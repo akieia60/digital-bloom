@@ -1,0 +1,480 @@
+{
+  "project": {
+    "name": "Digital Bloom",
+    "description": "E-commerce flower shop with React, Supabase, and Stripe",
+    "version": "1.0.0",
+    "location": "/Users/akieiamoniquedavis/Desktop/flower-shop",
+    "tech_stack": {
+      "frontend": "React 19 + Vite 7",
+      "backend": "Node.js + Express",
+      "database": "Supabase (PostgreSQL)",
+      "payments": "Stripe",
+      "styling": "Tailwind CSS 4",
+      "state_management": "React Context API"
+    },
+    "servers": {
+      "development": {
+        "frontend": "http://localhost:5173",
+        "backend": "http://localhost:3001"
+      },
+      "production": {
+        "frontend": "Deploy to Vercel/Netlify",
+        "backend": "Deploy with frontend or separate to Railway"
+      }
+    }
+  },
+
+  "structure": {
+    "frontend": {
+      "path": "src/",
+      "components": {
+        "Header.jsx": {
+          "purpose": "Navigation bar with search and cart",
+          "features": ["Search", "Cart icon", "Logo"],
+          "location": "src/components/Header.jsx"
+        },
+        "Hero.jsx": {
+          "purpose": "Homepage banner section",
+          "features": ["Gradient background", "Animated particles"],
+          "location": "src/components/Hero.jsx"
+        },
+        "ProductGrid.jsx": {
+          "purpose": "Display all products in grid layout",
+          "features": ["Filtering", "Search", "Responsive grid"],
+          "location": "src/components/ProductGrid.jsx"
+        },
+        "ProductCard.jsx": {
+          "purpose": "Individual product card with hover effects",
+          "features": ["Video on hover", "Add to cart", "Quick view"],
+          "location": "src/components/ProductCard.jsx"
+        },
+        "ShoppingCart.jsx": {
+          "purpose": "Shopping cart sidebar",
+          "features": ["Cart items", "Checkout button", "Total calculation"],
+          "location": "src/components/ShoppingCart.jsx",
+          "key_functions": {
+            "handleCheckout": "Initiates Stripe checkout (line 12-38)",
+            "toggleCart": "Opens/closes cart",
+            "getCartTotal": "Calculates total price"
+          }
+        },
+        "CartItem.jsx": {
+          "purpose": "Individual cart item component",
+          "features": ["Quantity controls", "Remove item", "Price display"],
+          "location": "src/components/CartItem.jsx"
+        },
+        "VideoPlayer.jsx": {
+          "purpose": "Video player for product videos",
+          "features": ["Autoplay on hover", "Muted playback"],
+          "location": "src/components/VideoPlayer.jsx"
+        },
+        "ProductDetails.jsx": {
+          "purpose": "Full product detail page",
+          "location": "src/components/ProductDetails.jsx"
+        },
+        "FilterPanel.jsx": {
+          "purpose": "Category and occasion filters",
+          "location": "src/components/FilterPanel.jsx"
+        }
+      },
+      "pages": {
+        "Admin.jsx": {
+          "purpose": "Admin panel for managing products",
+          "features": [
+            "Add new products",
+            "Edit existing products",
+            "Delete products",
+            "View all products"
+          ],
+          "location": "src/pages/Admin.jsx",
+          "url": "/admin"
+        },
+        "Success.jsx": {
+          "purpose": "Payment success confirmation page",
+          "features": ["Order details", "Order ID", "Next steps"],
+          "location": "src/pages/Success.jsx",
+          "url": "/success"
+        }
+      },
+      "context": {
+        "CartContext.jsx": {
+          "purpose": "Global shopping cart state",
+          "provides": [
+            "cartItems",
+            "addToCart",
+            "removeFromCart",
+            "updateQuantity",
+            "clearCart",
+            "getCartTotal"
+          ],
+          "location": "src/context/CartContext.jsx"
+        }
+      },
+      "lib": {
+        "supabase.js": {
+          "purpose": "Supabase database client",
+          "exports": [
+            "supabase - Database client",
+            "createPurchase - Create order record",
+            "updatePurchaseStatus - Update order status"
+          ],
+          "location": "src/lib/supabase.js"
+        },
+        "stripe.js": {
+          "purpose": "Stripe payment integration",
+          "exports": [
+            "stripePromise - Stripe client",
+            "createCartCheckoutSession - Create checkout",
+            "redirectToCheckout - Redirect to Stripe"
+          ],
+          "location": "src/lib/stripe.js"
+        }
+      },
+      "hooks": {
+        "useProducts.js": {
+          "purpose": "Load products from Supabase",
+          "returns": "{ products, loading, error }",
+          "location": "src/hooks/useProducts.js"
+        }
+      },
+      "main_files": {
+        "App.jsx": {
+          "purpose": "Main application component",
+          "features": ["Routing", "Layout", "Particle effects"],
+          "location": "src/App.jsx"
+        },
+        "main.jsx": {
+          "purpose": "Application entry point",
+          "location": "src/main.jsx"
+        },
+        "index.css": {
+          "purpose": "Global styles and animations",
+          "includes": [
+            "Tailwind imports",
+            "Custom fonts (Playfair Display, Poppins)",
+            "Particle animations",
+            "Gradient text effects",
+            "Glass morphism"
+          ],
+          "location": "src/index.css"
+        }
+      }
+    },
+
+    "backend": {
+      "server.js": {
+        "purpose": "Express API server for Stripe checkout",
+        "port": 3001,
+        "endpoints": {
+          "/api/create-checkout-session": {
+            "method": "POST",
+            "purpose": "Create Stripe checkout session",
+            "accepts": {
+              "cartItems": "Array of cart items",
+              "successUrl": "Redirect URL on success",
+              "cancelUrl": "Redirect URL on cancel",
+              "customerEmail": "Customer email (optional)",
+              "metadata": "Order metadata"
+            },
+            "returns": {
+              "sessionId": "Stripe session ID",
+              "url": "Stripe checkout URL"
+            }
+          }
+        },
+        "location": "server.js"
+      }
+    },
+
+    "database": {
+      "schema": {
+        "file": "supabase/schemas/01_initial_schema.sql",
+        "tables": {
+          "products": {
+            "columns": [
+              "id (UUID)",
+              "name",
+              "slug",
+              "description",
+              "price",
+              "image_url",
+              "video_url",
+              "thumbnail_url",
+              "category",
+              "occasions (array)",
+              "stripe_product_id",
+              "stripe_price_id",
+              "stock",
+              "is_active",
+              "created_at",
+              "updated_at"
+            ]
+          },
+          "users": {
+            "columns": [
+              "id (UUID)",
+              "email",
+              "full_name",
+              "stripe_customer_id",
+              "created_at",
+              "updated_at"
+            ]
+          },
+          "purchases": {
+            "columns": [
+              "id (UUID)",
+              "user_id",
+              "product_id",
+              "quantity",
+              "unit_price",
+              "total_price",
+              "stripe_payment_intent_id",
+              "stripe_session_id",
+              "status",
+              "customer_email",
+              "customer_name",
+              "created_at",
+              "updated_at"
+            ]
+          },
+          "cart_items": {
+            "columns": [
+              "id (UUID)",
+              "user_id",
+              "product_id",
+              "quantity",
+              "created_at",
+              "updated_at"
+            ]
+          }
+        }
+      },
+      "connection": {
+        "url": "From .env VITE_SUPABASE_URL",
+        "key": "From .env VITE_SUPABASE_ANON_KEY"
+      }
+    },
+
+    "scripts": {
+      "uploadProducts.js": {
+        "purpose": "Upload sample products to database",
+        "command": "npm run upload-products",
+        "location": "scripts/uploadProducts.js"
+      },
+      "autoSetup.js": {
+        "purpose": "Automatic database setup with admin key",
+        "location": "scripts/autoSetup.js"
+      },
+      "quickSetup.js": {
+        "purpose": "Quick database setup script",
+        "location": "scripts/quickSetup.js"
+      }
+    },
+
+    "configuration": {
+      ".env": {
+        "purpose": "Environment variables (NEVER commit to git!)",
+        "variables": {
+          "VITE_SUPABASE_URL": "Supabase project URL",
+          "VITE_SUPABASE_ANON_KEY": "Supabase anonymous key",
+          "VITE_STRIPE_PUBLISHABLE_KEY": "Stripe public key",
+          "STRIPE_SECRET_KEY": "Stripe secret key (backend only)"
+        },
+        "location": ".env"
+      },
+      "package.json": {
+        "purpose": "Project dependencies and scripts",
+        "scripts": {
+          "dev": "Start frontend dev server (Vite)",
+          "backend": "Start backend API server",
+          "build": "Build for production",
+          "preview": "Preview production build",
+          "upload-products": "Upload products to database"
+        },
+        "location": "package.json"
+      },
+      "vite.config.js": {
+        "purpose": "Vite bundler configuration",
+        "location": "vite.config.js"
+      },
+      "tailwind.config.js": {
+        "purpose": "Tailwind CSS configuration",
+        "custom_colors": {
+          "primary": "Pink shades",
+          "rose-red": "#ff1744",
+          "rose-pink": "#ff80ab",
+          "gold": "#ffd700",
+          "dark-bg": "#1a1a2e"
+        },
+        "custom_fonts": {
+          "playfair": "Playfair Display (serif)",
+          "poppins": "Poppins (sans-serif)"
+        },
+        "location": "tailwind.config.js"
+      },
+      ".gitignore": {
+        "purpose": "Files to ignore in version control",
+        "ignores": [
+          "node_modules/",
+          ".env",
+          "dist/",
+          ".DS_Store"
+        ],
+        "location": ".gitignore"
+      }
+    },
+
+    "public_assets": {
+      "images": {
+        "path": "public/images/",
+        "purpose": "Product images and photos"
+      },
+      "videos": {
+        "path": "public/videos/",
+        "purpose": "Product videos (MP4 format)"
+      }
+    }
+  },
+
+  "features": {
+    "shopping": [
+      "Product browsing with search",
+      "Category filtering",
+      "Video product previews",
+      "Shopping cart with persistence",
+      "Quantity management",
+      "Checkout with Stripe"
+    ],
+    "admin": [
+      "Add new products",
+      "Edit existing products",
+      "Delete products",
+      "Upload images/videos",
+      "Set prices and stock",
+      "Toggle product visibility"
+    ],
+    "payments": [
+      "Stripe checkout integration",
+      "Test mode support",
+      "Order confirmation",
+      "Success page",
+      "Purchase tracking"
+    ]
+  },
+
+  "deployment": {
+    "recommended_platform": "Vercel",
+    "alternatives": ["Netlify", "Railway", "Render"],
+    "steps": [
+      "npm install -g vercel",
+      "cd ~/Desktop/flower-shop",
+      "vercel",
+      "Add environment variables",
+      "vercel --prod"
+    ],
+    "environment_variables_needed": [
+      "VITE_SUPABASE_URL",
+      "VITE_SUPABASE_ANON_KEY",
+      "VITE_STRIPE_PUBLISHABLE_KEY",
+      "STRIPE_SECRET_KEY"
+    ],
+    "cost": {
+      "hosting": "Free (Vercel/Netlify free tier)",
+      "database": "Free (Supabase free tier)",
+      "payments": "2.9% + $0.30 per transaction (Stripe)",
+      "total_monthly": "$0 until you make sales"
+    }
+  },
+
+  "development": {
+    "start_servers": {
+      "frontend": "npm run dev",
+      "backend": "npm run backend"
+    },
+    "urls": {
+      "frontend": "http://localhost:5173",
+      "backend": "http://localhost:3001",
+      "admin": "http://localhost:5173/admin"
+    },
+    "test_checkout": {
+      "card_number": "4242 4242 4242 4242",
+      "expiry": "Any future date",
+      "cvc": "Any 3 digits"
+    }
+  },
+
+  "documentation_files": {
+    "README.md": "Project overview",
+    "SETUP_GUIDE.md": "Complete setup instructions",
+    "COMPLETE_CODE_GUIDE.md": "Full codebase documentation",
+    "DEPLOY.md": "Deployment guide",
+    "CODE_LOCATIONS.md": "Quick reference for all features",
+    "project-structure.json": "This file - complete project map"
+  },
+
+  "key_integrations": {
+    "supabase": {
+      "project_url": "https://yhdbeblowolfinxxhsnt.supabase.co",
+      "used_for": "Database, authentication, storage",
+      "tables": ["products", "users", "purchases", "cart_items"]
+    },
+    "stripe": {
+      "mode": "Test mode (switch to live for production)",
+      "used_for": "Payment processing",
+      "features": ["Checkout sessions", "Payment intents", "Success/cancel redirects"]
+    }
+  },
+
+  "security": {
+    "implemented": [
+      "Environment variables for secrets",
+      "Supabase Row Level Security (RLS)",
+      "CORS configuration",
+      "HTTPS in production (automatic with Vercel)",
+      ".gitignore for sensitive files"
+    ],
+    "before_production": [
+      "Switch Stripe to live mode",
+      "Update environment variables",
+      "Set proper CORS origins",
+      "Enable Stripe webhooks"
+    ]
+  },
+
+  "npm_packages": {
+    "frontend": {
+      "react": "19.2.0",
+      "react-dom": "19.2.0",
+      "react-router-dom": "7.13.0",
+      "@stripe/stripe-js": "8.6.4",
+      "@supabase/supabase-js": "2.91.1",
+      "vite": "7.2.4",
+      "tailwindcss": "4.1.18"
+    },
+    "backend": {
+      "express": "5.2.1",
+      "stripe": "20.2.0",
+      "cors": "2.8.6",
+      "dotenv": "17.2.3"
+    }
+  },
+
+  "file_count": {
+    "total_files": "~50",
+    "react_components": 15,
+    "pages": 2,
+    "utility_files": 8,
+    "config_files": 6,
+    "scripts": 6,
+    "documentation": 6
+  },
+
+  "next_steps": [
+    "1. Read DEPLOY.md for deployment instructions",
+    "2. Choose deployment platform (Vercel recommended)",
+    "3. Deploy your site",
+    "4. Add your own flower arrangements via admin panel",
+    "5. Switch Stripe to live mode when ready",
+    "6. Optional: Add custom domain"
+  ]
+}
