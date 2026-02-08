@@ -32,6 +32,7 @@ export default function ExperienceCredits() {
       // Validate gift details if gifting
       if (isGift) {
         if (!giftDetails.recipientEmail) {
+          setLoading(false);
           throw new Error('Recipient email is required for gifts');
         }
       }
@@ -39,7 +40,9 @@ export default function ExperienceCredits() {
       // Get purchaser email (you may want to get this from user context/auth)
       const purchaserEmail = prompt('Enter your email address:');
       if (!purchaserEmail) {
-        throw new Error('Email is required');
+        setLoading(false);
+        setError('Email is required to purchase credits');
+        return;
       }
 
       // Create checkout session
