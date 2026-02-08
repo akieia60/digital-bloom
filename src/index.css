@@ -126,3 +126,62 @@ video {
   user-select: none;
   pointer-events: none;
 }
+
+/* Mobile Menu Slide-in Animation */
+@keyframes slide-in {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.animate-slide-in {
+  animation: slide-in 0.3s ease-out forwards;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 640px) {
+  /* Prevent iOS zoom on input focus */
+  input,
+  textarea,
+  select {
+    font-size: 16px !important;
+  }
+  
+  /* Touch-friendly buttons */
+  button,
+  .btn-primary,
+  .btn-secondary {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Readable text sizes */
+  body {
+    font-size: 16px;
+  }
+  
+  h1 {
+    font-size: 2rem;
+  }
+  
+  h2 {
+    font-size: 1.5rem;
+  }
+  
+  h3 {
+    font-size: 1.25rem;
+  }
+}
+
+@media (max-width: 768px) {
+  /* Tablet adjustments */
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}

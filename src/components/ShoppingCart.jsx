@@ -91,22 +91,22 @@ const ShoppingCart = () => {
         onClick={toggleCart}
       />
 
-      {/* Luxury Drawer */}
-      <div className="fixed right-0 top-0 h-full w-full max-w-md bg-obsidian shadow-2xl z-[101] transform transition-all duration-700 ease-[cubic-bezier(0.23, 1, 0.32, 1)] border-l border-white/5 flex flex-col animate-slide-left">
+      {/* Luxury Drawer - Full screen on mobile, sidebar on desktop */}
+      <div className="fixed inset-0 md:inset-auto md:right-0 md:top-0 md:h-full md:w-full md:max-w-md bg-obsidian shadow-2xl z-[101] transform transition-all duration-700 ease-[cubic-bezier(0.23, 1, 0.32, 1)] md:border-l border-white/5 flex flex-col animate-slide-left">
         
         {/* Header */}
-        <div className="flex items-center justify-between p-8 border-b border-white/5">
+        <div className="flex items-center justify-between p-4 sm:p-8 border-b border-white/5">
           <div>
-            <h2 className="text-2xl font-medium font-display tracking-tight text-white mb-1">Your Selection</h2>
+            <h2 className="text-xl sm:text-2xl font-medium font-display tracking-tight text-white mb-1">Your Selection</h2>
             <p className="text-[10px] uppercase tracking-[0.3em] text-white/30 font-light">
               {cartItems.length} Piece{cartItems.length !== 1 ? 's' : ''} Collected
             </p>
           </div>
           <button
             onClick={toggleCart}
-            className="w-10 h-10 rounded-full border border-white/5 flex items-center justify-center hover:border-pure-gold/40 transition-all text-white/40 hover:text-white"
+            className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border border-white/5 flex items-center justify-center hover:border-pure-gold/40 transition-all text-white/40 hover:text-white"
           >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
@@ -153,47 +153,26 @@ const ShoppingCart = () => {
                 
                 {!creditApplied ? (
                   <>
-                    <div className="credit-input-group">
+                    <div className="credit-input-group flex flex-col sm:flex-row gap-2 sm:gap-3">
                       <input
                         type="text"
                         placeholder="DBLOOM-XXXX-XXXX"
                         maxLength="17"
                         value={creditCode}
                         onChange={(e) => setCreditCode(e.target.value.toUpperCase())}
-                        style={{
-                          flex: 1,
-                          padding: '12px 16px',
-                          fontSize: '15px',
-                          border: '1px solid rgba(255,255,255,0.1)',
-                          borderRadius: '8px',
-                          background: 'rgba(255,255,255,0.05)',
-                          color: '#fff',
-                          fontFamily: 'monospace'
-                        }}
+                        className="flex-1 px-4 py-3 sm:py-3 text-base sm:text-sm border border-white/10 rounded-lg bg-white/5 text-white font-mono focus:outline-none focus:border-pure-gold transition-all"
+                        style={{ minHeight: '44px' }}
                       />
                       <button
                         onClick={handleApplyCredit}
                         disabled={isApplyingCredit || !creditCode}
-                        style={{
-                          padding: '12px 24px',
-                          background: '#0071e3',
-                          color: '#fff',
-                          border: 'none',
-                          borderRadius: '8px',
-                          fontSize: '14px',
-                          fontWeight: 600,
-                          cursor: 'pointer',
-                          opacity: (isApplyingCredit || !creditCode) ? 0.5 : 1
-                        }}
+                        className="px-6 py-3 bg-blue-600 text-white rounded-lg text-sm font-semibold hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                        style={{ minHeight: '44px', minWidth: '100px' }}
                       >
                         {isApplyingCredit ? 'Applying...' : 'Apply'}
                       </button>
                     </div>
-                    <p style={{
-                      fontSize: '12px',
-                      color: 'rgba(255,255,255,0.4)',
-                      marginTop: '8px'
-                    }}>
+                    <p className="text-xs text-white/40 mt-2">
                       Enter your credit code to reduce your total
                     </p>
                   </>
