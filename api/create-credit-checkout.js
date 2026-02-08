@@ -41,10 +41,14 @@ export default async function handler(req, res) {
       note = null
     } = req.body;
 
+    // Log for debugging
+    console.log('Received credit checkout request:', { amount_cents, purchaser_email });
+
     // Validate amount (ensure it's an integer)
     const amountCentsInt = parseInt(amount_cents, 10);
     
     if (!Number.isInteger(amountCentsInt) || !ALLOWED_AMOUNTS.includes(amountCentsInt)) {
+      console.error('Invalid amount:', { amount_cents, amountCentsInt, allowed: ALLOWED_AMOUNTS });
       return res.status(400).json({ error: 'Invalid credit amount' });
     }
 
