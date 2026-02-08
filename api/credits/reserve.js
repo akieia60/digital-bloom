@@ -73,7 +73,8 @@ export default async function handler(req, res) {
 
     res.status(200).json({
       reservation_id: reservation.id,
-      reserved_cents,
+      applied_cents: reserved_cents,
+      remaining_after_cents: credit.remaining_amount_cents - reserved_cents,
       expires_at
     });
 
