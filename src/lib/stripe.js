@@ -88,10 +88,11 @@ export const createCheckoutSession = async (product, quantity = 1, customerInfo 
 /**
  * Create a Stripe Checkout session for multiple products (cart)
  * @param {Array} cartItems - Array of {product, quantity} objects
+ * @param {Object} creditMetadata - Optional credit reservation metadata
  * @param {Object} customerInfo - Customer email and name (optional)
  * @returns {Promise<string|null>} Checkout session ID or null if error
  */
-export const createCartCheckoutSession = async (cartItems, customerInfo = {}) => {
+export const createCartCheckoutSession = async (cartItems, creditMetadata = null, customerInfo = {}) => {
   try {
     const successUrl = import.meta.env.VITE_STRIPE_SUCCESS_URL || `${window.location.origin}/success`;
     const cancelUrl = import.meta.env.VITE_STRIPE_CANCEL_URL || window.location.origin;
@@ -113,9 +114,12 @@ export const createCartCheckoutSession = async (cartItems, customerInfo = {}) =>
         successUrl: `${successUrl}?session_id={CHECKOUT_SESSION_ID}`,
         cancelUrl,
         customerEmail: customerInfo.email,
+        reservation_id: creditMetadata?.reservation_id,
+        remaining_due_cents: creditMetadata?.remaining_due_cents,
         metadata: {
           total_items: cartItems.length,
-          total_price: totalPrice
+          total_price: totalPrice,
+          ...(creditMetadata?.reservation_id && { reservation_id: creditMetadata.reservation_id })
         }
       }),
     });
@@ -125,8 +129,8 @@ export const createCartCheckoutSession = async (cartItems, customerInfo = {}) =>
       throw new Error(errorData.error || 'Failed to create checkout session');
     }
 
-    const { sessionId, url } = await response.json();
-    return { sessionId, url };
+    const { sessionId, url, free_checkout } = await response.json();
+    return { sessionId, url, free_checkout };
 
   } catch (error) {
     console.error('Error creating cart checkout session:', error);

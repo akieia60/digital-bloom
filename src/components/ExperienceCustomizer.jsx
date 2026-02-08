@@ -3,7 +3,7 @@ import GiftingForm from './GiftingForm';
 import CustomizationPreview from './CustomizationPreview';
 import '../styles/customizer.css';
 
-const Customizer = ({ product, isOpen, onClose, onComplete }) => {
+export default function ExperienceCustomizer({ product, onComplete, onCancel }) {
   const [customization, setCustomization] = useState({
     customMessageShort: '',
     customMessageLong: '',
@@ -42,15 +42,12 @@ const Customizer = ({ product, isOpen, onClose, onComplete }) => {
       productId: product.id,
       ...customization
     });
-    onClose();
   };
-
-  if (!isOpen) return null;
 
   return (
     <div className="customizer-modal">
       <div className="customizer-container">
-        <button className="customizer-close" onClick={onClose}>×</button>
+        <button className="customizer-close" onClick={onCancel}>×</button>
         
         <div className="customizer-content">
           {/* Left Panel - Options */}
@@ -149,7 +146,7 @@ const Customizer = ({ product, isOpen, onClose, onComplete }) => {
 
             {/* Action Buttons */}
             <div className="customizer-actions">
-              <button className="cta-secondary" onClick={onClose}>
+              <button className="cta-secondary" onClick={onCancel}>
                 Cancel
               </button>
               <button className="cta-primary" onClick={handleComplete}>
@@ -170,6 +167,4 @@ const Customizer = ({ product, isOpen, onClose, onComplete }) => {
       </div>
     </div>
   );
-};
-
-export default Customizer;
+}

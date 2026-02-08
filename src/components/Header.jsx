@@ -62,8 +62,8 @@ const Header = ({ onSearchChange, searchQuery }) => {
           {/* Right: Cart */}
           <div className="flex-1 flex justify-end items-center space-x-8">
             <nav className="hidden lg:flex items-center space-x-10">
-              <Link to="/" className="text-[11px] uppercase tracking-[0.2em] text-white/60 hover:text-white transition-colors">Bespoke</Link>
-              <Link to="/gallery" className="text-[11px] uppercase tracking-[0.2em] text-white/60 hover:text-white transition-colors">Collections</Link>
+              <Link to="/shop" className="text-[11px] uppercase tracking-[0.2em] text-white/60 hover:text-white transition-colors">Experiences</Link>
+              <Link to="/credits" className="text-[11px] uppercase tracking-[0.2em] text-white/60 hover:text-white transition-colors">Credits</Link>
             </nav>
             <button
               onClick={toggleCart}

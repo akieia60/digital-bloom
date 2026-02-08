@@ -2,12 +2,46 @@ import { useState } from 'react';
 import { useCart } from '../context/CartContext';
 import CartItem from './CartItem';
 import { createCartCheckoutSession, redirectToCheckout } from '../lib/stripe';
+import { validateCreditCode, reserveCredit } from '../lib/creditStripe';
 
 const ShoppingCart = () => {
   const { cartItems, isCartOpen, toggleCart, getCartTotal, clearCart } = useCart();
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState(null);
+  const [creditCode, setCreditCode] = useState('');
+  const [creditApplied, setCreditApplied] = useState(null);
+  const [isApplyingCredit, setIsApplyingCredit] = useState(false);
   const total = getCartTotal();
+  const totalCents = Math.round(total * 100);
+  const remainingDue = creditApplied ? totalCents - creditApplied.applied_cents : totalCents;
+
+  const handleApplyCredit = async () => {
+    setError(null);
+    setIsApplyingCredit(true);
+
+    try {
+      // Validate credit code first
+      const validation = await validateCreditCode(creditCode.toUpperCase());
+      
+      if (!validation.valid) {
+        throw new Error(validation.error || 'Invalid credit code');
+      }
+
+      // Reserve credit
+      const reservation = await reserveCredit(creditCode.toUpperCase(), totalCents);
+      
+      setCreditApplied({
+        code: creditCode.toUpperCase(),
+        reservation_id: reservation.reservation_id,
+        applied_cents: reservation.applied_cents,
+        remaining_after_cents: reservation.remaining_after_cents
+      });
+    } catch (err) {
+      setError(err.message || 'Failed to apply credit');
+    } finally {
+      setIsApplyingCredit(false);
+    }
+  };
 
   const handleCheckout = async () => {
     setIsProcessing(true);
@@ -19,7 +53,25 @@ const ShoppingCart = () => {
         quantity: item.quantity
       }));
 
-      const result = await createCartCheckoutSession(formattedItems);
+      // If credit is applied and covers full amount, skip Stripe
+      if (creditApplied && remainingDue <= 0) {
+        const result = await createCartCheckoutSession(formattedItems, {
+          reservation_id: creditApplied.reservation_id,
+          remaining_due_cents: 0
+        });
+        
+        if (result.free_checkout) {
+          window.location.href = result.url;
+          return;
+        }
+      }
+
+      // Otherwise create Stripe session with credit metadata
+      const result = await createCartCheckoutSession(formattedItems, creditApplied ? {
+        reservation_id: creditApplied.reservation_id,
+        remaining_due_cents: remainingDue
+      } : null);
+      
       if (!result || !result.url) throw new Error('Failed to create checkout session');
       await redirectToCheckout(result.url);
     } catch (err) {
@@ -95,12 +147,98 @@ const ShoppingCart = () => {
                 </div>
               )}
 
+              {/* Credit Redemption */}
+              <div className="credit-redemption">
+                <h4 className="credit-redemption-title">Apply Experience Credit</h4>
+                
+                {!creditApplied ? (
+                  <>
+                    <div className="credit-input-group">
+                      <input
+                        type="text"
+                        placeholder="DBLOOM-XXXX-XXXX"
+                        maxLength="17"
+                        value={creditCode}
+                        onChange={(e) => setCreditCode(e.target.value.toUpperCase())}
+                        style={{
+                          flex: 1,
+                          padding: '12px 16px',
+                          fontSize: '15px',
+                          border: '1px solid rgba(255,255,255,0.1)',
+                          borderRadius: '8px',
+                          background: 'rgba(255,255,255,0.05)',
+                          color: '#fff',
+                          fontFamily: 'monospace'
+                        }}
+                      />
+                      <button
+                        onClick={handleApplyCredit}
+                        disabled={isApplyingCredit || !creditCode}
+                        style={{
+                          padding: '12px 24px',
+                          background: '#0071e3',
+                          color: '#fff',
+                          border: 'none',
+                          borderRadius: '8px',
+                          fontSize: '14px',
+                          fontWeight: 600,
+                          cursor: 'pointer',
+                          opacity: (isApplyingCredit || !creditCode) ? 0.5 : 1
+                        }}
+                      >
+                        {isApplyingCredit ? 'Applying...' : 'Apply'}
+                      </button>
+                    </div>
+                    <p style={{
+                      fontSize: '12px',
+                      color: 'rgba(255,255,255,0.4)',
+                      marginTop: '8px'
+                    }}>
+                      Enter your credit code to reduce your total
+                    </p>
+                  </>
+                ) : (
+                  <div className="credit-applied">
+                    <div className="credit-applied-title">✓ Credit Applied</div>
+                    <div className="credit-applied-details">
+                      <div>Code: {creditApplied.code}</div>
+                      <div>Applied: ${(creditApplied.applied_cents / 100).toFixed(2)}</div>
+                      <div>Remaining on card: ${(creditApplied.remaining_after_cents / 100).toFixed(2)}</div>
+                    </div>
+                    <button
+                      onClick={() => {
+                        setCreditApplied(null);
+                        setCreditCode('');
+                      }}
+                      style={{
+                        marginTop: '12px',
+                        padding: '8px 16px',
+                        background: 'transparent',
+                        color: 'rgba(255,255,255,0.6)',
+                        border: '1px solid rgba(255,255,255,0.2)',
+                        borderRadius: '6px',
+                        fontSize: '12px',
+                        cursor: 'pointer'
+                      }}
+                    >
+                      Remove Credit
+                    </button>
+                  </div>
+                )}
+
               <div className="flex items-end justify-between">
                 <div>
-                  <p className="text-[10px] uppercase tracking-widest text-white/30 mb-2">Total Value</p>
-                  <p className="text-3xl font-light tracking-tight text-white font-display">
-                    ${total.toFixed(2)}
+                  <p className="text-[10px] uppercase tracking-widest text-white/30 mb-2">
+                    {creditApplied ? 'Remaining Due' : 'Total Value'}
                   </p>
+                  <p className="text-3xl font-light tracking-tight text-white font-display">
+                    ${(remainingDue / 100).toFixed(2)}
+                  </p>
+                  {creditApplied && (
+                    <p className="text-xs text-white/40 mt-2">
+                      Original: ${total.toFixed(2)} - Credit: ${(creditApplied.applied_cents / 100).toFixed(2)}
+                    </p>
+                  )}
                 </div>
                 <div className="text-right">
                    <p className="text-[10px] uppercase tracking-widest text-pure-gold/60">Digital Concierge</p>
@@ -121,7 +259,7 @@ const ShoppingCart = () => {
                     </>
                   ) : (
                     <>
-                      <span>Begin Transaction</span>
+                      <span>Publish Experience</span>
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                       </svg>
@@ -136,6 +274,7 @@ const ShoppingCart = () => {
                   >
                     Clear Collection
                   </button>
+                </div>
                 </div>
               </div>
             </div>

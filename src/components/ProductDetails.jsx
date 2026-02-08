@@ -133,7 +133,7 @@ const ProductDetails = () => {
                   onClick={() => setIsCustomizerOpen(true)}
                   className="w-full btn-primary py-6 rounded-full text-sm font-bold tracking-[0.3em] uppercase transition-all shadow-xl shadow-white/5"
                 >
-                  Personalize & Gift 💎
+                  Customize Experience
                 </button>
                 
                 <div className="flex items-center justify-center space-x-4 opacity-30 text-[9px] uppercase tracking-[0.3em]">
@@ -155,8 +155,8 @@ const ProductDetails = () => {
                     </svg>
                   </div>
                   <div>
-                    <p className="text-sm font-semibold">Bespoke product added to cart.</p>
-                    <p className="text-[10px] text-white/40 uppercase tracking-widest mt-1">Ready for checkout</p>
+                    <p className="text-sm font-semibold">Experience added to cart.</p>
+                    <p className="text-[10px] text-white/40 uppercase tracking-widest mt-1">Ready to publish</p>
                   </div>
                 </div>
               )}

@@ -2,34 +2,35 @@ import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { CartProvider } from './context/CartContext';
 import Header from './components/Header';
-import Hero from './components/Hero';
-import ProductGrid from './components/ProductGrid';
+import LandingPage from './pages/LandingPage';
+import Shop from './pages/Shop';
 import ProductDetails from './components/ProductDetails';
 import ShoppingCart from './components/ShoppingCart';
 import Success from './pages/Success';
 import Admin from './pages/Admin';
 import PromptBrowser from './components/PromptBrowser';
+import ExperienceCredits from './pages/ExperienceCredits';
+import CreditBalance from './pages/CreditBalance';
 
 function AppContent({ searchQuery, setSearchQuery }) {
   const location = useLocation();
-  const isHomePage = location.pathname === '/';
+  const isShopPage = location.pathname === '/shop';
+  const isLandingPage = location.pathname === '/';
 
   return (
     <>
-      <Header onSearchChange={setSearchQuery} searchQuery={searchQuery} />
-      {isHomePage && <Hero />}
+      {!isLandingPage && <Header onSearchChange={setSearchQuery} searchQuery={searchQuery} />}
       <Routes>
-        <Route path="/" element={
-          <div id="products-section">
-            <ProductGrid searchQuery={searchQuery} />
-          </div>
-        } />
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/shop" element={<Shop searchQuery={searchQuery} setSearchQuery={setSearchQuery} />} />
         <Route path="/product/:id" element={<ProductDetails />} />
+        <Route path="/credits" element={<ExperienceCredits />} />
+        <Route path="/credits/balance" element={<CreditBalance />} />
         <Route path="/success" element={<Success />} />
         <Route path="/admin" element={<Admin />} />
         <Route path="/admin/prompts" element={<PromptBrowser />} />
       </Routes>
-      <ShoppingCart />
+      {!isLandingPage && <ShoppingCart />}
     </>
   );
 }

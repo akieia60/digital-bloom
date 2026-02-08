@@ -39,7 +39,7 @@ const Success = () => {
       <div className="min-h-screen bg-obsidian flex items-center justify-center">
         <div className="text-center">
           <div className="w-16 h-16 border-2 border-pure-gold/20 border-t-pure-gold rounded-full animate-spin mx-auto mb-8"></div>
-          <p className="text-[10px] uppercase tracking-[0.4em] text-white/40">Securing Your Masterpiece</p>
+          <p className="text-[10px] uppercase tracking-[0.4em] text-white/40">Publishing Your Experience</p>
         </div>
       </div>
     );
@@ -69,10 +69,10 @@ const Success = () => {
           </div>
 
           <h1 className="text-5xl font-medium font-display tracking-tight leading-tight mb-6">
-            An Extraordinary <br /> <span className="gradient-text">Choice.</span>
+            Your Experience <br /> <span className="gradient-text">Is Being Published.</span>
           </h1>
           <p className="text-white/50 font-light leading-relaxed italic">
-            Your Digital Bloom™ has been meticulously prepared. You are now the exclusive curator of this motion art masterpiece.
+            Your DigitalBloom experience has been commissioned and is being prepared for delivery.
           </p>
         </div>
 
@@ -80,7 +80,7 @@ const Success = () => {
           {/* Acquisition Summary */}
           <div className="glass border border-white/5 p-10 rounded-[2.5rem] flex flex-col justify-between">
             <div>
-              <h3 className="text-[10px] uppercase tracking-[0.4em] text-white/30 mb-8 font-semibold pr-4">Inventory Details</h3>
+              <h3 className="text-[10px] uppercase tracking-[0.4em] text-white/30 mb-8 font-semibold pr-4">Experience Details</h3>
               {purchase && (
                 <div className="space-y-6">
                   <div className="flex justify-between items-baseline group">
@@ -88,7 +88,7 @@ const Success = () => {
                     <span className="text-sm font-light text-white font-mono">{purchase.id.substring(0, 8).toUpperCase()}</span>
                   </div>
                   <div className="flex justify-between items-baseline group">
-                    <span className="text-[10px] uppercase tracking-widest text-white/20 group-hover:text-white/40 transition-colors">Acquisition Value</span>
+                    <span className="text-[10px] uppercase tracking-widest text-white/20 group-hover:text-white/40 transition-colors">Experience Value</span>
                     <span className="text-xl font-light text-pure-gold">${purchase.total_price.toFixed(2)}</span>
                   </div>
                   <div className="flex justify-between items-baseline">
@@ -116,7 +116,7 @@ const Success = () => {
               {purchase?.download_url ? (
                 <div className="space-y-8 animate-slide-up">
                   <p className="text-lg font-light text-white/80 leading-relaxed italic pr-4">
-                    Your bespoke 4K masterpiece is ready for exhibition.
+                    Your customized DigitalBloom experience is ready for delivery.
                   </p>
                   
                   {new Date(purchase.download_expires_at) > new Date() ? (
@@ -129,7 +129,7 @@ const Success = () => {
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                         </svg>
-                        <span>Download Masterpiece</span>
+                        <span>Access Experience</span>
                       </a>
                       <div className="p-4 bg-white/5 border border-white/10 rounded-2xl">
                          <p className="text-[9px] text-white/40 uppercase tracking-widest italic leading-relaxed text-center">
@@ -147,11 +147,11 @@ const Success = () => {
                 <div className="space-y-6">
                   <div className="flex items-start space-x-4 opacity-40 group">
                     <div className="w-1 h-1 rounded-full bg-white mt-1.5 group-hover:scale-150 transition-transform"></div>
-                    <p className="text-[10px] uppercase tracking-widest text-white leading-loose">Acquisition notification sent to your digital estate.</p>
+                    <p className="text-[10px] uppercase tracking-widest text-white leading-loose">Experience confirmation sent to your email.</p>
                   </div>
                   <div className="flex items-start space-x-4 opacity-40 group">
                     <div className="w-1 h-1 rounded-full bg-white mt-1.5 group-hover:scale-150 transition-transform"></div>
-                    <p className="text-[10px] uppercase tracking-widest text-white leading-loose">Artisan preparation in progress (Est. 2-4 hours).</p>
+                    <p className="text-[10px] uppercase tracking-widest text-white leading-loose">Experience publishing in progress (Est. 2-4 hours).</p>
                   </div>
                   <div className="flex items-start space-x-4 opacity-40 group">
                     <div className="w-1 h-1 rounded-full bg-white mt-1.5 group-hover:scale-150 transition-transform"></div>
@@ -182,7 +182,7 @@ const Success = () => {
         <div className="mt-24 text-center">
             <p className="text-[10px] uppercase tracking-[0.5em] text-white/20 font-light">
                 Digital Bloom™ <br /> 
-                <span className="mt-2 block opacity-50">Luxury Motion Art Gallery</span>
+                <span className="mt-2 block opacity-50">Digital Multimedia Publishing</span>
             </p>
         </div>
       </div>
