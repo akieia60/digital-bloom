@@ -91,7 +91,7 @@ export default function ExperienceCredits() {
             <div
               key={amount.value}
               className={`credit-card ${selectedAmount === amount.value ? 'selected' : ''}`}
-              onClick={() => setSelectedAmount(amount.value)}
+              onClick={() => !loading && setSelectedAmount(amount.value)}
             >
               {amount.popular && <span className="credit-badge">Popular</span>}
               <div className="credit-amount">{amount.label}</div>
@@ -99,9 +99,12 @@ export default function ExperienceCredits() {
                 className="cta-primary"
                 onClick={(e) => {
                   e.stopPropagation();
-                  handlePurchase(amount.value);
+                  if (!loading) {
+                    handlePurchase(amount.value);
+                  }
                 }}
                 disabled={loading}
+                style={{ opacity: loading ? 0.5 : 1, cursor: loading ? 'not-allowed' : 'pointer' }}
               >
                 {loading ? 'Processing...' : 'Buy Experience Credit'}
               </button>

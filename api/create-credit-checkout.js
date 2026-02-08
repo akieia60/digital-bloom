@@ -41,8 +41,10 @@ export default async function handler(req, res) {
       note = null
     } = req.body;
 
-    // Validate amount
-    if (!ALLOWED_AMOUNTS.includes(amount_cents)) {
+    // Validate amount (ensure it's an integer)
+    const amountCentsInt = parseInt(amount_cents, 10);
+    
+    if (!Number.isInteger(amountCentsInt) || !ALLOWED_AMOUNTS.includes(amountCentsInt)) {
       return res.status(400).json({ error: 'Invalid credit amount' });
     }
 
@@ -62,10 +64,10 @@ export default async function handler(req, res) {
           price_data: {
             currency: 'usd',
             product_data: {
-              name: `DigitalBloom Experience Credit - $${amount_cents / 100}`,
+              name: `DigitalBloom Experience Credit - $${amountCentsInt / 100}`,
               description: 'Prepaid access to digital multimedia experiences',
             },
-            unit_amount: amount_cents,
+            unit_amount: amountCentsInt, // Ensure this is an integer
           },
           quantity: 1,
         },
@@ -77,7 +79,7 @@ export default async function handler(req, res) {
       metadata: {
         type: 'experience_credit',
         code,
-        amount_cents: amount_cents.toString(),
+        amount_cents: amountCentsInt.toString(),
         purchaser_email,
         recipient_email: recipient_email || purchaser_email,
         delivery_date: delivery_date || '',
