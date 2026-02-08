@@ -106,25 +106,8 @@ export default async function handler(req, res) {
       quantity: item.quantity
     }));
 
-    // If credit is applied but doesn't cover full amount, adjust the total
-    if (reservation_id && remaining_due_cents > 0 && remaining_due_cents < totalCents) {
-      // Add a discount line item for the credit
-      const creditDiscount = totalCents - remaining_due_cents;
-      lineItems.push({
-        price_data: {
-          currency: 'usd',
-          product_data: {
-            name: 'Experience Credit Applied',
-            description: `Credit discount: -$${(creditDiscount / 100).toFixed(2)}`
-          },
-          unit_amount: -creditDiscount
-        },
-        quantity: 1
-      });
-    }
-
-    // Create Stripe checkout session
-    const session = await stripe.checkout.sessions.create({
+    // Prepare session config
+    const sessionConfig = {
       payment_method_types: ['card'],
       line_items: lineItems,
       mode: 'payment',
@@ -141,7 +124,25 @@ export default async function handler(req, res) {
           price: item.product.price
         })))
       }
-    });
+    };
+
+    // If credit is applied but doesn't cover full amount, add discount
+    if (reservation_id && remaining_due_cents > 0 && remaining_due_cents < totalCents) {
+      const creditDiscount = totalCents - remaining_due_cents;
+      
+      // Use Stripe's discount feature instead of negative line items
+      sessionConfig.discounts = [{
+        coupon: await stripe.coupons.create({
+          amount_off: creditDiscount,
+          currency: 'usd',
+          duration: 'once',
+          name: `Experience Credit: -$${(creditDiscount / 100).toFixed(2)}`
+        }).then(c => c.id)
+      }];
+    }
+
+    // Create Stripe checkout session
+    const session = await stripe.checkout.sessions.create(sessionConfig);
 
     res.status(200).json({
       sessionId: session.id,
