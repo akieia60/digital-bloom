@@ -19,6 +19,9 @@ export default {
           800: '#9d174d',
           900: '#831843',
         },
+        'obsidian': '#050510',
+        'pure-gold': '#D4AF37',
+        'champagne': '#F5F5F7',
         'rose-red': '#ff1744',
         'rose-pink': '#ff80ab',
         'deep-purple': '#4a148c',
@@ -26,6 +29,8 @@ export default {
         'cream': '#fff8e1',
         'dark-bg': '#1a1a2e',
         'dark-secondary': '#16213e',
+        'brand-white': '#F4F1EA',
+        'brand-gold': '#C9A24A',
       },
       fontFamily: {
         'playfair': ['"Playfair Display"', 'serif'],
@@ -36,8 +41,9 @@ export default {
       animation: {
         'float': 'float 15s infinite',
         'gradient-shift': 'gradientShift 3s ease infinite',
-        'fade-in': 'fadeIn 0.3s ease',
-        'slide-up': 'slideUp 0.4s ease',
+        'fade-in': 'fadeIn 1s ease-out',
+        'slide-up': 'slideUp 1.2s cubic-bezier(0.16, 1, 0.3, 1)',
+        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
       },
       keyframes: {
         float: {
@@ -55,8 +61,12 @@ export default {
           'to': { opacity: '1' },
         },
         slideUp: {
-          'from': { transform: 'translateY(50px)', opacity: '0' },
+          'from': { transform: 'translateY(30px)', opacity: '0' },
           'to': { transform: 'translateY(0)', opacity: '1' },
+        },
+        pulse: {
+          '0%, 100%': { opacity: '1' },
+          '50%': { opacity: '0.5' },
         },
       },
     },

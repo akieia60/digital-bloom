@@ -102,7 +102,8 @@ export const createCartCheckoutSession = async (cartItems, customerInfo = {}) =>
     );
 
     // Call backend API to create checkout session
-    const response = await fetch('http://localhost:3001/api/create-checkout-session', {
+    const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+    const response = await fetch(`${apiUrl}/api/create-checkout-session`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

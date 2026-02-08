@@ -19,7 +19,11 @@ function AppContent({ searchQuery, setSearchQuery }) {
       <Header onSearchChange={setSearchQuery} searchQuery={searchQuery} />
       {isHomePage && <Hero />}
       <Routes>
-        <Route path="/" element={<ProductGrid searchQuery={searchQuery} />} />
+        <Route path="/" element={
+          <div id="products-section">
+            <ProductGrid searchQuery={searchQuery} />
+          </div>
+        } />
         <Route path="/product/:id" element={<ProductDetails />} />
         <Route path="/success" element={<Success />} />
         <Route path="/admin" element={<Admin />} />
@@ -57,9 +61,10 @@ function App() {
   return (
     <CartProvider>
       <Router>
-        <div className="min-h-screen bg-gradient-to-br from-dark-bg to-dark-secondary relative">
-          {/* Floating particles background */}
-          <div className="particles" id="particles"></div>
+        <div className="min-h-screen bg-obsidian relative overflow-x-hidden">
+          {/* Subtle Atmosphere */}
+          <div className="fixed inset-0 bg-[#050510] pointer-events-none"></div>
+          <div className="particles opacity-30" id="particles"></div>
 
           {/* Content */}
           <div className="relative z-10">

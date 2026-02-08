@@ -1,107 +1,56 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
-import { useState } from 'react';
 import VideoPlayer from './VideoPlayer';
 
 const ProductCard = ({ product }) => {
-  const { addToCart } = useCart();
-  const [showSuccess, setShowSuccess] = useState(false);
-
-  const handleAddToCart = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    addToCart(product);
-    setShowSuccess(true);
-    setTimeout(() => setShowSuccess(false), 2000);
-  };
+  const [isHovered, setIsHovered] = useState(false);
 
   return (
-    <Link to={`/product/${product.id}`} className="group">
-      <div className="glass rounded-2xl overflow-hidden transition-all duration-400 hover:-translate-y-3 hover:shadow-2xl hover:shadow-gold/20 hover:border-gold/40 relative">
-        <div className="relative aspect-square overflow-hidden bg-gradient-to-br from-dark-bg to-dark-secondary group/video">
-          {product.video_file_url || product.video_url ? (
-            <video
-              src={product.video_file_url || product.video_url}
-              autoPlay
-              muted
-              loop
-              playsInline
-              preload="metadata"
-              poster={product.image_url}
-              onContextMenu={(e) => e.preventDefault()}
-              controlsList="nodownload"
-              className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
-            />
-          ) : (
-            <img
-              src={product.image_url || product.image}
+    <div 
+      className="group relative cursor-pointer"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      <Link to={`/product/${product.id}`}>
+        {/* Cinematic Preview Container */}
+        <div className="relative aspect-[3/4] overflow-hidden rounded-[2.5rem] glass border border-white/5 transition-all duration-1000 group-hover:border-pure-gold/40 group-hover:shadow-[0_0_50px_rgba(212,175,55,0.1)]">
+          <div className="w-full h-full transition-transform duration-1000 group-hover:scale-110">
+            <VideoPlayer
+              videoUrl={product.video_file_url || product.video_url}
+              posterUrl={product.image_url}
               alt={product.name}
-              className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
             />
-          )}
+          </div>
+          
+          {/* Subtle Luxury Gradient Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-80 group-hover:opacity-60 transition-opacity duration-700"></div>
 
-          {/* Glowing border on video hover */}
-          {(product.video_file_url || product.video_url) && (
-            <div className="absolute inset-0 border-2 border-gold/0 group-hover/video:border-gold/30 transition-all duration-500 pointer-events-none" />
-          )}
-
-          {/* Badge */}
-          <div className="absolute top-4 right-4 flex flex-col gap-2">
-            <span className="inline-block bg-gradient-to-r from-rose-red to-rose-pink px-3 py-1 rounded-full text-xs font-semibold text-white capitalize shadow-lg">
-              {product.category || 'Premium 3D'}
-            </span>
-            {product.product_type === 'digital' && (
-              <span className="inline-block bg-gradient-to-r from-purple-600 to-pink-600 px-3 py-1 rounded-full text-xs font-semibold text-white shadow-lg animate-pulse">
-                Digital Motion
-              </span>
-            )}
+          {/* Hover-Reveal Bespoke Button */}
+          <div className={`absolute inset-0 flex items-center justify-center transition-all duration-700 ${isHovered ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'}`}>
+            <div className="px-10 py-4 glass border border-white/20 rounded-full text-[10px] uppercase tracking-[0.4em] font-bold text-white group-hover:bg-pure-gold group-hover:text-black group-hover:border-pure-gold transition-all duration-500 shadow-2xl">
+              Personalize Art
+            </div>
           </div>
 
-          {/* Success Animation */}
-          {showSuccess && (
-            <div className="absolute inset-0 bg-gradient-to-br from-rose-red/90 to-rose-pink/90 flex items-center justify-center animate-fade-in backdrop-blur-sm">
-              <div className="text-white text-center">
-                <svg className="w-16 h-16 mx-auto mb-2 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
-                <p className="font-semibold text-lg">Added to cart!</p>
-              </div>
-            </div>
-          )}
-
-          {/* Gradient overlay at bottom */}
-          <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-dark-bg/100 to-transparent pointer-events-none"></div>
+          {/* Price Badge */}
+          <div className="absolute top-8 right-8 px-5 py-2 glass border border-white/10 rounded-full transition-transform duration-700 group-hover:-translate-x-2">
+            <span className="text-xs font-bold text-pure-gold tracking-wider">${parseFloat(product.price).toFixed(2)}</span>
+          </div>
         </div>
 
-        <div className="p-6">
-          <h3 className="text-xl font-playfair font-semibold text-gold mb-2 group-hover:gradient-text transition-all">
+        {/* Narrative Info */}
+        <div className="mt-8 px-4 text-center sm:text-left transition-all duration-700 group-hover:translate-x-1">
+          <h3 className="text-xl font-medium font-display tracking-tight text-white group-hover:text-pure-gold transition-colors duration-500">
             {product.name}
           </h3>
-          <p className="text-white/70 text-sm mb-4 line-clamp-2">
-            {product.description}
+          <p className="text-[10px] uppercase tracking-[0.3em] text-white/40 mt-3 font-medium flex items-center justify-center sm:justify-start">
+            <span className="w-1 h-1 rounded-full bg-pure-gold/40 mr-3"></span>
+            {product.category || 'Limited Masterpiece'}
           </p>
-
-          <div className="flex items-center justify-between">
-            <span className="text-3xl font-bold gradient-text">
-              ${Number(product.price).toFixed(2)}
-            </span>
-
-            <button
-              onClick={handleAddToCart}
-              className="bg-gradient-to-r from-rose-red to-rose-pink hover:from-rose-pink hover:to-rose-red text-white px-6 py-2.5 rounded-full font-semibold transition-all duration-300 flex items-center shadow-lg hover:shadow-rose-red/50 hover:scale-105"
-            >
-              Add to Cart
-            </button>
-          </div>
-
-          {product.stock && product.stock < 10 && (
-            <p className="text-xs text-rose-pink mt-3 font-medium">
-              Limited Availability: Only {product.stock} left
-            </p>
-          )}
         </div>
-      </div>
-    </Link>
+      </Link>
+    </div>
   );
 };
 

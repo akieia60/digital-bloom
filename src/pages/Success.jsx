@@ -13,23 +13,19 @@ const Success = () => {
   useEffect(() => {
     const processPurchase = async () => {
       if (!sessionId) {
-        setError('Invalid payment session');
+        setError('Session token unavailable.');
         setIsProcessing(false);
         return;
       }
 
       try {
-        // Update purchase status in database
         const updatedPurchase = await updatePurchaseStatus(sessionId, 'completed', {
           stripe_session_id: sessionId
         });
-
-        if (updatedPurchase) {
-          setPurchase(updatedPurchase);
-        }
+        if (updatedPurchase) setPurchase(updatedPurchase);
       } catch (err) {
         console.error('Error processing purchase:', err);
-        setError('Failed to process purchase');
+        setError('Failed to securely process acquisition.');
       } finally {
         setIsProcessing(false);
       }
@@ -40,14 +36,10 @@ const Success = () => {
 
   if (isProcessing) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="min-h-screen bg-obsidian flex items-center justify-center">
         <div className="text-center">
-          <svg className="animate-spin h-12 w-12 text-primary-600 mx-auto mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-          </svg>
-          <h2 className="text-xl font-semibold text-gray-900">Processing your order...</h2>
-          <p className="text-gray-600 mt-2">Please wait while we confirm your payment</p>
+          <div className="w-16 h-16 border-2 border-pure-gold/20 border-t-pure-gold rounded-full animate-spin mx-auto mb-8"></div>
+          <p className="text-[10px] uppercase tracking-[0.4em] text-white/40">Securing Your Masterpiece</p>
         </div>
       </div>
     );
@@ -55,124 +47,143 @@ const Success = () => {
 
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-8 text-center">
-          <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <svg className="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Payment Error</h2>
-          <p className="text-gray-600 mb-6">{error}</p>
-          <Link
-            to="/"
-            className="inline-block bg-primary-500 hover:bg-primary-600 text-white px-6 py-3 rounded-lg font-semibold transition-colors"
-          >
-            Return to Shop
-          </Link>
+      <div className="min-h-screen bg-obsidian flex items-center justify-center p-6 text-center">
+        <div className="max-w-md glass border border-red-500/20 p-12 rounded-[2.5rem]">
+          <h2 className="text-2xl font-display text-white mb-6">Acquisition Error</h2>
+          <p className="text-white/40 font-light mb-8 text-sm italic">"{error}"</p>
+          <Link to="/" className="btn-secondary px-8 py-3 rounded-full text-[10px] uppercase tracking-widest">Return to Gallery</Link>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
-      <div className="max-w-2xl w-full bg-white rounded-lg shadow-lg p-8">
-        <div className="text-center">
-          {/* Success Icon */}
-          <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6 animate-bounce">
-            <svg className="w-10 h-10 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+    <div className="min-h-screen bg-obsidian text-white flex items-center justify-center px-6 py-24">
+      <div className="max-w-3xl w-full">
+        <div className="text-center max-w-xl mx-auto mb-16">
+          {/* Animated Signature Icon */}
+          <div className="w-24 h-24 glass border border-pure-gold/40 rounded-full flex items-center justify-center mx-auto mb-10 animate-fade-in shadow-2xl shadow-pure-gold/10">
+            <svg className="w-10 h-10 text-pure-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 13l4 4L19 7" />
             </svg>
           </div>
 
-          {/* Success Message */}
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Payment Successful!</h1>
-          <p className="text-lg text-gray-600 mb-8">
-            Thank you for your purchase. Your order has been confirmed.
+          <h1 className="text-5xl font-medium font-display tracking-tight leading-tight mb-6">
+            An Extraordinary <br /> <span className="gradient-text">Choice.</span>
+          </h1>
+          <p className="text-white/50 font-light leading-relaxed italic">
+            Your Digital Bloom™ has been meticulously prepared. You are now the exclusive curator of this motion art masterpiece.
           </p>
+        </div>
 
-          {/* Order Details */}
-          <div className="bg-gray-50 rounded-lg p-6 mb-8 text-left">
-            <h3 className="font-semibold text-gray-900 mb-4">Order Details</h3>
-            {purchase && (
-              <div className="space-y-2 text-sm">
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Order ID:</span>
-                  <span className="font-medium text-gray-900">{purchase.id.substring(0, 8).toUpperCase()}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Amount:</span>
-                  <span className="font-medium text-gray-900">${purchase.total_price.toFixed(2)}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Status:</span>
-                  <span className="inline-block px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-semibold">
-                    Completed
-                  </span>
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* What's Next / Downloads */}
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-8 text-left">
-            <h3 className="font-semibold text-blue-900 mb-2 flex items-center">
-              <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              {purchase?.download_url ? 'Your Download' : "What's Next?"}
-            </h3>
-
-            {purchase?.download_url ? (
-              <div className="space-y-4">
-                <p className="text-sm text-blue-800">Your luxury digital art is ready!</p>
-                {new Date(purchase.download_expires_at) > new Date() ? (
-                  <div>
-                    <a
-                      href={purchase.download_url}
-                      download
-                      className="inline-block bg-primary-600 hover:bg-primary-700 text-white px-6 py-2 rounded-lg font-semibold transition-colors shadow-sm"
-                    >
-                      Download MP4 Now
-                    </a>
-                    <p className="text-[10px] text-blue-500 mt-2 italic">
-                      Restricted Access: Valid for 48 hours / 1 download.
-                    </p>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch h-full">
+          {/* Acquisition Summary */}
+          <div className="glass border border-white/5 p-10 rounded-[2.5rem] flex flex-col justify-between">
+            <div>
+              <h3 className="text-[10px] uppercase tracking-[0.4em] text-white/30 mb-8 font-semibold pr-4">Inventory Details</h3>
+              {purchase && (
+                <div className="space-y-6">
+                  <div className="flex justify-between items-baseline group">
+                    <span className="text-[10px] uppercase tracking-widest text-white/20 group-hover:text-white/40 transition-colors">Manifest ID</span>
+                    <span className="text-sm font-light text-white font-mono">{purchase.id.substring(0, 8).toUpperCase()}</span>
                   </div>
-                ) : (
-                  <p className="text-sm text-red-600 font-semibold italic">Link expired (48h limit reached).</p>
-                )}
-              </div>
-            ) : (
-              <ul className="text-sm text-blue-800 space-y-1 ml-7">
-                <li>You'll receive a confirmation email shortly</li>
-                <li>Your order will be processed within 24 hours</li>
-                <li>Track your order status in your account</li>
-              </ul>
-            )}
+                  <div className="flex justify-between items-baseline group">
+                    <span className="text-[10px] uppercase tracking-widest text-white/20 group-hover:text-white/40 transition-colors">Acquisition Value</span>
+                    <span className="text-xl font-light text-pure-gold">${purchase.total_price.toFixed(2)}</span>
+                  </div>
+                  <div className="flex justify-between items-baseline">
+                    <span className="text-[10px] uppercase tracking-widest text-white/20">Provenance</span>
+                    <span className="px-3 py-1 bg-pure-gold/10 text-pure-gold border border-pure-gold/20 rounded-full text-[9px] font-bold uppercase tracking-widest">
+                      Verified
+                    </span>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <div className="pt-12 mt-12 border-t border-white/5">
+               <p className="text-[9px] uppercase tracking-[0.3em] text-white/20 leading-loose">
+                 Digital Bloom™ adheres to a philosophy of scarcity. Your link is an exclusive gateway to luxury motion art.
+               </p>
+            </div>
           </div>
 
-          {/* Action Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              to="/"
-              className="bg-primary-500 hover:bg-primary-600 text-white px-8 py-3 rounded-lg font-semibold transition-colors"
-            >
-              Continue Shopping
-            </Link>
-            <button
-              onClick={() => window.print()}
-              className="bg-gray-100 hover:bg-gray-200 text-gray-900 px-8 py-3 rounded-lg font-semibold transition-colors"
-            >
-              Print Receipt
-            </button>
-          </div>
+          {/* Delivery Actions */}
+          <div className="glass border border-pure-gold/20 p-10 rounded-[2.5rem] flex flex-col bg-white/[0.02]">
+            <h3 className="text-[10px] uppercase tracking-[0.4em] text-pure-gold mb-8 font-bold">Secure Delivery</h3>
+            
+            <div className="flex-grow">
+              {purchase?.download_url ? (
+                <div className="space-y-8 animate-slide-up">
+                  <p className="text-lg font-light text-white/80 leading-relaxed italic pr-4">
+                    Your bespoke 4K masterpiece is ready for exhibition.
+                  </p>
+                  
+                  {new Date(purchase.download_expires_at) > new Date() ? (
+                    <div className="space-y-4">
+                      <a
+                        href={purchase.download_url}
+                        download
+                        className="w-full btn-primary py-5 rounded-full text-[11px] font-bold tracking-[0.3em] uppercase transition-all shadow-xl shadow-pure-gold/10 flex items-center justify-center space-x-3"
+                      >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                        </svg>
+                        <span>Download Masterpiece</span>
+                      </a>
+                      <div className="p-4 bg-white/5 border border-white/10 rounded-2xl">
+                         <p className="text-[9px] text-white/40 uppercase tracking-widest italic leading-relaxed text-center">
+                           Security Protocol: Link valid for 48 hours. <br /> Maximum 1 download permitted.
+                         </p>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="p-6 bg-red-500/10 border border-red-500/20 rounded-2xl">
+                      <p className="text-xs text-red-500 font-light italic text-center">Exclusive delivery window has closed (48h).</p>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div className="space-y-6">
+                  <div className="flex items-start space-x-4 opacity-40 group">
+                    <div className="w-1 h-1 rounded-full bg-white mt-1.5 group-hover:scale-150 transition-transform"></div>
+                    <p className="text-[10px] uppercase tracking-widest text-white leading-loose">Acquisition notification sent to your digital estate.</p>
+                  </div>
+                  <div className="flex items-start space-x-4 opacity-40 group">
+                    <div className="w-1 h-1 rounded-full bg-white mt-1.5 group-hover:scale-150 transition-transform"></div>
+                    <p className="text-[10px] uppercase tracking-widest text-white leading-loose">Artisan preparation in progress (Est. 2-4 hours).</p>
+                  </div>
+                  <div className="flex items-start space-x-4 opacity-40 group">
+                    <div className="w-1 h-1 rounded-full bg-white mt-1.5 group-hover:scale-150 transition-transform"></div>
+                    <p className="text-[10px] uppercase tracking-widest text-white leading-loose">Final provenance certificates being generated.</p>
+                  </div>
+                </div>
+              )}
+            </div>
 
-          {/* Support */}
-          <p className="text-sm text-gray-500 mt-8">
-            Need help? <a href="mailto:support@bloomandpetal.com" className="text-primary-600 hover:text-primary-700 underline">Contact Support</a>
-          </p>
+            <div className="mt-12 flex flex-col gap-4">
+              <Link
+                to="/"
+                className="w-full btn-secondary py-4 rounded-full text-[10px] uppercase tracking-widest font-semibold text-center"
+              >
+                Explore More Pieces
+              </Link>
+              <button
+                onClick={() => window.print()}
+                className="text-[9px] uppercase tracking-widest text-white/20 hover:text-white transition-colors"
+              >
+                Archive Receipt
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Brand Sign-off */}
+        <div className="mt-24 text-center">
+            <p className="text-[10px] uppercase tracking-[0.5em] text-white/20 font-light">
+                Digital Bloom™ <br /> 
+                <span className="mt-2 block opacity-50">Luxury Motion Art Gallery</span>
+            </p>
         </div>
       </div>
     </div>

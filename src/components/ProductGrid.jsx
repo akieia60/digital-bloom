@@ -41,72 +41,45 @@ const ProductGrid = ({ searchQuery }) => {
   }
 
   return (
-    <div id="products-section" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div id="products-section" className="max-w-7xl mx-auto px-6 lg:px-12 py-24">
       {usingMockData && (
-        <div className="mb-6 glass border border-gold/30 rounded-2xl p-4">
-          <div className="flex items-start">
-            <svg className="w-5 h-5 text-gold mt-0.5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            <div className="flex-1">
-              <h3 className="text-sm font-semibold text-gold">Using Demo Data</h3>
-              <p className="text-sm text-white/70 mt-1">
-                Configure Supabase to use real product data. See <code className="bg-white/10 px-2 py-0.5 rounded text-gold">env</code> for setup instructions.
-              </p>
-            </div>
-          </div>
+        <div className="mb-12 glass border border-white/5 rounded-2xl p-4 text-center">
+          <p className="text-[10px] uppercase tracking-widest text-white/30">
+            Preview Collection Only • <span className="text-pure-gold/50 cursor-pointer hover:text-pure-gold transition-colors">Connect Live Data</span>
+          </p>
         </div>
       )}
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-        <aside className="lg:col-span-1">
-          <FilterPanel
-            selectedCategories={selectedCategories}
-            setSelectedCategories={setSelectedCategories}
-            selectedOccasions={selectedOccasions}
-            setSelectedOccasions={setSelectedOccasions}
-            priceRange={priceRange}
-            setPriceRange={setPriceRange}
-          />
-        </aside>
 
-        <main className="lg:col-span-3">
-          <div className="mb-8">
-            <h2 className="text-4xl font-bold font-playfair gradient-text mb-2">
-              {searchQuery ? `Search results for "${searchQuery}"` : '✨ Luxury Collection'}
+      {/* Grid Layout - Professional Gallery */}
+      <div className="flex flex-col space-y-16">
+        <header className="flex flex-col md:flex-row md:items-end justify-between border-b border-white/5 pb-8">
+          <div>
+            <h2 className="text-4xl sm:text-5xl font-medium font-display tracking-tight text-white mb-4">
+              {searchQuery ? `Results for "${searchQuery}"` : 'Digital Gallery'}
             </h2>
-            <p className="text-white/60 text-lg">
-              {filteredProducts.length} {filteredProducts.length === 1 ? 'premium product' : 'premium products'} found
+            <p className="text-sm text-white/40 font-light tracking-wide uppercase">
+              {filteredProducts.length} Bespoke Items Available
             </p>
           </div>
+          
+          {/* Top-level subtle filter summary */}
+          <div className="mt-6 md:mt-0 flex items-center space-x-6">
+            <span className="text-[10px] uppercase tracking-widest text-white/30">Sort by Elegance</span>
+            <div className="h-px w-12 bg-white/10"></div>
+          </div>
+        </header>
 
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-12 lg:gap-16">
           {filteredProducts.length === 0 ? (
-            <div className="text-center py-16 glass rounded-2xl">
-              <svg
-                className="mx-auto h-24 w-24 text-gold/30"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
-              </svg>
-              <h3 className="mt-4 text-xl font-medium text-white">No flowers found</h3>
-              <p className="mt-2 text-white/60">
-                Try adjusting your filters or search terms
-              </p>
+            <div className="col-span-full text-center py-32 glass rounded-3xl">
+              <h3 className="text-xl font-light text-white/40 italic">A masterpiece is yet to be found.</h3>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-8">
-              {filteredProducts.map(flower => (
-                <ProductCard key={flower.id} product={flower} />
-              ))}
-            </div>
+            filteredProducts.map(flower => (
+              <ProductCard key={flower.id} product={flower} />
+            ))
           )}
-        </main>
+        </div>
       </div>
     </div>
   );

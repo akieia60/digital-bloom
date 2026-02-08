@@ -21,19 +21,23 @@ export const CartProvider = ({ children }) => {
     localStorage.setItem('flowerShopCart', JSON.stringify(cartItems));
   }, [cartItems]);
 
-  const addToCart = (product, quantity = 1) => {
+  const addToCart = (product, quantity = 1, customization = null) => {
     setCartItems(prevItems => {
-      const existingItem = prevItems.find(item => item.id === product.id);
+      // For luxury bespoke items, we check if the EXACT same customization exists
+      const existingItem = prevItems.find(item => 
+        item.id === product.id && 
+        JSON.stringify(item.customization) === JSON.stringify(customization)
+      );
 
       if (existingItem) {
         return prevItems.map(item =>
-          item.id === product.id
+          (item.id === product.id && JSON.stringify(item.customization) === JSON.stringify(customization))
             ? { ...item, quantity: item.quantity + quantity }
             : item
         );
       }
 
-      return [...prevItems, { ...product, quantity }];
+      return [...prevItems, { ...product, quantity, customization }];
     });
   };
 

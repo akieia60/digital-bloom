@@ -1,6 +1,8 @@
 # React + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This template provides a minimal- **Luxury Dark Theme UI** - Beautiful, modern interface with gold accents
+- **Atmospheric Audio Engine** - Cross-fading soundscapes for immersive browsing
+- **3D Rose Video Catalog** - Browse and preview stunning flower animationslable:
 
 Currently, two official plugins are available:
 

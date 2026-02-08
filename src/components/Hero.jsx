@@ -1,4 +1,25 @@
+import { useState, useEffect } from 'react';
+
 const Hero = () => {
+  const [isVideoOpen, setIsVideoOpen] = useState(false);
+  const [isVideoLoading, setIsVideoLoading] = useState(true);
+
+  useEffect(() => {
+    const handleEscape = (e) => {
+      if (e.key === 'Escape') setIsVideoOpen(false);
+    };
+    if (isVideoOpen) {
+      window.addEventListener('keydown', handleEscape);
+      document.body.style.overflow = 'hidden';
+    } else {
+      window.removeEventListener('keydown', handleEscape);
+      document.body.style.overflow = 'auto';
+    }
+    return () => {
+      window.removeEventListener('keydown', handleEscape);
+      document.body.style.overflow = 'auto';
+    };
+  }, [isVideoOpen]);
   const scrollToProducts = () => {
     const productsSection = document.getElementById('products-section');
     if (productsSection) {
@@ -7,85 +28,113 @@ const Hero = () => {
   };
 
   return (
-    <section className="relative min-h-[80vh] flex items-center justify-center overflow-hidden">
-      {/* Animated background circles */}
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-40 pb-20">
+      {/* Refined Ambient Glow */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-rose-red/10 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '4s' }}></div>
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-gold/10 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '6s', animationDelay: '2s' }}></div>
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-rose-pink/5 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '8s', animationDelay: '1s' }}></div>
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(circle_at_center,rgba(212,175,55,0.05)_0%,transparent_70%)]"></div>
       </div>
 
-      <div className="relative z-10 text-center px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto">
-        {/* Centered branding moved to Header - Hero is now focus on content */}
+      <div className="relative z-10 text-center px-6 max-w-5xl mx-auto">
+        
+        {/* Cinematic Prelude */}
+        <div className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full glass border border-white/5 mb-12 animate-fade-in">
+          <span className="w-1 h-1 rounded-full bg-brand-gold/40 animate-pulse"></span>
+          <span className="text-[11px] uppercase tracking-[0.2em] text-white/60 font-medium">The Future of Gifting</span>
+        </div>
 
-        {/* Main Heading */}
-        <h1 className="font-cormorant text-6xl sm:text-7xl md:text-9xl font-bold mb-6 animate-slide-up tracking-tight">
-          <span className="gradient-text drop-shadow-2xl">
-            Digital Bloom™
-          </span>
-        </h1>
+        {/* Hero Title - Refined Hierarchy */}
+        <div className="mb-20 animate-slide-up">
+          <h1 className="font-display text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-medium text-brand-white leading-[1.05] tracking-[0.02em] mb-8">
+            Give them their flowers
+          </h1>
+          <h2 className="font-display text-xl sm:text-3xl md:text-4xl lg:text-5xl font-medium text-brand-gold/60 leading-[1.05] tracking-[0.02em]">
+            while they can still see them
+          </h2>
+        </div>
 
-        {/* Subheading */}
-        <p className="text-xl sm:text-2xl md:text-3xl text-gold/90 mb-6 animate-slide-up font-light tracking-wide uppercase font-montserrat" style={{ animationDelay: '0.1s' }}>
-          Exclusive 3D Flower Motion Art
+        {/* Hero Subtitle */}
+        <p className="text-base sm:text-lg md:text-xl text-white/20 mb-16 max-w-xl mx-auto animate-slide-up font-light leading-relaxed" style={{ animationDelay: '0.2s' }}>
+          Digital Bloom was created to express love and appreciation with intention. We believe in giving people their flowers while they are still here to experience the gesture. 
         </p>
 
-        {/* Description */}
-        <p className="text-lg sm:text-xl text-white/80 mb-12 max-w-2xl mx-auto animate-slide-up leading-relaxed font-light font-montserrat" style={{ animationDelay: '0.3s' }}>
-          Premium animated flower videos that go viral. Send digital love, create stunning content, and stand out on social media.
-        </p>
-
-        {/* CTA Buttons */}
-        <div className="flex flex-col sm:flex-row gap-6 justify-center items-center animate-slide-up" style={{ animationDelay: '0.4s' }}>
+        {/* Primary Actions */}
+        <div className="flex flex-col sm:flex-row gap-10 justify-center items-center animate-slide-up" style={{ animationDelay: '0.4s' }}>
           <button
             onClick={scrollToProducts}
-            className="group relative px-10 py-5 bg-gradient-to-r from-[#D4AF37] to-[#B8860B] rounded-full text-black font-bold text-lg shadow-[0_0_20px_rgba(212,175,55,0.4)] hover:shadow-[0_0_30px_rgba(212,175,55,0.6)] transform hover:scale-105 transition-all duration-300 overflow-hidden"
+            className="btn-primary group px-12 py-5 rounded-full text-sm font-medium tracking-[0.2em] uppercase transition-all bg-brand-white/90"
           >
-            <span className="relative z-10 flex items-center gap-3">
-              Shop Luxury Collection
-              <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-              </svg>
-            </span>
-            <div className="absolute inset-0 bg-white/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            Begin Your Story
           </button>
 
           <button
-            onClick={() => alert('🎬 Watch our demo reel coming soon! All videos are ready to purchase and download.')}
-            className="px-8 py-4 bg-white/5 backdrop-blur-sm border-2 border-gold/30 rounded-full text-white font-semibold text-lg hover:bg-white/10 hover:border-gold/50 transform hover:scale-105 transition-all duration-300 flex items-center gap-2"
+            onClick={() => setIsVideoOpen(true)}
+            className="group flex items-center space-x-4 text-white/60 hover:text-white transition-all underline-offset-8"
           >
-            <svg className="w-6 h-6 text-gold" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M8 5v14l11-7z" />
-            </svg>
-            Watch Demo
+            <div className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center group-hover:border-pure-gold/40 transition-all">
+              <svg className="w-4 h-4 translate-x-0.5 text-pure-gold/60 group-hover:text-pure-gold" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M8 5v14l11-7z" />
+              </svg>
+            </div>
+            <span className="text-xs uppercase tracking-[0.2em] font-medium">Watch the Film</span>
           </button>
         </div>
 
-        {/* Features */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-16 animate-slide-up" style={{ animationDelay: '0.5s' }}>
-          <div className="glass rounded-2xl p-8 border-t border-white/10 transform hover:scale-105 transition-all duration-300">
-            <h3 className="text-gold font-semibold text-xl mb-2">Instant Access</h3>
-            <p className="text-white/60 text-sm font-light">Download your luxury art immediately after purchase</p>
+        {/* Discreet Features */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-12 mt-24 animate-fade-in border-t border-white/5 pt-16" style={{ animationDelay: '0.6s' }}>
+          <div className="text-center group">
+            <h3 className="text-[10px] uppercase tracking-[0.3em] text-pure-gold mb-3 font-semibold">Curation</h3>
+            <p className="text-xs text-white/40 leading-relaxed font-light">Only the world's most <br /> refined digital blooms.</p>
           </div>
 
-          <div className="glass rounded-2xl p-8 border-t border-white/10 transform hover:scale-105 transition-all duration-300">
-            <h3 className="text-gold font-semibold text-xl mb-2">Social Ready</h3>
-            <p className="text-white/60 text-sm font-light">Optimized for high-impact social media presence</p>
+          <div className="text-center group">
+            <h3 className="text-[10px] uppercase tracking-[0.3em] text-pure-gold mb-3 font-semibold">Bespoke</h3>
+            <p className="text-xs text-white/40 leading-relaxed font-light">Your message, music, <br /> and theme. Tailored.</p>
           </div>
 
-          <div className="glass rounded-2xl p-8 border-t border-white/10 transform hover:scale-105 transition-all duration-300">
-            <h3 className="text-gold font-semibold text-xl mb-2">Exclusive Quality</h3>
-            <p className="text-white/60 text-sm font-light">Premium 3D animations with sophisticated effects</p>
+          <div className="text-center group">
+            <h3 className="text-[10px] uppercase tracking-[0.3em] text-pure-gold mb-3 font-semibold">Legacy</h3>
+            <p className="text-xs text-white/40 leading-relaxed font-light">Instant digital delivery. <br /> Timeless emotional value.</p>
           </div>
         </div>
       </div>
 
-      {/* Scroll indicator */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
-        <svg className="w-6 h-6 text-gold/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-        </svg>
+      {/* Subtle Scroll Hint */}
+      <div className="absolute bottom-12 left-1/2 -translate-x-1/2 opacity-20">
+        <div className="w-[1px] h-12 bg-gradient-to-b from-white to-transparent"></div>
       </div>
+      {/* Cinematic Modal Overlay */}
+      {isVideoOpen && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/95 backdrop-blur-2xl animate-fade-in">
+          <button 
+            onClick={() => setIsVideoOpen(false)}
+            className="absolute top-12 right-12 text-white/40 hover:text-white transition-all p-4 z-[110]"
+          >
+            <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+          
+          <div className="w-full max-w-6xl aspect-video relative group px-6">
+            {isVideoLoading && (
+              <div className="absolute inset-0 flex flex-col items-center justify-center space-y-4">
+                <div className="w-12 h-12 border-2 border-pure-gold/20 border-t-pure-gold rounded-full animate-spin"></div>
+                <span className="text-[10px] uppercase tracking-[0.4em] text-white/40">Preparing the Film</span>
+              </div>
+            )}
+            <video
+              src="/videos/grok_manifesto.mp4"
+              autoPlay
+              controls
+              onLoadedData={() => setIsVideoLoading(false)}
+              className={`w-full h-full object-contain rounded-3xl shadow-2xl border border-white/10 transition-all duration-1000 ${
+                isVideoLoading ? 'opacity-0 scale-95 blur-2xl' : 'opacity-100 scale-100 blur-0'
+              }`}
+            />
+            {/* Ambient Shadow */}
+            {!isVideoLoading && <div className="absolute -inset-10 bg-pure-gold/5 blur-[100px] -z-10 rounded-full animate-pulse-slow"></div>}
+          </div>
+        </div>
+      )}
     </section>
   );
 };

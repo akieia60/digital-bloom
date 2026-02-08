@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { supabase } from '../lib/supabase';
+import { supabase, uploadProductImage, uploadProductVideo } from '../lib/supabase';
 
 const Admin = () => {
   const [products, setProducts] = useState([]);
@@ -28,6 +28,10 @@ const Admin = () => {
     embellishments: ''
   });
 
+  const [imageFile, setImageFile] = useState(null);
+  const [videoFile, setVideoFile] = useState(null);
+  const [uploading, setUploading] = useState(false);
+
   // Load products
   useEffect(() => {
     loadProducts();
@@ -54,6 +58,14 @@ const Admin = () => {
   const showMessage = (text, type = 'success') => {
     setMessage({ text, type });
     setTimeout(() => setMessage(null), 5000);
+  };
+
+  const handleFileChange = (e) => {
+    const { name, files } = e.target;
+    if (files && files[0]) {
+      if (name === 'image_file') setImageFile(files[0]);
+      if (name === 'video_file') setVideoFile(files[0]);
+    }
   };
 
   const handleInputChange = (e) => {
@@ -99,21 +111,41 @@ const Admin = () => {
       embellishments: ''
     });
     setEditingProduct(null);
+    setImageFile(null);
+    setVideoFile(null);
     setShowForm(false);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setUploading(true);
 
     try {
+      let currentImageUrl = formData.image_url;
+      let currentVideoUrl = formData.video_url;
+
+      // Handle Image Upload
+      if (imageFile) {
+        showMessage('Uploading image...', 'info');
+        const uploadedUrl = await uploadProductImage(imageFile);
+        if (uploadedUrl) currentImageUrl = uploadedUrl;
+      }
+
+      // Handle Video Upload
+      if (videoFile) {
+        showMessage('Uploading video...', 'info');
+        const uploadedUrl = await uploadProductVideo(videoFile);
+        if (uploadedUrl) currentVideoUrl = uploadedUrl;
+      }
+
       // Prepare data
       const productData = {
         name: formData.name,
         slug: formData.slug,
         description: formData.description,
         price: parseFloat(formData.price),
-        image_url: formData.image_url,
-        video_url: formData.video_url || null,
+        image_url: currentImageUrl,
+        video_url: currentVideoUrl || null,
         category: formData.category,
         occasions: formData.occasions.split(',').map(o => o.trim()).filter(Boolean),
         stock: parseInt(formData.stock),
@@ -152,6 +184,8 @@ const Admin = () => {
     } catch (error) {
       console.error('Error saving product:', error);
       showMessage('Error: ' + error.message, 'error');
+    } finally {
+      setUploading(false);
     }
   };
 
@@ -458,26 +492,59 @@ const Admin = () => {
                 />
               </div>
 
+              {/* Image Upload */}
+              <div className="md:col-span-2">
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  Product Image (Upload new or use URL below)
+                </label>
+                <div className="flex items-center space-x-4">
+                  <input
+                    type="file"
+                    name="image_file"
+                    onChange={handleFileChange}
+                    accept="image/*"
+                    className="flex-1 px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-rose-500"
+                  />
+                  {imageFile && <span className="text-green-400 text-sm">📁 {imageFile.name} ready</span>}
+                </div>
+              </div>
+
               {/* Image URL */}
               <div>
                 <label className="block text-sm font-medium text-gray-300 mb-2">
-                  Image URL *
+                  Image URL (Current or fallback)
                 </label>
                 <input
                   type="url"
                   name="image_url"
                   value={formData.image_url}
                   onChange={handleInputChange}
-                  required
                   className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-rose-500"
-                  placeholder="https://images.unsplash.com/... or /images/my-flower.jpg"
+                  placeholder="https://images.unsplash.com/..."
                 />
+              </div>
+
+              {/* Video Upload */}
+              <div className="md:col-span-2">
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  Product Video (Upload new or use path below)
+                </label>
+                <div className="flex items-center space-x-4">
+                  <input
+                    type="file"
+                    name="video_file"
+                    onChange={handleFileChange}
+                    accept="video/*"
+                    className="flex-1 px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-rose-500"
+                  />
+                  {videoFile && <span className="text-green-400 text-sm">📁 {videoFile.name} ready</span>}
+                </div>
               </div>
 
               {/* Video URL */}
               <div>
                 <label className="block text-sm font-medium text-gray-300 mb-2">
-                  Video URL (optional)
+                  Video URL/Path
                 </label>
                 <input
                   type="text"
@@ -507,9 +574,10 @@ const Admin = () => {
               <div className="flex space-x-4 pt-4">
                 <button
                   type="submit"
-                  className="bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white px-8 py-3 rounded-lg font-semibold transition-all duration-300"
+                  disabled={uploading}
+                  className={`bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white px-8 py-3 rounded-lg font-semibold transition-all duration-300 ${uploading ? 'opacity-50 cursor-not-allowed' : ''}`}
                 >
-                  {editingProduct ? 'Update Product' : 'Add Product'}
+                  {uploading ? '⌛ Uploading...' : (editingProduct ? 'Update Product' : 'Add Product')}
                 </button>
                 <button
                   type="button"

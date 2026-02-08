@@ -1,5 +1,17 @@
 export const flowers = [
-  // --- NEW OPEN ART COLLECTION ---
+  {
+    id: 1,
+    name: "Rose Stiletto Luxury",
+    slug: "rose-stiletto-luxury",
+    price: 12.99,
+    category: "luxury",
+    description: "Stunning 3D animated roses on a designer heel. Rotating video with pearl accents and floating petals. The ultimate luxury statement.",
+    occasions: ["romance", "anniversary", "viral-content"],
+    video_url: "/videos/grok-video-06fc35b4-7fae-420e-a7e9-a056c87ac8f1-2.mp4",
+    image_url: "https://images.unsplash.com/photo-1518895949257-7621c3c786d7?w=800&q=80",
+    stock: 999,
+    is_active: true
+  },
   {
     id: 101,
     name: "Ethereal Rose Pulse",
@@ -35,19 +47,6 @@ export const flowers = [
     description: "Deep, velvety textures moving gracefully in a moonlit digital garden. Mysterious and profoundly beautiful.",
     occasions: ["romance", "thinking-of-you"],
     video_url: "/videos/velvet-night-garden.mp4",
-    image_url: "https://images.unsplash.com/photo-1518895949257-7621c3c786d7?w=800&q=80",
-    stock: 999,
-    is_active: true
-  },
-  {
-    id: 104,
-    name: "Emerald Leaf Dance",
-    slug: "emerald-leaf-dance",
-    price: 12.99,
-    category: "digital-art",
-    description: "Vibrant emerald leaves and flowers dancing in a digital breeze. A refreshing piece of botanical motion art.",
-    occasions: ["birthday", "thank-you"],
-    video_url: "/videos/emerald-leaf-dance.mp4",
     image_url: "https://images.unsplash.com/photo-1518895949257-7621c3c786d7?w=800&q=80",
     stock: 999,
     is_active: true
@@ -100,34 +99,6 @@ export const flowers = [
     description: "High-fashion floral animation with fluid movement and rich, saturated colors. Designed to stand out.",
     occasions: ["viral-content", "celebration"],
     video_url: "/videos/opulent-floral-motion.mp4",
-    image_url: "https://images.unsplash.com/photo-1518895949257-7621c3c786d7?w=800&q=80",
-    stock: 999,
-    is_active: true
-  },
-  {
-    id: 109,
-    name: "Serene Blossom Drift",
-    slug: "serene-blossom-drift",
-    price: 11.99,
-    category: "digital-art",
-    description: "Soft blossoms drifting gently in a calm digital space. Minimalist and peaceful.",
-    occasions: ["thinking-of-you", "thank-you"],
-    video_url: "/videos/serene-blossom-drift.mp4",
-    image_url: "https://images.unsplash.com/photo-1518895949257-7621c3c786d7?w=800&q=80",
-    stock: 999,
-    is_active: true
-  },
-
-  // --- EXISTING CURATED COLLECTION ---
-  {
-    id: 1,
-    name: "Rose Stiletto Luxury",
-    slug: "rose-stiletto-luxury",
-    price: 12.99,
-    category: "luxury",
-    description: "Stunning 3D animated roses on a designer heel. Rotating video with pearl accents and floating petals. The ultimate luxury statement.",
-    occasions: ["romance", "anniversary", "viral-content"],
-    video_url: "/videos/grok-video-06fc35b4-7fae-420e-a7e9-a056c87ac8f1-2.mp4",
     image_url: "https://images.unsplash.com/photo-1518895949257-7621c3c786d7?w=800&q=80",
     stock: 999,
     is_active: true
