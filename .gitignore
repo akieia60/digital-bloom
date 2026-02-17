@@ -4,8 +4,16 @@ node_modules/
 # Build output
 dist/
 
-# Environment variables (keep private!)
+# Environment variables (NEVER commit secrets!)
 .env
+.env.*
+.env.local
+.env.development
+.env.production
+.env.staging
+.env.vercel
+.env.test
+*.env
 
 # Vercel
 .vercel/
@@ -25,3 +33,11 @@ public/videos/
 # Logs
 *.log
 npm-debug.log*
+
+# Secret/key files
+*.pem
+*.key
+*.p12
+*.pfx
+secrets.json
+service-account*.json
