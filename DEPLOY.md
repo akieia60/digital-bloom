@@ -17,11 +17,13 @@ vercel
 When prompted, add these environment variables:
 
 ```
-VITE_SUPABASE_URL=https://yhdbeblowolfinxxhsnt.supabase.co
-VITE_SUPABASE_ANON_KEY=REDACTED_ANON_KEY
-VITE_STRIPE_PUBLISHABLE_KEY=REDACTED_STRIPE_PK
-STRIPE_SECRET_KEY=REDACTED_STRIPE_SECRET
+VITE_SUPABASE_URL=your_supabase_project_url
+VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+VITE_STRIPE_PUBLISHABLE_KEY=your_stripe_publishable_key
+STRIPE_SECRET_KEY=your_stripe_secret_key
 ```
+
+> ⚠️ **NEVER commit real API keys to Git.** Get these values from your Supabase and Stripe dashboards and add them directly in Vercel's environment variable settings.
 
 ### **Step 4: Deploy to Production**
 ```bash
