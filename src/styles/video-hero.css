@@ -1,0 +1,307 @@
+/* ============================================
+   VIDEO HERO — Full-Screen Luxury Landing
+   Digital Bloom Brand: Obsidian + Gold
+   ============================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&display=swap');
+
+/* Container */
+.video-hero {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  height: 100dvh; /* Dynamic viewport height for mobile */
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #050510;
+  z-index: 1;
+}
+
+/* Video Background Layer */
+.video-hero__bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  will-change: transform, opacity;
+  transform-origin: center center;
+}
+
+.video-hero__video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  pointer-events: auto;
+  user-select: none;
+}
+
+/* Dark Overlay */
+.video-hero__overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(5, 5, 16, 0.35) 0%,
+    rgba(5, 5, 16, 0.15) 40%,
+    rgba(5, 5, 16, 0.25) 70%,
+    rgba(5, 5, 16, 0.55) 100%
+  );
+  z-index: 1;
+}
+
+/* Text Content */
+.video-hero__content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  padding: 0 24px;
+  will-change: opacity;
+}
+
+/* Title — Elegant Gold */
+.video-hero__title {
+  font-family: 'Cormorant Garamond', 'Georgia', serif;
+  font-weight: 300;
+  font-size: clamp(2.8rem, 8vw, 6rem);
+  letter-spacing: 0.35em;
+  color: #D4AF37;
+  text-shadow:
+    0 0 40px rgba(212, 175, 55, 0.25),
+    0 0 80px rgba(212, 175, 55, 0.1);
+  margin: 0 0 16px;
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+
+/* Tagline */
+.video-hero__tagline {
+  font-family: 'Cormorant Garamond', 'Georgia', serif;
+  font-weight: 400;
+  font-style: italic;
+  font-size: clamp(1rem, 2.8vw, 1.5rem);
+  letter-spacing: 0.12em;
+  color: rgba(245, 245, 247, 0.85);
+  margin: 0 0 48px;
+  line-height: 1.5;
+  max-width: 600px;
+}
+
+/* CTA Button Wrapper */
+.video-hero__cta-wrap {
+  display: flex;
+  justify-content: center;
+}
+
+/* Glowing Gold Button */
+.video-hero__btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px 48px;
+  background: transparent;
+  border: 1.5px solid rgba(212, 175, 55, 0.6);
+  border-radius: 50px;
+  text-decoration: none;
+  cursor: pointer;
+  overflow: hidden;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  min-height: 56px;
+  min-width: 200px;
+}
+
+.video-hero__btn:hover {
+  border-color: #D4AF37;
+  background: rgba(212, 175, 55, 0.08);
+  transform: translateY(-2px);
+  box-shadow:
+    0 0 30px rgba(212, 175, 55, 0.2),
+    0 0 60px rgba(212, 175, 55, 0.1);
+}
+
+.video-hero__btn-text {
+  font-family: 'Cormorant Garamond', 'Georgia', serif;
+  font-weight: 500;
+  font-size: clamp(0.95rem, 2vw, 1.15rem);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #D4AF37;
+  position: relative;
+  z-index: 2;
+}
+
+/* Glow Animation */
+.video-hero__btn-glow {
+  position: absolute;
+  inset: -2px;
+  border-radius: 50px;
+  background: transparent;
+  box-shadow:
+    0 0 15px rgba(212, 175, 55, 0.15),
+    inset 0 0 15px rgba(212, 175, 55, 0.05);
+  animation: heroGlow 3s ease-in-out infinite;
+  z-index: 1;
+  pointer-events: none;
+}
+
+@keyframes heroGlow {
+  0%, 100% {
+    box-shadow:
+      0 0 15px rgba(212, 175, 55, 0.15),
+      inset 0 0 15px rgba(212, 175, 55, 0.05);
+  }
+  50% {
+    box-shadow:
+      0 0 30px rgba(212, 175, 55, 0.3),
+      inset 0 0 20px rgba(212, 175, 55, 0.1);
+  }
+}
+
+/* Scroll Indicator */
+.video-hero__scroll-indicator {
+  position: absolute;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  will-change: opacity;
+}
+
+.video-hero__scroll-text {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: rgba(245, 245, 247, 0.45);
+}
+
+.video-hero__chevron {
+  color: rgba(245, 245, 247, 0.45);
+  animation: scrollBounce 2s ease-in-out infinite;
+}
+
+@keyframes scrollBounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(6px); }
+}
+
+/* ============================================
+   ENTRANCE ANIMATIONS
+   ============================================ */
+.video-hero__hidden {
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+.video-hero__animate-in {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.video-hero__delay-1 {
+  transition-delay: 0.3s;
+}
+
+.video-hero__delay-2 {
+  transition-delay: 0.6s;
+}
+
+.video-hero__delay-3 {
+  transition-delay: 0.9s;
+}
+
+/* ============================================
+   MOBILE OPTIMIZATION
+   iPhone 16 Pro Max priority (430px width)
+   ============================================ */
+@media (max-width: 768px) {
+  .video-hero__title {
+    letter-spacing: 0.2em;
+    margin-bottom: 12px;
+  }
+
+  .video-hero__tagline {
+    letter-spacing: 0.08em;
+    margin-bottom: 36px;
+    padding: 0 16px;
+  }
+
+  .video-hero__btn {
+    padding: 14px 40px;
+    min-height: 52px;
+  }
+
+  .video-hero__btn-text {
+    letter-spacing: 0.15em;
+  }
+
+  .video-hero__scroll-indicator {
+    bottom: 24px;
+  }
+}
+
+@media (max-width: 430px) {
+  .video-hero__title {
+    letter-spacing: 0.15em;
+    font-size: 2.4rem;
+  }
+
+  .video-hero__tagline {
+    font-size: 0.95rem;
+    letter-spacing: 0.06em;
+  }
+
+  .video-hero__btn {
+    padding: 14px 36px;
+    min-width: 180px;
+  }
+
+  .video-hero__btn-text {
+    font-size: 0.9rem;
+    letter-spacing: 0.12em;
+  }
+}
+
+/* Landscape phones */
+@media (max-height: 500px) and (orientation: landscape) {
+  .video-hero__title {
+    font-size: 2rem;
+    margin-bottom: 8px;
+  }
+
+  .video-hero__tagline {
+    font-size: 0.9rem;
+    margin-bottom: 20px;
+  }
+
+  .video-hero__btn {
+    padding: 10px 32px;
+    min-height: 44px;
+  }
+
+  .video-hero__scroll-indicator {
+    display: none;
+  }
+}
+
+/* Ensure video pointer events work for hero only */
+.video-hero .video-hero__video {
+  pointer-events: none;
+  user-select: none;
+}
