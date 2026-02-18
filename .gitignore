@@ -24,7 +24,7 @@ Thumbs.db
 
 # Large media folders (videos are stored in Supabase)
 media/
-public/videos/
+# Note: public/videos/ is tracked for the homepage hero video
 
 # Editor
 .vscode/
