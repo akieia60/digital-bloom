@@ -19,10 +19,14 @@ const FounderLogin = ({ onLogin, error: externalError }) => {
     setLoading(true);
 
     try {
+      // Use production URL explicitly to avoid localhost redirects
+      // In production, window.location.origin will be the actual domain
+      const redirectUrl = `${window.location.origin}/founder`;
+      
       const { error } = await supabase.auth.signInWithOtp({
         email,
         options: {
-          emailRedirectTo: `${window.location.origin}/founder`,
+          emailRedirectTo: redirectUrl,
         },
       });
 
