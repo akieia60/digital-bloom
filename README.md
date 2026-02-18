@@ -1,18 +1,44 @@
-# React + Vite
+# Digital Bloom
 
-This template provides a minimal- **Luxury Dark Theme UI** - Beautiful, modern interface with gold accents
-- **Atmospheric Audio Engine** - Cross-fading soundscapes for immersive browsing
-- **3D Rose Video Catalog** - Browse and preview stunning flower animationslable:
+Digital Bloom is a luxury e-commerce experience for bespoke, AI-generated motion art.
 
-Currently, two official plugins are available:
+- **Luxury Dark Theme UI**: Beautiful, modern interface with gold accents.
+- **Atmospheric Audio Engine**: Cross-fading soundscapes for immersive browsing.
+- **3D Rose Video Catalog**: Browse and preview stunning flower animations.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+This project is built with Vite, React, Tailwind CSS, Supabase, and Stripe.
 
-## React Compiler
+---
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Founder Command Dashboard
 
-## Expanding the ESLint configuration
+The Founder Command Dashboard is a private, internal tool for the Digital Bloom founder, A.K. Davis, to monitor the application's operational status, security, and financial health from a single, mobile-responsive interface. It is located at the `/founder` route.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### Access & Security
+
+Access to the dashboard is strictly controlled:
+
+1.  **Authentication Required**: A valid Supabase user session is required. The page will redirect to a login form if the user is not signed in.
+2.  **Founder Allowlist**: Even after logging in, the user's email address is checked against a hardcoded allowlist of founder emails. Access is denied to any other authenticated user.
+
+This two-layer security ensures that only the designated founder can view the dashboard.
+
+**CRITICAL SECURITY NOTE:** The dashboard and its associated API endpoint (`/api/env-check`) are designed to **NEVER** display or transmit secret values (API keys, webhook secrets, etc.). It only ever shows the *presence* or *absence* of a required environment variable.
+
+### Features
+
+The dashboard is organized into five main sections:
+
+1.  **Vault Seal Status**: A checklist for tracking the rotation and secure storage of critical secrets like Supabase and Stripe keys. The state is saved in the browser's `localStorage`.
+2.  **Environment Readiness**: A table that checks for the presence of all required server-side and client-side environment variables. It calls the `/api/env-check` endpoint, which verifies the variables on the server without exposing their values.
+3.  **Money Flow Quick Tests**: A set of buttons that trigger key financial API endpoints (e.g., creating a test checkout, validating a credit code) and display a simple pass/fail result. This allows for quick, end-to-end verification of the payment and credit systems.
+4.  **Risk Dashboard**: A simple RAG (Red/Amber/Green) status board for tracking high-level operational risks. The status and notes are saved in `localStorage`.
+5.  **Links Hub**: A collection of quick links to essential external services like Vercel, Stripe, Supabase, and GitHub.
+
+### API Endpoint: `/api/env-check`
+
+A new serverless function was created to support the Environment Readiness section.
+
+-   **Endpoint**: `GET /api/env-check`
+-   **Function**: Checks for the existence of required `process.env` variables on the Vercel server.
+-   **Security**: It requires a valid Supabase JWT from an authorized founder and will only return a boolean `present` status for each variable, never the value itself.
