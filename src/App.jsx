@@ -13,6 +13,7 @@ import ExperienceCredits from './pages/ExperienceCredits';
 import CreditBalance from './pages/CreditBalance';
 import Experience1 from './pages/Experience1';
 import FounderDashboard from './pages/FounderDashboard';
+import PromptVault from './pages/PromptVault';
 
 function AppContent({ searchQuery, setSearchQuery }) {
   const location = useLocation();
@@ -33,6 +34,7 @@ function AppContent({ searchQuery, setSearchQuery }) {
         <Route path="/admin/prompts" element={<PromptBrowser />} />
         <Route path="/experience/1" element={<Experience1 />} />
         <Route path="/founder" element={<FounderDashboard />} />
+        <Route path="/vault" element={<PromptVault />} />
       </Routes>
       {!isLandingPage && <ShoppingCart />}
     </>

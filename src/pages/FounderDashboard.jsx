@@ -93,6 +93,7 @@ const QUICK_LINKS = [
   { label: 'Stripe Dashboard', url: 'https://dashboard.stripe.com', icon: '💳' },
   { label: 'Supabase Project', url: 'https://supabase.com/dashboard', icon: '⚡' },
   { label: 'GitHub Repo', url: 'https://github.com/akieia60/digital-bloom', icon: '🐙' },
+  { label: 'Prompt Vault', url: '/vault', icon: '🗃️', internal: true },
   { label: 'Incident Log', url: '#', icon: '📋', optional: true },
 ];
 
@@ -646,28 +647,46 @@ const FounderDashboard = () => {
         <SectionCard title="Links Hub" icon="🔗">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             {QUICK_LINKS.map((link) => (
-              <a
-                key={link.label}
-                href={link.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={`flex items-center gap-3 p-3 rounded-xl hover:bg-white/[0.03] transition-colors group ${
-                  link.optional ? 'opacity-50' : ''
-                }`}
-              >
-                <span className="text-lg">{link.icon}</span>
-                <div className="flex-1 min-w-0">
-                  <span className="text-sm text-white/70 group-hover:text-white transition-colors">
-                    {link.label}
-                  </span>
-                  {link.optional && (
-                    <span className="block text-[10px] text-white/30">Not configured yet</span>
-                  )}
-                </div>
-                <svg className="w-4 h-4 text-white/20 group-hover:text-white/40 transition-colors flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                </svg>
-              </a>
+              link.internal ? (
+                <Link
+                  key={link.label}
+                  to={link.url}
+                  className="flex items-center gap-3 p-3 rounded-xl hover:bg-white/[0.03] transition-colors group"
+                >
+                  <span className="text-lg">{link.icon}</span>
+                  <div className="flex-1 min-w-0">
+                    <span className="text-sm text-white/70 group-hover:text-white transition-colors">
+                      {link.label}
+                    </span>
+                  </div>
+                  <svg className="w-4 h-4 text-white/20 group-hover:text-white/40 transition-colors flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </Link>
+              ) : (
+                <a
+                  key={link.label}
+                  href={link.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`flex items-center gap-3 p-3 rounded-xl hover:bg-white/[0.03] transition-colors group ${
+                    link.optional ? 'opacity-50' : ''
+                  }`}
+                >
+                  <span className="text-lg">{link.icon}</span>
+                  <div className="flex-1 min-w-0">
+                    <span className="text-sm text-white/70 group-hover:text-white transition-colors">
+                      {link.label}
+                    </span>
+                    {link.optional && (
+                      <span className="block text-[10px] text-white/30">Not configured yet</span>
+                    )}
+                  </div>
+                  <svg className="w-4 h-4 text-white/20 group-hover:text-white/40 transition-colors flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                  </svg>
+                </a>
+              )
             ))}
           </div>
         </SectionCard>
