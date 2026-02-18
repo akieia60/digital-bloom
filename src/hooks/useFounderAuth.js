@@ -8,13 +8,11 @@ import { supabase } from '../lib/supabase';
  */
 const FOUNDER_EMAILS = [
   'akieia60@gmail.com',
-  'akieia.davis@gmail.com',
-  'admin@digitalbloom.art',
 ];
 
 /**
  * Custom hook for founder authentication.
- * - Checks Supabase auth session
+ * - Checks Supabase auth session (supports both OAuth and email/password)
  * - Validates email against founder allowlist
  * - Provides login/logout helpers
  * - Returns loading, authenticated, and authorization states
@@ -51,7 +49,7 @@ export function useFounderAuth() {
 
     getSession();
 
-    // Listen for auth state changes
+    // Listen for auth state changes (handles both OAuth and password-based login)
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, newSession) => {
       setSession(newSession);
       const newUser = newSession?.user || null;
