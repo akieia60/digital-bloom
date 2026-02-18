@@ -1,18 +1,22 @@
 /* ============================================
    PREMIUM LANDING PAGE STYLES
-   Apple-inspired, minimalist, elegant
+   Luxury Brand: Tom Ford / Cartier / Apple
+   Obsidian + Gold + Platinum
    ============================================ */
 
-/* Smooth Scroll Behavior */
+/* Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Cormorant+Garamond:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap');
+
+/* Smooth Scroll */
 html {
   scroll-behavior: smooth;
 }
 
 /* Landing Page Container */
 .landing-page {
-  background: #ffffff;
-  color: #1d1d1f;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+  background: #050510;
+  color: #F5F5F7;
+  font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
   line-height: 1.6;
 }
 
@@ -23,7 +27,350 @@ html {
 }
 
 /* ============================================
-   HERO SECTION
+   VALUE PROPS SECTION — Luxury Redesign
+   ============================================ */
+.vp-section {
+  position: relative;
+  padding: 100px 0 80px;
+  background: linear-gradient(180deg, #050510 0%, #0A0A1A 50%, #050510 100%);
+  overflow: hidden;
+}
+
+/* Subtle bloom pattern background */
+.vp-bg-pattern {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 600px 600px at 20% 50%, rgba(212, 175, 55, 0.03) 0%, transparent 70%),
+    radial-gradient(ellipse 500px 500px at 80% 30%, rgba(212, 175, 55, 0.02) 0%, transparent 70%),
+    radial-gradient(ellipse 400px 400px at 50% 80%, rgba(212, 175, 55, 0.025) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+/* Gold line dividers */
+.vp-divider-top,
+.vp-divider-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 0 48px;
+  margin-bottom: 60px;
+}
+
+.vp-divider-bottom {
+  margin-bottom: 0;
+  margin-top: 60px;
+}
+
+.vp-divider-line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(212, 175, 55, 0.3) 50%, transparent 100%);
+}
+
+.vp-divider-diamond {
+  width: 8px;
+  height: 8px;
+  background: #D4AF37;
+  transform: rotate(45deg);
+  opacity: 0.6;
+  flex-shrink: 0;
+}
+
+/* Section header */
+.vp-header {
+  text-align: center;
+  max-width: 700px;
+  margin: 0 auto 72px;
+  padding: 0 24px;
+  position: relative;
+  z-index: 1;
+}
+
+.vp-eyebrow {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 400;
+  font-size: 0.75rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: #D4AF37;
+  display: block;
+  margin-bottom: 20px;
+  opacity: 0.8;
+}
+
+.vp-headline {
+  font-family: 'Cormorant Garamond', 'Georgia', serif;
+  font-weight: 600;
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  line-height: 1.2;
+  color: #F5F5F7;
+  margin: 0 0 24px;
+  letter-spacing: 0.01em;
+}
+
+.vp-subtext {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 300;
+  font-size: clamp(0.95rem, 2vw, 1.1rem);
+  line-height: 1.8;
+  color: rgba(245, 245, 247, 0.55);
+  margin: 0;
+}
+
+/* ============================================
+   VALUE CARDS — Luxury Glass Cards
+   ============================================ */
+.vp-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 24px;
+  position: relative;
+  z-index: 1;
+}
+
+.vp-card {
+  position: relative;
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.vp-card--visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.vp-card-inner {
+  position: relative;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0.01) 100%);
+  border: 1px solid rgba(212, 175, 55, 0.12);
+  border-radius: 20px;
+  padding: 48px 32px 40px;
+  text-align: center;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+  z-index: 1;
+}
+
+.vp-card-inner::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(212, 175, 55, 0.4) 50%, transparent 100%);
+}
+
+.vp-card:hover .vp-card-inner {
+  border-color: rgba(212, 175, 55, 0.25);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.02) 100%);
+  transform: translateY(-4px);
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.3),
+    0 0 40px rgba(212, 175, 55, 0.06);
+}
+
+/* Card glow effect */
+.vp-card-glow {
+  position: absolute;
+  inset: -1px;
+  border-radius: 20px;
+  background: transparent;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  z-index: 0;
+  pointer-events: none;
+  box-shadow: 0 0 30px rgba(212, 175, 55, 0.08);
+}
+
+.vp-card:hover .vp-card-glow {
+  opacity: 1;
+}
+
+/* Card icon */
+.vp-card-icon-wrap {
+  width: 72px;
+  height: 72px;
+  margin: 0 auto 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.vp-icon {
+  width: 64px;
+  height: 64px;
+  transition: transform 0.5s ease;
+}
+
+.vp-card:hover .vp-icon {
+  transform: scale(1.08);
+}
+
+/* Gold line under icon */
+.vp-card-gold-line {
+  width: 40px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #D4AF37, transparent);
+  margin: 0 auto 24px;
+  opacity: 0.5;
+}
+
+/* Card title */
+.vp-card-title {
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 600;
+  font-size: 1.1rem;
+  letter-spacing: 0.25em;
+  color: #F5F5F7;
+  margin: 0 0 16px;
+  text-transform: uppercase;
+}
+
+/* Card description */
+.vp-card-desc {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 300;
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: rgba(245, 245, 247, 0.55);
+  margin: 0;
+}
+
+/* ============================================
+   PREMIUM CTA SECTION
+   ============================================ */
+.vp-cta-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+  margin-top: 72px;
+  position: relative;
+  z-index: 1;
+}
+
+/* BEGIN YOUR STORY — Gold gradient premium button */
+.vp-btn-primary {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px 56px;
+  background: linear-gradient(135deg, #D4AF37 0%, #B8962E 40%, #D4AF37 100%);
+  border: none;
+  border-radius: 50px;
+  text-decoration: none;
+  cursor: pointer;
+  overflow: hidden;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  min-height: 58px;
+  box-shadow:
+    0 4px 20px rgba(212, 175, 55, 0.25),
+    0 0 40px rgba(212, 175, 55, 0.08);
+}
+
+.vp-btn-primary:hover {
+  transform: translateY(-3px);
+  box-shadow:
+    0 8px 32px rgba(212, 175, 55, 0.35),
+    0 0 60px rgba(212, 175, 55, 0.15);
+  background: linear-gradient(135deg, #E0BF4A 0%, #D4AF37 40%, #E0BF4A 100%);
+}
+
+.vp-btn-primary-text {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 600;
+  font-size: 0.95rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #050510;
+  position: relative;
+  z-index: 2;
+}
+
+.vp-btn-primary-glow {
+  position: absolute;
+  inset: -2px;
+  border-radius: 50px;
+  background: transparent;
+  box-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
+  animation: ctaGlow 3s ease-in-out infinite;
+  z-index: 1;
+  pointer-events: none;
+}
+
+@keyframes ctaGlow {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(212, 175, 55, 0.35);
+  }
+}
+
+/* WATCH THE FILM — Refined link */
+.vp-btn-film {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  cursor: pointer;
+  padding: 12px 24px;
+  transition: all 0.4s ease;
+  border-radius: 50px;
+  border: 1px solid transparent;
+}
+
+.vp-btn-film:hover {
+  border-color: rgba(212, 175, 55, 0.15);
+  background: rgba(212, 175, 55, 0.04);
+}
+
+.vp-btn-film-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(212, 175, 55, 0.4);
+  color: #D4AF37;
+  transition: all 0.4s ease;
+}
+
+.vp-btn-film:hover .vp-btn-film-icon {
+  border-color: #D4AF37;
+  background: rgba(212, 175, 55, 0.08);
+  box-shadow: 0 0 15px rgba(212, 175, 55, 0.15);
+}
+
+.vp-btn-film-text {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 400;
+  font-size: 0.85rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(245, 245, 247, 0.6);
+  transition: color 0.4s ease;
+}
+
+.vp-btn-film:hover .vp-btn-film-text {
+  color: rgba(245, 245, 247, 0.85);
+}
+
+/* ============================================
+   HERO SECTION (LandingHero — unused but kept)
    ============================================ */
 .landing-hero {
   min-height: 90vh;
@@ -32,7 +379,7 @@ html {
   justify-content: center;
   text-align: center;
   padding: 120px 0 80px;
-  background: linear-gradient(180deg, #fafafa 0%, #ffffff 100%);
+  background: linear-gradient(180deg, #050510 0%, #0A0A1A 100%);
 }
 
 .hero-content {
@@ -41,19 +388,21 @@ html {
 }
 
 .hero-headline {
+  font-family: 'Orbitron', sans-serif;
   font-size: clamp(40px, 6vw, 72px);
   font-weight: 700;
-  letter-spacing: -0.03em;
+  letter-spacing: 0.05em;
   line-height: 1.1;
   margin: 0 0 24px;
-  color: #1d1d1f;
+  color: #F5F5F7;
 }
 
 .hero-subheadline {
+  font-family: 'Outfit', sans-serif;
   font-size: clamp(18px, 2.5vw, 24px);
-  font-weight: 400;
+  font-weight: 300;
   line-height: 1.5;
-  color: #6e6e73;
+  color: rgba(245, 245, 247, 0.6);
   margin: 0 0 48px;
   max-width: 600px;
   margin-left: auto;
@@ -73,90 +422,65 @@ html {
 .cta-primary {
   display: inline-block;
   padding: 16px 32px;
-  background: #1d1d1f;
-  color: #ffffff;
+  background: linear-gradient(135deg, #D4AF37 0%, #B8962E 100%);
+  color: #050510;
+  font-family: 'Outfit', sans-serif;
   font-size: 17px;
-  font-weight: 500;
+  font-weight: 600;
   text-decoration: none;
   border-radius: 980px;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   border: none;
   cursor: pointer;
+  letter-spacing: 0.05em;
 }
 
 .cta-primary:hover {
-  background: #424245;
+  background: linear-gradient(135deg, #E0BF4A 0%, #D4AF37 100%);
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 8px 24px rgba(212, 175, 55, 0.3);
 }
 
 .cta-secondary {
   display: inline-block;
   padding: 16px 32px;
   background: transparent;
-  color: #1d1d1f;
+  color: #D4AF37;
+  font-family: 'Outfit', sans-serif;
   font-size: 17px;
   font-weight: 500;
   text-decoration: none;
   border-radius: 980px;
-  border: 2px solid #d2d2d7;
+  border: 1.5px solid rgba(212, 175, 55, 0.3);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
+  letter-spacing: 0.05em;
 }
 
 .cta-secondary:hover {
-  border-color: #1d1d1f;
-  background: #f5f5f7;
+  border-color: #D4AF37;
+  background: rgba(212, 175, 55, 0.06);
 }
 
 /* ============================================
-   VALUE PROPS SECTION
-   ============================================ */
-.value-props {
-  padding: 80px 0;
-  background: #ffffff;
-}
-
-.value-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 48px;
-  margin-top: 48px;
-}
-
-.value-card {
-  text-align: center;
-}
-
-.value-title {
-  font-size: 24px;
-  font-weight: 600;
-  margin: 0 0 12px;
-  color: #1d1d1f;
-}
-
-.value-description {
-  font-size: 17px;
-  color: #6e6e73;
-  line-height: 1.6;
-  margin: 0;
-}
-
-/* ============================================
-   SECTION TITLES
+   SECTION TITLES — Luxury Typography
    ============================================ */
 .section-title {
-  font-size: clamp(32px, 5vw, 48px);
-  font-weight: 700;
-  letter-spacing: -0.02em;
+  font-family: 'Orbitron', sans-serif;
+  font-size: clamp(24px, 4vw, 36px);
+  font-weight: 600;
+  letter-spacing: 0.15em;
   margin: 0 0 16px;
   text-align: center;
-  color: #1d1d1f;
+  color: #F5F5F7;
+  text-transform: uppercase;
 }
 
 .section-subtitle {
-  font-size: 19px;
-  color: #6e6e73;
+  font-family: 'Outfit', sans-serif;
+  font-size: 17px;
+  font-weight: 300;
+  color: rgba(245, 245, 247, 0.55);
   text-align: center;
   margin: 0 0 48px;
   max-width: 600px;
@@ -165,11 +489,11 @@ html {
 }
 
 /* ============================================
-   FEATURED GALLERY
+   FEATURED GALLERY — Dark Luxury
    ============================================ */
 .featured-gallery {
   padding: 100px 0;
-  background: #f5f5f7;
+  background: linear-gradient(180deg, #050510 0%, #0A0A1A 50%, #050510 100%);
 }
 
 .gallery-grid {
@@ -180,17 +504,18 @@ html {
 }
 
 .gallery-card {
-  background: #ffffff;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(212, 175, 55, 0.08);
   border-radius: 16px;
   overflow: hidden;
   text-decoration: none;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .gallery-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+  border-color: rgba(212, 175, 55, 0.2);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4), 0 0 20px rgba(212, 175, 55, 0.05);
 }
 
 .gallery-media {
@@ -210,15 +535,17 @@ html {
 }
 
 .gallery-title {
+  font-family: 'Outfit', sans-serif;
   font-size: 17px;
-  font-weight: 600;
+  font-weight: 500;
   margin: 0 0 8px;
-  color: #1d1d1f;
+  color: #F5F5F7;
 }
 
 .gallery-price {
+  font-family: 'Outfit', sans-serif;
   font-size: 15px;
-  color: #6e6e73;
+  color: rgba(245, 245, 247, 0.5);
   margin: 0;
 }
 
@@ -228,7 +555,7 @@ html {
 }
 
 .skeleton {
-  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background: linear-gradient(90deg, rgba(255,255,255,0.03) 25%, rgba(255,255,255,0.06) 50%, rgba(255,255,255,0.03) 75%);
   background-size: 200% 100%;
   animation: loading 1.5s infinite;
   border-radius: 16px;
@@ -241,11 +568,11 @@ html {
 }
 
 /* ============================================
-   ABOUT SECTION
+   ABOUT SECTION — Dark Luxury
    ============================================ */
 .about-section {
   padding: 100px 0;
-  background: #ffffff;
+  background: #050510;
 }
 
 .about-content {
@@ -259,9 +586,11 @@ html {
 }
 
 .about-text p {
+  font-family: 'Outfit', sans-serif;
   font-size: 19px;
-  line-height: 1.7;
-  color: #1d1d1f;
+  font-weight: 300;
+  line-height: 1.8;
+  color: rgba(245, 245, 247, 0.7);
   margin: 0 0 24px;
 }
 
@@ -270,11 +599,11 @@ html {
 }
 
 /* ============================================
-   HOW IT WORKS
+   HOW IT WORKS — Dark Luxury
    ============================================ */
 .how-it-works {
   padding: 100px 0;
-  background: #f5f5f7;
+  background: linear-gradient(180deg, #050510 0%, #0A0A1A 50%, #050510 100%);
 }
 
 .steps-grid {
@@ -289,33 +618,37 @@ html {
 }
 
 .step-number {
+  font-family: 'Orbitron', sans-serif;
   font-size: 48px;
   font-weight: 700;
-  color: #d2d2d7;
+  color: rgba(212, 175, 55, 0.2);
   margin: 0 0 16px;
-  letter-spacing: -0.02em;
+  letter-spacing: 0.05em;
 }
 
 .step-title {
+  font-family: 'Outfit', sans-serif;
   font-size: 21px;
-  font-weight: 600;
+  font-weight: 500;
   margin: 0 0 12px;
-  color: #1d1d1f;
+  color: #F5F5F7;
 }
 
 .step-description {
+  font-family: 'Outfit', sans-serif;
   font-size: 17px;
-  color: #6e6e73;
-  line-height: 1.6;
+  font-weight: 300;
+  color: rgba(245, 245, 247, 0.55);
+  line-height: 1.7;
   margin: 0;
 }
 
 /* ============================================
-   FAQ SECTION
+   FAQ SECTION — Dark Luxury
    ============================================ */
 .faq-section {
   padding: 100px 0;
-  background: #ffffff;
+  background: #050510;
 }
 
 .faq-list {
@@ -324,7 +657,7 @@ html {
 }
 
 .faq-item {
-  border-bottom: 1px solid #d2d2d7;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.1);
 }
 
 .faq-question {
@@ -335,20 +668,22 @@ html {
   align-items: center;
   background: none;
   border: none;
+  font-family: 'Outfit', sans-serif;
   font-size: 19px;
-  font-weight: 600;
-  color: #1d1d1f;
+  font-weight: 500;
+  color: #F5F5F7;
   text-align: left;
   cursor: pointer;
   transition: color 0.3s;
 }
 
 .faq-question:hover {
-  color: #6e6e73;
+  color: #D4AF37;
 }
 
 .faq-icon {
   flex-shrink: 0;
+  color: rgba(212, 175, 55, 0.5);
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -368,18 +703,20 @@ html {
 }
 
 .faq-answer p {
+  font-family: 'Outfit', sans-serif;
   font-size: 17px;
-  line-height: 1.7;
-  color: #6e6e73;
+  font-weight: 300;
+  line-height: 1.8;
+  color: rgba(245, 245, 247, 0.55);
   margin: 0;
 }
 
 /* ============================================
-   CONTACT SECTION
+   CONTACT SECTION — Dark Luxury
    ============================================ */
 .contact-section {
   padding: 100px 0;
-  background: #f5f5f7;
+  background: linear-gradient(180deg, #050510 0%, #0A0A1A 100%);
 }
 
 .contact-content {
@@ -395,9 +732,11 @@ html {
 }
 
 .contact-description {
+  font-family: 'Outfit', sans-serif;
   font-size: 17px;
-  color: #6e6e73;
-  line-height: 1.7;
+  font-weight: 300;
+  color: rgba(245, 245, 247, 0.55);
+  line-height: 1.8;
   margin: 24px 0;
 }
 
@@ -406,27 +745,30 @@ html {
 }
 
 .contact-details p {
+  font-family: 'Outfit', sans-serif;
   font-size: 17px;
-  color: #1d1d1f;
+  color: #F5F5F7;
   margin: 12px 0;
 }
 
 .contact-details a {
-  color: #0071e3;
+  color: #D4AF37;
   text-decoration: none;
   transition: color 0.3s;
 }
 
 .contact-details a:hover {
-  color: #0077ed;
+  color: #E0BF4A;
   text-decoration: underline;
 }
 
 .contact-form {
-  background: #ffffff;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(212, 175, 55, 0.1);
   padding: 40px;
   border-radius: 16px;
-  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.08);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
 .form-group {
@@ -435,9 +777,10 @@ html {
 
 .form-group label {
   display: block;
+  font-family: 'Outfit', sans-serif;
   font-size: 15px;
-  font-weight: 500;
-  color: #1d1d1f;
+  font-weight: 400;
+  color: rgba(245, 245, 247, 0.7);
   margin-bottom: 8px;
 }
 
@@ -446,9 +789,11 @@ html {
   width: 100%;
   padding: 12px 16px;
   font-size: 17px;
-  border: 1px solid #d2d2d7;
+  border: 1px solid rgba(212, 175, 55, 0.15);
   border-radius: 8px;
-  font-family: inherit;
+  font-family: 'Outfit', sans-serif;
+  background: rgba(255, 255, 255, 0.03);
+  color: #F5F5F7;
   transition: border-color 0.3s;
   box-sizing: border-box;
 }
@@ -456,7 +801,12 @@ html {
 .form-group input:focus,
 .form-group textarea:focus {
   outline: none;
-  border-color: #0071e3;
+  border-color: rgba(212, 175, 55, 0.4);
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+  color: rgba(245, 245, 247, 0.3);
 }
 
 .form-group textarea {
@@ -470,12 +820,12 @@ html {
 }
 
 /* ============================================
-   FOOTER
+   FOOTER — Dark Luxury
    ============================================ */
 .landing-footer {
   padding: 64px 0 32px;
-  background: #1d1d1f;
-  color: #f5f5f7;
+  background: #030308;
+  border-top: 1px solid rgba(212, 175, 55, 0.08);
 }
 
 .footer-content {
@@ -483,26 +833,32 @@ html {
 }
 
 .footer-logo {
-  font-size: 24px;
-  font-weight: 700;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
   margin: 0 0 8px;
-  color: #ffffff;
+  color: #F5F5F7;
 }
 
 .footer-tagline {
+  font-family: 'Outfit', sans-serif;
   font-size: 15px;
-  color: #a1a1a6;
+  font-weight: 300;
+  color: rgba(245, 245, 247, 0.4);
   margin: 0 0 32px;
 }
 
 .footer-copyright {
+  font-family: 'Outfit', sans-serif;
   font-size: 13px;
-  color: #a1a1a6;
+  color: rgba(245, 245, 247, 0.3);
   margin: 0;
 }
 
 /* ============================================
-   RESPONSIVE DESIGN
+   RESPONSIVE DESIGN — Mobile First
+   iPhone 16 Pro Max priority (430px)
    ============================================ */
 @media (max-width: 768px) {
   .landing-hero {
@@ -521,8 +877,47 @@ html {
     text-align: center;
   }
 
-  .value-grid {
-    gap: 32px;
+  /* Value Props mobile */
+  .vp-section {
+    padding: 72px 0 60px;
+  }
+
+  .vp-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+    padding: 0 20px;
+  }
+
+  .vp-header {
+    margin-bottom: 48px;
+  }
+
+  .vp-headline {
+    font-size: 1.8rem;
+  }
+
+  .vp-card-inner {
+    padding: 36px 24px 32px;
+  }
+
+  .vp-divider-top,
+  .vp-divider-bottom {
+    padding: 0 24px;
+    margin-bottom: 40px;
+  }
+
+  .vp-divider-bottom {
+    margin-bottom: 0;
+    margin-top: 40px;
+  }
+
+  .vp-cta-section {
+    margin-top: 48px;
+  }
+
+  .vp-btn-primary {
+    padding: 16px 48px;
+    min-height: 54px;
   }
 
   .gallery-grid {
@@ -545,15 +940,11 @@ html {
   }
 
   .section-title {
-    text-align: left;
+    text-align: center;
   }
 
   .section-subtitle {
-    text-align: left;
-  }
-
-  .contact-info .section-title {
-    text-align: left;
+    text-align: center;
   }
 }
 
@@ -564,5 +955,23 @@ html {
 
   .gallery-grid {
     grid-template-columns: 1fr;
+  }
+
+  .vp-headline {
+    font-size: 1.5rem;
+  }
+
+  .vp-card-title {
+    font-size: 1rem;
+    letter-spacing: 0.2em;
+  }
+
+  .vp-btn-primary {
+    padding: 15px 40px;
+  }
+
+  .vp-btn-primary-text {
+    font-size: 0.85rem;
+    letter-spacing: 0.15em;
   }
 }
