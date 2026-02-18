@@ -3,6 +3,14 @@
  * Data source for the Prompt Vault page.
  */
 
+import {
+  MOTHERS_DAY_COLLECTION,
+  MISSING_ZODIAC_SIGNS,
+  BIRTHDAY_CELEBRATION,
+  HOLIDAY_COLLECTION,
+  INCLUSIVE_SPECIAL_CATEGORIES,
+} from './newPromptVaultData';
+
 export const VISUAL_DOCTRINE = [
   'Dark void',
   'Single-source spotlight',
@@ -452,4 +460,23 @@ Mood: refinement, ascent, understated luxury.`,
   },
 ];
 
-export const ALL_PROMPTS = [...SIGNATURE_SERIES, ...BLOOM_COLLECTION_SERIES];
+// ─── New Launch Prompt Series (April 2026) ────────────────────────────────────
+export { MOTHERS_DAY_COLLECTION } from './newPromptVaultData';
+export { MISSING_ZODIAC_SIGNS } from './newPromptVaultData';
+export { BIRTHDAY_CELEBRATION } from './newPromptVaultData';
+export { HOLIDAY_COLLECTION } from './newPromptVaultData';
+export { INCLUSIVE_SPECIAL_CATEGORIES } from './newPromptVaultData';
+
+
+
+export const ORIGINAL_PROMPTS = [...SIGNATURE_SERIES, ...BLOOM_COLLECTION_SERIES];
+
+export const LAUNCH_PROMPTS = [
+  ...MOTHERS_DAY_COLLECTION,
+  ...MISSING_ZODIAC_SIGNS,
+  ...BIRTHDAY_CELEBRATION,
+  ...HOLIDAY_COLLECTION,
+  ...INCLUSIVE_SPECIAL_CATEGORIES,
+];
+
+export const ALL_PROMPTS = [...ORIGINAL_PROMPTS, ...LAUNCH_PROMPTS];
