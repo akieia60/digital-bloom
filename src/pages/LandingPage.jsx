@@ -1,6 +1,6 @@
 import VideoHero from '../components/landing/VideoHero';
-import LandingHero from '../components/landing/LandingHero';
 import ValueProps from '../components/landing/ValueProps';
+import DemoVideo from '../components/landing/DemoVideo';
 import FeaturedGallery from '../components/landing/FeaturedGallery';
 import AboutSection from '../components/landing/AboutSection';
 import HowItWorks from '../components/landing/HowItWorks';
@@ -15,6 +15,7 @@ export default function LandingPage() {
     <div className="landing-page">
       <VideoHero />
       <ValueProps />
+      <DemoVideo />
       <FeaturedGallery />
       <AboutSection />
       <HowItWorks />

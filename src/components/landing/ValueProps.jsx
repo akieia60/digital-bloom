@@ -7,8 +7,8 @@ export default function ValueProps() {
 
   const values = [
     {
-      title: "CURATION",
-      description: "Only the world's most refined digital blooms. Each piece is hand-selected and crafted with the precision of a master jeweler.",
+      title: "HANDPICKED",
+      description: "Every bloom is hand-selected for quality and beauty. We choose only the best so you don\u2019t have to\u00A0\u2014\u00A0each one crafted with care and intention.",
       icon: (
         <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" className="vp-icon">
           <circle cx="32" cy="32" r="30" stroke="url(#goldGrad1)" strokeWidth="1.5" opacity="0.4"/>
@@ -25,8 +25,8 @@ export default function ValueProps() {
       )
     },
     {
-      title: "BESPOKE",
-      description: "Your message, music, and theme. Tailored. Every detail is an intentional expression of love, crafted exclusively for your recipient.",
+      title: "MADE FOR THEM",
+      description: "Your words, your music, your story. Every detail is personalized and crafted with love\u00A0\u2014\u00A0because the people you care about deserve something truly\u00A0theirs.",
       icon: (
         <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" className="vp-icon">
           <circle cx="32" cy="32" r="30" stroke="url(#goldGrad2)" strokeWidth="1.5" opacity="0.4"/>
@@ -42,8 +42,8 @@ export default function ValueProps() {
       )
     },
     {
-      title: "LEGACY",
-      description: "Instant digital delivery. Timeless emotional value. A bloom that lives forever — a digital heirloom for generations.",
+      title: "LASTS FOREVER",
+      description: "Delivered instantly to their phone or inbox. A bloom that never wilts\u00A0\u2014\u00A0a digital keepsake they can revisit, replay, and treasure for a\u00A0lifetime.",
       icon: (
         <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" className="vp-icon">
           <circle cx="32" cy="32" r="30" stroke="url(#goldGrad3)" strokeWidth="1.5" opacity="0.4"/>
@@ -85,71 +85,65 @@ export default function ValueProps() {
   }, []);
 
   return (
-    <section className="vp-section" id="experience" ref={sectionRef}>
-      {/* Subtle bloom pattern background */}
-      <div className="vp-bg-pattern" />
-      
-      {/* Gold line divider at top */}
-      <div className="vp-divider-top">
-        <div className="vp-divider-line" />
-        <div className="vp-divider-diamond" />
-        <div className="vp-divider-line" />
-      </div>
+    <div className="dark-to-light-transition">
+      <section className="vp-section" id="experience" ref={sectionRef}>
+        {/* Subtle bloom pattern background */}
+        <div className="vp-bg-pattern" />
+        
+        {/* Gold line divider at top */}
+        <div className="vp-divider-top">
+          <div className="vp-divider-line" />
+          <div className="vp-divider-diamond" />
+          <div className="vp-divider-line" />
+        </div>
 
-      {/* Section header */}
-      <div className="vp-header">
-        <span className="vp-eyebrow">THE FUTURE OF GIFTING</span>
-        <h2 className="vp-headline">Give them their flowers<br/>while they can still see them</h2>
-        <p className="vp-subtext">
-          Digital Bloom was created to express love and appreciation with intention. 
-          We believe in giving people their flowers while they are still here to experience the gesture.
-        </p>
-      </div>
+        {/* Section header */}
+        <div className="vp-header">
+          <span className="vp-eyebrow">THE FUTURE OF GIFTING</span>
+          <h2 className="vp-headline">Give them their flowers<br/>while they can still see them</h2>
+          <p className="vp-subtext">
+            Digital Bloom was created to express love and appreciation with intention. 
+            We believe in giving people their flowers while they are still here to experience the gesture.
+          </p>
+        </div>
 
-      {/* Value cards */}
-      <div className="vp-grid">
-        {values.map((value, index) => (
-          <div
-            key={index}
-            className={`vp-card ${visibleCards.has(String(index)) ? 'vp-card--visible' : ''}`}
-            data-index={index}
-            style={{ transitionDelay: `${index * 0.15}s` }}
-          >
-            <div className="vp-card-inner">
-              <div className="vp-card-icon-wrap">
-                {value.icon}
+        {/* Value cards */}
+        <div className="vp-grid">
+          {values.map((value, index) => (
+            <div
+              key={index}
+              className={`vp-card ${visibleCards.has(String(index)) ? 'vp-card--visible' : ''}`}
+              data-index={index}
+              style={{ transitionDelay: `${index * 0.15}s` }}
+            >
+              <div className="vp-card-inner">
+                <div className="vp-card-icon-wrap">
+                  {value.icon}
+                </div>
+                <div className="vp-card-gold-line" />
+                <h3 className="vp-card-title">{value.title}</h3>
+                <p className="vp-card-desc">{value.description}</p>
               </div>
-              <div className="vp-card-gold-line" />
-              <h3 className="vp-card-title">{value.title}</h3>
-              <p className="vp-card-desc">{value.description}</p>
+              <div className="vp-card-glow" />
             </div>
-            <div className="vp-card-glow" />
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
 
-      {/* Premium CTAs */}
-      <div className="vp-cta-section">
-        <Link to="/shop" className="vp-btn-primary">
-          <span className="vp-btn-primary-text">Begin Your Story</span>
-          <span className="vp-btn-primary-glow" />
-        </Link>
-        <a href="#featured" className="vp-btn-film">
-          <span className="vp-btn-film-icon">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-              <polygon points="5,3 19,12 5,21" />
-            </svg>
-          </span>
-          <span className="vp-btn-film-text">Watch the Film</span>
-        </a>
-      </div>
+        {/* Premium CTA */}
+        <div className="vp-cta-section">
+          <Link to="/shop" className="vp-btn-primary">
+            <span className="vp-btn-primary-text">Begin Your Story</span>
+            <span className="vp-btn-primary-glow" />
+          </Link>
+        </div>
 
-      {/* Gold line divider at bottom */}
-      <div className="vp-divider-bottom">
-        <div className="vp-divider-line" />
-        <div className="vp-divider-diamond" />
-        <div className="vp-divider-line" />
-      </div>
-    </section>
+        {/* Gold line divider at bottom */}
+        <div className="vp-divider-bottom">
+          <div className="vp-divider-line" />
+          <div className="vp-divider-diamond" />
+          <div className="vp-divider-line" />
+        </div>
+      </section>
+    </div>
   );
 }
