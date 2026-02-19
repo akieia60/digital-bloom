@@ -62,10 +62,10 @@ export default function VideoHero() {
           muted
           loop
           playsInline
-          poster="/videos/digital_bloom_poster.jpg"
+          poster="/videos/hero_bloom_poster.jpg"
           preload="auto"
         >
-          <source src="/videos/digital_bloom_seamless.mp4" type="video/mp4" />
+          <source src="/videos/hero_bloom.mp4" type="video/mp4" />
         </video>
         <div className="video-hero__overlay" />
       </div>
