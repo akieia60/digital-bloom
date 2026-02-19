@@ -21,7 +21,7 @@ import {
 // ─── Constants ────────────────────────────────────────────────────────────────
 const STORAGE_KEY_COMPLETED = 'db_prompt_vault_completed';
 const STORAGE_KEY_HIGGS = 'db_prompt_vault_higgs';
-const TOTAL_PROMPTS = ALL_PROMPTS.length; // 54
+const TOTAL_PROMPTS = ALL_PROMPTS.length;
 
 // ─── Filter Tabs ──────────────────────────────────────────────────────────────
 const FILTER_TABS = [
@@ -129,19 +129,11 @@ function WeekBadge({ week }) {
   );
 }
 
-// ─── PromptCard Component ─────────────────────────────────────────────────────
-function PromptCard({ prompt, completed, onToggleComplete, higgsEnabled }) {
-  const [expanded, setExpanded] = useState(false);
+// ─── Copy Button Component ────────────────────────────────────────────────────
+function CopyButton({ text, label, variant = 'gold', size = 'normal' }) {
   const [copied, setCopied] = useState(false);
 
-  const isNewPrompt = prompt.id >= 21;
-  const priority = isNewPrompt ? PRIORITY_MAP[prompt.category] : null;
-
   const handleCopy = async () => {
-    let text = prompt.prompt;
-    if (higgsEnabled) {
-      text = text + '\n\n' + HIGGS_FIELD_SUFFIX;
-    }
     try {
       await navigator.clipboard.writeText(text);
       setCopied(true);
@@ -159,6 +151,96 @@ function PromptCard({ prompt, completed, onToggleComplete, higgsEnabled }) {
       setTimeout(() => setCopied(false), 2000);
     }
   };
+
+  const colorClasses = {
+    gold: copied
+      ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30'
+      : 'bg-[#D4AF37]/15 text-[#D4AF37] border border-[#D4AF37]/25 hover:bg-[#D4AF37]/25 active:scale-[0.97]',
+    blue: copied
+      ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30'
+      : 'bg-blue-500/15 text-blue-400 border border-blue-500/25 hover:bg-blue-500/25 active:scale-[0.97]',
+    purple: copied
+      ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30'
+      : 'bg-purple-500/15 text-purple-400 border border-purple-500/25 hover:bg-purple-500/25 active:scale-[0.97]',
+  };
+
+  const sizeClasses = size === 'small' ? 'px-3 py-1.5 text-xs' : 'px-4 py-2.5 sm:py-2 text-sm';
+
+  return (
+    <button
+      onClick={handleCopy}
+      className={`flex items-center justify-center gap-1.5 rounded-xl font-medium transition-all duration-300 border ${colorClasses[variant]} ${sizeClasses}`}
+    >
+      {copied ? (
+        <>
+          <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+          </svg>
+          Copied!
+        </>
+      ) : (
+        <>
+          <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+          </svg>
+          {label}
+        </>
+      )}
+    </button>
+  );
+}
+
+// ─── Mega-Prompt Section Component ────────────────────────────────────────────
+function MegaPromptSection({ title, text, variant, stepNumber, higgsEnabled }) {
+  let fullText = text;
+  if (higgsEnabled && stepNumber === 1) {
+    fullText = text + '\n\n' + HIGGS_FIELD_SUFFIX;
+  }
+
+  const stepColors = {
+    1: { border: 'border-[#D4AF37]/20', bg: 'bg-[#D4AF37]/5', label: 'text-[#D4AF37]', badge: 'bg-[#D4AF37]/15 text-[#D4AF37] border-[#D4AF37]/25' },
+    2: { border: 'border-blue-500/20', bg: 'bg-blue-500/5', label: 'text-blue-400', badge: 'bg-blue-500/15 text-blue-400 border-blue-500/25' },
+    3: { border: 'border-purple-500/20', bg: 'bg-purple-500/5', label: 'text-purple-400', badge: 'bg-purple-500/15 text-purple-400 border-purple-500/25' },
+  };
+
+  const colors = stepColors[stepNumber] || stepColors[1];
+
+  return (
+    <div className={`rounded-xl border ${colors.border} ${colors.bg} p-4 mb-3`}>
+      <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center gap-2">
+          <span className={`inline-flex items-center justify-center w-6 h-6 rounded-full text-[10px] font-bold border ${colors.badge}`}>
+            {stepNumber}
+          </span>
+          <span className={`text-xs font-bold uppercase tracking-wider ${colors.label}`}>
+            {title}
+          </span>
+        </div>
+        <CopyButton text={fullText} label={`Copy ${title}`} variant={variant} size="small" />
+      </div>
+      <div className="p-3 rounded-lg bg-black/40 border border-white/[0.04]">
+        <pre className="whitespace-pre-wrap text-sm text-white/60 leading-relaxed font-sans">
+          {text}
+        </pre>
+        {higgsEnabled && stepNumber === 1 && (
+          <div className="mt-3 pt-3 border-t border-[#D4AF37]/20">
+            <p className="text-sm text-[#D4AF37]/70 italic">
+              + {HIGGS_FIELD_SUFFIX}
+            </p>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ─── PromptCard Component (Mega-Prompt Format) ───────────────────────────────
+function PromptCard({ prompt, completed, onToggleComplete, higgsEnabled }) {
+  const [expanded, setExpanded] = useState(false);
+
+  const isNewPrompt = prompt.id >= 21;
+  const priority = isNewPrompt ? PRIORITY_MAP[prompt.category] : null;
+  const hasMegaPrompt = !!(prompt.iteration1 && prompt.iteration2);
 
   return (
     <div
@@ -199,6 +281,14 @@ function PromptCard({ prompt, completed, onToggleComplete, higgsEnabled }) {
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 flex-wrap">
               <span className="text-xs font-mono text-[#D4AF37]/60">#{prompt.id}</span>
+              {hasMegaPrompt && (
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] uppercase tracking-wider font-bold bg-gradient-to-r from-[#D4AF37]/20 to-purple-500/20 text-[#D4AF37] border border-[#D4AF37]/20">
+                  <svg className="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                  </svg>
+                  MEGA-PROMPT
+                </span>
+              )}
               {completed && (
                 <span className="text-[10px] uppercase tracking-wider text-emerald-400 font-medium">Done</span>
               )}
@@ -246,36 +336,14 @@ function PromptCard({ prompt, completed, onToggleComplete, higgsEnabled }) {
 
         {/* Action Buttons */}
         <div className="flex items-center gap-2 ml-9">
-          {/* Copy Button */}
-          <button
-            onClick={handleCopy}
-            className={`flex-1 sm:flex-none flex items-center justify-center gap-2 px-5 py-3 sm:py-2.5 rounded-xl text-sm font-medium transition-all duration-300 ${
-              copied
-                ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
-                : 'bg-[#D4AF37]/15 text-[#D4AF37] border border-[#D4AF37]/25 hover:bg-[#D4AF37]/25 active:scale-[0.97]'
-            }`}
-          >
-            {copied ? (
-              <>
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
-                Copied!
-              </>
-            ) : (
-              <>
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                </svg>
-                Copy Prompt
-              </>
-            )}
-          </button>
-
           {/* Expand/Collapse Toggle */}
           <button
             onClick={() => setExpanded(!expanded)}
-            className="flex items-center justify-center gap-1.5 px-4 py-3 sm:py-2.5 rounded-xl text-sm font-medium bg-white/[0.04] text-white/50 border border-white/[0.06] hover:bg-white/[0.07] hover:text-white/70 transition-all"
+            className={`flex-1 sm:flex-none flex items-center justify-center gap-2 px-5 py-3 sm:py-2.5 rounded-xl text-sm font-medium transition-all duration-300 ${
+              expanded
+                ? 'bg-[#D4AF37]/20 text-[#D4AF37] border border-[#D4AF37]/30'
+                : 'bg-white/[0.04] text-white/50 border border-white/[0.08] hover:bg-white/[0.08] hover:text-white/70'
+            }`}
           >
             <svg
               className={`w-4 h-4 transition-transform duration-300 ${expanded ? 'rotate-180' : ''}`}
@@ -285,30 +353,76 @@ function PromptCard({ prompt, completed, onToggleComplete, higgsEnabled }) {
             >
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
             </svg>
-            <span className="hidden sm:inline">{expanded ? 'Hide' : 'View'}</span>
+            <span>{expanded ? 'Hide Mega-Prompt' : hasMegaPrompt ? 'View Mega-Prompt' : 'View Prompt'}</span>
           </button>
         </div>
       </div>
 
-      {/* Expandable Prompt Text */}
+      {/* Expandable Mega-Prompt Content */}
       <div
         className={`overflow-hidden transition-all duration-400 ease-in-out ${
-          expanded ? 'max-h-[2000px] opacity-100' : 'max-h-0 opacity-0'
+          expanded ? 'max-h-[6000px] opacity-100' : 'max-h-0 opacity-0'
         }`}
       >
         <div className="px-4 pb-4 sm:px-5 sm:pb-5 ml-9">
-          <div className="p-4 rounded-xl bg-black/40 border border-white/[0.04]">
-            <pre className="whitespace-pre-wrap text-sm text-white/60 leading-relaxed font-sans">
-              {prompt.prompt}
-            </pre>
-            {higgsEnabled && (
-              <div className="mt-3 pt-3 border-t border-[#D4AF37]/20">
-                <p className="text-sm text-[#D4AF37]/70 italic">
-                  + {HIGGS_FIELD_SUFFIX}
-                </p>
+          {/* Mega-Prompt Workflow Header */}
+          {hasMegaPrompt && (
+            <div className="flex items-center gap-3 mb-4 pb-3 border-b border-white/[0.06]">
+              <div className="flex items-center gap-1.5">
+                <div className="w-2 h-2 rounded-full bg-[#D4AF37]" />
+                <div className="w-8 h-px bg-white/10" />
+                <div className="w-2 h-2 rounded-full bg-blue-400" />
+                <div className="w-8 h-px bg-white/10" />
+                <div className="w-2 h-2 rounded-full bg-purple-400" />
               </div>
-            )}
-          </div>
+              <span className="text-[10px] uppercase tracking-wider text-white/30 font-medium">
+                3-Step Mega-Prompt Workflow
+              </span>
+            </div>
+          )}
+
+          {/* Step 1: Initial Prompt */}
+          <MegaPromptSection
+            title="Initial Prompt"
+            text={prompt.prompt}
+            variant="gold"
+            stepNumber={1}
+            higgsEnabled={higgsEnabled}
+          />
+
+          {/* Step 2: Iteration 1 */}
+          {prompt.iteration1 && (
+            <MegaPromptSection
+              title="Iteration 1"
+              text={prompt.iteration1}
+              variant="blue"
+              stepNumber={2}
+              higgsEnabled={false}
+            />
+          )}
+
+          {/* Step 3: Iteration 2 */}
+          {prompt.iteration2 && (
+            <MegaPromptSection
+              title="Iteration 2"
+              text={prompt.iteration2}
+              variant="purple"
+              stepNumber={3}
+              higgsEnabled={false}
+            />
+          )}
+
+          {/* Copy All Button */}
+          {hasMegaPrompt && (
+            <div className="mt-4 pt-3 border-t border-white/[0.06]">
+              <CopyButton
+                text={`=== INITIAL PROMPT ===\n\n${prompt.prompt}${higgsEnabled ? '\n\n' + HIGGS_FIELD_SUFFIX : ''}\n\n=== ITERATION 1 ===\n\n${prompt.iteration1}\n\n=== ITERATION 2 ===\n\n${prompt.iteration2}`}
+                label="Copy All 3 Steps"
+                variant="gold"
+                size="normal"
+              />
+            </div>
+          )}
         </div>
       </div>
     </div>
@@ -463,7 +577,10 @@ const PromptVault = () => {
           <h1 className="text-2xl sm:text-3xl font-display font-bold gradient-text mb-2">
             Digital Bloom Prompt Vault
           </h1>
-          <p className="text-xs text-white/30 mb-3">Visual Doctrine — Animation Prompt Library</p>
+          <p className="text-xs text-white/30 mb-1">Visual Doctrine — Mega-Prompt Library</p>
+          <p className="text-[10px] text-[#D4AF37]/50 mb-3">
+            Each prompt includes 3-step mega-prompt workflow: Initial Prompt → Iteration 1 → Iteration 2
+          </p>
 
           {/* Doctrine Tags */}
           <div className="flex flex-wrap justify-center gap-1.5">
@@ -475,6 +592,39 @@ const PromptVault = () => {
                 {note}
               </span>
             ))}
+          </div>
+        </div>
+
+        {/* ━━━ Mega-Prompt Workflow Guide ━━━ */}
+        <div className="glass rounded-2xl border border-[#D4AF37]/15 p-4 sm:p-5 mb-4 bg-gradient-to-br from-[#D4AF37]/[0.03] to-transparent">
+          <div className="flex items-center gap-2 mb-3">
+            <svg className="w-4 h-4 text-[#D4AF37]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+            <span className="text-sm font-display font-semibold text-[#D4AF37]">Mega-Prompt Workflow</span>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div className="flex items-start gap-2 p-2.5 rounded-lg bg-[#D4AF37]/[0.06] border border-[#D4AF37]/10">
+              <span className="inline-flex items-center justify-center w-5 h-5 rounded-full text-[9px] font-bold bg-[#D4AF37]/20 text-[#D4AF37] border border-[#D4AF37]/30 flex-shrink-0 mt-0.5">1</span>
+              <div>
+                <p className="text-[11px] font-semibold text-[#D4AF37]/80">Initial Prompt</p>
+                <p className="text-[10px] text-white/30">Paste into Grok Imagine first</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-2 p-2.5 rounded-lg bg-blue-500/[0.06] border border-blue-500/10">
+              <span className="inline-flex items-center justify-center w-5 h-5 rounded-full text-[9px] font-bold bg-blue-500/20 text-blue-400 border border-blue-500/30 flex-shrink-0 mt-0.5">2</span>
+              <div>
+                <p className="text-[11px] font-semibold text-blue-400/80">Iteration 1</p>
+                <p className="text-[10px] text-white/30">Paste after first result</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-2 p-2.5 rounded-lg bg-purple-500/[0.06] border border-purple-500/10">
+              <span className="inline-flex items-center justify-center w-5 h-5 rounded-full text-[9px] font-bold bg-purple-500/20 text-purple-400 border border-purple-500/30 flex-shrink-0 mt-0.5">3</span>
+              <div>
+                <p className="text-[11px] font-semibold text-purple-400/80">Iteration 2</p>
+                <p className="text-[10px] text-white/30">Paste after second result</p>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -563,7 +713,7 @@ const PromptVault = () => {
                 </span>
               </div>
               <p className="text-xs text-white/30 mt-1 leading-relaxed">
-                When enabled, copies include: "{HIGGS_FIELD_SUFFIX}"
+                When enabled, Initial Prompt copies include: "{HIGGS_FIELD_SUFFIX}"
               </p>
             </div>
             <button
@@ -633,7 +783,7 @@ const PromptVault = () => {
         {showOriginal && (!activeCategory || activeCategory === 'signature') && (
           <SeriesSection
             title="Signature Series"
-            subtitle="Prompts 1–6 — Core brand animations"
+            subtitle="Prompts 1–6, 55 — Core brand animations + Mega-Prompt"
             prompts={SIGNATURE_SERIES}
             completedMap={completedMap}
             onToggleComplete={toggleComplete}
@@ -684,10 +834,10 @@ const PromptVault = () => {
         {/* Footer */}
         <div className="text-center py-8">
           <p className="text-[10px] text-white/20 uppercase tracking-wider">
-            Digital Bloom — Prompt Vault
+            Digital Bloom — Mega-Prompt Vault
           </p>
           <p className="text-[10px] text-white/15 mt-1">
-            {TOTAL_PROMPTS} animation prompts · Visual Doctrine
+            {TOTAL_PROMPTS} animation mega-prompts · Visual Doctrine · 3-Step Workflow
           </p>
         </div>
       </div>

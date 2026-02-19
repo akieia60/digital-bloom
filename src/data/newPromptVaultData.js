@@ -1,3 +1,7 @@
+/**
+ * Digital Bloom — New Launch Prompt Series (April 2026)
+ * MEGA-PROMPT FORMAT: Each prompt includes iteration1 and iteration2 follow-ups.
+ */
 
 export const MOTHERS_DAY_COLLECTION = [
   {
@@ -5,7 +9,9 @@ export const MOTHERS_DAY_COLLECTION = [
     title: "Mama's Rose — Mother's Day",
     category: "Mother's Day Collection",
     week: 1,
-    prompt: `Shot on an ARRI Alexa with a 100mm macro lens, this is a cinematic close-up of a single, hyper-detailed pink rose against a deep black void. The camera executes a slow, reverent push-in, the focus so shallow that only the very edge of the nearest petal is sharp. As the rose slowly blooms, its velvet-soft petals unfurl to reveal the words \"Happy Mother's Day\" crafted from elegant, glowing gold script at its heart. Warm, 3200K tungsten light catches microscopic gold particle dust, making it cascade like embers from a dying star. The mood is intimate, sacred, and deeply emotional, with a color grade reminiscent of a Rembrandt painting.`,
+    prompt: `Shot on an ARRI Alexa with a 100mm macro lens, this is a cinematic close-up of a single, hyper-detailed pink rose against a deep black void. The camera executes a slow, reverent push-in, the focus so shallow that only the very edge of the nearest petal is sharp. As the rose slowly blooms, its velvet-soft petals unfurl to reveal the words "Happy Mother's Day" crafted from elegant, glowing gold script at its heart. Warm, 3200K tungsten light catches microscopic gold particle dust, making it cascade like embers from a dying star. The mood is intimate, sacred, and deeply emotional, with a color grade reminiscent of a Rembrandt painting.`,
+    iteration1: `Refine the previous generation. Enhance the blooming motion — make each petal unfurl with more visible weight and grace, like silk unfolding in slow motion. Increase the gold particle dust density around the text reveal, creating a more dramatic moment of discovery. Add a subtle warm lens flare from the tungsten light source that catches the edge of the frame. Push the Rembrandt color grade deeper with richer shadows.`,
+    iteration2: `Further refinement. Focus on the text reveal moment — make the "Happy Mother's Day" script glow more intensely with a warm, pulsing light that fades to a steady golden shimmer. Push the macro petal texture to an extreme, showing individual cell structures and microscopic water droplets. Intensify the film grain to a more pronounced, vintage quality. Add a subtle rack focus from the text back to the petal edge for a cinematic finish.`,
   },
   {
     id: 22,
@@ -13,6 +19,8 @@ export const MOTHERS_DAY_COLLECTION = [
     category: "Mother's Day Collection",
     week: 1,
     prompt: `A smooth orbital tracking shot, captured on a 85mm portrait lens at f/1.4, reveals a large, hyper-detailed golden rose in full bloom. Nestled beside it are two smaller, unopened rosebuds, representing a generational bond. The entire floral arrangement is bathed in a warm, volumetric light that creates god rays piercing through the petal gaps. Gold particles swirl in a controlled vortex around the three roses, creating a sense of a shared, golden lineage. The air feels thick with sacred energy, a silent testament to enduring love and connection.`,
+    iteration1: `Refine the previous generation. Enhance the size contrast between the large golden rose and the two smaller buds — make the generational hierarchy more visually dramatic. Increase the god rays, making them more defined and volumetric as they pierce through the petal gaps. Add subtle movement to the rosebuds, as if they're slowly beginning to open, inspired by the larger bloom.`,
+    iteration2: `Further refinement. Push the golden rose's metallic sheen to be more luminous and detailed, with visible light dancing across the petal surfaces. Intensify the vortex of gold particles — make it more defined with visible spiral patterns. Make the petal textures on all three roses hyper-detailed, showing the difference between the mature bloom and the tight, smooth buds. Add a warm vintage film grain and a slight golden color cast throughout.`,
   },
 ];
 
@@ -24,6 +32,8 @@ export const MISSING_ZODIAC_SIGNS = [
     category: "Missing Zodiac Signs",
     week: 2,
     prompt: `A fiery, hyper-detailed red rose BURSTS into bloom from a point of pure light. Shot on an anamorphic lens, the scene is filled with dramatic lens flare as the petals unfold. The camera executes a rapid dolly zoom, creating a sense of vertigo and power. As the rose reaches full bloom, its core ERUPTS in a shower of golden particle dust, revealing a molten gold ram's head symbol that glows with intense heat. The lighting is harsh and dramatic, with deep, crushed blacks and vibrant reds, reminiscent of a volcanic eruption.`,
+    iteration1: `Refine the previous generation. Enhance the burst — make the initial bloom explosion more violent and dynamic, with petals snapping open with visible force. Increase the anamorphic lens flare intensity and add horizontal streak artifacts for authenticity. Push the molten gold ram's head to glow more intensely, with visible heat distortion waves radiating from it.`,
+    iteration2: `Further refinement. Push the volcanic color palette — deeper, more saturated reds with orange and amber highlights on the petal edges. Intensify the crushed blacks to absolute darkness in the shadows. Make the golden particle shower more chaotic and energetic, with sparks and embers. Add a heavy, warm film grain and slight camera shake for a raw, powerful cinematic feel.`,
   },
   {
     id: 24,
@@ -31,6 +41,8 @@ export const MISSING_ZODIAC_SIGNS = [
     category: "Missing Zodiac Signs",
     week: 2,
     prompt: `A slow, deliberate orbital tracking shot reveals a hyper-detailed green rose, its petals the color of ancient moss and new spring growth. The camera, on a 50mm lens, captures the velvet-soft petal texture with visible micro-fibers. As the rose blooms, its center glows with a steady, powerful light, and a golden bull's head symbol, solid and resolute, emerges. Gold particles cascade slowly, like pollen in the morning sun. The lighting is soft and diffused, creating a mood of earthy strength and quiet determination.`,
+    iteration1: `Refine the previous generation. Enhance the green tones — add more variation between the ancient moss and spring growth colors, creating a richer palette. Make the golden bull's head symbol more three-dimensional and solid, with visible surface texture. Increase the pollen-like particle cascade and add subtle light scattering through the particles.`,
+    iteration2: `Further refinement. Push the velvet petal texture to show individual micro-fibers in extreme detail. Intensify the center glow to create more dramatic light spillover onto the surrounding petals. Make the orbital tracking smoother and more deliberate. Add an earthy, warm film grain and a slight green-gold color grade for a natural, grounded atmosphere.`,
   },
   {
     id: 25,
@@ -38,6 +50,8 @@ export const MISSING_ZODIAC_SIGNS = [
     category: "Missing Zodiac Signs",
     week: 3,
     prompt: `A hyper-detailed silver rose, shot with a dreamy, soft-focus effect, blooms in a sea of shimmering blue particle dust. The camera drifts slowly, as if underwater, capturing the ethereal, otherworldly quality of the scene. As the petals unfurl, a luminous silver crab symbol, glowing with a cool, lunar light, is revealed at the rose's heart. The lighting is soft and ambient, with a gentle blue-silver glow that creates a sense of emotional depth and intuition.`,
+    iteration1: `Refine the previous generation. Enhance the underwater drift quality of the camera movement — add subtle floating motion and gentle swaying. Increase the blue particle dust density and add bioluminescent-like glowing particles among them. Make the silver crab symbol more detailed with visible texture and a pulsing lunar glow.`,
+    iteration2: `Further refinement. Push the silver rose petals to be more reflective and metallic, catching the blue-silver light in dramatic ways. Intensify the dreamy soft-focus effect in the background while keeping the center sharp. Make the petal texture hyper-detailed with a cool, moonlit quality. Add a subtle film grain with a blue-silver tone for an ethereal, nocturnal atmosphere.`,
   },
   {
     id: 26,
@@ -45,6 +59,8 @@ export const MISSING_ZODIAC_SIGNS = [
     category: "Missing Zodiac Signs",
     week: 3,
     prompt: `A pristine, hyper-detailed white rose, shot with a clean, minimalist aesthetic, blooms with perfect, symmetrical grace. The camera performs a slow, elegant pedestal shot, rising as the rose opens. From its core, a delicate, golden maiden symbol emerges, radiating a soft, pure light. Gold particles drift like microscopic pollen dust, catching the light in slow motion. The lighting is bright and even, with a clean, high-key look that emphasizes purity, precision, and grace.`,
+    iteration1: `Refine the previous generation. Enhance the symmetrical blooming — make each petal open with mathematical precision, emphasizing the perfection of the form. Increase the golden maiden symbol's detail and luminosity. Add more visible pollen-like particles with defined individual shapes catching the high-key light.`,
+    iteration2: `Further refinement. Push the white rose to be even more pristine — near-luminous white with subtle warm undertones in the shadows. Intensify the clean, high-key lighting while maintaining subtle shadow detail for depth. Make the petal texture hyper-detailed with a smooth, porcelain-like quality. Add a minimal, clean film grain for a refined, editorial atmosphere.`,
   },
   {
     id: 27,
@@ -52,6 +68,8 @@ export const MISSING_ZODIAC_SIGNS = [
     category: "Missing Zodiac Signs",
     week: 4,
     prompt: `A deep, crimson rose, its petals the color of dried blood, blooms with a dangerous, magnetic energy. The camera uses a series of quick, jarring cuts, building a sense of tension and mystery. As the rose opens, a golden scorpion symbol, sharp and menacing, is revealed, glowing with a venomous red light. Red particle dust swirls like a storm, and the lighting is low-key and dramatic, with long, menacing shadows. The mood is one of power, passion, and hidden depths.`,
+    iteration1: `Refine the previous generation. Enhance the tension — make the jarring cuts more impactful with brief flashes of intense light between them. Increase the red particle storm intensity with more chaotic, swirling patterns. Make the golden scorpion symbol sharper and more menacing, with visible barb detail and a pulsing venomous glow.`,
+    iteration2: `Further refinement. Push the dried-blood crimson to be deeper and more ominous, with near-black shadows in the petal folds. Intensify the low-key lighting to create longer, more dramatic shadows. Make the petal texture feel dangerous — sharp edges, thorny details, and a slightly withered quality. Add a heavy, dark film grain and a slight red color cast for a brooding, intense atmosphere.`,
   },
   {
     id: 28,
@@ -59,6 +77,8 @@ export const MISSING_ZODIAC_SIGNS = [
     category: "Missing Zodiac Signs",
     week: 4,
     prompt: `A dark green rose, its petals like ancient stone, blooms with a slow, inexorable force. The camera executes a slow, powerful crane shot, moving from below the rose to a position high above, emphasizing its upward climb. As the petals open, a golden sea-goat symbol, a creature of both earth and water, is revealed, glowing with a steady, determined light. Gold particles rise like bubbles from the deep. The lighting is stark and sculptural, carving the rose out of the darkness.`,
+    iteration1: `Refine the previous generation. Enhance the stone-like quality of the petals — add visible cracks and mineral texture. Make the crane shot more dramatic with a greater vertical range. Increase the rising gold bubble-particles and add variation in their size and speed. Push the sea-goat symbol to be more detailed and three-dimensional.`,
+    iteration2: `Further refinement. Push the dark green to be more complex — add subtle earth tones and mineral highlights. Intensify the stark, sculptural lighting to carve deeper shadows and brighter highlights. Make the ancient stone texture hyper-detailed with visible grain and weathering. Add a cool, desaturated film grain for a monumental, timeless atmosphere.`,
   },
   {
     id: 29,
@@ -66,6 +86,8 @@ export const MISSING_ZODIAC_SIGNS = [
     category: "Missing Zodiac Signs",
     week: 5,
     prompt: `A hyper-detailed purple rose, its petals swirling with shades of violet and indigo, blooms in a cascade of shimmering blue particle dust. The camera uses a disorienting, free-floating movement, as if untethered from gravity. As the rose opens, a golden water bearer symbol emerges, pouring a stream of liquid light that flows and dances in zero gravity. The lighting is unconventional and prismatic, with shifting colors and unexpected flares, creating a sense of innovation and cosmic consciousness.`,
+    iteration1: `Refine the previous generation. Enhance the zero-gravity liquid light stream — make it flow more dynamically with visible surface tension and light refraction. Increase the prismatic lighting effects with more color shifts and unexpected flares. Push the free-floating camera movement to be more disorienting and dreamlike.`,
+    iteration2: `Further refinement. Push the violet and indigo swirling to be more dynamic and alive within the petals themselves. Intensify the prismatic lighting to create rainbow-edge effects on the petal surfaces. Make the petal texture hyper-detailed with an almost crystalline, otherworldly quality. Add a unique film grain with subtle color shifts for an innovative, avant-garde atmosphere.`,
   },
 ];
 
@@ -76,7 +98,9 @@ export const BIRTHDAY_CELEBRATION = [
     title: "Birthday Wish: The Dandelion Dream",
     category: "Birthday & Celebration",
     week: 5,
-    prompt: `A hyper-detailed golden dandelion, captured with an 85mm portrait lens at f/1.4, stands against a stark black background. The camera holds a tight focus on the seed head. A gentle, invisible force causes the seeds to BURST outward in a slow-motion explosion. As they travel through the air, they transform into sparkling golden particles that coalesce and form the words \"Happy Birthday\" in an elegant, shimmering script. The lighting is magical and ethereal, with a soft, golden glow that illuminates the scene.`,
+    prompt: `A hyper-detailed golden dandelion, captured with an 85mm portrait lens at f/1.4, stands against a stark black background. The camera holds a tight focus on the seed head. A gentle, invisible force causes the seeds to BURST outward in a slow-motion explosion. As they travel through the air, they transform into sparkling golden particles that coalesce and form the words "Happy Birthday" in an elegant, shimmering script. The lighting is magical and ethereal, with a soft, golden glow that illuminates the scene.`,
+    iteration1: `Refine the previous generation. Enhance the seed burst — make each seed's departure more individually defined, with visible parachute structures catching the light. Increase the transformation effect as seeds become golden particles, making it more gradual and magical. Push the text formation to be more elegant with visible particle trails leading to each letter.`,
+    iteration2: `Further refinement. Push the golden dandelion's detail to show every individual seed and filament in extreme clarity. Intensify the magical golden glow to create more dramatic light and shadow. Make the "Happy Birthday" text shimmer more dynamically with individual particles pulsing. Add a warm, dreamy film grain and a slight bokeh effect in the background for a birthday-wish atmosphere.`,
   },
   {
     id: 31,
@@ -84,6 +108,8 @@ export const BIRTHDAY_CELEBRATION = [
     category: "Birthday & Celebration",
     week: 6,
     prompt: `A single, elegant cupcake with a solitary, glowing candle is the subject of a slow, dramatic zoom-in. The shot, reminiscent of a still life painting, is framed with a shallow depth of field, blurring the background into a soft, inky black. Gold sprinkles fall like gentle snow, catching the light of the candle flame. The mood is intimate and celebratory, a quiet moment of personal significance.`,
+    iteration1: `Refine the previous generation. Enhance the candle flame — make it flicker more naturally with visible warm light casting dancing shadows on the cupcake surface. Increase the gold sprinkle density and add variation in their falling speed and trajectory. Push the still-life painting quality with richer, more painterly lighting.`,
+    iteration2: `Further refinement. Push the cupcake texture to show frosting detail, cake crumb structure, and the metallic sheen of the gold sprinkles in extreme detail. Intensify the candle light to create more dramatic chiaroscuro on the cupcake. Make the background bokeh warmer and more inviting. Add a classic, warm film grain for a nostalgic, intimate celebration atmosphere.`,
   },
   {
     id: 32,
@@ -91,6 +117,8 @@ export const BIRTHDAY_CELEBRATION = [
     category: "Birthday & Celebration",
     week: 6,
     prompt: `A hyper-detailed white rose, symbolizing a new beginning, blooms in a seamless, continuous shot. The camera starts low, looking up at the rose, and then slowly cranes upwards as the petals unfurl. At its heart, a black graduation cap with a golden tassel is revealed, the tassel swaying gently. Gold particle dust rains down, like academic honors being bestowed. The lighting is bright and optimistic, with a clean, high-key look.`,
+    iteration1: `Refine the previous generation. Enhance the crane movement — make the upward motion more dramatic, creating a greater sense of ascent and achievement. Increase the golden tassel detail and its swaying motion. Push the gold particle rain to be more celebratory with visible individual particles catching the light.`,
+    iteration2: `Further refinement. Push the white rose petals to be more luminous and pristine, symbolizing a fresh start. Intensify the bright, optimistic lighting while adding subtle shadow detail for depth. Make the graduation cap texture hyper-detailed — show the fabric weave and the metallic gold of the tassel. Add a clean, bright film grain for an uplifting, achievement-oriented atmosphere.`,
   },
   {
     id: 33,
@@ -98,13 +126,17 @@ export const BIRTHDAY_CELEBRATION = [
     category: "Birthday & Celebration",
     week: 6,
     prompt: `A golden rose, its petals imbued with a metallic sheen, blooms in a mesmerizing time-lapse. The camera executes a smooth orbital tracking shot, circling the rose as it opens. At its center, a glowing golden infinity symbol materializes, pulsing with a soft, warm light. Gold particles swirl around the symbol, tracing its infinite path. The lighting is warm and romantic, with a soft, diffused glow that speaks of eternal love.`,
+    iteration1: `Refine the previous generation. Enhance the metallic sheen on the petals — make it more dynamic with visible light reflections shifting as the camera orbits. Increase the infinity symbol's glow and make its pulsing more hypnotic. Push the particle trails to more clearly trace the figure-eight path of infinity.`,
+    iteration2: `Further refinement. Push the golden rose to be more luxurious — richer metallic tones with subtle rose-gold undertones. Intensify the warm, romantic lighting to create a more intimate atmosphere. Make the petal texture hyper-detailed with visible metallic grain and light-catching surfaces. Add a soft, warm film grain and a slight golden vignette for an eternal, romantic atmosphere.`,
   },
   {
     id: 34,
     title: "The Firework Bloom: A Congratulatory Explosion",
     category: "Birthday & Celebration",
     week: 6,
-    prompt: `A golden bloom, tightly closed, hangs in a black void. Suddenly, it ERUPTS in a silent, slow-motion explosion of golden fireworks. The camera captures the spectacle with a wide-angle lens, emphasizing the scale and grandeur of the event. As the fireworks fade, the word \"Congratulations\" appears in elegant, glowing script, hanging in the space where the bloom once was. The lighting is dynamic and celebratory, with bright flashes and long, fading trails of light.`,
+    prompt: `A golden bloom, tightly closed, hangs in a black void. Suddenly, it ERUPTS in a silent, slow-motion explosion of golden fireworks. The camera captures the spectacle with a wide-angle lens, emphasizing the scale and grandeur of the event. As the fireworks fade, the word "Congratulations" appears in elegant, glowing script, hanging in the space where the bloom once was. The lighting is dynamic and celebratory, with bright flashes and long, fading trails of light.`,
+    iteration1: `Refine the previous generation. Enhance the explosion — make the firework burst more spectacular with multiple stages of detonation. Increase the light trail length and add more color variation in the golden sparks. Push the "Congratulations" text reveal to be more dramatic with particles assembling letter by letter.`,
+    iteration2: `Further refinement. Push the wide-angle perspective to be more dramatic, emphasizing the vast scale of the explosion against the void. Intensify the bright flashes and make the fading trails more elegant and long-lasting. Make the golden bloom texture hyper-detailed before the explosion. Add a dynamic film grain that intensifies during the explosion and settles afterward for a cinematic, celebratory atmosphere.`,
   },
 ];
 
@@ -116,6 +148,8 @@ export const HOLIDAY_COLLECTION = [
     category: "Holiday Collection",
     week: 7,
     prompt: `Two hyper-detailed roses, one a passionate red and the other a pure, innocent white, are captured in a slow, intimate dance. Their stems, like lovers' arms, intertwine to form a perfect heart shape. The camera, on a smooth, romantic dolly shot, moves slowly around the intertwined roses, revealing their delicate textures. Gold particle accents drift like whispered secrets in the air. The lighting is soft and sensual, with a warm, inviting glow that creates a mood of deep, enduring love.`,
+    iteration1: `Refine the previous generation. Enhance the intertwining stems — make the heart shape more defined and the twisting motion more organic and graceful. Increase the gold particle accents and add subtle heart-shaped bokeh in the background. Push the contrast between the passionate red and innocent white to be more dramatic.`,
+    iteration2: `Further refinement. Push the petal textures on both roses to extreme detail — show the velvet quality of the red and the porcelain smoothness of the white. Intensify the soft, sensual lighting to create more romantic shadows in the heart-shaped negative space. Add a warm, romantic film grain and a slight soft-focus halo for a timeless love atmosphere.`,
   },
   {
     id: 36,
@@ -123,6 +157,8 @@ export const HOLIDAY_COLLECTION = [
     category: "Holiday Collection",
     week: 7,
     prompt: `A strong, ancient oak tree, its leaves a brilliant gold, stands as a monument in a vast, black void. The camera starts with a wide shot, then slowly zooms in, revealing the gnarled, powerful roots that glow with a potent, golden light. The shot is framed to convey a sense of history, stability, and quiet strength. The lighting is dramatic and heroic, with a single, powerful light source that casts long, deep shadows.`,
+    iteration1: `Refine the previous generation. Enhance the oak tree's ancient quality — add more gnarled bark detail, visible growth rings where branches meet the trunk, and moss in the deeper crevices. Increase the golden glow in the roots, making it pulse with a slow, powerful rhythm. Push the dramatic lighting to create more heroic, monumental shadows.`,
+    iteration2: `Further refinement. Push the golden leaves to be individually detailed, each one catching light differently. Intensify the single light source to create more dramatic chiaroscuro across the entire tree structure. Make the bark texture hyper-detailed — show centuries of weathering and growth. Add a strong, warm film grain and a slight desaturation in the shadows for a stoic, patriarchal atmosphere.`,
   },
   {
     id: 37,
@@ -130,6 +166,8 @@ export const HOLIDAY_COLLECTION = [
     category: "Holiday Collection",
     week: 7,
     prompt: `A hyper-detailed rose blooms in a whirlwind of red, white, and blue. The camera captures this patriotic spectacle with a series of fast, energetic cuts, creating a sense of excitement and celebration. In the background, subtle gold particle fireworks explode softly, their light reflecting off the rose's petals. The lighting is festive and dynamic, with bright flashes of color and a celebratory mood.`,
+    iteration1: `Refine the previous generation. Enhance the patriotic color whirlwind — make the red, white, and blue more vivid and defined in their swirling patterns. Increase the background firework explosions with more variety in burst patterns. Push the energetic cuts to be more dynamic with motion blur transitions.`,
+    iteration2: `Further refinement. Push the rose's petal texture to show the patriotic colors blending naturally, like a watercolor effect on the surface. Intensify the festive lighting with more dramatic light flashes and reflections. Make the gold particle fireworks more detailed with visible spark trails. Add a vibrant, slightly saturated film grain for an exciting, celebratory atmosphere.`,
   },
   {
     id: 38,
@@ -137,6 +175,8 @@ export const HOLIDAY_COLLECTION = [
     category: "Holiday Collection",
     week: 7,
     prompt: `A single, stoic, metallic-looking silver rose stands in a stark, black void. The camera holds a long, still shot, creating a sense of quiet contemplation and respect. A single golden dog tag hangs from its stem, catching the light. The shallow depth of field blurs the background, focusing all attention on the rose and the dog tag. The lighting is somber and respectful, with a single, soft light source that creates a mood of quiet dignity.`,
+    iteration1: `Refine the previous generation. Enhance the metallic silver quality of the rose — make it more reflective with visible surface imperfections that tell a story of endurance. Increase the dog tag detail, showing embossed text and chain links. Push the still shot to feel even more contemplative with the slightest, almost imperceptible camera drift.`,
+    iteration2: `Further refinement. Push the silver rose texture to look like forged metal — cold, strong, and enduring. Intensify the somber lighting to create deeper shadows and a more respectful, memorial atmosphere. Make the dog tag catch the light more dramatically, creating a single bright point of focus. Add a cool, desaturated film grain for a solemn, dignified atmosphere.`,
   },
   {
     id: 39,
@@ -144,6 +184,8 @@ export const HOLIDAY_COLLECTION = [
     category: "Holiday Collection",
     week: 7,
     prompt: `A hyper-detailed rose with petals of red, black, and green blooms with a powerful, celebratory energy. The camera executes a joyful, swirling crane shot, moving up and around the rose as it opens. At its heart, the Juneteenth star, glowing with a brilliant gold, is revealed. The lighting is bright and hopeful, with a festive, celebratory mood.`,
+    iteration1: `Refine the previous generation. Enhance the red, black, and green color separation — make each color more vivid and defined on the petals. Increase the Juneteenth star's golden glow and add radiating light rays. Push the swirling crane shot to be more joyful and dynamic with a greater sense of upward movement.`,
+    iteration2: `Further refinement. Push the petal textures to show the three colors blending at their boundaries in a natural, organic way. Intensify the bright, hopeful lighting to create a more uplifting, celebratory atmosphere. Make the star symbol more detailed and luminous. Add a warm, vibrant film grain for a joyful, liberating atmosphere.`,
   },
   {
     id: 40,
@@ -151,6 +193,8 @@ export const HOLIDAY_COLLECTION = [
     category: "Holiday Collection",
     week: 7,
     prompt: `A hyper-detailed white rose, its edges delicately tipped in gold, is the subject of a magical, wintery scene. The camera captures the rose in a gentle, floating shot, as if it's a snowflake itself. Gently falling golden snowflakes drift down, landing on the petals and sparkling in the soft, warm light. The shallow depth of field creates a dreamy, enchanting mood.`,
+    iteration1: `Refine the previous generation. Enhance the golden snowflakes — make them more crystalline and detailed with visible six-pointed structures catching the light. Increase the floating quality of the camera movement. Push the gold-tipped edges of the rose to be more luminous and defined against the white petals.`,
+    iteration2: `Further refinement. Push the white rose texture to show frost-like crystalline detail on the petal surfaces. Intensify the warm light to create a cozy contrast against the cold, wintery elements. Make the golden snowflakes accumulate slightly on the petals, creating a dusting effect. Add a soft, warm film grain and a slight blue-to-warm color gradient for a magical Christmas atmosphere.`,
   },
   {
     id: 41,
@@ -158,13 +202,17 @@ export const HOLIDAY_COLLECTION = [
     category: "Holiday Collection",
     week: 7,
     prompt: `A hyper-detailed black rose, its petals like midnight silk, blooms in a dramatic time-lapse. The camera focuses on the center of the rose, where golden clock hands appear, counting down the final seconds to midnight. As the hands strike twelve, the rose ERUPTS in a shower of golden fireworks. The lighting is dramatic and celebratory, with a sense of anticipation and excitement.`,
+    iteration1: `Refine the previous generation. Enhance the clock hands — make them more ornate and golden with visible mechanical detail. Increase the countdown tension with the lighting gradually intensifying as midnight approaches. Push the firework eruption to be more spectacular with multiple burst stages.`,
+    iteration2: `Further refinement. Push the midnight silk texture of the black petals to be ultra-luxurious — show the sheen and depth of true black silk. Intensify the dramatic lighting transition from anticipation to celebration. Make the golden fireworks more detailed with visible spark trails and fading embers. Add a dramatic film grain that shifts from subtle to pronounced during the eruption for a New Year's atmosphere.`,
   },
   {
     id: 42,
     title: "The Lily of Hope: An Easter Rebirth",
     category: "Holiday Collection",
     week: 7,
-    prompt: `A hyper-detailed white Easter lily, a symbol of purity and new life, blooms in a soft, ethereal light. The camera performs a slow, gentle pedestal shot, rising as the lily opens to reveal a glowing golden center. Soft, pastel-colored particles float around it, like the colors of a spring morning. The lighting is soft and hopeful, with a gentle, diffused glow.`,
+    prompt: `A hyper-detailed white lily, its petals catching the first light of dawn, blooms in a slow, graceful time-lapse. The camera captures this moment of rebirth with a gentle, rising crane shot. At the lily's heart, a golden cross, simple and elegant, glows with a warm, hopeful light. Gold particles rise upward, like prayers ascending. The lighting is soft and hopeful, with a warm, golden dawn glow.`,
+    iteration1: `Refine the previous generation. Enhance the dawn light — make it more gradual and natural, with warm golden rays slowly illuminating the lily from one side. Increase the rising gold particles and add a more defined upward trajectory. Push the crane shot to feel more reverent and ascending.`,
+    iteration2: `Further refinement. Push the white lily petals to show translucent quality where dawn light passes through them. Intensify the golden cross glow to be warmer and more inviting. Make the petal texture hyper-detailed with visible pollen and stamen detail. Add a soft, warm film grain and a golden dawn color grade for a hopeful, spiritual rebirth atmosphere.`,
   },
   {
     id: 43,
@@ -172,6 +220,8 @@ export const HOLIDAY_COLLECTION = [
     category: "Holiday Collection",
     week: 7,
     prompt: `A hyper-detailed rose in the warm, rich colors of autumn – orange, gold, and deep red – is the centerpiece of a bountiful scene. Golden wheat stalks gently weave around it, their heads heavy with grain. The camera executes a slow, circular tracking shot, taking in the full bounty of the harvest. The lighting is warm and inviting, with a golden, late-afternoon glow.`,
+    iteration1: `Refine the previous generation. Enhance the autumn colors — make the orange, gold, and deep red more vivid and varied across the petals. Increase the wheat stalk detail, showing individual grain kernels and golden husks. Push the circular tracking to reveal more of the bountiful arrangement from different angles.`,
+    iteration2: `Further refinement. Push the autumn rose texture to show the warm, slightly dry quality of fall petals with rich color depth. Intensify the late-afternoon golden glow to create longer, warmer shadows. Make the wheat stalks hyper-detailed with visible grain texture and golden light catching each husk. Add a warm, harvest-toned film grain for a grateful, abundant atmosphere.`,
   },
   {
     id: 44,
@@ -179,6 +229,8 @@ export const HOLIDAY_COLLECTION = [
     category: "Holiday Collection",
     week: 7,
     prompt: `A hyper-detailed black rose with deep purple undertones is the subject of a spooky, atmospheric shot. Delicate silver spiderwebs, glistening with dew, are spun on its petals. The camera uses a slow, creeping dolly shot, moving in on the rose as if stalking it. The shallow depth of field and low-key, mysterious lighting create a sense of unease and gothic romance.`,
+    iteration1: `Refine the previous generation. Enhance the spiderwebs — make them more intricate with visible individual strands and dew droplets catching the light like tiny jewels. Increase the creeping quality of the dolly shot, making it feel more predatory. Add subtle fog or mist drifting through the background.`,
+    iteration2: `Further refinement. Push the black-purple rose texture to show a velvety, almost otherworldly quality. Intensify the low-key lighting to create deeper shadows and more mysterious atmosphere. Make the silver spiderwebs more luminous against the dark petals. Add a cool, desaturated film grain with a slight purple color cast for a gothic, haunting atmosphere.`,
   },
 ];
 
@@ -190,6 +242,8 @@ export const INCLUSIVE_SPECIAL_CATEGORIES = [
     category: "Inclusive & Special Categories",
     week: 7,
     prompt: `A stunning bouquet of different types of hyper-detailed purple flowers – roses, lilies, orchids – all bloom in perfect, powerful unison. The camera captures this moment of unity with a wide, sweeping crane shot that rises to reveal the full glory of the bouquet. Gold particle accents swirl around the flowers, a testament to their collective strength and beauty. The lighting is strong and vibrant, with a celebratory, empowering mood.`,
+    iteration1: `Refine the previous generation. Enhance the variety of purple flowers — make each type more distinct and individually detailed while maintaining the unified purple palette. Increase the sweeping crane shot's dramatic range. Push the gold particle accents to swirl more dynamically, connecting the different flowers like golden threads of solidarity.`,
+    iteration2: `Further refinement. Push each flower type's texture to extreme detail — show the velvet of roses, the waxy smoothness of lilies, and the delicate veining of orchids. Intensify the strong, vibrant lighting to create a more empowering, celebratory atmosphere. Add a vibrant, warm film grain for a powerful, unified sisterhood atmosphere.`,
   },
   {
     id: 46,
@@ -197,6 +251,8 @@ export const INCLUSIVE_SPECIAL_CATEGORIES = [
     category: "Inclusive & Special Categories",
     week: 7,
     prompt: `A hyper-detailed rose, its petals in soft, delicate stripes of blue, pink, and white, blooms in a gentle, continuous shot. The camera holds a steady, respectful gaze as the rose transforms, its colors a symbol of identity and pride. Silver particle accents shimmer and dance around the rose, adding a touch of magical realism. The lighting is soft and affirming, with a gentle, ethereal glow.`,
+    iteration1: `Refine the previous generation. Enhance the color stripes — make the blue, pink, and white more defined and luminous on the petals. Increase the silver particle shimmer and add a subtle transformation effect where particles shift between the three colors. Push the gentle, continuous shot to feel more meditative and affirming.`,
+    iteration2: `Further refinement. Push the petal texture to show the colors blending naturally at their boundaries, like watercolors on silk. Intensify the soft, affirming lighting to create a warmer, more embracing atmosphere. Make the silver particles more detailed and magical. Add a soft, ethereal film grain with subtle color shifts for a beautiful, affirming metamorphosis atmosphere.`,
   },
   {
     id: 47,
@@ -204,6 +260,8 @@ export const INCLUSIVE_SPECIAL_CATEGORIES = [
     category: "Inclusive & Special Categories",
     week: 7,
     prompt: `A hyper-detailed rose, its petals a vibrant spectrum of pink, purple, and blue, blooms with a confident, joyful energy. The camera captures this celebration of love with a series of quick, energetic cuts, creating a sense of excitement and pride. Gold particle accents add a touch of celebratory sparkle. The lighting is bright and festive, with a bold, unapologetic mood.`,
+    iteration1: `Refine the previous generation. Enhance the pink-purple-blue spectrum — make the color transitions more vivid and dynamic across the petals. Increase the energetic cuts' impact with more dynamic camera angles. Push the gold particle sparkle to be more celebratory and abundant.`,
+    iteration2: `Further refinement. Push the petal texture to show the vibrant colors with extreme saturation and detail. Intensify the bright, festive lighting to create a more bold and celebratory atmosphere. Make the color spectrum flow more naturally across the petals. Add a vibrant, energetic film grain for a proud, joyful atmosphere.`,
   },
   {
     id: 48,
@@ -211,6 +269,8 @@ export const INCLUSIVE_SPECIAL_CATEGORIES = [
     category: "Inclusive & Special Categories",
     week: 7,
     prompt: `A hyper-detailed rose, its petals a unique and striking combination of yellow, white, purple, and black, blooms with a quiet, powerful grace. The camera uses a slow, deliberate orbital shot, allowing the viewer to appreciate the beauty and complexity of the rose. Gold particle accents add a touch of regal elegance. The lighting is soft and respectful, with a gentle, affirming glow.`,
+    iteration1: `Refine the previous generation. Enhance the four-color combination — make each color more distinct and beautifully integrated into the petal structure. Increase the orbital shot's deliberate quality, making it feel more contemplative. Push the gold particle accents to be more regal and elegant.`,
+    iteration2: `Further refinement. Push the petal texture to show the unique color combination with extreme detail and natural blending. Intensify the soft, respectful lighting to create a more affirming, dignified atmosphere. Make each color zone on the petals hyper-detailed. Add a soft, warm film grain for a powerful, identity-affirming atmosphere.`,
   },
   {
     id: 49,
@@ -218,6 +278,8 @@ export const INCLUSIVE_SPECIAL_CATEGORIES = [
     category: "Inclusive & Special Categories",
     week: 7,
     prompt: `Two hands, one masculine and one feminine, are clasped in a supportive, powerful grip. The shot, captured with a cinematic 8K resolution, is stark and intimate against a pure black background. Golden energy flows between their clasped hands, a visible representation of their bond. The lighting is dramatic and focused, highlighting the strength and tenderness of their connection.`,
+    iteration1: `Refine the previous generation. Enhance the hand detail — show skin texture, subtle veins, and the tension in the grip that conveys both strength and tenderness. Increase the golden energy flow to be more dynamic with visible streams and pulses. Push the dramatic lighting to create more sculptural shadows on the hands.`,
+    iteration2: `Further refinement. Push the skin texture to extreme detail — show pores, fine lines, and the warmth of living skin. Intensify the focused lighting to create more dramatic contrast between the lit surfaces and the black void. Make the golden energy more complex with branching streams and a warm, pulsing core. Add a warm, intimate film grain for a deeply connected, soulful atmosphere.`,
   },
   {
     id: 50,
@@ -225,6 +287,8 @@ export const INCLUSIVE_SPECIAL_CATEGORIES = [
     category: "Inclusive & Special Categories",
     week: 7,
     prompt: `A flower made of golden fire burns with an intense, beautiful light. The camera captures this spectacle in a single, continuous shot, as the flower burns down to ash. Then, from the ashes, a new flower is reborn, more brilliant and vibrant than before. The lighting is dramatic and transformative, with a powerful, cinematic feel.`,
+    iteration1: `Refine the previous generation. Enhance the fire texture — make the flames more detailed with visible individual tongues of fire and glowing embers. Increase the drama of the burn-down with more visible ash particles and smoke. Push the rebirth to be more spectacular with the new flower emerging in a burst of golden light.`,
+    iteration2: `Further refinement. Push the golden fire to be more complex — show different flame temperatures from white-hot core to golden edges. Intensify the transformative lighting to create a more dramatic before-and-after contrast. Make the ash texture detailed and the rebirth flower hyper-vivid. Add a dynamic film grain that shifts from heavy during the burning to clean during the rebirth for a powerful transformation atmosphere.`,
   },
   {
     id: 51,
@@ -232,6 +296,8 @@ export const INCLUSIVE_SPECIAL_CATEGORIES = [
     category: "Inclusive & Special Categories",
     week: 7,
     prompt: `A single, hyper-detailed forget-me-not flower, its petals a delicate blue, is the subject of a quiet, contemplative shot. The camera holds a still, meditative gaze, allowing the viewer to reflect. A glowing blue center pulses with a soft, healing light, and soft, white particles float upwards, like memories ascending. The lighting is gentle and ethereal, with a peaceful, healing mood.`,
+    iteration1: `Refine the previous generation. Enhance the forget-me-not's delicate blue — make it more luminous and ethereal. Increase the healing light pulse to be more visible and soothing. Push the ascending white particles to be more defined, like tiny orbs of light rising slowly. Make the still, meditative gaze feel even more contemplative.`,
+    iteration2: `Further refinement. Push the petal texture to show the delicate, almost translucent quality of forget-me-not petals in extreme detail. Intensify the gentle, ethereal lighting to create a more peaceful, healing atmosphere. Make the ascending particles leave faint trails of light. Add a soft, cool film grain with a slight blue tone for a meditative, healing atmosphere.`,
   },
   {
     id: 52,
@@ -239,6 +305,8 @@ export const INCLUSIVE_SPECIAL_CATEGORIES = [
     category: "Inclusive & Special Categories",
     week: 7,
     prompt: `A hyper-detailed yellow rose, a symbol of warmth and happiness, radiates a warm, healing light. The camera captures this with a shallow depth of field, creating a dreamy, hopeful mood. Golden dust motes dance in the beams of light, creating a magical, ethereal effect. The lighting is bright and optimistic, with a warm, inviting glow.`,
+    iteration1: `Refine the previous generation. Enhance the radiating warm light — make the light beams more visible and volumetric. Increase the golden dust motes and add variation in their size and movement patterns. Push the dreamy, hopeful mood with a softer, more diffused background bokeh.`,
+    iteration2: `Further refinement. Push the yellow rose texture to show warm, sunny petal detail with visible light passing through the thinner edges. Intensify the bright, optimistic lighting to create a more uplifting atmosphere. Make the dust motes more magical with subtle light scattering effects. Add a warm, golden film grain for a hopeful, healing atmosphere.`,
   },
   {
     id: 53,
@@ -246,6 +314,8 @@ export const INCLUSIVE_SPECIAL_CATEGORIES = [
     category: "Inclusive & Special Categories",
     week: 7,
     prompt: `A heart-shaped bloom, intricately woven from green leaves and vines, is the subject of a warm, inviting shot. A soft, golden glow emanates from its center, a visible representation of gratitude. The camera executes a slow, gentle zoom-in, drawing the viewer into the heart of the bloom. The lighting is warm and gentle, with a peaceful, appreciative mood.`,
+    iteration1: `Refine the previous generation. Enhance the woven leaf and vine detail — make each leaf individually textured with visible veining and the vines more organic and intertwined. Increase the golden center glow to be warmer and more inviting. Push the gentle zoom-in to feel more intimate and drawing.`,
+    iteration2: `Further refinement. Push the green leaf texture to extreme detail — show chlorophyll patterns, subtle moisture, and the organic quality of living plants. Intensify the warm, gentle lighting to create a more peaceful, grateful atmosphere. Make the heart shape more defined and the golden glow more luminous. Add a warm, natural film grain for a grateful, heartfelt atmosphere.`,
   },
   {
     id: 54,
@@ -253,5 +323,7 @@ export const INCLUSIVE_SPECIAL_CATEGORIES = [
     category: "Inclusive & Special Categories",
     week: 7,
     prompt: `A single, hyper-detailed sunflower, its face a riot of color and texture, turns towards a warm, golden light source just off-screen. The camera captures this simple, beautiful moment with a still, appreciative gaze. Gold particle dust floats in the air, catching the light and adding a touch of magic. The lighting is warm and golden, with a gentle, appreciative mood.`,
+    iteration1: `Refine the previous generation. Enhance the sunflower's turning motion — make it more visible and natural, like a slow, deliberate movement toward the light. Increase the gold particle dust density and add visible light beams for the particles to float through. Push the still, appreciative gaze to feel more meditative.`,
+    iteration2: `Further refinement. Push the sunflower face texture to extreme detail — show the intricate spiral pattern of seeds, the individual ray florets, and the rich color variations. Intensify the warm, golden lighting to create a more dramatic, appreciative atmosphere. Make the light source just off-screen feel more present and warm. Add a warm, golden film grain for a simple, grateful atmosphere.`,
   },
 ];
