@@ -121,10 +121,15 @@ h1, h2, h3, .font-display {
   border-color: var(--pure-gold);
 }
 
-/* Product Protection */
+/* Product Protection — excludes demo video player */
 video {
   user-select: none;
   pointer-events: none;
+}
+
+.demo-video-player video {
+  user-select: auto;
+  pointer-events: auto;
 }
 
 /* Mobile Menu Slide-in Animation */
