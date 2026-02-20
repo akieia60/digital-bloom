@@ -16,6 +16,8 @@ import {
   INCLUSIVE_SPECIAL_CATEGORIES,
 } from './newPromptVaultData';
 
+import { VAULT_EXPANSION_PHASE_1 } from './newly_created_prompts';
+
 export const VISUAL_DOCTRINE = [
   'Dark void',
   'Single-source spotlight',
@@ -533,4 +535,6 @@ export const LAUNCH_PROMPTS = [
   ...INCLUSIVE_SPECIAL_CATEGORIES,
 ];
 
-export const ALL_PROMPTS = [...ORIGINAL_PROMPTS, ...LAUNCH_PROMPTS];
+export { VAULT_EXPANSION_PHASE_1 } from './newly_created_prompts';
+
+export const ALL_PROMPTS = [...ORIGINAL_PROMPTS, ...LAUNCH_PROMPTS, ...VAULT_EXPANSION_PHASE_1];
