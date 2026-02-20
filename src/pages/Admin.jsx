@@ -1,7 +1,23 @@
 import { useState, useEffect } from 'react';
 import { supabase, uploadProductImage, uploadProductVideo } from '../lib/supabase';
+import { useFounderAuth } from '../hooks/useFounderAuth';
+import FounderLogin from '../components/FounderLogin';
+
+/**
+ * Admin emails allowed to access the admin panel.
+ * Matches the founder allowlist used elsewhere in the app.
+ */
+const ADMIN_EMAILS = [
+  'akieia60@gmail.com',
+  'akieia.davis@gmail.com',
+  'admin@digitalbloom.art',
+];
 
 const Admin = () => {
+  // ── FIX #4 — Auth gate ─────────────────────────────────────────────────────
+  const { loading: authLoading, user, isFounder, error: authError, signIn, signOut } = useFounderAuth();
+  const isAdmin = user?.email && ADMIN_EMAILS.includes(user.email.toLowerCase());
+
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
@@ -20,7 +36,7 @@ const Admin = () => {
     occasions: '',
     stock: 10,
     is_active: true,
-    // NEW: Digital product fields
+    // Digital product fields
     product_type: 'physical',
     animation_style: '',
     prompt_used: '',
@@ -32,10 +48,12 @@ const Admin = () => {
   const [videoFile, setVideoFile] = useState(null);
   const [uploading, setUploading] = useState(false);
 
-  // Load products
+  // Load products only when authenticated as admin
   useEffect(() => {
-    loadProducts();
-  }, []);
+    if (isAdmin) {
+      loadProducts();
+    }
+  }, [isAdmin]);
 
   const loadProducts = async () => {
     setLoading(true);
@@ -150,7 +168,6 @@ const Admin = () => {
         occasions: formData.occasions.split(',').map(o => o.trim()).filter(Boolean),
         stock: parseInt(formData.stock),
         is_active: formData.is_active,
-        // NEW: Digital product fields
         product_type: formData.product_type,
         animation_style: formData.animation_style || null,
         prompt_used: formData.prompt_used || null,
@@ -232,24 +249,75 @@ const Admin = () => {
   const categories = ['roses', 'tulips', 'lilies', 'mixed', 'digital-art'];
   const occasionOptions = ['anniversary', 'birthday', 'romance', 'valentine', 'wedding', 'sympathy', 'thank-you', 'just-because', 'get-well'];
 
+  // ── Auth loading state ─────────────────────────────────────────────────────
+  if (authLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 to-gray-800">
+        <div className="text-center">
+          <div className="animate-spin h-12 w-12 border-4 border-rose-500 border-t-transparent rounded-full mx-auto"></div>
+          <p className="text-gray-400 mt-4">Checking authentication...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // ── Not authenticated → show login ─────────────────────────────────────────
+  if (!user) {
+    return <FounderLogin onLogin={signIn} error={authError} />;
+  }
+
+  // ── Authenticated but NOT admin → show unauthorized ────────────────────────
+  if (!isAdmin) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 to-gray-800 px-4">
+        <div className="text-center max-w-md">
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-red-500/20 border border-red-500/30 mb-4">
+            <svg className="w-8 h-8 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <h1 className="text-2xl font-bold text-white mb-2">Unauthorized</h1>
+          <p className="text-gray-400 mb-6">
+            Your account ({user.email}) does not have admin access.
+          </p>
+          <button
+            onClick={signOut}
+            className="bg-gray-700 hover:bg-gray-600 text-white px-6 py-3 rounded-lg font-semibold transition-colors"
+          >
+            Sign Out
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // ── Admin panel (original UI) ──────────────────────────────────────────────
   return (
     <div className="min-h-screen py-8 px-4 bg-gradient-to-br from-gray-900 to-gray-800">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8 flex items-center justify-between">
           <div>
-            <h1 className="text-4xl font-bold text-white mb-2">🌸 Admin Panel</h1>
-            <p className="text-gray-400">Manage your flower arrangements</p>
+            <h1 className="text-4xl font-bold text-white mb-2">Admin Panel</h1>
+            <p className="text-gray-400">Manage your flower arrangements &mdash; signed in as {user.email}</p>
           </div>
-          <button
-            onClick={() => {
-              resetForm();
-              setShowForm(!showForm);
-            }}
-            className="bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white px-6 py-3 rounded-lg font-semibold transition-all duration-300 shadow-lg hover:shadow-xl"
-          >
-            {showForm ? '✕ Close Form' : '+ Add New Product'}
-          </button>
+          <div className="flex items-center space-x-3">
+            <button
+              onClick={signOut}
+              className="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+            >
+              Sign Out
+            </button>
+            <button
+              onClick={() => {
+                resetForm();
+                setShowForm(!showForm);
+              }}
+              className="bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white px-6 py-3 rounded-lg font-semibold transition-all duration-300 shadow-lg hover:shadow-xl"
+            >
+              {showForm ? 'Close Form' : '+ Add New Product'}
+            </button>
+          </div>
         </div>
 
         {/* Message */}
@@ -320,17 +388,15 @@ const Admin = () => {
                 {/* Stock */}
                 <div>
                   <label className="block text-sm font-medium text-gray-300 mb-2">
-                    Stock Quantity *
+                    Stock
                   </label>
                   <input
                     type="number"
                     name="stock"
                     value={formData.stock}
                     onChange={handleInputChange}
-                    required
                     min="0"
                     className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-rose-500"
-                    placeholder="10"
                   />
                 </div>
 
@@ -343,17 +409,32 @@ const Admin = () => {
                     name="category"
                     value={formData.category}
                     onChange={handleInputChange}
-                    required
                     className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-rose-500"
                   >
                     {categories.map(cat => (
-                      <option key={cat} value={cat}>{cat.charAt(0).toUpperCase() + cat.slice(1)}</option>
+                      <option key={cat} value={cat}>{cat}</option>
                     ))}
                   </select>
                 </div>
 
-                {/* Occasions */}
+                {/* Product Type */}
                 <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                    Product Type
+                  </label>
+                  <select
+                    name="product_type"
+                    value={formData.product_type}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-rose-500"
+                  >
+                    <option value="physical">Physical</option>
+                    <option value="digital">Digital</option>
+                  </select>
+                </div>
+
+                {/* Occasions */}
+                <div className="md:col-span-2">
                   <label className="block text-sm font-medium text-gray-300 mb-2">
                     Occasions (comma-separated)
                   </label>
@@ -365,116 +446,37 @@ const Admin = () => {
                     className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-rose-500"
                     placeholder="anniversary, birthday, romance"
                   />
-                  <p className="text-xs text-gray-400 mt-1">
-                    Suggestions: {occasionOptions.join(', ')}
-                  </p>
-                </div>
-
-                {/* Product Type */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
-                    Product Type *
-                  </label>
-                  <select
-                    name="product_type"
-                    value={formData.product_type}
-                    onChange={handleInputChange}
-                    required
-                    className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-rose-500"
-                  >
-                    <option value="physical">Physical (Flower Arrangement)</option>
-                    <option value="digital">Digital (Video Download)</option>
-                  </select>
+                  <div className="flex flex-wrap gap-2 mt-2">
+                    {occasionOptions.map(occ => (
+                      <button
+                        key={occ}
+                        type="button"
+                        onClick={() => {
+                          const current = formData.occasions.split(',').map(o => o.trim()).filter(Boolean);
+                          if (current.includes(occ)) {
+                            setFormData(prev => ({
+                              ...prev,
+                              occasions: current.filter(o => o !== occ).join(', ')
+                            }));
+                          } else {
+                            setFormData(prev => ({
+                              ...prev,
+                              occasions: [...current, occ].join(', ')
+                            }));
+                          }
+                        }}
+                        className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
+                          formData.occasions.includes(occ)
+                            ? 'bg-rose-500 text-white'
+                            : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                        }`}
+                      >
+                        {occ}
+                      </button>
+                    ))}
+                  </div>
                 </div>
               </div>
-
-              {/* DIGITAL PRODUCT FIELDS - Only show if digital */}
-              {formData.product_type === 'digital' && (
-                <div className="bg-purple-900/20 border border-purple-500/30 rounded-lg p-4 space-y-4">
-                  <h3 className="text-lg font-semibold text-purple-300 mb-3">
-                    🎬 Digital Product Details
-                  </h3>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {/* Animation Style */}
-                    <div>
-                      <label className="block text-sm font-medium text-gray-300 mb-2">
-                        Animation Style
-                      </label>
-                      <select
-                        name="animation_style"
-                        value={formData.animation_style}
-                        onChange={handleInputChange}
-                        className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-purple-500"
-                      >
-                        <option value="">Select animation...</option>
-                        <option value="heartbeat-pulse">Heartbeat Pulse</option>
-                        <option value="wave-effect">Wave Effect</option>
-                        <option value="circular-pulse">Circular Pulse</option>
-                        <option value="music-reactive">Music Reactive</option>
-                        <option value="rising-intertwine">Rising & Intertwining</option>
-                        <option value="love-story">Love Story Silhouette</option>
-                        <option value="custom">Custom/Other</option>
-                      </select>
-                    </div>
-
-                    {/* Trim Style */}
-                    <div>
-                      <label className="block text-sm font-medium text-gray-300 mb-2">
-                        Trim/Edge Style
-                      </label>
-                      <select
-                        name="trim_style"
-                        value={formData.trim_style}
-                        onChange={handleInputChange}
-                        className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-purple-500"
-                      >
-                        <option value="">Select trim...</option>
-                        <option value="diamond">Diamond Encrusted</option>
-                        <option value="gold">Gold Metallic</option>
-                        <option value="silver">Silver Metallic</option>
-                        <option value="white">White Trim</option>
-                        <option value="blue">Blue Glow</option>
-                        <option value="orange">Orange Gradient</option>
-                      </select>
-                    </div>
-
-                    {/* Embellishments */}
-                    <div>
-                      <label className="block text-sm font-medium text-gray-300 mb-2">
-                        Embellishments
-                      </label>
-                      <input
-                        type="text"
-                        name="embellishments"
-                        value={formData.embellishments}
-                        onChange={handleInputChange}
-                        className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-purple-500"
-                        placeholder="e.g., pearls, sparkles, glow effects"
-                      />
-                    </div>
-
-                    {/* Prompt Used */}
-                    <div>
-                      <label className="block text-sm font-medium text-gray-300 mb-2">
-                        AI Prompt Used
-                      </label>
-                      <input
-                        type="text"
-                        name="prompt_used"
-                        value={formData.prompt_used}
-                        onChange={handleInputChange}
-                        className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-purple-500"
-                        placeholder="e.g., Diamond Crusted + Heartbeat Pulse"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="bg-purple-800/20 rounded p-3 text-sm text-purple-200">
-                    💡 <strong>Tip:</strong> For digital products, set stock to 999 (unlimited downloads) and use Video URL for the MP4 file.
-                  </div>
-                </div>
-              )}
 
               {/* Description */}
               <div>
@@ -488,9 +490,34 @@ const Admin = () => {
                   required
                   rows="3"
                   className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-rose-500"
-                  placeholder="A beautiful description of your arrangement..."
+                  placeholder="Describe your product..."
                 />
               </div>
+
+              {/* Digital Product Fields */}
+              {formData.product_type === 'digital' && (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 bg-gray-700/50 rounded-lg border border-gray-600">
+                  <div className="md:col-span-2">
+                    <h3 className="text-lg font-semibold text-white mb-2">Digital Product Details</h3>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-2">Animation Style</label>
+                    <input type="text" name="animation_style" value={formData.animation_style} onChange={handleInputChange} className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-rose-500" placeholder="e.g., Watercolor bloom" />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-2">Prompt Used</label>
+                    <input type="text" name="prompt_used" value={formData.prompt_used} onChange={handleInputChange} className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-rose-500" placeholder="AI prompt used to generate" />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-2">Trim Style</label>
+                    <input type="text" name="trim_style" value={formData.trim_style} onChange={handleInputChange} className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-rose-500" placeholder="e.g., Gold leaf" />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-2">Embellishments</label>
+                    <input type="text" name="embellishments" value={formData.embellishments} onChange={handleInputChange} className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-rose-500" placeholder="e.g., Sparkle particles" />
+                  </div>
+                </div>
+              )}
 
               {/* Image Upload */}
               <div className="md:col-span-2">
@@ -505,7 +532,7 @@ const Admin = () => {
                     accept="image/*"
                     className="flex-1 px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-rose-500"
                   />
-                  {imageFile && <span className="text-green-400 text-sm">📁 {imageFile.name} ready</span>}
+                  {imageFile && <span className="text-green-400 text-sm">{imageFile.name} ready</span>}
                 </div>
               </div>
 
@@ -537,7 +564,7 @@ const Admin = () => {
                     accept="video/*"
                     className="flex-1 px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-rose-500"
                   />
-                  {videoFile && <span className="text-green-400 text-sm">📁 {videoFile.name} ready</span>}
+                  {videoFile && <span className="text-green-400 text-sm">{videoFile.name} ready</span>}
                 </div>
               </div>
 
@@ -577,7 +604,7 @@ const Admin = () => {
                   disabled={uploading}
                   className={`bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white px-8 py-3 rounded-lg font-semibold transition-all duration-300 ${uploading ? 'opacity-50 cursor-not-allowed' : ''}`}
                 >
-                  {uploading ? '⌛ Uploading...' : (editingProduct ? 'Update Product' : 'Add Product')}
+                  {uploading ? 'Uploading...' : (editingProduct ? 'Update Product' : 'Add Product')}
                 </button>
                 <button
                   type="button"
