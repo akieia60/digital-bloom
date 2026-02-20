@@ -15,6 +15,7 @@ import {
   INCLUSIVE_SPECIAL_CATEGORIES,
   ORIGINAL_PROMPTS,
   LAUNCH_PROMPTS,
+  VAULT_EXPANSION_PHASE_1,
   ALL_PROMPTS,
 } from '../data/promptVaultData';
 
@@ -28,6 +29,7 @@ const FILTER_TABS = [
   { key: 'all', label: 'All Prompts', count: ALL_PROMPTS.length },
   { key: 'original', label: 'Original Collection', count: ORIGINAL_PROMPTS.length },
   { key: 'launch', label: 'New — Launch Prompts', count: LAUNCH_PROMPTS.length },
+  { key: 'expansion', label: 'Vault Expansion', count: VAULT_EXPANSION_PHASE_1.length },
 ];
 
 const CATEGORY_FILTERS = [
@@ -38,6 +40,10 @@ const CATEGORY_FILTERS = [
   { key: 'birthday', label: 'Birthday & Celebration' },
   { key: 'holiday', label: 'Holiday Collection' },
   { key: 'inclusive', label: 'Inclusive & Special' },
+  { key: 'occasions', label: 'Occasions' },
+  { key: 'relationships', label: 'Relationships' },
+  { key: 'flowertypes', label: 'Flower Types' },
+  { key: 'mens', label: "Men's Themes" },
 ];
 
 // ─── Priority config ──────────────────────────────────────────────────────────
@@ -506,15 +512,40 @@ const PromptVault = () => {
 
   const showLaunch = useMemo(() => {
     if (activeCategory) {
-      return !['signature', 'bloom'].includes(activeCategory);
+      return !['signature', 'bloom', 'occasions', 'relationships', 'flowertypes', 'mens'].includes(activeCategory);
     }
     return activeTab === 'all' || activeTab === 'launch';
+  }, [activeTab, activeCategory]);
+
+  const showExpansion = useMemo(() => {
+    if (activeCategory) {
+      return ['occasions', 'relationships', 'flowertypes', 'mens'].includes(activeCategory);
+    }
+    return activeTab === 'all' || activeTab === 'expansion';
   }, [activeTab, activeCategory]);
 
   const filteredNewSeries = useMemo(() => {
     if (!activeCategory) return NEW_SERIES;
     return NEW_SERIES.filter((s) => s.key === activeCategory);
   }, [activeCategory]);
+
+  const EXPANSION_SERIES = useMemo(() => {
+    const occasions = VAULT_EXPANSION_PHASE_1.filter(p => p.category === 'Occasions');
+    const relationships = VAULT_EXPANSION_PHASE_1.filter(p => p.category === 'Relationships');
+    const flowerTypes = VAULT_EXPANSION_PHASE_1.filter(p => p.category === 'Flower Types');
+    const mensThemes = VAULT_EXPANSION_PHASE_1.filter(p => p.category === "Men's Themes");
+    return [
+      { key: 'occasions', title: 'Occasions', subtitle: 'Prompts 56\u201373 \u2014 Celebrations & Life Events', prompts: occasions },
+      { key: 'relationships', title: 'Relationships', subtitle: 'Prompts 74\u201377 \u2014 Love & Connection', prompts: relationships },
+      { key: 'flowertypes', title: 'Flower Types', subtitle: 'Prompts 78\u201381 \u2014 Featured Blooms', prompts: flowerTypes },
+      { key: 'mens', title: "Men's Themes", subtitle: 'Prompts 82\u201385 \u2014 Masculine Luxury', prompts: mensThemes },
+    ];
+  }, []);
+
+  const filteredExpansionSeries = useMemo(() => {
+    if (!activeCategory) return EXPANSION_SERIES;
+    return EXPANSION_SERIES.filter((s) => s.key === activeCategory);
+  }, [activeCategory, EXPANSION_SERIES]);
 
   const handleCategoryClick = (key) => {
     setActiveCategory((prev) => (prev === key ? null : key));
@@ -826,6 +857,33 @@ const PromptVault = () => {
                 onToggleComplete={toggleComplete}
                 higgsEnabled={higgsEnabled}
                 priority={series.priority}
+              />
+            ))}
+          </>
+        )}
+
+        {/* ━━━ Vault Expansion Phase 1 ━━━ */}
+        {showExpansion && (
+          <>
+            {(showOriginal || showLaunch) && !activeCategory && (
+              <div className="flex items-center gap-4 my-8">
+                <div className="flex-1 h-px bg-gradient-to-r from-transparent via-[#D4AF37]/30 to-transparent" />
+                <span className="text-xs font-display font-semibold text-[#D4AF37]/60 uppercase tracking-widest">
+                  Vault Expansion — Phase 1
+                </span>
+                <div className="flex-1 h-px bg-gradient-to-r from-transparent via-[#D4AF37]/30 to-transparent" />
+              </div>
+            )}
+
+            {filteredExpansionSeries.map((series) => (
+              <SeriesSection
+                key={series.key}
+                title={series.title}
+                subtitle={series.subtitle}
+                prompts={series.prompts}
+                completedMap={completedMap}
+                onToggleComplete={toggleComplete}
+                higgsEnabled={higgsEnabled}
               />
             ))}
           </>
