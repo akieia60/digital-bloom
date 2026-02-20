@@ -7,6 +7,7 @@
  * Only founder emails in the allowlist can access this endpoint.
  */
 import { createClient } from '@supabase/supabase-js';
+import { applyCors } from './_lib/cors.js';
 
 // Founder email allowlist — only these emails can access the env-check endpoint
 const FOUNDER_EMAILS = [
@@ -25,16 +26,8 @@ const REQUIRED_ENV_VARS = [
 ];
 
 export default async function handler(req, res) {
-  // CORS headers
-  res.setHeader('Access-Control-Allow-Credentials', 'true');
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Authorization');
-
-  if (req.method === 'OPTIONS') {
-    res.status(200).end();
-    return;
-  }
+  // CORS hardening
+  if (!applyCors(req, res)) return;
 
   if (req.method !== 'GET') {
     return res.status(405).json({ error: 'Method not allowed' });
