@@ -1,13 +1,17 @@
 /* ============================================
-   VIDEO HERO — Full-Screen Luxury Landing
+   VIDEO HERO — Cinematic Luxury Landing
    Digital Bloom Brand: Obsidian + Gold + Platinum
-   Redesigned for maximum readability & impact
+   Full Redesign: 7-Part Creative Brief
    ============================================ */
 
-/* Google Fonts — Futuristic bold heading + Elegant serif body */
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Cormorant+Garamond:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap');
+/* ── PART 6: Typography Rebrand ──
+   Playfair Display — high-contrast editorial serif
+   Elegant, modern luxury, mobile-safe, long-term brand identity
+   Applied to hero headline and section headers
+   ============================================ */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&family=Cormorant+Garamond:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap');
 
-/* Container */
+/* ── Container ── */
 .video-hero {
   position: relative;
   width: 100%;
@@ -21,13 +25,48 @@
   z-index: 1;
 }
 
-/* Video Background Layer */
+/* ── PART 1: Black Curtain for Cinematic Intro ──
+   Starts fully opaque; lifts (fades out) after blackHold phase */
+.video-hero__curtain {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  background: #000000;
+  opacity: 1;
+  transition: opacity 2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  pointer-events: none;
+}
+
+.video-hero__curtain--lifted {
+  opacity: 0;
+}
+
+/* ── Video Background Layer ── */
 .video-hero__bg {
   position: absolute;
   inset: 0;
   z-index: 0;
   will-change: transform, opacity;
   transform-origin: center center;
+}
+
+/* ── PART 7: Micro Parallax — subtle cinematic scale pulse ──
+   2–3% scale over 6s, extremely subtle, CSS-only */
+.video-hero__video-wrap {
+  width: 100%;
+  height: 100%;
+  animation: heroMicroParallax 8s ease-in-out infinite alternate;
+  will-change: transform;
+  transform-origin: center center;
+}
+
+@keyframes heroMicroParallax {
+  0% {
+    transform: scale(1.0);
+  }
+  100% {
+    transform: scale(1.025);
+  }
 }
 
 .video-hero__video {
@@ -39,21 +78,43 @@
   user-select: none;
 }
 
-/* Dark Overlay — Stronger for text readability against gold video */
+/* ── PART 2: Overlay Refinement ──
+   Multi-stop gradient: darker bottom, lighter top, warm amber tint
+   Cinematic depth, not a flat dark sheet */
 .video-hero__overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    180deg,
-    rgba(5, 5, 16, 0.55) 0%,
-    rgba(5, 5, 16, 0.35) 30%,
-    rgba(5, 5, 16, 0.40) 60%,
-    rgba(5, 5, 16, 0.70) 100%
-  );
   z-index: 1;
+  /* Layered overlays for depth */
+  background:
+    /* Warm amber tint — barely perceptible */
+    radial-gradient(
+      ellipse 120% 80% at 50% 40%,
+      rgba(212, 175, 55, 0.04) 0%,
+      rgba(180, 140, 30, 0.02) 40%,
+      transparent 70%
+    ),
+    /* Radial vignette — darker edges, lighter center bloom area */
+    radial-gradient(
+      ellipse 80% 70% at 50% 35%,
+      transparent 0%,
+      rgba(5, 5, 16, 0.15) 50%,
+      rgba(5, 5, 16, 0.45) 100%
+    ),
+    /* Primary vertical gradient — heavy bottom for text readability */
+    linear-gradient(
+      180deg,
+      rgba(5, 5, 16, 0.30) 0%,
+      rgba(5, 5, 16, 0.15) 20%,
+      rgba(5, 5, 16, 0.10) 35%,
+      rgba(5, 5, 16, 0.20) 50%,
+      rgba(5, 5, 16, 0.45) 70%,
+      rgba(5, 5, 16, 0.72) 85%,
+      rgba(5, 5, 16, 0.85) 100%
+    );
 }
 
-/* Text Content */
+/* ── Text Content ── */
 .video-hero__content {
   position: relative;
   z-index: 2;
@@ -66,27 +127,26 @@
   will-change: opacity;
 }
 
-/* ============================================
-   TITLE — Bold Futuristic Platinum/White
-   Font: Orbitron — geometric, premium, forward-thinking
-   ============================================ */
+/* ── PART 6 + PART 3: Title — Playfair Display + warm text-shadow ──
+   High-contrast serif, editorial luxury
+   Warm gold glow, dimensional depth */
 .video-hero__title {
-  font-family: 'Orbitron', sans-serif;
+  font-family: 'Playfair Display', 'Georgia', serif;
   font-weight: 700;
-  font-size: clamp(2.2rem, 7vw, 5rem);
-  letter-spacing: 0.25em;
+  font-size: clamp(2.4rem, 7.5vw, 5.2rem);
+  letter-spacing: 0.18em;
   color: #F0F0F5;
   text-shadow:
-    0 0 20px rgba(240, 240, 245, 0.4),
-    0 0 50px rgba(212, 175, 55, 0.15),
-    0 0 80px rgba(212, 175, 55, 0.08),
-    0 2px 4px rgba(0, 0, 0, 0.6);
+    0 0 30px rgba(212, 175, 55, 0.18),
+    0 0 60px rgba(212, 175, 55, 0.08),
+    0 0 10px rgba(245, 230, 190, 0.12),
+    0 2px 8px rgba(0, 0, 0, 0.7);
   margin: 0 0 20px;
   line-height: 1.15;
   text-transform: uppercase;
 }
 
-/* Tagline — Elegant serif, clearly readable */
+/* ── PART 3: Tagline — warm ambient glow ── */
 .video-hero__tagline {
   font-family: 'Cormorant Garamond', 'Georgia', serif;
   font-weight: 400;
@@ -95,20 +155,21 @@
   letter-spacing: 0.12em;
   color: rgba(245, 245, 247, 0.92);
   text-shadow:
-    0 0 15px rgba(245, 245, 247, 0.2),
-    0 1px 3px rgba(0, 0, 0, 0.5);
+    0 0 20px rgba(212, 175, 55, 0.12),
+    0 0 8px rgba(245, 230, 190, 0.08),
+    0 1px 4px rgba(0, 0, 0, 0.6);
   margin: 0 0 48px;
   line-height: 1.5;
   max-width: 600px;
 }
 
-/* CTA Button Wrapper */
+/* ── CTA Button Wrapper ── */
 .video-hero__cta-wrap {
   display: flex;
   justify-content: center;
 }
 
-/* Glowing Gold Button — Premium */
+/* ── PART 4: CTA Micro-Interaction — Gold Shimmer Sweep ── */
 .video-hero__btn {
   position: relative;
   display: inline-flex;
@@ -130,12 +191,50 @@
 
 .video-hero__btn:hover {
   border-color: #D4AF37;
-  background: linear-gradient(135deg, rgba(212, 175, 55, 0.18) 0%, rgba(212, 175, 55, 0.08) 100%);
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.20) 0%, rgba(212, 175, 55, 0.10) 100%);
   transform: translateY(-2px);
   box-shadow:
-    0 0 30px rgba(212, 175, 55, 0.25),
-    0 0 60px rgba(212, 175, 55, 0.12),
+    0 0 35px rgba(212, 175, 55, 0.30),
+    0 0 70px rgba(212, 175, 55, 0.12),
     0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+/* Shimmer sweep on hover — CSS-only, <600ms */
+.video-hero__btn-shimmer {
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(212, 175, 55, 0.15) 40%,
+    rgba(255, 235, 180, 0.25) 50%,
+    rgba(212, 175, 55, 0.15) 60%,
+    transparent 100%
+  );
+  z-index: 1;
+  pointer-events: none;
+  transition: none;
+}
+
+.video-hero__btn:hover .video-hero__btn-shimmer {
+  animation: shimmerSweep 0.55s ease-out forwards;
+}
+
+@keyframes shimmerSweep {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+.video-hero__btn:focus-visible {
+  outline: 2px solid #D4AF37;
+  outline-offset: 4px;
 }
 
 .video-hero__btn-text {
@@ -149,7 +248,7 @@
   z-index: 2;
 }
 
-/* Glow Animation */
+/* Glow Animation — ambient pulse */
 .video-hero__btn-glow {
   position: absolute;
   inset: -2px;
@@ -159,7 +258,7 @@
     0 0 15px rgba(212, 175, 55, 0.15),
     inset 0 0 15px rgba(212, 175, 55, 0.05);
   animation: heroGlow 3s ease-in-out infinite;
-  z-index: 1;
+  z-index: 0;
   pointer-events: none;
 }
 
@@ -176,7 +275,7 @@
   }
 }
 
-/* Scroll Indicator */
+/* ── Scroll Indicator ── */
 .video-hero__scroll-indicator {
   position: absolute;
   bottom: 32px;
@@ -213,7 +312,9 @@
 }
 
 /* ============================================
-   ENTRANCE ANIMATIONS
+   PART 1: ENTRANCE ANIMATIONS
+   Cinematic staging — each element fades up independently
+   Intro plays ONCE on page load via JS phase control
    ============================================ */
 .video-hero__hidden {
   opacity: 0;
@@ -227,16 +328,28 @@
               transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.video-hero__delay-1 {
-  transition-delay: 0.3s;
-}
-
-.video-hero__delay-2 {
-  transition-delay: 0.6s;
-}
-
-.video-hero__delay-3 {
-  transition-delay: 0.9s;
+/* ============================================
+   PART 5: Scroll Continuity — Night → Dawn
+   Gradient fade band between hero and next section
+   Eliminates abrupt jump into light content
+   ============================================ */
+.video-hero__scroll-fade {
+  position: relative;
+  z-index: 0;
+  width: 100%;
+  height: 120px;
+  background: linear-gradient(
+    180deg,
+    #050510 0%,
+    #0a0a1f 15%,
+    #111128 30%,
+    #1a1a38 45%,
+    #1A1A2E 60%,
+    rgba(26, 26, 46, 0.6) 80%,
+    transparent 100%
+  );
+  margin-top: -1px; /* prevent sub-pixel gap */
+  pointer-events: none;
 }
 
 /* ============================================
@@ -245,7 +358,7 @@
    ============================================ */
 @media (max-width: 768px) {
   .video-hero__title {
-    letter-spacing: 0.15em;
+    letter-spacing: 0.12em;
     margin-bottom: 14px;
   }
 
@@ -267,12 +380,16 @@
   .video-hero__scroll-indicator {
     bottom: 24px;
   }
+
+  .video-hero__scroll-fade {
+    height: 80px;
+  }
 }
 
 @media (max-width: 430px) {
   .video-hero__title {
-    letter-spacing: 0.1em;
-    font-size: 2rem;
+    letter-spacing: 0.08em;
+    font-size: 2.1rem;
   }
 
   .video-hero__tagline {
@@ -288,6 +405,10 @@
   .video-hero__btn-text {
     font-size: 0.9rem;
     letter-spacing: 0.12em;
+  }
+
+  .video-hero__scroll-fade {
+    height: 60px;
   }
 }
 
@@ -310,6 +431,33 @@
 
   .video-hero__scroll-indicator {
     display: none;
+  }
+}
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .video-hero__curtain {
+    transition-duration: 0.01s;
+  }
+
+  .video-hero__animate-in {
+    transition-duration: 0.01s;
+  }
+
+  .video-hero__video-wrap {
+    animation: none;
+  }
+
+  .video-hero__btn-glow {
+    animation: none;
+  }
+
+  .video-hero__chevron {
+    animation: none;
+  }
+
+  .video-hero__btn:hover .video-hero__btn-shimmer {
+    animation: none;
   }
 }
 
