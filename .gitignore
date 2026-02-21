@@ -6,7 +6,13 @@ dist/
 
 # Environment variables (NEVER commit secrets!)
 .env
-.env.*
+.env.local
+.env.development
+.env.production
+.env.staging
+.env.vercel
+.env.test
+*.env
 .env.local
 .env.development
 .env.production
@@ -41,3 +47,6 @@ npm-debug.log*
 *.pfx
 secrets.json
 service-account*.json
+
+# Stripe setup output (contains product/price IDs — add to .env instead)
+stripe-product-ids.json

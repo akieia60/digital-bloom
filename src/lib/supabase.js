@@ -14,12 +14,23 @@ export const supabase = createClient(supabaseUrl || '', supabaseAnonKey || '');
 // PRODUCT QUERIES
 // ============================================
 
-export const getProducts = async () => {
-  const { data, error } = await supabase
+/**
+ * Fetch active products from Supabase.
+ * @param {object} options
+ * @param {number|null} options.tier - Filter by pricing tier (1-4), or null for all
+ */
+export const getProducts = async ({ tier = null } = {}) => {
+  let query = supabase
     .from('products')
     .select('*')
     .eq('is_active', true)
     .order('created_at', { ascending: false });
+
+  if (tier !== null) {
+    query = query.eq('tier', tier);
+  }
+
+  const { data, error } = await query;
 
   if (error) {
     console.error('Error fetching products:', error);
