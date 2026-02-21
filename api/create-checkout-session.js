@@ -8,6 +8,21 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY
 );
 
+/**
+ * Tier price ID map — reads from environment variables.
+ * Set these in your Vercel project settings after running the Stripe setup script.
+ * Keys: VITE_STRIPE_PRICE_TIER1 … VITE_STRIPE_PRICE_TIER4
+ *
+ * Note: Vercel serverless functions use process.env (not import.meta.env).
+ * Both VITE_ prefixed and non-prefixed versions are checked for compatibility.
+ */
+const TIER_PRICE_IDS = {
+  1: process.env.VITE_STRIPE_PRICE_TIER1 || process.env.STRIPE_PRICE_TIER1 || null,
+  2: process.env.VITE_STRIPE_PRICE_TIER2 || process.env.STRIPE_PRICE_TIER2 || null,
+  3: process.env.VITE_STRIPE_PRICE_TIER3 || process.env.STRIPE_PRICE_TIER3 || null,
+  4: process.env.VITE_STRIPE_PRICE_TIER4 || process.env.STRIPE_PRICE_TIER4 || null,
+};
+
 export default async function handler(req, res) {
   // FIX #6 — CORS hardening (replaces wildcard origin)
   if (!applyCors(req, res)) return;
@@ -17,10 +32,10 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { 
-      cartItems, 
-      successUrl, 
-      cancelUrl, 
+    const {
+      cartItems,
+      successUrl,
+      cancelUrl,
       customerEmail,
       reservation_id,
       remaining_due_cents,
@@ -38,7 +53,6 @@ export default async function handler(req, res) {
 
     // If credit covers full amount, handle free checkout
     if (reservation_id && remaining_due_cents === 0) {
-      // Capture the reservation immediately
       const { data: reservation, error: resError } = await supabase
         .from('experience_credit_reservations')
         .select('*, experience_credits(*)')
@@ -49,8 +63,8 @@ export default async function handler(req, res) {
         return res.status(400).json({ error: 'Invalid reservation' });
       }
 
-      // Update credit balance
-      const newBalance = reservation.experience_credits.remaining_amount_cents - reservation.reserved_cents;
+      const newBalance =
+        reservation.experience_credits.remaining_amount_cents - reservation.reserved_cents;
       const newStatus = newBalance === 0 ? 'redeemed' : 'partially_used';
 
       await supabase
@@ -62,42 +76,62 @@ export default async function handler(req, res) {
         })
         .eq('id', reservation.credit_id);
 
-      // Add ledger entry
-      await supabase
-        .from('experience_credit_ledger')
-        .insert({
-          credit_id: reservation.credit_id,
-          type: 'redemption',
-          amount_cents: -reservation.reserved_cents,
-          description: `Redeemed for cart purchase (${cartItems.length} items)`
-        });
+      await supabase.from('experience_credit_ledger').insert({
+        credit_id: reservation.credit_id,
+        type: 'redemption',
+        amount_cents: -reservation.reserved_cents,
+        description: `Redeemed for cart purchase (${cartItems.length} items)`
+      });
 
-      // Mark reservation as captured
       await supabase
         .from('experience_credit_reservations')
         .update({ status: 'captured' })
         .eq('id', reservation_id);
 
-      // Return success URL for free checkout
       return res.status(200).json({
         free_checkout: true,
         url: successUrl.replace('{CHECKOUT_SESSION_ID}', 'free_' + reservation_id)
       });
     }
 
-    // Create Stripe line items
-    const lineItems = cartItems.map(item => ({
-      price_data: {
-        currency: 'usd',
-        product_data: {
-          name: item.product.title || item.product.name,
-          description: item.product.description || '',
-          images: item.product.image_url ? [item.product.image_url] : []
+    // Build Stripe line items.
+    // Prefer using the Stripe price ID stored on the product (from the database),
+    // falling back to the tier-based env var, and finally using price_data.
+    const lineItems = cartItems.map((item) => {
+      const product = item.product;
+
+      // Option 1: Use the stored Stripe price ID (most reliable)
+      if (product.stripe_price_id &&
+          !product.stripe_price_id.startsWith('REPLACE_WITH')) {
+        return {
+          price: product.stripe_price_id,
+          quantity: item.quantity,
+        };
+      }
+
+      // Option 2: Use tier-based env var price ID
+      const tierPriceId = product.tier ? TIER_PRICE_IDS[product.tier] : null;
+      if (tierPriceId) {
+        return {
+          price: tierPriceId,
+          quantity: item.quantity,
+        };
+      }
+
+      // Option 3: Fallback — create price inline (works before Stripe IDs are configured)
+      return {
+        price_data: {
+          currency: 'usd',
+          product_data: {
+            name: product.title || product.name,
+            description: product.description || '',
+            images: product.image_url ? [product.image_url] : [],
+          },
+          unit_amount: Math.round(product.price * 100),
         },
-        unit_amount: Math.round(item.product.price * 100)
-      },
-      quantity: item.quantity
-    }));
+        quantity: item.quantity,
+      };
+    });
 
     // Prepare session config
     const sessionConfig = {
@@ -107,31 +141,38 @@ export default async function handler(req, res) {
       success_url: successUrl,
       cancel_url: cancelUrl,
       customer_email: customerEmail || undefined,
+      // Apple Pay and Google Pay are enabled automatically by Stripe Checkout
+      // when the site is on HTTPS and the customer's device supports them.
       metadata: {
         ...metadata,
         reservation_id: reservation_id || '',
-        cart_items: JSON.stringify(cartItems.map(item => ({
-          id: item.product.id,
-          title: item.product.title,
-          quantity: item.quantity,
-          price: item.product.price
-        })))
-      }
+        cart_items: JSON.stringify(
+          cartItems.map((item) => ({
+            id: item.product.id,
+            title: item.product.title || item.product.name,
+            tier: item.product.tier || null,
+            quantity: item.quantity,
+            price: item.product.price,
+          }))
+        ),
+      },
     };
 
     // If credit is applied but doesn't cover full amount, add discount
     if (reservation_id && remaining_due_cents > 0 && remaining_due_cents < totalCents) {
       const creditDiscount = totalCents - remaining_due_cents;
-      
-      // Use Stripe's discount feature instead of negative line items
-      sessionConfig.discounts = [{
-        coupon: await stripe.coupons.create({
-          amount_off: creditDiscount,
-          currency: 'usd',
-          duration: 'once',
-          name: `Experience Credit: -$${(creditDiscount / 100).toFixed(2)}`
-        }).then(c => c.id)
-      }];
+      sessionConfig.discounts = [
+        {
+          coupon: await stripe.coupons
+            .create({
+              amount_off: creditDiscount,
+              currency: 'usd',
+              duration: 'once',
+              name: `Experience Credit: -$${(creditDiscount / 100).toFixed(2)}`,
+            })
+            .then((c) => c.id),
+        },
+      ];
     }
 
     // Create Stripe checkout session
@@ -139,14 +180,13 @@ export default async function handler(req, res) {
 
     res.status(200).json({
       sessionId: session.id,
-      url: session.url
+      url: session.url,
     });
-
   } catch (error) {
     console.error('Error creating checkout session:', error);
-    res.status(500).json({ 
+    res.status(500).json({
       error: 'Internal server error',
-      details: error.message 
+      details: error.message,
     });
   }
 }

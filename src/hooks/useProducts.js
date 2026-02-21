@@ -3,10 +3,13 @@ import { getProducts, getProductById } from '../lib/supabase';
 import { flowers } from '../data/flowers';
 
 /**
- * Custom hook to fetch products from Supabase
- * Falls back to mock data if Supabase is not configured
+ * Custom hook to fetch products from Supabase.
+ * Falls back to mock data if Supabase is not configured or returns empty.
+ *
+ * @param {object} options
+ * @param {number|null} options.tier - Filter by pricing tier (1-4), or null for all
  */
-export const useProducts = () => {
+export const useProducts = ({ tier = null } = {}) => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -18,7 +21,7 @@ export const useProducts = () => {
       setError(null);
 
       try {
-        const data = await getProducts();
+        const data = await getProducts({ tier });
 
         if (data && data.length > 0) {
           setProducts(data);
@@ -27,14 +30,16 @@ export const useProducts = () => {
         } else {
           // Fallback to mock data only if database is empty
           console.log('⚠️ No products in database, using demo data');
-          setProducts(flowers);
+          const filtered = tier ? flowers.filter((f) => f.tier === tier) : flowers;
+          setProducts(filtered);
           setUsingMockData(true);
         }
       } catch (err) {
         console.error('Error fetching products:', err);
         setError(err.message);
         // Fallback to mock data on error
-        setProducts(flowers);
+        const filtered = tier ? flowers.filter((f) => f.tier === tier) : flowers;
+        setProducts(filtered);
         setUsingMockData(true);
       } finally {
         setLoading(false);
@@ -42,14 +47,14 @@ export const useProducts = () => {
     };
 
     fetchProducts();
-  }, []);
+  }, [tier]);
 
   return { products, loading, error, usingMockData };
 };
 
 /**
- * Custom hook to fetch a single product by ID
- * Falls back to mock data if Supabase is not configured
+ * Custom hook to fetch a single product by ID.
+ * Falls back to mock data if Supabase is not configured.
  */
 export const useProduct = (id) => {
   const [product, setProduct] = useState(null);
@@ -67,13 +72,6 @@ export const useProduct = (id) => {
       setLoading(true);
       setError(null);
 
-      // Using local data with videos for now - REMOVED to enable Supabase
-      // const mockProduct = flowers.find(f => f.id === parseInt(id));
-      // setProduct(mockProduct || null);
-      // setUsingMockData(true);
-      // setLoading(false);
-      // return;
-
       try {
         const data = await getProductById(id);
 
@@ -82,15 +80,14 @@ export const useProduct = (id) => {
           setUsingMockData(false);
         } else {
           // Fallback to mock data if product not found in database
-          const mockProduct = flowers.find(f => f.id === parseInt(id));
+          const mockProduct = flowers.find((f) => f.id === parseInt(id));
           setProduct(mockProduct || null);
           setUsingMockData(true);
         }
       } catch (err) {
         console.error('Error fetching product:', err);
         setError(err.message);
-        // Fallback to mock data on error
-        const mockProduct = flowers.find(f => f.id === parseInt(id));
+        const mockProduct = flowers.find((f) => f.id === parseInt(id));
         setProduct(mockProduct || null);
         setUsingMockData(true);
       } finally {

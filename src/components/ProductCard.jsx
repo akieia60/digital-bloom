@@ -1,13 +1,20 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useCart } from '../context/CartContext';
 import VideoPlayer from './VideoPlayer';
+import { getTierByNumber } from '../config/pricingTiers';
 
+/**
+ * ProductCard — Digital Bloom
+ * Price is always read from product.price (database value).
+ * Tier badge is derived from product.tier via the pricingTiers config.
+ * No prices are hardcoded here.
+ */
 const ProductCard = ({ product }) => {
   const [isHovered, setIsHovered] = useState(false);
+  const tierInfo = product.tier ? getTierByNumber(product.tier) : null;
 
   return (
-    <div 
+    <div
       className="group relative cursor-pointer"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
@@ -22,7 +29,7 @@ const ProductCard = ({ product }) => {
               alt={product.name}
             />
           </div>
-          
+
           {/* Subtle Luxury Gradient Overlay */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-80 group-hover:opacity-60 transition-opacity duration-700"></div>
 
@@ -33,10 +40,21 @@ const ProductCard = ({ product }) => {
             </div>
           </div>
 
-          {/* Price Badge */}
+          {/* Price Badge — reads from product.price (database), never hardcoded */}
           <div className="absolute top-8 right-8 px-5 py-2 glass border border-white/10 rounded-full transition-transform duration-700 group-hover:-translate-x-2">
-            <span className="text-xs font-bold text-pure-gold tracking-wider">${parseFloat(product.price).toFixed(2)}</span>
+            <span className="text-xs font-bold text-pure-gold tracking-wider">
+              ${parseFloat(product.price).toFixed(2)}
+            </span>
           </div>
+
+          {/* Tier Badge — shown if product has a tier */}
+          {tierInfo && (
+            <div className="absolute top-8 left-8 px-3 py-1 glass border border-white/10 rounded-full">
+              <span className="text-[9px] uppercase tracking-widest text-white/50 font-semibold">
+                Tier {tierInfo.tier}
+              </span>
+            </div>
+          )}
         </div>
 
         {/* Narrative Info */}
@@ -46,7 +64,7 @@ const ProductCard = ({ product }) => {
           </h3>
           <p className="text-[10px] uppercase tracking-[0.3em] text-white/40 mt-3 font-medium flex items-center justify-center sm:justify-start">
             <span className="w-1 h-1 rounded-full bg-pure-gold/40 mr-3"></span>
-            {product.category || 'Limited Masterpiece'}
+            {tierInfo ? tierInfo.tagline : (product.category || 'Limited Masterpiece')}
           </p>
         </div>
       </Link>
