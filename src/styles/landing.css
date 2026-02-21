@@ -5,7 +5,7 @@
    ============================================ */
 
 /* Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Cormorant+Garamond:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&family=Cormorant+Garamond:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap');
 
 /* Smooth Scroll */
 html {
@@ -480,7 +480,7 @@ html {
 }
 
 .hero-headline {
-  font-family: 'Orbitron', sans-serif;
+  font-family: 'Playfair Display', 'Georgia', serif;
   font-size: clamp(40px, 6vw, 72px);
   font-weight: 700;
   letter-spacing: 0.05em;
@@ -558,7 +558,7 @@ html {
    SECTION TITLES — Dark text on light bg
    ============================================ */
 .section-title {
-  font-family: 'Orbitron', sans-serif;
+  font-family: 'Playfair Display', 'Georgia', serif;
   font-size: clamp(24px, 4vw, 36px);
   font-weight: 600;
   letter-spacing: 0.15em;
@@ -926,7 +926,7 @@ html {
 }
 
 .footer-logo {
-  font-family: 'Orbitron', sans-serif;
+  font-family: 'Playfair Display', 'Georgia', serif;
   font-size: 20px;
   font-weight: 600;
   letter-spacing: 0.15em;

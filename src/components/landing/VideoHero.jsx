@@ -1,19 +1,46 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 
 export default function VideoHero() {
   const heroRef = useRef(null);
   const videoRef = useRef(null);
-  const [isVisible, setIsVisible] = useState(false);
   const [scrollY, setScrollY] = useState(0);
 
-  // Entrance animation trigger
+  // ── PART 1: Cinematic Intro Sequence ──
+  // Phases: blackHold → videoFade → titleIn → taglineIn → ctaIn → complete
+  const [introPhase, setIntroPhase] = useState('blackHold');
+  const introPlayed = useRef(false);
+
   useEffect(() => {
-    const timer = setTimeout(() => setIsVisible(true), 300);
-    return () => clearTimeout(timer);
+    if (introPlayed.current) return;
+    introPlayed.current = true;
+
+    // 1. Black hold: 1.8s of pure darkness
+    const t1 = setTimeout(() => setIntroPhase('videoFade'), 1800);
+
+    // 2. After video fade begins (~2s fade), start text staging
+    //    Video fade is 2s CSS transition; title appears after video is mostly visible
+    const t2 = setTimeout(() => setIntroPhase('titleIn'), 3600);
+
+    // 3. Tagline fades up 0.5s after title
+    const t3 = setTimeout(() => setIntroPhase('taglineIn'), 4100);
+
+    // 4. CTA fades up 0.5s after tagline
+    const t4 = setTimeout(() => setIntroPhase('ctaIn'), 4600);
+
+    // 5. Scroll indicator and mark complete
+    const t5 = setTimeout(() => setIntroPhase('complete'), 5200);
+
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+      clearTimeout(t3);
+      clearTimeout(t4);
+      clearTimeout(t5);
+    };
   }, []);
 
-  // Parallax scroll effect
+  // ── Parallax scroll effect (preserved from original) ──
   useEffect(() => {
     const handleScroll = () => {
       setScrollY(window.scrollY);
@@ -22,7 +49,7 @@ export default function VideoHero() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Ensure video plays on iOS Safari
+  // ── Ensure video plays on iOS Safari ──
   useEffect(() => {
     const video = videoRef.current;
     if (video) {
@@ -32,8 +59,18 @@ export default function VideoHero() {
     }
   }, []);
 
+  // Scroll-based parallax values (original logic preserved)
   const heroOpacity = Math.max(0, 1 - scrollY / (window.innerHeight * 0.8));
   const heroScale = 1 + scrollY * 0.0003;
+
+  // Helper: determine if a phase has been reached
+  const phaseReached = useCallback(
+    (target) => {
+      const order = ['blackHold', 'videoFade', 'titleIn', 'taglineIn', 'ctaIn', 'complete'];
+      return order.indexOf(introPhase) >= order.indexOf(target);
+    },
+    [introPhase]
+  );
 
   const scrollToContent = () => {
     const hero = heroRef.current;
@@ -46,77 +83,101 @@ export default function VideoHero() {
   };
 
   return (
-    <section ref={heroRef} className="video-hero">
-      {/* Video Background */}
-      <div
-        className="video-hero__bg"
-        style={{
-          transform: `scale(${heroScale})`,
-          opacity: heroOpacity,
-        }}
-      >
-        <video
-          ref={videoRef}
-          className="video-hero__video"
-          autoPlay
-          muted
-          loop
-          playsInline
-          poster="/videos/hero_bloom_poster.jpg"
-          preload="auto"
-        >
-          <source src="/videos/hero_bloom.mp4" type="video/mp4" />
-        </video>
-        <div className="video-hero__overlay" />
-      </div>
-
-      {/* Text Content */}
-      <div
-        className="video-hero__content"
-        style={{ opacity: heroOpacity }}
-      >
-        <h1
-          className={`video-hero__title ${isVisible ? 'video-hero__animate-in' : 'video-hero__hidden'}`}
-        >
-          DIGITAL BLOOM
-        </h1>
-        <p
-          className={`video-hero__tagline ${isVisible ? 'video-hero__animate-in video-hero__delay-1' : 'video-hero__hidden'}`}
-        >
-          Give Them Their Flowers While They&rsquo;re Here
-        </p>
+    <>
+      <section ref={heroRef} className="video-hero">
+        {/* PART 1: Black curtain — visible during blackHold phase */}
         <div
-          className={`video-hero__cta-wrap ${isVisible ? 'video-hero__animate-in video-hero__delay-2' : 'video-hero__hidden'}`}
-        >
-          <Link to="/shop" className="video-hero__btn">
-            <span className="video-hero__btn-text">Send a Bloom</span>
-            <span className="video-hero__btn-glow" />
-          </Link>
-        </div>
-      </div>
+          className={`video-hero__curtain ${phaseReached('videoFade') ? 'video-hero__curtain--lifted' : ''}`}
+        />
 
-      {/* Scroll Indicator */}
-      <button
-        className={`video-hero__scroll-indicator ${isVisible ? 'video-hero__animate-in video-hero__delay-3' : 'video-hero__hidden'}`}
-        onClick={scrollToContent}
-        aria-label="Scroll down"
-        style={{ opacity: heroOpacity }}
-      >
-        <span className="video-hero__scroll-text">Scroll</span>
-        <svg
-          className="video-hero__chevron"
-          width="20"
-          height="20"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
+        {/* Video Background — PART 7: micro-parallax via CSS animation */}
+        <div
+          className="video-hero__bg"
+          style={{
+            transform: `scale(${heroScale})`,
+            opacity: heroOpacity,
+          }}
         >
-          <polyline points="6 9 12 15 18 9" />
-        </svg>
-      </button>
-    </section>
+          <div className="video-hero__video-wrap">
+            <video
+              ref={videoRef}
+              className="video-hero__video"
+              autoPlay
+              muted
+              loop
+              playsInline
+              poster="/videos/hero_bloom_poster.jpg"
+              preload="auto"
+            >
+              <source src="/videos/hero_bloom.mp4" type="video/mp4" />
+            </video>
+          </div>
+          {/* PART 2: Refined multi-stop overlay with warm tint */}
+          <div className="video-hero__overlay" />
+        </div>
+
+        {/* Text Content — PART 3: text treatment via CSS */}
+        <div
+          className="video-hero__content"
+          style={{ opacity: heroOpacity }}
+        >
+          {/* PART 6: Typography rebrand — font applied via CSS */}
+          <h1
+            className={`video-hero__title ${
+              phaseReached('titleIn') ? 'video-hero__animate-in' : 'video-hero__hidden'
+            }`}
+          >
+            DIGITAL BLOOM
+          </h1>
+          <p
+            className={`video-hero__tagline ${
+              phaseReached('taglineIn') ? 'video-hero__animate-in' : 'video-hero__hidden'
+            }`}
+          >
+            Give Them Their Flowers While They&rsquo;re Here
+          </p>
+          {/* PART 4: CTA micro-interaction — shimmer via CSS */}
+          <div
+            className={`video-hero__cta-wrap ${
+              phaseReached('ctaIn') ? 'video-hero__animate-in' : 'video-hero__hidden'
+            }`}
+          >
+            <Link to="/shop" className="video-hero__btn">
+              <span className="video-hero__btn-text">Send a Bloom</span>
+              <span className="video-hero__btn-shimmer" />
+              <span className="video-hero__btn-glow" />
+            </Link>
+          </div>
+        </div>
+
+        {/* Scroll Indicator */}
+        <button
+          className={`video-hero__scroll-indicator ${
+            phaseReached('complete') ? 'video-hero__animate-in' : 'video-hero__hidden'
+          }`}
+          onClick={scrollToContent}
+          aria-label="Scroll down"
+          style={{ opacity: heroOpacity }}
+        >
+          <span className="video-hero__scroll-text">Scroll</span>
+          <svg
+            className="video-hero__chevron"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <polyline points="6 9 12 15 18 9" />
+          </svg>
+        </button>
+      </section>
+
+      {/* PART 5: Scroll Continuity — Night → Dawn gradient divider */}
+      <div className="video-hero__scroll-fade" aria-hidden="true" />
+    </>
   );
 }
