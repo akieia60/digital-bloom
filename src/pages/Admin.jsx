@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { supabase, uploadProductImage, uploadProductVideo } from '../lib/supabase';
 import { useFounderAuth } from '../hooks/useFounderAuth';
 import FounderLogin from '../components/FounderLogin';
+import VideoLibrary from '../components/tracker/VideoLibrary';
 
 /**
  * Admin emails allowed to access the admin panel.
@@ -706,6 +707,11 @@ const Admin = () => {
               </table>
             </div>
           )}
+        </div>
+
+        {/* ━━━ Video Library Section ━━━ */}
+        <div className="mt-8 bg-gray-800 rounded-xl p-6 border border-gray-700 shadow-xl">
+          <VideoLibrary />
         </div>
       </div>
     </div>
