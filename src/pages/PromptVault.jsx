@@ -1,7 +1,13 @@
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { useFounderAuth } from '../hooks/useFounderAuth';
 import FounderLogin from '../components/FounderLogin';
+import GrokVideoGenerator from '../components/tracker/GrokVideoGenerator';
+import PromptEnhancer from '../components/tracker/PromptEnhancer';
+import ViralHooksScorer from '../components/tracker/ViralHooksScorer';
+import PromptVersionHistory from '../components/tracker/PromptVersionHistory';
+import ExportTools from '../components/tracker/ExportTools';
+import { useToast } from '../components/tracker/Toast';
 import {
   VISUAL_DOCTRINE,
   CONSISTENCY_RULES,
@@ -241,7 +247,7 @@ function MegaPromptSection({ title, text, variant, stepNumber, higgsEnabled }) {
 }
 
 // ─── PromptCard Component (Mega-Prompt Format) ───────────────────────────────
-function PromptCard({ prompt, completed, onToggleComplete, higgsEnabled }) {
+function PromptCard({ prompt, completed, onToggleComplete, higgsEnabled, onGenerateVideo, onEnhance, onScore, onHistory }) {
   const [expanded, setExpanded] = useState(false);
 
   const isNewPrompt = prompt.id >= 21;
@@ -341,7 +347,7 @@ function PromptCard({ prompt, completed, onToggleComplete, higgsEnabled }) {
         </div>
 
         {/* Action Buttons */}
-        <div className="flex items-center gap-2 ml-9">
+        <div className="flex items-center gap-2 ml-9 flex-wrap">
           {/* Expand/Collapse Toggle */}
           <button
             onClick={() => setExpanded(!expanded)}
@@ -360,6 +366,54 @@ function PromptCard({ prompt, completed, onToggleComplete, higgsEnabled }) {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
             </svg>
             <span>{expanded ? 'Hide Mega-Prompt' : hasMegaPrompt ? 'View Mega-Prompt' : 'View Prompt'}</span>
+          </button>
+
+          {/* Generate Video Button */}
+          <button
+            onClick={() => onGenerateVideo(prompt)}
+            title="Generate Video"
+            className="flex items-center justify-center gap-1.5 px-3 py-2.5 sm:py-2 rounded-xl text-xs font-medium bg-[#D4AF37]/10 text-[#D4AF37]/80 border border-[#D4AF37]/20 hover:bg-[#D4AF37]/20 transition-all"
+          >
+            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+            </svg>
+            <span className="hidden sm:inline">Video</span>
+          </button>
+
+          {/* Enhance Button */}
+          <button
+            onClick={() => onEnhance(prompt)}
+            title="Enhance Prompt"
+            className="flex items-center justify-center gap-1.5 px-3 py-2.5 sm:py-2 rounded-xl text-xs font-medium bg-purple-500/10 text-purple-400/80 border border-purple-500/20 hover:bg-purple-500/20 transition-all"
+          >
+            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+            </svg>
+            <span className="hidden sm:inline">Enhance</span>
+          </button>
+
+          {/* Score Button */}
+          <button
+            onClick={() => onScore(prompt)}
+            title="Score Hook"
+            className="flex items-center justify-center gap-1.5 px-3 py-2.5 sm:py-2 rounded-xl text-xs font-medium bg-amber-500/10 text-amber-400/80 border border-amber-500/20 hover:bg-amber-500/20 transition-all"
+          >
+            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+            </svg>
+            <span className="hidden sm:inline">Score</span>
+          </button>
+
+          {/* History Button */}
+          <button
+            onClick={() => onHistory(prompt)}
+            title="Version History"
+            className="flex items-center justify-center gap-1.5 px-3 py-2.5 sm:py-2 rounded-xl text-xs font-medium bg-blue-500/10 text-blue-400/80 border border-blue-500/20 hover:bg-blue-500/20 transition-all"
+          >
+            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span className="hidden sm:inline">History</span>
           </button>
         </div>
       </div>
@@ -436,7 +490,7 @@ function PromptCard({ prompt, completed, onToggleComplete, higgsEnabled }) {
 }
 
 // ─── Series Section Component ─────────────────────────────────────────────────
-function SeriesSection({ title, subtitle, prompts, completedMap, onToggleComplete, higgsEnabled, priority }) {
+function SeriesSection({ title, subtitle, prompts, completedMap, onToggleComplete, higgsEnabled, priority, onGenerateVideo, onEnhance, onScore, onHistory }) {
   const completedCount = prompts.filter((p) => completedMap[p.id]).length;
 
   return (
@@ -461,6 +515,10 @@ function SeriesSection({ title, subtitle, prompts, completedMap, onToggleComplet
             completed={!!completedMap[prompt.id]}
             onToggleComplete={onToggleComplete}
             higgsEnabled={higgsEnabled}
+            onGenerateVideo={onGenerateVideo}
+            onEnhance={onEnhance}
+            onScore={onScore}
+            onHistory={onHistory}
           />
         ))}
       </div>
@@ -480,6 +538,29 @@ const PromptVault = () => {
 
   // ── Consistency rules collapsed ──
   const [rulesOpen, setRulesOpen] = useState(false);
+
+  // ── Tracker tool modals ──
+  const [videoModal, setVideoModal] = useState({ open: false, prompt: null });
+  const [enhancerModal, setEnhancerModal] = useState({ open: false, prompt: null });
+  const [scorerModal, setScorerModal] = useState({ open: false, prompt: null });
+  const [historyModal, setHistoryModal] = useState({ open: false, prompt: null });
+  const [showExport, setShowExport] = useState(false);
+
+  const handleGenerateVideo = useCallback((p) => {
+    setVideoModal({ open: true, prompt: p });
+  }, []);
+
+  const handleEnhance = useCallback((p) => {
+    setEnhancerModal({ open: true, prompt: p });
+  }, []);
+
+  const handleScore = useCallback((p) => {
+    setScorerModal({ open: true, prompt: p });
+  }, []);
+
+  const handleHistory = useCallback((p) => {
+    setHistoryModal({ open: true, prompt: p });
+  }, []);
 
   // ── Filter state ──
   const [activeTab, setActiveTab] = useState('all');
@@ -819,6 +900,10 @@ const PromptVault = () => {
             completedMap={completedMap}
             onToggleComplete={toggleComplete}
             higgsEnabled={higgsEnabled}
+            onGenerateVideo={handleGenerateVideo}
+            onEnhance={handleEnhance}
+            onScore={handleScore}
+            onHistory={handleHistory}
           />
         )}
 
@@ -830,6 +915,10 @@ const PromptVault = () => {
             completedMap={completedMap}
             onToggleComplete={toggleComplete}
             higgsEnabled={higgsEnabled}
+            onGenerateVideo={handleGenerateVideo}
+            onEnhance={handleEnhance}
+            onScore={handleScore}
+            onHistory={handleHistory}
           />
         )}
 
@@ -857,6 +946,10 @@ const PromptVault = () => {
                 onToggleComplete={toggleComplete}
                 higgsEnabled={higgsEnabled}
                 priority={series.priority}
+                onGenerateVideo={handleGenerateVideo}
+                onEnhance={handleEnhance}
+                onScore={handleScore}
+                onHistory={handleHistory}
               />
             ))}
           </>
@@ -884,10 +977,27 @@ const PromptVault = () => {
                 completedMap={completedMap}
                 onToggleComplete={toggleComplete}
                 higgsEnabled={higgsEnabled}
+                onGenerateVideo={handleGenerateVideo}
+                onEnhance={handleEnhance}
+                onScore={handleScore}
+                onHistory={handleHistory}
               />
             ))}
           </>
         )}
+
+        {/* ━━━ Export Button ━━━ */}
+        <div className="flex justify-center py-4">
+          <button
+            onClick={() => setShowExport(true)}
+            className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-medium bg-white/[0.03] text-white/40 border border-white/[0.06] hover:bg-white/[0.06] transition-colors"
+          >
+            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            Export All Prompts
+          </button>
+        </div>
 
         {/* Footer */}
         <div className="text-center py-8">
@@ -899,6 +1009,57 @@ const PromptVault = () => {
           </p>
         </div>
       </div>
+
+      {/* ━━━ Tracker Modals ━━━ */}
+      <GrokVideoGenerator
+        prompt={videoModal.prompt?.prompt || ''}
+        promptName={videoModal.prompt?.title || ''}
+        onClose={() => setVideoModal({ open: false, prompt: null })}
+        isOpen={videoModal.open}
+      />
+
+      <PromptEnhancer
+        prompt={enhancerModal.prompt?.prompt || ''}
+        onEnhanced={(text) => {
+          // Enhanced prompt can be used for video generation
+          setEnhancerModal({ open: false, prompt: null });
+          if (enhancerModal.prompt) {
+            setVideoModal({ open: true, prompt: { ...enhancerModal.prompt, prompt: text } });
+          }
+        }}
+        onClose={() => setEnhancerModal({ open: false, prompt: null })}
+        isOpen={enhancerModal.open}
+      />
+
+      <ViralHooksScorer
+        prompt={scorerModal.prompt?.prompt || ''}
+        onClose={() => setScorerModal({ open: false, prompt: null })}
+        isOpen={scorerModal.open}
+      />
+
+      <PromptVersionHistory
+        promptId={historyModal.prompt ? `prompt_${historyModal.prompt.id}` : ''}
+        promptName={historyModal.prompt?.title || ''}
+        currentText={historyModal.prompt?.prompt || ''}
+        onRestore={() => {}}
+        onClose={() => setHistoryModal({ open: false, prompt: null })}
+        isOpen={historyModal.open}
+      />
+
+      <ExportTools
+        data={ALL_PROMPTS.map(p => ({
+          id: p.id,
+          title: p.title,
+          prompt: p.prompt,
+          iteration1: p.iteration1 || '',
+          iteration2: p.iteration2 || '',
+          category: p.category || '',
+          completed: completedMap[p.id] ? 'Yes' : 'No',
+        }))}
+        filename="digital-bloom-prompts"
+        onClose={() => setShowExport(false)}
+        isOpen={showExport}
+      />
     </div>
   );
 };

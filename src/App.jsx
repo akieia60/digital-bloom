@@ -15,6 +15,7 @@ import Experience1 from './pages/Experience1';
 import FounderDashboard from './pages/FounderDashboard';
 import PromptVault from './pages/PromptVault';
 import ComingSoon from './pages/ComingSoon';
+import { ToastProvider } from './components/tracker/Toast';
 
 function AppContent({ searchQuery, setSearchQuery }) {
   const location = useLocation();
@@ -73,6 +74,7 @@ function App() {
   }, []);
 
   return (
+    <ToastProvider>
     <CartProvider>
       <Router>
         <div className="min-h-screen bg-obsidian relative overflow-x-hidden">
@@ -87,6 +89,7 @@ function App() {
         </div>
       </Router>
     </CartProvider>
+    </ToastProvider>
   );
 }
 
