@@ -337,15 +337,19 @@
   position: relative;
   z-index: 0;
   width: 100%;
-  height: 120px;
+  height: 160px;
   background: linear-gradient(
     180deg,
     #050510 0%,
-    #0a0a1f 15%,
-    #111128 30%,
-    #1a1a38 45%,
-    #1A1A2E 60%,
-    rgba(26, 26, 46, 0.6) 80%,
+    #070518 10%,
+    #0a0a1f 20%,
+    #0d0d28 30%,
+    #111130 40%,
+    #151535 50%,
+    #1a1a3a 60%,
+    #1e1e40 70%,
+    rgba(15, 15, 36, 0.8) 80%,
+    rgba(15, 15, 36, 0.4) 90%,
     transparent 100%
   );
   margin-top: -1px; /* prevent sub-pixel gap */

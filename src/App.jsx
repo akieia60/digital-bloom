@@ -14,6 +14,7 @@ import CreditBalance from './pages/CreditBalance';
 import Experience1 from './pages/Experience1';
 import FounderDashboard from './pages/FounderDashboard';
 import PromptVault from './pages/PromptVault';
+import ComingSoon from './pages/ComingSoon';
 
 function AppContent({ searchQuery, setSearchQuery }) {
   const location = useLocation();
@@ -35,6 +36,12 @@ function AppContent({ searchQuery, setSearchQuery }) {
         <Route path="/experience/1" element={<Experience1 />} />
         <Route path="/founder" element={<FounderDashboard />} />
         <Route path="/vault" element={<PromptVault />} />
+        <Route path="/balance" element={<CreditBalance />} />
+        <Route path="/about" element={<ComingSoon />} />
+        <Route path="/contact" element={<ComingSoon />} />
+        <Route path="/checkout" element={<ComingSoon />} />
+        {/* Catch-all for unknown routes */}
+        <Route path="*" element={<ComingSoon />} />
       </Routes>
       {!isLandingPage && <ShoppingCart />}
     </>
