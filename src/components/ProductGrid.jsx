@@ -3,16 +3,31 @@ import { useSearchParams } from 'react-router-dom';
 import ProductCard from './ProductCard';
 import { useProducts } from '../hooks/useProducts';
 import { PRICING_TIERS } from '../config/pricingTiers';
+import { categories } from '../data/flowers';
 
 /**
  * ProductGrid — Digital Bloom
- * Renders the product gallery with optional tier and search filtering.
- * Prices are always read from the database product objects — never hardcoded.
+ * Renders the product gallery organized by category/occasion.
+ * Supports tier filtering, search, and category filtering from landing page.
  */
+
+const CATEGORY_DISPLAY = {
+  'mothers-day': { label: "Mother's Day Collection", emoji: '', tagline: 'Celebrate the woman who gave you everything' },
+  'birthday': { label: 'Birthday Collection', emoji: '', tagline: 'Make their special day unforgettable' },
+  'love': { label: 'Love & Romance', emoji: '', tagline: 'Express your deepest feelings' },
+  'valentine': { label: "Valentine's Day", emoji: '', tagline: 'For the one who has your heart' },
+  'celebration': { label: 'Congratulations', emoji: '', tagline: 'Celebrate their achievements in style' },
+  'grief': { label: 'Grief & Sympathy', emoji: '', tagline: 'Honor those we hold dear' },
+  'friendship': { label: 'Thinking of You', emoji: '', tagline: 'Let them know they matter' },
+  'luxury': { label: 'Glass Stiletto Series', emoji: '', tagline: 'Where fashion meets floral artistry' },
+  'general': { label: 'General Collection', emoji: '', tagline: 'Beautiful blooms for every moment' },
+};
+
 const ProductGrid = ({ searchQuery = '' }) => {
   const { products, loading, usingMockData } = useProducts();
   const [searchParams] = useSearchParams();
   const tierFilter = searchParams.get('tier') ? parseInt(searchParams.get('tier')) : null;
+  const categoryFilter = searchParams.get('category') || null;
 
   const filteredProducts = useMemo(() => {
     return products.filter((product) => {
@@ -23,13 +38,41 @@ const ProductGrid = ({ searchQuery = '' }) => {
 
       const matchesTier = tierFilter === null || product.tier === tierFilter;
 
-      return matchesSearch && matchesTier;
+      // Match category filter from landing page category grid
+      const matchesCategory = !categoryFilter || 
+        product.category === categoryFilter ||
+        (product.occasions && product.occasions.includes(categoryFilter));
+
+      return matchesSearch && matchesTier && matchesCategory;
     });
-  }, [products, searchQuery, tierFilter]);
+  }, [products, searchQuery, tierFilter, categoryFilter]);
+
+  // Group products by category for display
+  const groupedProducts = useMemo(() => {
+    const groups = {};
+    filteredProducts.forEach((product) => {
+      const cat = product.category || 'general';
+      if (!groups[cat]) groups[cat] = [];
+      groups[cat].push(product);
+    });
+    return groups;
+  }, [filteredProducts]);
+
+  // Determine category display order (prioritize categories with more products)
+  const categoryOrder = [
+    'mothers-day', 'birthday', 'love', 'valentine',
+    'celebration', 'grief', 'friendship', 'luxury', 'general'
+  ];
+
+  const orderedCategories = categoryOrder.filter(cat => groupedProducts[cat]?.length > 0);
 
   // Find the active tier label if filtering
   const activeTierLabel = tierFilter
     ? PRICING_TIERS.find((t) => t.tier === tierFilter)?.name
+    : null;
+
+  const activeCategoryLabel = categoryFilter
+    ? CATEGORY_DISPLAY[categoryFilter]?.label || categoryFilter
     : null;
 
   if (loading) {
@@ -74,6 +117,8 @@ const ProductGrid = ({ searchQuery = '' }) => {
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-medium font-display tracking-tight text-white mb-3 sm:mb-4">
               {searchQuery
                 ? `Results for "${searchQuery}"`
+                : activeCategoryLabel
+                ? activeCategoryLabel
                 : activeTierLabel
                 ? `${activeTierLabel} Gallery`
                 : 'Digital Gallery'}
@@ -89,19 +134,40 @@ const ProductGrid = ({ searchQuery = '' }) => {
           </div>
         </header>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 sm:gap-8 lg:gap-12 xl:gap-16">
-          {filteredProducts.length === 0 ? (
-            <div className="col-span-full text-center py-20 sm:py-32 glass rounded-3xl">
-              <h3 className="text-lg sm:text-xl font-light text-white/40 italic">
-                A masterpiece is yet to be found.
-              </h3>
-            </div>
-          ) : (
-            filteredProducts.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))
-          )}
-        </div>
+        {filteredProducts.length === 0 ? (
+          <div className="text-center py-20 sm:py-32 glass rounded-3xl">
+            <h3 className="text-lg sm:text-xl font-light text-white/40 italic">
+              A masterpiece is yet to be found.
+            </h3>
+          </div>
+        ) : (
+          orderedCategories.map((catId) => {
+            const catInfo = CATEGORY_DISPLAY[catId] || { label: catId, tagline: '' };
+            const catProducts = groupedProducts[catId];
+
+            return (
+              <section key={catId} className="space-y-8">
+                {/* Category Header — only show if not filtering by single category */}
+                {!categoryFilter && orderedCategories.length > 1 && (
+                  <div className="border-b border-white/5 pb-4">
+                    <h3 className="text-xl sm:text-2xl font-display font-medium text-pure-gold tracking-tight">
+                      {catInfo.label}
+                    </h3>
+                    <p className="text-[11px] uppercase tracking-[0.2em] text-white/30 mt-2 font-light">
+                      {catInfo.tagline}
+                    </p>
+                  </div>
+                )}
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 sm:gap-8 lg:gap-12 xl:gap-16">
+                  {catProducts.map((product) => (
+                    <ProductCard key={product.id} product={product} />
+                  ))}
+                </div>
+              </section>
+            );
+          })
+        )}
       </div>
     </div>
   );
