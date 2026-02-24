@@ -25,71 +25,16 @@ export const MOTHERS_DAY_COLLECTION = [
 ];
 
 
-export const MISSING_ZODIAC_SIGNS = [
-  {
-    id: 23,
-    title: "Aries: The Ram's Inferno",
-    category: "Missing Zodiac Signs",
-    week: 2,
-    prompt: `A fiery, hyper-detailed red rose BURSTS into bloom from a point of pure light. Shot on an anamorphic lens, the scene is filled with dramatic lens flare as the petals unfold. The camera executes a rapid dolly zoom, creating a sense of vertigo and power. As the rose reaches full bloom, its core ERUPTS in a shower of golden particle dust, revealing a molten gold ram's head symbol that glows with intense heat. The lighting is harsh and dramatic, with deep, crushed blacks and vibrant reds, reminiscent of a volcanic eruption.`,
-    iteration1: `Refine the previous generation. Enhance the burst — make the initial bloom explosion more violent and dynamic, with petals snapping open with visible force. Increase the anamorphic lens flare intensity and add horizontal streak artifacts for authenticity. Push the molten gold ram's head to glow more intensely, with visible heat distortion waves radiating from it.`,
-    iteration2: `Further refinement. Push the volcanic color palette — deeper, more saturated reds with orange and amber highlights on the petal edges. Intensify the crushed blacks to absolute darkness in the shadows. Make the golden particle shower more chaotic and energetic, with sparks and embers. Add a heavy, warm film grain and slight camera shake for a raw, powerful cinematic feel.`,
-  },
-  {
-    id: 24,
-    title: "Taurus: The Verdant Bull",
-    category: "Missing Zodiac Signs",
-    week: 2,
-    prompt: `A slow, deliberate orbital tracking shot reveals a hyper-detailed green rose, its petals the color of ancient moss and new spring growth. The camera, on a 50mm lens, captures the velvet-soft petal texture with visible micro-fibers. As the rose blooms, its center glows with a steady, powerful light, and a golden bull's head symbol, solid and resolute, emerges. Gold particles cascade slowly, like pollen in the morning sun. The lighting is soft and diffused, creating a mood of earthy strength and quiet determination.`,
-    iteration1: `Refine the previous generation. Enhance the green tones — add more variation between the ancient moss and spring growth colors, creating a richer palette. Make the golden bull's head symbol more three-dimensional and solid, with visible surface texture. Increase the pollen-like particle cascade and add subtle light scattering through the particles.`,
-    iteration2: `Further refinement. Push the velvet petal texture to show individual micro-fibers in extreme detail. Intensify the center glow to create more dramatic light spillover onto the surrounding petals. Make the orbital tracking smoother and more deliberate. Add an earthy, warm film grain and a slight green-gold color grade for a natural, grounded atmosphere.`,
-  },
-  {
-    id: 25,
-    title: "Cancer: The Lunar Crab",
-    category: "Missing Zodiac Signs",
-    week: 3,
-    prompt: `A hyper-detailed silver rose, shot with a dreamy, soft-focus effect, blooms in a sea of shimmering blue particle dust. The camera drifts slowly, as if underwater, capturing the ethereal, otherworldly quality of the scene. As the petals unfurl, a luminous silver crab symbol, glowing with a cool, lunar light, is revealed at the rose's heart. The lighting is soft and ambient, with a gentle blue-silver glow that creates a sense of emotional depth and intuition.`,
-    iteration1: `Refine the previous generation. Enhance the underwater drift quality of the camera movement — add subtle floating motion and gentle swaying. Increase the blue particle dust density and add bioluminescent-like glowing particles among them. Make the silver crab symbol more detailed with visible texture and a pulsing lunar glow.`,
-    iteration2: `Further refinement. Push the silver rose petals to be more reflective and metallic, catching the blue-silver light in dramatic ways. Intensify the dreamy soft-focus effect in the background while keeping the center sharp. Make the petal texture hyper-detailed with a cool, moonlit quality. Add a subtle film grain with a blue-silver tone for an ethereal, nocturnal atmosphere.`,
-  },
-  {
-    id: 26,
-    title: "Virgo: The Maiden's Grace",
-    category: "Missing Zodiac Signs",
-    week: 3,
-    prompt: `A pristine, hyper-detailed white rose, shot with a clean, minimalist aesthetic, blooms with perfect, symmetrical grace. The camera performs a slow, elegant pedestal shot, rising as the rose opens. From its core, a delicate, golden maiden symbol emerges, radiating a soft, pure light. Gold particles drift like microscopic pollen dust, catching the light in slow motion. The lighting is bright and even, with a clean, high-key look that emphasizes purity, precision, and grace.`,
-    iteration1: `Refine the previous generation. Enhance the symmetrical blooming — make each petal open with mathematical precision, emphasizing the perfection of the form. Increase the golden maiden symbol's detail and luminosity. Add more visible pollen-like particles with defined individual shapes catching the high-key light.`,
-    iteration2: `Further refinement. Push the white rose to be even more pristine — near-luminous white with subtle warm undertones in the shadows. Intensify the clean, high-key lighting while maintaining subtle shadow detail for depth. Make the petal texture hyper-detailed with a smooth, porcelain-like quality. Add a minimal, clean film grain for a refined, editorial atmosphere.`,
-  },
-  {
-    id: 27,
-    title: "Scorpio: The Crimson Scorpion",
-    category: "Missing Zodiac Signs",
-    week: 4,
-    prompt: `A deep, crimson rose, its petals the color of dried blood, blooms with a dangerous, magnetic energy. The camera uses a series of quick, jarring cuts, building a sense of tension and mystery. As the rose opens, a golden scorpion symbol, sharp and menacing, is revealed, glowing with a venomous red light. Red particle dust swirls like a storm, and the lighting is low-key and dramatic, with long, menacing shadows. The mood is one of power, passion, and hidden depths.`,
-    iteration1: `Refine the previous generation. Enhance the tension — make the jarring cuts more impactful with brief flashes of intense light between them. Increase the red particle storm intensity with more chaotic, swirling patterns. Make the golden scorpion symbol sharper and more menacing, with visible barb detail and a pulsing venomous glow.`,
-    iteration2: `Further refinement. Push the dried-blood crimson to be deeper and more ominous, with near-black shadows in the petal folds. Intensify the low-key lighting to create longer, more dramatic shadows. Make the petal texture feel dangerous — sharp edges, thorny details, and a slightly withered quality. Add a heavy, dark film grain and a slight red color cast for a brooding, intense atmosphere.`,
-  },
-  {
-    id: 28,
-    title: "Capricorn: The Sea-Goat's Ascent",
-    category: "Missing Zodiac Signs",
-    week: 4,
-    prompt: `A dark green rose, its petals like ancient stone, blooms with a slow, inexorable force. The camera executes a slow, powerful crane shot, moving from below the rose to a position high above, emphasizing its upward climb. As the petals open, a golden sea-goat symbol, a creature of both earth and water, is revealed, glowing with a steady, determined light. Gold particles rise like bubbles from the deep. The lighting is stark and sculptural, carving the rose out of the darkness.`,
-    iteration1: `Refine the previous generation. Enhance the stone-like quality of the petals — add visible cracks and mineral texture. Make the crane shot more dramatic with a greater vertical range. Increase the rising gold bubble-particles and add variation in their size and speed. Push the sea-goat symbol to be more detailed and three-dimensional.`,
-    iteration2: `Further refinement. Push the dark green to be more complex — add subtle earth tones and mineral highlights. Intensify the stark, sculptural lighting to carve deeper shadows and brighter highlights. Make the ancient stone texture hyper-detailed with visible grain and weathering. Add a cool, desaturated film grain for a monumental, timeless atmosphere.`,
-  },
-  {
-    id: 29,
-    title: "Aquarius: The Water Bearer's Vision",
-    category: "Missing Zodiac Signs",
-    week: 5,
-    prompt: `A hyper-detailed purple rose, its petals swirling with shades of violet and indigo, blooms in a cascade of shimmering blue particle dust. The camera uses a disorienting, free-floating movement, as if untethered from gravity. As the rose opens, a golden water bearer symbol emerges, pouring a stream of liquid light that flows and dances in zero gravity. The lighting is unconventional and prismatic, with shifting colors and unexpected flares, creating a sense of innovation and cosmic consciousness.`,
-    iteration1: `Refine the previous generation. Enhance the zero-gravity liquid light stream — make it flow more dynamically with visible surface tension and light refraction. Increase the prismatic lighting effects with more color shifts and unexpected flares. Push the free-floating camera movement to be more disorienting and dreamlike.`,
-    iteration2: `Further refinement. Push the violet and indigo swirling to be more dynamic and alive within the petals themselves. Intensify the prismatic lighting to create rainbow-edge effects on the petal surfaces. Make the petal texture hyper-detailed with an almost crystalline, otherworldly quality. Add a unique film grain with subtle color shifts for an innovative, avant-garde atmosphere.`,
-  },
-];
+/**
+ * ZODIAC SERIES — REPLACED
+ *
+ * The original "Missing Zodiac Signs" prompts (IDs 23–29) have been
+ * removed and replaced by the full Celestial Saga series.
+ *
+ * See: src/data/celestialSagaData.js  (12 signs × 4 clips each)
+ * Displayed via: CelestialSagaSection in PromptVault.jsx
+ */
+export const MISSING_ZODIAC_SIGNS = [];
 
 
 export const BIRTHDAY_CELEBRATION = [
