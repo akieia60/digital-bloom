@@ -12,10 +12,10 @@ html {
   scroll-behavior: smooth;
 }
 
-/* Landing Page Container */
+/* Landing Page Container — DARK throughout per Gamble feedback */
 .landing-page {
-  background: #FAFAF7;
-  color: #1A1A2E;
+  background: #050510;
+  color: #F5F5F7;
   font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
   line-height: 1.6;
 }
@@ -555,7 +555,7 @@ html {
 }
 
 /* ============================================
-   SECTION TITLES — Dark text on light bg
+   SECTION TITLES — Light text on dark bg
    ============================================ */
 .section-title {
   font-family: 'Playfair Display', 'Georgia', serif;
@@ -564,7 +564,7 @@ html {
   letter-spacing: 0.15em;
   margin: 0 0 16px;
   text-align: center;
-  color: #1A1A2E;
+  color: #F5F5F7;
   text-transform: uppercase;
 }
 
@@ -572,7 +572,7 @@ html {
   font-family: 'Outfit', sans-serif;
   font-size: 17px;
   font-weight: 300;
-  color: rgba(26, 26, 46, 0.6);
+  color: rgba(245, 245, 247, 0.55);
   text-align: center;
   margin: 0 0 48px;
   max-width: 600px;
@@ -581,11 +581,11 @@ html {
 }
 
 /* ============================================
-   FEATURED GALLERY — Light Background
+   FEATURED GALLERY — Dark Background
    ============================================ */
 .featured-gallery {
   padding: 100px 0;
-  background: linear-gradient(180deg, #FAFAF7 0%, #F5F5F0 50%, #FAFAF7 100%);
+  background: #050510;
 }
 
 .gallery-grid {
@@ -692,11 +692,13 @@ html {
 }
 
 /* ============================================
-   HOW IT WORKS — Light Background with subtle warmth
+   HOW IT WORKS — Dark Background
+   (Section removed from landing page per Gamble feedback,
+    kept here in case it's needed elsewhere)
    ============================================ */
 .how-it-works {
   padding: 100px 0;
-  background: linear-gradient(180deg, #FAFAF7 0%, #F5F5F0 50%, #FAFAF7 100%);
+  background: #050510;
 }
 
 .steps-grid {
@@ -724,24 +726,25 @@ html {
   font-size: 21px;
   font-weight: 600;
   margin: 0 0 12px;
-  color: #1A1A2E;
+  color: #F5F5F7;
 }
 
 .step-description {
   font-family: 'Outfit', sans-serif;
   font-size: 17px;
   font-weight: 300;
-  color: rgba(26, 26, 46, 0.6);
+  color: rgba(245, 245, 247, 0.55);
   line-height: 1.7;
   margin: 0;
 }
 
 /* ============================================
-   FAQ SECTION — Light Background
+   FAQ SECTION — Dark Background
    ============================================ */
 .faq-section {
   padding: 100px 0;
-  background: #FAFAF7;
+  background: #050510;
+  border-top: 1px solid rgba(212, 175, 55, 0.08);
 }
 
 .faq-list {
@@ -750,7 +753,7 @@ html {
 }
 
 .faq-item {
-  border-bottom: 1px solid rgba(212, 175, 55, 0.15);
+  border-bottom: 1px solid rgba(212, 175, 55, 0.12);
 }
 
 .faq-question {
@@ -764,7 +767,7 @@ html {
   font-family: 'Playfair Display', 'Georgia', serif;
   font-size: 19px;
   font-weight: 500;
-  color: #1A1A2E;
+  color: rgba(245, 245, 247, 0.85);
   text-align: left;
   cursor: pointer;
   transition: color 0.3s;
@@ -800,7 +803,7 @@ html {
   font-size: 17px;
   font-weight: 300;
   line-height: 1.8;
-  color: rgba(26, 26, 46, 0.6);
+  color: rgba(245, 245, 247, 0.5);
   margin: 0;
 }
 
