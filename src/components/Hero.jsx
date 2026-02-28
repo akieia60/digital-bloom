@@ -47,54 +47,36 @@ const Hero = () => {
           <h1 className="font-display text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-medium text-brand-white leading-[1.05] tracking-[0.02em] mb-8">
             Give them their flowers
           </h1>
-          <h2 className="font-display text-xl sm:text-3xl md:text-4xl lg:text-5xl font-medium text-brand-gold/60 leading-[1.05] tracking-[0.02em]">
+          <h2 className="font-display text-xl sm:text-3xl md:text-4xl lg:text-5xl font-medium text-brand-gold/85 leading-[1.05] tracking-[0.02em]">
             while they can still see them
           </h2>
         </div>
 
         {/* Hero Subtitle */}
-        <p className="text-base sm:text-lg md:text-xl text-white/20 mb-16 max-w-xl mx-auto animate-slide-up font-light leading-relaxed" style={{ animationDelay: '0.2s' }}>
-          Digital Bloom was created to express love and appreciation with intention. We believe in giving people their flowers while they are still here to experience the gesture. 
+        <p className="text-base sm:text-lg md:text-xl text-white/60 mb-16 max-w-xl mx-auto animate-slide-up font-light leading-relaxed" style={{ animationDelay: '0.2s' }}>
+          Digital Bloom was created to express love and appreciation with intention. We believe in giving people their flowers while they are still here to experience the gesture.
         </p>
 
         {/* Primary Actions */}
         <div className="flex flex-col sm:flex-row gap-10 justify-center items-center animate-slide-up" style={{ animationDelay: '0.4s' }}>
           <button
             onClick={scrollToProducts}
-            className="btn-primary group px-12 py-5 rounded-full text-sm font-medium tracking-[0.2em] uppercase transition-all bg-brand-white/90"
+            className="group px-12 py-5 rounded-full text-sm font-medium tracking-[0.2em] uppercase transition-all bg-brand-gold text-black hover:bg-brand-gold/90"
           >
             Begin Your Story
           </button>
 
           <button
             onClick={() => setIsVideoOpen(true)}
-            className="group flex items-center space-x-4 text-white/60 hover:text-white transition-all underline-offset-8"
+            className="group flex items-center space-x-4 text-white/70 hover:text-white transition-all underline-offset-8"
           >
-            <div className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center group-hover:border-pure-gold/40 transition-all">
-              <svg className="w-4 h-4 translate-x-0.5 text-pure-gold/60 group-hover:text-pure-gold" fill="currentColor" viewBox="0 0 24 24">
+            <div className="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center group-hover:border-pure-gold/60 transition-all">
+              <svg className="w-4 h-4 translate-x-0.5 text-pure-gold/80 group-hover:text-pure-gold" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M8 5v14l11-7z" />
               </svg>
             </div>
             <span className="text-xs uppercase tracking-[0.2em] font-medium">Watch the Film</span>
           </button>
-        </div>
-
-        {/* Discreet Features */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-12 mt-24 animate-fade-in border-t border-white/5 pt-16" style={{ animationDelay: '0.6s' }}>
-          <div className="text-center group">
-            <h3 className="text-[10px] uppercase tracking-[0.3em] text-pure-gold mb-3 font-semibold">Curation</h3>
-            <p className="text-xs text-white/40 leading-relaxed font-light">Only the world's most <br /> refined digital blooms.</p>
-          </div>
-
-          <div className="text-center group">
-            <h3 className="text-[10px] uppercase tracking-[0.3em] text-pure-gold mb-3 font-semibold">Bespoke</h3>
-            <p className="text-xs text-white/40 leading-relaxed font-light">Your message, music, <br /> and theme. Tailored.</p>
-          </div>
-
-          <div className="text-center group">
-            <h3 className="text-[10px] uppercase tracking-[0.3em] text-pure-gold mb-3 font-semibold">Legacy</h3>
-            <p className="text-xs text-white/40 leading-relaxed font-light">Instant digital delivery. <br /> Timeless emotional value.</p>
-          </div>
         </div>
       </div>
 
