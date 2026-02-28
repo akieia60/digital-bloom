@@ -1,5 +1,54 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Component } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+
+/**
+ * ErrorBoundary — catches any JavaScript error inside a child component tree,
+ * logs it, and shows a friendly recovery screen instead of a full white page.
+ * React requires this to be a class component.
+ */
+class ErrorBoundary extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error };
+  }
+
+  componentDidCatch(error, info) {
+    // Log to console so you can see what broke in Vercel's function logs
+    console.error('[Digital Bloom] Uncaught render error:', error, info);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div style={{
+          minHeight: '100vh', background: '#050510', display: 'flex',
+          flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+          color: '#fff', fontFamily: 'sans-serif', padding: '2rem', textAlign: 'center'
+        }}>
+          <h1 style={{ fontSize: '2rem', marginBottom: '1rem' }}>🌸 Something went wrong</h1>
+          <p style={{ color: '#aaa', maxWidth: '400px', marginBottom: '2rem' }}>
+            We hit an unexpected error. Your cart and account are safe — just refresh to continue.
+          </p>
+          <button
+            onClick={() => window.location.reload()}
+            style={{
+              background: '#c9a84c', color: '#050510', border: 'none',
+              padding: '0.75rem 2rem', borderRadius: '8px', fontSize: '1rem',
+              cursor: 'pointer', fontWeight: 'bold'
+            }}
+          >
+            Refresh Page
+          </button>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
 import { CartProvider } from './context/CartContext';
 import Header from './components/Header';
 import LandingPage from './pages/LandingPage';
@@ -74,6 +123,7 @@ function App() {
   }, []);
 
   return (
+    <ErrorBoundary>
     <ToastProvider>
     <CartProvider>
       <Router>
@@ -84,12 +134,15 @@ function App() {
 
           {/* Content */}
           <div className="relative z-10">
-            <AppContent searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+            <ErrorBoundary>
+              <AppContent searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+            </ErrorBoundary>
           </div>
         </div>
       </Router>
     </CartProvider>
     </ToastProvider>
+    </ErrorBoundary>
   );
 }
 

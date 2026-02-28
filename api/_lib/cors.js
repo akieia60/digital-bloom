@@ -2,9 +2,11 @@
  * Shared CORS utility for Digital Bloom API endpoints.
  *
  * Allowed origins:
- *   - https://digitabloom.com  (production)
- *   - https://www.digitabloom.com  (production www)
- *   - http://localhost:*  (local development)
+ *   - https://digitabloom.com        (production)
+ *   - https://www.digitabloom.com    (production www)
+ *   - https://*.vercel.app           (Vercel preview deployments)
+ *   - APP_BASE_URL env var           (any custom deployment URL)
+ *   - http://localhost:*             (local development)
  *
  * Returns 403 for any other origin.
  */
@@ -12,15 +14,19 @@
 const ALLOWED_ORIGINS = [
   'https://digitabloom.com',
   'https://www.digitabloom.com',
+  // Pull in any custom deployment URL set via environment variable
+  ...(process.env.APP_BASE_URL ? [process.env.APP_BASE_URL] : []),
 ];
 
 /**
  * Check whether the given origin is allowed.
- * Allows production domains and any localhost port for development.
+ * Allows production domains, Vercel preview URLs, and any localhost port.
  */
 function isAllowedOrigin(origin) {
   if (!origin) return true; // server-to-server requests (no origin header)
   if (ALLOWED_ORIGINS.includes(origin)) return true;
+  // Allow any Vercel preview deployment (*.vercel.app)
+  if (/^https:\/\/[a-zA-Z0-9-]+(\.vercel\.app)$/.test(origin)) return true;
   // Allow any localhost port for development
   if (/^https?:\/\/localhost(:\d+)?$/.test(origin)) return true;
   return false;
