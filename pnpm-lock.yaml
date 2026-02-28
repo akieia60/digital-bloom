@@ -11,6 +11,9 @@ importers:
       '@stripe/stripe-js':
         specifier: ^8.6.4
         version: 8.7.0
+      '@supabase/supabase-js':
+        specifier: ^2.91.1
+        version: 2.96.0
       cors:
         specifier: ^2.8.6
         version: 2.8.6
@@ -36,9 +39,6 @@ importers:
       '@eslint/js':
         specifier: ^9.39.1
         version: 9.39.2
-      '@supabase/supabase-js':
-        specifier: ^2.91.1
-        version: 2.96.0
       '@tailwindcss/postcss':
         specifier: ^4.1.18
         version: 4.1.18
