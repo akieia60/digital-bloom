@@ -518,18 +518,20 @@ Mood: refinement, ascent, understated luxury.`,
 
 // ─── New Launch Prompt Series (April 2026) ────────────────────────────────────
 export { MOTHERS_DAY_COLLECTION } from './newPromptVaultData';
-export { MISSING_ZODIAC_SIGNS } from './newPromptVaultData';
+export { MISSING_ZODIAC_SIGNS } from './newPromptVaultData'; // now empty — replaced by Celestial Saga
 export { BIRTHDAY_CELEBRATION } from './newPromptVaultData';
 export { HOLIDAY_COLLECTION } from './newPromptVaultData';
 export { INCLUSIVE_SPECIAL_CATEGORIES } from './newPromptVaultData';
 
+// ─── Celestial Saga Series (replaces old zodiac prompts) ──────────────────────
+export { CELESTIAL_SAGA } from './celestialSagaData';
 
 
 export const ORIGINAL_PROMPTS = [...SIGNATURE_SERIES, ...BLOOM_COLLECTION_SERIES];
 
 export const LAUNCH_PROMPTS = [
   ...MOTHERS_DAY_COLLECTION,
-  ...MISSING_ZODIAC_SIGNS,
+  // MISSING_ZODIAC_SIGNS intentionally omitted — replaced by CELESTIAL_SAGA
   ...BIRTHDAY_CELEBRATION,
   ...HOLIDAY_COLLECTION,
   ...INCLUSIVE_SPECIAL_CATEGORIES,

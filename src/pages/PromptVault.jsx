@@ -15,7 +15,6 @@ import {
   SIGNATURE_SERIES,
   BLOOM_COLLECTION_SERIES,
   MOTHERS_DAY_COLLECTION,
-  MISSING_ZODIAC_SIGNS,
   BIRTHDAY_CELEBRATION,
   HOLIDAY_COLLECTION,
   INCLUSIVE_SPECIAL_CATEGORIES,
@@ -24,6 +23,7 @@ import {
   VAULT_EXPANSION_PHASE_1,
   ALL_PROMPTS,
 } from '../data/promptVaultData';
+import { CELESTIAL_SAGA } from '../data/celestialSagaData';
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 const STORAGE_KEY_COMPLETED = 'db_prompt_vault_completed';
@@ -42,7 +42,7 @@ const CATEGORY_FILTERS = [
   { key: 'signature', label: 'Signature Series' },
   { key: 'bloom', label: 'Bloom Collection' },
   { key: 'mothers', label: "Mother's Day" },
-  { key: 'zodiac', label: 'Zodiac Signs' },
+  { key: 'zodiac', label: 'Celestial Saga' },
   { key: 'birthday', label: 'Birthday & Celebration' },
   { key: 'holiday', label: 'Holiday Collection' },
   { key: 'inclusive', label: 'Inclusive & Special' },
@@ -55,7 +55,7 @@ const CATEGORY_FILTERS = [
 // ─── Priority config ──────────────────────────────────────────────────────────
 const PRIORITY_MAP = {
   "Mother's Day Collection": { label: 'PRIORITY', color: 'bg-red-500/20 text-red-400 border-red-500/30' },
-  "Missing Zodiac Signs": { label: 'HIGH PRIORITY', color: 'bg-amber-500/20 text-amber-400 border-amber-500/30' },
+  // "Missing Zodiac Signs" removed — replaced by Celestial Saga
 };
 
 // ─── Series definitions for new prompts ───────────────────────────────────────
@@ -67,13 +67,7 @@ const NEW_SERIES = [
     prompts: MOTHERS_DAY_COLLECTION,
     priority: PRIORITY_MAP["Mother's Day Collection"],
   },
-  {
-    key: 'zodiac',
-    title: 'Missing Zodiac Signs',
-    subtitle: 'Prompts 23–29 — Weeks 2–5',
-    prompts: MISSING_ZODIAC_SIGNS,
-    priority: PRIORITY_MAP["Missing Zodiac Signs"],
-  },
+  // Zodiac entry removed — replaced by Celestial Saga (rendered via CelestialSagaSection)
   {
     key: 'birthday',
     title: 'Birthday & Celebration',
@@ -489,6 +483,181 @@ function PromptCard({ prompt, completed, onToggleComplete, higgsEnabled, onGener
   );
 }
 
+
+// ─── Celestial Saga Clip Card ─────────────────────────────────────────────────
+const CLIP_COLORS = [
+  { border: 'border-[#D4AF37]/20', bg: 'bg-[#D4AF37]/5', label: 'text-[#D4AF37]', badge: 'bg-[#D4AF37]/15 text-[#D4AF37] border-[#D4AF37]/25', variant: 'gold' },
+  { border: 'border-blue-500/20', bg: 'bg-blue-500/5', label: 'text-blue-400', badge: 'bg-blue-500/15 text-blue-400 border-blue-500/25', variant: 'blue' },
+  { border: 'border-purple-500/20', bg: 'bg-purple-500/5', label: 'text-purple-400', badge: 'bg-purple-500/15 text-purple-400 border-purple-500/25', variant: 'purple' },
+  { border: 'border-amber-500/20', bg: 'bg-amber-500/5', label: 'text-amber-400', badge: 'bg-amber-500/15 text-amber-400 border-amber-500/25', variant: 'gold' },
+];
+
+const CLIP_LABELS = [
+  'Clip 1 — Symbol Formation',
+  'Clip 2 — Creature/Figure',
+  'Clip 3 — Bloom Transformation',
+  'Clip 4 — Constellation Finale',
+];
+
+function CelestialSagaCard({ sign }) {
+  const [expanded, setExpanded] = useState(false);
+
+  return (
+    <div className="rounded-2xl border border-white/[0.06] bg-white/[0.02] transition-all duration-300 overflow-hidden">
+      {/* Card Header */}
+      <div className="px-4 pt-4 pb-3 sm:px-5 sm:pt-5 sm:pb-4">
+        <div className="flex items-start gap-3 mb-3">
+          {/* Celestial icon */}
+          <div className="flex-shrink-0 mt-0.5 w-6 h-6 rounded-lg border-2 border-[#D4AF37]/40 flex items-center justify-center">
+            <svg className="w-3.5 h-3.5 text-[#D4AF37]/70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+            </svg>
+          </div>
+
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] uppercase tracking-wider font-bold bg-gradient-to-r from-[#D4AF37]/20 to-amber-500/20 text-[#D4AF37] border border-[#D4AF37]/20">
+                <svg className="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z" />
+                </svg>
+                4-CLIP SEQUENCE
+              </span>
+              <span className="inline-block px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-indigo-500/15 text-indigo-400 border border-indigo-500/25">
+                Celestial Saga
+              </span>
+            </div>
+            <h3 className="text-base sm:text-lg font-display font-semibold mt-1 leading-tight text-white/90">
+              {sign.sign} &mdash; {sign.title}
+            </h3>
+            <p className="text-xs text-white/30 mt-1 italic">
+              Generate each clip as a separate 10-second video. Stitch externally. Do not modify order.
+            </p>
+          </div>
+        </div>
+
+        {/* Action row */}
+        <div className="flex items-center gap-2 ml-9 flex-wrap">
+          <button
+            onClick={() => setExpanded(!expanded)}
+            className={`flex-1 sm:flex-none flex items-center justify-center gap-2 px-5 py-3 sm:py-2.5 rounded-xl text-sm font-medium transition-all duration-300 ${
+              expanded
+                ? 'bg-[#D4AF37]/20 text-[#D4AF37] border border-[#D4AF37]/30'
+                : 'bg-white/[0.04] text-white/50 border border-white/[0.08] hover:bg-white/[0.08] hover:text-white/70'
+            }`}
+          >
+            <svg
+              className={`w-4 h-4 transition-transform duration-300 ${expanded ? 'rotate-180' : ''}`}
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+            </svg>
+            <span>{expanded ? 'Hide Clips' : 'View 4 Clips'}</span>
+          </button>
+          <CopyButton
+            text={sign.clips.map((c, i) => `=== ${CLIP_LABELS[i]} ===\n\n${c}`).join('\n\n')}
+            label="Copy All 4"
+            variant="gold"
+            size="small"
+          />
+        </div>
+      </div>
+
+      {/* Expandable Clip Content */}
+      <div
+        className={`overflow-hidden transition-all duration-400 ease-in-out ${
+          expanded ? 'max-h-[8000px] opacity-100' : 'max-h-0 opacity-0'
+        }`}
+      >
+        <div className="px-4 pb-4 sm:px-5 sm:pb-5 ml-9">
+          {/* Clip sequence guide */}
+          <div className="flex items-center gap-3 mb-4 pb-3 border-b border-white/[0.06]">
+            <div className="flex items-center gap-1.5">
+              {[0, 1, 2, 3].map((i) => (
+                <span
+                  key={i}
+                  className={`inline-flex items-center justify-center w-5 h-5 rounded-full text-[9px] font-bold border ${CLIP_COLORS[i].badge}`}
+                >
+                  {i + 1}
+                </span>
+              ))}
+            </div>
+            <span className="text-[10px] uppercase tracking-wider text-white/30 font-medium">
+              4-Clip Cinematic Sequence &mdash; 10 sec each
+            </span>
+          </div>
+
+          {sign.clips.map((clip, i) => {
+            const colors = CLIP_COLORS[i];
+            return (
+              <div key={i} className={`rounded-xl border ${colors.border} ${colors.bg} p-4 mb-3`}>
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-2">
+                    <span
+                      className={`inline-flex items-center justify-center w-6 h-6 rounded-full text-[10px] font-bold border ${colors.badge}`}
+                    >
+                      {i + 1}
+                    </span>
+                    <span className={`text-xs font-bold uppercase tracking-wider ${colors.label}`}>
+                      {CLIP_LABELS[i]}
+                    </span>
+                  </div>
+                  <CopyButton
+                    text={clip}
+                    label={`Copy Clip ${i + 1}`}
+                    variant={colors.variant}
+                    size="small"
+                  />
+                </div>
+                <div className="p-3 rounded-lg bg-black/40 border border-white/[0.04]">
+                  <pre className="whitespace-pre-wrap text-sm text-white/60 leading-relaxed font-sans">
+                    {clip}
+                  </pre>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── Celestial Saga Section ───────────────────────────────────────────────────
+function CelestialSagaSection({ signs }) {
+  return (
+    <div className="mb-8">
+      <div className="flex items-center justify-between mb-4 px-1">
+        <div>
+          <div className="flex items-center gap-3 flex-wrap">
+            <h2 className="text-lg sm:text-xl font-display font-semibold text-white/90">
+              Digital Bloom &mdash; Celestial Saga
+            </h2>
+            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] uppercase tracking-wider font-bold border bg-indigo-500/20 text-indigo-400 border-indigo-500/30">
+              <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+              </svg>
+              NEW SERIES
+            </span>
+          </div>
+          <p className="text-xs text-white/30 mt-0.5">
+            12 Zodiac Signs &mdash; 4 Cinematic Clips Each &mdash; Stitch Externally
+          </p>
+        </div>
+        <span className="text-xs font-mono text-[#D4AF37]/60">
+          {signs.length} signs
+        </span>
+      </div>
+      <div className="space-y-3">
+        {signs.map((sign) => (
+          <CelestialSagaCard key={sign.id} sign={sign} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
 // ─── Series Section Component ─────────────────────────────────────────────────
 function SeriesSection({ title, subtitle, prompts, completedMap, onToggleComplete, higgsEnabled, priority, onGenerateVideo, onEnhance, onScore, onHistory }) {
   const completedCount = prompts.filter((p) => completedMap[p.id]).length;
@@ -603,6 +772,11 @@ const PromptVault = () => {
       return ['occasions', 'relationships', 'flowertypes', 'mens'].includes(activeCategory);
     }
     return activeTab === 'all' || activeTab === 'expansion';
+  }, [activeTab, activeCategory]);
+
+  const showCelestialSaga = useMemo(() => {
+    if (activeCategory) return activeCategory === 'zodiac';
+    return activeTab === 'all' || activeTab === 'launch';
   }, [activeTab, activeCategory]);
 
   const filteredNewSeries = useMemo(() => {
@@ -952,6 +1126,11 @@ const PromptVault = () => {
                 onHistory={handleHistory}
               />
             ))}
+
+            {/* ━━━ Celestial Saga ━━━ */}
+            {showCelestialSaga && (
+              <CelestialSagaSection signs={CELESTIAL_SAGA} />
+            )}
           </>
         )}
 
