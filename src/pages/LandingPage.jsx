@@ -1,7 +1,6 @@
 import LandingNav from '../components/landing/LandingNav';
 import VideoHero from '../components/landing/VideoHero';
 import SignatureBloom from '../components/landing/SignatureBloom';
-import CategoryGrid from '../components/landing/CategoryGrid';
 import FAQ from '../components/landing/FAQ';
 import LandingFooter from '../components/landing/LandingFooter';
 import '../styles/video-hero.css';
@@ -13,10 +12,9 @@ export default function LandingPage() {
   return (
     <div className="landing-page">
       <LandingNav />
-      {/* Hero → Categories (moved up, prominent) → Signature Bloom → FAQ → Footer */}
-      {/* HowItWorks removed per Gamble feedback */}
+      {/* Hero → Signature Bloom → FAQ → Footer */}
+      {/* CategoryGrid removed — "Send a Bloom" CTA takes users to /shop where categories are shown */}
       <VideoHero />
-      <CategoryGrid />
       <SignatureBloom />
       <FAQ />
       <LandingFooter />
