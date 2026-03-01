@@ -33,8 +33,7 @@ const ProductGrid = ({ searchQuery = '', category = null }) => {
       const matchesTier = tierFilter === null || product.tier === tierFilter;
 
       const matchesCategory = !categoryFilter || 
-        product.category === categoryFilter ||
-        (product.occasions && product.occasions.includes(categoryFilter));
+        product.category === categoryFilter;
 
       return matchesSearch && matchesTier && matchesCategory;
     });
