@@ -1,35 +1,16 @@
 /* ============================================
-   SIGNATURE BLOOM EXPERIENCE — Cinematic Showcase
-   Dark section right after hero for visual continuity
+   SIGNATURE BLOOM EXPERIENCE — Apple-style clean
    ============================================ */
 
 .signature-bloom {
   position: relative;
-  padding: 80px 0 100px;
-  /* Stays fully dark — no more fade to pale white */
-  background: linear-gradient(
-    180deg,
-    transparent 0%,
-    #0a0a1f 5%,
-    #0f0f24 20%,
-    #111128 50%,
-    #0f0f24 80%,
-    #0a0a1f 100%
-  );
+  padding: 120px 0;
+  background: #FAFAFA;
   overflow: hidden;
 }
 
-.signature-bloom::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(ellipse 600px 400px at 50% 40%, rgba(212, 175, 55, 0.04) 0%, transparent 70%);
-  pointer-events: none;
-}
-
 .signature-bloom__inner {
-  max-width: 1000px;
+  max-width: 900px;
   margin: 0 auto;
   padding: 0 24px;
   position: relative;
@@ -50,17 +31,15 @@
   color: #D4AF37;
   display: block;
   margin-bottom: 16px;
-  opacity: 0.9;
 }
 
 .signature-bloom__title {
   font-family: 'Playfair Display', 'Georgia', serif;
   font-weight: 600;
-  font-size: clamp(1.8rem, 4.5vw, 3rem);
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
   line-height: 1.2;
-  color: #F5F5F7;
-  margin: 0 0 20px;
-  letter-spacing: 0.02em;
+  color: #1D1D1F;
+  margin: 0 0 16px;
 }
 
 .signature-bloom__subtitle {
@@ -68,14 +47,13 @@
   font-weight: 300;
   font-size: clamp(0.95rem, 2vw, 1.1rem);
   line-height: 1.8;
-  color: rgba(245, 245, 247, 0.55);
+  color: #6E6E73;
   margin: 0;
   max-width: 600px;
   margin-left: auto;
   margin-right: auto;
 }
 
-/* Video Showcase */
 .signature-bloom__showcase {
   max-width: 800px;
   margin: 0 auto;
@@ -83,60 +61,21 @@
 
 .signature-bloom__video-frame {
   position: relative;
-  border-radius: 20px;
+  border-radius: 24px;
   overflow: hidden;
-  border: 1.5px solid rgba(212, 175, 55, 0.3);
-  box-shadow:
-    0 20px 60px rgba(0, 0, 0, 0.4),
-    0 0 80px rgba(212, 175, 55, 0.06),
-    inset 0 0 60px rgba(0, 0, 0, 0.2);
+  border: 1px solid #D2D2D7;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
   background: #000;
-  transition: border-color 0.4s ease, box-shadow 0.4s ease;
+  transition: box-shadow 0.4s ease;
 }
 
 .signature-bloom__video-frame:hover {
-  border-color: rgba(212, 175, 55, 0.5);
-  box-shadow:
-    0 24px 72px rgba(0, 0, 0, 0.5),
-    0 0 100px rgba(212, 175, 55, 0.1),
-    inset 0 0 60px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 24px 72px rgba(0, 0, 0, 0.12);
 }
 
-/* Gold corner accents */
+/* Remove gold corner accents — Apple-style is clean */
 .signature-bloom__corner {
-  position: absolute;
-  width: 24px;
-  height: 24px;
-  z-index: 2;
-  pointer-events: none;
-}
-
-.signature-bloom__corner--tl {
-  top: 12px;
-  left: 12px;
-  border-top: 1.5px solid rgba(212, 175, 55, 0.6);
-  border-left: 1.5px solid rgba(212, 175, 55, 0.6);
-}
-
-.signature-bloom__corner--tr {
-  top: 12px;
-  right: 12px;
-  border-top: 1.5px solid rgba(212, 175, 55, 0.6);
-  border-right: 1.5px solid rgba(212, 175, 55, 0.6);
-}
-
-.signature-bloom__corner--bl {
-  bottom: 12px;
-  left: 12px;
-  border-bottom: 1.5px solid rgba(212, 175, 55, 0.6);
-  border-left: 1.5px solid rgba(212, 175, 55, 0.6);
-}
-
-.signature-bloom__corner--br {
-  bottom: 12px;
-  right: 12px;
-  border-bottom: 1.5px solid rgba(212, 175, 55, 0.6);
-  border-right: 1.5px solid rgba(212, 175, 55, 0.6);
+  display: none;
 }
 
 .signature-bloom__video {
@@ -146,42 +85,29 @@
   object-fit: cover;
 }
 
-/* Caption */
 .signature-bloom__caption {
   text-align: center;
   margin-top: 32px;
 }
 
 .signature-bloom__caption p {
-  font-family: 'Cormorant Garamond', 'Georgia', serif;
-  font-weight: 400;
-  font-style: italic;
-  font-size: clamp(1rem, 2.5vw, 1.2rem);
+  font-family: 'Outfit', sans-serif;
+  font-weight: 300;
+  font-size: clamp(0.95rem, 2vw, 1.1rem);
   line-height: 1.8;
-  color: rgba(245, 245, 247, 0.45);
+  color: #6E6E73;
+  font-style: italic;
   margin: 0;
 }
 
 /* ============================================
-   CATEGORY GRID — Browse by Occasion
-   DARK background with vivid category colors
+   CATEGORY GRID — Apple-style white cards
    ============================================ */
 
 .category-grid-section {
   padding: 100px 0 110px;
-  /* Dark obsidian background — consistent with the overall dark theme */
-  background: #050510;
+  background: #FFFFFF;
   position: relative;
-}
-
-.category-grid-section::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(ellipse 700px 500px at 20% 40%, rgba(212, 175, 55, 0.04) 0%, transparent 65%),
-    radial-gradient(ellipse 600px 400px at 80% 60%, rgba(212, 175, 55, 0.03) 0%, transparent 65%);
-  pointer-events: none;
 }
 
 .cat-header {
@@ -201,16 +127,14 @@
   color: #D4AF37;
   display: block;
   margin-bottom: 16px;
-  opacity: 0.9;
 }
 
-/* Bigger headline — Gamble said "This should be bigger" */
 .cat-headline {
   font-family: 'Playfair Display', 'Georgia', serif;
   font-weight: 700;
   font-size: clamp(2.2rem, 5vw, 3.6rem);
   line-height: 1.15;
-  color: #F5F5F7;
+  color: #1D1D1F;
   margin: 0 0 20px;
   letter-spacing: 0.02em;
 }
@@ -220,7 +144,7 @@
   font-weight: 300;
   font-size: clamp(0.95rem, 2vw, 1.1rem);
   line-height: 1.8;
-  color: rgba(245, 245, 247, 0.5);
+  color: #6E6E73;
   margin: 0;
 }
 
@@ -235,10 +159,7 @@
   z-index: 1;
 }
 
-/* ── Category Card ─────────────────────────────
-   Clean dark card with a vivid colored top bar
-   and icon. Simple, bold, no fancy mixing.
-   ─────────────────────────────────────────── */
+/* ── Category Card — Apple-style white card ── */
 .cat-card {
   position: relative;
   display: flex;
@@ -246,15 +167,16 @@
   align-items: center;
   justify-content: center;
   padding: 36px 16px 30px;
-  background: #0d0d20;
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  border-radius: 16px;
+  background: #F5F5F7;
+  border: 1px solid transparent;
+  border-radius: 20px;
   text-decoration: none;
   cursor: pointer;
   overflow: hidden;
   transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1),
               border-color 0.35s ease,
-              box-shadow 0.35s ease;
+              box-shadow 0.35s ease,
+              background 0.35s ease;
   opacity: 0;
   transform: translateY(30px);
 }
@@ -266,7 +188,7 @@
               transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Solid colored top accent bar — 3px, full width, no fade */
+/* Subtle colored top accent bar */
 .cat-card::before {
   content: '';
   position: absolute;
@@ -275,18 +197,17 @@
   right: 0;
   height: 3px;
   background: var(--cat-color, #D4AF37);
-  border-radius: 16px 16px 0 0;
+  border-radius: 20px 20px 0 0;
 }
 
 .cat-card:hover {
-  border-color: var(--cat-color, #D4AF37);
+  border-color: #D2D2D7;
   transform: translateY(-5px);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+  background: #FFFFFF;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
 }
 
-/* No ::after pseudo element — keep it clean */
-
-/* Card icon — uses the vivid category color */
+/* Card icon */
 .cat-card__icon {
   width: 48px;
   height: 48px;
@@ -304,25 +225,21 @@
   transform: scale(1.1);
 }
 
-/* Card name — clean white text */
+/* Card name */
 .cat-card__name {
   font-family: 'Playfair Display', 'Georgia', serif;
   font-weight: 500;
   font-size: 0.9rem;
   letter-spacing: 0.05em;
-  color: rgba(245, 245, 247, 0.88);
+  color: #1D1D1F;
   margin: 0 0 10px;
   text-align: center;
   line-height: 1.3;
 }
 
-.cat-card:hover .cat-card__name {
-  color: #ffffff;
-}
-
 /* Arrow */
 .cat-card__arrow {
-  color: rgba(255, 255, 255, 0.2);
+  color: #D2D2D7;
   transition: color 0.3s ease, transform 0.3s ease;
 }
 
@@ -332,7 +249,7 @@
 }
 
 /* ============================================
-   RESPONSIVE — Category Grid
+   RESPONSIVE
    ============================================ */
 @media (max-width: 1024px) {
   .cat-grid {
@@ -343,22 +260,12 @@
 
 @media (max-width: 768px) {
   .signature-bloom {
-    padding: 60px 0 80px;
+    padding: 80px 0;
   }
 
   .signature-bloom__video-frame {
     border-radius: 16px;
   }
-
-  .signature-bloom__corner {
-    width: 18px;
-    height: 18px;
-  }
-
-  .signature-bloom__corner--tl { top: 8px; left: 8px; }
-  .signature-bloom__corner--tr { top: 8px; right: 8px; }
-  .signature-bloom__corner--bl { bottom: 8px; left: 8px; }
-  .signature-bloom__corner--br { bottom: 8px; right: 8px; }
 
   .category-grid-section {
     padding: 72px 0 80px;

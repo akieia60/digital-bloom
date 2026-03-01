@@ -109,7 +109,7 @@ export default function VideoHero() {
               poster="/videos/hero_bloom_poster.jpg"
               preload="auto"
             >
-              <source src="/videos/hero_bloom.mp4" type="video/mp4" />
+              <source src="/videos/digital_bloom_hero_morph.mp4" type="video/mp4" />
             </video>
           </div>
           {/* PART 2: Refined multi-stop overlay with warm tint */}

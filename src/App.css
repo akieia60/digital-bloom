@@ -1,1 +1,12 @@
-/* Custom styles can be added here */
+/* App.css — Apple-style minimal overrides */
+
+#root {
+  background: #FFFFFF;
+  min-height: 100vh;
+}
+
+/* Particle system removed — Apple-style is clean */
+.particle,
+.particles {
+  display: none;
+}

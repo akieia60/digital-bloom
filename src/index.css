@@ -2,10 +2,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&family=Outfit:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap');
 
 :root {
-  --obsidian-black: #050510;
+  --apple-white: #FFFFFF;
+  --apple-gray: #FAFAFA;
+  --apple-text: #1D1D1F;
+  --apple-secondary: #6E6E73;
+  --apple-border: #D2D2D7;
+  --apple-accent: #D4AF37;
   --pure-gold: #D4AF37;
   --champagne-white: #F5F5F7;
-  --muted-gold: rgba(212, 175, 55, 0.4);
 }
 
 * {
@@ -16,55 +20,33 @@
 
 body {
   margin: 0;
-  font-family: 'Inter', sans-serif;
-  background: var(--obsidian-black);
-  color: var(--champagne-white);
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Outfit', 'Inter', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  background: var(--apple-white);
+  color: var(--apple-text);
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 h1, h2, h3, .font-display {
   font-family: 'Playfair Display', 'Georgia', serif;
   letter-spacing: 0.02em;
+  color: var(--apple-text);
 }
 
-/* Luxury Background */
+/* Apple-style clean background */
 .bg-obsidian {
-  background: radial-gradient(circle at top center, #0B0B1E 0%, #050510 100%);
+  background: var(--apple-white);
 }
 
-/* Floating particles background */
+/* Remove floating particles — Apple-style is clean */
 .particles {
-  position: fixed;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  z-index: 0;
-  pointer-events: none;
-  top: 0;
-  left: 0;
+  display: none;
 }
 
-.particle {
-  position: absolute;
-  width: 2px;
-  height: 2px;
-  background: var(--muted-gold);
-  border-radius: 50%;
-  box-shadow: 0 0 8px rgba(212, 175, 55, 0.1);
-  animation: float 25s infinite linear;
-}
-
-@keyframes float {
-  0% { transform: translateY(0) translateX(0); opacity: 0; }
-  10% { opacity: 1; }
-  90% { opacity: 1; }
-  100% { transform: translateY(-100vh) translateX(20px); opacity: 0; }
-}
-
-/* Custom scrollbar - Ultra Minimal */
+/* Custom scrollbar - Apple minimal */
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 8px;
 }
 
 ::-webkit-scrollbar-track {
@@ -72,53 +54,55 @@ h1, h2, h3, .font-display {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(212, 175, 55, 0.2);
+  background: rgba(0, 0, 0, 0.15);
   border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--pure-gold);
+  background: rgba(0, 0, 0, 0.3);
 }
 
-/* Gradient text - Luxury Gold (Apple Style) */
+/* Gradient text - Subtle gold */
 .gradient-text {
-  background: linear-gradient(135deg, #F5F5F7 0%, #D4AF37 100%);
+  background: linear-gradient(135deg, var(--apple-text) 0%, var(--apple-accent) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
-/* Glass morphism - Refined for Obsidian */
+/* Glass morphism - Apple frosted glass */
 .glass {
-  background: rgba(11, 11, 30, 0.6);
+  background: rgba(255, 255, 255, 0.8);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.06);
 }
 
-/* Buttons - Premium Feel */
+/* Buttons - Apple Premium Feel */
 .btn-primary {
-  background: var(--champagne-white);
-  color: var(--obsidian-black);
+  background: var(--apple-text);
+  color: var(--apple-white);
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 980px;
 }
 
 .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 10px 20px rgba(0,0,0,0.4);
-  background: #ffffff;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+  background: #333333;
 }
 
 .btn-secondary {
-  border: 1px solid rgba(212, 175, 55, 0.3);
+  border: 1px solid var(--apple-border);
   background: transparent;
-  color: var(--pure-gold);
+  color: var(--apple-text);
   transition: all 0.4s ease;
+  border-radius: 980px;
 }
 
 .btn-secondary:hover {
-  background: rgba(212, 175, 55, 0.05);
-  border-color: var(--pure-gold);
+  background: rgba(0, 0, 0, 0.03);
+  border-color: var(--apple-text);
 }
 
 /* Product Protection — excludes demo video player */

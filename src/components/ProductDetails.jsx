@@ -24,10 +24,10 @@ const ProductDetails = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-obsidian flex items-center justify-center">
+      <div className="min-h-screen bg-white flex items-center justify-center">
         <div className="text-center">
-          <div className="w-12 h-12 border-2 border-pure-gold/20 border-t-pure-gold rounded-full animate-spin mx-auto mb-6"></div>
-          <p className="text-[10px] uppercase tracking-[0.4em] text-white/40">Preparing the Studio</p>
+          <div className="w-10 h-10 border-2 border-[#D2D2D7] border-t-[#D4AF37] rounded-full animate-spin mx-auto mb-6"></div>
+          <p className="text-[11px] uppercase tracking-[0.2em] text-[#6E6E73]">Loading...</p>
         </div>
       </div>
     );
@@ -35,10 +35,10 @@ const ProductDetails = () => {
 
   if (!product) {
     return (
-      <div className="min-h-screen bg-obsidian flex items-center justify-center p-6 text-center">
+      <div className="min-h-screen bg-white flex items-center justify-center p-6 text-center">
         <div>
-          <h2 className="text-2xl font-display text-white mb-6">Piece not found in collection.</h2>
-          <Link to="/" className="btn-secondary px-8 py-3 rounded-full text-[10px] uppercase tracking-widest">Return to Gallery</Link>
+          <h2 className="text-2xl font-display text-[#1D1D1F] mb-6">Product not found.</h2>
+          <Link to="/shop" className="inline-block px-8 py-3 rounded-full text-[12px] uppercase tracking-widest border border-[#D2D2D7] text-[#1D1D1F] hover:border-[#1D1D1F] transition-colors">Return to Shop</Link>
         </div>
       </div>
     );
@@ -51,7 +51,7 @@ const ProductDetails = () => {
   };
 
   return (
-    <div className="min-h-screen bg-obsidian text-white pt-32 pb-24">
+    <div className="min-h-screen bg-white text-[#1D1D1F] pt-32 pb-24">
       {/* Customizer Overlay */}
       <Customizer 
         product={product} 
@@ -64,19 +64,19 @@ const ProductDetails = () => {
         {/* Navigation */}
         <button
           onClick={() => navigate(-1)}
-          className="group flex items-center text-white/40 hover:text-white transition-all mb-12"
+          className="group flex items-center text-[#6E6E73] hover:text-[#1D1D1F] transition-all mb-12"
         >
-          <div className="w-8 h-8 rounded-full border border-white/5 flex items-center justify-center mr-4 group-hover:border-pure-gold/40">
+          <div className="w-8 h-8 rounded-full border border-[#D2D2D7] flex items-center justify-center mr-4 group-hover:border-[#1D1D1F]">
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 19l-7-7 7-7" />
             </svg>
           </div>
-          <span className="text-[10px] uppercase tracking-[0.2em] font-medium">Return to Gallery</span>
+          <span className="text-[11px] uppercase tracking-[0.15em] font-medium">Back</span>
         </button>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 mb-32 items-center">
-          {/* Cinematic Viewport */}
-          <div className="relative aspect-[3/4] sm:aspect-square lg:aspect-[4/5] rounded-[3rem] overflow-hidden glass border border-white/5 shadow-2xl">
+          {/* Video Viewport */}
+          <div className="relative aspect-[3/4] sm:aspect-square lg:aspect-[4/5] rounded-3xl overflow-hidden bg-[#F5F5F7] border border-[#D2D2D7]/30 shadow-lg">
             <video
               src={product.video_file_url || product.video_url}
               autoPlay
@@ -87,76 +87,69 @@ const ProductDetails = () => {
               poster={product.image_url}
               className="w-full h-full object-cover"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-40"></div>
-            
-            <div className="absolute bottom-8 left-8">
-              <span className="px-4 py-1.5 glass border border-white/10 rounded-full text-[10px] uppercase tracking-widest font-semibold text-pure-gold">
-                Masterpiece Edition
-              </span>
-            </div>
+            <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-30"></div>
           </div>
 
-          {/* Bespoke Details */}
+          {/* Details */}
           <div className="flex flex-col">
             <div className="mb-8">
-              <span className="text-[10px] uppercase tracking-[0.4em] text-white/40 font-semibold mb-4 block">
-                {product.category || 'Luxury Bloom'}
+              <span className="text-[11px] uppercase tracking-[0.2em] text-[#D4AF37] font-semibold mb-4 block">
+                {product.category || 'Digital Experience'}
               </span>
-              <h1 className="text-5xl sm:text-6xl font-medium font-display tracking-tight leading-tight mb-6">
+              <h1 className="text-4xl sm:text-5xl font-medium font-display tracking-tight leading-tight mb-6 text-[#1D1D1F]">
                 {product.name}
               </h1>
-              <p className="text-3xl font-light tracking-tight text-white/90">
+              <p className="text-3xl font-light tracking-tight text-[#1D1D1F]">
                 ${parseFloat(product.price).toFixed(2)}
               </p>
             </div>
 
-            <p className="text-lg text-white/50 mb-12 font-light leading-relaxed max-w-xl italic">
-             "{product.description}"
+            <p className="text-lg text-[#6E6E73] mb-12 font-light leading-relaxed max-w-xl">
+              {product.description}
             </p>
 
-            <div className="space-y-12">
+            <div className="space-y-10">
               {/* Feature Points */}
-              <div className="grid grid-cols-2 gap-8 border-t border-white/5 pt-12">
+              <div className="grid grid-cols-2 gap-8 border-t border-[#D2D2D7]/50 pt-10">
                 <div>
-                  <h3 className="text-[10px] uppercase tracking-[0.2em] text-pure-gold mb-2 font-semibold">Format</h3>
-                  <p className="text-xs text-white/40 font-light">4K Cinematic Video (MP4)</p>
+                  <h3 className="text-[11px] uppercase tracking-[0.15em] text-[#D4AF37] mb-2 font-semibold">Format</h3>
+                  <p className="text-sm text-[#6E6E73] font-light">4K Cinematic Video (MP4)</p>
                 </div>
                 <div>
-                  <h3 className="text-[10px] uppercase tracking-[0.2em] text-pure-gold mb-2 font-semibold">Delivery</h3>
-                  <p className="text-xs text-white/40 font-light">Instant Global Download</p>
+                  <h3 className="text-[11px] uppercase tracking-[0.15em] text-[#D4AF37] mb-2 font-semibold">Delivery</h3>
+                  <p className="text-sm text-[#6E6E73] font-light">Instant Digital Download</p>
                 </div>
               </div>
 
-              {/* Primary Call to Action */}
+              {/* Primary CTA */}
               <div className="space-y-6">
                 <button
                   onClick={() => setIsCustomizerOpen(true)}
-                  className="w-full btn-primary py-6 rounded-full text-sm font-bold tracking-[0.3em] uppercase transition-all shadow-xl shadow-white/5"
+                  className="w-full py-5 rounded-full text-sm font-medium tracking-[0.2em] uppercase transition-all bg-[#1D1D1F] text-white hover:bg-[#D4AF37] hover:text-[#1D1D1F] shadow-lg"
                 >
                   Customize Experience
                 </button>
                 
-                <div className="flex items-center justify-center space-x-4 opacity-30 text-[9px] uppercase tracking-[0.3em]">
-                  <span className="w-1.5 h-1.5 rounded-full bg-white"></span>
+                <div className="flex items-center justify-center space-x-4 text-[10px] uppercase tracking-[0.2em] text-[#6E6E73]/60">
                   <span>4K Resolution</span>
-                  <span className="w-1.5 h-1.5 rounded-full bg-white"></span>
-                  <span>Bespoke Music</span>
-                  <span className="w-1.5 h-1.5 rounded-full bg-white"></span>
+                  <span className="w-1 h-1 rounded-full bg-[#D2D2D7]"></span>
+                  <span>Custom Music</span>
+                  <span className="w-1 h-1 rounded-full bg-[#D2D2D7]"></span>
                   <span>Lifetime Access</span>
                 </div>
               </div>
 
               {/* Success Notification */}
               {showSuccess && (
-                <div className="animate-fade-in glass border border-green-500/30 p-4 rounded-2xl flex items-center space-x-4 bg-green-500/5">
+                <div className="animate-fade-in bg-green-50 border border-green-200 p-4 rounded-2xl flex items-center space-x-4">
                   <div className="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center">
-                    <svg className="w-4 h-4 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
                     </svg>
                   </div>
                   <div>
-                    <p className="text-sm font-semibold">Experience added to cart.</p>
-                    <p className="text-[10px] text-white/40 uppercase tracking-widest mt-1">Ready to publish</p>
+                    <p className="text-sm font-semibold text-[#1D1D1F]">Added to cart.</p>
+                    <p className="text-[10px] text-[#6E6E73] uppercase tracking-widest mt-1">Ready to customize</p>
                   </div>
                 </div>
               )}
@@ -164,11 +157,11 @@ const ProductDetails = () => {
           </div>
         </div>
 
-        {/* Gallery Extension */}
+        {/* Related Products */}
         {relatedProducts.length > 0 && (
-          <div className="border-t border-white/5 pt-24">
-            <h2 className="text-3xl font-display font-medium text-white mb-16 tracking-tight">You may also admire</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12">
+          <div className="border-t border-[#D2D2D7]/50 pt-24">
+            <h2 className="text-3xl font-display font-medium text-[#1D1D1F] mb-16 tracking-tight">You may also like</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
               {relatedProducts.map(flower => (
                 <ProductCard key={flower.id} product={flower} />
               ))}
