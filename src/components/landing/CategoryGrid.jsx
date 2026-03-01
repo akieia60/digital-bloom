@@ -1,29 +1,15 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 
-// Each category now has a vivid accent color — shows on the card border,
-// icon, and top highlight bar so every tile feels distinct and bold.
 const CATEGORIES = [
   {
-    name: 'Love',
-    slug: 'love',
-    color: '#FF3B7F',
+    name: "Mother's Day",
+    slug: 'mothers-day',
+    color: '#FF4DA6',
     icon: (
       <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M24 42S6 30 6 18C6 12 10 6 16 6C20 6 23 9 24 12C25 9 28 6 32 6C38 6 42 12 42 18C42 30 24 42 24 42Z" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
-      </svg>
-    ),
-  },
-  {
-    name: 'Anniversary',
-    slug: 'anniversary',
-    color: '#FF7B54',
-    icon: (
-      <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="24" cy="24" r="18" stroke="currentColor" strokeWidth="1.8"/>
-        <path d="M24 6C24 6 30 14 30 24C30 34 24 42 24 42" stroke="currentColor" strokeWidth="1.2" opacity="0.7"/>
-        <path d="M24 6C24 6 18 14 18 24C18 34 24 42 24 42" stroke="currentColor" strokeWidth="1.2" opacity="0.7"/>
-        <path d="M8 18H40M8 30H40" stroke="currentColor" strokeWidth="1.2" opacity="0.6"/>
+        <path d="M24 40C24 40 8 32 8 20C8 14 12 10 18 10C21 10 23 12 24 14C25 12 27 10 30 10C36 10 40 14 40 20C40 32 24 40 24 40Z" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+        <path d="M24 18C22 22 20 26 24 32C28 26 26 22 24 18Z" stroke="currentColor" strokeWidth="1.2" opacity="0.6"/>
       </svg>
     ),
   },
@@ -43,7 +29,28 @@ const CATEGORIES = [
     ),
   },
   {
-    name: 'Celebration',
+    name: 'Love',
+    slug: 'love',
+    color: '#FF3B7F',
+    icon: (
+      <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M24 42S6 30 6 18C6 12 10 6 16 6C20 6 23 9 24 12C25 9 28 6 32 6C38 6 42 12 42 18C42 30 24 42 24 42Z" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+      </svg>
+    ),
+  },
+  {
+    name: "Valentine's Day",
+    slug: 'valentine',
+    color: '#FF6B6B',
+    icon: (
+      <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M24 42S6 30 6 18C6 12 10 6 16 6C20 6 23 9 24 12C25 9 28 6 32 6C38 6 42 12 42 18C42 30 24 42 24 42Z" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+        <path d="M18 20L22 24L30 16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+      </svg>
+    ),
+  },
+  {
+    name: 'Congratulations',
     slug: 'celebration',
     color: '#B45FFF',
     icon: (
@@ -53,7 +60,7 @@ const CATEGORIES = [
     ),
   },
   {
-    name: 'Grief & Sympathy',
+    name: 'Memorial',
     slug: 'grief',
     color: '#7B9FFF',
     icon: (
@@ -64,9 +71,9 @@ const CATEGORIES = [
     ),
   },
   {
-    name: 'Friendship',
+    name: 'Thinking of You',
     slug: 'friendship',
-    color: '#FF6B6B',
+    color: '#FF8C42',
     icon: (
       <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
         <circle cx="18" cy="18" r="8" stroke="currentColor" strokeWidth="1.8"/>
@@ -76,49 +83,37 @@ const CATEGORIES = [
     ),
   },
   {
-    name: 'Encouragement',
-    slug: 'encouragement',
-    color: '#FF8C42',
-    icon: (
-      <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M24 6L28 18H40L30 26L34 38L24 30L14 38L18 26L8 18H20L24 6Z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round"/>
-      </svg>
-    ),
-  },
-  {
-    name: "Mother's Day",
-    slug: 'mothers-day',
-    color: '#FF4DA6',
-    icon: (
-      <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M24 40C24 40 8 32 8 20C8 14 12 10 18 10C21 10 23 12 24 14C25 12 27 10 30 10C36 10 40 14 40 20C40 32 24 40 24 40Z" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
-        <path d="M24 18C22 22 20 26 24 32C28 26 26 22 24 18Z" stroke="currentColor" strokeWidth="1.2" opacity="0.6"/>
-      </svg>
-    ),
-  },
-  {
-    name: "Father's Day",
-    slug: 'fathers-day',
-    color: '#4D9FFF',
-    icon: (
-      <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M16 8H32L30 18H18L16 8Z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round"/>
-        <rect x="14" y="18" width="20" height="24" rx="2" stroke="currentColor" strokeWidth="1.8"/>
-        <path d="M20 18V42M28 18V42" stroke="currentColor" strokeWidth="1.2" opacity="0.5"/>
-        <path d="M14 28H34" stroke="currentColor" strokeWidth="1.2" opacity="0.5"/>
-      </svg>
-    ),
-  },
-  {
-    name: 'Graduation',
-    slug: 'graduation',
+    name: 'Luxury',
+    slug: 'luxury',
     color: '#D4AF37',
     icon: (
       <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M4 20L24 10L44 20L24 30L4 20Z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round"/>
-        <path d="M36 24V36C36 36 30 40 24 40C18 40 12 36 12 36V24" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
-        <path d="M40 22V34" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
-        <circle cx="40" cy="36" r="2" stroke="currentColor" strokeWidth="1.2"/>
+        <path d="M8 18L16 8H32L40 18L24 40L8 18Z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round"/>
+        <path d="M8 18H40M16 8L24 40M32 8L24 40M20 18L16 8M28 18L32 8" stroke="currentColor" strokeWidth="1.2" opacity="0.5"/>
+      </svg>
+    ),
+  },
+  {
+    name: 'Zodiac',
+    slug: 'zodiac',
+    color: '#9B59B6',
+    icon: (
+      <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="24" cy="24" r="18" stroke="currentColor" strokeWidth="1.8"/>
+        <path d="M24 6V42M6 24H42" stroke="currentColor" strokeWidth="1.2" opacity="0.4"/>
+        <circle cx="24" cy="24" r="6" stroke="currentColor" strokeWidth="1.5"/>
+        <circle cx="24" cy="24" r="2" fill="currentColor" opacity="0.6"/>
+      </svg>
+    ),
+  },
+  {
+    name: 'General',
+    slug: 'general',
+    color: '#6E6E73',
+    icon: (
+      <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M24 8C20 8 16 12 16 18C16 24 24 36 24 36C24 36 32 24 32 18C32 12 28 8 24 8Z" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+        <circle cx="24" cy="18" r="4" stroke="currentColor" strokeWidth="1.5"/>
       </svg>
     ),
   },
@@ -158,12 +153,12 @@ export default function CategoryGrid() {
           </p>
         </div>
 
-        {/* Grid */}
+        {/* Grid — links to individual category pages */}
         <div className="cat-grid">
           {CATEGORIES.map((cat, index) => (
             <Link
               key={cat.slug}
-              to={`/shop?category=${cat.slug}`}
+              to={`/shop/${cat.slug}`}
               className={`cat-card ${visibleCards.has(String(index)) ? 'cat-card--visible' : ''}`}
               data-index={index}
               style={{

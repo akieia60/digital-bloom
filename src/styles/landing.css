@@ -1,21 +1,18 @@
 /* ============================================
    PREMIUM LANDING PAGE STYLES
-   Luxury Brand: Tom Ford / Cartier / Apple
-   Dark Hero → Warm White Content Transition
+   Apple-Style Clean White Design
    ============================================ */
 
-/* Google Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&family=Cormorant+Garamond:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap');
 
-/* Smooth Scroll */
 html {
   scroll-behavior: smooth;
 }
 
-/* Landing Page Container — DARK throughout per Gamble feedback */
+/* Landing Page Container — Apple white */
 .landing-page {
-  background: #050510;
-  color: #F5F5F7;
+  background: #FFFFFF;
+  color: #1D1D1F;
   font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
   line-height: 1.6;
 }
@@ -27,498 +24,16 @@ html {
 }
 
 /* ============================================
-   DARK-TO-LIGHT TRANSITION GRADIENT
-   Smooth fade from hero dark to warm white
-   ============================================ */
-.dark-to-light-transition {
-  position: relative;
-  background: linear-gradient(180deg,
-    #050510 0%,
-    #0A0A1A 15%,
-    #1A1A2E 35%,
-    #3D3D56 50%,
-    #8A8A9A 62%,
-    #C8C8C0 72%,
-    #E8E8E2 82%,
-    #F2F2ED 90%,
-    #FAFAF7 100%
-  );
-  padding: 100px 0 80px;
-  overflow: hidden;
-}
-
-/* ============================================
-   VALUE PROPS SECTION — Light Background Redesign
-   ============================================ */
-.vp-section {
-  position: relative;
-  padding: 0;
-  background: transparent;
-  overflow: hidden;
-}
-
-/* Subtle bloom pattern background — adapted for light */
-.vp-bg-pattern {
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(ellipse 600px 600px at 20% 50%, rgba(212, 175, 55, 0.06) 0%, transparent 70%),
-    radial-gradient(ellipse 500px 500px at 80% 30%, rgba(212, 175, 55, 0.04) 0%, transparent 70%),
-    radial-gradient(ellipse 400px 400px at 50% 80%, rgba(212, 175, 55, 0.05) 0%, transparent 70%);
-  pointer-events: none;
-}
-
-/* Gold line dividers — adjusted for light bg */
-.vp-divider-top,
-.vp-divider-bottom {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 16px;
-  padding: 0 48px;
-  margin-bottom: 60px;
-}
-
-.vp-divider-bottom {
-  margin-bottom: 0;
-  margin-top: 60px;
-}
-
-.vp-divider-line {
-  flex: 1;
-  height: 1px;
-  background: linear-gradient(90deg, transparent 0%, rgba(212, 175, 55, 0.4) 50%, transparent 100%);
-}
-
-.vp-divider-diamond {
-  width: 8px;
-  height: 8px;
-  background: #D4AF37;
-  transform: rotate(45deg);
-  opacity: 0.7;
-  flex-shrink: 0;
-}
-
-/* Section header — dark text on light bg */
-.vp-header {
-  text-align: center;
-  max-width: 700px;
-  margin: 0 auto 72px;
-  padding: 0 24px;
-  position: relative;
-  z-index: 1;
-}
-
-.vp-eyebrow {
-  font-family: 'Outfit', sans-serif;
-  font-weight: 400;
-  font-size: 0.75rem;
-  letter-spacing: 0.35em;
-  text-transform: uppercase;
-  color: #D4AF37;
-  display: block;
-  margin-bottom: 20px;
-  opacity: 0.9;
-}
-
-.vp-headline {
-  font-family: 'Cormorant Garamond', 'Georgia', serif;
-  font-weight: 600;
-  font-size: clamp(2rem, 5vw, 3.2rem);
-  line-height: 1.2;
-  color: #1A1A2E;
-  margin: 0 0 24px;
-  letter-spacing: 0.01em;
-}
-
-/* In the transition zone, headline stays light */
-.dark-to-light-transition .vp-headline {
-  color: #F5F5F7;
-}
-
-.dark-to-light-transition .vp-eyebrow {
-  color: #D4AF37;
-}
-
-.dark-to-light-transition .vp-subtext {
-  color: rgba(245, 245, 247, 0.6);
-}
-
-.vp-subtext {
-  font-family: 'Outfit', sans-serif;
-  font-weight: 300;
-  font-size: clamp(0.95rem, 2vw, 1.1rem);
-  line-height: 1.8;
-  color: rgba(26, 26, 46, 0.6);
-  margin: 0;
-}
-
-/* ============================================
-   VALUE CARDS — Premium White Cards on Light BG
-   White cards with gold borders and soft shadows
-   ============================================ */
-.vp-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 32px;
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 0 24px;
-  position: relative;
-  z-index: 1;
-}
-
-.vp-card {
-  position: relative;
-  opacity: 0;
-  transform: translateY(40px);
-  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
-              transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.vp-card--visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.vp-card-inner {
-  position: relative;
-  background: #FFFFFF;
-  border: 1px solid rgba(212, 175, 55, 0.25);
-  border-radius: 20px;
-  padding: 48px 32px 40px;
-  text-align: center;
-  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-  overflow: hidden;
-  z-index: 1;
-  box-shadow:
-    0 4px 24px rgba(0, 0, 0, 0.06),
-    0 1px 4px rgba(0, 0, 0, 0.04);
-}
-
-.vp-card-inner::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 60%;
-  height: 2px;
-  background: linear-gradient(90deg, transparent 0%, #D4AF37 50%, transparent 100%);
-  opacity: 0.6;
-}
-
-.vp-card:hover .vp-card-inner {
-  border-color: rgba(212, 175, 55, 0.5);
-  transform: translateY(-6px);
-  box-shadow:
-    0 20px 60px rgba(0, 0, 0, 0.1),
-    0 0 40px rgba(212, 175, 55, 0.08),
-    0 1px 4px rgba(0, 0, 0, 0.04);
-}
-
-/* Card glow effect — subtle gold on light */
-.vp-card-glow {
-  position: absolute;
-  inset: -1px;
-  border-radius: 20px;
-  background: transparent;
-  opacity: 0;
-  transition: opacity 0.5s ease;
-  z-index: 0;
-  pointer-events: none;
-  box-shadow: 0 0 30px rgba(212, 175, 55, 0.1);
-}
-
-.vp-card:hover .vp-card-glow {
-  opacity: 1;
-}
-
-/* Card icon — gold on white */
-.vp-card-icon-wrap {
-  width: 72px;
-  height: 72px;
-  margin: 0 auto 24px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.vp-icon {
-  width: 64px;
-  height: 64px;
-  transition: transform 0.5s ease;
-}
-
-.vp-card:hover .vp-icon {
-  transform: scale(1.08);
-}
-
-/* Gold line under icon */
-.vp-card-gold-line {
-  width: 40px;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, #D4AF37, transparent);
-  margin: 0 auto 24px;
-  opacity: 0.6;
-}
-
-/* Card title — dark text with gold accent */
-.vp-card-title {
-  font-family: 'Playfair Display', 'Georgia', serif;
-  font-weight: 600;
-  font-size: 1.1rem;
-  letter-spacing: 0.25em;
-  color: #1A1A2E;
-  margin: 0 0 16px;
-  text-transform: uppercase;
-}
-
-/* Card description — dark readable text */
-.vp-card-desc {
-  font-family: 'Outfit', sans-serif;
-  font-weight: 300;
-  font-size: 0.95rem;
-  line-height: 1.7;
-  color: rgba(26, 26, 46, 0.65);
-  margin: 0;
-}
-
-/* ============================================
-   PREMIUM CTA SECTION
-   ============================================ */
-.vp-cta-section {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 28px;
-  margin-top: 72px;
-  position: relative;
-  z-index: 1;
-}
-
-/* BEGIN YOUR STORY — Gold gradient premium button */
-.vp-btn-primary {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 18px 56px;
-  background: linear-gradient(135deg, #D4AF37 0%, #B8962E 40%, #D4AF37 100%);
-  border: none;
-  border-radius: 50px;
-  text-decoration: none;
-  cursor: pointer;
-  overflow: hidden;
-  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-  min-height: 58px;
-  box-shadow:
-    0 4px 20px rgba(212, 175, 55, 0.3),
-    0 0 40px rgba(212, 175, 55, 0.1);
-}
-
-.vp-btn-primary:hover {
-  transform: translateY(-3px);
-  box-shadow:
-    0 8px 32px rgba(212, 175, 55, 0.4),
-    0 0 60px rgba(212, 175, 55, 0.18);
-  background: linear-gradient(135deg, #E0BF4A 0%, #D4AF37 40%, #E0BF4A 100%);
-}
-
-.vp-btn-primary-text {
-  font-family: 'Outfit', sans-serif;
-  font-weight: 600;
-  font-size: 0.95rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: #050510;
-  position: relative;
-  z-index: 2;
-}
-
-.vp-btn-primary-glow {
-  position: absolute;
-  inset: -2px;
-  border-radius: 50px;
-  background: transparent;
-  box-shadow: 0 0 20px rgba(212, 175, 55, 0.25);
-  animation: ctaGlow 3s ease-in-out infinite;
-  z-index: 1;
-  pointer-events: none;
-}
-
-@keyframes ctaGlow {
-  0%, 100% {
-    box-shadow: 0 0 20px rgba(212, 175, 55, 0.25);
-  }
-  50% {
-    box-shadow: 0 0 40px rgba(212, 175, 55, 0.4);
-  }
-}
-
-/* ============================================
-   DEMO VIDEO SECTION — Light Background
-   ============================================ */
-.demo-video-section {
-  padding: 80px 0 100px;
-  background: #FAFAF7;
-  position: relative;
-  overflow: hidden;
-}
-
-.demo-video-section::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(ellipse 500px 400px at 50% 50%, rgba(212, 175, 55, 0.04) 0%, transparent 70%);
-  pointer-events: none;
-}
-
-.demo-video-header {
-  text-align: center;
-  max-width: 700px;
-  margin: 0 auto 48px;
-  padding: 0 24px;
-  position: relative;
-  z-index: 1;
-}
-
-.demo-video-eyebrow {
-  font-family: 'Outfit', sans-serif;
-  font-weight: 400;
-  font-size: 0.75rem;
-  letter-spacing: 0.35em;
-  text-transform: uppercase;
-  color: #D4AF37;
-  display: block;
-  margin-bottom: 16px;
-  opacity: 0.9;
-}
-
-.demo-video-title {
-  font-family: 'Playfair Display', 'Georgia', serif;
-  font-weight: 600;
-  font-size: clamp(1.8rem, 4vw, 2.8rem);
-  line-height: 1.2;
-  color: #1A1A2E;
-  margin: 0;
-  letter-spacing: 0.01em;
-}
-
-.demo-video-wrapper {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 0 24px;
-  position: relative;
-  z-index: 1;
-}
-
-.demo-video-player {
-  position: relative;
-  width: 100%;
-  border-radius: 20px;
-  overflow: hidden;
-  border: 2px solid rgba(212, 175, 55, 0.3);
-  box-shadow:
-    0 20px 60px rgba(0, 0, 0, 0.12),
-    0 0 40px rgba(212, 175, 55, 0.06);
-  background: #000;
-  transition: box-shadow 0.4s ease, border-color 0.4s ease;
-}
-
-.demo-video-player:hover {
-  border-color: rgba(212, 175, 55, 0.5);
-  box-shadow:
-    0 24px 72px rgba(0, 0, 0, 0.15),
-    0 0 50px rgba(212, 175, 55, 0.1);
-}
-
-.demo-video-player video {
-  width: 100%;
-  display: block;
-  aspect-ratio: 16 / 9;
-  object-fit: cover;
-  pointer-events: auto;
-  user-select: auto;
-}
-
-.demo-video-caption {
-  text-align: center;
-  margin-top: 32px;
-  padding: 0 24px;
-  position: relative;
-  z-index: 1;
-}
-
-.demo-video-caption p {
-  font-family: 'Outfit', sans-serif;
-  font-weight: 300;
-  font-size: clamp(0.95rem, 2vw, 1.1rem);
-  line-height: 1.8;
-  color: rgba(26, 26, 46, 0.6);
-  font-style: italic;
-  margin: 0;
-}
-
-/* ============================================
-   HERO SECTION (LandingHero — unused but kept)
-   ============================================ */
-.landing-hero {
-  min-height: 90vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 120px 0 80px;
-  background: linear-gradient(180deg, #050510 0%, #0A0A1A 100%);
-}
-
-.hero-content {
-  max-width: 800px;
-  margin: 0 auto;
-}
-
-.hero-headline {
-  font-family: 'Playfair Display', 'Georgia', serif;
-  font-size: clamp(40px, 6vw, 72px);
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  line-height: 1.1;
-  margin: 0 0 24px;
-  color: #F5F5F7;
-}
-
-.hero-subheadline {
-  font-family: 'Outfit', sans-serif;
-  font-size: clamp(18px, 2.5vw, 24px);
-  font-weight: 300;
-  line-height: 1.5;
-  color: rgba(245, 245, 247, 0.6);
-  margin: 0 0 48px;
-  max-width: 600px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.hero-ctas {
-  display: flex;
-  gap: 16px;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-
-/* ============================================
-   BUTTONS / CTAs — Adapted for light bg
+   BUTTONS / CTAs — Apple-style
    ============================================ */
 .cta-primary {
   display: inline-block;
   padding: 16px 32px;
-  background: linear-gradient(135deg, #D4AF37 0%, #B8962E 100%);
-  color: #050510;
+  background: #1D1D1F;
+  color: #FFFFFF;
   font-family: 'Outfit', sans-serif;
   font-size: 17px;
-  font-weight: 600;
+  font-weight: 500;
   text-decoration: none;
   border-radius: 980px;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -528,43 +43,44 @@ html {
 }
 
 .cta-primary:hover {
-  background: linear-gradient(135deg, #E0BF4A 0%, #D4AF37 100%);
+  background: #D4AF37;
+  color: #1D1D1F;
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(212, 175, 55, 0.35);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
 }
 
 .cta-secondary {
   display: inline-block;
   padding: 16px 32px;
   background: transparent;
-  color: #D4AF37;
+  color: #1D1D1F;
   font-family: 'Outfit', sans-serif;
   font-size: 17px;
   font-weight: 500;
   text-decoration: none;
   border-radius: 980px;
-  border: 1.5px solid rgba(212, 175, 55, 0.4);
+  border: 1.5px solid #D2D2D7;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
   letter-spacing: 0.05em;
 }
 
 .cta-secondary:hover {
-  border-color: #D4AF37;
-  background: rgba(212, 175, 55, 0.08);
+  border-color: #1D1D1F;
+  background: rgba(0, 0, 0, 0.02);
 }
 
 /* ============================================
-   SECTION TITLES — Light text on dark bg
+   SECTION TITLES — Apple-style dark text
    ============================================ */
 .section-title {
   font-family: 'Playfair Display', 'Georgia', serif;
   font-size: clamp(24px, 4vw, 36px);
   font-weight: 600;
-  letter-spacing: 0.15em;
+  letter-spacing: 0.08em;
   margin: 0 0 16px;
   text-align: center;
-  color: #F5F5F7;
+  color: #1D1D1F;
   text-transform: uppercase;
 }
 
@@ -572,7 +88,7 @@ html {
   font-family: 'Outfit', sans-serif;
   font-size: 17px;
   font-weight: 300;
-  color: rgba(245, 245, 247, 0.55);
+  color: #6E6E73;
   text-align: center;
   margin: 0 0 48px;
   max-width: 600px;
@@ -581,170 +97,42 @@ html {
 }
 
 /* ============================================
-   FEATURED GALLERY — Dark Background
+   CATEGORY GRID — Apple-style cards
    ============================================ */
-.featured-gallery {
-  padding: 100px 0;
-  background: #050510;
+.category-grid-section {
+  padding: 100px 0 80px;
+  background: #FFFFFF;
 }
 
-.gallery-grid {
+.category-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 24px;
   margin-bottom: 48px;
 }
 
-.gallery-card {
-  background: #FFFFFF;
-  border: 1px solid rgba(212, 175, 55, 0.15);
-  border-radius: 16px;
+.category-card {
+  background: #F5F5F7;
+  border: 1px solid transparent;
+  border-radius: 20px;
   overflow: hidden;
   text-decoration: none;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
 }
 
-.gallery-card:hover {
+.category-card:hover {
   transform: translateY(-4px);
-  border-color: rgba(212, 175, 55, 0.35);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1), 0 0 20px rgba(212, 175, 55, 0.06);
-}
-
-.gallery-media {
-  aspect-ratio: 1;
-  overflow: hidden;
-  background: #000;
-}
-
-.gallery-video {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.gallery-info {
-  padding: 20px;
-}
-
-.gallery-title {
-  font-family: 'Outfit', sans-serif;
-  font-size: 17px;
-  font-weight: 500;
-  margin: 0 0 8px;
-  color: #1A1A2E;
-}
-
-.gallery-price {
-  font-family: 'Outfit', sans-serif;
-  font-size: 15px;
-  color: rgba(26, 26, 46, 0.55);
-  margin: 0;
-}
-
-.gallery-cta {
-  text-align: center;
-  margin-top: 48px;
-}
-
-.skeleton {
-  background: linear-gradient(90deg, rgba(0,0,0,0.03) 25%, rgba(0,0,0,0.06) 50%, rgba(0,0,0,0.03) 75%);
-  background-size: 200% 100%;
-  animation: loading 1.5s infinite;
-  border-radius: 16px;
-  min-height: 400px;
-}
-
-@keyframes loading {
-  0% { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
+  border-color: #D2D2D7;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
 }
 
 /* ============================================
-   ABOUT SECTION — Light Background
-   ============================================ */
-.about-section {
-  padding: 100px 0;
-  background: #FAFAF7;
-}
-
-.about-content {
-  max-width: 800px;
-  margin: 0 auto;
-  text-align: center;
-}
-
-.about-text {
-  margin: 32px 0 48px;
-}
-
-.about-text p {
-  font-family: 'Outfit', sans-serif;
-  font-size: 19px;
-  font-weight: 300;
-  line-height: 1.8;
-  color: rgba(26, 26, 46, 0.7);
-  margin: 0 0 24px;
-}
-
-.about-text p:last-child {
-  margin-bottom: 0;
-}
-
-/* ============================================
-   HOW IT WORKS — Dark Background
-   (Section removed from landing page per Gamble feedback,
-    kept here in case it's needed elsewhere)
-   ============================================ */
-.how-it-works {
-  padding: 100px 0;
-  background: #050510;
-}
-
-.steps-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 48px;
-  margin-top: 64px;
-}
-
-.step-card {
-  text-align: center;
-}
-
-.step-number {
-  font-family: 'Playfair Display', 'Georgia', serif;
-  font-size: 48px;
-  font-weight: 700;
-  color: rgba(212, 175, 55, 0.3);
-  margin: 0 0 16px;
-  letter-spacing: 0.05em;
-}
-
-.step-title {
-  font-family: 'Playfair Display', 'Georgia', serif;
-  font-size: 21px;
-  font-weight: 600;
-  margin: 0 0 12px;
-  color: #F5F5F7;
-}
-
-.step-description {
-  font-family: 'Outfit', sans-serif;
-  font-size: 17px;
-  font-weight: 300;
-  color: rgba(245, 245, 247, 0.55);
-  line-height: 1.7;
-  margin: 0;
-}
-
-/* ============================================
-   FAQ SECTION — Dark Background
+   FAQ SECTION — Apple-style white
    ============================================ */
 .faq-section {
   padding: 100px 0;
-  background: #050510;
-  border-top: 1px solid rgba(212, 175, 55, 0.08);
+  background: #FAFAFA;
+  border-top: 1px solid rgba(0, 0, 0, 0.04);
 }
 
 .faq-list {
@@ -753,7 +141,7 @@ html {
 }
 
 .faq-item {
-  border-bottom: 1px solid rgba(212, 175, 55, 0.12);
+  border-bottom: 1px solid #D2D2D7;
 }
 
 .faq-question {
@@ -767,7 +155,7 @@ html {
   font-family: 'Playfair Display', 'Georgia', serif;
   font-size: 19px;
   font-weight: 500;
-  color: rgba(245, 245, 247, 0.85);
+  color: #1D1D1F;
   text-align: left;
   cursor: pointer;
   transition: color 0.3s;
@@ -779,7 +167,7 @@ html {
 
 .faq-icon {
   flex-shrink: 0;
-  color: rgba(212, 175, 55, 0.6);
+  color: #D4AF37;
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -803,125 +191,17 @@ html {
   font-size: 17px;
   font-weight: 300;
   line-height: 1.8;
-  color: rgba(245, 245, 247, 0.5);
+  color: #6E6E73;
   margin: 0;
 }
 
 /* ============================================
-   CONTACT SECTION — Light Background
-   ============================================ */
-.contact-section {
-  padding: 100px 0;
-  background: linear-gradient(180deg, #FAFAF7 0%, #F2F2ED 100%);
-}
-
-.contact-content {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 64px;
-  max-width: 1000px;
-  margin: 48px auto 0;
-}
-
-.contact-info {
-  text-align: left;
-}
-
-.contact-description {
-  font-family: 'Outfit', sans-serif;
-  font-size: 17px;
-  font-weight: 300;
-  color: rgba(26, 26, 46, 0.6);
-  line-height: 1.8;
-  margin: 24px 0;
-}
-
-.contact-details {
-  margin-top: 32px;
-}
-
-.contact-details p {
-  font-family: 'Outfit', sans-serif;
-  font-size: 17px;
-  color: #1A1A2E;
-  margin: 12px 0;
-}
-
-.contact-details a {
-  color: #D4AF37;
-  text-decoration: none;
-  transition: color 0.3s;
-}
-
-.contact-details a:hover {
-  color: #B8962E;
-  text-decoration: underline;
-}
-
-.contact-form {
-  background: #FFFFFF;
-  border: 1px solid rgba(212, 175, 55, 0.15);
-  padding: 40px;
-  border-radius: 16px;
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
-}
-
-.form-group {
-  margin-bottom: 24px;
-}
-
-.form-group label {
-  display: block;
-  font-family: 'Outfit', sans-serif;
-  font-size: 15px;
-  font-weight: 400;
-  color: rgba(26, 26, 46, 0.7);
-  margin-bottom: 8px;
-}
-
-.form-group input,
-.form-group textarea {
-  width: 100%;
-  padding: 12px 16px;
-  font-size: 17px;
-  border: 1px solid rgba(212, 175, 55, 0.2);
-  border-radius: 8px;
-  font-family: 'Outfit', sans-serif;
-  background: #FAFAF7;
-  color: #1A1A2E;
-  transition: border-color 0.3s;
-  box-sizing: border-box;
-}
-
-.form-group input:focus,
-.form-group textarea:focus {
-  outline: none;
-  border-color: rgba(212, 175, 55, 0.5);
-  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.08);
-}
-
-.form-group input::placeholder,
-.form-group textarea::placeholder {
-  color: rgba(26, 26, 46, 0.35);
-}
-
-.form-group textarea {
-  resize: vertical;
-  min-height: 120px;
-}
-
-.contact-form button {
-  width: 100%;
-  margin-top: 8px;
-}
-
-/* ============================================
-   FOOTER — Dark Luxury (stays dark for contrast)
+   FOOTER — Clean minimal
    ============================================ */
 .landing-footer {
   padding: 64px 0 32px;
-  background: #050510;
-  border-top: 1px solid rgba(212, 175, 55, 0.12);
+  background: #1D1D1F;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .footer-content {
@@ -953,90 +233,51 @@ html {
 }
 
 /* ============================================
-   RESPONSIVE DESIGN — Mobile First
-   iPhone 16 Pro Max priority (430px)
+   FORM ELEMENTS — Apple-style
+   ============================================ */
+.customizer-input,
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 12px 16px;
+  font-size: 17px;
+  border: 1px solid #D2D2D7;
+  border-radius: 12px;
+  font-family: 'Outfit', sans-serif;
+  background: #FFFFFF;
+  color: #1D1D1F;
+  transition: border-color 0.3s;
+  box-sizing: border-box;
+}
+
+.customizer-input:focus,
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #D4AF37;
+  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+}
+
+.customizer-input::placeholder,
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+  color: #6E6E73;
+  opacity: 0.5;
+}
+
+/* ============================================
+   RESPONSIVE
    ============================================ */
 @media (max-width: 768px) {
-  .landing-hero {
-    min-height: 80vh;
-    padding: 80px 0 60px;
-  }
-
-  .hero-ctas {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
   .cta-primary,
   .cta-secondary {
     width: 100%;
     text-align: center;
   }
 
-  /* Value Props mobile */
-  .vp-section {
-    padding: 0;
-  }
-
-  .dark-to-light-transition {
-    padding: 72px 0 60px;
-  }
-
-  .vp-grid {
-    grid-template-columns: 1fr;
-    gap: 24px;
-    padding: 0 20px;
-  }
-
-  .vp-header {
-    margin-bottom: 48px;
-  }
-
-  .vp-headline {
-    font-size: 1.8rem;
-  }
-
-  .vp-card-inner {
-    padding: 36px 24px 32px;
-  }
-
-  .vp-divider-top,
-  .vp-divider-bottom {
-    padding: 0 24px;
-    margin-bottom: 40px;
-  }
-
-  .vp-divider-bottom {
-    margin-bottom: 0;
-    margin-top: 40px;
-  }
-
-  .vp-cta-section {
-    margin-top: 48px;
-  }
-
-  .vp-btn-primary {
-    padding: 16px 48px;
-    min-height: 54px;
-  }
-
-  .gallery-grid {
+  .category-grid {
     grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
     gap: 16px;
-  }
-
-  .steps-grid {
-    grid-template-columns: 1fr;
-    gap: 32px;
-  }
-
-  .contact-content {
-    grid-template-columns: 1fr;
-    gap: 48px;
-  }
-
-  .contact-form {
-    padding: 32px 24px;
   }
 
   .section-title {
@@ -1046,19 +287,6 @@ html {
   .section-subtitle {
     text-align: center;
   }
-
-  /* Demo video mobile */
-  .demo-video-section {
-    padding: 60px 0 80px;
-  }
-
-  .demo-video-wrapper {
-    padding: 0 16px;
-  }
-
-  .demo-video-player {
-    border-radius: 16px;
-  }
 }
 
 @media (max-width: 480px) {
@@ -1066,33 +294,7 @@ html {
     padding: 0 16px;
   }
 
-  .gallery-grid {
+  .category-grid {
     grid-template-columns: 1fr;
-  }
-
-  .vp-headline {
-    font-size: 1.5rem;
-  }
-
-  .vp-card-title {
-    font-size: 1rem;
-    letter-spacing: 0.2em;
-  }
-
-  .vp-btn-primary {
-    padding: 15px 40px;
-  }
-
-  .vp-btn-primary-text {
-    font-size: 0.85rem;
-    letter-spacing: 0.15em;
-  }
-
-  .demo-video-player {
-    border-radius: 12px;
-  }
-
-  .demo-video-title {
-    font-size: 1.5rem;
   }
 }

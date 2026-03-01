@@ -3,12 +3,6 @@ import { Link } from 'react-router-dom';
 import VideoPlayer from './VideoPlayer';
 import { getTierByNumber } from '../config/pricingTiers';
 
-/**
- * ProductCard — Digital Bloom
- * Price is always read from product.price (database value).
- * Tier badge is derived from product.tier via the pricingTiers config.
- * No prices are hardcoded here.
- */
 const ProductCard = ({ product }) => {
   const [isHovered, setIsHovered] = useState(false);
   const tierInfo = product.tier ? getTierByNumber(product.tier) : null;
@@ -20,9 +14,9 @@ const ProductCard = ({ product }) => {
       onMouseLeave={() => setIsHovered(false)}
     >
       <Link to={`/product/${product.id}`}>
-        {/* Cinematic Preview Container */}
-        <div className="relative aspect-[3/4] overflow-hidden rounded-[2.5rem] glass border border-white/5 transition-all duration-1000 group-hover:border-pure-gold/40 group-hover:shadow-[0_0_50px_rgba(212,175,55,0.1)]">
-          <div className="w-full h-full transition-transform duration-1000 group-hover:scale-110">
+        {/* Video Container — Apple-style rounded with subtle shadow */}
+        <div className="relative aspect-[3/4] overflow-hidden rounded-3xl bg-[#F5F5F7] border border-[#D2D2D7]/30 transition-all duration-700 group-hover:shadow-xl group-hover:shadow-black/10 group-hover:border-[#D4AF37]/30">
+          <div className="w-full h-full transition-transform duration-700 group-hover:scale-105">
             <VideoPlayer
               videoUrl={product.video_file_url || product.video_url}
               posterUrl={product.image_url}
@@ -30,41 +24,40 @@ const ProductCard = ({ product }) => {
             />
           </div>
 
-          {/* Subtle Luxury Gradient Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-80 group-hover:opacity-60 transition-opacity duration-700"></div>
+          {/* Subtle gradient overlay */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-60 group-hover:opacity-40 transition-opacity duration-500"></div>
 
-          {/* Hover-Reveal Bespoke Button */}
-          <div className={`absolute inset-0 flex items-center justify-center transition-all duration-700 ${isHovered ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'}`}>
-            <div className="px-10 py-4 glass border border-white/20 rounded-full text-[10px] uppercase tracking-[0.4em] font-bold text-white group-hover:bg-pure-gold group-hover:text-black group-hover:border-pure-gold transition-all duration-500 shadow-2xl">
-              Personalize Art
+          {/* Hover button */}
+          <div className={`absolute inset-0 flex items-center justify-center transition-all duration-500 ${isHovered ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'}`}>
+            <div className="px-8 py-3 bg-white/90 backdrop-blur-sm rounded-full text-[11px] uppercase tracking-[0.2em] font-medium text-[#1D1D1F] shadow-lg transition-all duration-300 group-hover:bg-[#1D1D1F] group-hover:text-white">
+              View Experience
             </div>
           </div>
 
-          {/* Price Badge — reads from product.price (database), never hardcoded */}
-          <div className="absolute top-8 right-8 px-5 py-2 glass border border-white/10 rounded-full transition-transform duration-700 group-hover:-translate-x-2">
-            <span className="text-xs font-bold text-pure-gold tracking-wider">
+          {/* Price Badge */}
+          <div className="absolute top-6 right-6 px-4 py-1.5 bg-white/90 backdrop-blur-sm rounded-full shadow-sm">
+            <span className="text-xs font-semibold text-[#1D1D1F] tracking-wide">
               ${parseFloat(product.price).toFixed(2)}
             </span>
           </div>
 
-          {/* Tier Badge — shown if product has a tier */}
+          {/* Tier Badge */}
           {tierInfo && (
-            <div className="absolute top-8 left-8 px-3 py-1 glass border border-white/10 rounded-full">
-              <span className="text-[9px] uppercase tracking-widest text-white/50 font-semibold">
+            <div className="absolute top-6 left-6 px-3 py-1 bg-white/90 backdrop-blur-sm rounded-full shadow-sm">
+              <span className="text-[9px] uppercase tracking-widest text-[#6E6E73] font-semibold">
                 Tier {tierInfo.tier}
               </span>
             </div>
           )}
         </div>
 
-        {/* Narrative Info */}
-        <div className="mt-8 px-4 text-center sm:text-left transition-all duration-700 group-hover:translate-x-1">
-          <h3 className="text-xl font-medium font-display tracking-tight text-white group-hover:text-pure-gold transition-colors duration-500">
+        {/* Product Info */}
+        <div className="mt-5 px-1 text-center sm:text-left transition-all duration-500">
+          <h3 className="text-base font-medium text-[#1D1D1F] group-hover:text-[#D4AF37] transition-colors duration-300 tracking-tight">
             {product.name}
           </h3>
-          <p className="text-[10px] uppercase tracking-[0.3em] text-white/40 mt-3 font-medium flex items-center justify-center sm:justify-start">
-            <span className="w-1 h-1 rounded-full bg-pure-gold/40 mr-3"></span>
-            {tierInfo ? tierInfo.tagline : (product.category || 'Limited Masterpiece')}
+          <p className="text-[11px] uppercase tracking-[0.15em] text-[#6E6E73] mt-2 font-medium">
+            {tierInfo ? tierInfo.tagline : (product.category || 'Digital Experience')}
           </p>
         </div>
       </Link>

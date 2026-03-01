@@ -34,7 +34,6 @@ export default function LandingNav() {
 
         {/* Desktop Links */}
         <div className="landing-nav__links">
-          <a href="#experience" className="landing-nav__link">Experience</a>
           <Link to="/shop" className="landing-nav__link">Shop</Link>
           <Link to="/credits" className="landing-nav__link">Credits</Link>
           <Link to="/vault" className="landing-nav__link">Vault</Link>

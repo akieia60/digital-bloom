@@ -25,20 +25,20 @@ class ErrorBoundary extends Component {
     if (this.state.hasError) {
       return (
         <div style={{
-          minHeight: '100vh', background: '#050510', display: 'flex',
+          minHeight: '100vh', background: '#FFFFFF', display: 'flex',
           flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-          color: '#fff', fontFamily: 'sans-serif', padding: '2rem', textAlign: 'center'
+          color: '#1D1D1F', fontFamily: '-apple-system, BlinkMacSystemFont, sans-serif', padding: '2rem', textAlign: 'center'
         }}>
-          <h1 style={{ fontSize: '2rem', marginBottom: '1rem' }}>🌸 Something went wrong</h1>
-          <p style={{ color: '#aaa', maxWidth: '400px', marginBottom: '2rem' }}>
+          <h1 style={{ fontSize: '2rem', marginBottom: '1rem' }}>Something went wrong</h1>
+          <p style={{ color: '#6E6E73', maxWidth: '400px', marginBottom: '2rem' }}>
             We hit an unexpected error. Your cart and account are safe — just refresh to continue.
           </p>
           <button
             onClick={() => window.location.reload()}
             style={{
-              background: '#c9a84c', color: '#050510', border: 'none',
-              padding: '0.75rem 2rem', borderRadius: '8px', fontSize: '1rem',
-              cursor: 'pointer', fontWeight: 'bold'
+              background: '#1D1D1F', color: '#FFFFFF', border: 'none',
+              padding: '0.75rem 2rem', borderRadius: '980px', fontSize: '1rem',
+              cursor: 'pointer', fontWeight: '500'
             }}
           >
             Refresh Page
@@ -53,6 +53,7 @@ import { CartProvider } from './context/CartContext';
 import Header from './components/Header';
 import LandingPage from './pages/LandingPage';
 import Shop from './pages/Shop';
+import CategoryPage from './pages/CategoryPage';
 import ProductDetails from './components/ProductDetails';
 import ShoppingCart from './components/ShoppingCart';
 import Success from './pages/Success';
@@ -68,7 +69,6 @@ import { ToastProvider } from './components/tracker/Toast';
 
 function AppContent({ searchQuery, setSearchQuery }) {
   const location = useLocation();
-  const isShopPage = location.pathname === '/shop';
   const isLandingPage = location.pathname === '/';
 
   return (
@@ -77,6 +77,7 @@ function AppContent({ searchQuery, setSearchQuery }) {
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/shop" element={<Shop searchQuery={searchQuery} setSearchQuery={setSearchQuery} />} />
+        <Route path="/shop/:categorySlug" element={<CategoryPage />} />
         <Route path="/product/:id" element={<ProductDetails />} />
         <Route path="/credits" element={<ExperienceCredits />} />
         <Route path="/credits/balance" element={<CreditBalance />} />
@@ -101,37 +102,14 @@ function AppContent({ searchQuery, setSearchQuery }) {
 function App() {
   const [searchQuery, setSearchQuery] = useState('');
 
-  // Create floating particles
-  useEffect(() => {
-    const container = document.getElementById('particles');
-    if (!container) return;
 
-    for (let i = 0; i < 30; i++) {
-      const particle = document.createElement('div');
-      particle.className = 'particle';
-      particle.style.left = Math.random() * 100 + '%';
-      particle.style.animationDelay = Math.random() * 15 + 's';
-      particle.style.animationDuration = (10 + Math.random() * 10) + 's';
-      container.appendChild(particle);
-    }
-
-    return () => {
-      if (container) {
-        container.innerHTML = '';
-      }
-    };
-  }, []);
 
   return (
     <ErrorBoundary>
     <ToastProvider>
     <CartProvider>
       <Router>
-        <div className="min-h-screen bg-obsidian relative overflow-x-hidden">
-          {/* Subtle Atmosphere */}
-          <div className="fixed inset-0 bg-[#050510] pointer-events-none"></div>
-          <div className="particles opacity-30" id="particles"></div>
-
+        <div className="min-h-screen bg-white relative overflow-x-hidden">
           {/* Content */}
           <div className="relative z-10">
             <ErrorBoundary>
