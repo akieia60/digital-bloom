@@ -66,6 +66,20 @@
   color: #1D1D1F;
 }
 
+/* "Build a Bloom" CTA nav link */
+.landing-nav__link--cta {
+  padding: 8px 18px;
+  background: #1D1D1F;
+  color: #FFFFFF !important;
+  border-radius: 980px;
+  transition: all 0.25s;
+}
+
+.landing-nav__link--cta:hover {
+  background: #D4AF37;
+  color: #1D1D1F !important;
+}
+
 /* Hamburger button — hidden on desktop */
 .landing-nav__hamburger {
   display: none;

@@ -65,17 +65,20 @@ import Experience1 from './pages/Experience1';
 import FounderDashboard from './pages/FounderDashboard';
 import PromptVault from './pages/PromptVault';
 import ComingSoon from './pages/ComingSoon';
+import BloomBuilder from './pages/BloomBuilder';
 import { ToastProvider } from './components/tracker/Toast';
 
 function AppContent({ searchQuery, setSearchQuery }) {
   const location = useLocation();
   const isLandingPage = location.pathname === '/';
+  const isBuilderPage = location.pathname === '/build';
 
   return (
     <>
-      {!isLandingPage && <Header onSearchChange={setSearchQuery} searchQuery={searchQuery} />}
+      {!isLandingPage && !isBuilderPage && <Header onSearchChange={setSearchQuery} searchQuery={searchQuery} />}
       <Routes>
         <Route path="/" element={<LandingPage />} />
+        <Route path="/build" element={<BloomBuilder />} />
         <Route path="/shop" element={<Shop searchQuery={searchQuery} setSearchQuery={setSearchQuery} />} />
         <Route path="/shop/:categorySlug" element={<CategoryPage />} />
         <Route path="/product/:id" element={<ProductDetails />} />
@@ -94,7 +97,7 @@ function AppContent({ searchQuery, setSearchQuery }) {
         {/* Catch-all for unknown routes */}
         <Route path="*" element={<ComingSoon />} />
       </Routes>
-      {!isLandingPage && <ShoppingCart />}
+      {!isLandingPage && !isBuilderPage && <ShoppingCart />}
     </>
   );
 }

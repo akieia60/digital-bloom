@@ -129,7 +129,9 @@
 /* ── CTA Button ── */
 .video-hero__cta-wrap {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
 }
 
 .video-hero__btn {
@@ -204,6 +206,23 @@
 
 .video-hero__btn-glow {
   display: none;
+}
+
+/* Secondary CTA — "Browse the Gallery" */
+.video-hero__btn-secondary {
+  font-family: -apple-system, BlinkMacSystemFont, 'Outfit', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 400;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+  text-decoration: none;
+  transition: color 0.3s;
+  padding: 4px 0;
+}
+
+.video-hero__btn-secondary:hover {
+  color: rgba(255, 255, 255, 0.9);
 }
 
 /* ── Scroll Indicator ── */

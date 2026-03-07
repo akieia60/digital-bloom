@@ -36,7 +36,7 @@ export default function LandingNav() {
         <div className="landing-nav__links">
           <Link to="/shop" className="landing-nav__link">Shop</Link>
           <Link to="/credits" className="landing-nav__link">Credits</Link>
-          <Link to="/vault" className="landing-nav__link">Vault</Link>
+          <Link to="/build" className="landing-nav__link landing-nav__link--cta">Build a Bloom</Link>
         </div>
 
         {/* Hamburger Button */}
@@ -69,10 +69,10 @@ export default function LandingNav() {
             </div>
             <div className="landing-nav__mobile-links">
               <Link to="/" onClick={() => setIsMobileMenuOpen(false)} className="landing-nav__mobile-link">Home</Link>
+              <Link to="/build" onClick={() => setIsMobileMenuOpen(false)} className="landing-nav__mobile-link" style={{ color: '#D4AF37', fontWeight: 600 }}>Build a Bloom</Link>
               <Link to="/shop" onClick={() => setIsMobileMenuOpen(false)} className="landing-nav__mobile-link">Shop</Link>
               <Link to="/credits" onClick={() => setIsMobileMenuOpen(false)} className="landing-nav__mobile-link">Credits</Link>
               <Link to="/credits/balance" onClick={() => setIsMobileMenuOpen(false)} className="landing-nav__mobile-link">Balance</Link>
-              <Link to="/vault" onClick={() => setIsMobileMenuOpen(false)} className="landing-nav__mobile-link">Prompt Vault</Link>
             </div>
             <div className="landing-nav__mobile-footer">
               <p>Digital Bloom</p>

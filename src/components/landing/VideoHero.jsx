@@ -142,10 +142,13 @@ export default function VideoHero() {
               phaseReached('ctaIn') ? 'video-hero__animate-in' : 'video-hero__hidden'
             }`}
           >
-            <Link to="/shop" className="video-hero__btn">
-              <span className="video-hero__btn-text">Send a Bloom</span>
+            <Link to="/build" className="video-hero__btn">
+              <span className="video-hero__btn-text">Build a Bloom</span>
               <span className="video-hero__btn-shimmer" />
               <span className="video-hero__btn-glow" />
+            </Link>
+            <Link to="/shop" className="video-hero__btn-secondary">
+              Browse the Gallery
             </Link>
           </div>
         </div>
