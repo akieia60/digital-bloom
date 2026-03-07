@@ -27,13 +27,24 @@ export default function Shop({ searchQuery, setSearchQuery }) {
   return (
     <div className="min-h-screen bg-white">
       {/* Shop Hero */}
-      <section className="pt-32 pb-16 px-6 text-center">
+      <section className="pt-32 pb-12 px-6 text-center">
         <h1 className="text-4xl sm:text-5xl md:text-6xl font-display font-medium text-[#1D1D1F] tracking-tight mb-6">
           Digital Gallery
         </h1>
-        <p className="text-lg text-[#6E6E73] font-light max-w-xl mx-auto leading-relaxed">
-          Browse our curated collections of cinematic digital bloom experiences, crafted for every occasion.
+        <p className="text-lg text-[#6E6E73] font-light max-w-xl mx-auto leading-relaxed mb-8">
+          Browse curated collections of cinematic digital bloom experiences.
         </p>
+        {/* Bloom Builder Banner */}
+        <Link
+          to="/build"
+          className="inline-flex items-center gap-3 px-6 py-3.5 rounded-2xl bg-[#F5F5F7] border border-[#D2D2D7] hover:border-[#1D1D1F] hover:shadow-md transition-all duration-300 group max-w-sm mx-auto"
+        >
+          <div className="text-left">
+            <p className="text-[9px] uppercase tracking-[0.2em] text-[#D4AF37] font-semibold mb-0.5">New</p>
+            <p className="text-sm font-medium text-[#1D1D1F] group-hover:text-[#D4AF37] transition-colors">Build a Custom Bloom →</p>
+            <p className="text-xs text-[#6E6E73]">Choose occasion, tone, style & message</p>
+          </div>
+        </Link>
       </section>
 
       {/* Category Tiles */}

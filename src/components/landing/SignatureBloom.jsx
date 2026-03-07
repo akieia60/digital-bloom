@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
 
 export default function SignatureBloom() {
   const sectionRef = useRef(null);
@@ -84,6 +85,27 @@ export default function SignatureBloom() {
           }}
         >
           <p>See what you're sending — every bloom is a cinematic moment.</p>
+        </div>
+
+        {/* CTA */}
+        <div
+          style={{
+            opacity: isVisible ? 1 : 0,
+            transform: isVisible ? 'translateY(0)' : 'translateY(20px)',
+            transition: 'opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.6s, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.6s',
+            textAlign: 'center',
+            marginTop: '2.5rem',
+          }}
+        >
+          <Link
+            to="/build"
+            className="inline-flex items-center gap-2 px-8 py-3.5 bg-[#1D1D1F] text-white rounded-full text-sm font-medium hover:bg-[#D4AF37] hover:text-[#1D1D1F] transition-all duration-300"
+          >
+            Build Your Bloom
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </Link>
         </div>
       </div>
     </section>

@@ -36,7 +36,23 @@ export default function LandingNav() {
         <div className="landing-nav__links">
           <Link to="/shop" className="landing-nav__link">Shop</Link>
           <Link to="/credits" className="landing-nav__link">Credits</Link>
-          <Link to="/vault" className="landing-nav__link">Vault</Link>
+          <Link
+            to="/build"
+            className="landing-nav__link"
+            style={{
+              padding: '0.45rem 1.1rem',
+              background: '#1D1D1F',
+              color: '#FFFFFF',
+              borderRadius: '980px',
+              fontWeight: '500',
+              letterSpacing: '0.02em',
+              transition: 'background 0.2s, color 0.2s',
+            }}
+            onMouseEnter={(e) => { e.currentTarget.style.background = '#D4AF37'; e.currentTarget.style.color = '#1D1D1F'; }}
+            onMouseLeave={(e) => { e.currentTarget.style.background = '#1D1D1F'; e.currentTarget.style.color = '#FFFFFF'; }}
+          >
+            Build a Bloom
+          </Link>
         </div>
 
         {/* Hamburger Button */}
@@ -69,10 +85,10 @@ export default function LandingNav() {
             </div>
             <div className="landing-nav__mobile-links">
               <Link to="/" onClick={() => setIsMobileMenuOpen(false)} className="landing-nav__mobile-link">Home</Link>
+              <Link to="/build" onClick={() => setIsMobileMenuOpen(false)} className="landing-nav__mobile-link" style={{ color: '#D4AF37', fontWeight: '500' }}>Build a Bloom</Link>
               <Link to="/shop" onClick={() => setIsMobileMenuOpen(false)} className="landing-nav__mobile-link">Shop</Link>
               <Link to="/credits" onClick={() => setIsMobileMenuOpen(false)} className="landing-nav__mobile-link">Credits</Link>
               <Link to="/credits/balance" onClick={() => setIsMobileMenuOpen(false)} className="landing-nav__mobile-link">Balance</Link>
-              <Link to="/vault" onClick={() => setIsMobileMenuOpen(false)} className="landing-nav__mobile-link">Prompt Vault</Link>
             </div>
             <div className="landing-nav__mobile-footer">
               <p>Digital Bloom</p>
