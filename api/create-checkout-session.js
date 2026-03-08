@@ -3,12 +3,10 @@ import { createClient } from '@supabase/supabase-js';
 import { applyCors } from './_lib/cors.js';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
-const supabase = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL
-  ? createClient(
-      process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL,
-      process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.VITE_SUPABASE_ANON_KEY
-    )
-  : null;
+const supabase = createClient(
+  process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL,
+  process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.VITE_SUPABASE_ANON_KEY
+);
 
 /**
  * Tier price ID map — reads from environment variables.
@@ -97,14 +95,17 @@ export default async function handler(req, res) {
     }
 
     // Build Stripe line items.
+    // Prefer using the Stripe price ID stored on the product (from the database),
+    // falling back to the tier-based env var, and finally using price_data.
     const lineItems = cartItems.map((item) => {
-      const product = item.product || {};
+      const product = item.product;
 
       // Option 1: Use the stored Stripe price ID (most reliable)
-      if (product.stripe_price_id && !product.stripe_price_id.startsWith('REPLACE_WITH')) {
+      if (product.stripe_price_id &&
+          !product.stripe_price_id.startsWith('REPLACE_WITH')) {
         return {
           price: product.stripe_price_id,
-          quantity: item.quantity || 1,
+          quantity: item.quantity,
         };
       }
 
@@ -113,36 +114,22 @@ export default async function handler(req, res) {
       if (tierPriceId) {
         return {
           price: tierPriceId,
-          quantity: item.quantity || 1,
+          quantity: item.quantity,
         };
       }
 
-      // Option 3: Fallback — create price inline
-      const priceInCents = Math.round((product.price || 1.99) * 100);
-      
-      // Stripe STRICTLY requires absolute URLs for images. Relative URLs will cause a 400 fatal crash.
-      const baseUrl = 'https://digitabloom.com';
-      let validImageUrl = null;
-      
-      if (product.image_url) {
-        if (product.image_url.startsWith('http')) {
-          validImageUrl = product.image_url;
-        } else if (product.image_url.startsWith('/')) {
-          validImageUrl = `${baseUrl}${product.image_url}`;
-        }
-      }
-
+      // Option 3: Fallback — create price inline (works before Stripe IDs are configured)
       return {
         price_data: {
           currency: 'usd',
           product_data: {
-            name: product.title || product.name || 'DigitalBloom Experience',
-            description: product.description || 'Customized luxury motion art',
-            images: validImageUrl ? [validImageUrl] : [],
+            name: product.title || product.name,
+            description: product.description || '',
+            images: product.image_url ? [product.image_url] : [],
           },
-          unit_amount: priceInCents,
+          unit_amount: Math.round(product.price * 100),
         },
-        quantity: item.quantity || 1,
+        quantity: item.quantity,
       };
     });
 
