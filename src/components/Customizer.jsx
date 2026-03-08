@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import GiftingForm from './GiftingForm';
 import CustomizationPreview from './CustomizationPreview';
+import { supabase } from '../lib/supabase';
 import '../styles/customizer.css';
 
 const Customizer = ({ product, isOpen, onClose, onComplete }) => {
@@ -91,7 +92,38 @@ const Customizer = ({ product, isOpen, onClose, onComplete }) => {
     setCustomization(prev => ({ ...prev, [field]: value }));
   };
 
-  const handleComplete = () => {
+  const handleComplete = async () => {
+    // 1. Check for logged-in user
+    const { data: { user } } = await supabase.auth.getUser();
+
+    // 2. If authenticated, save the chosen dynamic theme to Supabase
+    if (user) {
+      const root = document.documentElement;
+      const themeData = {
+        user_id: user.id,
+        theme_name: customization.colorTheme,
+        primary_color: root.style.getPropertyValue('--bloom-primary').trim() || '#FF69B4',
+        border_radius: root.style.getPropertyValue('--bloom-radius').trim() || '30px',
+        bloom_glow: root.style.getPropertyValue('--bloom-glow').trim() || '0.2',
+        bg_opacity: 0.9,
+      };
+
+      try {
+        const { error } = await supabase
+          .from('digital_bloom_themes')
+          .insert([themeData]);
+        
+        if (error) {
+          console.error('Error saving theme to Supabase:', error.message);
+        } else {
+          console.log('Successfully saved theme to digital_bloom_themes!');
+        }
+      } catch (err) {
+        console.error('Network error saving theme:', err);
+      }
+    }
+
+    // 3. Add to cart & close
     onComplete({
       productId: product.id,
       ...customization,
