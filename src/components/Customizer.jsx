@@ -125,9 +125,9 @@ const Customizer = ({ product, isOpen, onClose, onComplete }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="customizer-overlay">
-      <div className="customizer-modal">
-        <button className="close-btn" onClick={onClose} aria-label="Close customizer">
+    <div className="customizer-modal">
+      <div className="customizer-container">
+        <button className="customizer-close" onClick={onClose} aria-label="Close customizer">
           ×
         </button>
         

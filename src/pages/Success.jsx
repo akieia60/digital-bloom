@@ -161,12 +161,27 @@ const Success = () => {
               )}
             </div>
 
-            <div className="mt-12 flex flex-col gap-4">
+            <div className="mt-8 pt-8 border-t border-white/5">
+              <h4 className="text-[10px] uppercase tracking-[0.4em] text-white/40 mb-6 font-bold text-center">Share Your Experience</h4>
+              <div className="flex justify-center space-x-6">
+                <button className="text-white/40 hover:text-[#1DA1F2] transition-colors" title="Share to X (Twitter)" onClick={() => window.open('https://twitter.com/intent/tweet?text=I%20just%20customized%20a%20luxury%20digital%20bloom%20experience!', '_blank')}>
+                  <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                </button>
+                <button className="text-white/40 hover:text-[#4267B2] transition-colors" title="Share to Facebook" onClick={() => window.open('https://www.facebook.com/sharer/sharer.php?u=https://digitabloom.com', '_blank')}>
+                  <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"/></svg>
+                </button>
+                <button className="text-white/40 hover:text-pure-gold transition-colors" title="Copy Link" onClick={() => navigator.clipboard.writeText('https://digitabloom.com')}>
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg>
+                </button>
+              </div>
+            </div>
+
+            <div className="mt-8 flex flex-col gap-4">
               <Link
                 to="/"
-                className="w-full btn-secondary py-4 rounded-full text-[10px] uppercase tracking-widest font-semibold text-center"
+                className="w-full btn-secondary py-4 rounded-full text-[10px] uppercase tracking-widest font-bold text-center border-pure-gold/30 hover:border-pure-gold text-pure-gold"
               >
-                Explore More Pieces
+                Return to Homepage
               </Link>
               <button
                 onClick={() => window.print()}
