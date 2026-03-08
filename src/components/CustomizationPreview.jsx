@@ -33,10 +33,10 @@ export default function CustomizationPreview({ product, customization, colorThem
           )}
 
           {/* Custom Message Overlay */}
-          {customization.customMessageShort && (
+          {customization.shortMessage && (
             <div className="preview-message">
               <h2 className="preview-message-text">
-                {customization.customMessageShort}
+                {customization.shortMessage}
               </h2>
             </div>
           )}
@@ -47,7 +47,9 @@ export default function CustomizationPreview({ product, customization, colorThem
           {customization.occasion && (
             <div className="preview-detail">
               <span className="preview-label">Occasion:</span>
-              <span className="preview-value">{customization.occasion}</span>
+              <span className="preview-value">
+                {customization.occasion.charAt(0).toUpperCase() + customization.occasion.slice(1)}
+              </span>
             </div>
           )}
           {customization.colorTheme && (
@@ -62,10 +64,12 @@ export default function CustomizationPreview({ product, customization, colorThem
               <span className="preview-value">{customization.recipientName}</span>
             </div>
           )}
-          {customization.balloonMessage && (
+          {customization.balloonMessage && customization.balloonMessage !== 'none' && (
             <div className="preview-detail">
               <span className="preview-label">Balloon:</span>
-              <span className="preview-value">{customization.balloonMessage}</span>
+              <span className="preview-value">
+                {customization.balloonMessage.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
+              </span>
             </div>
           )}
           {customization.sloganType === 'custom'
@@ -75,29 +79,29 @@ export default function CustomizationPreview({ product, customization, colorThem
                   <span className="preview-value">{customization.customSlogan}</span>
                 </div>
               )
-            : customization.selectedSlogan && (
+            : customization.sloganType !== 'none' && customization.sloganType && (
                 <div className="preview-detail">
                   <span className="preview-label">Slogan:</span>
-                  <span className="preview-value">{customization.selectedSlogan}</span>
+                  <span className="preview-value">{customization.sloganType}</span>
                 </div>
               )}
-          {customization.toName && (
+          {customization.to && (
             <div className="preview-detail">
               <span className="preview-label">To:</span>
-              <span className="preview-value">{customization.toName}</span>
+              <span className="preview-value">{customization.to}</span>
             </div>
           )}
-          {customization.fromName && (
+          {customization.from && (
             <div className="preview-detail">
               <span className="preview-label">From:</span>
-              <span className="preview-value">{customization.fromName}</span>
+              <span className="preview-value">{customization.from}</span>
             </div>
           )}
-          {customization.symbolType && (
+          {customization.symbol && (
             <div className="preview-detail">
               <span className="preview-label">Symbol:</span>
               <span className="preview-value">
-                {customization.symbolType.charAt(0).toUpperCase() + customization.symbolType.slice(1)}
+                {customization.symbol.charAt(0).toUpperCase() + customization.symbol.slice(1)}
               </span>
             </div>
           )}
@@ -119,22 +123,22 @@ export default function CustomizationPreview({ product, customization, colorThem
               </span>
             </div>
           )}
-          {customization.deliveryMethod === 'text' && customization.recipientPhone && (
+          {customization.deliveryMethod === 'text' && customization.deliveryPhone && (
             <div className="preview-detail">
               <span className="preview-label">Phone:</span>
-              <span className="preview-value">{customization.recipientPhone}</span>
+              <span className="preview-value">{customization.deliveryPhone}</span>
             </div>
           )}
-          {customization.deliveryMethod === 'email' && customization.recipientEmail && (
+          {customization.deliveryMethod === 'email' && customization.deliveryEmail && (
             <div className="preview-detail">
               <span className="preview-label">Email:</span>
-              <span className="preview-value">{customization.recipientEmail}</span>
+              <span className="preview-value">{customization.deliveryEmail}</span>
             </div>
           )}
-          {customization.deliveryTiming === 'later' && customization.deliveryDate && (
+          {customization.deliveryTiming === 'later' && customization.scheduledDate && (
             <div className="preview-detail">
               <span className="preview-label">Date:</span>
-              <span className="preview-value">{customization.deliveryDate}</span>
+              <span className="preview-value">{customization.scheduledDate}</span>
             </div>
           )}
         </div>
