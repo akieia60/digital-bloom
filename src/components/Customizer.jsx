@@ -294,17 +294,32 @@ const Customizer = ({ product, isOpen, onClose, onComplete }) => {
                     )}
                   </div>
 
-                  <GiftingForm 
-                    isGift={customization.isGift}
-                    onToggle={(isGift) => handleChange('isGift', isGift)}
-                    recipientName={customization.recipientName}
-                    deliveryEmail={customization.deliveryEmail}
-                    onChange={(field, value) => handleChange(field, value)}
-                  />
+                  {/* Gifting Toggle */}
+                  <div className="option-section" style={{ marginTop: '24px', borderTop: '1px solid #f2f2f2', paddingTop: '24px' }}>
+                    <label className="customizer-toggle" style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer' }}>
+                      <input
+                        type="checkbox"
+                        checked={customization.isGift}
+                        onChange={(e) => handleChange('isGift', e.target.checked)}
+                        style={{ width: '20px', height: '20px', cursor: 'pointer' }}
+                      />
+                      <span className="toggle-label" style={{ fontWeight: 600, fontSize: '16px' }}>Send this experience as a gift</span>
+                    </label>
+                  </div>
 
                   {customization.isGift && (
-                    <div className="option-section">
-                      <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+                    <div className="option-section" style={{ background: '#f9f9fb', padding: '16px', borderRadius: '12px', marginTop: '16px' }}>
+                      <div className="option-section">
+                        <label>Recipient Name</label>
+                        <input 
+                          type="text" 
+                          placeholder="Who is this for?"
+                          value={customization.recipientName}
+                          onChange={(e) => handleChange('recipientName', e.target.value)}
+                        />
+                      </div>
+
+                      <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', marginBottom: '16px' }}>
                         <div style={{ flex: 1, minWidth: '120px' }}>
                           <label>Delivery Method</label>
                           <select 
@@ -330,7 +345,8 @@ const Customizer = ({ product, isOpen, onClose, onComplete }) => {
                       </div>
 
                       {customization.deliveryTiming === 'later' && (
-                        <div style={{ marginTop: '0.5rem' }}>
+                        <div className="option-section">
+                          <label>Delivery Date</label>
                           <input 
                             type="date" 
                             disabled
@@ -341,13 +357,24 @@ const Customizer = ({ product, isOpen, onClose, onComplete }) => {
                         </div>
                       )}
                       
-                      {customization.deliveryMethod === 'text' && (
-                        <div style={{ marginTop: '0.5rem' }}>
+                      {customization.deliveryMethod === 'text' ? (
+                        <div className="option-section">
+                          <label>Recipient Phone Number</label>
                           <input 
                             type="tel" 
-                            placeholder="Recipient Phone Number"
+                            placeholder="(555) 555-5555"
                             value={customization.deliveryPhone}
                             onChange={(e) => handleChange('deliveryPhone', e.target.value)}
+                          />
+                        </div>
+                      ) : (
+                        <div className="option-section">
+                          <label>Recipient Email</label>
+                          <input 
+                            type="email" 
+                            placeholder="their@email.com"
+                            value={customization.deliveryEmail}
+                            onChange={(e) => handleChange('deliveryEmail', e.target.value)}
                           />
                         </div>
                       )}
