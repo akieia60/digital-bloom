@@ -118,13 +118,25 @@ export default async function handler(req, res) {
       // Option 3: Fallback — create price inline
       const priceInCents = Math.round((product.price || 1.99) * 100);
       
+      // Stripe STRICTLY requires absolute URLs for images. Relative URLs will cause a 400 fatal crash.
+      const baseUrl = 'https://digitabloom.com';
+      let validImageUrl = null;
+      
+      if (product.image_url) {
+        if (product.image_url.startsWith('http')) {
+          validImageUrl = product.image_url;
+        } else if (product.image_url.startsWith('/')) {
+          validImageUrl = `${baseUrl}${product.image_url}`;
+        }
+      }
+
       return {
         price_data: {
           currency: 'usd',
           product_data: {
             name: product.title || product.name || 'DigitalBloom Experience',
             description: product.description || 'Customized luxury motion art',
-            images: product.image_url ? [product.image_url] : [],
+            images: validImageUrl ? [validImageUrl] : [],
           },
           unit_amount: priceInCents,
         },
