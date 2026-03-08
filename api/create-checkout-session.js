@@ -95,17 +95,14 @@ export default async function handler(req, res) {
     }
 
     // Build Stripe line items.
-    // Prefer using the Stripe price ID stored on the product (from the database),
-    // falling back to the tier-based env var, and finally using price_data.
     const lineItems = cartItems.map((item) => {
-      const product = item.product;
+      const product = item.product || {};
 
       // Option 1: Use the stored Stripe price ID (most reliable)
-      if (product.stripe_price_id &&
-          !product.stripe_price_id.startsWith('REPLACE_WITH')) {
+      if (product.stripe_price_id && !product.stripe_price_id.startsWith('REPLACE_WITH')) {
         return {
           price: product.stripe_price_id,
-          quantity: item.quantity,
+          quantity: item.quantity || 1,
         };
       }
 
@@ -114,22 +111,24 @@ export default async function handler(req, res) {
       if (tierPriceId) {
         return {
           price: tierPriceId,
-          quantity: item.quantity,
+          quantity: item.quantity || 1,
         };
       }
 
-      // Option 3: Fallback — create price inline (works before Stripe IDs are configured)
+      // Option 3: Fallback — create price inline
+      const priceInCents = Math.round((product.price || 1.99) * 100);
+      
       return {
         price_data: {
           currency: 'usd',
           product_data: {
-            name: product.title || product.name,
-            description: product.description || '',
+            name: product.title || product.name || 'DigitalBloom Experience',
+            description: product.description || 'Customized luxury motion art',
             images: product.image_url ? [product.image_url] : [],
           },
-          unit_amount: Math.round(product.price * 100),
+          unit_amount: priceInCents,
         },
-        quantity: item.quantity,
+        quantity: item.quantity || 1,
       };
     });
 
