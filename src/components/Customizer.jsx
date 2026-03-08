@@ -67,7 +67,7 @@ const Customizer = ({ product, isOpen, onClose, onComplete }) => {
   ];
 
   const symbolOptions = ['rose', 'cross'];
-  const deliveryMethods = ['email', 'text'];
+  const deliveryMethods = ['email'];
   const deliveryTimings = ['now', 'later', 'send-to-self-first'];
 
   // Dynamic Theme Engine Bridge
