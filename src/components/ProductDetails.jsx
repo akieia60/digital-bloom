@@ -4,11 +4,12 @@ import { useCart } from '../context/CartContext';
 import { useProduct, useProducts } from '../hooks/useProducts';
 import ProductCard from './ProductCard';
 import Customizer from './Customizer';
+import ShoppingCart from './ShoppingCart';
 
 const ProductDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { addToCart } = useCart();
+  const { addToCart, toggleCart } = useCart();
   const [isCustomizerOpen, setIsCustomizerOpen] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
 
@@ -47,7 +48,6 @@ const ProductDetails = () => {
   const handleCustomizationComplete = (customization) => {
     addToCart(product, 1, customization);
     setShowSuccess(true);
-    setTimeout(() => setShowSuccess(false), 3000);
   };
 
   return (
@@ -139,18 +139,32 @@ const ProductDetails = () => {
                 </div>
               </div>
 
-              {/* Success Notification */}
+              {/* Success — Checkout Prompt */}
               {showSuccess && (
-                <div className="animate-fade-in bg-green-50 border border-green-200 p-4 rounded-2xl flex items-center space-x-4">
-                  <div className="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center">
-                    <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-                    </svg>
+                <div className="animate-fade-in space-y-4">
+                  <div className="bg-green-50 border border-green-200 p-5 rounded-2xl flex items-center space-x-4">
+                    <div className="w-10 h-10 rounded-full bg-green-500 flex items-center justify-center flex-shrink-0">
+                      <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                      </svg>
+                    </div>
+                    <div>
+                      <p className="text-base font-semibold text-[#1D1D1F]">Added to your cart!</p>
+                      <p className="text-sm text-[#6E6E73] mt-1">Your personalized bloom is ready for checkout.</p>
+                    </div>
                   </div>
-                  <div>
-                    <p className="text-sm font-semibold text-[#1D1D1F]">Added to cart.</p>
-                    <p className="text-[10px] text-[#6E6E73] uppercase tracking-widest mt-1">Ready to customize</p>
-                  </div>
+                  <button
+                    onClick={() => { setShowSuccess(false); toggleCart(); }}
+                    className="w-full py-4 rounded-full text-sm font-medium tracking-[0.15em] uppercase transition-all bg-[#D4AF37] text-[#1D1D1F] hover:bg-[#C4A030] shadow-lg"
+                  >
+                    View Cart &amp; Checkout
+                  </button>
+                  <Link
+                    to="/shop"
+                    className="block w-full py-3 rounded-full text-sm font-medium tracking-[0.15em] uppercase transition-all text-center border border-[#D2D2D7] text-[#6E6E73] hover:border-[#1D1D1F] hover:text-[#1D1D1F]"
+                  >
+                    Continue Shopping
+                  </Link>
                 </div>
               )}
             </div>

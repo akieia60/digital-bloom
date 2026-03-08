@@ -15,21 +15,20 @@ export default function VideoHero() {
     if (introPlayed.current) return;
     introPlayed.current = true;
 
-    // 1. Black hold: 1.8s of pure darkness
-    const t1 = setTimeout(() => setIntroPhase('videoFade'), 1800);
+    // 1. Black hold: 0.6s — brief cinematic beat, then reveal
+    const t1 = setTimeout(() => setIntroPhase('videoFade'), 600);
 
-    // 2. After video fade begins (~2s fade), start text staging
-    //    Video fade is 2s CSS transition; title appears after video is mostly visible
-    const t2 = setTimeout(() => setIntroPhase('titleIn'), 3600);
+    // 2. Title appears after video is partially visible
+    const t2 = setTimeout(() => setIntroPhase('titleIn'), 1800);
 
-    // 3. Tagline fades up 0.5s after title
-    const t3 = setTimeout(() => setIntroPhase('taglineIn'), 4100);
+    // 3. Tagline fades up 0.4s after title
+    const t3 = setTimeout(() => setIntroPhase('taglineIn'), 2200);
 
-    // 4. CTA fades up 0.5s after tagline
-    const t4 = setTimeout(() => setIntroPhase('ctaIn'), 4600);
+    // 4. CTA fades up 0.4s after tagline
+    const t4 = setTimeout(() => setIntroPhase('ctaIn'), 2600);
 
     // 5. Scroll indicator and mark complete
-    const t5 = setTimeout(() => setIntroPhase('complete'), 5200);
+    const t5 = setTimeout(() => setIntroPhase('complete'), 3200);
 
     return () => {
       clearTimeout(t1);
