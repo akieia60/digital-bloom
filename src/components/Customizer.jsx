@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import GiftingForm from './GiftingForm';
 import CustomizationPreview from './CustomizationPreview';
 import '../styles/customizer.css';
@@ -68,6 +68,24 @@ const Customizer = ({ product, isOpen, onClose, onComplete }) => {
   const symbolOptions = ['rose', 'cross'];
   const deliveryMethods = ['email', 'text'];
   const deliveryTimings = ['now', 'later', 'send-to-self-first'];
+
+  // Dynamic Theme Engine Bridge
+  useEffect(() => {
+    const root = document.documentElement;
+    const themeSpecs = {
+      original: { color: '#FF69B4', rgb: '255, 105, 180', radius: '30px', glow: '0.2' },
+      warm:     { color: '#FF6B6B', rgb: '255, 107, 107', radius: '40px', glow: '0.25' },
+      cool:     { color: '#4ECDC4', rgb: '78, 205, 196',  radius: '35px', glow: '0.2' },
+      elegant:  { color: '#D4AF37', rgb: '212, 175, 55',  radius: '50px', glow: '0.35' },
+      romantic: { color: '#C41E3A', rgb: '196, 30, 58',   radius: '45px', glow: '0.3' }
+    };
+    
+    const spec = themeSpecs[customization.colorTheme] || themeSpecs.original;
+    root.style.setProperty('--bloom-primary', spec.color);
+    root.style.setProperty('--bloom-primary-rgb', spec.rgb);
+    root.style.setProperty('--bloom-radius', spec.radius);
+    root.style.setProperty('--bloom-glow', spec.glow);
+  }, [customization.colorTheme]);
 
   const handleChange = (field, value) => {
     setCustomization(prev => ({ ...prev, [field]: value }));

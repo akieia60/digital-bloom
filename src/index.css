@@ -10,6 +10,12 @@
   --apple-accent: #D4AF37;
   --pure-gold: #D4AF37;
   --champagne-white: #F5F5F7;
+  
+  /* Dynamic Theme Engine Defaults */
+  --bloom-primary: #FF69B4;
+  --bloom-primary-rgb: 255, 105, 180;
+  --bloom-radius: 20px;
+  --bloom-glow: 0.15;
 }
 
 * {
