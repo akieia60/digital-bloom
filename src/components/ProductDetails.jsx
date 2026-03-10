@@ -5,6 +5,7 @@ import { useProduct, useProducts } from '../hooks/useProducts';
 import ProductCard from './ProductCard';
 import Customizer from './Customizer';
 import ShoppingCart from './ShoppingCart';
+import OCCASIONS from '../data/occasions';
 
 const ProductDetails = () => {
   const { id } = useParams();
@@ -22,6 +23,13 @@ const ProductDetails = () => {
       .filter(f => f.category === product.category && f.id !== product.id)
       .slice(0, 4);
   }, [product, products]);
+
+  // Look up occasion-based customizer defaults for this product's category
+  const customizerDefaults = useMemo(() => {
+    if (!product?.category) return {};
+    const occasion = OCCASIONS[product.category];
+    return occasion?.customizerDefaults || {};
+  }, [product?.category]);
 
   if (loading) {
     return (
@@ -52,12 +60,14 @@ const ProductDetails = () => {
 
   return (
     <div className="min-h-screen bg-white text-[#1D1D1F] pt-32 pb-24">
-      {/* Customizer Overlay */}
+      {/* Customizer Overlay — key resets state when product changes */}
       <Customizer 
+        key={product.id}
         product={product} 
         isOpen={isCustomizerOpen} 
         onClose={() => setIsCustomizerOpen(false)}
         onComplete={handleCustomizationComplete}
+        defaults={customizerDefaults}
       />
 
       <div className="max-w-7xl mx-auto px-6 lg:px-12">

@@ -4,8 +4,13 @@ import CustomizationPreview from './CustomizationPreview';
 import { supabase } from '../lib/supabase';
 import '../styles/customizer.css';
 
-const Customizer = ({ product, isOpen, onClose, onComplete }) => {
-  const [customization, setCustomization] = useState({
+const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {} }) => {
+  // Separate placeholder hints from state defaults
+  const { messagePlaceholder, toPlaceholder, ...stateDefaults } = defaults;
+
+  // Lazy initializer — runs once on mount, merges occasion defaults into base state.
+  // After mount, user changes are never overwritten.
+  const [customization, setCustomization] = useState(() => ({
     customMessageShort: '',
     customMessageLong: '',
     colorTheme: 'original',
@@ -26,7 +31,9 @@ const Customizer = ({ product, isOpen, onClose, onComplete }) => {
     deliveryMethod: '',
     deliveryTiming: '',
     recipientPhone: '',
-  });
+    // Merge occasion-based defaults (e.g. occasion, colorTheme, balloonMessage)
+    ...stateDefaults,
+  }));
 
   const colorThemes = [
     { id: 'original', name: 'Original', colors: ['#FF69B4', '#FFB6C1'] },
@@ -152,7 +159,7 @@ const Customizer = ({ product, isOpen, onClose, onComplete }) => {
               <input
                 type="text"
                 className="customizer-input"
-                placeholder="e.g., Happy Birthday!"
+                placeholder={messagePlaceholder || 'e.g., Happy Birthday!'}
                 maxLength="50"
                 value={customization.customMessageShort}
                 onChange={(e) => handleChange('customMessageShort', e.target.value)}
@@ -280,7 +287,7 @@ const Customizer = ({ product, isOpen, onClose, onComplete }) => {
               <input
                 type="text"
                 className="customizer-input"
-                placeholder="Recipient name"
+                placeholder={toPlaceholder || 'Recipient name'}
                 value={customization.toName}
                 onChange={(e) => handleChange('toName', e.target.value)}
               />
