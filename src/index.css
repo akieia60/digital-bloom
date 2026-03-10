@@ -27,8 +27,8 @@
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Outfit', 'Inter', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-  background: var(--apple-white);
-  color: var(--apple-text);
+  background: #0A0A0A;
+  color: #FFFFFF;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -37,12 +37,11 @@ body {
 h1, h2, h3, .font-display {
   font-family: 'Playfair Display', 'Georgia', serif;
   letter-spacing: 0.02em;
-  color: var(--apple-text);
 }
 
-/* Apple-style clean background */
+/* Dark luxury background */
 .bg-obsidian {
-  background: var(--apple-white);
+  background: #0A0A0A;
 }
 
 /* Remove floating particles — Apple-style is clean */
@@ -76,12 +75,12 @@ h1, h2, h3, .font-display {
   background-clip: text;
 }
 
-/* Glass morphism - Apple frosted glass */
+/* Glass morphism - dark frosted glass */
 .glass {
-  background: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.06);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 /* Buttons - Apple Premium Feel */
@@ -99,16 +98,17 @@ h1, h2, h3, .font-display {
 }
 
 .btn-secondary {
-  border: 1px solid var(--apple-border);
+  border: 1px solid rgba(255, 255, 255, 0.15);
   background: transparent;
-  color: var(--apple-text);
+  color: #FFFFFF;
   transition: all 0.4s ease;
   border-radius: 980px;
 }
 
 .btn-secondary:hover {
-  background: rgba(0, 0, 0, 0.03);
-  border-color: var(--apple-text);
+  background: rgba(255, 255, 255, 0.08);
+  border-color: var(--pure-gold);
+  color: var(--pure-gold);
 }
 
 /* Product Protection — excludes demo video player */

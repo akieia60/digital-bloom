@@ -14,10 +14,10 @@
 
 .landing-nav--scrolled {
   padding: 12px 0;
-  background: rgba(255, 255, 255, 0.85);
+  background: rgba(10, 10, 10, 0.9);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .landing-nav__inner {
@@ -34,7 +34,7 @@
   font-weight: 600;
   font-size: 1.2rem;
   letter-spacing: 0.12em;
-  color: #1D1D1F;
+  color: #FFFFFF;
   text-decoration: none;
   text-transform: uppercase;
   transition: color 0.3s ease;
@@ -57,13 +57,13 @@
   font-size: 0.85rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #6E6E73;
+  color: rgba(255, 255, 255, 0.5);
   text-decoration: none;
   transition: color 0.3s ease;
 }
 
 .landing-nav__link:hover {
-  color: #1D1D1F;
+  color: #FFFFFF;
 }
 
 .landing-nav__link--accent {
@@ -71,7 +71,7 @@
 }
 
 .landing-nav__link--accent:hover {
-  color: #1D1D1F;
+  color: #FFFFFF;
 }
 
 /* Hamburger button — hidden on desktop */
@@ -92,7 +92,7 @@
   display: block;
   width: 100%;
   height: 1.5px;
-  background: #1D1D1F;
+  background: #FFFFFF;
   transition: all 0.3s ease;
   transform-origin: center;
 }
@@ -125,10 +125,10 @@
   bottom: 0;
   width: 80%;
   max-width: 320px;
-  background: rgba(255, 255, 255, 0.98);
+  background: rgba(10, 10, 10, 0.98);
   backdrop-filter: blur(30px);
   -webkit-backdrop-filter: blur(30px);
-  border-left: 1px solid rgba(0, 0, 0, 0.06);
+  border-left: 1px solid rgba(255, 255, 255, 0.05);
   display: flex;
   flex-direction: column;
   animation: slideInRight 0.3s ease-out;
@@ -149,7 +149,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 24px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .landing-nav__mobile-brand {
@@ -157,21 +157,21 @@
   font-weight: 600;
   font-size: 1.1rem;
   letter-spacing: 0.1em;
-  color: #1D1D1F;
+  color: #FFFFFF;
   text-transform: uppercase;
 }
 
 .landing-nav__mobile-close {
   background: none;
   border: none;
-  color: #6E6E73;
+  color: rgba(255, 255, 255, 0.4);
   cursor: pointer;
   padding: 4px;
   transition: color 0.3s ease;
 }
 
 .landing-nav__mobile-close:hover {
-  color: #1D1D1F;
+  color: #FFFFFF;
 }
 
 .landing-nav__mobile-links {
@@ -187,10 +187,10 @@
   font-weight: 400;
   font-size: 1rem;
   letter-spacing: 0.06em;
-  color: #1D1D1F;
+  color: #FFFFFF;
   text-decoration: none;
   padding: 14px 0;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
   transition: color 0.3s ease;
 }
 
@@ -204,7 +204,7 @@
 
 .landing-nav__mobile-footer {
   padding: 24px;
-  border-top: 1px solid rgba(0, 0, 0, 0.06);
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
   text-align: center;
 }
 
@@ -213,14 +213,14 @@
   font-size: 0.7rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: #6E6E73;
+  color: rgba(255, 255, 255, 0.3);
   margin: 0;
 }
 
 .landing-nav__mobile-sub {
   margin-top: 4px !important;
   font-size: 0.6rem !important;
-  color: #6E6E73 !important;
+  color: rgba(255, 255, 255, 0.2) !important;
   opacity: 0.5;
 }
 
