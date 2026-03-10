@@ -68,8 +68,8 @@ const ProductGrid = ({ searchQuery = '', category = null }) => {
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="text-center py-12">
-          <div className="w-10 h-10 border-2 border-white/10 border-t-[#D4AF37] rounded-full animate-spin mx-auto mb-4"></div>
-          <h3 className="text-base font-medium text-white/40">Loading collection...</h3>
+          <div className="w-10 h-10 border-2 border-[var(--border-default)] border-t-[#D4AF37] rounded-full animate-spin mx-auto mb-4"></div>
+          <h3 className="text-base font-medium text-[var(--text-secondary)]">Loading collection...</h3>
         </div>
       </div>
     );
@@ -78,9 +78,9 @@ const ProductGrid = ({ searchQuery = '', category = null }) => {
   return (
     <div id="products-section" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 py-12 sm:py-24">
       <div className="flex flex-col space-y-8 sm:space-y-16">
-        <header className="flex flex-col md:flex-row md:items-end justify-between border-b border-white/10 pb-6 sm:pb-8">
+        <header className="flex flex-col md:flex-row md:items-end justify-between border-b border-[var(--border-default)] pb-6 sm:pb-8">
           <div>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-medium font-display tracking-tight text-white mb-3 sm:mb-4">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-medium font-display tracking-tight text-[var(--text-primary)] mb-3 sm:mb-4">
               {searchQuery
                 ? `Results for "${searchQuery}"`
                 : activeCategoryLabel
@@ -89,15 +89,15 @@ const ProductGrid = ({ searchQuery = '', category = null }) => {
                 ? `${activeTierLabel} Gallery`
                 : 'Digital Gallery'}
             </h2>
-            <p className="text-sm text-white/40 font-light tracking-wide">
+            <p className="text-sm text-[var(--text-secondary)] font-light tracking-wide">
               {filteredProducts.length} experience{filteredProducts.length !== 1 ? 's' : ''} available
             </p>
           </div>
         </header>
 
         {filteredProducts.length === 0 ? (
-          <div className="text-center py-20 sm:py-32 bg-white/[0.03] rounded-3xl border border-white/5">
-            <h3 className="text-lg sm:text-xl font-light text-white/40">
+          <div className="text-center py-20 sm:py-32 bg-white/[0.03] rounded-3xl border border-[var(--border-subtle)]">
+            <h3 className="text-lg sm:text-xl font-light text-[var(--text-secondary)]">
               No experiences found.
             </h3>
           </div>
@@ -109,11 +109,11 @@ const ProductGrid = ({ searchQuery = '', category = null }) => {
             return (
               <section key={catId} className="space-y-8">
                 {!categoryFilter && orderedCategories.length > 1 && (
-                  <div className="border-b border-white/5 pb-4">
-                    <h3 className="text-xl sm:text-2xl font-display font-medium text-white tracking-tight">
+                  <div className="border-b border-[var(--border-subtle)] pb-4">
+                    <h3 className="text-xl sm:text-2xl font-display font-medium text-[var(--text-primary)] tracking-tight">
                       {catInfo.label}
                     </h3>
-                    <p className="text-[12px] text-white/30 mt-2 font-light">
+                    <p className="text-[12px] text-[var(--text-muted)] mt-2 font-light">
                       {catInfo.tagline}
                     </p>
                   </div>

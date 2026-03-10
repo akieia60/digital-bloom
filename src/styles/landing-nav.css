@@ -14,10 +14,10 @@
 
 .landing-nav--scrolled {
   padding: 12px 0;
-  background: rgba(10, 10, 10, 0.9);
+  background: var(--nav-bg-scrolled);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid var(--nav-border-scrolled);
 }
 
 .landing-nav__inner {
@@ -34,14 +34,14 @@
   font-weight: 600;
   font-size: 1.2rem;
   letter-spacing: 0.12em;
-  color: #FFFFFF;
+  color: var(--text-primary);
   text-decoration: none;
   text-transform: uppercase;
   transition: color 0.3s ease;
 }
 
 .landing-nav__logo:hover {
-  color: #D4AF37;
+  color: var(--accent-gold);
 }
 
 /* Desktop links */
@@ -57,21 +57,21 @@
   font-size: 0.85rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--text-secondary);
   text-decoration: none;
   transition: color 0.3s ease;
 }
 
 .landing-nav__link:hover {
-  color: #FFFFFF;
+  color: var(--text-primary);
 }
 
 .landing-nav__link--accent {
-  color: #D4AF37;
+  color: var(--accent-gold);
 }
 
 .landing-nav__link--accent:hover {
-  color: #FFFFFF;
+  color: var(--text-primary);
 }
 
 /* Hamburger button — hidden on desktop */
@@ -92,7 +92,7 @@
   display: block;
   width: 100%;
   height: 1.5px;
-  background: #FFFFFF;
+  background: var(--text-primary);
   transition: all 0.3s ease;
   transform-origin: center;
 }
@@ -125,10 +125,10 @@
   bottom: 0;
   width: 80%;
   max-width: 320px;
-  background: rgba(10, 10, 10, 0.98);
+  background: var(--nav-bg-scrolled);
   backdrop-filter: blur(30px);
   -webkit-backdrop-filter: blur(30px);
-  border-left: 1px solid rgba(255, 255, 255, 0.05);
+  border-left: 1px solid var(--nav-border-scrolled);
   display: flex;
   flex-direction: column;
   animation: slideInRight 0.3s ease-out;
@@ -149,7 +149,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 24px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid var(--nav-border-scrolled);
 }
 
 .landing-nav__mobile-brand {
@@ -157,14 +157,14 @@
   font-weight: 600;
   font-size: 1.1rem;
   letter-spacing: 0.1em;
-  color: #FFFFFF;
+  color: var(--text-primary);
   text-transform: uppercase;
 }
 
 .landing-nav__mobile-close {
   background: none;
   border: none;
-  color: rgba(255, 255, 255, 0.4);
+  color: var(--text-muted);
   cursor: pointer;
   padding: 4px;
   transition: color 0.3s ease;
@@ -187,24 +187,24 @@
   font-weight: 400;
   font-size: 1rem;
   letter-spacing: 0.06em;
-  color: #FFFFFF;
+  color: var(--text-primary);
   text-decoration: none;
   padding: 14px 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  border-bottom: 1px solid var(--border-subtle);
   transition: color 0.3s ease;
 }
 
 .landing-nav__mobile-link:hover {
-  color: #D4AF37;
+  color: var(--accent-gold);
 }
 
 .landing-nav__mobile-link--accent {
-  color: #D4AF37;
+  color: var(--accent-gold);
 }
 
 .landing-nav__mobile-footer {
   padding: 24px;
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  border-top: 1px solid var(--nav-border-scrolled);
   text-align: center;
 }
 
@@ -213,14 +213,14 @@
   font-size: 0.7rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.3);
+  color: var(--text-muted);
   margin: 0;
 }
 
 .landing-nav__mobile-sub {
   margin-top: 4px !important;
   font-size: 0.6rem !important;
-  color: rgba(255, 255, 255, 0.2) !important;
+  color: var(--text-muted) !important;
   opacity: 0.5;
 }
 

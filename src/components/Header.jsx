@@ -28,7 +28,7 @@ const Header = ({ onSearchChange, searchQuery }) => {
   }, [isMobileMenuOpen]);
 
   return (
-    <header className={`sticky top-0 z-50 transition-all duration-500 ${isScrolled ? 'py-3 bg-[#0A0A0A]/90 backdrop-blur-xl border-b border-white/5' : 'py-6 bg-[#0A0A0A]'}`}>
+    <header className={`sticky top-0 z-50 transition-all duration-500 ${isScrolled ? 'py-3 bg-[var(--nav-bg-scrolled)] backdrop-blur-xl border-b border-[var(--nav-border-scrolled)]' : 'py-6 bg-[var(--nav-bg)]'}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
         <div className="flex items-center h-12 relative">
           
@@ -37,7 +37,7 @@ const Header = ({ onSearchChange, searchQuery }) => {
             {/* Hamburger Button - Mobile Only */}
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="lg:hidden p-2 -ml-2 text-white/60 hover:text-white transition-colors"
+              className="lg:hidden p-2 -ml-2 text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
               aria-label="Menu"
             >
               <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -56,10 +56,10 @@ const Header = ({ onSearchChange, searchQuery }) => {
                 placeholder="Search..."
                 value={searchQuery}
                 onChange={(e) => onSearchChange(e.target.value)}
-                className="w-48 focus:w-64 px-4 py-2 bg-white/[0.06] border border-white/10 rounded-lg text-sm text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-[#D4AF37]/30 transition-all duration-500 font-light"
+                className="w-48 focus:w-64 px-4 py-2 bg-[var(--bg-surface)] border border-[var(--border-default)] rounded-lg text-sm text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--accent-gold-border-hover)] transition-all duration-500 font-light"
               />
               <svg
-                className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/30"
+                className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[var(--text-muted)]"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -72,14 +72,14 @@ const Header = ({ onSearchChange, searchQuery }) => {
           {/* Center: Brand */}
           <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transition-all duration-700">
             <Link to="/" className="flex flex-col items-center group" onClick={() => setIsMobileMenuOpen(false)}>
-              <span className={`font-medium font-display uppercase text-white transition-all duration-700 ease-in-out ${
+              <span className={`font-medium font-display uppercase text-[var(--text-primary)] transition-all duration-700 ease-in-out ${
                 isScrolled 
                   ? 'text-lg sm:text-xl tracking-[0.15em]' 
                   : 'text-xl sm:text-2xl md:text-3xl tracking-[0.2em]'
               }`}>
                 Digital Bloom
               </span>
-              <span className={`text-[9px] tracking-[0.3em] uppercase text-white/30 font-light transition-all duration-700 ${
+              <span className={`text-[9px] tracking-[0.3em] uppercase text-[var(--text-muted)] font-light transition-all duration-700 ${
                 isScrolled ? 'opacity-0 -translate-y-2 pointer-events-none' : 'opacity-100 translate-y-0'
               }`}>
                 Luxury Motion Art
@@ -90,9 +90,9 @@ const Header = ({ onSearchChange, searchQuery }) => {
           {/* Right: Desktop Nav + Cart */}
           <div className="flex-1 flex justify-end items-center space-x-4 sm:space-x-8">
             <nav className="hidden lg:flex items-center space-x-8">
-              <Link to="/shop" className="text-[12px] uppercase tracking-[0.12em] text-[#D4AF37] hover:text-white transition-colors font-medium">Occasions</Link>
-              <Link to="/shop" className="text-[12px] uppercase tracking-[0.12em] text-white/50 hover:text-white transition-colors font-medium">Shop</Link>
-              <Link to="/credits" className="text-[12px] uppercase tracking-[0.12em] text-white/50 hover:text-white transition-colors font-medium">Credits</Link>
+              <Link to="/shop" className="text-[12px] uppercase tracking-[0.12em] text-[var(--accent-gold)] hover:text-[var(--text-primary)] transition-colors font-medium">Occasions</Link>
+              <Link to="/shop" className="text-[12px] uppercase tracking-[0.12em] text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors font-medium">Shop</Link>
+              <Link to="/credits" className="text-[12px] uppercase tracking-[0.12em] text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors font-medium">Credits</Link>
             </nav>
             <button
               onClick={toggleCart}
@@ -100,7 +100,7 @@ const Header = ({ onSearchChange, searchQuery }) => {
               aria-label="Shopping cart"
             >
               <svg
-                className="h-5 w-5 text-white/50 group-hover:text-white transition-all"
+                className="h-5 w-5 text-[var(--text-secondary)] group-hover:text-[var(--text-primary)] transition-all"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -108,7 +108,7 @@ const Header = ({ onSearchChange, searchQuery }) => {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
               </svg>
               {cartCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-[#D4AF37] text-white text-[9px] font-bold rounded-full h-4 w-4 flex items-center justify-center shadow-sm">
+                <span className="absolute -top-1 -right-1 bg-[var(--accent-gold)] text-[var(--bg-page)] text-[9px] font-bold rounded-full h-4 w-4 flex items-center justify-center shadow-sm">
                   {cartCount}
                 </span>
               )}
@@ -127,14 +127,14 @@ const Header = ({ onSearchChange, searchQuery }) => {
           />
           
           {/* Menu Panel */}
-          <div className="absolute top-0 left-0 bottom-0 w-4/5 max-w-sm bg-[#0A0A0A] border-r border-white/5 flex flex-col animate-slide-in shadow-2xl">
+          <div className="absolute top-0 left-0 bottom-0 w-4/5 max-w-sm bg-[var(--bg-page)] border-r border-[var(--nav-border-scrolled)] flex flex-col animate-slide-in shadow-2xl">
             {/* Menu Header */}
-              <div className="p-6 border-b border-white/5">
+              <div className="p-6 border-b border-[var(--nav-border-scrolled)]">
               <div className="flex items-center justify-between">
-                <span className="text-xl font-display uppercase text-white tracking-wider">Menu</span>
+                <span className="text-xl font-display uppercase text-[var(--text-primary)] tracking-wider">Menu</span>
                 <button
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="p-2 text-white/40 hover:text-white transition-colors"
+                  className="p-2 text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors"
                 >
                   <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M6 18L18 6M6 6l12 12" />
@@ -144,14 +144,14 @@ const Header = ({ onSearchChange, searchQuery }) => {
             </div>
 
             {/* Mobile Search */}
-            <div className="p-6 border-b border-white/5">
+            <div className="p-6 border-b border-[var(--nav-border-scrolled)]">
               <div className="relative">
                 <input
                   type="text"
                   placeholder="Search..."
                   value={searchQuery}
                   onChange={(e) => onSearchChange(e.target.value)}
-                  className="w-full px-4 py-3 bg-white/[0.06] border border-white/10 rounded-lg text-base text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-[#D4AF37]/30 transition-all"
+                  className="w-full px-4 py-3 bg-[var(--bg-surface)] border border-[var(--border-default)] rounded-lg text-base text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--accent-gold-border-hover)] transition-all"
                 />
               </div>
             </div>
@@ -161,37 +161,37 @@ const Header = ({ onSearchChange, searchQuery }) => {
               <Link
                 to="/"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="block text-base text-white hover:text-[#D4AF37] transition-colors py-4 border-b border-white/5"
+                className="block text-base text-[var(--text-primary)] hover:text-[var(--accent-gold)] transition-colors py-4 border-b border-[var(--border-subtle)]"
               >
                 Home
               </Link>
               <Link
                 to="/shop"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="block text-base text-[#D4AF37] hover:text-white transition-colors py-4 border-b border-white/5"
+                className="block text-base text-[var(--accent-gold)] hover:text-[var(--text-primary)] transition-colors py-4 border-b border-[var(--border-subtle)]"
               >
                 Occasions
               </Link>
               <Link
                 to="/shop"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="block text-base text-white hover:text-[#D4AF37] transition-colors py-4 border-b border-white/5"
+                className="block text-base text-[var(--text-primary)] hover:text-[var(--accent-gold)] transition-colors py-4 border-b border-[var(--border-subtle)]"
               >
                 Shop
               </Link>
               <Link
                 to="/credits"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="block text-base text-white hover:text-[#D4AF37] transition-colors py-4 border-b border-white/5"
+                className="block text-base text-[var(--text-primary)] hover:text-[var(--accent-gold)] transition-colors py-4 border-b border-[var(--border-subtle)]"
               >
                 Experience Credits
               </Link>
             </nav>
 
             {/* Menu Footer */}
-            <div className="p-6 border-t border-white/5">
-              <p className="text-xs text-white/30 uppercase tracking-wider">Digital Bloom</p>
-              <p className="text-[10px] text-white/15 mt-1">Luxury Motion Art</p>
+            <div className="p-6 border-t border-[var(--nav-border-scrolled)]">
+              <p className="text-xs text-[var(--text-muted)] uppercase tracking-wider">Digital Bloom</p>
+              <p className="text-[10px] text-[var(--text-muted)] opacity-50 mt-1">Luxury Motion Art</p>
             </div>
           </div>
         </div>
