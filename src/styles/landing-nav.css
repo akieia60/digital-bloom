@@ -66,6 +66,14 @@
   color: #1D1D1F;
 }
 
+.landing-nav__link--accent {
+  color: #D4AF37;
+}
+
+.landing-nav__link--accent:hover {
+  color: #1D1D1F;
+}
+
 /* Hamburger button — hidden on desktop */
 .landing-nav__hamburger {
   display: none;
@@ -187,6 +195,10 @@
 }
 
 .landing-nav__mobile-link:hover {
+  color: #D4AF37;
+}
+
+.landing-nav__mobile-link--accent {
   color: #D4AF37;
 }
 

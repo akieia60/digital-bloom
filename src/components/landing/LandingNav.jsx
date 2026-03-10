@@ -34,6 +34,7 @@ export default function LandingNav() {
 
         {/* Desktop Links */}
         <div className="landing-nav__links">
+          <Link to="/shop" className="landing-nav__link landing-nav__link--accent">Occasions</Link>
           <Link to="/shop" className="landing-nav__link">Shop</Link>
           <Link to="/credits" className="landing-nav__link">Credits</Link>
           <Link to="/vault" className="landing-nav__link">Vault</Link>
@@ -69,6 +70,7 @@ export default function LandingNav() {
             </div>
             <div className="landing-nav__mobile-links">
               <Link to="/" onClick={() => setIsMobileMenuOpen(false)} className="landing-nav__mobile-link">Home</Link>
+              <Link to="/shop" onClick={() => setIsMobileMenuOpen(false)} className="landing-nav__mobile-link landing-nav__mobile-link--accent">Occasions</Link>
               <Link to="/shop" onClick={() => setIsMobileMenuOpen(false)} className="landing-nav__mobile-link">Shop</Link>
               <Link to="/credits" onClick={() => setIsMobileMenuOpen(false)} className="landing-nav__mobile-link">Credits</Link>
               <Link to="/credits/balance" onClick={() => setIsMobileMenuOpen(false)} className="landing-nav__mobile-link">Balance</Link>
