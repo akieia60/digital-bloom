@@ -248,6 +248,33 @@
   transform: translateX(4px);
 }
 
+/* ── Coming Soon state ── */
+.cat-card--coming-soon {
+  opacity: 0.55;
+  cursor: default;
+}
+
+.cat-card--coming-soon.cat-card--visible {
+  opacity: 0.55;
+}
+
+.cat-card--coming-soon:hover {
+  transform: translateY(0);
+  border-color: transparent;
+  background: #F5F5F7;
+  box-shadow: none;
+}
+
+.cat-card__badge {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--cat-color, #9B59B6);
+  margin-top: 2px;
+}
+
 /* ============================================
    RESPONSIVE
    ============================================ */

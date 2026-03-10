@@ -96,6 +96,7 @@ const CATEGORIES = [
   {
     name: 'Zodiac',
     slug: 'zodiac',
+    comingSoon: true,
     color: '#9B59B6',
     icon: (
       <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -155,26 +156,46 @@ export default function CategoryGrid() {
 
         {/* Grid — links to individual category pages */}
         <div className="cat-grid">
-          {CATEGORIES.map((cat, index) => (
-            <Link
-              key={cat.slug}
-              to={`/shop/${cat.slug}`}
-              className={`cat-card ${visibleCards.has(String(index)) ? 'cat-card--visible' : ''}`}
-              data-index={index}
-              style={{
-                transitionDelay: `${(index % 5) * 0.08}s`,
-                '--cat-color': cat.color,
-              }}
-            >
-              <div className="cat-card__icon">{cat.icon}</div>
-              <h3 className="cat-card__name">{cat.name}</h3>
-              <span className="cat-card__arrow">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M5 12H19M12 5L19 12L12 19" />
-                </svg>
-              </span>
-            </Link>
-          ))}
+          {CATEGORIES.map((cat, index) => {
+            const visible = visibleCards.has(String(index)) ? 'cat-card--visible' : '';
+            const sharedStyle = {
+              transitionDelay: `${(index % 5) * 0.08}s`,
+              '--cat-color': cat.color,
+            };
+
+            if (cat.comingSoon) {
+              return (
+                <div
+                  key={cat.slug}
+                  className={`cat-card cat-card--coming-soon ${visible}`}
+                  data-index={index}
+                  style={sharedStyle}
+                >
+                  <div className="cat-card__icon">{cat.icon}</div>
+                  <h3 className="cat-card__name">{cat.name}</h3>
+                  <span className="cat-card__badge">Coming Soon</span>
+                </div>
+              );
+            }
+
+            return (
+              <Link
+                key={cat.slug}
+                to={`/shop/${cat.slug}`}
+                className={`cat-card ${visible}`}
+                data-index={index}
+                style={sharedStyle}
+              >
+                <div className="cat-card__icon">{cat.icon}</div>
+                <h3 className="cat-card__name">{cat.name}</h3>
+                <span className="cat-card__arrow">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M5 12H19M12 5L19 12L12 19" />
+                  </svg>
+                </span>
+              </Link>
+            );
+          })}
         </div>
       </div>
     </section>

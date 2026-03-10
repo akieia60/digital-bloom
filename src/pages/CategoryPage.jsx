@@ -2,9 +2,12 @@ import { useParams, Link } from 'react-router-dom';
 import ProductGrid from '../components/ProductGrid';
 import OCCASIONS from '../data/occasions';
 
+const COMING_SOON_SLUGS = new Set(['zodiac']);
+
 export default function CategoryPage() {
   const { categorySlug } = useParams();
   const occasion = OCCASIONS[categorySlug];
+  const isComingSoon = COMING_SOON_SLUGS.has(categorySlug);
 
   if (!occasion) {
     return (
@@ -69,8 +72,27 @@ export default function CategoryPage() {
         />
       </section>
 
-      {/* Products for this category — UNCHANGED */}
-      <ProductGrid category={categorySlug} />
+      {isComingSoon ? (
+        /* Coming Soon empty state */
+        <section className="max-w-xl mx-auto px-6 py-24 text-center">
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full mb-8" style={{ background: `${occasion.accent}15` }}>
+            <span className="text-3xl">{occasion.emoji}</span>
+          </div>
+          <h2 className="text-2xl font-display font-medium text-[#1D1D1F] mb-4">Coming Soon</h2>
+          <p className="text-[#6E6E73] font-light leading-relaxed mb-10">
+            We're crafting something special for the {occasion.title}. Check back soon — beautiful blooms are on the way.
+          </p>
+          <Link
+            to="/shop"
+            className="inline-block px-8 py-3 rounded-full text-sm uppercase tracking-widest bg-[#1D1D1F] text-white hover:bg-[#D4AF37] hover:text-[#1D1D1F] transition-all"
+          >
+            Browse Other Occasions
+          </Link>
+        </section>
+      ) : (
+        /* Products for this category — UNCHANGED */
+        <ProductGrid category={categorySlug} />
+      )}
     </div>
   );
 }
