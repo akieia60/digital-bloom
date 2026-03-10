@@ -90,6 +90,7 @@ const Header = ({ onSearchChange, searchQuery }) => {
           {/* Right: Desktop Nav + Cart */}
           <div className="flex-1 flex justify-end items-center space-x-4 sm:space-x-8">
             <nav className="hidden lg:flex items-center space-x-8">
+              <Link to="/shop" className="text-[12px] uppercase tracking-[0.12em] text-[#D4AF37] hover:text-[#1D1D1F] transition-colors font-medium">Occasions</Link>
               <Link to="/shop" className="text-[12px] uppercase tracking-[0.12em] text-[#6E6E73] hover:text-[#1D1D1F] transition-colors font-medium">Shop</Link>
               <Link to="/credits" className="text-[12px] uppercase tracking-[0.12em] text-[#6E6E73] hover:text-[#1D1D1F] transition-colors font-medium">Credits</Link>
             </nav>
@@ -163,6 +164,13 @@ const Header = ({ onSearchChange, searchQuery }) => {
                 className="block text-base text-[#1D1D1F] hover:text-[#D4AF37] transition-colors py-4 border-b border-[#D2D2D7]/20"
               >
                 Home
+              </Link>
+              <Link
+                to="/shop"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="block text-base text-[#D4AF37] hover:text-[#1D1D1F] transition-colors py-4 border-b border-[#D2D2D7]/20"
+              >
+                Occasions
               </Link>
               <Link
                 to="/shop"

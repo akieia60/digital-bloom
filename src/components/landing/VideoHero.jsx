@@ -142,7 +142,7 @@ export default function VideoHero() {
             }`}
           >
             <Link to="/shop" className="video-hero__btn">
-              <span className="video-hero__btn-text">Send a Bloom</span>
+              <span className="video-hero__btn-text">Choose Your Occasion</span>
               <span className="video-hero__btn-shimmer" />
               <span className="video-hero__btn-glow" />
             </Link>
