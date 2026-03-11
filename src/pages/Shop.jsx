@@ -1,22 +1,122 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import ProductGrid from '../components/ProductGrid';
+import ProductCard from '../components/ProductCard';
+import { useProducts } from '../hooks/useProducts';
 
 const CATEGORIES = [
-  { name: "Happy Mother's Day", slug: 'mothers-day', accent: '#FF4DA6', tagline: 'Celebrate the woman who gave you everything', gradient: 'linear-gradient(135deg, #1a0010 0%, #3d0025 50%, #1a000d 100%)', glow: 'rgba(255,77,166,0.22)' },
-  { name: 'Happy Birthday', slug: 'birthday', accent: '#FFD23F', tagline: 'Make their special day unforgettable', gradient: 'linear-gradient(135deg, #1a1500 0%, #3d3000 50%, #1a1200 100%)', glow: 'rgba(255,210,63,0.18)' },
-  { name: 'Love & Romance', slug: 'love', accent: '#FF3B7F', tagline: 'Express your deepest feelings', gradient: 'linear-gradient(135deg, #1a0010 0%, #3d0020 50%, #1a000d 100%)', glow: 'rgba(255,59,127,0.2)' },
-  { name: "Valentine's Day", slug: 'valentine', accent: '#FF6B6B', tagline: 'For the one who has your heart', gradient: 'linear-gradient(135deg, #1a0000 0%, #3d0a0a 50%, #1a0505 100%)', glow: 'rgba(255,107,107,0.18)' },
-  { name: 'Congratulations', slug: 'celebration', accent: '#B45FFF', tagline: 'Celebrate their achievements in style', gradient: 'linear-gradient(135deg, #0d0018 0%, #220040 50%, #0d000f 100%)', glow: 'rgba(180,95,255,0.2)' },
-  { name: 'Memorial & Sympathy', slug: 'grief', accent: '#7B9FFF', tagline: 'Honor those we hold dear', gradient: 'linear-gradient(135deg, #000d1a 0%, #001a3d 50%, #00091a 100%)', glow: 'rgba(123,159,255,0.18)' },
-  { name: 'Thinking of You', slug: 'friendship', accent: '#FF8C42', tagline: 'Let them know they matter', gradient: 'linear-gradient(135deg, #1a0a00 0%, #3d1a00 50%, #1a0800 100%)', glow: 'rgba(255,140,66,0.18)' },
-  { name: 'Luxury Collection', slug: 'luxury', accent: '#D4AF37', tagline: 'Where fashion meets floral artistry', gradient: 'linear-gradient(135deg, #0d0a00 0%, #2a2000 50%, #0d0a00 100%)', glow: 'rgba(212,175,55,0.22)' },
-  { name: 'Zodiac Collection', slug: 'zodiac', accent: '#9B59B6', tagline: 'Written in the stars', gradient: 'linear-gradient(135deg, #0d0013 0%, #1e003d 50%, #0d0013 100%)', glow: 'rgba(155,89,182,0.18)', comingSoon: true },
-  { name: 'General Collection', slug: 'general', accent: '#9E9E9E', tagline: 'Beautiful blooms for every moment', gradient: 'linear-gradient(135deg, #0d0d0d 0%, #1f1f1f 50%, #0d0d0d 100%)', glow: 'rgba(158,158,158,0.12)' },
+  { name: "Happy Mother's Day", slug: 'mothers-day', accent: '#FF4DA6', tagline: 'Celebrate the woman who gave you everything' },
+  { name: 'Happy Birthday', slug: 'birthday', accent: '#FFD23F', tagline: 'Make their special day unforgettable' },
+  { name: 'Love & Romance', slug: 'love', accent: '#FF3B7F', tagline: 'Express your deepest feelings' },
+  { name: "Valentine's Day", slug: 'valentine', accent: '#FF6B6B', tagline: 'For the one who has your heart' },
+  { name: 'Congratulations', slug: 'celebration', accent: '#B45FFF', tagline: 'Celebrate their achievements in style' },
+  { name: 'Memorial & Sympathy', slug: 'grief', accent: '#7B9FFF', tagline: 'Honor those we hold dear' },
+  { name: 'Thinking of You', slug: 'friendship', accent: '#FF8C42', tagline: 'Let them know they matter' },
+  { name: 'Luxury Collection', slug: 'luxury', accent: '#D4AF37', tagline: 'Where fashion meets floral artistry' },
+  { name: 'Zodiac Collection', slug: 'zodiac', accent: '#9B59B6', tagline: 'Written in the stars', comingSoon: true },
+  { name: 'General Collection', slug: 'general', accent: '#9E9E9E', tagline: 'Beautiful blooms for every moment' },
 ];
+
+function CategoryRow({ cat, products }) {
+  const scrollRef = useRef(null);
+  const catProducts = products.filter((p) => p.category === cat.slug);
+
+  return (
+    <div className="mb-10">
+      {/* Row header */}
+      {cat.comingSoon ? (
+        <div className="flex items-center justify-between px-4 sm:px-6 mb-4 opacity-50 cursor-default">
+          <span className="font-display font-semibold text-lg sm:text-xl" style={{ color: cat.accent }}>
+            {cat.name}
+          </span>
+          <span className="text-[10px] uppercase tracking-widest px-3 py-1 rounded-full border border-[var(--border-default)] text-[var(--text-muted)]">
+            Coming Soon
+          </span>
+        </div>
+      ) : (
+        <Link
+          to={`/shop/${cat.slug}`}
+          className="group flex items-center justify-between px-4 sm:px-6 mb-4"
+          style={{ textDecoration: 'none' }}
+        >
+          <span
+            className="font-display font-semibold text-lg sm:text-xl transition-all duration-200 group-hover:brightness-125"
+            style={{ color: cat.accent }}
+          >
+            {cat.name}
+          </span>
+          <div className="flex items-center gap-1.5 opacity-60 group-hover:opacity-100 transition-all duration-200">
+            <span className="text-xs text-[var(--text-muted)] group-hover:text-[var(--text-secondary)] transition-colors">
+              See all
+            </span>
+            <svg
+              className="w-4 h-4 group-hover:translate-x-0.5 transition-transform duration-200"
+              style={{ color: cat.accent }}
+              fill="none" stroke="currentColor" strokeWidth={2}
+              strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"
+            >
+              <path d="M5 12H19M12 5L19 12L12 19" />
+            </svg>
+          </div>
+        </Link>
+      )}
+
+      {/* Horizontal scroll strip */}
+      {cat.comingSoon ? (
+        <div className="px-4 sm:px-6 py-6 rounded-2xl mx-4 sm:mx-6 border border-[var(--border-subtle)] text-center opacity-40">
+          <p className="text-sm text-[var(--text-muted)]">Coming soon — {cat.tagline}</p>
+        </div>
+      ) : catProducts.length === 0 ? (
+        <div className="px-4 sm:px-6">
+          <Link
+            to={`/shop/${cat.slug}`}
+            className="flex items-center justify-center h-40 rounded-2xl border border-dashed border-[var(--border-subtle)] hover:border-[var(--border-default)] transition-colors"
+            style={{ textDecoration: 'none' }}
+          >
+            <span className="text-sm text-[var(--text-muted)]" style={{ color: cat.accent }}>
+              Browse {cat.name} →
+            </span>
+          </Link>
+        </div>
+      ) : (
+        <div
+          ref={scrollRef}
+          className="flex gap-3 overflow-x-auto px-4 sm:px-6 pb-3"
+          style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+        >
+          {catProducts.slice(0, 10).map((product) => (
+            <div key={product.id} className="flex-shrink-0 w-36 sm:w-44">
+              <ProductCard product={product} compact />
+            </div>
+          ))}
+
+          {/* "See all" card at end of row */}
+          <Link
+            to={`/shop/${cat.slug}`}
+            className="flex-shrink-0 w-36 sm:w-44 flex items-center justify-center rounded-2xl border border-[var(--border-subtle)] hover:border-[var(--border-default)] transition-colors"
+            style={{ textDecoration: 'none', minHeight: '176px' }}
+          >
+            <div className="text-center px-3">
+              <svg
+                className="w-6 h-6 mx-auto mb-2 opacity-40"
+                style={{ color: cat.accent }}
+                fill="none" stroke="currentColor" strokeWidth={1.5}
+                strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"
+              >
+                <path d="M5 12H19M12 5L19 12L12 19" />
+              </svg>
+              <span className="text-[11px] text-[var(--text-muted)] leading-tight">See all</span>
+            </div>
+          </Link>
+        </div>
+      )}
+    </div>
+  );
+}
 
 export default function Shop({ searchQuery, setSearchQuery }) {
   const [localSearch, setLocalSearch] = useState(searchQuery || '');
+  const { products, loading } = useProducts();
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -59,71 +159,17 @@ export default function Shop({ searchQuery, setSearchQuery }) {
         </form>
       </section>
 
-      {/* Vertical occasion list */}
-      <section className="max-w-3xl mx-auto px-4 sm:px-6 pb-32">
-        <div className="flex flex-col gap-0">
-          {CATEGORIES.map((cat, idx) => (
-            <div key={cat.slug}>
-              {/* Title row */}
-              {cat.comingSoon ? (
-                <div className="flex items-center justify-between py-4 border-t border-[var(--border-subtle)] opacity-50 cursor-default">
-                  <span className="font-display font-semibold text-lg sm:text-xl" style={{ color: cat.accent }}>
-                    {cat.name}
-                  </span>
-                  <span className="text-[10px] uppercase tracking-widest px-3 py-1 rounded-full border border-[var(--border-default)] text-[var(--text-muted)]">
-                    Coming Soon
-                  </span>
-                </div>
-              ) : (
-                <Link
-                  to={`/shop/${cat.slug}`}
-                  className="flex items-center justify-between py-4 border-t border-[var(--border-subtle)] group"
-                  style={{ textDecoration: 'none' }}
-                >
-                  <span
-                    className="font-display font-semibold text-lg sm:text-xl transition-all duration-200 group-hover:brightness-125"
-                    style={{ color: cat.accent }}
-                  >
-                    {cat.name}
-                  </span>
-                  <svg
-                    className="w-5 h-5 opacity-60 group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-200"
-                    style={{ color: cat.accent }}
-                    fill="none" stroke="currentColor" strokeWidth={1.5}
-                    strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"
-                  >
-                    <path d="M5 12H19M12 5L19 12L12 19" />
-                  </svg>
-                </Link>
-              )}
-
-              {/* Large bloom card */}
-              {!cat.comingSoon && (
-                <Link
-                  to={`/shop/${cat.slug}`}
-                  className="group flex items-center gap-6 rounded-2xl mb-6 overflow-hidden border border-[var(--border-subtle)] hover:border-[rgba(255,255,255,0.12)] transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl"
-                  style={{ background: cat.gradient, minHeight: '120px', padding: '24px 28px', textDecoration: 'none', position: 'relative' }}
-                >
-                  <div style={{ position: 'absolute', inset: 0, background: `radial-gradient(ellipse at 30% 50%, ${cat.glow} 0%, transparent 65%)`, pointerEvents: 'none' }} />
-                  <div className="relative z-10 flex-1">
-                    <span className="block font-display font-semibold text-xl sm:text-2xl mb-1" style={{ color: cat.accent }}>
-                      {cat.name}
-                    </span>
-                    <span className="block text-sm text-[var(--text-secondary)] font-light">
-                      {cat.tagline}
-                    </span>
-                  </div>
-                  <div className="relative z-10 flex-shrink-0 opacity-70 group-hover:opacity-100 transition-opacity">
-                    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.2} strokeLinecap="round" strokeLinejoin="round" style={{ color: cat.accent }}>
-                      <path d="M5 12H19M12 5L19 12L12 19" />
-                    </svg>
-                  </div>
-                  <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '2px', background: cat.accent, opacity: 0.5 }} />
-                </Link>
-              )}
-            </div>
-          ))}
-        </div>
+      {/* Netflix-style category rows */}
+      <section className="pb-32">
+        {loading ? (
+          <div className="flex items-center justify-center py-24">
+            <div className="w-8 h-8 border-2 border-[var(--accent-gold)] border-t-transparent rounded-full animate-spin" />
+          </div>
+        ) : (
+          CATEGORIES.map((cat) => (
+            <CategoryRow key={cat.slug} cat={cat} products={products} />
+          ))
+        )}
       </section>
     </div>
   );
