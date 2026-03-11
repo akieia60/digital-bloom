@@ -97,11 +97,11 @@ html {
 }
 
 /* ============================================
-   CATEGORY GRID — Apple-style cards
+   CATEGORY GRID — Apple-style cards (legacy)
    ============================================ */
 .category-grid-section {
   padding: 100px 0 80px;
-  background: #FFFFFF;
+  background: #0A0A0A;
 }
 
 .category-grid {
@@ -112,7 +112,7 @@ html {
 }
 
 .category-card {
-  background: #F5F5F7;
+  background: rgba(255,255,255,0.04);
   border: 1px solid transparent;
   border-radius: 20px;
   overflow: hidden;
@@ -122,8 +122,205 @@ html {
 
 .category-card:hover {
   transform: translateY(-4px);
-  border-color: #D2D2D7;
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+  border-color: rgba(212,175,55,0.3);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+}
+
+/* ============================================
+   CATEGORY LIST — Vertical occasion list (new)
+   ============================================ */
+.cat-list-section {
+  padding: 80px 0 100px;
+  background: #0A0A0A;
+}
+
+.cat-list-container {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.cat-list-header {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.cat-list-eyebrow {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: #D4AF37;
+  display: block;
+  margin-bottom: 14px;
+}
+
+.cat-list-headline {
+  font-family: 'Cormorant Garamond', 'Playfair Display', 'Georgia', serif;
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  font-weight: 500;
+  font-style: italic;
+  color: #FFFFFF;
+  margin: 0 0 16px;
+  line-height: 1.2;
+}
+
+.cat-list-subtext {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1rem;
+  font-weight: 300;
+  color: rgba(255,255,255,0.45);
+  max-width: 480px;
+  margin: 0 auto;
+  line-height: 1.7;
+}
+
+/* Each category: title row + bloom card */
+.cat-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.cat-list-item {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.55s ease, transform 0.55s ease;
+}
+
+.cat-list-item--visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Title row */
+.cat-list-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 0 10px;
+  border-top: 1px solid rgba(255,255,255,0.07);
+  text-decoration: none;
+  transition: border-color 0.3s;
+}
+
+.cat-list-item:first-child .cat-list-title-row {
+  border-top: none;
+}
+
+.cat-list-title-row:hover .cat-list-title-row__name {
+  filter: brightness(1.25);
+}
+
+.cat-list-title-row__name {
+  font-family: 'Playfair Display', 'Georgia', serif;
+  font-size: clamp(1.1rem, 3vw, 1.5rem);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  transition: filter 0.25s;
+}
+
+.cat-list-title-row__arrow {
+  opacity: 0.7;
+  transition: transform 0.25s, opacity 0.25s;
+}
+
+.cat-list-title-row:hover .cat-list-title-row__arrow {
+  transform: translateX(4px);
+  opacity: 1;
+}
+
+/* Large bloom card */
+.cat-list-bloom-card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  padding: 32px 36px;
+  border-radius: 20px;
+  margin-bottom: 28px;
+  text-decoration: none;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.06);
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+              border-color 0.35s,
+              box-shadow 0.35s;
+  min-height: 140px;
+}
+
+.cat-list-bloom-card:hover {
+  transform: translateY(-3px) scale(1.005);
+  border-color: rgba(255,255,255,0.12);
+  box-shadow: 0 16px 48px rgba(0,0,0,0.5);
+}
+
+.cat-list-bloom-card__glow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.cat-list-bloom-card__icon {
+  position: relative;
+  z-index: 1;
+  flex-shrink: 0;
+  opacity: 0.85;
+  transition: opacity 0.3s, transform 0.4s;
+}
+
+.cat-list-bloom-card:hover .cat-list-bloom-card__icon {
+  opacity: 1;
+  transform: scale(1.08) rotate(-3deg);
+}
+
+.cat-list-bloom-card__info {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.cat-list-bloom-card__label {
+  font-family: 'Playfair Display', 'Georgia', serif;
+  font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.cat-list-bloom-card__tagline {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 300;
+  color: rgba(255,255,255,0.5);
+  line-height: 1.5;
+}
+
+.cat-list-bloom-card__line {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  opacity: 0.6;
+  transition: opacity 0.3s;
+}
+
+.cat-list-bloom-card:hover .cat-list-bloom-card__line {
+  opacity: 1;
+}
+
+@media (max-width: 600px) {
+  .cat-list-bloom-card {
+    padding: 24px 20px;
+    gap: 18px;
+    min-height: 120px;
+  }
+
+  .cat-list-bloom-card__icon {
+    display: none;
+  }
 }
 
 /* ============================================
