@@ -16,7 +16,18 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #000000;
+  background:
+    /* Bold gold vein streaks */
+    linear-gradient(125deg, transparent 30%, rgba(196,160,48,0.18) 42%, rgba(212,175,55,0.10) 50%, transparent 58%),
+    linear-gradient(230deg, transparent 45%, rgba(212,175,55,0.14) 54%, rgba(196,160,48,0.08) 60%, transparent 68%),
+    linear-gradient(340deg, transparent 55%, rgba(212,175,55,0.10) 62%, transparent 70%),
+    /* Marble drift — warm ivory with cool-gray veins */
+    radial-gradient(ellipse at 15% 60%, rgba(230,222,210,0.6) 0%, transparent 50%),
+    radial-gradient(ellipse at 85% 25%, rgba(225,218,206,0.5) 0%, transparent 45%),
+    radial-gradient(ellipse at 55% 80%, rgba(235,228,218,0.4) 0%, transparent 40%),
+    radial-gradient(ellipse at 40% 20%, rgba(220,215,205,0.3) 0%, transparent 35%),
+    /* Base: warm cream marble */
+    #F5F0E8;
   z-index: 1;
 }
 
@@ -25,7 +36,7 @@
   position: absolute;
   inset: 0;
   z-index: 10;
-  background: #000000;
+  background: #F5F0E8;
   opacity: 1;
   transition: opacity 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   pointer-events: none;
@@ -255,7 +266,7 @@
               transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* ── Scroll Continuity — Dark hero → White content ── */
+/* ── Scroll Continuity — Marble hero → Page content ── */
 .video-hero__scroll-fade {
   position: relative;
   z-index: 0;
@@ -263,11 +274,11 @@
   height: 120px;
   background: linear-gradient(
     180deg,
-    #000000 0%,
-    rgba(0, 0, 0, 0.8) 20%,
-    rgba(0, 0, 0, 0.4) 40%,
-    rgba(0, 0, 0, 0.15) 60%,
-    rgba(0, 0, 0, 0.05) 80%,
+    #F5F0E8 0%,
+    rgba(245,240,232,0.8) 20%,
+    rgba(245,240,232,0.4) 40%,
+    rgba(245,240,232,0.15) 60%,
+    rgba(245,240,232,0.05) 80%,
     transparent 100%
   );
   margin-top: -1px;
