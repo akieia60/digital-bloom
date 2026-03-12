@@ -1,199 +1,241 @@
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 const CATEGORIES = [
   {
-    name: "Mother's Day",
+    name: "Happy Mother's Day",
     slug: 'mothers-day',
-    color: '#FF4DA6',
-    icon: (
-      <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M24 40C24 40 8 32 8 20C8 14 12 10 18 10C21 10 23 12 24 14C25 12 27 10 30 10C36 10 40 14 40 20C40 32 24 40 24 40Z" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
-        <path d="M24 18C22 22 20 26 24 32C28 26 26 22 24 18Z" stroke="currentColor" strokeWidth="1.2" opacity="0.6"/>
-      </svg>
-    ),
+    accent: '#FF4DA6',
+    tagline: 'Celebrate the woman who gave you everything',
+    gradient: 'linear-gradient(135deg, #1a0010 0%, #3d0025 50%, #1a000d 100%)',
+    glowColor: 'rgba(255,77,166,0.28)',
   },
   {
-    name: 'Birthday',
+    name: 'Happy Birthday',
     slug: 'birthday',
-    color: '#FFD23F',
-    icon: (
-      <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect x="8" y="20" width="32" height="20" rx="3" stroke="currentColor" strokeWidth="1.8"/>
-        <path d="M8 28H40" stroke="currentColor" strokeWidth="1.2" opacity="0.6"/>
-        <path d="M16 20V16M24 20V14M32 20V16" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
-        <circle cx="16" cy="13" r="2" fill="currentColor" opacity="0.7"/>
-        <circle cx="24" cy="11" r="2" fill="currentColor" opacity="0.7"/>
-        <circle cx="32" cy="13" r="2" fill="currentColor" opacity="0.7"/>
-      </svg>
-    ),
+    accent: '#FFD23F',
+    tagline: 'Make their special day unforgettable',
+    gradient: 'linear-gradient(135deg, #1a1500 0%, #3d3000 50%, #1a1200 100%)',
+    glowColor: 'rgba(255,210,63,0.22)',
   },
   {
-    name: 'Love',
+    name: 'Love & Romance',
     slug: 'love',
-    color: '#FF3B7F',
-    icon: (
-      <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M24 42S6 30 6 18C6 12 10 6 16 6C20 6 23 9 24 12C25 9 28 6 32 6C38 6 42 12 42 18C42 30 24 42 24 42Z" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
-      </svg>
-    ),
+    accent: '#FF3B7F',
+    tagline: 'Express your deepest feelings',
+    gradient: 'linear-gradient(135deg, #1a0010 0%, #3d0020 50%, #1a000d 100%)',
+    glowColor: 'rgba(255,59,127,0.25)',
   },
   {
     name: "Valentine's Day",
     slug: 'valentine',
-    color: '#FF6B6B',
-    icon: (
-      <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M24 42S6 30 6 18C6 12 10 6 16 6C20 6 23 9 24 12C25 9 28 6 32 6C38 6 42 12 42 18C42 30 24 42 24 42Z" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
-        <path d="M18 20L22 24L30 16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-      </svg>
-    ),
+    accent: '#FF6B6B',
+    tagline: 'For the one who has your heart',
+    gradient: 'linear-gradient(135deg, #1a0000 0%, #3d0a0a 50%, #1a0505 100%)',
+    glowColor: 'rgba(255,107,107,0.22)',
   },
   {
     name: 'Congratulations',
     slug: 'celebration',
-    color: '#B45FFF',
-    icon: (
-      <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M24 4L26 16L38 10L30 20L42 24L30 28L38 38L26 32L24 44L22 32L10 38L18 28L6 24L18 20L10 10L22 16L24 4Z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round"/>
-      </svg>
-    ),
+    accent: '#B45FFF',
+    tagline: 'Celebrate their achievements in style',
+    gradient: 'linear-gradient(135deg, #0d0018 0%, #220040 50%, #0d000f 100%)',
+    glowColor: 'rgba(180,95,255,0.25)',
   },
   {
-    name: 'Memorial',
+    name: 'Memorial & Sympathy',
     slug: 'grief',
-    color: '#7B9FFF',
-    icon: (
-      <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M24 8C20 8 14 12 14 20C14 28 24 40 24 40C24 40 34 28 34 20C34 12 28 8 24 8Z" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
-        <path d="M24 16V28M20 22H28" stroke="currentColor" strokeWidth="1.2" opacity="0.6"/>
-      </svg>
-    ),
+    accent: '#7B9FFF',
+    tagline: 'Honor those we hold dear',
+    gradient: 'linear-gradient(135deg, #000d1a 0%, #001a3d 50%, #00091a 100%)',
+    glowColor: 'rgba(123,159,255,0.22)',
   },
   {
     name: 'Thinking of You',
     slug: 'friendship',
-    color: '#FF8C42',
-    icon: (
-      <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="18" cy="18" r="8" stroke="currentColor" strokeWidth="1.8"/>
-        <circle cx="30" cy="18" r="8" stroke="currentColor" strokeWidth="1.8"/>
-        <path d="M10 40C10 34 14 30 18 30C20 30 22 30.5 24 32C26 30.5 28 30 30 30C34 30 38 34 38 40" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
-      </svg>
-    ),
+    accent: '#FF8C42',
+    tagline: 'Let them know they matter',
+    gradient: 'linear-gradient(135deg, #1a0a00 0%, #3d1a00 50%, #1a0800 100%)',
+    glowColor: 'rgba(255,140,66,0.22)',
   },
   {
-    name: 'Luxury',
+    name: 'Luxury Collection',
     slug: 'luxury',
-    color: '#D4AF37',
-    icon: (
-      <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M8 18L16 8H32L40 18L24 40L8 18Z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round"/>
-        <path d="M8 18H40M16 8L24 40M32 8L24 40M20 18L16 8M28 18L32 8" stroke="currentColor" strokeWidth="1.2" opacity="0.5"/>
-      </svg>
-    ),
+    accent: '#D4AF37',
+    tagline: 'Where fashion meets floral artistry',
+    gradient: 'linear-gradient(135deg, #0d0a00 0%, #2a2000 50%, #0d0a00 100%)',
+    glowColor: 'rgba(212,175,55,0.28)',
   },
   {
-    name: 'Zodiac',
-    slug: 'zodiac',
-    comingSoon: true,
-    color: '#9B59B6',
-    icon: (
-      <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="24" cy="24" r="18" stroke="currentColor" strokeWidth="1.8"/>
-        <path d="M24 6V42M6 24H42" stroke="currentColor" strokeWidth="1.2" opacity="0.4"/>
-        <circle cx="24" cy="24" r="6" stroke="currentColor" strokeWidth="1.5"/>
-        <circle cx="24" cy="24" r="2" fill="currentColor" opacity="0.6"/>
-      </svg>
-    ),
-  },
-  {
-    name: 'General',
+    name: 'General Collection',
     slug: 'general',
-    color: '#6E6E73',
-    icon: (
-      <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M24 8C20 8 16 12 16 18C16 24 24 36 24 36C24 36 32 24 32 18C32 12 28 8 24 8Z" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
-        <circle cx="24" cy="18" r="4" stroke="currentColor" strokeWidth="1.5"/>
-      </svg>
-    ),
+    accent: '#9E9E9E',
+    tagline: 'Beautiful blooms for every moment',
+    gradient: 'linear-gradient(135deg, #0d0d0d 0%, #1f1f1f 50%, #0d0d0d 100%)',
+    glowColor: 'rgba(158,158,158,0.15)',
   },
 ];
 
+// Decorative floral SVG rendered inside each bloom card
+function BloomIcon({ accent }) {
+  return (
+    <svg
+      viewBox="0 0 140 140"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      width="90"
+      height="90"
+      aria-hidden="true"
+    >
+      {/* Outer petals */}
+      {[0, 45, 90, 135, 180, 225, 270, 315].map((angle, i) => {
+        const rad = (angle * Math.PI) / 180;
+        const cx = 70 + 32 * Math.cos(rad);
+        const cy = 70 + 32 * Math.sin(rad);
+        return (
+          <ellipse
+            key={i}
+            cx={cx}
+            cy={cy}
+            rx="13"
+            ry="21"
+            transform={`rotate(${angle + 90}, ${cx}, ${cy})`}
+            fill={accent}
+            opacity="0.5"
+          />
+        );
+      })}
+      {/* Inner petals */}
+      {[22, 67, 112, 157, 202, 247].map((angle, i) => {
+        const rad = (angle * Math.PI) / 180;
+        const cx = 70 + 18 * Math.cos(rad);
+        const cy = 70 + 18 * Math.sin(rad);
+        return (
+          <ellipse
+            key={`inner-${i}`}
+            cx={cx}
+            cy={cy}
+            rx="8"
+            ry="14"
+            transform={`rotate(${angle + 90}, ${cx}, ${cy})`}
+            fill={accent}
+            opacity="0.7"
+          />
+        );
+      })}
+      {/* Center */}
+      <circle cx="70" cy="70" r="13" fill={accent} opacity="0.95" />
+      <circle cx="70" cy="70" r="7" fill="#fff" opacity="0.15" />
+    </svg>
+  );
+}
+
 export default function CategoryGrid() {
   const sectionRef = useRef(null);
-  const [visibleCards, setVisibleCards] = useState(new Set());
+  const [visibleItems, setVisibleItems] = useState(new Set());
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            const index = entry.target.getAttribute('data-index');
-            setVisibleCards((prev) => new Set([...prev, index]));
+            const idx = entry.target.getAttribute('data-idx');
+            setVisibleItems((prev) => new Set([...prev, idx]));
           }
         });
       },
-      { threshold: 0.1, rootMargin: '0px 0px -30px 0px' }
+      { threshold: 0.08, rootMargin: '0px 0px -20px 0px' }
     );
-    const cards = sectionRef.current?.querySelectorAll('.cat-card');
-    cards?.forEach((card) => observer.observe(card));
+
+    const items = sectionRef.current?.querySelectorAll('[data-idx]');
+    items?.forEach((el) => observer.observe(el));
     return () => observer.disconnect();
   }, []);
 
   return (
-    <section className="category-grid-section" ref={sectionRef}>
-      <div className="landing-container">
-        {/* Header */}
-        <div className="cat-header">
-          <span className="cat-eyebrow">BROWSE BY OCCASION</span>
-          <h2 className="cat-headline">Find the Perfect Bloom</h2>
-          <p className="cat-subtext">
-            Every occasion deserves its own expression. Choose a category and discover
-            experiences crafted for the moments that matter most.
+    <section className="cat-list-section" ref={sectionRef}>
+      <div className="cat-list-container">
+        {/* Section header */}
+        <div className="cat-list-header">
+          <span className="cat-list-eyebrow">Browse by Occasion</span>
+          <h2 className="cat-list-headline">Find the Perfect Bloom</h2>
+          <p className="cat-list-subtext">
+            Every occasion deserves its own expression. Choose a category below.
           </p>
         </div>
 
-        {/* Grid — links to individual category pages */}
-        <div className="cat-grid">
-          {CATEGORIES.map((cat, index) => {
-            const visible = visibleCards.has(String(index)) ? 'cat-card--visible' : '';
-            const sharedStyle = {
-              transitionDelay: `${(index % 5) * 0.08}s`,
-              '--cat-color': cat.color,
-            };
-
-            if (cat.comingSoon) {
-              return (
-                <div
-                  key={cat.slug}
-                  className={`cat-card cat-card--coming-soon ${visible}`}
-                  data-index={index}
-                  style={sharedStyle}
-                >
-                  <div className="cat-card__icon">{cat.icon}</div>
-                  <h3 className="cat-card__name">{cat.name}</h3>
-                  <span className="cat-card__badge">Coming Soon</span>
-                </div>
-              );
-            }
-
+        {/* Vertical list — each entry = title row + bloom card */}
+        <div className="cat-list">
+          {CATEGORIES.map((cat, idx) => {
+            const visible = visibleItems.has(String(idx));
             return (
-              <Link
+              <div
                 key={cat.slug}
-                to={`/shop/${cat.slug}`}
-                className={`cat-card ${visible}`}
-                data-index={index}
-                style={sharedStyle}
+                className={`cat-list-item ${visible ? 'cat-list-item--visible' : ''}`}
+                data-idx={idx}
+                style={{ transitionDelay: `${(idx % 5) * 0.07}s` }}
               >
-                <div className="cat-card__icon">{cat.icon}</div>
-                <h3 className="cat-card__name">{cat.name}</h3>
-                <span className="cat-card__arrow">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M5 12H19M12 5L19 12L12 19" />
-                  </svg>
-                </span>
-              </Link>
+                {/* Title row — full-width clickable header */}
+                <Link to={`/shop/${cat.slug}`} className="cat-list-title-row">
+                  <span
+                    className="cat-list-title-row__name"
+                    style={{ color: cat.accent }}
+                  >
+                    {cat.name}
+                  </span>
+                  <span className="cat-list-title-row__arrow" style={{ color: cat.accent }}>
+                    <svg
+                      width="18"
+                      height="18"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="M5 12H19M12 5L19 12L12 19" />
+                    </svg>
+                  </span>
+                </Link>
+
+                {/* Large bloom preview card — also links to same category page */}
+                <Link
+                  to={`/shop/${cat.slug}`}
+                  className="cat-list-bloom-card"
+                  style={{ background: cat.gradient }}
+                >
+                  {/* Radial glow */}
+                  <div
+                    className="cat-list-bloom-card__glow"
+                    style={{
+                      background: `radial-gradient(ellipse at 50% 50%, ${cat.glowColor} 0%, transparent 65%)`,
+                    }}
+                  />
+
+                  {/* Floral illustration */}
+                  <div className="cat-list-bloom-card__icon">
+                    <BloomIcon accent={cat.accent} />
+                  </div>
+
+                  {/* Card text overlay */}
+                  <div className="cat-list-bloom-card__info">
+                    <span
+                      className="cat-list-bloom-card__label"
+                      style={{ color: cat.accent }}
+                    >
+                      {cat.name}
+                    </span>
+                    <span className="cat-list-bloom-card__tagline">{cat.tagline}</span>
+                  </div>
+
+                  {/* Bottom accent line */}
+                  <div
+                    className="cat-list-bloom-card__line"
+                    style={{ background: cat.accent }}
+                  />
+                </Link>
+              </div>
             );
           })}
         </div>

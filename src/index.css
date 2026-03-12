@@ -201,6 +201,132 @@ img {
   opacity: 1;
 }
 
+/* ============================================
+   BLOOM LIST CARD — Full-width category page card
+   ============================================ */
+.bloom-list-card {
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  border-radius: 20px;
+  overflow: hidden;
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-surface);
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+              border-color 0.4s,
+              box-shadow 0.4s;
+  cursor: pointer;
+}
+
+.bloom-list-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--accent-gold-border-hover);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 0 1px var(--accent-gold-border);
+}
+
+.bloom-list-card__media {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 7;
+  overflow: hidden;
+  background: #111;
+}
+
+.bloom-list-card__media-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.55) 100%);
+  z-index: 1;
+  pointer-events: none;
+}
+
+.bloom-list-card__info {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 20px 24px;
+  background: var(--bg-surface);
+}
+
+.bloom-list-card__meta {
+  flex: 1;
+  min-width: 0;
+}
+
+.bloom-list-card__tier {
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent-gold);
+  font-family: 'Outfit', sans-serif;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.bloom-list-card__name {
+  font-family: 'Playfair Display', 'Georgia', serif;
+  font-size: clamp(1rem, 2.5vw, 1.3rem);
+  font-weight: 500;
+  color: var(--text-primary);
+  margin: 0 0 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: color 0.3s;
+}
+
+.bloom-list-card:hover .bloom-list-card__name {
+  color: var(--accent-gold);
+}
+
+.bloom-list-card__desc {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  font-weight: 300;
+  line-height: 1.5;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.bloom-list-card__right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.bloom-list-card__price {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--accent-gold);
+}
+
+.bloom-list-card__cta {
+  display: inline-block;
+  padding: 6px 18px;
+  border: 1px solid var(--accent-gold-border);
+  border-radius: 980px;
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent-gold);
+  font-family: 'Outfit', sans-serif;
+  transition: background 0.3s, border-color 0.3s, color 0.3s;
+}
+
+.bloom-list-card:hover .bloom-list-card__cta {
+  background: var(--accent-gold);
+  color: var(--bg-page);
+  border-color: var(--accent-gold);
+}
+
 /* Mobile Menu Slide-in Animation */
 @keyframes slide-in {
   from {
