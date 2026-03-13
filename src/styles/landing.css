@@ -495,3 +495,104 @@ html {
     grid-template-columns: 1fr;
   }
 }
+
+/* ============================================
+   TWO WAYS TO BLOOM — Credits visibility
+   ============================================ */
+.two-ways-section {
+  padding: 80px 0;
+  background: #FAFAFA;
+  border-top: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+.two-ways-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.two-ways-card {
+  background: #FFFFFF;
+  border: 1px solid #E5E5EA;
+  border-radius: 20px;
+  padding: 36px 28px;
+  text-decoration: none;
+  color: #1D1D1F;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.two-ways-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+  border-color: #D2D2D7;
+}
+
+.two-ways-card--gold {
+  border-color: rgba(212, 175, 55, 0.3);
+  background: linear-gradient(145deg, #FFFFFF 0%, rgba(212, 175, 55, 0.04) 100%);
+}
+
+.two-ways-card--gold:hover {
+  border-color: rgba(212, 175, 55, 0.5);
+  box-shadow: 0 12px 40px rgba(212, 175, 55, 0.1);
+}
+
+.two-ways-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  background: #F5F5F7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  color: #1D1D1F;
+}
+
+.two-ways-card--gold .two-ways-icon {
+  background: rgba(212, 175, 55, 0.1);
+  color: #D4AF37;
+}
+
+.two-ways-title {
+  font-family: 'Playfair Display', 'Georgia', serif;
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0 0 10px;
+}
+
+.two-ways-desc {
+  font-family: 'Outfit', sans-serif;
+  font-size: 15px;
+  font-weight: 300;
+  color: #6E6E73;
+  line-height: 1.7;
+  margin: 0 0 20px;
+  flex: 1;
+}
+
+.two-ways-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: #D4AF37;
+  letter-spacing: 0.04em;
+}
+
+@media (max-width: 640px) {
+  .two-ways-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .two-ways-card {
+    padding: 28px 24px;
+  }
+}

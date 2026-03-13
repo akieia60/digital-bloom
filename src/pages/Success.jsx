@@ -26,7 +26,7 @@ const Success = () => {
         if (updatedPurchase) setPurchase(updatedPurchase);
       } catch (err) {
         console.error('Error processing purchase:', err);
-        setError('Failed to securely process acquisition.');
+        setError('Failed to process your purchase.');
       } finally {
         setIsProcessing(false);
       }
@@ -35,12 +35,18 @@ const Success = () => {
     processPurchase();
   }, [sessionId]);
 
+  const copyLink = () => {
+    navigator.clipboard.writeText(window.location.href);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
   if (isProcessing) {
     return (
-      <div className="min-h-screen bg-obsidian flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-16 h-16 border-2 border-pure-gold/20 border-t-pure-gold rounded-full animate-spin mx-auto mb-8"></div>
-          <p className="text-[10px] uppercase tracking-[0.4em] text-white/40">Publishing Your Experience</p>
+      <div style={styles.page}>
+        <div style={styles.loadingContainer}>
+          <div style={styles.spinner} />
+          <p style={styles.loadingText}>Publishing Your Experience...</p>
         </div>
       </div>
     );
@@ -48,223 +54,389 @@ const Success = () => {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-obsidian flex items-center justify-center p-6 text-center">
-        <div className="max-w-md glass border border-red-500/20 p-12 rounded-[2.5rem]">
-          <h2 className="text-2xl font-display text-white mb-6">Acquisition Error</h2>
-          <p className="text-white/40 font-light mb-8 text-sm italic">"{error}"</p>
-          <Link to="/" className="btn-secondary px-8 py-3 rounded-full text-[10px] uppercase tracking-widest">Return to Gallery</Link>
+      <div style={styles.page}>
+        <div style={styles.errorCard}>
+          <h2 style={styles.errorTitle}>Something Went Wrong</h2>
+          <p style={styles.errorMessage}>{error}</p>
+          <Link to="/" style={styles.returnBtn}>Return Home</Link>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-obsidian text-white flex items-center justify-center px-6 py-24">
-      <div className="max-w-3xl w-full">
-        <div className="text-center max-w-xl mx-auto mb-16">
-          {/* Animated Signature Icon */}
-          <div className="w-24 h-24 glass border border-pure-gold/40 rounded-full flex items-center justify-center mx-auto mb-10 animate-fade-in shadow-2xl shadow-pure-gold/10">
-            <svg className="w-10 h-10 text-pure-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 13l4 4L19 7" />
+    <div style={styles.page}>
+      <div style={styles.container}>
+
+        {/* Success Header */}
+        <div style={styles.header}>
+          <div style={styles.checkCircle}>
+            <svg width="32" height="32" fill="none" stroke="#D4AF37" viewBox="0 0 24 24" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
             </svg>
           </div>
-
-          <h1 className="text-5xl font-medium font-display tracking-tight leading-tight mb-6">
-            Your Experience <br /> <span className="gradient-text">Is Being Published.</span>
-          </h1>
-          <p className="text-white/50 font-light leading-relaxed italic">
-            Your bloom is on its way to becoming a beautiful moment. We'll have everything ready for you shortly.
+          <h1 style={styles.title}>Your Bloom Is On Its Way!</h1>
+          <p style={styles.subtitle}>
+            Your experience has been published and is being prepared for delivery.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch h-full">
-          {/* Acquisition Summary */}
-          <div className="glass border border-white/5 p-10 rounded-[2.5rem] flex flex-col justify-between">
-            <div>
-              <h3 className="text-[10px] uppercase tracking-[0.4em] text-white/30 mb-8 font-semibold pr-4">Experience Details</h3>
-              {purchase && (
-                <div className="space-y-6">
-                  <div className="flex justify-between items-baseline group">
-                    <span className="text-[10px] uppercase tracking-widest text-white/20 group-hover:text-white/40 transition-colors">Manifest ID</span>
-                    <span className="text-sm font-light text-white font-mono">{purchase.id.substring(0, 8).toUpperCase()}</span>
-                  </div>
-                  <div className="flex justify-between items-baseline group">
-                    <span className="text-[10px] uppercase tracking-widest text-white/20 group-hover:text-white/40 transition-colors">Experience Value</span>
-                    <span className="text-xl font-light text-pure-gold">${purchase.total_price.toFixed(2)}</span>
-                  </div>
-                  <div className="flex justify-between items-baseline">
-                    <span className="text-[10px] uppercase tracking-widest text-white/20">Provenance</span>
-                    <span className="px-3 py-1 bg-pure-gold/10 text-pure-gold border border-pure-gold/20 rounded-full text-[9px] font-bold uppercase tracking-widest">
-                      Verified
-                    </span>
-                  </div>
-                </div>
-              )}
+        {/* Order Summary */}
+        {purchase && (
+          <div style={styles.card}>
+            <h3 style={styles.cardTitle}>Order Summary</h3>
+            <div style={styles.detailRow}>
+              <span style={styles.detailLabel}>Order ID</span>
+              <span style={styles.detailValue}>{purchase.id.substring(0, 8).toUpperCase()}</span>
             </div>
-
-            <div className="pt-12 mt-12 border-t border-white/5">
-               <p className="text-[9px] uppercase tracking-[0.3em] text-white/20 leading-loose">
-                 Digital Bloom™ adheres to a philosophy of scarcity. Your link is an exclusive gateway to luxury motion art.
-               </p>
+            <div style={styles.detailRow}>
+              <span style={styles.detailLabel}>Total</span>
+              <span style={styles.detailValueGold}>${purchase.total_price.toFixed(2)}</span>
+            </div>
+            <div style={styles.detailRow}>
+              <span style={styles.detailLabel}>Status</span>
+              <span style={styles.statusBadge}>Confirmed ✓</span>
             </div>
           </div>
+        )}
 
-          {/* Delivery Actions */}
-          <div className="glass border border-pure-gold/20 p-10 rounded-[2.5rem] flex flex-col bg-white/[0.02]">
-            <h3 className="text-[10px] uppercase tracking-[0.4em] text-pure-gold mb-8 font-bold">Secure Delivery</h3>
-            
-            <div className="flex-grow">
-              {purchase?.download_url ? (
-                <div className="space-y-8 animate-slide-up">
-                  <p className="text-lg font-light text-white/80 leading-relaxed italic pr-4">
-                    Your customized DigitalBloom experience is ready for delivery.
-                  </p>
-                  
-                  {new Date(purchase.download_expires_at) > new Date() ? (
-                    <div className="space-y-4">
-                      <a
-                        href={purchase.download_url}
-                        download
-                        className="w-full btn-primary py-5 rounded-full text-[11px] font-bold tracking-[0.3em] uppercase transition-all shadow-xl shadow-pure-gold/10 flex items-center justify-center space-x-3"
-                      >
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                        </svg>
-                        <span>Access Experience</span>
-                      </a>
-                      <div className="p-4 bg-white/5 border border-white/10 rounded-2xl">
-                         <p className="text-[9px] text-white/40 uppercase tracking-widest italic leading-relaxed text-center">
-                           Security Protocol: Link valid for 48 hours. <br /> Maximum 1 download permitted.
-                         </p>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="p-6 bg-red-500/10 border border-red-500/20 rounded-2xl">
-                      <p className="text-xs text-red-500 font-light italic text-center">Exclusive delivery window has closed (48h).</p>
-                    </div>
-                  )}
-                </div>
-              ) : (
-                <div className="space-y-6">
-                  <div className="flex items-start space-x-4 opacity-40 group">
-                    <div className="w-1 h-1 rounded-full bg-white mt-1.5 group-hover:scale-150 transition-transform"></div>
-                    <p className="text-[10px] uppercase tracking-widest text-white leading-loose">Experience confirmation sent to your email.</p>
-                  </div>
-                  <div className="flex items-start space-x-4 opacity-40 group">
-                    <div className="w-1 h-1 rounded-full bg-white mt-1.5 group-hover:scale-150 transition-transform"></div>
-                    <p className="text-[10px] uppercase tracking-widest text-white leading-loose">Experience publishing in progress (Est. 2-4 hours).</p>
-                  </div>
-                  <div className="flex items-start space-x-4 opacity-40 group">
-                    <div className="w-1 h-1 rounded-full bg-white mt-1.5 group-hover:scale-150 transition-transform"></div>
-                    <p className="text-[10px] uppercase tracking-widest text-white leading-loose">Final provenance certificates being generated.</p>
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* Share Your Bloom */}
-            <div className="mt-8 pt-8 border-t border-white/5">
-              <h4 className="text-[10px] uppercase tracking-[0.4em] text-white/40 mb-6 font-bold text-center">Share Your Bloom</h4>
-              <div className="flex flex-wrap justify-center gap-4">
-                {/* Instagram — no web share URL, copies link */}
-                <button
-                  className="flex items-center gap-2 px-4 py-2.5 rounded-full border border-white/10 text-white/50 hover:text-[#E1306C] hover:border-[#E1306C]/30 transition-all text-[10px] uppercase tracking-widest font-medium"
-                  title="Copy link for Instagram"
-                  onClick={() => {
-                    navigator.clipboard.writeText(window.location.href);
-                    setCopied(true);
-                    setTimeout(() => setCopied(false), 2000);
-                  }}
+        {/* Download / Delivery */}
+        <div style={styles.card}>
+          <h3 style={styles.cardTitle}>Your Experience</h3>
+          {purchase?.download_url ? (
+            new Date(purchase.download_expires_at) > new Date() ? (
+              <div>
+                <p style={styles.cardText}>Your customized bloom is ready! Download it now or share directly.</p>
+                <a
+                  href={purchase.download_url}
+                  download
+                  style={styles.downloadBtn}
                 >
-                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
-                  Instagram
-                </button>
-
-                {/* TikTok — no web share URL, copies link */}
-                <button
-                  className="flex items-center gap-2 px-4 py-2.5 rounded-full border border-white/10 text-white/50 hover:text-white hover:border-white/30 transition-all text-[10px] uppercase tracking-widest font-medium"
-                  title="Copy link for TikTok"
-                  onClick={() => {
-                    navigator.clipboard.writeText(window.location.href);
-                    setCopied(true);
-                    setTimeout(() => setCopied(false), 2000);
-                  }}
-                >
-                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-5.2 1.74 2.89 2.89 0 012.31-4.64 2.93 2.93 0 01.88.13V9.4a6.84 6.84 0 00-1-.05A6.33 6.33 0 005.81 20a6.34 6.34 0 006.33-6.33V8.12A8.34 8.34 0 0019.59 10z"/></svg>
-                  TikTok
-                </button>
-
-                {/* Facebook — opens share dialog */}
-                <button
-                  className="flex items-center gap-2 px-4 py-2.5 rounded-full border border-white/10 text-white/50 hover:text-[#4267B2] hover:border-[#4267B2]/30 transition-all text-[10px] uppercase tracking-widest font-medium"
-                  title="Share on Facebook"
-                  onClick={() => window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.origin)}`, '_blank', 'width=600,height=400')}
-                >
-                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"/></svg>
-                  Facebook
-                </button>
-
-                {/* X — opens tweet intent */}
-                <button
-                  className="flex items-center gap-2 px-4 py-2.5 rounded-full border border-white/10 text-white/50 hover:text-white hover:border-white/30 transition-all text-[10px] uppercase tracking-widest font-medium"
-                  title="Share on X"
-                  onClick={() => window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent('I just sent a luxury digital bloom experience ✨ #DigitalBloom #GiveThemFlowers')}&url=${encodeURIComponent(window.location.origin)}`, '_blank', 'width=600,height=400')}
-                >
-                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-                  X
-                </button>
-
-                {/* Copy Link */}
-                <button
-                  className={`flex items-center gap-2 px-4 py-2.5 rounded-full border transition-all text-[10px] uppercase tracking-widest font-medium ${
-                    copied
-                      ? 'border-pure-gold/40 text-pure-gold'
-                      : 'border-white/10 text-white/50 hover:text-pure-gold hover:border-pure-gold/30'
-                  }`}
-                  title="Copy link"
-                  onClick={() => {
-                    navigator.clipboard.writeText(window.location.href);
-                    setCopied(true);
-                    setTimeout(() => setCopied(false), 2000);
-                  }}
-                >
-                  {copied ? (
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
-                  ) : (
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" /></svg>
-                  )}
-                  {copied ? 'Copied!' : 'Copy Link'}
-                </button>
+                  <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                  </svg>
+                  Download Experience
+                </a>
+                <p style={styles.securityNote}>
+                  Your download link is valid for 48 hours.
+                </p>
               </div>
+            ) : (
+              <p style={styles.expiredNote}>Your download link has expired (48h). Please contact support.</p>
+            )
+          ) : (
+            <div>
+              <p style={styles.cardText}>We're preparing your experience now.</p>
+              <ul style={styles.statusList}>
+                <li style={styles.statusItem}>✓ Confirmation sent to your email</li>
+                <li style={styles.statusItem}>⏳ Experience publishing (est. 2–4 hours)</li>
+                <li style={styles.statusItem}>📧 You'll be notified when it's ready</li>
+              </ul>
             </div>
+          )}
+        </div>
 
-            <div className="mt-8 flex flex-col gap-4">
-              <Link
-                to="/"
-                className="w-full btn-secondary py-4 rounded-full text-[10px] uppercase tracking-widest font-semibold text-center"
-              >
-                Return to Homepage
-              </Link>
-              <button
-                onClick={() => window.print()}
-                className="text-[9px] uppercase tracking-widest text-white/20 hover:text-white transition-colors"
-              >
-                Archive Receipt
-              </button>
-            </div>
+        {/* Share */}
+        <div style={styles.card}>
+          <h3 style={styles.cardTitle}>Share Your Bloom</h3>
+          <div style={styles.shareRow}>
+            <button onClick={copyLink} style={styles.shareBtn}>
+              {copied ? '✓ Copied!' : '🔗 Copy Link'}
+            </button>
+            <button
+              onClick={() => window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.origin)}`, '_blank', 'width=600,height=400')}
+              style={styles.shareBtn}
+            >
+              Facebook
+            </button>
+            <button
+              onClick={() => window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent('I just sent a luxury digital bloom ✨ #DigitalBloom')}&url=${encodeURIComponent(window.location.origin)}`, '_blank', 'width=600,height=400')}
+              style={styles.shareBtn}
+            >
+              X
+            </button>
+            <button onClick={copyLink} style={styles.shareBtn} title="Copy link for Instagram">
+              Instagram
+            </button>
+            <button onClick={copyLink} style={styles.shareBtn} title="Copy link for TikTok">
+              TikTok
+            </button>
           </div>
         </div>
 
-        {/* Brand Sign-off */}
-        <div className="mt-24 text-center">
-            <p className="text-[10px] uppercase tracking-[0.5em] text-white/20 font-light">
-                Digital Bloom™ <br /> 
-                <span className="mt-2 block opacity-50">Digital Multimedia Publishing</span>
-            </p>
+        {/* Actions */}
+        <div style={styles.actions}>
+          <Link to="/" style={styles.returnHomeBtn}>Return to Homepage</Link>
+          <button onClick={() => window.print()} style={styles.printBtn}>
+            Save Receipt
+          </button>
+        </div>
+
+        {/* Brand Footer */}
+        <div style={styles.brandFooter}>
+          <p style={styles.brandName}>Digital Bloom™</p>
+          <p style={styles.brandSub}>Digital Gifting Experience</p>
         </div>
       </div>
     </div>
   );
+};
+
+/* ─── Inline Styles ─── */
+const styles = {
+  page: {
+    minHeight: '100vh',
+    background: '#0a0a0a',
+    color: '#ffffff',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: '24px 16px',
+  },
+  container: {
+    maxWidth: '560px',
+    width: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '20px',
+  },
+  // Loading
+  loadingContainer: {
+    textAlign: 'center',
+  },
+  spinner: {
+    width: '48px',
+    height: '48px',
+    border: '2px solid rgba(212, 175, 55, 0.2)',
+    borderTop: '2px solid #D4AF37',
+    borderRadius: '50%',
+    animation: 'spin 1s linear infinite',
+    margin: '0 auto 24px',
+  },
+  loadingText: {
+    fontSize: '13px',
+    letterSpacing: '0.2em',
+    textTransform: 'uppercase',
+    color: 'rgba(255,255,255,0.4)',
+  },
+  // Error
+  errorCard: {
+    background: 'rgba(255,255,255,0.03)',
+    border: '1px solid rgba(239, 68, 68, 0.2)',
+    borderRadius: '16px',
+    padding: '40px 32px',
+    textAlign: 'center',
+    maxWidth: '400px',
+  },
+  errorTitle: {
+    fontSize: '22px',
+    fontWeight: '500',
+    marginBottom: '12px',
+  },
+  errorMessage: {
+    color: 'rgba(255,255,255,0.5)',
+    fontSize: '14px',
+    marginBottom: '24px',
+  },
+  // Header
+  header: {
+    textAlign: 'center',
+    padding: '20px 0',
+  },
+  checkCircle: {
+    width: '72px',
+    height: '72px',
+    borderRadius: '50%',
+    background: 'rgba(212, 175, 55, 0.1)',
+    border: '1px solid rgba(212, 175, 55, 0.3)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    margin: '0 auto 24px',
+  },
+  title: {
+    fontSize: 'clamp(24px, 5vw, 32px)',
+    fontWeight: '500',
+    lineHeight: '1.3',
+    marginBottom: '12px',
+  },
+  subtitle: {
+    fontSize: '15px',
+    color: 'rgba(255,255,255,0.5)',
+    lineHeight: '1.6',
+    maxWidth: '400px',
+    margin: '0 auto',
+  },
+  // Cards
+  card: {
+    background: 'rgba(255,255,255,0.03)',
+    border: '1px solid rgba(255,255,255,0.06)',
+    borderRadius: '16px',
+    padding: '24px',
+  },
+  cardTitle: {
+    fontSize: '11px',
+    fontWeight: '600',
+    letterSpacing: '0.15em',
+    textTransform: 'uppercase',
+    color: 'rgba(212, 175, 55, 0.8)',
+    marginBottom: '20px',
+  },
+  cardText: {
+    fontSize: '15px',
+    color: 'rgba(255,255,255,0.6)',
+    lineHeight: '1.6',
+    marginBottom: '20px',
+  },
+  detailRow: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: '12px 0',
+    borderBottom: '1px solid rgba(255,255,255,0.05)',
+  },
+  detailLabel: {
+    fontSize: '14px',
+    color: 'rgba(255,255,255,0.4)',
+  },
+  detailValue: {
+    fontSize: '14px',
+    fontWeight: '500',
+    fontFamily: 'monospace',
+  },
+  detailValueGold: {
+    fontSize: '20px',
+    fontWeight: '400',
+    color: '#D4AF37',
+  },
+  statusBadge: {
+    fontSize: '12px',
+    fontWeight: '600',
+    color: '#D4AF37',
+    background: 'rgba(212, 175, 55, 0.1)',
+    border: '1px solid rgba(212, 175, 55, 0.2)',
+    borderRadius: '20px',
+    padding: '4px 12px',
+  },
+  // Download
+  downloadBtn: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: '10px',
+    width: '100%',
+    padding: '16px',
+    background: '#D4AF37',
+    color: '#0a0a0a',
+    border: 'none',
+    borderRadius: '12px',
+    fontSize: '14px',
+    fontWeight: '600',
+    letterSpacing: '0.1em',
+    textTransform: 'uppercase',
+    textDecoration: 'none',
+    cursor: 'pointer',
+  },
+  securityNote: {
+    fontSize: '12px',
+    color: 'rgba(255,255,255,0.3)',
+    textAlign: 'center',
+    marginTop: '12px',
+    fontStyle: 'italic',
+  },
+  expiredNote: {
+    fontSize: '14px',
+    color: '#ef4444',
+    textAlign: 'center',
+  },
+  // Status list
+  statusList: {
+    listStyle: 'none',
+    padding: 0,
+    margin: 0,
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '14px',
+  },
+  statusItem: {
+    fontSize: '14px',
+    color: 'rgba(255,255,255,0.5)',
+    lineHeight: '1.5',
+  },
+  // Share
+  shareRow: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    gap: '8px',
+  },
+  shareBtn: {
+    padding: '10px 16px',
+    background: 'transparent',
+    border: '1px solid rgba(255,255,255,0.1)',
+    borderRadius: '8px',
+    color: 'rgba(255,255,255,0.5)',
+    fontSize: '13px',
+    cursor: 'pointer',
+    transition: 'all 0.2s',
+  },
+  // Actions
+  actions: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '12px',
+  },
+  returnHomeBtn: {
+    display: 'block',
+    width: '100%',
+    padding: '16px',
+    background: 'rgba(255,255,255,0.06)',
+    border: '1px solid rgba(255,255,255,0.1)',
+    borderRadius: '12px',
+    color: '#ffffff',
+    fontSize: '13px',
+    fontWeight: '500',
+    letterSpacing: '0.1em',
+    textTransform: 'uppercase',
+    textAlign: 'center',
+    textDecoration: 'none',
+    cursor: 'pointer',
+  },
+  returnBtn: {
+    display: 'inline-block',
+    padding: '12px 32px',
+    background: 'rgba(255,255,255,0.06)',
+    border: '1px solid rgba(255,255,255,0.1)',
+    borderRadius: '8px',
+    color: '#ffffff',
+    fontSize: '13px',
+    textDecoration: 'none',
+  },
+  printBtn: {
+    background: 'transparent',
+    border: 'none',
+    color: 'rgba(255,255,255,0.3)',
+    fontSize: '12px',
+    letterSpacing: '0.1em',
+    textTransform: 'uppercase',
+    cursor: 'pointer',
+    padding: '8px',
+  },
+  // Brand
+  brandFooter: {
+    textAlign: 'center',
+    padding: '24px 0',
+  },
+  brandName: {
+    fontSize: '11px',
+    letterSpacing: '0.3em',
+    textTransform: 'uppercase',
+    color: 'rgba(255,255,255,0.2)',
+    marginBottom: '4px',
+  },
+  brandSub: {
+    fontSize: '10px',
+    color: 'rgba(255,255,255,0.1)',
+  },
 };
 
 export default Success;

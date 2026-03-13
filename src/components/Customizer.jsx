@@ -14,24 +14,17 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {} }) => 
     customMessageShort: '',
     customMessageLong: '',
     colorTheme: 'original',
-    occasion: '',
     isGift: false,
     recipientName: '',
     recipientEmail: '',
     deliveryDate: '',
     giftMessage: '',
-    // Personalization fields
-    balloonMessage: '',
-    sloganType: 'premade',
-    selectedSlogan: '',
-    customSlogan: '',
     toName: '',
     fromName: '',
-    symbolType: 'rose',
     deliveryMethod: '',
     deliveryTiming: '',
     recipientPhone: '',
-    // Merge occasion-based defaults (e.g. occasion, colorTheme, balloonMessage)
+    // Merge occasion-based defaults (e.g. colorTheme)
     ...stateDefaults,
   }));
 
@@ -43,37 +36,6 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {} }) => 
     { id: 'romantic', name: 'Romantic Rose', colors: ['#C41E3A', '#FF1744'] },
   ];
 
-  const occasions = [
-    { id: 'celebration', name: 'Celebration', icon: '🎉' },
-    { id: 'gratitude', name: 'Gratitude', icon: '🙏' },
-    { id: 'remembrance', name: 'Remembrance', icon: '💭' },
-    { id: 'encouragement', name: 'Encouragement', icon: '💪' },
-    { id: 'love', name: 'Love', icon: '❤️' },
-    { id: 'sympathy', name: 'Sympathy', icon: '🕊️' },
-  ];
-
-  const balloonOptions = [
-    'Happy Birthday',
-    'I Love You',
-    'Congratulations',
-    'Thank You',
-    "You're the Best",
-  ];
-
-  const premadeSlogans = [
-    'I hope you have a great day',
-    'You are always loved',
-    'Even in your darkest days, you are loved',
-    'Thank you for being you',
-    'Wishing you peace, joy, and beauty today',
-    'Congratulations, this moment is yours',
-    'You make life brighter',
-    'Thinking of you with love',
-    'You are stronger than you know',
-    'Grace surrounds you',
-  ];
-
-  const symbolOptions = ['rose', 'cross'];
   const deliveryMethods = ['email', 'text'];
   const deliveryTimings = ['now', 'later', 'send-to-self-first'];
 
@@ -204,83 +166,6 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {} }) => 
               </div>
             </div>
 
-            {/* Occasion */}
-            <div className="customizer-section">
-              <label className="customizer-label">Occasion</label>
-              <div className="occasion-grid">
-                {occasions.map(occ => (
-                  <button
-                    key={occ.id}
-                    className={`occasion-btn ${customization.occasion === occ.id ? 'active' : ''}`}
-                    onClick={() => handleChange('occasion', occ.id)}
-                  >
-                    <span className="occasion-icon">{occ.icon}</span>
-                    <span className="occasion-name">{occ.name}</span>
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Balloon Message */}
-            <div className="customizer-section">
-              <label className="customizer-label">Balloon Message</label>
-              <select
-                className="customizer-input"
-                value={customization.balloonMessage}
-                onChange={(e) => handleChange('balloonMessage', e.target.value)}
-              >
-                <option value="">Select message</option>
-                {balloonOptions.map((option) => (
-                  <option key={option} value={option}>{option}</option>
-                ))}
-              </select>
-            </div>
-
-            {/* Slogan Section */}
-            <div className="customizer-section">
-              <label className="customizer-label">Slogan Type</label>
-              <select
-                className="customizer-input"
-                value={customization.sloganType}
-                onChange={(e) => handleChange('sloganType', e.target.value)}
-              >
-                <option value="premade">Choose premade</option>
-                <option value="custom">Write your own</option>
-              </select>
-            </div>
-
-            {customization.sloganType === 'premade' && (
-              <div className="customizer-section">
-                <label className="customizer-label">Slogan</label>
-                <select
-                  className="customizer-input"
-                  value={customization.selectedSlogan}
-                  onChange={(e) => handleChange('selectedSlogan', e.target.value)}
-                >
-                  <option value="">Select a slogan</option>
-                  {premadeSlogans.map((s) => (
-                    <option key={s} value={s}>{s}</option>
-                  ))}
-                </select>
-              </div>
-            )}
-            {customization.sloganType === 'custom' && (
-              <div className="customizer-section">
-                <label className="customizer-label">Custom Slogan</label>
-                <textarea
-                  className="customizer-textarea"
-                  placeholder="Write your own message..."
-                  maxLength="200"
-                  rows="3"
-                  value={customization.customSlogan}
-                  onChange={(e) => handleChange('customSlogan', e.target.value)}
-                />
-                <span className="customizer-hint">
-                  {customization.customSlogan.length}/200
-                </span>
-              </div>
-            )}
-
             {/* To / From fields */}
             <div className="customizer-section">
               <label className="customizer-label">To</label>
@@ -303,22 +188,6 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {} }) => 
               />
             </div>
 
-            {/* Symbol Selector */}
-            <div className="customizer-section">
-              <label className="customizer-label">Symbol</label>
-              <select
-                className="customizer-input"
-                value={customization.symbolType}
-                onChange={(e) => handleChange('symbolType', e.target.value)}
-              >
-                {symbolOptions.map((opt) => (
-                  <option key={opt} value={opt}>
-                    {opt.charAt(0).toUpperCase() + opt.slice(1)}
-                  </option>
-                ))}
-              </select>
-            </div>
-
             {/* Delivery Method */}
             <div className="customizer-section">
               <label className="customizer-label">Delivery Method</label>
@@ -338,12 +207,15 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {} }) => 
               <div className="customizer-section">
                 <label className="customizer-label">Recipient Phone</label>
                 <input
-                  type="text"
+                  type="tel"
                   className="customizer-input"
-                  placeholder="Recipient phone number"
+                  placeholder="(555) 123-4567"
                   value={customization.recipientPhone}
                   onChange={(e) => handleChange('recipientPhone', e.target.value)}
                 />
+                <span className="customizer-hint" style={{ color: 'var(--text-muted)', fontStyle: 'italic' }}>
+                  We'll only use this number to deliver your bloom
+                </span>
               </div>
             )}
             {customization.deliveryMethod === 'email' && (

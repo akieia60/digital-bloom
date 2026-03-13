@@ -150,7 +150,9 @@ export default async function handler(req, res) {
 
     // Prepare session config
     const sessionConfig = {
-      payment_method_types: ['card'],
+      // Let Stripe dynamically display all payment methods enabled in the dashboard
+      // (Cards, Apple Pay, Google Pay, Cash App Pay, Link/Venmo, Affirm, Klarna, etc.)
+      automatic_payment_methods: { enabled: true },
       line_items: lineItems,
       mode: 'payment',
       success_url: successUrl,
