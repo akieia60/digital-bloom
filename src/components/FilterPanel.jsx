@@ -1,4 +1,16 @@
-import { categories, occasions } from '../data/flowers';
+import OCCASIONS from '../data/occasions';
+
+// Derive filter categories from the occasions data (source of truth)
+const categories = Object.entries(OCCASIONS).map(([id, data]) => ({
+  id,
+  name: data.name,
+  count: 0  // count is populated dynamically from Supabase, not static data
+}));
+
+const occasions = Object.entries(OCCASIONS).map(([id, data]) => ({
+  id,
+  name: data.name
+}));
 
 const FilterPanel = ({
   selectedCategories,
