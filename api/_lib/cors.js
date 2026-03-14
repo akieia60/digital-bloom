@@ -26,7 +26,7 @@ function isAllowedOrigin(origin) {
   if (!origin) return true; // server-to-server requests (no origin header)
   if (ALLOWED_ORIGINS.includes(origin)) return true;
   // Allow any Vercel preview deployment (*.vercel.app)
-  if (/^https:\/\/[a-zA-Z0-9-]+(\.vercel\.app)$/.test(origin)) return true;
+  if (/^https:\/\/[a-zA-Z0-9._-]+(\.vercel\.app)$/.test(origin)) return true;
   // Allow any localhost port for development
   if (/^https?:\/\/localhost(:\d+)?$/.test(origin)) return true;
   return false;
