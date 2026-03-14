@@ -5,7 +5,7 @@ import { applyCors } from './_lib/cors.js';
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 const supabase = createClient(
   process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.VITE_SUPABASE_ANON_KEY
+  process.env.SUPABASE_SERVICE_ROLE_KEY
 );
 
 /**
@@ -78,9 +78,9 @@ export default async function handler(req, res) {
 
       await supabase.from('experience_credit_ledger').insert({
         credit_id: reservation.credit_id,
-        type: 'redemption',
-        amount_cents: -reservation.reserved_cents,
-        description: `Redeemed for cart purchase (${cartItems.length} items)`
+        delta_cents: -reservation.reserved_cents,
+        reason: 'redemption',
+        related_order_id: 'free_' + reservation_id
       });
 
       await supabase

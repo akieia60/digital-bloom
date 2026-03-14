@@ -1,44 +1,113 @@
 # Digital Bloom
 
-Digital Bloom is a luxury e-commerce experience for bespoke, AI-generated motion art.
+A luxury digital gifting platform where customers browse, customize, and send animated flower experiences for any occasion.
 
-- **Luxury Dark Theme UI**: Beautiful, modern interface with gold accents.
-- **Atmospheric Audio Engine**: Cross-fading soundscapes for immersive browsing.
-- **3D Rose Video Catalog**: Browse and preview stunning flower animations.
+## Tech Stack
 
-This project is built with Vite, React, Tailwind CSS, Supabase, and Stripe.
+| Layer | Technology |
+|-------|-----------|
+| Frontend | React 19 + Vite 7 |
+| Styling | Vanilla CSS + Tailwind CSS 4 |
+| Routing | React Router DOM 7 |
+| Backend | Vercel Serverless Functions (`api/`) |
+| Database | Supabase (PostgreSQL) |
+| Payments | Stripe Checkout (automatic payment methods) |
+| Hosting | Vercel (auto-deploys from `main`) |
 
----
+## Project Structure
 
-## Founder Command Dashboard
+```
+├── api/                        # Vercel serverless endpoints
+│   ├── create-checkout-session.js    # Stripe checkout (products)
+│   ├── create-credit-checkout.js    # Stripe checkout (credits)
+│   ├── credits/                     # validate, reserve, balance
+│   ├── stripe/webhook.js           # Stripe webhook handler
+│   └── _lib/cors.js                # CORS utility
+│
+├── src/
+│   ├── App.jsx                 # Root + routes
+│   ├── components/             # UI components
+│   │   ├── landing/            # Landing page sections
+│   │   └── tracker/            # Toast notifications
+│   ├── pages/                  # Route pages
+│   ├── lib/                    # Supabase, Stripe, Credits clients
+│   ├── context/                # CartContext
+│   ├── data/                   # occasions.js, prompt vault data
+│   └── styles/                 # CSS files
+│
+├── public/videos/              # Hero video + product posters
+├── supabase/migrations/        # Database schema
+├── archive/                    # Archived docs, CSVs, legacy HTML
+└── scripts/                    # One-time setup/seed scripts
+```
 
-The Founder Command Dashboard is a private, internal tool for the Digital Bloom founder, A.K. Davis, to monitor the application's operational status, security, and financial health from a single, mobile-responsive interface. It is located at the `/founder` route.
+## Routes
 
-### Access & Security
+| Path | Page | Description |
+|------|------|-------------|
+| `/` | LandingPage | Hero video, categories, Two Ways to Bloom, FAQ |
+| `/shop` | Shop | All products with category tabs |
+| `/shop/:slug` | CategoryPage | Occasion-filtered products |
+| `/product/:id` | ProductDetails | Product detail + customizer |
+| `/credits` | ExperienceCredits | Buy credits |
+| `/credits/balance` | CreditBalance | Check balance |
+| `/success` | Success | Post-checkout confirmation |
+| `/admin` | Admin | Product management |
+| `/founder` | FounderDashboard | Env checks, API tests, risk dashboard |
+| `/vault` | PromptVault | AI prompt library |
 
-Access to the dashboard is strictly controlled:
+## Required Environment Variables
 
-1.  **Authentication Required**: A valid Supabase user session is required. The page will redirect to a login form if the user is not signed in.
-2.  **Founder Allowlist**: Even after logging in, the user's email address is checked against a hardcoded allowlist of founder emails. Access is denied to any other authenticated user.
+### Server-side (Vercel env settings)
+```
+SUPABASE_URL                    # Supabase project URL
+SUPABASE_SERVICE_ROLE_KEY       # Supabase admin key
+STRIPE_SECRET_KEY               # Stripe secret key
+STRIPE_WEBHOOK_SECRET           # Stripe webhook verification
+APP_BASE_URL                    # e.g. https://your-app.vercel.app
+```
 
-This two-layer security ensures that only the designated founder can view the dashboard.
+### Client-side (VITE_ prefix, accessible in browser)
+```
+VITE_SUPABASE_URL               # Supabase project URL
+VITE_SUPABASE_ANON_KEY          # Supabase public key
+VITE_STRIPE_PUBLISHABLE_KEY     # Stripe publishable key
+VITE_STRIPE_PRICE_TIER1..4      # Stripe price IDs per tier
+```
 
-**CRITICAL SECURITY NOTE:** The dashboard and its associated API endpoint (`/api/env-check`) are designed to **NEVER** display or transmit secret values (API keys, webhook secrets, etc.). It only ever shows the *presence* or *absence* of a required environment variable.
+> **Note:** Stripe is currently in sandbox/test mode. See HANDOFF.md for the live transition checklist.
 
-### Features
+## Local Development
 
-The dashboard is organized into five main sections:
+```bash
+npm install
+npm run dev          # http://localhost:5173
+```
 
-1.  **Vault Seal Status**: A checklist for tracking the rotation and secure storage of critical secrets like Supabase and Stripe keys. The state is saved in the browser's `localStorage`.
-2.  **Environment Readiness**: A table that checks for the presence of all required server-side and client-side environment variables. It calls the `/api/env-check` endpoint, which verifies the variables on the server without exposing their values.
-3.  **Money Flow Quick Tests**: A set of buttons that trigger key financial API endpoints (e.g., creating a test checkout, validating a credit code) and display a simple pass/fail result. This allows for quick, end-to-end verification of the payment and credit systems.
-4.  **Risk Dashboard**: A simple RAG (Red/Amber/Green) status board for tracking high-level operational risks. The status and notes are saved in `localStorage`.
-5.  **Links Hub**: A collection of quick links to essential external services like Vercel, Stripe, Supabase, and GitHub.
+Stripe checkout won't work locally (no `STRIPE_SECRET_KEY`). Push to Vercel for full testing.
 
-### API Endpoint: `/api/env-check`
+## Deployment
 
-A new serverless function was created to support the Environment Readiness section.
+Push to `main` → Vercel auto-deploys. No manual steps needed.
 
--   **Endpoint**: `GET /api/env-check`
--   **Function**: Checks for the existence of required `process.env` variables on the Vercel server.
--   **Security**: It requires a valid Supabase JWT from an authorized founder and will only return a boolean `present` status for each variable, never the value itself.
+## Key Files
+
+- **HANDOFF.md** — Comprehensive project documentation for AI assistants or developers
+- **CLEANUP_AUDIT.md** — Detailed audit of issues found during repo cleanup
+- **CLEANUP_SUMMARY.md** — Summary of what was changed during cleanup
+
+## Archived During Cleanup
+
+The following were moved to `archive/` during the repo slimming pass:
+- **archive/docs/** — 20 stale setup/configuration guides
+- **archive/legacy-html/** — 5 old prototype HTML files
+- **archive/demo-data/** — CSVs, SQL fixes, static flower data (`flowers.js`)
+
+## Credit Ledger Schema
+
+All writes to `experience_credit_ledger` use:
+```sql
+(credit_id, delta_cents, reason, related_order_id)
+-- reason: 'purchase' | 'redemption' | 'void' | 'adjustment'
+-- delta_cents: positive for purchase, negative for redemption
+```

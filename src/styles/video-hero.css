@@ -326,6 +326,10 @@
 
 /* ── Mobile ── */
 @media (max-width: 768px) {
+  .video-hero__content {
+    padding-top: calc(80px + env(safe-area-inset-top, 0px));
+  }
+
   .video-hero__title {
     letter-spacing: 0.12em;
     margin-bottom: 14px;
