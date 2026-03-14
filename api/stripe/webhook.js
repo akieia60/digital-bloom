@@ -11,7 +11,9 @@ export const config = {
   },
 };
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+  apiVersion: '2023-10-16',
+});
 const supabase = createClient(
   process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL,
   process.env.SUPABASE_SERVICE_ROLE_KEY
