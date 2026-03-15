@@ -195,7 +195,21 @@ export default async function handler(req, res) {
     }
 
     // Create Stripe checkout session
-    const session = await stripe.checkout.sessions.create(sessionConfig);
+    // Try automatic_payment_methods first; fall back to payment_method_types
+    // if the Stripe account API version is too old.
+    let session;
+    try {
+      session = await stripe.checkout.sessions.create(sessionConfig);
+    } catch (stripeError) {
+      if (stripeError.message && stripeError.message.includes('automatic_payment_methods')) {
+        console.warn('automatic_payment_methods not supported, falling back to payment_method_types');
+        delete sessionConfig.automatic_payment_methods;
+        sessionConfig.payment_method_types = ['card'];
+        session = await stripe.checkout.sessions.create(sessionConfig);
+      } else {
+        throw stripeError;
+      }
+    }
 
     res.status(200).json({
       sessionId: session.id,
