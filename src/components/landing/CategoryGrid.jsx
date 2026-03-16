@@ -9,6 +9,7 @@ const CATEGORIES = [
     tagline: 'Celebrate the woman who gave you everything',
     gradient: 'linear-gradient(135deg, #1a0010 0%, #3d0025 50%, #1a000d 100%)',
     glowColor: 'rgba(255,77,166,0.28)',
+    previewVideo: '/videos/category-previews/preview_mothers-day_grok1.mp4',
   },
   {
     name: 'Happy Birthday',
@@ -213,9 +214,29 @@ export default function CategoryGrid() {
                     }}
                   />
 
-                  {/* Floral illustration */}
+                  {/* Floral illustration or video preview */}
                   <div className="cat-list-bloom-card__icon">
-                    <BloomIcon accent={cat.accent} />
+                    {cat.previewVideo ? (
+                      <video
+                        src={cat.previewVideo}
+                        autoPlay
+                        loop
+                        muted
+                        playsInline
+                        style={{
+                          width: '100%',
+                          height: '100%',
+                          objectFit: 'cover',
+                          position: 'absolute',
+                          top: 0,
+                          left: 0,
+                          borderRadius: 'inherit',
+                          opacity: 0.7,
+                        }}
+                      />
+                    ) : (
+                      <BloomIcon accent={cat.accent} />
+                    )}
                   </div>
 
                   {/* Card text overlay */}
