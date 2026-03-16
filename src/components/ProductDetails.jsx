@@ -93,7 +93,7 @@ const ProductDetails = () => {
               muted
               loop
               playsInline
-              preload="metadata"
+              preload="auto"
               poster={product.image_url}
               className="w-full h-full object-cover"
             />

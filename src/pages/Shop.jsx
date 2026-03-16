@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import ProductGrid from '../components/ProductGrid';
 import ProductCard from '../components/ProductCard';
 import { useProducts } from '../hooks/useProducts';
@@ -116,6 +116,7 @@ function CategoryRow({ cat, products }) {
 
 export default function Shop({ searchQuery, setSearchQuery }) {
   const [localSearch, setLocalSearch] = useState(searchQuery || '');
+  const navigate = useNavigate();
   const { products, loading } = useProducts();
 
   const handleSearch = (e) => {
@@ -135,6 +136,17 @@ export default function Shop({ searchQuery, setSearchQuery }) {
     <div className="min-h-screen bg-[var(--bg-page)]">
       {/* Shop Hero */}
       <section className="pt-32 pb-8 px-6 text-center">
+        <button
+          onClick={() => navigate(-1)}
+          className="group inline-flex items-center text-[var(--text-secondary)] hover:text-white transition-all mb-8"
+        >
+          <div className="w-8 h-8 rounded-full border border-[var(--border-default)] flex items-center justify-center mr-3 group-hover:border-[var(--accent-gold)] transition-colors">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 19l-7-7 7-7" />
+            </svg>
+          </div>
+          <span className="text-[11px] uppercase tracking-[0.15em] font-medium">Back</span>
+        </button>
         <h1 className="text-4xl sm:text-5xl md:text-6xl font-display font-medium text-[var(--text-primary)] tracking-tight mb-6 italic">
           Choose Your Occasion
         </h1>

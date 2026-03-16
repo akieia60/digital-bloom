@@ -37,10 +37,10 @@ const Header = ({ onSearchChange, searchQuery }) => {
             {/* Hamburger Button - Mobile Only */}
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="lg:hidden p-2 -ml-2 text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
+              className="lg:hidden p-3 -ml-2 text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
               aria-label="Menu"
             >
-              <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 {isMobileMenuOpen ? (
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M6 18L18 6M6 6l12 12" />
                 ) : (
@@ -161,31 +161,42 @@ const Header = ({ onSearchChange, searchQuery }) => {
               <Link
                 to="/"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="block text-base text-[var(--text-primary)] hover:text-[var(--accent-gold)] transition-colors py-4 border-b border-[var(--border-subtle)]"
+                className="block text-lg text-[var(--text-primary)] hover:text-[var(--accent-gold)] transition-colors py-5 border-b border-[var(--border-subtle)]"
               >
                 Home
               </Link>
               <Link
                 to="/shop"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="block text-base text-[var(--accent-gold)] hover:text-[var(--text-primary)] transition-colors py-4 border-b border-[var(--border-subtle)]"
+                className="block text-lg text-[var(--accent-gold)] hover:text-[var(--text-primary)] transition-colors py-5 border-b border-[var(--border-subtle)]"
               >
                 Occasions
               </Link>
               <Link
                 to="/shop"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="block text-base text-[var(--text-primary)] hover:text-[var(--accent-gold)] transition-colors py-4 border-b border-[var(--border-subtle)]"
+                className="block text-lg text-[var(--text-primary)] hover:text-[var(--accent-gold)] transition-colors py-5 border-b border-[var(--border-subtle)]"
               >
                 Shop
               </Link>
               <Link
                 to="/credits"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="block text-base text-[var(--text-primary)] hover:text-[var(--accent-gold)] transition-colors py-4 border-b border-[var(--border-subtle)]"
+                className="block text-lg text-[var(--text-primary)] hover:text-[var(--accent-gold)] transition-colors py-5 border-b border-[var(--border-subtle)]"
               >
                 Experience Credits
               </Link>
+              <button
+                onClick={() => { setIsMobileMenuOpen(false); toggleCart(); }}
+                className="w-full flex items-center justify-between text-lg text-[var(--text-primary)] hover:text-[var(--accent-gold)] transition-colors py-5 border-b border-[var(--border-subtle)]"
+              >
+                <span>Cart</span>
+                {cartCount > 0 && (
+                  <span className="bg-[var(--accent-gold)] text-[var(--bg-page)] text-xs font-bold rounded-full h-6 w-6 flex items-center justify-center">
+                    {cartCount}
+                  </span>
+                )}
+              </button>
             </nav>
 
             {/* Menu Footer */}

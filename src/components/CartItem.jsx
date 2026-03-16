@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 
 const CartItem = ({ item }) => {
@@ -12,11 +13,13 @@ const CartItem = ({ item }) => {
   return (
     <div className="flex items-start space-x-6 py-8 border-b border-white/5 last:border-0 group animate-fade-in">
       {/* Visual Asset Preview */}
-      <div className="w-24 h-32 flex-shrink-0 rounded-2xl overflow-hidden glass border border-white/5 relative">
+      <Link to={`/product/${item.id}`} className="w-24 h-32 flex-shrink-0 rounded-2xl overflow-hidden glass border border-white/5 relative block">
         {item.video_file_url || item.video_url ? (
           <video
             src={item.video_file_url || item.video_url}
             className="w-full h-full object-cover"
+            poster={item.image_url || item.image}
+            preload="auto"
             muted
             autoPlay
             loop
@@ -30,14 +33,14 @@ const CartItem = ({ item }) => {
           />
         )}
         <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-500"></div>
-      </div>
+      </Link>
 
       {/* Item Narrative */}
       <div className="flex-1 min-w-0">
         <div className="flex justify-between items-start mb-2">
-          <h3 className="text-sm font-medium text-white font-display tracking-tight truncate pr-4">
+          <Link to={`/product/${item.id}`} className="text-sm font-medium text-white font-display tracking-tight truncate pr-4 hover:text-[var(--accent-gold)] transition-colors">
             {item.name}
-          </h3>
+          </Link>
           <p className="text-sm font-light text-white/50">${parseFloat(item.price).toFixed(2)}</p>
         </div>
 

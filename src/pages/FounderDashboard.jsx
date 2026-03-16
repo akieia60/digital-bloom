@@ -93,7 +93,7 @@ const QUICK_LINKS = [
   { label: 'Stripe Dashboard', url: 'https://dashboard.stripe.com', icon: '💳' },
   { label: 'Supabase Project', url: 'https://supabase.com/dashboard', icon: '⚡' },
   { label: 'GitHub Repo', url: 'https://github.com/akieia60/digital-bloom', icon: '🐙' },
-  { label: 'Prompt Vault', url: '/vault', icon: '🗃️', internal: true },
+  // Prompt Vault removed from public nav
   { label: 'Incident Log', url: '#', icon: '📋', optional: true },
 ];
 

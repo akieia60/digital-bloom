@@ -63,7 +63,7 @@ import ExperienceCredits from './pages/ExperienceCredits';
 import CreditBalance from './pages/CreditBalance';
 import Experience1 from './pages/Experience1';
 import FounderDashboard from './pages/FounderDashboard';
-import PromptVault from './pages/PromptVault';
+// PromptVault removed from public routing (admin-only, kept in codebase)
 import ComingSoon from './pages/ComingSoon';
 import { ToastProvider } from './components/tracker/Toast';
 
@@ -86,7 +86,7 @@ function AppContent({ searchQuery, setSearchQuery }) {
         <Route path="/admin/prompts" element={<PromptBrowser />} />
         <Route path="/experience/1" element={<Experience1 />} />
         <Route path="/founder" element={<FounderDashboard />} />
-        <Route path="/vault" element={<PromptVault />} />
+        {/* Prompt Vault removed from public nav — admin only */}
         <Route path="/balance" element={<CreditBalance />} />
         <Route path="/about" element={<ComingSoon />} />
         <Route path="/contact" element={<ComingSoon />} />

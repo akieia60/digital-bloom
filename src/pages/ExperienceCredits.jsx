@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { createCreditCheckoutSession } from '../lib/creditStripe';
 import '../styles/credits.css';
 
 export default function ExperienceCredits() {
+  const navigate = useNavigate();
   const [selectedAmount, setSelectedAmount] = useState(null);
   const [isGift, setIsGift] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -65,8 +66,20 @@ export default function ExperienceCredits() {
   return (
     <div className="credits-page">
       <div className="landing-container">
-        {/* Hero Section */}
+        {/* Back Button */}
         <div className="credits-hero">
+          <button
+            onClick={() => navigate(-1)}
+            className="group inline-flex items-center mb-8"
+            style={{ color: 'var(--text-secondary)' }}
+          >
+            <div style={{ width: '32px', height: '32px', borderRadius: '50%', border: '1px solid var(--border-default)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginRight: '12px', transition: 'border-color 0.2s' }}>
+              <svg style={{ width: '16px', height: '16px' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 19l-7-7 7-7" />
+              </svg>
+            </div>
+            <span style={{ fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.15em', fontWeight: '500' }}>Back</span>
+          </button>
           <h1 className="section-title">Experience Credits</h1>
           <p className="section-subtitle">
             Prepaid access to DigitalBloom digital multimedia experiences
