@@ -27,7 +27,7 @@ const Success = () => {
         if (updatedPurchase) setPurchase(updatedPurchase);
       } catch (err) {
         console.error('Error processing purchase:', err);
-        setError('Failed to process your purchase.');
+        setError('Failed to process your purchase. Please contact support.');
       } finally {
         setIsProcessing(false);
       }
@@ -36,18 +36,36 @@ const Success = () => {
     processPurchase();
   }, [sessionId]);
 
-  const copyLink = () => {
-    navigator.clipboard.writeText(window.location.href);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+  const copyLink = async () => {
+    const shareUrl = `${window.location.origin}/shop`;
+    try {
+      await navigator.clipboard.writeText(shareUrl);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // Fallback for older browsers / insecure contexts
+      const textarea = document.createElement('textarea');
+      textarea.value = shareUrl;
+      textarea.style.position = 'fixed';
+      textarea.style.opacity = '0';
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textarea);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
   };
+
+  const shareUrl = `${window.location.origin}/shop`;
+  const shareText = encodeURIComponent('I just sent a luxury digital bloom ✨ Check it out! #DigitalBloom');
 
   if (isProcessing) {
     return (
       <div className="success-page">
         <div className="success-loading">
           <div className="success-spinner" />
-          <p className="success-loading-text">Publishing Your Experience...</p>
+          <p className="success-loading-text">Preparing Your Experience...</p>
         </div>
       </div>
     );
@@ -65,6 +83,9 @@ const Success = () => {
     );
   }
 
+  const displayPrice = Number(purchase?.total_price || 0).toFixed(2);
+  const displayId = (purchase?.id || 'N/A').substring(0, 8).toUpperCase();
+
   return (
     <div className="success-page">
       <div className="success-container">
@@ -78,7 +99,7 @@ const Success = () => {
           </div>
           <h1 className="success-title">Your Bloom Is On Its Way!</h1>
           <p className="success-subtitle">
-            Your experience has been published and is being prepared for delivery.
+            Your experience has been created and is being prepared for delivery.
           </p>
         </div>
 
@@ -88,11 +109,11 @@ const Success = () => {
             <h3 className="success-card-label">Order Summary</h3>
             <div className="success-row">
               <span className="success-row-label">Order ID</span>
-              <span className="success-row-value success-row-mono">{purchase.id.substring(0, 8).toUpperCase()}</span>
+              <span className="success-row-value success-row-mono">{displayId}</span>
             </div>
             <div className="success-row">
               <span className="success-row-label">Total</span>
-              <span className="success-row-value success-row-gold">${purchase.total_price.toFixed(2)}</span>
+              <span className="success-row-value success-row-gold">${displayPrice}</span>
             </div>
             <div className="success-row success-row-last">
               <span className="success-row-label">Status</span>
@@ -124,7 +145,7 @@ const Success = () => {
               <p className="success-card-text">We're preparing your experience now.</p>
               <ul className="success-status-list">
                 <li>✓ Confirmation sent to your email</li>
-                <li>⏳ Experience publishing (est. 2–4 hours)</li>
+                <li>⏳ Experience processing (est. 2–4 hours)</li>
                 <li>📧 You'll be notified when it's ready</li>
               </ul>
             </div>
@@ -133,19 +154,21 @@ const Success = () => {
 
         {/* ── SHARE ── */}
         <div className="success-card">
-          <h3 className="success-card-label">Share Your Bloom</h3>
+          <h3 className="success-card-label">Share Digital Bloom</h3>
           <div className="success-share-row">
-            <button onClick={copyLink} className="success-share-btn">
+            <button type="button" onClick={copyLink} className="success-share-btn">
               {copied ? '✓ Copied!' : '🔗 Copy Link'}
             </button>
             <button
-              onClick={() => window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.origin)}`, '_blank', 'width=600,height=400')}
+              type="button"
+              onClick={() => window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`, '_blank', 'width=600,height=400')}
               className="success-share-btn"
             >
               Facebook
             </button>
             <button
-              onClick={() => window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent('I just sent a luxury digital bloom ✨ #DigitalBloom')}&url=${encodeURIComponent(window.location.origin)}`, '_blank', 'width=600,height=400')}
+              type="button"
+              onClick={() => window.open(`https://twitter.com/intent/tweet?text=${shareText}&url=${encodeURIComponent(shareUrl)}`, '_blank', 'width=600,height=400')}
               className="success-share-btn"
             >
               X

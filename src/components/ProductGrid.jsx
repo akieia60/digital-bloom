@@ -18,7 +18,7 @@ const CATEGORY_DISPLAY = {
 };
 
 const ProductGrid = ({ searchQuery = '', category = null }) => {
-  const { products, loading, usingMockData } = useProducts();
+  const { products, loading } = useProducts();
   const [searchParams] = useSearchParams();
   const tierFilter = searchParams.get('tier') ? parseInt(searchParams.get('tier')) : null;
   const categoryFilter = category || searchParams.get('category') || null;
@@ -96,7 +96,7 @@ const ProductGrid = ({ searchQuery = '', category = null }) => {
         </header>
 
         {filteredProducts.length === 0 ? (
-          <div className="text-center py-20 sm:py-32 bg-white/[0.03] rounded-3xl border border-[var(--border-subtle)]">
+          <div className="text-center py-20 sm:py-32 bg-[var(--surface-white)] rounded-2xl border border-[var(--border-subtle)]">
             <h3 className="text-lg sm:text-xl font-light text-[var(--text-secondary)]">
               No experiences found.
             </h3>
