@@ -18,6 +18,7 @@ const CATEGORIES = [
     tagline: 'Make their special day unforgettable',
     gradient: 'linear-gradient(135deg, #1a1500 0%, #3d3000 50%, #1a1200 100%)',
     glowColor: 'rgba(255,210,63,0.22)',
+    previewVideo: '/videos/shop/birthday_birthday_roses_bloom_v1.mp4',
   },
   {
     name: 'Love & Romance',
@@ -26,15 +27,9 @@ const CATEGORIES = [
     tagline: 'Express your deepest feelings',
     gradient: 'linear-gradient(135deg, #1a0010 0%, #3d0020 50%, #1a000d 100%)',
     glowColor: 'rgba(255,59,127,0.25)',
+    previewVideo: '/videos/shop/iloveyou_iloveyou_roses_bloom_v1.mp4',
   },
-  {
-    name: "Valentine's Day",
-    slug: 'valentine',
-    accent: '#FF6B6B',
-    tagline: 'For the one who has your heart',
-    gradient: 'linear-gradient(135deg, #1a0000 0%, #3d0a0a 50%, #1a0505 100%)',
-    glowColor: 'rgba(255,107,107,0.22)',
-  },
+
   {
     name: 'Congratulations',
     slug: 'celebration',
@@ -42,6 +37,7 @@ const CATEGORIES = [
     tagline: 'Celebrate their achievements in style',
     gradient: 'linear-gradient(135deg, #0d0018 0%, #220040 50%, #0d000f 100%)',
     glowColor: 'rgba(180,95,255,0.25)',
+    previewVideo: '/videos/shop/congratulations_congratulations_roses_bloom_v1.mp4',
   },
   {
     name: 'Memorial & Sympathy',
@@ -50,6 +46,7 @@ const CATEGORIES = [
     tagline: 'Honor those we hold dear',
     gradient: 'linear-gradient(135deg, #000d1a 0%, #001a3d 50%, #00091a 100%)',
     glowColor: 'rgba(123,159,255,0.22)',
+    previewVideo: '/videos/shop/memorial_memorial_roses_artistic_v1.mp4',
   },
   {
     name: 'Thinking of You',
@@ -58,6 +55,7 @@ const CATEGORIES = [
     tagline: 'Let them know they matter',
     gradient: 'linear-gradient(135deg, #1a0a00 0%, #3d1a00 50%, #1a0800 100%)',
     glowColor: 'rgba(255,140,66,0.22)',
+    previewVideo: '/videos/shop/thinkingofyou_thinkingofyou_roses_bloom_v1.mp4',
   },
   {
     name: 'Luxury Collection',
@@ -66,6 +64,7 @@ const CATEGORIES = [
     tagline: 'Where fashion meets floral artistry',
     gradient: 'linear-gradient(135deg, #0d0a00 0%, #2a2000 50%, #0d0a00 100%)',
     glowColor: 'rgba(212,175,55,0.28)',
+    previewVideo: '/videos/shop/glassstiletto_glassstilettoseries_roses_artistic_v1.mp4',
   },
   {
     name: 'General Collection',
@@ -74,6 +73,7 @@ const CATEGORIES = [
     tagline: 'Beautiful blooms for every moment',
     gradient: 'linear-gradient(135deg, #0d0d0d 0%, #1f1f1f 50%, #0d0d0d 100%)',
     glowColor: 'rgba(158,158,158,0.15)',
+    previewVideo: '/videos/shop/general_general_goldenroses_bloom_v1.mp4',
   },
 ];
 
