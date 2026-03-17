@@ -28,6 +28,7 @@
   background: var(--surface-white, #FFFFFF);
   border-radius: 20px 20px 0 0;
   max-height: 90vh;
+  max-height: 90dvh;
   display: flex;
   flex-direction: column;
   transform: translateY(100%);
@@ -94,7 +95,7 @@
   flex: 1;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
-  padding: 0 20px 120px;
+  padding: 0 20px calc(130px + env(safe-area-inset-bottom, 0px));
   overscroll-behavior: contain;
 }
 
@@ -135,6 +136,43 @@
   font-weight: 600;
   color: #1D1D1F;
   margin: 0;
+}
+
+/* Collapsible delivery section — progressive reveal */
+.customizer-section--collapsible {
+  border-bottom: none;
+}
+
+.customizer-section__toggle-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.customizer-section__toggle-icon {
+  width: 24px;
+  height: 24px;
+  color: #AEAEB2;
+  transition: transform 0.25s ease;
+}
+
+.customizer-section--collapsible.expanded .customizer-section__toggle-icon {
+  transform: rotate(180deg);
+}
+
+.customizer-section__collapsible-body {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.35s ease;
+}
+
+.customizer-section--collapsible.expanded .customizer-section__collapsible-body {
+  max-height: 800px;
 }
 
 /* ─── FORM ELEMENTS ─── */
@@ -183,7 +221,7 @@
 .customizer-select:focus {
   outline: none;
   border-color: var(--spec-gold, #C9A14A);
-  box-shadow: 0 0 0 3px rgba(201, 161, 74, 0.12);
+  box-shadow: 0 0 0 3px rgba(201, 161, 74, 0.1);
 }
 
 .customizer-textarea {
@@ -230,10 +268,10 @@
   background: #F0F0F0;
 }
 
+/* Restrained gold — only border changes on active, no stacked effects */
 .theme-swatch.active {
   border-color: var(--spec-gold, #C9A14A);
-  background: rgba(201, 161, 74, 0.06);
-  box-shadow: 0 2px 8px rgba(201, 161, 74, 0.15);
+  background: var(--surface-soft, #F7F7F7);
 }
 
 .theme-colors {
@@ -284,6 +322,12 @@
 
 .extra-toggle:hover {
   background: #EFEFEF;
+}
+
+/* Active extra — subtle, not heavy */
+.extra-toggle.extra-toggle--active {
+  background: rgba(201, 161, 74, 0.05);
+  border: 1px solid rgba(201, 161, 74, 0.2);
 }
 
 .extra-toggle__info {
@@ -365,7 +409,7 @@
 
 .delivery-method {
   padding: 14px;
-  border: 2px solid #E5E5EA;
+  border: 1.5px solid #E5E5EA;
   border-radius: 14px;
   background: var(--surface-soft, #F7F7F7);
   cursor: pointer;
@@ -373,7 +417,7 @@
   font-size: 14px;
   font-weight: 600;
   color: #3A3A3C;
-  transition: all 0.2s;
+  transition: border-color 0.2s, color 0.2s;
   min-height: 48px;
   font-family: 'Outfit', sans-serif;
 }
@@ -382,10 +426,11 @@
   border-color: #D1D1D6;
 }
 
+/* Restrained active — border only, no stacked gold */
 .delivery-method.active {
   border-color: var(--spec-gold, #C9A14A);
-  background: rgba(201, 161, 74, 0.06);
   color: var(--spec-gold, #C9A14A);
+  background: var(--surface-soft, #F7F7F7);
 }
 
 .delivery-timings {
@@ -396,7 +441,7 @@
 
 .delivery-timing {
   padding: 12px 8px;
-  border: 2px solid #E5E5EA;
+  border: 1.5px solid #E5E5EA;
   border-radius: 12px;
   background: var(--surface-soft, #F7F7F7);
   cursor: pointer;
@@ -404,14 +449,13 @@
   font-size: 13px;
   font-weight: 600;
   color: #3A3A3C;
-  transition: all 0.2s;
+  transition: border-color 0.2s, color 0.2s;
   min-height: 44px;
   font-family: 'Outfit', sans-serif;
 }
 
 .delivery-timing.active {
   border-color: var(--spec-gold, #C9A14A);
-  background: rgba(201, 161, 74, 0.06);
   color: var(--spec-gold, #C9A14A);
 }
 
@@ -421,21 +465,22 @@
   bottom: 0;
   left: 0;
   right: 0;
-  padding: 16px 20px;
+  padding: 14px 20px;
+  padding-bottom: calc(14px + env(safe-area-inset-bottom, 0px));
   background: var(--surface-white, #FFFFFF);
   border-top: 1px solid #EBEBEB;
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 12px;
   flex-shrink: 0;
   z-index: 10;
   box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08);
 }
 
 .cta-preview {
-  width: 52px;
-  height: 52px;
-  border-radius: 12px;
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
   overflow: hidden;
   flex-shrink: 0;
   border: 1px solid #E5E5EA;
@@ -460,18 +505,18 @@
   letter-spacing: 0.1em;
   color: #6E6E73;
   font-family: 'Outfit', sans-serif;
-  margin-bottom: 2px;
+  margin-bottom: 1px;
 }
 
 .cta-pricing__amount {
-  font-size: 22px;
+  font-size: 20px;
   font-weight: 700;
   color: #1D1D1F;
   font-family: 'Outfit', sans-serif;
 }
 
 .cta-add-btn {
-  padding: 14px 28px;
+  padding: 14px 24px;
   background: var(--spec-gold, #C9A14A);
   color: #FFFFFF;
   border: none;
@@ -490,18 +535,49 @@
 .cta-add-btn:hover {
   background: #B8923F;
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(201, 161, 74, 0.3);
+  box-shadow: 0 4px 12px rgba(201, 161, 74, 0.25);
 }
 
 .cta-add-btn:active {
   transform: scale(0.97);
 }
 
-/* ─── BODY SCROLL LOCK ─── */
+/* ─── EXTRA-SMALL SCREEN (≤375px) ─── */
+@media (max-width: 375px) {
+  .customizer-sticky-cta {
+    padding: 12px 14px;
+    padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+    gap: 8px;
+  }
+
+  .cta-preview {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+  }
+
+  .cta-pricing__amount {
+    font-size: 18px;
+  }
+
+  .cta-add-btn {
+    padding: 12px 18px;
+    font-size: 13px;
+  }
+
+  .delivery-timings {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .theme-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* ─── BODY SCROLL LOCK (Safari-safe) ─── */
 body.customizer-open {
   overflow: hidden;
-  position: fixed;
-  width: 100%;
+  touch-action: none;
 }
 
 /* ─── GIFTING FORM ─── */
@@ -531,17 +607,18 @@ body.customizer-open {
   margin-bottom: 16px;
 }
 
-/* ─── DESKTOP ADJUSTMENTS ─── */
+/* ─── DESKTOP — RIGHT-SIDE PANEL (POLISHED) ─── */
 @media (min-width: 769px) {
   .customizer-sheet {
     top: 0;
     bottom: 0;
     left: auto;
     right: 0;
-    width: 520px;
+    width: 480px;
     max-height: 100vh;
     border-radius: 0;
     transform: translateX(100%);
+    box-shadow: -12px 0 40px rgba(0, 0, 0, 0.1);
   }
 
   .customizer-sheet.open {
@@ -552,13 +629,42 @@ body.customizer-open {
     display: none;
   }
 
+  .customizer-sheet__header {
+    padding: 24px 32px;
+    border-bottom: 1px solid #EBEBEB;
+  }
+
+  .customizer-sheet__title {
+    font-size: 22px;
+  }
+
   .customizer-sheet__body {
-    padding-bottom: 100px;
+    padding: 0 32px calc(100px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .customizer-section {
+    padding: 28px 0;
+  }
+
+  .customizer-sticky-cta {
+    padding: 20px 32px;
+    padding-bottom: 20px;
+    gap: 16px;
+  }
+
+  .cta-preview {
+    width: 56px;
+    height: 56px;
+    border-radius: 12px;
+  }
+
+  .cta-pricing__amount {
+    font-size: 22px;
   }
 }
 
 @media (min-width: 1200px) {
   .customizer-sheet {
-    width: 580px;
+    width: 540px;
   }
 }

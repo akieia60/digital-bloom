@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import GiftingForm from './GiftingForm';
 import { supabase } from '../lib/supabase';
 import '../styles/customizer.css';
@@ -11,6 +11,7 @@ const EXTRAS = [
 
 const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {} }) => {
   const { messagePlaceholder, toPlaceholder, ...stateDefaults } = defaults;
+  const scrollPosRef = useRef(0);
 
   const [customization, setCustomization] = useState(() => ({
     customMessageShort: '',
@@ -30,6 +31,8 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {} }) => 
     ...stateDefaults,
   }));
 
+  const [deliveryExpanded, setDeliveryExpanded] = useState(false);
+
   const colorThemes = [
     { id: 'original', name: 'Original', colors: ['#FF69B4', '#FFB6C1'] },
     { id: 'warm', name: 'Warm Sunset', colors: ['#FF6B6B', '#FFA07A'] },
@@ -38,14 +41,27 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {} }) => 
     { id: 'romantic', name: 'Romantic Rose', colors: ['#C41E3A', '#FF1744'] },
   ];
 
-  // Lock body scroll when panel is open
+  // Safari-safe scroll lock — preserves scroll position
   useEffect(() => {
     if (isOpen) {
+      scrollPosRef.current = window.scrollY;
+      document.body.style.top = `-${scrollPosRef.current}px`;
+      document.body.style.position = 'fixed';
+      document.body.style.width = '100%';
       document.body.classList.add('customizer-open');
     } else {
       document.body.classList.remove('customizer-open');
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.width = '';
+      window.scrollTo(0, scrollPosRef.current);
     }
-    return () => document.body.classList.remove('customizer-open');
+    return () => {
+      document.body.classList.remove('customizer-open');
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.width = '';
+    };
   }, [isOpen]);
 
   // Dynamic Theme Engine
@@ -65,16 +81,16 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {} }) => 
     root.style.setProperty('--bloom-glow', spec.glow);
   }, [customization.colorTheme]);
 
-  const handleChange = (field, value) => {
+  const handleChange = useCallback((field, value) => {
     setCustomization(prev => ({ ...prev, [field]: value }));
-  };
+  }, []);
 
-  const toggleExtra = (extraId) => {
+  const toggleExtra = useCallback((extraId) => {
     setCustomization(prev => ({
       ...prev,
       extras: { ...prev.extras, [extraId]: !prev.extras[extraId] }
     }));
-  };
+  }, []);
 
   // Calculate total price
   const basePrice = parseFloat(product?.price || 0);
@@ -237,7 +253,11 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {} }) => 
 
             <div className="extras-grid">
               {EXTRAS.map(extra => (
-                <div key={extra.id} className="extra-toggle" onClick={() => toggleExtra(extra.id)}>
+                <div
+                  key={extra.id}
+                  className={`extra-toggle ${customization.extras[extra.id] ? 'extra-toggle--active' : ''}`}
+                  onClick={() => toggleExtra(extra.id)}
+                >
                   <div className="extra-toggle__info">
                     <span className="extra-toggle__icon">{extra.icon}</span>
                     <div>
@@ -258,115 +278,130 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {} }) => 
             </div>
           </div>
 
-          {/* ── SECTION 4: DELIVERY ── */}
-          <div className="customizer-section">
-            <div className="customizer-section__header">
-              <span className="customizer-section__number">4</span>
-              <h3 className="customizer-section__title">Delivery</h3>
-            </div>
-
-            <div className="customizer-field">
-              <label className="customizer-label">Delivery Method</label>
-              <div className="delivery-methods">
-                {['email', 'text'].map(method => (
-                  <button
-                    key={method}
-                    className={`delivery-method ${customization.deliveryMethod === method ? 'active' : ''}`}
-                    onClick={() => handleChange('deliveryMethod', method)}
-                  >
-                    {method === 'email' ? '📧 Email' : '💬 Text'}
-                  </button>
-                ))}
+          {/* ── SECTION 4: DELIVERY (collapsible) ── */}
+          <div className={`customizer-section customizer-section--collapsible ${deliveryExpanded ? 'expanded' : ''}`}>
+            <button
+              className="customizer-section__toggle-btn"
+              onClick={() => setDeliveryExpanded(!deliveryExpanded)}
+            >
+              <div className="customizer-section__header" style={{ marginBottom: 0 }}>
+                <span className="customizer-section__number">4</span>
+                <h3 className="customizer-section__title">Delivery Options</h3>
               </div>
-            </div>
+              <svg className="customizer-section__toggle-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
 
-            {customization.deliveryMethod === 'text' && (
-              <div className="customizer-field">
-                <label className="customizer-label">Recipient Phone</label>
-                <input
-                  type="tel"
-                  className="customizer-input"
-                  placeholder="(555) 123-4567"
-                  value={customization.recipientPhone}
-                  onChange={(e) => handleChange('recipientPhone', e.target.value)}
-                />
-                <span className="customizer-hint" style={{ fontStyle: 'italic' }}>
-                  We'll only use this number to deliver your bloom
-                </span>
-              </div>
-            )}
-
-            {customization.deliveryMethod === 'email' && (
-              <div className="customizer-field">
-                <label className="customizer-label">Recipient Email</label>
-                <input
-                  type="email"
-                  className="customizer-input"
-                  placeholder="recipient@email.com"
-                  value={customization.recipientEmail}
-                  onChange={(e) => handleChange('recipientEmail', e.target.value)}
-                />
-              </div>
-            )}
-
-            <div className="customizer-field">
-              <label className="customizer-label">When to Send</label>
-              <div className="delivery-timings">
-                {[
-                  { id: 'now', label: 'Now' },
-                  { id: 'later', label: 'Later' },
-                  { id: 'send-to-self-first', label: 'Me First' },
-                ].map(opt => (
-                  <button
-                    key={opt.id}
-                    className={`delivery-timing ${customization.deliveryTiming === opt.id ? 'active' : ''}`}
-                    onClick={() => handleChange('deliveryTiming', opt.id)}
-                  >
-                    {opt.label}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {customization.deliveryTiming === 'later' && (
-              <div className="customizer-field">
-                <label className="customizer-label">Delivery Date</label>
-                <input
-                  type="date"
-                  className="customizer-input"
-                  value={customization.deliveryDate}
-                  onChange={(e) => handleChange('deliveryDate', e.target.value)}
-                />
-              </div>
-            )}
-
-            {/* Gifting Toggle */}
-            <div className="customizer-field" style={{ marginTop: '8px' }}>
-              <div className="extra-toggle" onClick={() => handleChange('isGift', !customization.isGift)}>
-                <div className="extra-toggle__info">
-                  <span className="extra-toggle__icon">🎁</span>
-                  <span className="extra-toggle__name">Send as a gift</span>
+            <div className="customizer-section__collapsible-body">
+              <div style={{ paddingTop: '16px' }}>
+                <div className="customizer-field">
+                  <label className="customizer-label">Delivery Method</label>
+                  <div className="delivery-methods">
+                    {['email', 'text'].map(method => (
+                      <button
+                        key={method}
+                        className={`delivery-method ${customization.deliveryMethod === method ? 'active' : ''}`}
+                        onClick={() => handleChange('deliveryMethod', method)}
+                      >
+                        {method === 'email' ? '📧 Email' : '💬 Text'}
+                      </button>
+                    ))}
+                  </div>
                 </div>
-                <label className="toggle-switch" onClick={(e) => e.stopPropagation()}>
-                  <input
-                    type="checkbox"
-                    checked={customization.isGift}
-                    onChange={(e) => handleChange('isGift', e.target.checked)}
+
+                {customization.deliveryMethod === 'text' && (
+                  <div className="customizer-field">
+                    <label className="customizer-label">Recipient Phone</label>
+                    <input
+                      type="tel"
+                      className="customizer-input"
+                      placeholder="(555) 123-4567"
+                      value={customization.recipientPhone}
+                      onChange={(e) => handleChange('recipientPhone', e.target.value)}
+                    />
+                    <span className="customizer-hint" style={{ fontStyle: 'italic' }}>
+                      We'll only use this to deliver your bloom
+                    </span>
+                  </div>
+                )}
+
+                {customization.deliveryMethod === 'email' && (
+                  <div className="customizer-field">
+                    <label className="customizer-label">Recipient Email</label>
+                    <input
+                      type="email"
+                      className="customizer-input"
+                      placeholder="recipient@email.com"
+                      value={customization.recipientEmail}
+                      onChange={(e) => handleChange('recipientEmail', e.target.value)}
+                    />
+                  </div>
+                )}
+
+                <div className="customizer-field">
+                  <label className="customizer-label">When to Send</label>
+                  <div className="delivery-timings">
+                    {[
+                      { id: 'now', label: 'Now' },
+                      { id: 'later', label: 'Later' },
+                      { id: 'send-to-self-first', label: 'Me First' },
+                    ].map(opt => (
+                      <button
+                        key={opt.id}
+                        className={`delivery-timing ${customization.deliveryTiming === opt.id ? 'active' : ''}`}
+                        onClick={() => handleChange('deliveryTiming', opt.id)}
+                      >
+                        {opt.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {customization.deliveryTiming === 'later' && (
+                  <div className="customizer-field">
+                    <label className="customizer-label">Delivery Date</label>
+                    <input
+                      type="date"
+                      className="customizer-input"
+                      value={customization.deliveryDate}
+                      onChange={(e) => handleChange('deliveryDate', e.target.value)}
+                    />
+                  </div>
+                )}
+
+                {/* Gifting Toggle */}
+                <div className="customizer-field" style={{ marginTop: '8px' }}>
+                  <div
+                    className={`extra-toggle ${customization.isGift ? 'extra-toggle--active' : ''}`}
+                    onClick={() => handleChange('isGift', !customization.isGift)}
+                  >
+                    <div className="extra-toggle__info">
+                      <span className="extra-toggle__icon">🎁</span>
+                      <span className="extra-toggle__name">Send as a gift</span>
+                    </div>
+                    <label className="toggle-switch" onClick={(e) => e.stopPropagation()}>
+                      <input
+                        type="checkbox"
+                        checked={customization.isGift}
+                        onChange={(e) => handleChange('isGift', e.target.checked)}
+                      />
+                      <span className="toggle-switch__slider" />
+                    </label>
+                  </div>
+                </div>
+
+                {customization.isGift && (
+                  <GiftingForm
+                    recipientName={customization.recipientName}
+                    recipientEmail={customization.recipientEmail}
+                    deliveryDate={customization.deliveryDate}
+                    giftMessage={customization.giftMessage}
+                    onChange={handleChange}
                   />
-                  <span className="toggle-switch__slider" />
-                </label>
+                )}
               </div>
             </div>
-
-            {customization.isGift && (
-              <GiftingForm
-                recipientName={customization.recipientName}
-                recipientEmail={customization.recipientEmail}
-                deliveryDate={customization.deliveryDate}
-                giftMessage={customization.giftMessage}
-                onChange={handleChange}
-              />
-            )}
           </div>
         </div>
 
