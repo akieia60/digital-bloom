@@ -65,6 +65,7 @@ import Experience1 from './pages/Experience1';
 import FounderDashboard from './pages/FounderDashboard';
 // PromptVault removed from public routing (admin-only, kept in codebase)
 import ComingSoon from './pages/ComingSoon';
+import BloomDelivery from './pages/BloomDelivery';
 import { ToastProvider } from './components/tracker/Toast';
 
 function AppContent({ searchQuery, setSearchQuery }) {
@@ -91,6 +92,7 @@ function AppContent({ searchQuery, setSearchQuery }) {
         <Route path="/about" element={<ComingSoon />} />
         <Route path="/contact" element={<ComingSoon />} />
         <Route path="/checkout" element={<ComingSoon />} />
+        <Route path="/bloom/:id" element={<BloomDelivery />} />
         {/* Catch-all for unknown routes */}
         <Route path="*" element={<ComingSoon />} />
       </Routes>

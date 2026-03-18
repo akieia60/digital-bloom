@@ -128,6 +128,15 @@ export function buildFulfillmentManifest(product, customization) {
       hasTo: Boolean(message.toName),
       hasFrom: Boolean(message.fromName),
     },
+    // Brand protection — required on all delivered outputs
+    branding: {
+      watermark: true,
+      watermarkStyle: 'subtle-gold',
+      watermarkPosition: 'bottom-center',
+      introBrandCard: false,
+      outroBrandCard: true,
+      trademarkText: 'Digital Bloom™',
+    },
   };
 }
 
