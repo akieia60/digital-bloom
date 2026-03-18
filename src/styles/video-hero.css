@@ -10,8 +10,7 @@
 .video-hero {
   position: relative;
   width: 100%;
-  height: 65vh;
-  max-height: 600px;
+  min-height: 420px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -19,6 +18,7 @@
   justify-content: center;
   background: #0A0A0A;
   z-index: 1;
+  padding: 40px 24px 32px;
 }
 
 /* ── Live Holiday Banner ── */
@@ -87,11 +87,17 @@
 
 /* ── Video Background Layer ── */
 .video-hero__bg {
-  position: absolute;
-  inset: 0;
+  position: relative;
+  width: 240px;
+  height: 240px;
+  border-radius: 50%;
+  overflow: hidden;
   z-index: 0;
   will-change: transform, opacity;
   transform-origin: center center;
+  box-shadow: 0 8px 40px rgba(212,175,55,0.15), 0 0 0 2px rgba(212,175,55,0.2);
+  flex-shrink: 0;
+  margin-bottom: 24px;
 }
 
 .video-hero__video-wrap {
@@ -149,6 +155,7 @@
   gap: 0;
   padding: 0 24px;
   will-change: opacity;
+  margin-top: 0;
 }
 
 .video-hero__title {
@@ -159,7 +166,7 @@
   letter-spacing: 0.04em;
   color: #D4AF37;
   text-shadow: 0 0 40px rgba(212,175,55,0.35), 0 2px 12px rgba(0,0,0,0.6);
-  margin: 0 0 20px;
+  margin: 0 0 12px;
   line-height: 1.1;
   text-transform: none;
 }
@@ -172,7 +179,7 @@
   letter-spacing: 0.12em;
   color: rgba(255, 255, 255, 0.9);
   text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
-  margin: 0 0 48px;
+  margin: 0 0 28px;
   line-height: 1.5;
   max-width: 600px;
 }
