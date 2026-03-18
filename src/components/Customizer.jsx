@@ -1,312 +1,224 @@
-import { useState, useEffect } from 'react';
-import GiftingForm from './GiftingForm';
-import CustomizationPreview from './CustomizationPreview';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { supabase } from '../lib/supabase';
 import '../styles/customizer.css';
 
+const EXTRAS = [
+  { id: 'balloon', icon: '🎈', name: 'Balloons', price: 2.99 },
+  { id: 'ribbon', icon: '🎀', name: 'Ribbon Wrap', price: 1.99 },
+  { id: 'sparkle', icon: '✨', name: 'Sparkle Effect', price: 3.99 },
+];
+
+const COLOR_THEMES = [
+  { id: 'original', name: 'Original', colors: ['#FF69B4', '#FFB6C1'] },
+  { id: 'warm', name: 'Warm Sunset', colors: ['#FF6B6B', '#FFA07A'] },
+  { id: 'cool', name: 'Cool Breeze', colors: ['#4ECDC4', '#95E1D3'] },
+  { id: 'elegant', name: 'Elegant Gold', colors: ['#D4AF37', '#F4E4C1'] },
+  { id: 'romantic', name: 'Romantic Rose', colors: ['#C41E3A', '#FF1744'] },
+];
+
 const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {} }) => {
-  // Separate placeholder hints from state defaults
   const { messagePlaceholder, toPlaceholder, ...stateDefaults } = defaults;
+  const scrollPosRef = useRef(0);
 
-  // Lazy initializer — runs once on mount, merges occasion defaults into base state.
-  // After mount, user changes are never overwritten.
-  const [customization, setCustomization] = useState(() => ({
-    customMessageShort: '',
-    customMessageLong: '',
-    colorTheme: 'original',
-    isGift: false,
-    recipientName: '',
-    recipientEmail: '',
-    deliveryDate: '',
-    giftMessage: '',
-    toName: '',
-    fromName: '',
-    deliveryMethod: '',
-    deliveryTiming: '',
-    recipientPhone: '',
-    // Merge occasion-based defaults (e.g. colorTheme)
-    ...stateDefaults,
-  }));
+  // Clean, minimal state
+  const [message, setMessage] = useState({
+    short: stateDefaults.short || '',
+    toName: stateDefaults.toName || '',
+    fromName: stateDefaults.fromName || '',
+  });
+  const [colorTheme, setColorTheme] = useState(stateDefaults.colorTheme || 'original');
+  const [extras, setExtras] = useState({ balloon: false, ribbon: false, sparkle: false });
 
-  const colorThemes = [
-    { id: 'original', name: 'Original', colors: ['#FF69B4', '#FFB6C1'] },
-    { id: 'warm', name: 'Warm Sunset', colors: ['#FF6B6B', '#FFA07A'] },
-    { id: 'cool', name: 'Cool Breeze', colors: ['#4ECDC4', '#95E1D3'] },
-    { id: 'elegant', name: 'Elegant Gold', colors: ['#D4AF37', '#F4E4C1'] },
-    { id: 'romantic', name: 'Romantic Rose', colors: ['#C41E3A', '#FF1744'] },
-  ];
-
-  const deliveryMethods = ['email', 'text'];
-  const deliveryTimings = ['now', 'later', 'send-to-self-first'];
-
-  // Dynamic Theme Engine Bridge
+  // Safari-safe scroll lock
   useEffect(() => {
-    const root = document.documentElement;
-    const themeSpecs = {
-      original: { color: '#FF69B4', rgb: '255, 105, 180', radius: '30px', glow: '0.2' },
-      warm:     { color: '#FF6B6B', rgb: '255, 107, 107', radius: '40px', glow: '0.25' },
-      cool:     { color: '#4ECDC4', rgb: '78, 205, 196',  radius: '35px', glow: '0.2' },
-      elegant:  { color: '#D4AF37', rgb: '212, 175, 55',  radius: '50px', glow: '0.35' },
-      romantic: { color: '#C41E3A', rgb: '196, 30, 58',   radius: '45px', glow: '0.3' }
-    };
-    
-    const spec = themeSpecs[customization.colorTheme] || themeSpecs.original;
-    root.style.setProperty('--bloom-primary', spec.color);
-    root.style.setProperty('--bloom-primary-rgb', spec.rgb);
-    root.style.setProperty('--bloom-radius', spec.radius);
-    root.style.setProperty('--bloom-glow', spec.glow);
-  }, [customization.colorTheme]);
-
-  const handleChange = (field, value) => {
-    setCustomization(prev => ({ ...prev, [field]: value }));
-  };
-
-  const handleComplete = async () => {
-    // 1. Check for logged-in user
-    const { data: { user } } = await supabase.auth.getUser();
-
-    // 2. If authenticated, save the chosen dynamic theme to Supabase
-    if (user) {
-      const root = document.documentElement;
-      const themeData = {
-        user_id: user.id,
-        theme_name: customization.colorTheme,
-        primary_color: root.style.getPropertyValue('--bloom-primary').trim() || '#FF69B4',
-        border_radius: root.style.getPropertyValue('--bloom-radius').trim() || '30px',
-        bloom_glow: root.style.getPropertyValue('--bloom-glow').trim() || '0.2',
-        bg_opacity: 0.9,
-      };
-
-      try {
-        const { error } = await supabase
-          .from('digital_bloom_themes')
-          .insert([themeData]);
-        
-        if (error) {
-          console.error('Error saving theme to Supabase:', error.message);
-        } else {
-          console.log('Successfully saved theme to digital_bloom_themes!');
-        }
-      } catch (err) {
-        console.error('Network error saving theme:', err);
-      }
+    if (isOpen) {
+      scrollPosRef.current = window.scrollY;
+      document.body.style.top = `-${scrollPosRef.current}px`;
+      document.body.style.position = 'fixed';
+      document.body.style.width = '100%';
+      document.body.classList.add('customizer-open');
+    } else {
+      document.body.classList.remove('customizer-open');
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.width = '';
+      window.scrollTo(0, scrollPosRef.current);
     }
+    return () => {
+      document.body.classList.remove('customizer-open');
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.width = '';
+    };
+  }, [isOpen]);
 
-    // 3. Add to cart & close
-    onComplete({
-      productId: product.id,
-      ...customization,
-    });
+  // Scoped theme
+  const themeStyle = useMemo(() => {
+    const specs = {
+      original: { color: '#FF69B4' },
+      warm:     { color: '#FF6B6B' },
+      cool:     { color: '#4ECDC4' },
+      elegant:  { color: '#D4AF37' },
+      romantic: { color: '#C41E3A' },
+    };
+    return specs[colorTheme] || specs.original;
+  }, [colorTheme]);
+
+  const handleMessageChange = useCallback((field, value) => {
+    setMessage(prev => ({ ...prev, [field]: value }));
+  }, []);
+
+  const toggleExtra = useCallback((extraId) => {
+    setExtras(prev => ({ ...prev, [extraId]: !prev[extraId] }));
+  }, []);
+
+  // Pricing
+  const basePrice = parseFloat(product?.price || 0);
+  const extrasTotal = EXTRAS.reduce((sum, e) => sum + (extras[e.id] ? e.price : 0), 0);
+  const totalPrice = basePrice + extrasTotal;
+  const isProductValid = Boolean(product?.id && basePrice > 0);
+
+  // Non-blocking Add to Cart
+  const handleComplete = useCallback(() => {
+    if (!isProductValid) return;
+    // Fire-and-forget theme save
+    (async () => {
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
+          await supabase.from('digital_bloom_themes').insert([{
+            user_id: user.id, theme_name: colorTheme, primary_color: themeStyle.color,
+          }]);
+        }
+      } catch (err) { console.error('Theme save (non-blocking):', err); }
+    })();
+    onComplete({ productId: product.id, message, colorTheme, extras, totalPrice });
     onClose();
-  };
+  }, [isProductValid, product, message, colorTheme, extras, totalPrice, themeStyle, onComplete, onClose]);
 
   if (!isOpen) return null;
 
   return (
-    <div className="customizer-modal">
-      <div className="customizer-container">
-        <button className="customizer-close" onClick={onClose}>×</button>
-        
-        <div className="customizer-content">
-          {/* Left Panel - Options */}
-          <div className="customizer-options">
-            <h2 className="customizer-title">Customize Your DigitalBloom Experience</h2>
-            <p className="customizer-subtitle">
-              Your experience will be published with these selections
-            </p>
+    <>
+      <div className={`customizer-overlay ${isOpen ? 'active' : ''}`} onClick={onClose} role="presentation" />
 
-            {/* Custom Message */}
-            <div className="customizer-section">
-              <label className="customizer-label">Custom Message (Short)</label>
+      <div className={`customizer-sheet ${isOpen ? 'open' : ''}`} role="dialog" aria-modal="true" aria-label="Customize your experience">
+        <div className="customizer-sheet__drag-indicator" />
+
+        {/* Header */}
+        <div className="customizer-sheet__header">
+          <h2 className="customizer-sheet__title">Customize</h2>
+          <button type="button" className="customizer-sheet__close" onClick={onClose} aria-label="Close">✕</button>
+        </div>
+
+        {/* Body — streamlined: Message → Style → Extras */}
+        <div className="customizer-sheet__body">
+
+          {/* ── MESSAGE (simplified — just short msg + to/from) ── */}
+          <div className="customizer-section">
+            <div className="customizer-section__header">
+              <span className="customizer-section__number">1</span>
+              <h3 className="customizer-section__title">Your Message</h3>
+            </div>
+
+            <div className="customizer-field">
               <input
+                id="cust-msg"
                 type="text"
                 className="customizer-input"
                 placeholder={messagePlaceholder || 'e.g., Happy Birthday!'}
-                maxLength="50"
-                value={customization.customMessageShort}
-                onChange={(e) => handleChange('customMessageShort', e.target.value)}
+                maxLength="80"
+                value={message.short}
+                onChange={(e) => handleMessageChange('short', e.target.value)}
               />
-              <span className="customizer-hint">
-                {customization.customMessageShort.length}/50
-              </span>
+              <span className="customizer-hint">{message.short.length}/80</span>
             </div>
 
-            <div className="customizer-section">
-              <label className="customizer-label">Personal Note (Optional)</label>
-              <textarea
-                className="customizer-textarea"
-                placeholder="Add a longer personal message..."
-                maxLength="200"
-                rows="3"
-                value={customization.customMessageLong}
-                onChange={(e) => handleChange('customMessageLong', e.target.value)}
-              />
-              <span className="customizer-hint">
-                {customization.customMessageLong.length}/200
-              </span>
-            </div>
-
-            {/* Color Theme */}
-            <div className="customizer-section">
-              <label className="customizer-label">Color Theme</label>
-              <div className="theme-grid">
-                {colorThemes.map(theme => (
-                  <button
-                    key={theme.id}
-                    className={`theme-swatch ${customization.colorTheme === theme.id ? 'active' : ''}`}
-                    onClick={() => handleChange('colorTheme', theme.id)}
-                  >
-                    <div className="theme-colors">
-                      <span style={{ background: theme.colors[0] }}></span>
-                      <span style={{ background: theme.colors[1] }}></span>
-                    </div>
-                    <span className="theme-name">{theme.name}</span>
-                  </button>
-                ))}
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+              <div className="customizer-field">
+                <label className="customizer-label" htmlFor="cust-to">To</label>
+                <input id="cust-to" type="text" className="customizer-input"
+                  placeholder={toPlaceholder || 'Recipient'}
+                  value={message.toName}
+                  onChange={(e) => handleMessageChange('toName', e.target.value)} />
               </div>
-            </div>
-
-            {/* To / From fields */}
-            <div className="customizer-section">
-              <label className="customizer-label">To</label>
-              <input
-                type="text"
-                className="customizer-input"
-                placeholder={toPlaceholder || 'Recipient name'}
-                value={customization.toName}
-                onChange={(e) => handleChange('toName', e.target.value)}
-              />
-            </div>
-            <div className="customizer-section">
-              <label className="customizer-label">From</label>
-              <input
-                type="text"
-                className="customizer-input"
-                placeholder="Your name"
-                value={customization.fromName}
-                onChange={(e) => handleChange('fromName', e.target.value)}
-              />
-            </div>
-
-            {/* Delivery Method */}
-            <div className="customizer-section">
-              <label className="customizer-label">Delivery Method</label>
-              <select
-                className="customizer-input"
-                value={customization.deliveryMethod}
-                onChange={(e) => handleChange('deliveryMethod', e.target.value)}
-              >
-                <option value="">Select method</option>
-                {deliveryMethods.map((method) => (
-                  <option key={method} value={method}>{method}</option>
-                ))}
-              </select>
-            </div>
-
-            {customization.deliveryMethod === 'text' && (
-              <div className="customizer-section">
-                <label className="customizer-label">Recipient Phone</label>
-                <input
-                  type="tel"
-                  className="customizer-input"
-                  placeholder="(555) 123-4567"
-                  value={customization.recipientPhone}
-                  onChange={(e) => handleChange('recipientPhone', e.target.value)}
-                />
-                <span className="customizer-hint" style={{ color: 'var(--text-muted)', fontStyle: 'italic' }}>
-                  We'll only use this number to deliver your bloom
-                </span>
+              <div className="customizer-field">
+                <label className="customizer-label" htmlFor="cust-from">From</label>
+                <input id="cust-from" type="text" className="customizer-input"
+                  placeholder="Your name"
+                  value={message.fromName}
+                  onChange={(e) => handleMessageChange('fromName', e.target.value)} />
               </div>
-            )}
-            {customization.deliveryMethod === 'email' && (
-              <div className="customizer-section">
-                <label className="customizer-label">Recipient Email</label>
-                <input
-                  type="email"
-                  className="customizer-input"
-                  placeholder="Recipient email"
-                  value={customization.recipientEmail}
-                  onChange={(e) => handleChange('recipientEmail', e.target.value)}
-                />
-              </div>
-            )}
-
-            {/* Delivery Timing */}
-            <div className="customizer-section">
-              <label className="customizer-label">Delivery Timing</label>
-              <select
-                className="customizer-input"
-                value={customization.deliveryTiming}
-                onChange={(e) => handleChange('deliveryTiming', e.target.value)}
-              >
-                <option value="">Select timing</option>
-                {deliveryTimings.map((opt) => (
-                  <option key={opt} value={opt}>
-                    {opt === 'send-to-self-first'
-                      ? 'Send to me first'
-                      : opt.charAt(0).toUpperCase() + opt.slice(1)}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {customization.deliveryTiming === 'later' && (
-              <div className="customizer-section">
-                <label className="customizer-label">Delivery Date</label>
-                <input
-                  type="date"
-                  className="customizer-input"
-                  value={customization.deliveryDate}
-                  onChange={(e) => handleChange('deliveryDate', e.target.value)}
-                />
-              </div>
-            )}
-
-            {/* Gifting Toggle */}
-            <div className="customizer-section">
-              <label className="customizer-toggle">
-                <input
-                  type="checkbox"
-                  checked={customization.isGift}
-                  onChange={(e) => handleChange('isGift', e.target.checked)}
-                />
-                <span className="toggle-label">Send this experience as a gift</span>
-              </label>
-            </div>
-
-            {/* Gifting Form */}
-            {customization.isGift && (
-              <GiftingForm
-                recipientName={customization.recipientName}
-                recipientEmail={customization.recipientEmail}
-                deliveryDate={customization.deliveryDate}
-                giftMessage={customization.giftMessage}
-                onChange={handleChange}
-              />
-            )}
-
-            {/* Action Buttons */}
-            <div className="customizer-actions">
-              <button className="cta-secondary" onClick={onClose}>
-                Cancel
-              </button>
-              <button className="cta-primary" onClick={handleComplete}>
-                Add to Experience
-              </button>
             </div>
           </div>
 
-          {/* Right Panel - Preview */}
-          <div className="customizer-preview">
-            <CustomizationPreview
-              product={product}
-              customization={customization}
-              colorThemes={colorThemes}
-            />
+          {/* ── STYLE ── */}
+          <div className="customizer-section">
+            <div className="customizer-section__header">
+              <span className="customizer-section__number">2</span>
+              <h3 className="customizer-section__title">Style</h3>
+            </div>
+            <div className="theme-grid" role="radiogroup" aria-label="Color theme">
+              {COLOR_THEMES.map(theme => (
+                <button key={theme.id} type="button" role="radio" aria-checked={colorTheme === theme.id}
+                  className={`theme-swatch ${colorTheme === theme.id ? 'active' : ''}`}
+                  onClick={() => setColorTheme(theme.id)}>
+                  <div className="theme-colors">
+                    <span style={{ background: theme.colors[0] }} />
+                    <span style={{ background: theme.colors[1] }} />
+                  </div>
+                  <span className="theme-name">{theme.name}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* ── EXTRAS ── */}
+          <div className="customizer-section">
+            <div className="customizer-section__header">
+              <span className="customizer-section__number">3</span>
+              <h3 className="customizer-section__title">Extras</h3>
+            </div>
+            <div className="extras-grid">
+              {EXTRAS.map(extra => (
+                <button key={extra.id} type="button"
+                  className={`extra-toggle ${extras[extra.id] ? 'extra-toggle--active' : ''}`}
+                  onClick={() => toggleExtra(extra.id)}
+                  aria-pressed={extras[extra.id]}
+                  aria-label={`${extra.name} — $${extra.price.toFixed(2)}`}>
+                  <div className="extra-toggle__info">
+                    <span className="extra-toggle__icon" aria-hidden="true">{extra.icon}</span>
+                    <div>
+                      <span className="extra-toggle__name">{extra.name}</span>
+                      <span className="extra-toggle__price">+${extra.price.toFixed(2)}</span>
+                    </div>
+                  </div>
+                  <span className="toggle-switch" aria-hidden="true">
+                    <input type="checkbox" tabIndex={-1} checked={extras[extra.id]} readOnly />
+                    <span className="toggle-switch__slider" />
+                  </span>
+                </button>
+              ))}
+            </div>
           </div>
         </div>
+
+        {/* ── STICKY CTA ── */}
+        <div className="customizer-sticky-cta">
+          <div className="cta-preview">
+            {product?.image_url && <img src={product.image_url} alt={product?.name || 'Preview'} />}
+          </div>
+          <div className="cta-pricing">
+            <div className="cta-pricing__label">Total</div>
+            <div className="cta-pricing__amount">${totalPrice.toFixed(2)}</div>
+          </div>
+          <button type="button" className="cta-add-btn" onClick={handleComplete}
+            disabled={!isProductValid} aria-label={`Add to cart for $${totalPrice.toFixed(2)}`}>
+            Add to Cart
+          </button>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 
