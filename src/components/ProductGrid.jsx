@@ -1,20 +1,21 @@
 import { useState, useMemo } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, Link } from 'react-router-dom';
 import ProductCard from './ProductCard';
 import { useProducts } from '../hooks/useProducts';
 import { PRICING_TIERS } from '../config/pricingTiers';
+import '../styles/gallery.css';
 
 const CATEGORY_DISPLAY = {
-  'mothers-day': { label: "Mother's Day Collection", tagline: 'Celebrate the woman who gave you everything' },
-  'birthday': { label: 'Birthday Collection', tagline: 'Make their special day unforgettable' },
-  'love': { label: 'Love & Romance', tagline: 'Express your deepest feelings' },
-  'valentine': { label: "Valentine's Day", tagline: 'For the one who has your heart' },
-  'celebration': { label: 'Congratulations', tagline: 'Celebrate their achievements in style' },
-  'grief': { label: 'Memorial & Sympathy', tagline: 'Honor those we hold dear' },
-  'friendship': { label: 'Thinking of You', tagline: 'Let them know they matter' },
-  'luxury': { label: 'Glass Stiletto Series', tagline: 'Where fashion meets floral artistry' },
-  'zodiac': { label: 'Zodiac Collection', tagline: 'Written in the stars' },
-  'general': { label: 'General Collection', tagline: 'Beautiful blooms for every moment' },
+  'mothers-day': { label: "Mother's Day Collection", tagline: 'Celebrate the woman who gave you everything', emoji: '🌸' },
+  'birthday': { label: 'Birthday Collection', tagline: 'Make their special day unforgettable', emoji: '🎂' },
+  'love': { label: 'Love & Romance', tagline: 'Express your deepest feelings', emoji: '❤️' },
+  'valentine': { label: "Valentine's Day", tagline: 'For the one who has your heart', emoji: '💕' },
+  'celebration': { label: 'Congratulations', tagline: 'Celebrate their achievements in style', emoji: '🎉' },
+  'grief': { label: 'Memorial & Sympathy', tagline: 'Honor those we hold dear', emoji: '🕊️' },
+  'friendship': { label: 'Thinking of You', tagline: 'Let them know they matter', emoji: '💐' },
+  'luxury': { label: 'Glass Stiletto Series', tagline: 'Where fashion meets floral artistry', emoji: '👠' },
+  'zodiac': { label: 'Zodiac Collection', tagline: 'Written in the stars', emoji: '✨' },
+  'general': { label: 'General Collection', tagline: 'Beautiful blooms for every moment', emoji: '🌷' },
 };
 
 const ProductGrid = ({ searchQuery = '', category = null }) => {
@@ -31,9 +32,7 @@ const ProductGrid = ({ searchQuery = '', category = null }) => {
         (product.description || '').toLowerCase().includes(searchQuery.toLowerCase());
 
       const matchesTier = tierFilter === null || product.tier === tierFilter;
-
-      const matchesCategory = !categoryFilter || 
-        product.category === categoryFilter;
+      const matchesCategory = !categoryFilter || product.category === categoryFilter;
 
       return matchesSearch && matchesTier && matchesCategory;
     });
@@ -66,67 +65,79 @@ const ProductGrid = ({ searchQuery = '', category = null }) => {
 
   if (loading) {
     return (
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="text-center py-12">
-          <div className="w-10 h-10 border-2 border-[var(--border-default)] border-t-[#D4AF37] rounded-full animate-spin mx-auto mb-4"></div>
-          <h3 className="text-base font-medium text-[var(--text-secondary)]">Loading collection...</h3>
+      <div className="gallery-page">
+        <div className="gallery-container">
+          <div className="text-center py-20">
+            <div className="w-10 h-10 border-2 border-[#E5E5EA] border-t-[var(--accent-gold)] rounded-full animate-spin mx-auto mb-4" />
+            <p className="text-sm text-[#6E6E73] font-light tracking-wide">Loading collection...</p>
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div id="products-section" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 py-12 sm:py-24">
-      <div className="flex flex-col space-y-8 sm:space-y-16">
-        <header className="flex flex-col md:flex-row md:items-end justify-between border-b border-[var(--border-default)] pb-6 sm:pb-8">
-          <div>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-medium font-display tracking-tight text-[var(--text-primary)] mb-3 sm:mb-4">
+    <div className="gallery-page">
+      <div className="gallery-container">
+
+        {/* ── PAGE HEADER ── */}
+        <header className="gallery-header">
+          <div className="gallery-header__meta">
+            <h1 className="gallery-header__title">
               {searchQuery
                 ? `Results for "${searchQuery}"`
-                : activeCategoryLabel
-                ? activeCategoryLabel
-                : activeTierLabel
-                ? `${activeTierLabel} Gallery`
-                : 'Digital Gallery'}
-            </h2>
-            <p className="text-sm text-[var(--text-secondary)] font-light tracking-wide">
-              {filteredProducts.length} experience{filteredProducts.length !== 1 ? 's' : ''} available
+                : activeCategoryLabel || (activeTierLabel ? `${activeTierLabel} Gallery` : 'Digital Gallery')}
+            </h1>
+            <p className="gallery-header__count">
+              {filteredProducts.length} experience{filteredProducts.length !== 1 ? 's' : ''}
             </p>
           </div>
         </header>
 
+        {/* ── EMPTY STATE ── */}
         {filteredProducts.length === 0 ? (
-          <div className="text-center py-20 sm:py-32 bg-[var(--surface-white)] rounded-2xl border border-[var(--border-subtle)]">
-            <h3 className="text-lg sm:text-xl font-light text-[var(--text-secondary)]">
-              No experiences found.
-            </h3>
+          <div className="gallery-empty">
+            <div className="gallery-empty__icon">🌸</div>
+            <h3 className="gallery-empty__title">No experiences found</h3>
+            <p className="gallery-empty__text">Try a different search or browse all collections.</p>
+            <Link to="/shop" className="gallery-empty__cta">Browse All</Link>
           </div>
         ) : (
-          orderedCategories.map((catId) => {
-            const catInfo = CATEGORY_DISPLAY[catId] || { label: catId, tagline: '' };
-            const catProducts = groupedProducts[catId];
+          /* ── CATEGORY SECTIONS ── */
+          <div className="gallery-sections">
+            {orderedCategories.map((catId) => {
+              const catInfo = CATEGORY_DISPLAY[catId] || { label: catId, tagline: '', emoji: '🌷' };
+              const catProducts = groupedProducts[catId];
+              const showHeader = !categoryFilter && orderedCategories.length > 1;
 
-            return (
-              <section key={catId} className="space-y-8">
-                {!categoryFilter && orderedCategories.length > 1 && (
-                  <div className="border-b border-[var(--border-subtle)] pb-4">
-                    <h3 className="text-xl sm:text-2xl font-display font-medium text-[var(--text-primary)] tracking-tight">
-                      {catInfo.label}
-                    </h3>
-                    <p className="text-[12px] text-[var(--text-muted)] mt-2 font-light">
-                      {catInfo.tagline}
-                    </p>
+              return (
+                <section key={catId} className="gallery-section">
+                  {showHeader && (
+                    <div className="gallery-section__header">
+                      <div className="gallery-section__info">
+                        <h2 className="gallery-section__title">
+                          {catInfo.label}
+                        </h2>
+                        <p className="gallery-section__tagline">{catInfo.tagline}</p>
+                      </div>
+                      <Link
+                        to={`/shop?category=${catId}`}
+                        className="gallery-section__see-all"
+                      >
+                        See all →
+                      </Link>
+                    </div>
+                  )}
+
+                  <div className="gallery-grid">
+                    {catProducts.map((product) => (
+                      <ProductCard key={product.id} product={product} />
+                    ))}
                   </div>
-                )}
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 sm:gap-8 lg:gap-10">
-                  {catProducts.map((product) => (
-                    <ProductCard key={product.id} product={product} />
-                  ))}
-                </div>
-              </section>
-            );
-          })
+                </section>
+              );
+            })}
+          </div>
         )}
       </div>
     </div>
