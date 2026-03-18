@@ -10,8 +10,8 @@
 .video-hero {
   position: relative;
   width: 100%;
-  height: 100vh;
-  height: 100dvh;
+  height: 65vh;
+  max-height: 600px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -311,14 +311,13 @@
   position: relative;
   z-index: 0;
   width: 100%;
-  height: 120px;
+  height: 60px;
   background: linear-gradient(
     180deg,
     #0A0A0A 0%,
-    rgba(10,10,10,0.8) 30%,
-    rgba(10,10,10,0.4) 60%,
-    rgba(10,10,10,0.1) 85%,
-    transparent 100%
+    rgba(10,10,10,0.6) 30%,
+    rgba(255,255,255,0.2) 60%,
+    var(--surface-white, #FFFFFF) 100%
   );
   margin-top: -1px;
   pointer-events: none;
