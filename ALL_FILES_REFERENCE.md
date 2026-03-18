@@ -1,4 +1,4 @@
-# Digital Bloom — All 10 Files (Final)
+# Digital Bloom — All Files (Final)
 
 ---
 ## 1. src/index.css
@@ -2381,7 +2381,217 @@ html {
 ```
 
 ---
-## 5. src/components/Customizer.jsx
+## 5. src/styles/gallery.css
+```css
+/* ============================================
+   GALLERY / SHOP PAGE
+   White-forward, polished grid layout
+   ============================================ */
+
+.gallery-page {
+  min-height: 100vh;
+  background: var(--surface-soft, #F7F7F7);
+  padding-bottom: 80px;
+}
+
+.gallery-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+@media (min-width: 768px) {
+  .gallery-container {
+    padding: 0 32px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .gallery-container {
+    padding: 0 48px;
+  }
+}
+
+/* ── PAGE HEADER ── */
+.gallery-header {
+  padding: 32px 0 24px;
+  border-bottom: 1px solid var(--border-default, #E5E5EA);
+  margin-bottom: 32px;
+}
+
+@media (min-width: 768px) {
+  .gallery-header {
+    padding: 48px 0 32px;
+    margin-bottom: 48px;
+  }
+}
+
+.gallery-header__title {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(24px, 5vw, 40px);
+  font-weight: 600;
+  color: var(--text-primary, #1D1D1F);
+  letter-spacing: 0.02em;
+  margin: 0 0 8px;
+  line-height: 1.2;
+}
+
+.gallery-header__count {
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--text-secondary, #6E6E73);
+  margin: 0;
+  letter-spacing: 0.02em;
+}
+
+/* ── EMPTY STATE ── */
+.gallery-empty {
+  text-align: center;
+  padding: 64px 24px;
+  background: var(--surface-white, #FFFFFF);
+  border-radius: 20px;
+  border: 1px solid var(--border-subtle, #F0F0F0);
+}
+
+.gallery-empty__icon {
+  font-size: 48px;
+  margin-bottom: 20px;
+}
+
+.gallery-empty__title {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--text-primary, #1D1D1F);
+  margin: 0 0 10px;
+}
+
+.gallery-empty__text {
+  font-family: 'Outfit', sans-serif;
+  font-size: 15px;
+  color: var(--text-secondary, #6E6E73);
+  margin: 0 0 24px;
+}
+
+.gallery-empty__cta {
+  display: inline-block;
+  padding: 14px 32px;
+  background: var(--accent-gold, #C9A14A);
+  color: #FFFFFF;
+  border-radius: 980px;
+  text-decoration: none;
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  transition: all 0.2s;
+}
+
+.gallery-empty__cta:hover {
+  background: var(--accent-gold-hover, #B8923F);
+}
+
+/* ── SECTIONS ── */
+.gallery-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+}
+
+@media (min-width: 768px) {
+  .gallery-sections {
+    gap: 64px;
+  }
+}
+
+
+
+/* Section header: title + see all on one line */
+.gallery-section__header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border-subtle, #F0F0F0);
+  margin-bottom: 24px;
+}
+
+.gallery-section__title {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(20px, 3vw, 28px);
+  font-weight: 600;
+  color: var(--text-primary, #1D1D1F);
+  margin: 0;
+  letter-spacing: 0.02em;
+  line-height: 1.2;
+}
+
+.gallery-section__tagline {
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px;
+  font-weight: 300;
+  color: var(--text-secondary, #6E6E73);
+  margin: 4px 0 0;
+  line-height: 1.5;
+}
+
+.gallery-section__see-all {
+  flex-shrink: 0;
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--accent-gold, #C9A14A);
+  text-decoration: none;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+  transition: color 0.2s;
+  padding-bottom: 2px;
+}
+
+.gallery-section__see-all:hover {
+  color: var(--accent-gold-hover, #B8923F);
+}
+
+/* ── PRODUCT GRID ── */
+.gallery-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+}
+
+@media (min-width: 480px) {
+  .gallery-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+}
+
+@media (min-width: 768px) {
+  .gallery-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .gallery-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 28px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .gallery-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 28px;
+  }
+}
+```
+
+---
+## 6. src/components/Customizer.jsx
 ```jsx
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { supabase } from '../lib/supabase';
@@ -2404,21 +2614,17 @@ const COLOR_THEMES = [
 const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {} }) => {
   const { messagePlaceholder, toPlaceholder, ...stateDefaults } = defaults;
   const scrollPosRef = useRef(0);
-  const themePreviewRef = useRef(null);
 
-  // ── Clean field modeling ──
+  // Clean, minimal state
   const [message, setMessage] = useState({
-    short: '',
-    long: '',
-    toName: '',
-    fromName: '',
-    ...stateDefaults,
+    short: stateDefaults.short || '',
+    toName: stateDefaults.toName || '',
+    fromName: stateDefaults.fromName || '',
   });
-
   const [colorTheme, setColorTheme] = useState(stateDefaults.colorTheme || 'original');
   const [extras, setExtras] = useState({ balloon: false, ribbon: false, sparkle: false });
 
-  // ── Safari-safe scroll lock ──
+  // Safari-safe scroll lock
   useEffect(() => {
     if (isOpen) {
       scrollPosRef.current = window.scrollY;
@@ -2441,19 +2647,18 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {} }) => 
     };
   }, [isOpen]);
 
-  // ── Scoped theme preview (NO global mutation) ──
+  // Scoped theme
   const themeStyle = useMemo(() => {
     const specs = {
-      original: { color: '#FF69B4', rgb: '255, 105, 180' },
-      warm:     { color: '#FF6B6B', rgb: '255, 107, 107' },
-      cool:     { color: '#4ECDC4', rgb: '78, 205, 196' },
-      elegant:  { color: '#D4AF37', rgb: '212, 175, 55' },
-      romantic: { color: '#C41E3A', rgb: '196, 30, 58' },
+      original: { color: '#FF69B4' },
+      warm:     { color: '#FF6B6B' },
+      cool:     { color: '#4ECDC4' },
+      elegant:  { color: '#D4AF37' },
+      romantic: { color: '#C41E3A' },
     };
     return specs[colorTheme] || specs.original;
   }, [colorTheme]);
 
-  // ── Callbacks ──
   const handleMessageChange = useCallback((field, value) => {
     setMessage(prev => ({ ...prev, [field]: value }));
   }, []);
@@ -2462,47 +2667,27 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {} }) => 
     setExtras(prev => ({ ...prev, [extraId]: !prev[extraId] }));
   }, []);
 
-  // ── Pricing ──
+  // Pricing
   const basePrice = parseFloat(product?.price || 0);
-  const extrasTotal = EXTRAS.reduce((sum, extra) =>
-    sum + (extras[extra.id] ? extra.price : 0), 0
-  );
+  const extrasTotal = EXTRAS.reduce((sum, e) => sum + (extras[e.id] ? e.price : 0), 0);
   const totalPrice = basePrice + extrasTotal;
-
-  // ── Guard: is product data complete? ──
   const isProductValid = Boolean(product?.id && basePrice > 0);
 
-  // ── Add to Cart (non-blocking Supabase) ──
+  // Non-blocking Add to Cart
   const handleComplete = useCallback(() => {
     if (!isProductValid) return;
-
-    // Fire-and-forget theme persistence — does NOT block the cart action
+    // Fire-and-forget theme save
     (async () => {
       try {
         const { data: { user } } = await supabase.auth.getUser();
         if (user) {
           await supabase.from('digital_bloom_themes').insert([{
-            user_id: user.id,
-            theme_name: colorTheme,
-            primary_color: themeStyle.color,
-            border_radius: '30px',
-            bloom_glow: '0.2',
-            bg_opacity: 0.9,
+            user_id: user.id, theme_name: colorTheme, primary_color: themeStyle.color,
           }]);
         }
-      } catch (err) {
-        console.error('Theme persistence error (non-blocking):', err);
-      }
+      } catch (err) { console.error('Theme save (non-blocking):', err); }
     })();
-
-    // Immediately add to cart — no await
-    onComplete({
-      productId: product.id,
-      message,
-      colorTheme,
-      extras,
-      totalPrice,
-    });
+    onComplete({ productId: product.id, message, colorTheme, extras, totalPrice });
     onClose();
   }, [isProductValid, product, message, colorTheme, extras, totalPrice, themeStyle, onComplete, onClose]);
 
@@ -2510,40 +2695,21 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {} }) => 
 
   return (
     <>
-      {/* Overlay */}
-      <div
-        className={`customizer-overlay ${isOpen ? 'active' : ''}`}
-        onClick={onClose}
-        role="presentation"
-      />
+      <div className={`customizer-overlay ${isOpen ? 'active' : ''}`} onClick={onClose} role="presentation" />
 
-      {/* Bottom Sheet / Side Panel */}
-      <div
-        className={`customizer-sheet ${isOpen ? 'open' : ''}`}
-        role="dialog"
-        aria-modal="true"
-        aria-label="Customize your experience"
-      >
-        {/* Drag Indicator (mobile) */}
+      <div className={`customizer-sheet ${isOpen ? 'open' : ''}`} role="dialog" aria-modal="true" aria-label="Customize your experience">
         <div className="customizer-sheet__drag-indicator" />
 
         {/* Header */}
         <div className="customizer-sheet__header">
-          <h2 className="customizer-sheet__title">Customize Experience</h2>
-          <button
-            type="button"
-            className="customizer-sheet__close"
-            onClick={onClose}
-            aria-label="Close customizer"
-          >
-            ✕
-          </button>
+          <h2 className="customizer-sheet__title">Customize</h2>
+          <button type="button" className="customizer-sheet__close" onClick={onClose} aria-label="Close">✕</button>
         </div>
 
-        {/* Scrollable Body */}
+        {/* Body — streamlined: Message → Style → Extras */}
         <div className="customizer-sheet__body">
 
-          {/* ── SECTION 1: MESSAGE ── */}
+          {/* ── MESSAGE (simplified — just short msg + to/from) ── */}
           <div className="customizer-section">
             <div className="customizer-section__header">
               <span className="customizer-section__number">1</span>
@@ -2551,105 +2717,70 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {} }) => 
             </div>
 
             <div className="customizer-field">
-              <label className="customizer-label" htmlFor="cust-msg-short">Short Message</label>
               <input
-                id="cust-msg-short"
+                id="cust-msg"
                 type="text"
                 className="customizer-input"
                 placeholder={messagePlaceholder || 'e.g., Happy Birthday!'}
-                maxLength="50"
+                maxLength="80"
                 value={message.short}
                 onChange={(e) => handleMessageChange('short', e.target.value)}
               />
-              <span className="customizer-hint">{message.short.length}/50</span>
+              <span className="customizer-hint">{message.short.length}/80</span>
             </div>
 
-            <div className="customizer-field">
-              <label className="customizer-label" htmlFor="cust-msg-long">Personal Note</label>
-              <textarea
-                id="cust-msg-long"
-                className="customizer-textarea"
-                placeholder="Add a longer personal message..."
-                maxLength="200"
-                rows="3"
-                value={message.long}
-                onChange={(e) => handleMessageChange('long', e.target.value)}
-              />
-              <span className="customizer-hint">{message.long.length}/200</span>
-            </div>
-
-            <div className="customizer-field">
-              <label className="customizer-label" htmlFor="cust-to">To</label>
-              <input
-                id="cust-to"
-                type="text"
-                className="customizer-input"
-                placeholder={toPlaceholder || 'Recipient name'}
-                value={message.toName}
-                onChange={(e) => handleMessageChange('toName', e.target.value)}
-              />
-            </div>
-
-            <div className="customizer-field">
-              <label className="customizer-label" htmlFor="cust-from">From</label>
-              <input
-                id="cust-from"
-                type="text"
-                className="customizer-input"
-                placeholder="Your name"
-                value={message.fromName}
-                onChange={(e) => handleMessageChange('fromName', e.target.value)}
-              />
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+              <div className="customizer-field">
+                <label className="customizer-label" htmlFor="cust-to">To</label>
+                <input id="cust-to" type="text" className="customizer-input"
+                  placeholder={toPlaceholder || 'Recipient'}
+                  value={message.toName}
+                  onChange={(e) => handleMessageChange('toName', e.target.value)} />
+              </div>
+              <div className="customizer-field">
+                <label className="customizer-label" htmlFor="cust-from">From</label>
+                <input id="cust-from" type="text" className="customizer-input"
+                  placeholder="Your name"
+                  value={message.fromName}
+                  onChange={(e) => handleMessageChange('fromName', e.target.value)} />
+              </div>
             </div>
           </div>
 
-          {/* ── SECTION 2: STYLE ── */}
+          {/* ── STYLE ── */}
           <div className="customizer-section">
             <div className="customizer-section__header">
               <span className="customizer-section__number">2</span>
               <h3 className="customizer-section__title">Style</h3>
             </div>
-
-            <div className="customizer-field">
-              <label className="customizer-label">Color Theme</label>
-              <div className="theme-grid" role="radiogroup" aria-label="Color theme">
-                {COLOR_THEMES.map(theme => (
-                  <button
-                    key={theme.id}
-                    type="button"
-                    role="radio"
-                    aria-checked={colorTheme === theme.id}
-                    className={`theme-swatch ${colorTheme === theme.id ? 'active' : ''}`}
-                    onClick={() => setColorTheme(theme.id)}
-                  >
-                    <div className="theme-colors">
-                      <span style={{ background: theme.colors[0] }} />
-                      <span style={{ background: theme.colors[1] }} />
-                    </div>
-                    <span className="theme-name">{theme.name}</span>
-                  </button>
-                ))}
-              </div>
+            <div className="theme-grid" role="radiogroup" aria-label="Color theme">
+              {COLOR_THEMES.map(theme => (
+                <button key={theme.id} type="button" role="radio" aria-checked={colorTheme === theme.id}
+                  className={`theme-swatch ${colorTheme === theme.id ? 'active' : ''}`}
+                  onClick={() => setColorTheme(theme.id)}>
+                  <div className="theme-colors">
+                    <span style={{ background: theme.colors[0] }} />
+                    <span style={{ background: theme.colors[1] }} />
+                  </div>
+                  <span className="theme-name">{theme.name}</span>
+                </button>
+              ))}
             </div>
           </div>
 
-          {/* ── SECTION 3: EXTRAS ── */}
+          {/* ── EXTRAS ── */}
           <div className="customizer-section">
             <div className="customizer-section__header">
               <span className="customizer-section__number">3</span>
               <h3 className="customizer-section__title">Extras</h3>
             </div>
-
             <div className="extras-grid">
               {EXTRAS.map(extra => (
-                <button
-                  key={extra.id}
-                  type="button"
+                <button key={extra.id} type="button"
                   className={`extra-toggle ${extras[extra.id] ? 'extra-toggle--active' : ''}`}
                   onClick={() => toggleExtra(extra.id)}
                   aria-pressed={extras[extra.id]}
-                  aria-label={`${extra.name} — $${extra.price.toFixed(2)}`}
-                >
+                  aria-label={`${extra.name} — $${extra.price.toFixed(2)}`}>
                   <div className="extra-toggle__info">
                     <span className="extra-toggle__icon" aria-hidden="true">{extra.icon}</span>
                     <div>
@@ -2667,24 +2798,17 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {} }) => 
           </div>
         </div>
 
-        {/* ── STICKY CTA BAR ── */}
+        {/* ── STICKY CTA ── */}
         <div className="customizer-sticky-cta">
           <div className="cta-preview">
-            {product?.image_url && (
-              <img src={product.image_url} alt={product?.name || 'Preview'} />
-            )}
+            {product?.image_url && <img src={product.image_url} alt={product?.name || 'Preview'} />}
           </div>
           <div className="cta-pricing">
             <div className="cta-pricing__label">Total</div>
             <div className="cta-pricing__amount">${totalPrice.toFixed(2)}</div>
           </div>
-          <button
-            type="button"
-            className="cta-add-btn"
-            onClick={handleComplete}
-            disabled={!isProductValid}
-            aria-label={`Add to cart for $${totalPrice.toFixed(2)}`}
-          >
+          <button type="button" className="cta-add-btn" onClick={handleComplete}
+            disabled={!isProductValid} aria-label={`Add to cart for $${totalPrice.toFixed(2)}`}>
             Add to Cart
           </button>
         </div>
@@ -2697,7 +2821,7 @@ export default Customizer;
 ```
 
 ---
-## 6. src/components/ProductDetails.jsx
+## 7. src/components/ProductDetails.jsx
 ```jsx
 import { useState, useMemo, useCallback, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
@@ -2737,13 +2861,11 @@ const ProductDetails = () => {
     return () => clearTimeout(timer);
   }, [showSuccess]);
 
-  // Reset success when customizer reopens
   const openCustomizer = useCallback(() => {
     setShowSuccess(false);
     setIsCustomizerOpen(true);
   }, []);
 
-  // Back navigation with /shop fallback
   const goBack = useCallback(() => {
     if (window.history.length > 1) {
       navigate(-1);
@@ -2786,152 +2908,140 @@ const ProductDetails = () => {
   const displayPrice = Number(product.price || 0).toFixed(2);
 
   return (
-    <div className="min-h-screen bg-[var(--bg-page)] text-white">
+    <div className="min-h-screen bg-[var(--surface-soft,#F7F7F7)] text-[var(--text-primary)]">
       {/* Customizer Panel */}
-      <Customizer 
+      <Customizer
         key={product.id}
-        product={product} 
-        isOpen={isCustomizerOpen} 
+        product={product}
+        isOpen={isCustomizerOpen}
         onClose={() => setIsCustomizerOpen(false)}
         onComplete={handleCustomizationComplete}
         defaults={customizerDefaults}
       />
 
-      {/* ── HERO MEDIA (CONDITIONAL: video OR image) ── */}
+      {/* ── HERO MEDIA ── */}
       <div className="relative w-full aspect-[3/4] sm:aspect-[16/10] lg:aspect-[16/7] overflow-hidden bg-black">
         {heroVideoSrc ? (
           <video
             src={heroVideoSrc}
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="auto"
+            autoPlay muted loop playsInline preload="auto"
             poster={heroImageSrc}
             className="w-full h-full object-cover"
             onError={(e) => { e.target.style.display = 'none'; }}
           />
         ) : heroImageSrc ? (
-          <img
-            src={heroImageSrc}
-            alt={product.name}
-            className="w-full h-full object-cover"
-          />
+          <img src={heroImageSrc} alt={product.name} className="w-full h-full object-cover" />
         ) : (
           <div className="w-full h-full bg-gradient-to-b from-[#1a1a2e] to-[#0a0a0a]" />
         )}
 
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-        
-        {/* Back Button */}
-        <button
-          type="button"
-          onClick={goBack}
+
+        {/* Back */}
+        <button type="button" onClick={goBack}
           className="absolute top-6 left-5 z-10 w-11 h-11 rounded-full bg-black/40 backdrop-blur-md border border-white/15 flex items-center justify-center text-white hover:bg-black/60 transition-all"
-          aria-label="Go back"
-        >
+          aria-label="Go back">
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
         </button>
 
-        {/* Category Badge */}
+        {/* Category */}
         {product.category && (
           <div className="absolute top-6 right-5 z-10 px-4 py-1.5 rounded-full bg-black/40 backdrop-blur-md border border-white/15">
-            <span className="text-[11px] uppercase tracking-[0.15em] text-white/80 font-medium">
-              {product.category}
-            </span>
+            <span className="text-[11px] uppercase tracking-[0.15em] text-white/80 font-medium">{product.category}</span>
           </div>
         )}
       </div>
 
-      {/* ── PRODUCT INFO ── */}
-      <div className="max-w-3xl mx-auto px-5 sm:px-8 -mt-8 relative z-10">
+      {/* ── PRODUCT INFO — More breathing room ── */}
+      <div className="max-w-3xl mx-auto px-5 sm:px-8 -mt-8 relative z-10 pb-24">
 
-        {/* Title + Price Card */}
-        <div className="bg-[var(--surface-white)] rounded-2xl p-6 sm:p-8 shadow-lg mb-6">
-          <h1 className="text-2xl sm:text-3xl font-display font-medium tracking-tight text-[#1D1D1F] mb-3">
+        {/* Title + Price Card — generous padding */}
+        <div className="bg-[var(--surface-white)] rounded-2xl p-7 sm:p-10 shadow-lg mb-8">
+          <h1 className="text-2xl sm:text-3xl font-display font-medium tracking-tight text-[#1D1D1F] mb-4">
             {product.name}
           </h1>
-          <p className="text-2xl font-semibold text-[var(--accent-gold)] mb-4">
+          <p className="text-3xl font-semibold text-[var(--accent-gold)] mb-5">
             ${displayPrice}
           </p>
           {product.description && (
-            <p className="text-base text-[#6E6E73] leading-relaxed mb-6">
+            <p className="text-base text-[#6E6E73] leading-relaxed mb-8">
               {product.description}
             </p>
           )}
 
-          {/* PRIMARY CTA */}
+          {/* PRIMARY CTA — more padding/presence */}
           <button
             type="button"
             onClick={openCustomizer}
-            className="w-full py-4 rounded-full text-sm font-bold tracking-[0.1em] uppercase transition-all bg-[var(--accent-gold)] text-white hover:brightness-110 shadow-lg active:scale-[0.98]"
+            className="w-full py-4.5 rounded-full text-[15px] font-bold tracking-[0.08em] uppercase transition-all bg-[var(--accent-gold)] text-white hover:brightness-110 shadow-lg active:scale-[0.98]"
+            style={{ padding: '18px 0' }}
           >
             Customize Experience
           </button>
 
-          {/* Feature tags — only rendered if product has relevant metadata */}
-          <div className="flex items-center justify-center gap-4 mt-4 text-[11px] uppercase tracking-[0.12em] text-[#AEAEB2] font-medium">
-            <span>Digital Experience</span>
-            <span className="w-1 h-1 rounded-full bg-[#D1D1D6]" />
-            <span>Instant Delivery</span>
-            <span className="w-1 h-1 rounded-full bg-[#D1D1D6]" />
-            <span>Personalized</span>
+          {/* Feature labels — clearer and readable */}
+          <div className="flex items-center justify-center gap-5 mt-6 flex-wrap">
+            {['Digital Experience', 'Instant Delivery', 'Personalized'].map((label, i) => (
+              <span key={i} className="text-[12px] uppercase tracking-[0.1em] text-[#8E8E93] font-medium">
+                {label}
+              </span>
+            ))}
           </div>
         </div>
 
-        {/* Success Toast */}
+        {/* ── SUCCESS TOAST — Premium brand-aligned ── */}
         {showSuccess && (
-          <div className="bg-[var(--surface-white)] rounded-2xl p-5 shadow-lg mb-6 animate-fade-in border border-green-200">
-            <div className="flex items-center gap-4 mb-4">
-              <div className="w-10 h-10 rounded-full bg-green-500 flex items-center justify-center flex-shrink-0">
-                <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+          <div className="bg-[var(--surface-white)] rounded-2xl p-7 shadow-lg mb-8 animate-fade-in border border-[var(--accent-gold-border)]">
+            <div className="flex items-center gap-4 mb-5">
+              <div className="w-12 h-12 rounded-full bg-[rgba(201,161,74,0.1)] border border-[rgba(201,161,74,0.25)] flex items-center justify-center flex-shrink-0">
+                <svg className="w-6 h-6 text-[var(--accent-gold)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
                 </svg>
               </div>
               <div>
-                <p className="text-base font-semibold text-[#1D1D1F]">Added to your cart!</p>
+                <p className="text-lg font-display font-semibold text-[#1D1D1F]">Added to Your Cart</p>
                 <p className="text-sm text-[#6E6E73] mt-1">Your personalized bloom is ready.</p>
               </div>
             </div>
-            <button
-              type="button"
-              onClick={() => { setShowSuccess(false); toggleCart(); }}
-              className="w-full py-3.5 rounded-full text-sm font-bold tracking-[0.1em] uppercase bg-[#1D1D1F] text-white hover:bg-[#333] transition-all"
-            >
-              View Cart & Checkout
-            </button>
-            <Link
-              to="/shop"
-              className="block w-full py-3 mt-3 rounded-full text-sm font-medium tracking-[0.1em] uppercase text-center border border-[#E5E5EA] text-[#6E6E73] hover:border-[var(--accent-gold)] hover:text-[var(--accent-gold)] transition-all"
-            >
-              Continue Shopping
-            </Link>
+            <div className="space-y-3">
+              <button
+                type="button"
+                onClick={() => { setShowSuccess(false); toggleCart(); }}
+                className="w-full py-4 rounded-full text-[14px] font-bold tracking-[0.08em] uppercase bg-[var(--accent-gold)] text-white hover:brightness-110 transition-all"
+              >
+                View Cart & Checkout
+              </button>
+              <Link
+                to="/shop"
+                className="block w-full py-3.5 rounded-full text-[13px] font-medium tracking-[0.08em] uppercase text-center border border-[#E5E5EA] text-[#6E6E73] hover:border-[var(--accent-gold)] hover:text-[var(--accent-gold)] transition-all"
+              >
+                Continue Shopping
+              </Link>
+            </div>
           </div>
         )}
 
-        {/* Details Card */}
-        <div className="bg-[var(--surface-white)] rounded-2xl p-6 shadow-lg mb-6">
-          <h3 className="text-[11px] uppercase tracking-[0.15em] text-[var(--accent-gold)] font-bold mb-4">Details</h3>
-          <div className="space-y-0">
-            {[
-              { label: 'Format', value: 'Digital Video Experience' },
-              { label: 'Delivery', value: 'Instant Digital Download' },
-              { label: 'Access', value: 'Lifetime — download anytime' },
-            ].map((item, i) => (
-              <div key={i} className="flex justify-between items-center py-3.5 border-b border-[#F0F0F0] last:border-b-0">
-                <span className="text-sm text-[#6E6E73]">{item.label}</span>
-                <span className="text-sm font-medium text-[#1D1D1F]">{item.value}</span>
-              </div>
-            ))}
-          </div>
+        {/* ── Details Card — clear separation ── */}
+        <div className="bg-[var(--surface-white)] rounded-2xl p-7 sm:p-10 shadow-lg mb-8">
+          <h3 className="text-[11px] uppercase tracking-[0.15em] text-[var(--accent-gold)] font-bold mb-5">Details</h3>
+          {[
+            { label: 'Format', value: 'Digital Video Experience' },
+            { label: 'Delivery', value: 'Instant Digital Download' },
+            { label: 'Access', value: 'Lifetime — download anytime' },
+          ].map((item, i) => (
+            <div key={i} className="flex justify-between items-center py-4 border-b border-[#F0F0F0] last:border-b-0">
+              <span className="text-[14px] text-[#6E6E73]">{item.label}</span>
+              <span className="text-[14px] font-medium text-[#1D1D1F]">{item.value}</span>
+            </div>
+          ))}
         </div>
       </div>
 
       {/* ── RELATED PRODUCTS ── */}
       {relatedProducts.length > 0 && (
-        <div className="max-w-7xl mx-auto px-5 sm:px-8 pt-12 pb-24">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 pb-24">
           <h2 className="text-2xl font-display font-medium text-[var(--text-primary)] mb-8 tracking-tight">
             You may also like
           </h2>
@@ -2952,7 +3062,7 @@ export default ProductDetails;
 ```
 
 ---
-## 7. src/components/ProductCard.jsx
+## 8. src/components/ProductCard.jsx
 ```jsx
 import { Link } from 'react-router-dom';
 import VideoPlayer from './VideoPlayer';
@@ -3021,25 +3131,26 @@ export default ProductCard;
 ```
 
 ---
-## 8. src/components/ProductGrid.jsx
+## 9. src/components/ProductGrid.jsx
 ```jsx
 import { useState, useMemo } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, Link } from 'react-router-dom';
 import ProductCard from './ProductCard';
 import { useProducts } from '../hooks/useProducts';
 import { PRICING_TIERS } from '../config/pricingTiers';
+import '../styles/gallery.css';
 
 const CATEGORY_DISPLAY = {
-  'mothers-day': { label: "Mother's Day Collection", tagline: 'Celebrate the woman who gave you everything' },
-  'birthday': { label: 'Birthday Collection', tagline: 'Make their special day unforgettable' },
-  'love': { label: 'Love & Romance', tagline: 'Express your deepest feelings' },
-  'valentine': { label: "Valentine's Day", tagline: 'For the one who has your heart' },
-  'celebration': { label: 'Congratulations', tagline: 'Celebrate their achievements in style' },
-  'grief': { label: 'Memorial & Sympathy', tagline: 'Honor those we hold dear' },
-  'friendship': { label: 'Thinking of You', tagline: 'Let them know they matter' },
-  'luxury': { label: 'Glass Stiletto Series', tagline: 'Where fashion meets floral artistry' },
-  'zodiac': { label: 'Zodiac Collection', tagline: 'Written in the stars' },
-  'general': { label: 'General Collection', tagline: 'Beautiful blooms for every moment' },
+  'mothers-day': { label: "Mother's Day Collection", tagline: 'Celebrate the woman who gave you everything', emoji: '🌸' },
+  'birthday': { label: 'Birthday Collection', tagline: 'Make their special day unforgettable', emoji: '🎂' },
+  'love': { label: 'Love & Romance', tagline: 'Express your deepest feelings', emoji: '❤️' },
+  'valentine': { label: "Valentine's Day", tagline: 'For the one who has your heart', emoji: '💕' },
+  'celebration': { label: 'Congratulations', tagline: 'Celebrate their achievements in style', emoji: '🎉' },
+  'grief': { label: 'Memorial & Sympathy', tagline: 'Honor those we hold dear', emoji: '🕊️' },
+  'friendship': { label: 'Thinking of You', tagline: 'Let them know they matter', emoji: '💐' },
+  'luxury': { label: 'Glass Stiletto Series', tagline: 'Where fashion meets floral artistry', emoji: '👠' },
+  'zodiac': { label: 'Zodiac Collection', tagline: 'Written in the stars', emoji: '✨' },
+  'general': { label: 'General Collection', tagline: 'Beautiful blooms for every moment', emoji: '🌷' },
 };
 
 const ProductGrid = ({ searchQuery = '', category = null }) => {
@@ -3056,9 +3167,7 @@ const ProductGrid = ({ searchQuery = '', category = null }) => {
         (product.description || '').toLowerCase().includes(searchQuery.toLowerCase());
 
       const matchesTier = tierFilter === null || product.tier === tierFilter;
-
-      const matchesCategory = !categoryFilter || 
-        product.category === categoryFilter;
+      const matchesCategory = !categoryFilter || product.category === categoryFilter;
 
       return matchesSearch && matchesTier && matchesCategory;
     });
@@ -3091,67 +3200,79 @@ const ProductGrid = ({ searchQuery = '', category = null }) => {
 
   if (loading) {
     return (
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="text-center py-12">
-          <div className="w-10 h-10 border-2 border-[var(--border-default)] border-t-[#D4AF37] rounded-full animate-spin mx-auto mb-4"></div>
-          <h3 className="text-base font-medium text-[var(--text-secondary)]">Loading collection...</h3>
+      <div className="gallery-page">
+        <div className="gallery-container">
+          <div className="text-center py-20">
+            <div className="w-10 h-10 border-2 border-[#E5E5EA] border-t-[var(--accent-gold)] rounded-full animate-spin mx-auto mb-4" />
+            <p className="text-sm text-[#6E6E73] font-light tracking-wide">Loading collection...</p>
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div id="products-section" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 py-12 sm:py-24">
-      <div className="flex flex-col space-y-8 sm:space-y-16">
-        <header className="flex flex-col md:flex-row md:items-end justify-between border-b border-[var(--border-default)] pb-6 sm:pb-8">
-          <div>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-medium font-display tracking-tight text-[var(--text-primary)] mb-3 sm:mb-4">
+    <div className="gallery-page">
+      <div className="gallery-container">
+
+        {/* ── PAGE HEADER ── */}
+        <header className="gallery-header">
+          <div className="gallery-header__meta">
+            <h1 className="gallery-header__title">
               {searchQuery
                 ? `Results for "${searchQuery}"`
-                : activeCategoryLabel
-                ? activeCategoryLabel
-                : activeTierLabel
-                ? `${activeTierLabel} Gallery`
-                : 'Digital Gallery'}
-            </h2>
-            <p className="text-sm text-[var(--text-secondary)] font-light tracking-wide">
-              {filteredProducts.length} experience{filteredProducts.length !== 1 ? 's' : ''} available
+                : activeCategoryLabel || (activeTierLabel ? `${activeTierLabel} Gallery` : 'Digital Gallery')}
+            </h1>
+            <p className="gallery-header__count">
+              {filteredProducts.length} experience{filteredProducts.length !== 1 ? 's' : ''}
             </p>
           </div>
         </header>
 
+        {/* ── EMPTY STATE ── */}
         {filteredProducts.length === 0 ? (
-          <div className="text-center py-20 sm:py-32 bg-[var(--surface-white)] rounded-2xl border border-[var(--border-subtle)]">
-            <h3 className="text-lg sm:text-xl font-light text-[var(--text-secondary)]">
-              No experiences found.
-            </h3>
+          <div className="gallery-empty">
+            <div className="gallery-empty__icon">🌸</div>
+            <h3 className="gallery-empty__title">No experiences found</h3>
+            <p className="gallery-empty__text">Try a different search or browse all collections.</p>
+            <Link to="/shop" className="gallery-empty__cta">Browse All</Link>
           </div>
         ) : (
-          orderedCategories.map((catId) => {
-            const catInfo = CATEGORY_DISPLAY[catId] || { label: catId, tagline: '' };
-            const catProducts = groupedProducts[catId];
+          /* ── CATEGORY SECTIONS ── */
+          <div className="gallery-sections">
+            {orderedCategories.map((catId) => {
+              const catInfo = CATEGORY_DISPLAY[catId] || { label: catId, tagline: '', emoji: '🌷' };
+              const catProducts = groupedProducts[catId];
+              const showHeader = !categoryFilter && orderedCategories.length > 1;
 
-            return (
-              <section key={catId} className="space-y-8">
-                {!categoryFilter && orderedCategories.length > 1 && (
-                  <div className="border-b border-[var(--border-subtle)] pb-4">
-                    <h3 className="text-xl sm:text-2xl font-display font-medium text-[var(--text-primary)] tracking-tight">
-                      {catInfo.label}
-                    </h3>
-                    <p className="text-[12px] text-[var(--text-muted)] mt-2 font-light">
-                      {catInfo.tagline}
-                    </p>
+              return (
+                <section key={catId} className="gallery-section">
+                  {showHeader && (
+                    <div className="gallery-section__header">
+                      <div className="gallery-section__info">
+                        <h2 className="gallery-section__title">
+                          {catInfo.label}
+                        </h2>
+                        <p className="gallery-section__tagline">{catInfo.tagline}</p>
+                      </div>
+                      <Link
+                        to={`/shop?category=${catId}`}
+                        className="gallery-section__see-all"
+                      >
+                        See all →
+                      </Link>
+                    </div>
+                  )}
+
+                  <div className="gallery-grid">
+                    {catProducts.map((product) => (
+                      <ProductCard key={product.id} product={product} />
+                    ))}
                   </div>
-                )}
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 sm:gap-8 lg:gap-10">
-                  {catProducts.map((product) => (
-                    <ProductCard key={product.id} product={product} />
-                  ))}
-                </div>
-              </section>
-            );
-          })
+                </section>
+              );
+            })}
+          </div>
         )}
       </div>
     </div>
@@ -3162,7 +3283,7 @@ export default ProductGrid;
 ```
 
 ---
-## 9. src/components/landing/VideoHero.jsx
+## 10. src/components/landing/VideoHero.jsx
 ```jsx
 import { useEffect, useRef, useState, useCallback, useMemo } from 'react';
 import { Link } from 'react-router-dom';
@@ -3344,7 +3465,7 @@ export default function VideoHero() {
 ```
 
 ---
-## 10. src/pages/Success.jsx
+## 11. src/pages/Success.jsx
 ```jsx
 import { useEffect, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
