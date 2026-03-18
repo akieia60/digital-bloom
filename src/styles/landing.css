@@ -279,10 +279,19 @@ html {
   position: absolute;
   inset: 0;
   z-index: 0;
-  opacity: 0.15;
+  opacity: 0.55;
   transition: opacity 0.3s, transform 0.4s;
   overflow: hidden;
   border-radius: inherit;
+}
+
+.cat-list-bloom-card__icon::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 50%);
+  z-index: 1;
+  pointer-events: none;
 }
 
 .cat-list-bloom-card__icon video {
@@ -292,7 +301,7 @@ html {
 }
 
 .cat-list-bloom-card:hover .cat-list-bloom-card__icon {
-  opacity: 0.25;
+  opacity: 0.7;
   transform: scale(1.05);
 }
 
@@ -342,7 +351,7 @@ html {
   }
 
   .cat-list-bloom-card__icon {
-    display: none;
+    opacity: 0.45;
   }
 }
 
