@@ -50,18 +50,29 @@ const CartItem = ({ item }) => {
             <div className="flex items-center space-x-2">
                <span className="text-[9px] uppercase tracking-widest text-pure-gold font-bold">Bespoke</span>
             </div>
+            {/* Handle both string (legacy) and object (new) message formats */}
             {item.customization.message && (
               <p className="text-[11px] text-white/40 font-light italic line-clamp-2">
-                "{item.customization.message}"
+                "{typeof item.customization.message === 'string'
+                  ? item.customization.message
+                  : item.customization.message.short || ''}"
               </p>
             )}
             <div className="flex flex-wrap gap-2 pt-1">
-              <span className="text-[8px] uppercase tracking-widest bg-white/5 px-2 py-0.5 rounded text-white/30">
-                {item.customization.music}
-              </span>
-              <span className="text-[8px] uppercase tracking-widest bg-white/5 px-2 py-0.5 rounded text-white/30">
-                {item.customization.theme}
-              </span>
+              {/* Show To/From if present (new format) */}
+              {(item.customization.message?.toName || item.customization.message?.fromName) && (
+                <span className="text-[8px] uppercase tracking-widest bg-white/5 px-2 py-0.5 rounded text-white/30">
+                  {item.customization.message.toName && `To: ${item.customization.message.toName}`}
+                  {item.customization.message.toName && item.customization.message.fromName && ' · '}
+                  {item.customization.message.fromName && `From: ${item.customization.message.fromName}`}
+                </span>
+              )}
+              {/* Show colorTheme (new) or legacy music/theme */}
+              {(item.customization.colorTheme || item.customization.theme || item.customization.music) && (
+                <span className="text-[8px] uppercase tracking-widest bg-white/5 px-2 py-0.5 rounded text-white/30">
+                  {item.customization.colorTheme || item.customization.theme || item.customization.music}
+                </span>
+              )}
             </div>
           </div>
         ) : (
