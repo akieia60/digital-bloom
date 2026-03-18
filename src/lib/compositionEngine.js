@@ -232,4 +232,64 @@ export function registerOverlayAsset(overlayType, variant, src) {
   }
 }
 
+// ── BRAND PROTECTION CONFIG ──
+// Configures watermark behavior per product type
+
+export const BRANDING_CONFIG = {
+  styles: {
+    'subtle-gold': {
+      color: 'rgba(212, 175, 55, 0.35)',
+      fontFamily: "'Cormorant Garamond', Georgia, serif",
+      fontStyle: 'italic',
+      fontSize: '0.7rem',
+      letterSpacing: '0.2em',
+      textShadow: '0 1px 3px rgba(0,0,0,0.5)',
+    },
+    'soft-white': {
+      color: 'rgba(255, 255, 255, 0.2)',
+      fontFamily: "'Cormorant Garamond', Georgia, serif",
+      fontStyle: 'italic',
+      fontSize: '0.7rem',
+      letterSpacing: '0.2em',
+      textShadow: '0 1px 3px rgba(0,0,0,0.4)',
+    },
+  },
+  positions: {
+    'bottom-center': { bottom: '16px', left: '0', right: '0', textAlign: 'center' },
+    'bottom-right': { bottom: '12px', right: '16px', textAlign: 'right' },
+    'center': { top: '50%', left: '50%', transform: 'translate(-50%, -50%)', textAlign: 'center' },
+  },
+  defaults: {
+    watermark: true,
+    watermarkStyle: 'subtle-gold',
+    watermarkPosition: 'bottom-center',
+    trademarkText: 'Digital Bloom™',
+    introBrandCard: false,
+    outroBrandCard: true,
+  },
+};
+
+/**
+ * Get branding layer configuration for a given product type.
+ * 
+ * @param {Object} [overrides] - Optional overrides for branding behavior
+ * @returns {Object} Branding layer specification
+ */
+export function getBrandingLayer(overrides = {}) {
+  const config = { ...BRANDING_CONFIG.defaults, ...overrides };
+  const style = BRANDING_CONFIG.styles[config.watermarkStyle] || BRANDING_CONFIG.styles['subtle-gold'];
+  const position = BRANDING_CONFIG.positions[config.watermarkPosition] || BRANDING_CONFIG.positions['bottom-center'];
+
+  return {
+    type: 'branding',
+    watermark: config.watermark,
+    text: config.trademarkText,
+    style,
+    position,
+    introBrandCard: config.introBrandCard,
+    outroBrandCard: config.outroBrandCard,
+  };
+}
+
 export { COLOR_THEMES, OVERLAY_ASSETS, TEXT_POSITIONS };
+

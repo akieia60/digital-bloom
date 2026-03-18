@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { updatePurchaseStatus } from '../lib/supabase';
+import { updatePurchaseStatus, saveBloomDelivery } from '../lib/supabase';
+import { generateBloomSlug } from '../lib/deliveryResolver';
 import '../styles/success.css';
 
 const Success = () => {
@@ -9,6 +10,7 @@ const Success = () => {
   const [purchase, setPurchase] = useState(null);
   const [error, setError] = useState(null);
   const [copied, setCopied] = useState(false);
+  const [bloomSlug, setBloomSlug] = useState(null);
 
   const sessionId = searchParams.get('session_id');
 
@@ -24,7 +26,41 @@ const Success = () => {
         const updatedPurchase = await updatePurchaseStatus(sessionId, 'completed', {
           stripe_session_id: sessionId
         });
-        if (updatedPurchase) setPurchase(updatedPurchase);
+        if (updatedPurchase) {
+          setPurchase(updatedPurchase);
+
+          // Generate bloom delivery slug and save composition data
+          const slug = updatedPurchase.bloom_slug || generateBloomSlug();
+          let compositionManifest = updatedPurchase.composition_manifest || null;
+
+          // Try to recover composition data from localStorage cart
+          if (!compositionManifest) {
+            try {
+              const savedCart = localStorage.getItem('digitalbloom_cart');
+              if (savedCart) {
+                const cartItems = JSON.parse(savedCart);
+                // Find cart item matching this purchase's product
+                const matchingItem = cartItems.find(item =>
+                  item.id === updatedPurchase.product_id || item.product_id === updatedPurchase.product_id
+                );
+                if (matchingItem?.customization) {
+                  compositionManifest = {
+                    customization: matchingItem.customization,
+                    composition: matchingItem.composition || null,
+                  };
+                }
+              }
+            } catch (e) {
+              console.warn('Could not recover composition from cart:', e);
+            }
+          }
+
+          // Save bloom delivery to purchase record
+          if (!updatedPurchase.bloom_slug) {
+            await saveBloomDelivery(updatedPurchase.id, slug, compositionManifest);
+          }
+          setBloomSlug(slug);
+        }
       } catch (err) {
         console.error('Error processing purchase:', err);
         setError('Failed to process your purchase. Please contact support.');
@@ -151,6 +187,22 @@ const Success = () => {
             </div>
           )}
         </div>
+
+        {/* ── VIEW YOUR BLOOM ── */}
+        {bloomSlug && (
+          <div className="success-card">
+            <h3 className="success-card-label">Your Bloom</h3>
+            <p className="success-card-text">
+              Your personalized bloom experience is ready to view and share.
+            </p>
+            <Link to={`/bloom/${bloomSlug}`} className="success-btn-gold">
+              ✨ View Your Bloom
+            </Link>
+            <p className="success-note">
+              Share this link with your recipient so they can experience their bloom.
+            </p>
+          </div>
+        )}
 
         {/* ── SHARE ── */}
         <div className="success-card">
