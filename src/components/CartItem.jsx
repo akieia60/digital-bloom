@@ -73,6 +73,12 @@ const CartItem = ({ item }) => {
                   {item.customization.colorTheme || item.customization.theme || item.customization.music}
                 </span>
               )}
+              {/* Show active overlays from composition manifest */}
+              {item.customization.composition?.activeOverlays?.map(overlay => (
+                <span key={overlay} className="text-[8px] uppercase tracking-widest bg-white/5 px-2 py-0.5 rounded text-white/30">
+                  {overlay === 'balloon' ? '🎈' : overlay === 'ribbon' ? '🎀' : overlay === 'sparkle' ? '✨' : ''} {overlay}
+                </span>
+              ))}
             </div>
           </div>
         ) : (
