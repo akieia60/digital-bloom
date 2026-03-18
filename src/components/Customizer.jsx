@@ -1,5 +1,7 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { supabase } from '../lib/supabase';
+import { buildCartComposition } from '../lib/fulfillmentMapper';
+import LivePreview from './LivePreview';
 import '../styles/customizer.css';
 
 const EXTRAS = [
@@ -92,7 +94,9 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {} }) => 
         }
       } catch (err) { console.error('Theme save (non-blocking):', err); }
     })();
-    onComplete({ productId: product.id, message, colorTheme, extras, totalPrice });
+    // Build composition manifest for fulfillment
+    const composition = buildCartComposition({ message, colorTheme, extras });
+    onComplete({ productId: product.id, message, colorTheme, extras, totalPrice, composition });
     onClose();
   }, [isProductValid, product, message, colorTheme, extras, totalPrice, themeStyle, onComplete, onClose]);
 
@@ -201,12 +205,35 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {} }) => 
               ))}
             </div>
           </div>
+
+          {/* ── LIVE PREVIEW ── */}
+          {(extras.balloon || extras.ribbon || extras.sparkle || message.short) && (
+            <div className="customizer-section">
+              <div className="customizer-section__header">
+                <h3 className="customizer-section__title">Preview</h3>
+              </div>
+              <div style={{ maxWidth: 280, margin: '0 auto' }}>
+                <LivePreview
+                  product={product}
+                  colorTheme={colorTheme}
+                  extras={extras}
+                  message={message}
+                />
+              </div>
+            </div>
+          )}
         </div>
 
         {/* ── STICKY CTA ── */}
         <div className="customizer-sticky-cta">
           <div className="cta-preview">
-            {product?.image_url && <img src={product.image_url} alt={product?.name || 'Preview'} />}
+            <LivePreview
+              product={product}
+              colorTheme={colorTheme}
+              extras={extras}
+              message={message}
+              className="composition-preview--square"
+            />
           </div>
           <div className="cta-pricing">
             <div className="cta-pricing__label">Total</div>

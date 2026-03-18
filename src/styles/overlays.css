@@ -1,0 +1,220 @@
+/* ============================================
+   OVERLAY ANIMATIONS — V1 CSS Placeholders
+   
+   These are temporary CSS-only overlays used until
+   real transparent WebM/APNG assets are added.
+   When real assets are ready, the LivePreview component
+   will render <video> layers instead of these CSS effects.
+   ============================================ */
+
+/* ── COMPOSITION CONTAINER ── */
+.composition-preview {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 9 / 16;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #000;
+}
+
+.composition-preview--square {
+  aspect-ratio: 1 / 1;
+}
+
+.composition-preview--landscape {
+  aspect-ratio: 16 / 9;
+}
+
+/* ── BASE MEDIA LAYER ── */
+.composition-layer--base {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.composition-layer--base video,
+.composition-layer--base img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ── COLOR FILTER LAYER ── */
+.composition-layer--color {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+  transition: background 0.4s ease, opacity 0.4s ease;
+}
+
+/* ── OVERLAY LAYERS (shared) ── */
+.composition-layer--overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+
+.composition-layer--overlay.entering {
+  animation: overlayFadeIn 0.4s ease forwards;
+}
+
+.composition-layer--overlay.exiting {
+  animation: overlayFadeOut 0.3s ease forwards;
+}
+
+@keyframes overlayFadeIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+@keyframes overlayFadeOut {
+  from { opacity: 1; transform: scale(1); }
+  to   { opacity: 0; transform: scale(0.95); }
+}
+
+/* ── BALLOON OVERLAY (CSS Placeholder) ── */
+.overlay-balloon {
+  z-index: 10;
+}
+
+.overlay-balloon__item {
+  position: absolute;
+  font-size: 32px;
+  animation: balloonFloat 4s ease-in-out infinite;
+  filter: drop-shadow(0 4px 12px rgba(0,0,0,0.3));
+}
+
+.overlay-balloon__item:nth-child(1) { left: 15%; bottom: -10%; animation-delay: 0s; animation-duration: 4.2s; }
+.overlay-balloon__item:nth-child(2) { left: 40%; bottom: -15%; animation-delay: 0.6s; animation-duration: 3.8s; font-size: 28px; }
+.overlay-balloon__item:nth-child(3) { left: 65%; bottom: -8%; animation-delay: 1.2s; animation-duration: 4.5s; }
+.overlay-balloon__item:nth-child(4) { left: 85%; bottom: -12%; animation-delay: 0.3s; animation-duration: 3.6s; font-size: 24px; }
+.overlay-balloon__item:nth-child(5) { left: 30%; bottom: -18%; animation-delay: 1.8s; animation-duration: 4.0s; font-size: 36px; }
+
+@keyframes balloonFloat {
+  0%   { transform: translateY(0) rotate(0deg); opacity: 0; }
+  10%  { opacity: 0.9; }
+  50%  { transform: translateY(-280px) rotate(8deg); opacity: 0.85; }
+  90%  { opacity: 0.3; }
+  100% { transform: translateY(-500px) rotate(-5deg); opacity: 0; }
+}
+
+/* Balloon colors per theme */
+.overlay-balloon--warm .overlay-balloon__item:nth-child(1) { color: #FF6B6B; }
+.overlay-balloon--warm .overlay-balloon__item:nth-child(2) { color: #FFA07A; }
+.overlay-balloon--warm .overlay-balloon__item:nth-child(3) { color: #FFD700; }
+.overlay-balloon--warm .overlay-balloon__item:nth-child(4) { color: #FF8C42; }
+.overlay-balloon--warm .overlay-balloon__item:nth-child(5) { color: #FF6B6B; }
+
+.overlay-balloon--cool .overlay-balloon__item:nth-child(1) { color: #4ECDC4; }
+.overlay-balloon--cool .overlay-balloon__item:nth-child(2) { color: #95E1D3; }
+.overlay-balloon--cool .overlay-balloon__item:nth-child(3) { color: #67C5E5; }
+.overlay-balloon--cool .overlay-balloon__item:nth-child(4) { color: #A8E6CF; }
+.overlay-balloon--cool .overlay-balloon__item:nth-child(5) { color: #4ECDC4; }
+
+.overlay-balloon--elegant .overlay-balloon__item { color: #D4AF37; }
+.overlay-balloon--romantic .overlay-balloon__item { color: #FF69B4; }
+.overlay-balloon--original .overlay-balloon__item { color: #FF69B4; }
+
+/* ── RIBBON OVERLAY (CSS Placeholder) ── */
+.overlay-ribbon {
+  z-index: 20;
+}
+
+.overlay-ribbon__border {
+  position: absolute;
+  inset: 8px;
+  border: 2px solid;
+  border-radius: 12px;
+  opacity: 0.5;
+  animation: ribbonShimmer 3s ease-in-out infinite;
+}
+
+.overlay-ribbon__corner {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  opacity: 0.7;
+}
+
+.overlay-ribbon__corner--tl { top: 4px; left: 4px; }
+.overlay-ribbon__corner--tr { top: 4px; right: 4px; transform: scaleX(-1); }
+.overlay-ribbon__corner--bl { bottom: 4px; left: 4px; transform: scaleY(-1); }
+.overlay-ribbon__corner--br { bottom: 4px; right: 4px; transform: scale(-1); }
+
+@keyframes ribbonShimmer {
+  0%, 100% { opacity: 0.3; }
+  50%      { opacity: 0.6; }
+}
+
+.overlay-ribbon--warm .overlay-ribbon__border { border-color: #FFA07A; }
+.overlay-ribbon--cool .overlay-ribbon__border { border-color: #4ECDC4; }
+.overlay-ribbon--elegant .overlay-ribbon__border { border-color: #D4AF37; }
+.overlay-ribbon--romantic .overlay-ribbon__border { border-color: #FF69B4; }
+.overlay-ribbon--original .overlay-ribbon__border { border-color: #FFB6C1; }
+
+/* ── SPARKLE OVERLAY (CSS Placeholder) ── */
+.overlay-sparkle {
+  z-index: 30;
+}
+
+.overlay-sparkle__particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: #FFFFFF;
+  border-radius: 50%;
+  box-shadow: 0 0 6px 2px rgba(255,255,255,0.6);
+  animation: sparkleGlow 2s ease-in-out infinite;
+}
+
+.overlay-sparkle__particle:nth-child(1)  { top: 12%; left: 20%; animation-delay: 0s; }
+.overlay-sparkle__particle:nth-child(2)  { top: 25%; left: 75%; animation-delay: 0.3s; }
+.overlay-sparkle__particle:nth-child(3)  { top: 40%; left: 45%; animation-delay: 0.7s; }
+.overlay-sparkle__particle:nth-child(4)  { top: 55%; left: 15%; animation-delay: 1.0s; }
+.overlay-sparkle__particle:nth-child(5)  { top: 60%; left: 80%; animation-delay: 0.5s; }
+.overlay-sparkle__particle:nth-child(6)  { top: 75%; left: 35%; animation-delay: 1.3s; }
+.overlay-sparkle__particle:nth-child(7)  { top: 30%; left: 60%; animation-delay: 0.2s; width: 3px; height: 3px; }
+.overlay-sparkle__particle:nth-child(8)  { top: 85%; left: 55%; animation-delay: 0.8s; }
+.overlay-sparkle__particle:nth-child(9)  { top: 18%; left: 40%; animation-delay: 1.5s; width: 5px; height: 5px; }
+.overlay-sparkle__particle:nth-child(10) { top: 70%; left: 70%; animation-delay: 0.4s; }
+
+@keyframes sparkleGlow {
+  0%, 100% { opacity: 0; transform: scale(0.5); }
+  50%      { opacity: 1; transform: scale(1.2); }
+}
+
+/* ── TEXT OVERLAY LAYER ── */
+.composition-layer--text {
+  position: absolute;
+  z-index: 40;
+  pointer-events: none;
+  padding: 0 16px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.composition-text__message {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(16px, 4vw, 28px);
+  font-weight: 500;
+  color: #FFFFFF;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.6), 0 0 20px rgba(0,0,0,0.3);
+  line-height: 1.3;
+  animation: textFadeIn 0.6s ease forwards;
+}
+
+.composition-text__names {
+  font-family: 'Outfit', sans-serif;
+  font-size: clamp(10px, 2.5vw, 14px);
+  color: rgba(255,255,255,0.7);
+  text-shadow: 0 1px 4px rgba(0,0,0,0.5);
+  margin-top: 6px;
+  letter-spacing: 0.05em;
+}
+
+@keyframes textFadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
