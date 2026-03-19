@@ -85,20 +85,20 @@
   opacity: 0;
 }
 
-/* ── Video Background Layer ── */
+/* ── Video Background Layer (Square) ── */
 .video-hero__bg {
   position: relative;
-  width: 85vw;
-  height: 85vw;
-  max-width: 480px;
-  max-height: 480px;
-  border-radius: 50%;
+  width: 92%;
+  max-width: 520px;
+  aspect-ratio: 1 / 1;
+  border-radius: 16px;
   overflow: hidden;
   z-index: 0;
   will-change: transform, opacity;
   transform-origin: center center;
-  box-shadow: 0 16px 80px rgba(212,175,55,0.25), 0 0 0 3px rgba(212,175,55,0.3);
+  box-shadow: 0 16px 60px rgba(212,175,55,0.2), 0 0 0 2px rgba(212,175,55,0.15);
   flex-shrink: 0;
+  margin-top: 16px;
   margin-bottom: 24px;
 }
 
