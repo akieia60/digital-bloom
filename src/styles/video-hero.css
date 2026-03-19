@@ -88,16 +88,16 @@
 /* ── Video Background Layer ── */
 .video-hero__bg {
   position: relative;
-  width: 70vw;
-  height: 70vw;
-  max-width: 400px;
-  max-height: 400px;
+  width: 85vw;
+  height: 85vw;
+  max-width: 480px;
+  max-height: 480px;
   border-radius: 50%;
   overflow: hidden;
   z-index: 0;
   will-change: transform, opacity;
   transform-origin: center center;
-  box-shadow: 0 12px 60px rgba(212,175,55,0.2), 0 0 0 3px rgba(212,175,55,0.25);
+  box-shadow: 0 16px 80px rgba(212,175,55,0.25), 0 0 0 3px rgba(212,175,55,0.3);
   flex-shrink: 0;
   margin-bottom: 24px;
 }

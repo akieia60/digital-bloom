@@ -131,11 +131,11 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {} }) => 
                 type="text"
                 className="customizer-input"
                 placeholder={messagePlaceholder || 'e.g., Happy Birthday!'}
-                maxLength="80"
+                maxLength="150"
                 value={message.short}
                 onChange={(e) => handleMessageChange('short', e.target.value)}
               />
-              <span className="customizer-hint">{message.short.length}/80</span>
+              <span className="customizer-hint">{message.short.length}/150</span>
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>

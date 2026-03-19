@@ -125,15 +125,15 @@ const Header = ({ onSearchChange, searchQuery }) => {
             onClick={() => setIsMobileMenuOpen(false)}
           />
           
-          {/* Menu Panel — slides from RIGHT */}
-          <div className="absolute top-0 right-0 bottom-0 w-4/5 max-w-sm bg-[var(--bg-page)] border-l border-[var(--nav-border-scrolled)] flex flex-col animate-slide-in-right shadow-2xl">
+          {/* Menu Panel — slides from RIGHT, lighter background */}
+          <div className="absolute top-0 right-0 bottom-0 w-4/5 max-w-sm flex flex-col animate-slide-in-right shadow-2xl" style={{ background: '#1a2744', borderLeft: '1px solid rgba(212,175,55,0.2)' }}>
             {/* Menu Header */}
-              <div className="p-6 border-b border-[var(--nav-border-scrolled)]">
+              <div className="p-6" style={{ borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
               <div className="flex items-center justify-between">
-                <span className="text-xl font-display uppercase text-[var(--text-primary)] tracking-wider">Menu</span>
+                <span className="text-xl font-display uppercase tracking-wider" style={{ color: '#D4AF37' }}>Digital Bloom</span>
                 <button
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="p-2 text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors"
+                  className="p-2 transition-colors" style={{ color: 'rgba(255,255,255,0.6)' }}
                 >
                   <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M6 18L18 6M6 6l12 12" />
@@ -143,14 +143,15 @@ const Header = ({ onSearchChange, searchQuery }) => {
             </div>
 
             {/* Mobile Search */}
-            <div className="p-6 border-b border-[var(--nav-border-scrolled)]">
+            <div className="p-6" style={{ borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
               <div className="relative">
                 <input
                   type="text"
                   placeholder="Search..."
                   value={searchQuery}
                   onChange={(e) => onSearchChange(e.target.value)}
-                  className="w-full px-4 py-3 bg-[var(--bg-surface)] border border-[var(--border-default)] rounded-lg text-base text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--accent-gold-border-hover)] transition-all"
+                  className="w-full px-4 py-3 rounded-lg text-base focus:outline-none focus:ring-2 transition-all"
+                  style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)', color: '#FFFFFF', placeholder: 'rgba(255,255,255,0.4)' }}
                 />
               </div>
             </div>
@@ -160,38 +161,43 @@ const Header = ({ onSearchChange, searchQuery }) => {
               <Link
                 to="/"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="block text-lg text-[var(--text-primary)] hover:text-[var(--accent-gold)] transition-colors py-5 border-b border-[var(--border-subtle)]"
+                className="block text-lg transition-colors py-5"
+                style={{ color: '#FFFFFF', borderBottom: '1px solid rgba(255,255,255,0.08)' }}
               >
                 Home
               </Link>
               <Link
                 to="/shop"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="block text-lg text-[var(--accent-gold)] hover:text-[var(--text-primary)] transition-colors py-5 border-b border-[var(--border-subtle)]"
+                className="block text-lg transition-colors py-5"
+                style={{ color: '#D4AF37', borderBottom: '1px solid rgba(255,255,255,0.08)' }}
               >
                 Occasions
               </Link>
               <Link
                 to="/shop"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="block text-lg text-[var(--text-primary)] hover:text-[var(--accent-gold)] transition-colors py-5 border-b border-[var(--border-subtle)]"
+                className="block text-lg transition-colors py-5"
+                style={{ color: '#FFFFFF', borderBottom: '1px solid rgba(255,255,255,0.08)' }}
               >
                 Shop
               </Link>
               <Link
                 to="/credits"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="block text-lg text-[var(--text-primary)] hover:text-[var(--accent-gold)] transition-colors py-5 border-b border-[var(--border-subtle)]"
+                className="block text-lg transition-colors py-5"
+                style={{ color: '#FFFFFF', borderBottom: '1px solid rgba(255,255,255,0.08)' }}
               >
                 Experience Credits
               </Link>
               <button
                 onClick={() => { setIsMobileMenuOpen(false); toggleCart(); }}
-                className="w-full flex items-center justify-between text-lg text-[var(--text-primary)] hover:text-[var(--accent-gold)] transition-colors py-5 border-b border-[var(--border-subtle)]"
+                className="w-full flex items-center justify-between text-lg transition-colors py-5"
+                style={{ color: '#FFFFFF', borderBottom: '1px solid rgba(255,255,255,0.08)' }}
               >
                 <span>Cart</span>
                 {cartCount > 0 && (
-                  <span className="bg-[var(--accent-gold)] text-[var(--bg-page)] text-xs font-bold rounded-full h-6 w-6 flex items-center justify-center">
+                  <span className="text-xs font-bold rounded-full h-6 w-6 flex items-center justify-center" style={{ background: '#D4AF37', color: '#1a2744' }}>
                     {cartCount}
                   </span>
                 )}
@@ -199,9 +205,9 @@ const Header = ({ onSearchChange, searchQuery }) => {
             </nav>
 
             {/* Menu Footer */}
-            <div className="p-6 border-t border-[var(--nav-border-scrolled)]">
-              <p className="text-xs text-[var(--text-muted)] uppercase tracking-wider">Digital Bloom</p>
-              <p className="text-[10px] text-[var(--text-muted)] opacity-50 mt-1">Luxury Motion Art</p>
+            <div className="p-6" style={{ borderTop: '1px solid rgba(255,255,255,0.1)' }}>
+              <p className="text-xs uppercase tracking-wider" style={{ color: '#D4AF37' }}>Digital Bloom</p>
+              <p className="text-[10px] mt-1" style={{ color: 'rgba(255,255,255,0.4)' }}>Cinematic Digital Experiences</p>
             </div>
           </div>
         </div>
