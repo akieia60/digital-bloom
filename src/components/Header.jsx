@@ -32,23 +32,8 @@ const Header = ({ onSearchChange, searchQuery }) => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
         <div className="flex items-center h-12 relative">
           
-          {/* Left: Hamburger Menu (Mobile) + Search (Desktop) */}
+          {/* Left: Desktop Search only */}
           <div className="flex-1 flex items-center">
-            {/* Hamburger Button - Mobile Only */}
-            <button
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="lg:hidden p-3 -ml-2 text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
-              aria-label="Menu"
-            >
-              <svg className="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                {isMobileMenuOpen ? (
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M6 18L18 6M6 6l12 12" />
-                ) : (
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 6h16M4 12h16M4 18h16" />
-                )}
-              </svg>
-            </button>
-
             {/* Desktop Search */}
             <div className="hidden md:flex relative group">
               <input
@@ -87,7 +72,7 @@ const Header = ({ onSearchChange, searchQuery }) => {
             </Link>
           </div>
 
-          {/* Right: Desktop Nav + Cart */}
+          {/* Right: Desktop Nav + Cart + Hamburger */}
           <div className="flex-1 flex justify-end items-center space-x-4 sm:space-x-8">
             <nav className="hidden lg:flex items-center space-x-8">
               <Link to="/shop" className="text-[12px] uppercase tracking-[0.12em] text-[var(--accent-gold)] hover:text-[var(--text-primary)] transition-colors font-medium">Occasions</Link>
@@ -113,6 +98,20 @@ const Header = ({ onSearchChange, searchQuery }) => {
                 </span>
               )}
             </button>
+            {/* Hamburger Button - Mobile Only (RIGHT side) */}
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="lg:hidden p-2 text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
+              aria-label="Menu"
+            >
+              <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                {isMobileMenuOpen ? (
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M6 18L18 6M6 6l12 12" />
+                ) : (
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 6h16M4 12h16M4 18h16" />
+                )}
+              </svg>
+            </button>
           </div>
         </div>
       </div>
@@ -126,8 +125,8 @@ const Header = ({ onSearchChange, searchQuery }) => {
             onClick={() => setIsMobileMenuOpen(false)}
           />
           
-          {/* Menu Panel */}
-          <div className="absolute top-0 left-0 bottom-0 w-4/5 max-w-sm bg-[var(--bg-page)] border-r border-[var(--nav-border-scrolled)] flex flex-col animate-slide-in shadow-2xl">
+          {/* Menu Panel — slides from RIGHT */}
+          <div className="absolute top-0 right-0 bottom-0 w-4/5 max-w-sm bg-[var(--bg-page)] border-l border-[var(--nav-border-scrolled)] flex flex-col animate-slide-in-right shadow-2xl">
             {/* Menu Header */}
               <div className="p-6 border-b border-[var(--nav-border-scrolled)]">
               <div className="flex items-center justify-between">

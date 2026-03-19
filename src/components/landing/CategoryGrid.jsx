@@ -83,28 +83,29 @@ export default function CategoryGrid() {
   }, []);
 
   return (
-    <section className="circle-cat-section" ref={sectionRef}>
-      <div className="circle-cat-container">
+    <section className="sq-cat-section" ref={sectionRef}>
+      <div className="sq-cat-container">
         {/* Section header */}
-        <div className="circle-cat-header">
-          <span className="circle-cat-eyebrow">Browse by Occasion</span>
-          <h2 className="circle-cat-headline">Find the Perfect Bloom</h2>
+        <div className="sq-cat-header">
+          <span className="sq-cat-eyebrow">Browse by Occasion</span>
+          <h2 className="sq-cat-headline">Find the Perfect Bloom</h2>
+          <p className="sq-cat-subline">Send a message they'll never forget</p>
         </div>
 
-        {/* Circle card rows */}
-        <div className="circle-cat-list">
+        {/* Square card grid — 2 columns */}
+        <div className="sq-cat-grid">
           {CATEGORIES.map((cat, idx) => {
             const visible = visibleItems.has(String(idx));
             return (
               <Link
                 key={cat.slug}
                 to={`/shop/${cat.slug}`}
-                className={`circle-cat-row ${visible ? 'circle-cat-row--visible' : ''}`}
+                className={`sq-cat-card ${visible ? 'sq-cat-card--visible' : ''}`}
                 data-idx={idx}
                 style={{ transitionDelay: `${(idx % 6) * 0.06}s` }}
               >
-                {/* Circle video preview */}
-                <div className="circle-cat-row__media">
+                {/* Square video/image area */}
+                <div className="sq-cat-card__media">
                   {cat.previewVideo ? (
                     <video
                       src={cat.previewVideo}
@@ -113,41 +114,25 @@ export default function CategoryGrid() {
                       muted
                       playsInline
                       preload="metadata"
-                      className="circle-cat-row__video"
+                      className="sq-cat-card__video"
                     />
                   ) : (
                     <div
-                      className="circle-cat-row__placeholder"
+                      className="sq-cat-card__placeholder"
                       style={{ background: cat.accent }}
                     />
                   )}
-                  {/* Subtle ring accent */}
+                  {/* Accent border-bottom */}
                   <div
-                    className="circle-cat-row__ring"
-                    style={{ borderColor: cat.accent }}
+                    className="sq-cat-card__accent"
+                    style={{ background: cat.accent }}
                   />
                 </div>
 
-                {/* Text content */}
-                <div className="circle-cat-row__content">
-                  <h3 className="circle-cat-row__title">{cat.name}</h3>
-                  <p className="circle-cat-row__tagline">{cat.tagline}</p>
-                </div>
-
-                {/* Arrow */}
-                <div className="circle-cat-row__arrow" style={{ color: cat.accent }}>
-                  <svg
-                    width="20"
-                    height="20"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="M9 18l6-6-6-6" />
-                  </svg>
+                {/* Text below image */}
+                <div className="sq-cat-card__body">
+                  <h3 className="sq-cat-card__title">{cat.name}</h3>
+                  <p className="sq-cat-card__tagline">{cat.tagline}</p>
                 </div>
               </Link>
             );
