@@ -3,16 +3,16 @@ import { useEffect, useRef } from 'react';
 // ─── Particle effect configurations ───────────────────────────────────────────
 // Each effect defines what characters/emojis to use and how they move
 const EFFECT_CONFIG = {
-  goldSparkles:   { chars: ['✦', '✧', '★', '✴'], colors: ['#D4AF37', '#F0D060', '#FFE566', '#C9A14A'], anim: 'float-up',     rate: 450 },
-  butterflies:    { chars: ['🦋'],                 colors: null,                                          anim: 'float-across', rate: 900 },
-  goldenHearts:   { chars: ['💛', '💝', '✨'],      colors: null,                                          anim: 'float-up',     rate: 500 },
-  coloredHearts:  { chars: ['❤️','🧡','💛','💚','💙','💜','🩷'], colors: null,                            anim: 'float-up',     rate: 480 },
-  diamondGlitter: { chars: ['💎', '✦', '✧'],       colors: ['#A8D8EA', '#C5D8F5', '#E8F4FD'],             anim: 'spin-fall',    rate: 500 },
-  glitter:        { chars: ['✨', '✦', '·', '✴'],  colors: ['#FFD700', '#FFC0CB', '#DDA0DD', '#FFB6C1'], anim: 'fall',         rate: 380 },
-  stars:          { chars: ['⭐', '✦', '★', '✬'], colors: ['#FFD700', '#FFF0A0'],                        anim: 'float-up',     rate: 500 },
-  rosePetals:     { chars: ['🌸', '🌺', '🌼'],     colors: null,                                          anim: 'fall-drift',   rate: 700 },
-  confetti:       { chars: ['🎊', '✨', '🌟', '🎉'], colors: null,                                         anim: 'fall',         rate: 420 },
-  snowflakes:     { chars: ['❄️', '❅', '❆'],       colors: ['#E0F7FF', '#C5DEF5', '#FFFFFF'],             anim: 'fall',         rate: 650 },
+  goldSparkles:   { chars: ['✦', '✧', '★', '✴', '✨'], colors: ['#D4AF37', '#F0D060', '#FFE566', '#C9A14A'], anim: 'float-up',     rate: 280, minSize: 18, maxSize: 34 },
+  butterflies:    { chars: ['🦋'],                      colors: null,                                          anim: 'float-across', rate: 500, minSize: 26, maxSize: 40 },
+  goldenHearts:   { chars: ['💛', '💝', '✨', '💫'],    colors: null,                                          anim: 'float-up',     rate: 300, minSize: 20, maxSize: 36 },
+  coloredHearts:  { chars: ['❤️','🧡','💛','💚','💙','💜','🩷'], colors: null,                               anim: 'float-up',     rate: 280, minSize: 20, maxSize: 34 },
+  diamondGlitter: { chars: ['💎', '✦', '✧', '💠'],     colors: ['#A8D8EA', '#C5D8F5', '#E8F4FD'],             anim: 'spin-fall',    rate: 300, minSize: 18, maxSize: 32 },
+  glitter:        { chars: ['✨', '✦', '·', '✴', '⭐'], colors: ['#FFD700', '#FFC0CB', '#DDA0DD', '#FFB6C1'], anim: 'fall',         rate: 220, minSize: 16, maxSize: 30 },
+  stars:          { chars: ['⭐', '✦', '★', '🌟', '✬'], colors: ['#FFD700', '#FFF0A0'],                      anim: 'float-up',     rate: 280, minSize: 18, maxSize: 32 },
+  rosePetals:     { chars: ['🌸', '🌺', '🌼', '🌷'],   colors: null,                                          anim: 'fall-drift',   rate: 400, minSize: 22, maxSize: 36 },
+  confetti:       { chars: ['🎊', '✨', '🌟', '🎉', '🎈'], colors: null,                                      anim: 'fall',         rate: 250, minSize: 20, maxSize: 34 },
+  snowflakes:     { chars: ['❄️', '❅', '❆', '🌨️'],    colors: ['#E0F7FF', '#C5DEF5', '#FFFFFF'],             anim: 'fall',         rate: 350, minSize: 18, maxSize: 32 },
 };
 
 // Font style map — mirrors what's in ExperienceCustomizer
@@ -57,8 +57,8 @@ export default function CustomizationPreview({ product, customization, colorThem
 
       const char     = pick(config.chars);
       const color    = config.colors ? pick(config.colors) : null;
-      const size     = random(13, 22);
-      const duration = random(1.8, 3.6);
+      const size     = random(config.minSize || 16, config.maxSize || 28);
+      const duration = random(2.0, 4.0);
 
       const el = document.createElement('span');
       el.textContent = char;
@@ -91,7 +91,7 @@ export default function CustomizationPreview({ product, customization, colorThem
     };
 
     // Burst on load, then drip continuously
-    for (let i = 0; i < 5; i++) setTimeout(spawnParticle, i * 120);
+    for (let i = 0; i < 8; i++) setTimeout(spawnParticle, i * 80);
     intervalRef.current = setInterval(spawnParticle, config.rate);
 
     return () => { if (intervalRef.current) clearInterval(intervalRef.current); };

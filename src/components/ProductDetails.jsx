@@ -75,7 +75,8 @@ const ProductDetails = () => {
 
   const handleCustomizationComplete = (customization) => {
     addToCart(product, 1, customization);
-    setShowSuccess(true);
+    setIsCustomizerOpen(false);
+    toggleCart(); // Open cart drawer immediately so customer can checkout
   };
 
   const heroVideoSrc = product.video_file_url || product.video_url;

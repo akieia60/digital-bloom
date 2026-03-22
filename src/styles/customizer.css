@@ -3,6 +3,121 @@
    Premium slide-up panel with sticky CTA
    ============================================ */
 
+/* ─── LIVE PREVIEW PANEL ─── */
+/* These styles power the right-side preview in ExperienceCustomizer */
+
+.preview-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  height: 100%;
+}
+
+.preview-title {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1D1D1F;
+  letter-spacing: 0.04em;
+  margin: 0;
+}
+
+.preview-frame {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* The video wrapper — MUST be position:relative so overlays sit on top */
+.preview-video-wrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 9 / 16;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #0D1B36;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+.preview-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Color theme overlay — transparent tint over video */
+.preview-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Custom message — sits ON TOP of the video, centered */
+.preview-message {
+  position: absolute;
+  bottom: 48px;
+  left: 0;
+  right: 0;
+  z-index: 6;
+  display: flex;
+  justify-content: center;
+  padding: 0 12px;
+  pointer-events: none;
+}
+
+.preview-message-text {
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  border-radius: 8px;
+  padding: 8px 14px;
+  color: #FFFFFF;
+  font-size: 0.9rem;
+  text-align: center;
+  max-width: 90%;
+  line-height: 1.4;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.6);
+  margin: 0;
+}
+
+/* Summary details below the video */
+.preview-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px 14px;
+  background: #F7F7F7;
+  border-radius: 10px;
+  border: 1px solid #F0F0F0;
+}
+
+.preview-detail {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.78rem;
+  line-height: 1.4;
+}
+
+.preview-label {
+  color: #AEAEB2;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 0.65rem;
+  flex-shrink: 0;
+  padding-top: 1px;
+}
+
+.preview-value {
+  color: #1D1D1F;
+  font-weight: 400;
+}
+
 /* ─── OVERLAY ─── */
 .customizer-overlay {
   position: fixed;
@@ -802,30 +917,32 @@ body.customizer-open {
 /* ─── PARTICLE ANIMATION KEYFRAMES ─── */
 
 @keyframes preview-float-up {
-  0%   { transform: translateY(0)      scale(1);    opacity: 0.95; }
-  100% { transform: translateY(-140px) scale(0.3);  opacity: 0; }
+  0%   { transform: translateY(0)      scale(1);    opacity: 1; }
+  60%  { opacity: 0.9; }
+  100% { transform: translateY(-180px) scale(0.2);  opacity: 0; }
 }
 
 @keyframes preview-fall {
-  0%   { transform: translateY(0)    rotate(0deg);   opacity: 0.95; }
-  100% { transform: translateY(170px) rotate(200deg); opacity: 0; }
+  0%   { transform: translateY(0)     rotate(0deg);    opacity: 1; }
+  100% { transform: translateY(200px) rotate(240deg);  opacity: 0; }
 }
 
 @keyframes preview-spin-fall {
-  0%   { transform: translateY(0)    rotate(0deg)    scale(1);   opacity: 0.95; }
-  100% { transform: translateY(170px) rotate(720deg) scale(0.3); opacity: 0; }
+  0%   { transform: translateY(0)     rotate(0deg)    scale(1);   opacity: 1; }
+  100% { transform: translateY(200px) rotate(900deg)  scale(0.2); opacity: 0; }
 }
 
 @keyframes preview-fall-drift {
-  0%   { transform: translateY(0)    translateX(0)   rotate(0deg);  opacity: 0.95; }
-  100% { transform: translateY(170px) translateX(25px) rotate(40deg); opacity: 0; }
+  0%   { transform: translateY(0)     translateX(0)    rotate(0deg);   opacity: 1; }
+  50%  { transform: translateY(100px) translateX(18px) rotate(25deg);  opacity: 0.9; }
+  100% { transform: translateY(200px) translateX(35px) rotate(55deg);  opacity: 0; }
 }
 
 @keyframes preview-float-across {
-  0%   { transform: translateX(0)    translateY(0);    opacity: 0; }
-  12%  { opacity: 0.95; }
-  85%  { opacity: 0.95; }
-  100% { transform: translateX(320px) translateY(-25px); opacity: 0; }
+  0%   { transform: translateX(0)     translateY(0);     opacity: 0; }
+  8%   { opacity: 1; }
+  80%  { opacity: 0.9; }
+  100% { transform: translateX(380px) translateY(-30px); opacity: 0; }
 }
 
 /* Preview panel Digital Bloom™ watermark */
@@ -1080,4 +1197,403 @@ body.customizer-open {
   color: #AEAEB2;
   font-family: 'Outfit', sans-serif;
   font-style: italic;
+}
+
+/* ============================================
+   WIZARD — Full-screen modal with step-by-step flow
+   ============================================ */
+
+/* Full-screen overlay */
+.customizer-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 1200;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* The white panel — full width on mobile, max 920px on desktop */
+.customizer-container {
+  position: relative;
+  width: 100%;
+  max-width: 920px;
+  min-height: 100vh;
+  background: #FFFFFF;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 0 80px rgba(0, 0, 0, 0.4);
+}
+
+/* ╳ Close button — top right */
+.customizer-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 20;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid #E5E5EA;
+  background: #F7F7F7;
+  font-size: 22px;
+  line-height: 1;
+  color: #6E6E73;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, color 0.2s;
+  font-family: 'Outfit', sans-serif;
+}
+.customizer-close:hover {
+  background: #EBEBEB;
+  color: #1D1D1F;
+}
+
+/* Two-column layout — left (form) + right (preview) */
+.customizer-content {
+  display: flex;
+  flex: 1;
+  flex-direction: column; /* stack on mobile */
+}
+
+/* LEFT column — the wizard form */
+.customizer-options {
+  flex: 1;
+  padding: 20px 20px 100px; /* bottom padding keeps content above sticky nav */
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* RIGHT column — live preview — hidden on mobile */
+.customizer-preview {
+  display: none;
+}
+
+/* ─── STEP PROGRESS BAR ─── */
+.wizard-progress {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 0;
+  margin-bottom: 28px;
+  padding-top: 14px;
+}
+
+.wizard-step-dot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0 14px;
+  position: relative;
+  opacity: 0.4;
+  transition: opacity 0.25s;
+}
+
+/* Connector line between dots */
+.wizard-step-dot:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  top: 22px;
+  right: -14px;
+  width: 28px;
+  height: 1.5px;
+  background: #E5E5EA;
+  z-index: 0;
+}
+
+.wizard-step-dot.active,
+.wizard-step-dot.done {
+  opacity: 1;
+}
+
+.wizard-step-dot.done::after {
+  background: var(--spec-gold, #C9A14A);
+}
+
+.wizard-step-dot__icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 2px solid #E5E5EA;
+  background: #F7F7F7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  transition: border-color 0.25s, background 0.25s, color 0.25s;
+  position: relative;
+  z-index: 1;
+}
+
+.wizard-step-dot.active .wizard-step-dot__icon {
+  border-color: var(--spec-gold, #C9A14A);
+  background: rgba(201, 161, 74, 0.07);
+}
+
+.wizard-step-dot.done .wizard-step-dot__icon {
+  border-color: var(--spec-gold, #C9A14A);
+  background: var(--spec-gold, #C9A14A);
+  color: #FFFFFF;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.wizard-step-dot__label {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #6E6E73;
+  white-space: nowrap;
+}
+
+.wizard-step-dot.active .wizard-step-dot__label {
+  color: var(--spec-gold, #C9A14A);
+}
+
+/* ─── STEP HEADING ─── */
+.wizard-heading {
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #F0F0F0;
+}
+
+.customizer-title {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 1.45rem;
+  font-weight: 600;
+  color: #1D1D1F;
+  margin: 0 0 5px;
+  line-height: 1.25;
+  padding-right: 40px; /* don't overlap with × close button */
+}
+
+.customizer-subtitle {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.85rem;
+  color: #6E6E73;
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* ─── STEP CONTENT BODY ─── */
+.wizard-step-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+/* ─── WIZARD NAVIGATION (Prev / Next) ─── */
+.wizard-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 20px;
+  padding-bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+  background: #FFFFFF;
+  border-top: 1px solid #EBEBEB;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.07);
+}
+
+/* Primary CTA — gold pill */
+.cta-primary {
+  flex: 1;
+  padding: 15px 20px;
+  background: var(--spec-gold, #C9A14A);
+  color: #FFFFFF;
+  border: none;
+  border-radius: 980px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+  min-height: 50px;
+  text-align: center;
+}
+
+.cta-primary:hover {
+  background: #B8923F;
+  box-shadow: 0 4px 14px rgba(201, 161, 74, 0.3);
+}
+.cta-primary:active {
+  transform: scale(0.97);
+}
+
+/* Secondary — ghost button */
+.cta-secondary {
+  padding: 15px 22px;
+  background: none;
+  border: 1.5px solid #E5E5EA;
+  border-radius: 980px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: #6E6E73;
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+  min-height: 50px;
+  white-space: nowrap;
+}
+.cta-secondary:hover {
+  border-color: #C7C7CC;
+  color: #1D1D1F;
+}
+
+/* ─── PREMADE / CUSTOM TOGGLE ─── */
+.wizard-toggle-btn {
+  flex: 1;
+  padding: 10px 12px;
+  background: var(--surface-soft, #F7F7F7);
+  border: 1.5px solid #E5E5EA;
+  border-radius: 10px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: #6E6E73;
+  cursor: pointer;
+  text-align: center;
+  transition: border-color 0.2s, color 0.2s, background 0.2s;
+  min-height: 40px;
+}
+.wizard-toggle-btn.active {
+  border-color: var(--spec-gold, #C9A14A);
+  color: var(--spec-gold, #C9A14A);
+  background: rgba(201, 161, 74, 0.05);
+}
+
+/* ─── OCCASION SELECTOR ─── */
+.occasion-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+.occasion-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  padding: 12px 6px;
+  border: 1.5px solid #E5E5EA;
+  border-radius: 12px;
+  background: var(--surface-soft, #F7F7F7);
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+  min-height: 64px;
+}
+.occasion-btn:hover {
+  border-color: rgba(201, 161, 74, 0.4);
+  background: #FEFCF7;
+}
+.occasion-btn.active {
+  border-color: var(--spec-gold, #C9A14A);
+  background: rgba(201, 161, 74, 0.06);
+}
+.occasion-icon {
+  font-size: 1.4rem;
+  line-height: 1;
+}
+.occasion-name {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: #3A3A3C;
+  text-align: center;
+  line-height: 1.2;
+}
+.occasion-btn.active .occasion-name {
+  color: var(--spec-gold, #C9A14A);
+}
+
+/* ─── CHECKBOX TOGGLE ROW ─── */
+.customizer-toggle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+.customizer-toggle input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+  accent-color: var(--spec-gold, #C9A14A);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.toggle-label {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.9rem;
+  color: #3A3A3C;
+  font-weight: 500;
+}
+
+/* ─── DESKTOP: Side-by-side layout ─── */
+@media (min-width: 768px) {
+  .customizer-modal {
+    align-items: center;
+    padding: 24px;
+  }
+
+  .customizer-container {
+    min-height: auto;
+    max-height: 92vh;
+    border-radius: 20px;
+    overflow: hidden;
+  }
+
+  .customizer-content {
+    flex-direction: row; /* side by side */
+    overflow: hidden;
+    flex: 1;
+    max-height: calc(92vh - 0px);
+  }
+
+  .customizer-options {
+    width: 50%;
+    flex-shrink: 0;
+    overflow-y: auto;
+    padding: 24px 28px 110px;
+    border-right: 1px solid #F0F0F0;
+  }
+
+  /* Show preview panel on desktop */
+  .customizer-preview {
+    display: flex;
+    flex: 1;
+    overflow-y: auto;
+    padding: 24px 24px;
+    background: #F7F7F7;
+    flex-direction: column;
+  }
+
+  .wizard-nav {
+    position: sticky; /* sticks to bottom of scrollable left column */
+    bottom: 0;
+    width: 100%; /* full width of its column */
+    padding-bottom: 14px;
+  }
+
+  .customizer-close {
+    top: 16px;
+    right: 16px;
+  }
 }
