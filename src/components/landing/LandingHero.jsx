@@ -9,9 +9,9 @@ export default function LandingHero() {
   };
 
   return (
-    <section className="landing-hero">
+    <section className="landing-hero" style={{ backgroundColor: '#001f3f', paddingTop: '5rem' }}>
       <div className="landing-container">
-        <div className="hero-content">
+        <div className="hero-content" style={{ paddingTop: '3rem' }}>
           <h1 className="hero-headline">
             DigitalBloom publishes meaningful digital multimedia experiences designed for expression, connection, and gifting.
           </h1>
