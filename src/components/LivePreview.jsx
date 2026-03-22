@@ -32,7 +32,7 @@ export default function LivePreview({ product, colorTheme, extras, message, clas
   const { baseMedia, colorFilter, overlays, textLayer } = composition;
 
   return (
-    <div className={`composition-preview ${className}`}>
+    <div className={`db-watermark composition-preview ${className}`}>
       {/* Layer 0: Base Media */}
       <div className="composition-layer--base">
         {baseMedia.type === 'video' ? (

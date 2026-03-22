@@ -799,6 +799,96 @@ body.customizer-open {
   font-size: 0.72rem;
 }
 
+/* ─── PARTICLE ANIMATION KEYFRAMES ─── */
+
+@keyframes preview-float-up {
+  0%   { transform: translateY(0)      scale(1);    opacity: 0.95; }
+  100% { transform: translateY(-140px) scale(0.3);  opacity: 0; }
+}
+
+@keyframes preview-fall {
+  0%   { transform: translateY(0)    rotate(0deg);   opacity: 0.95; }
+  100% { transform: translateY(170px) rotate(200deg); opacity: 0; }
+}
+
+@keyframes preview-spin-fall {
+  0%   { transform: translateY(0)    rotate(0deg)    scale(1);   opacity: 0.95; }
+  100% { transform: translateY(170px) rotate(720deg) scale(0.3); opacity: 0; }
+}
+
+@keyframes preview-fall-drift {
+  0%   { transform: translateY(0)    translateX(0)   rotate(0deg);  opacity: 0.95; }
+  100% { transform: translateY(170px) translateX(25px) rotate(40deg); opacity: 0; }
+}
+
+@keyframes preview-float-across {
+  0%   { transform: translateX(0)    translateY(0);    opacity: 0; }
+  12%  { opacity: 0.95; }
+  85%  { opacity: 0.95; }
+  100% { transform: translateX(320px) translateY(-25px); opacity: 0; }
+}
+
+/* Preview panel Digital Bloom™ watermark */
+.preview-watermark {
+  position: absolute;
+  bottom: 8px;
+  left: 10px;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 0.6rem;
+  font-style: italic;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: rgba(212, 175, 55, 0.75);
+  pointer-events: none;
+  z-index: 15;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+}
+
+/* Effect name badge — bottom right corner of preview */
+.preview-effect-badge {
+  position: absolute;
+  bottom: 8px;
+  right: 10px;
+  background: rgba(0,0,0,0.55);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border: 1px solid rgba(212,175,55,0.3);
+  border-radius: 20px;
+  padding: 3px 9px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.62rem;
+  font-weight: 500;
+  color: rgba(255,255,255,0.9);
+  pointer-events: none;
+  z-index: 15;
+  text-transform: capitalize;
+  letter-spacing: 0.03em;
+}
+
+/* Music badge — top right corner of preview */
+.preview-music-badge {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  background: rgba(0,0,0,0.55);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border: 1px solid rgba(212,175,55,0.3);
+  border-radius: 20px;
+  padding: 3px 9px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.62rem;
+  font-weight: 500;
+  color: rgba(255,255,255,0.9);
+  pointer-events: none;
+  z-index: 15;
+  letter-spacing: 0.03em;
+  max-width: 160px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 /* ─── ANIMATION EFFECT GRID ─── */
 .effect-grid {
   display: flex;
@@ -894,4 +984,100 @@ body.customizer-open {
   color: #AEAEB2;
   font-family: 'Outfit', sans-serif;
   letter-spacing: 0.03em;
+}
+
+/* ─── MUSIC SELECTOR GRID ─── */
+.music-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.music-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 12px 14px;
+  border: 1.5px solid #E5E5EA;
+  border-radius: 12px;
+  background: var(--surface-soft, #F7F7F7);
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 0.2s, background 0.2s;
+  font-family: 'Outfit', sans-serif;
+}
+
+.music-btn:hover {
+  border-color: rgba(201, 161, 74, 0.4);
+  background: #FEFCF7;
+}
+
+.music-btn.active {
+  border-color: var(--spec-gold, #C9A14A);
+  background: rgba(201, 161, 74, 0.06);
+}
+
+/* Featured track — the artist song — gets a slightly richer border */
+.music-btn--featured {
+  border-color: rgba(201, 161, 74, 0.35);
+  background: rgba(201, 161, 74, 0.03);
+}
+
+.music-btn--featured.active {
+  border-color: var(--spec-gold, #C9A14A);
+  background: rgba(201, 161, 74, 0.1);
+}
+
+.music-btn__icon {
+  font-size: 1.2rem;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.music-btn__info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+
+.music-btn__title {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #1D1D1F;
+  font-family: 'Outfit', sans-serif;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.music-btn.active .music-btn__title {
+  color: var(--spec-gold, #C9A14A);
+}
+
+.music-btn__tag {
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--spec-gold, #C9A14A);
+  background: rgba(201, 161, 74, 0.12);
+  border: 1px solid rgba(201, 161, 74, 0.3);
+  border-radius: 4px;
+  padding: 1px 5px;
+}
+
+.music-btn__artist {
+  font-size: 0.72rem;
+  color: #6E6E73;
+  font-family: 'Outfit', sans-serif;
+}
+
+.music-btn__mood {
+  font-size: 0.68rem;
+  color: #AEAEB2;
+  font-family: 'Outfit', sans-serif;
+  font-style: italic;
 }

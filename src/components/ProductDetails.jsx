@@ -95,7 +95,7 @@ const ProductDetails = () => {
       />
 
       {/* ── HERO MEDIA ── */}
-      <div className="relative w-full aspect-[3/4] sm:aspect-[16/10] lg:aspect-[16/7] overflow-hidden bg-black">
+      <div className="db-watermark relative w-full aspect-[3/4] sm:aspect-[16/10] lg:aspect-[16/7] overflow-hidden bg-black">
         {heroVideoSrc ? (
           <video
             src={heroVideoSrc}

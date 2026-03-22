@@ -80,6 +80,33 @@
 }
 
 /* ============================================
+   DIGITAL BLOOM™ WATERMARK UTILITY
+   Add class "db-watermark" to any video wrapper
+   to get the branded watermark automatically.
+   ============================================ */
+.db-watermark {
+  position: relative;
+  overflow: hidden;
+}
+
+.db-watermark::after {
+  content: 'Digital Bloom™';
+  position: absolute;
+  bottom: 10px;
+  left: 12px;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 0.62rem;
+  font-style: italic;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: rgba(212, 175, 55, 0.7);
+  pointer-events: none;
+  z-index: 20;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+  user-select: none;
+}
+
+/* ============================================
    GLOBAL RESET + TYPOGRAPHY
    ============================================ */
 * {

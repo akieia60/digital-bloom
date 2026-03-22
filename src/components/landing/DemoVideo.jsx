@@ -54,7 +54,7 @@ export default function DemoVideo() {
           transition: 'opacity 1s cubic-bezier(0.16, 1, 0.3, 1) 0.2s, transform 1s cubic-bezier(0.16, 1, 0.3, 1) 0.2s',
         }}
       >
-        <div className="demo-video-player">
+        <div className="db-watermark demo-video-player">
           <video
             controls
             playsInline

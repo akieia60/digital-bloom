@@ -13,7 +13,7 @@ const CartItem = ({ item }) => {
   return (
     <div className="flex items-start space-x-6 py-8 border-b border-white/5 last:border-0 group animate-fade-in">
       {/* Visual Asset Preview */}
-      <Link to={`/product/${item.id}`} className="w-24 h-32 flex-shrink-0 rounded-2xl overflow-hidden glass border border-white/5 relative block">
+      <Link to={`/product/${item.id}`} className="db-watermark w-24 h-32 flex-shrink-0 rounded-2xl overflow-hidden glass border border-white/5 relative block">
         {item.video_file_url || item.video_url ? (
           <video
             src={item.video_file_url || item.video_url}

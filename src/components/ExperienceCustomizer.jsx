@@ -18,6 +18,7 @@ export default function ExperienceCustomizer({ product, onComplete, onCancel }) 
     senderName: '',
     // New fields for personalization
     animationEffect: 'goldSparkles',
+    selectedMusic: '',
     sloganType: 'premade',
     selectedSlogan: '',
     customSlogan: '',
@@ -69,6 +70,38 @@ export default function ExperienceCustomizer({ product, onComplete, onCancel }) 
     { id: 'arial-bold', label: 'Arial Bold', sample: 'Bold & Clear',       style: { fontFamily: 'Arial, sans-serif', fontWeight: '700' } },
     { id: 'serif',      label: 'Classic Serif', sample: 'Timeless',        style: { fontFamily: 'Georgia, serif' } },
   ];
+  // Music tracks — "Give Them Their Flowers" is the featured artist track
+  const musicTracks = [
+    {
+      id: 'give-them-flowers',
+      label: 'Give Them Their Flowers',
+      artist: 'Featured Artist',
+      mood: 'Emotional · Celebratory',
+      featured: true,
+    },
+    {
+      id: 'soft-piano',
+      label: 'Soft Piano',
+      artist: 'Royalty Free',
+      mood: 'Peaceful · Reflective',
+      featured: false,
+    },
+    {
+      id: 'peaceful-strings',
+      label: 'Peaceful Strings',
+      artist: 'Royalty Free',
+      mood: 'Warm · Gentle',
+      featured: false,
+    },
+    {
+      id: 'gentle-acoustic',
+      label: 'Gentle Acoustic',
+      artist: 'Royalty Free',
+      mood: 'Uplifting · Tender',
+      featured: false,
+    },
+  ];
+
   const premadeSlogans = [
     'I hope you have a great day',
     'You are always loved',
@@ -222,6 +255,45 @@ export default function ExperienceCustomizer({ product, onComplete, onCancel }) 
                   >
                     <span className="font-btn__name" style={font.style}>{font.label}</span>
                     <span className="font-btn__sample">{font.sample}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Music Selection */}
+            <div className="customizer-section">
+              <label className="customizer-label">Add Music</label>
+              <p style={{ fontSize: '0.78rem', color: '#6E6E73', marginBottom: '10px', fontFamily: "'Outfit', sans-serif" }}>
+                Choose a song to play during the bloom experience
+              </p>
+              <div className="music-grid">
+                {/* No music option */}
+                <button
+                  className={`music-btn ${customization.selectedMusic === '' ? 'active' : ''}`}
+                  onClick={() => handleChange('selectedMusic', '')}
+                >
+                  <span className="music-btn__icon">🔇</span>
+                  <div className="music-btn__info">
+                    <span className="music-btn__title">No Music</span>
+                    <span className="music-btn__mood">Silent experience</span>
+                  </div>
+                </button>
+
+                {musicTracks.map((track) => (
+                  <button
+                    key={track.id}
+                    className={`music-btn ${customization.selectedMusic === track.id ? 'active' : ''} ${track.featured ? 'music-btn--featured' : ''}`}
+                    onClick={() => handleChange('selectedMusic', track.id)}
+                  >
+                    <span className="music-btn__icon">{track.featured ? '🌟' : '🎵'}</span>
+                    <div className="music-btn__info">
+                      <span className="music-btn__title">
+                        {track.label}
+                        {track.featured && <span className="music-btn__tag">Featured</span>}
+                      </span>
+                      <span className="music-btn__artist">{track.artist}</span>
+                      <span className="music-btn__mood">{track.mood}</span>
+                    </div>
                   </button>
                 ))}
               </div>

@@ -62,7 +62,7 @@ export default function FeaturedGallery() {
               to={`/product/${product.id}`}
               className="gallery-card"
             >
-              <div className="gallery-media">
+              <div className="db-watermark gallery-media">
                 <video
                   src={product.video_file_url || product.video_url}
                   autoPlay

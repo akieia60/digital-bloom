@@ -107,7 +107,7 @@ export default function CategoryGrid() {
                 className="cat-stack-bloom-link"
                 aria-label={`Browse ${cat.name}`}
               >
-                <div className="cat-stack-bloom-square">
+                <div className="db-watermark cat-stack-bloom-square">
                   {cat.previewVideo ? (
                     <video
                       src={cat.previewVideo}
