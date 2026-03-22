@@ -60,15 +60,21 @@ export default function GiftingForm({ recipientName, recipientEmail, deliveryDat
 
       {/* Message field with preview */}
       <div className="form-group">
-        <label className="customizer-label">Personal Message (Optional)</label>
+        <label className="customizer-label">Sign Your Card</label>
+        <p style={{ fontSize: '0.78rem', color: '#6E6E73', marginBottom: '10px', fontFamily: "'Outfit', sans-serif" }}>
+          Write a personal note — your recipient will see this as part of their bloom experience
+        </p>
 
-        {/* Live message preview card */}
+        {/* Live gift card preview */}
         <div className="gifting-message-preview">
+          {/* Decorative top divider */}
+          <div className="gifting-preview-divider" />
+
           {/* TO: top left */}
           <div className="gifting-preview-to">
             <span className="gifting-preview-label">To:</span>
             <span className="gifting-preview-name">
-              {recipientName || 'Recipient'}
+              {recipientName || 'Your Recipient'}
             </span>
           </div>
 
@@ -76,16 +82,21 @@ export default function GiftingForm({ recipientName, recipientEmail, deliveryDat
           <p className="gifting-preview-text">
             {giftMessage
               ? giftMessage
-              : <span className="gifting-preview-placeholder">Your message will appear here…</span>
+              : <span className="gifting-preview-placeholder">✦ Your heartfelt message will appear here ✦</span>
             }
           </p>
 
           {/* FROM: bottom right */}
           <div className="gifting-preview-from">
-            <span className="gifting-preview-label">From:</span>
+            <span className="gifting-preview-label">With love, from:</span>
             <span className="gifting-preview-name">
-              {senderName || 'You'}
+              {senderName || 'Your Name'}
             </span>
+          </div>
+
+          {/* Decorative bottom accent */}
+          <div className="gifting-preview-footer">
+            <span>Digital Bloom™</span>
           </div>
         </div>
 

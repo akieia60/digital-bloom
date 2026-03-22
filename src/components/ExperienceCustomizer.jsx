@@ -17,12 +17,13 @@ export default function ExperienceCustomizer({ product, onComplete, onCancel }) 
     giftMessage: '',
     senderName: '',
     // New fields for personalization
-    balloonMessage: '',
+    animationEffect: 'goldSparkles',
     sloganType: 'premade',
     selectedSlogan: '',
     customSlogan: '',
     toName: '',
     fromName: '',
+    textFont: 'cormorant',
     symbolType: 'rose',
     deliveryMethod: '',
     deliveryTiming: '',
@@ -46,13 +47,27 @@ export default function ExperienceCustomizer({ product, onComplete, onCancel }) 
     { id: 'sympathy', name: 'Sympathy', icon: '🕊️' },
   ];
 
-  // Options for new customization features.
-  const balloonOptions = [
-    'Happy Birthday',
-    'I Love You',
-    'Congratulations',
-    'Thank You',
-    "You're the Best",
+  // Animation effects — visual magic that plays over the bloom
+  const animationEffects = [
+    { id: 'goldSparkles',   label: '✨ Gold Sparkles',        desc: 'A shower of shimmering gold sparks' },
+    { id: 'butterflies',    label: '🦋 Butterflies',          desc: 'Soft, floating butterflies drift across the bloom' },
+    { id: 'goldenHearts',   label: '💛 Golden Hearts',        desc: 'Radiant hearts with a diamond shimmer' },
+    { id: 'coloredHearts',  label: '💖 Rainbow Hearts',       desc: 'Multi-colored hearts floating upward' },
+    { id: 'diamondGlitter', label: '💎 Diamond Glitter',      desc: 'Sparkling diamond-cut light effects' },
+    { id: 'glitter',        label: '🌟 Glitter Shower',       desc: 'Fine glitter raining down over the bloom' },
+    { id: 'stars',          label: '⭐ Star Burst',           desc: 'Twinkling stars cascading across the screen' },
+    { id: 'rosePetals',     label: '🌸 Rose Petals',          desc: 'Delicate petals gently falling' },
+    { id: 'confetti',       label: '🎊 Confetti',             desc: 'Festive bursts of colorful celebration' },
+    { id: 'snowflakes',     label: '❄️ Snowflakes',           desc: 'Gentle snowflakes drifting down' },
+  ];
+
+  // Font / text style options for message text
+  const fontOptions = [
+    { id: 'cormorant',  label: 'Cormorant',  sample: 'Elegant & Italic',   style: { fontFamily: "'Cormorant Garamond', Georgia, serif", fontStyle: 'italic' } },
+    { id: 'playfair',   label: 'Playfair',   sample: 'Classic & Refined',  style: { fontFamily: "'Playfair Display', Georgia, serif" } },
+    { id: 'outfit',     label: 'Outfit',     sample: 'Clean & Modern',     style: { fontFamily: "'Outfit', sans-serif" } },
+    { id: 'arial-bold', label: 'Arial Bold', sample: 'Bold & Clear',       style: { fontFamily: 'Arial, sans-serif', fontWeight: '700' } },
+    { id: 'serif',      label: 'Classic Serif', sample: 'Timeless',        style: { fontFamily: 'Georgia, serif' } },
   ];
   const premadeSlogans = [
     'I hope you have a great day',
@@ -171,21 +186,45 @@ export default function ExperienceCustomizer({ product, onComplete, onCancel }) 
               </div>
             </div>
 
-            {/* Balloon Message */}
+            {/* Animation Effect */}
             <div className="customizer-section">
-              <label className="customizer-label">Balloon Message</label>
-              <select
-                className="customizer-input"
-                value={customization.balloonMessage}
-                onChange={(e) => handleChange('balloonMessage', e.target.value)}
-              >
-                <option value="">Select message</option>
-                {balloonOptions.map((option) => (
-                  <option key={option} value={option}>
-                    {option}
-                  </option>
+              <label className="customizer-label">Animation Effect</label>
+              <p style={{ fontSize: '0.78rem', color: '#6E6E73', marginBottom: '10px', fontFamily: "'Outfit', sans-serif" }}>
+                Choose the magical effect that plays over your bloom
+              </p>
+              <div className="effect-grid">
+                {animationEffects.map((effect) => (
+                  <button
+                    key={effect.id}
+                    className={`effect-btn ${customization.animationEffect === effect.id ? 'active' : ''}`}
+                    onClick={() => handleChange('animationEffect', effect.id)}
+                    title={effect.desc}
+                  >
+                    <span className="effect-label">{effect.label}</span>
+                    <span className="effect-desc">{effect.desc}</span>
+                  </button>
                 ))}
-              </select>
+              </div>
+            </div>
+
+            {/* Text Font Style */}
+            <div className="customizer-section">
+              <label className="customizer-label">Message Font Style</label>
+              <p style={{ fontSize: '0.78rem', color: '#6E6E73', marginBottom: '10px', fontFamily: "'Outfit', sans-serif" }}>
+                Choose how your message text looks
+              </p>
+              <div className="font-grid">
+                {fontOptions.map((font) => (
+                  <button
+                    key={font.id}
+                    className={`font-btn ${customization.textFont === font.id ? 'active' : ''}`}
+                    onClick={() => handleChange('textFont', font.id)}
+                  >
+                    <span className="font-btn__name" style={font.style}>{font.label}</span>
+                    <span className="font-btn__sample">{font.sample}</span>
+                  </button>
+                ))}
+              </div>
             </div>
 
             {/* Slogan Section */}
