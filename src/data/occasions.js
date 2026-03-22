@@ -11,6 +11,7 @@ const OCCASIONS = {
     name: "Mother's Day",
     title: "Mother's Day Blooms",
     tagline: 'Celebrate the woman who made everything bloom.',
+    salesPitch: "Just in time to send your mother, grandmother, or any special woman in your life a beautiful Mother's Day bloom. Whether she's near or far, show her how much she means to you with a stunning digital experience that captures your love and appreciation.",
     accent: '#FF4DA6',
     emoji: '💐',
     customizerDefaults: {
@@ -25,6 +26,7 @@ const OCCASIONS = {
     name: 'Birthday',
     title: 'Birthday Blooms',
     tagline: 'Make their special day absolutely unforgettable.',
+    salesPitch: "Just in time to send your sister, brother, cousin, boyfriend, girlfriend, or loved one a birthday bloom that will make their day absolutely special. Create memories that last forever with a personalized digital experience that shows how much you care about their celebration.",
     accent: '#FFD23F',
     emoji: '🎂',
     customizerDefaults: {
@@ -81,6 +83,7 @@ const OCCASIONS = {
     name: 'Memorial',
     title: 'Memorial & Sympathy',
     tagline: 'Honor those we hold dear — their light never fades.',
+    salesPitch: "Just in time to send friends, family, and loved ones your heartfelt condolences via social media. Whether you can't be there in person or you are there and want to offer another gesture of support and appreciation, a memorial bloom can always be used for someone who has lost a loved one.",
     accent: '#7B9FFF',
     emoji: '🕊️',
     customizerDefaults: {

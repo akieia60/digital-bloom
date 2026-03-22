@@ -47,6 +47,16 @@ export default function CategoryPage() {
         <p className="relative text-base sm:text-lg text-[var(--text-secondary)] font-light max-w-xl mx-auto leading-relaxed">
           {occasion.tagline}
         </p>
+        
+        {/* Gamble's Sales Pitch */}
+        {occasion.salesPitch && (
+          <div className="relative max-w-2xl mx-auto mt-8 p-6 rounded-2xl" style={{ background: `${occasion.accent}08`, border: `1px solid ${occasion.accent}20` }}>
+            <p className="text-sm sm:text-base text-[var(--text-primary)] font-medium leading-relaxed text-center">
+              {occasion.salesPitch}
+            </p>
+          </div>
+        )}
+        
         <div className="relative mx-auto mt-6 h-[2px] w-12 rounded-full" style={{ background: occasion.accent }} />
       </section>
 
