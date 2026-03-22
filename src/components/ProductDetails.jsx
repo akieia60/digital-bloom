@@ -3,7 +3,7 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useProduct, useProducts } from '../hooks/useProducts';
 import ProductCard from './ProductCard';
-import Customizer from './Customizer';
+import ExperienceCustomizer from './ExperienceCustomizer';
 import OCCASIONS from '../data/occasions';
 
 const ProductDetails = () => {
@@ -84,15 +84,15 @@ const ProductDetails = () => {
 
   return (
     <div className="min-h-screen bg-[var(--surface-soft,#F7F7F7)] text-[var(--text-primary)]">
-      {/* Customizer Panel */}
-      <Customizer
-        key={product.id}
-        product={product}
-        isOpen={isCustomizerOpen}
-        onClose={() => setIsCustomizerOpen(false)}
-        onComplete={handleCustomizationComplete}
-        defaults={customizerDefaults}
-      />
+      {/* Customizer Panel — ExperienceCustomizer mounts only when open */}
+      {isCustomizerOpen && (
+        <ExperienceCustomizer
+          key={product.id}
+          product={product}
+          onComplete={handleCustomizationComplete}
+          onCancel={() => setIsCustomizerOpen(false)}
+        />
+      )}
 
       {/* ── HERO MEDIA ── */}
       <div className="db-watermark relative w-full aspect-[3/4] sm:aspect-[16/10] lg:aspect-[16/7] overflow-hidden bg-black">
