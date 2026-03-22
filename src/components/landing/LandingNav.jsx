@@ -30,7 +30,18 @@ export default function LandingNav() {
       className={`landing-nav ${isScrolled ? 'landing-nav--scrolled' : ''}`}
     >
       <div className="landing-nav__inner">
-        {/* Logo */}
+        {/* Hamburger Button — mobile left side */}
+        <button
+          className="landing-nav__hamburger"
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          aria-label="Toggle menu"
+        >
+          <span className={`landing-nav__hamburger-line ${isMobileMenuOpen ? 'open' : ''}`} />
+          <span className={`landing-nav__hamburger-line ${isMobileMenuOpen ? 'open' : ''}`} />
+          <span className={`landing-nav__hamburger-line ${isMobileMenuOpen ? 'open' : ''}`} />
+        </button>
+
+        {/* Logo — hidden on mobile */}
         <Link to="/" className="landing-nav__logo">
           Digital Bloom
         </Link>
@@ -49,25 +60,14 @@ export default function LandingNav() {
           aria-label="Shopping cart"
           style={{ position: 'relative', background: 'none', border: 'none', cursor: 'pointer', padding: '8px', marginLeft: '8px' }}
         >
-          <svg style={{ width: '22px', height: '22px', color: 'rgba(255,255,255,0.7)' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+          <svg style={{ width: '22px', height: '22px', color: 'rgba(255,255,255,0.95)' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
           </svg>
           {cartCount > 0 && (
             <span style={{ position: 'absolute', top: '2px', right: '0', background: '#D4AF37', color: '#050510', fontSize: '9px', fontWeight: 'bold', borderRadius: '50%', width: '16px', height: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               {cartCount}
             </span>
           )}
-        </button>
-
-        {/* Hamburger Button */}
-        <button
-          className="landing-nav__hamburger"
-          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          aria-label="Toggle menu"
-        >
-          <span className={`landing-nav__hamburger-line ${isMobileMenuOpen ? 'open' : ''}`} />
-          <span className={`landing-nav__hamburger-line ${isMobileMenuOpen ? 'open' : ''}`} />
-          <span className={`landing-nav__hamburger-line ${isMobileMenuOpen ? 'open' : ''}`} />
         </button>
       </div>
 
@@ -76,7 +76,7 @@ export default function LandingNav() {
         <div className="landing-nav__mobile-overlay" onClick={() => setIsMobileMenuOpen(false)}>
           <div className="landing-nav__mobile-menu" onClick={(e) => e.stopPropagation()}>
             <div className="landing-nav__mobile-header">
-              <span className="landing-nav__mobile-brand">Digital Bloom</span>
+              <span className="landing-nav__mobile-brand">Digital Bloom™</span>
               <button
                 className="landing-nav__mobile-close"
                 onClick={() => setIsMobileMenuOpen(false)}

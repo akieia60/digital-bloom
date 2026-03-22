@@ -15,6 +15,7 @@ export default function ExperienceCustomizer({ product, onComplete, onCancel }) 
     recipientEmail: '',
     deliveryDate: '',
     giftMessage: '',
+    senderName: '',
     // New fields for personalization
     balloonMessage: '',
     sloganType: 'premade',
@@ -364,6 +365,7 @@ export default function ExperienceCustomizer({ product, onComplete, onCancel }) 
                 recipientEmail={customization.recipientEmail}
                 deliveryDate={customization.deliveryDate}
                 giftMessage={customization.giftMessage}
+                senderName={customization.senderName}
                 onChange={handleChange}
               />
             )}

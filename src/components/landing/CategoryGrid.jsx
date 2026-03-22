@@ -6,56 +6,48 @@ const CATEGORIES = [
     name: "Happy Mother's Day",
     slug: 'mothers-day',
     accent: '#FF4DA6',
-    tagline: 'Celebrate the woman who gave you everything',
     previewVideo: '/videos/category-previews/preview_mothers-day_grok1.mp4',
   },
   {
     name: 'Happy Birthday',
     slug: 'birthday',
     accent: '#FFD23F',
-    tagline: 'Make their special day unforgettable',
     previewVideo: '/videos/shop/birthday_birthday_roses_bloom_v1.mp4',
   },
   {
     name: 'Love & Romance',
     slug: 'love',
     accent: '#FF3B7F',
-    tagline: 'Express your deepest feelings',
     previewVideo: '/videos/shop/iloveyou_iloveyou_roses_bloom_v1.mp4',
   },
   {
     name: 'Congratulations',
     slug: 'celebration',
     accent: '#B45FFF',
-    tagline: 'Celebrate their achievements in style',
     previewVideo: '/videos/shop/congratulations_congratulations_roses_bloom_v1.mp4',
   },
   {
     name: 'Memorial & Sympathy',
     slug: 'grief',
     accent: '#7B9FFF',
-    tagline: 'Honor those we hold dear',
     previewVideo: '/videos/shop/memorial_memorial_roses_artistic_v1.mp4',
   },
   {
     name: 'Thinking of You',
     slug: 'friendship',
     accent: '#FF8C42',
-    tagline: 'Let them know they matter',
     previewVideo: '/videos/shop/thinkingofyou_thinkingofyou_roses_bloom_v1.mp4',
   },
   {
     name: 'Luxury Collection',
     slug: 'luxury',
     accent: '#D4AF37',
-    tagline: 'Where fashion meets floral artistry',
     previewVideo: '/videos/shop/glassstiletto_glassstilettoseries_roses_artistic_v1.mp4',
   },
   {
     name: 'General Collection',
     slug: 'general',
     accent: '#9E9E9E',
-    tagline: 'Beautiful blooms for every moment',
     previewVideo: '/videos/shop/general_general_goldenroses_bloom_v1.mp4',
   },
 ];
@@ -74,7 +66,7 @@ export default function CategoryGrid() {
           }
         });
       },
-      { threshold: 0.1, rootMargin: '0px 0px -10px 0px' }
+      { threshold: 0.08, rootMargin: '0px 0px -10px 0px' }
     );
 
     const items = sectionRef.current?.querySelectorAll('[data-idx]');
@@ -83,29 +75,39 @@ export default function CategoryGrid() {
   }, []);
 
   return (
-    <section className="sq-cat-section" ref={sectionRef}>
-      <div className="sq-cat-container">
-        {/* Section header */}
-        <div className="sq-cat-header">
-          <span className="sq-cat-eyebrow">Browse by Occasion</span>
-          <h2 className="sq-cat-headline">Find the Perfect Bloom</h2>
-          <p className="sq-cat-subline">Send a message they'll never forget</p>
-        </div>
+    <section className="cat-stack-section" ref={sectionRef}>
+      {/* Section header */}
+      <div className="cat-stack-header">
+        <span className="cat-stack-eyebrow">Browse by Occasion</span>
+        <h2 className="cat-stack-headline">Find the Perfect Bloom</h2>
+      </div>
 
-        {/* Square card grid — 2 columns */}
-        <div className="sq-cat-grid">
-          {CATEGORIES.map((cat, idx) => {
-            const visible = visibleItems.has(String(idx));
-            return (
+      {/* Stacked category list */}
+      <div className="cat-stack-list">
+        {CATEGORIES.map((cat, idx) => {
+          const visible = visibleItems.has(String(idx));
+          return (
+            <div
+              key={cat.slug}
+              className={`cat-stack-item ${visible ? 'cat-stack-item--visible' : ''}`}
+              data-idx={idx}
+              style={{ transitionDelay: `${idx * 0.07}s` }}
+            >
+              {/* Category name row — full width */}
+              <div className="cat-stack-name-row">
+                <h3 className="cat-stack-name">{cat.name}</h3>
+              </div>
+
+              {/* Divider line — full width */}
+              <div className="cat-stack-divider" style={{ background: cat.accent }} />
+
+              {/* Full-width square bloom — tap to open */}
               <Link
-                key={cat.slug}
                 to={`/shop/${cat.slug}`}
-                className={`sq-cat-card ${visible ? 'sq-cat-card--visible' : ''}`}
-                data-idx={idx}
-                style={{ transitionDelay: `${(idx % 6) * 0.06}s` }}
+                className="cat-stack-bloom-link"
+                aria-label={`Browse ${cat.name}`}
               >
-                {/* Square video/image area */}
-                <div className="sq-cat-card__media">
+                <div className="cat-stack-bloom-square">
                   {cat.previewVideo ? (
                     <video
                       src={cat.previewVideo}
@@ -114,30 +116,23 @@ export default function CategoryGrid() {
                       muted
                       playsInline
                       preload="metadata"
-                      className="sq-cat-card__video"
+                      className="cat-stack-bloom-video"
                     />
                   ) : (
                     <div
-                      className="sq-cat-card__placeholder"
+                      className="cat-stack-bloom-placeholder"
                       style={{ background: cat.accent }}
                     />
                   )}
-                  {/* Accent border-bottom */}
-                  <div
-                    className="sq-cat-card__accent"
-                    style={{ background: cat.accent }}
-                  />
-                </div>
-
-                {/* Text below image */}
-                <div className="sq-cat-card__body">
-                  <h3 className="sq-cat-card__title">{cat.name}</h3>
-                  <p className="sq-cat-card__tagline">{cat.tagline}</p>
+                  {/* Tap hint overlay */}
+                  <div className="cat-stack-tap-hint">
+                    <span className="cat-stack-tap-text">Tap to explore</span>
+                  </div>
                 </div>
               </Link>
-            );
-          })}
-        </div>
+            </div>
+          );
+        })}
       </div>
     </section>
   );

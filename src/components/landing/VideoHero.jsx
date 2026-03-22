@@ -109,6 +109,10 @@ export default function VideoHero() {
             )}
           </div>
           <div className="video-hero__overlay" />
+          {/* Persistent watermark — always visible in screenshots & recordings */}
+          <div className="video-hero__watermark" aria-hidden="true">
+            Digital Bloom™
+          </div>
         </div>
 
         {/* Text Content — visible immediately on mobile */}
@@ -128,7 +132,7 @@ export default function VideoHero() {
           )}
 
           <h1 className="video-hero__title">
-            Digital Bloom
+            Digital Bloom<sup style={{ fontSize: '0.45em', verticalAlign: 'super', marginLeft: '3px', opacity: 0.75 }}>™</sup>
           </h1>
           <p className="video-hero__tagline">
             Give Them Their Flowers While They&rsquo;re Here

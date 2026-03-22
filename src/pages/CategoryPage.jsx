@@ -34,24 +34,24 @@ export default function CategoryPage() {
         <div className="absolute top-0 left-0 right-0 h-1" style={{ background: `linear-gradient(90deg, ${occasion.accent}, ${occasion.accent}66)` }} />
         <div className="absolute inset-0 opacity-[0.07] pointer-events-none" style={{ background: `radial-gradient(ellipse at 50% 0%, ${occasion.accent}, transparent 65%)` }} />
 
-        <Link to="/shop" className="relative inline-flex items-center text-[11px] uppercase tracking-[0.15em] text-[var(--text-secondary)] hover:text-[var(--accent-gold)] transition-colors mb-10 font-medium">
+        <Link to="/shop" className="relative inline-flex items-center text-[11px] uppercase tracking-[0.15em] hover:text-[var(--accent-gold)] transition-colors mb-10 font-medium" style={{ color: 'rgba(255,255,255,0.6)' }}>
           <svg className="w-3 h-3 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
           All Occasions
         </Link>
 
-        <h1 className="relative text-4xl sm:text-5xl md:text-6xl font-display font-medium text-[var(--text-primary)] tracking-[0.06em] uppercase mb-4">
+        <h1 className="relative text-4xl sm:text-5xl md:text-6xl font-display font-medium tracking-[0.06em] uppercase mb-4" style={{ color: '#FFFFFF' }}>
           {occasion.title}
         </h1>
-        <p className="relative text-base sm:text-lg text-[var(--text-secondary)] font-light max-w-xl mx-auto leading-relaxed">
+        <p className="relative text-base sm:text-lg font-light max-w-xl mx-auto leading-relaxed" style={{ color: 'rgba(255,255,255,0.75)' }}>
           {occasion.tagline}
         </p>
-        
+
         {/* Gamble's Sales Pitch */}
         {occasion.salesPitch && (
-          <div className="relative max-w-2xl mx-auto mt-8 p-6 rounded-2xl" style={{ background: `${occasion.accent}08`, border: `1px solid ${occasion.accent}20` }}>
-            <p className="text-sm sm:text-base text-[var(--text-primary)] font-medium leading-relaxed text-center">
+          <div className="relative max-w-2xl mx-auto mt-8 p-6 rounded-2xl" style={{ background: 'rgba(255,255,255,0.07)', border: `1px solid rgba(255,255,255,0.15)` }}>
+            <p className="text-sm sm:text-base font-medium leading-relaxed text-center" style={{ color: 'rgba(255,255,255,0.9)' }}>
               {occasion.salesPitch}
             </p>
           </div>

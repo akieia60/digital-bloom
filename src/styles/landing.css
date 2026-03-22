@@ -378,7 +378,149 @@ html {
     font-size: 0.68rem;
   }
 }
-/* (old circle card styles removed — replaced by sq-cat above) */
+/* ============================================
+   STACKED CATEGORY LIST — Full-width, one per row
+   Name on top, divider, then big square bloom
+   ============================================ */
+
+.cat-stack-section {
+  padding: 48px 0 24px;
+  background: var(--surface-white, #FFFFFF);
+}
+
+.cat-stack-header {
+  text-align: center;
+  padding: 0 20px;
+  margin-bottom: 32px;
+}
+
+.cat-stack-eyebrow {
+  display: block;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--accent-gold, #C9A14A);
+  margin-bottom: 10px;
+}
+
+.cat-stack-headline {
+  font-family: 'Playfair Display', 'Georgia', serif;
+  font-size: clamp(1.7rem, 5vw, 2.4rem);
+  font-weight: 600;
+  color: var(--text-primary, #1D1D1F);
+  margin: 0;
+}
+
+/* Each stacked category row */
+.cat-stack-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.cat-stack-item {
+  opacity: 0;
+  transform: translateY(24px);
+}
+
+.cat-stack-item--visible {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+/* Category name — full width, large */
+.cat-stack-name-row {
+  width: 100%;
+  padding: 22px 20px 14px;
+}
+
+.cat-stack-name {
+  font-family: 'Playfair Display', 'Georgia', serif;
+  font-size: clamp(1.5rem, 6vw, 2rem);
+  font-weight: 600;
+  color: var(--text-primary, #1D1D1F);
+  margin: 0;
+  letter-spacing: 0.02em;
+  line-height: 1.2;
+}
+
+/* Divider line — full width, accent colored */
+.cat-stack-divider {
+  width: 100%;
+  height: 3px;
+  opacity: 0.75;
+  margin-bottom: 0;
+}
+
+/* Full-width square bloom */
+.cat-stack-bloom-link {
+  display: block;
+  width: 100%;
+  text-decoration: none;
+  position: relative;
+}
+
+.cat-stack-bloom-square {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  background: #0a0a0a;
+  position: relative;
+}
+
+.cat-stack-bloom-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  pointer-events: none;
+}
+
+.cat-stack-bloom-placeholder {
+  width: 100%;
+  height: 100%;
+  opacity: 0.4;
+}
+
+/* Subtle "tap to explore" hint on the bloom */
+.cat-stack-tap-hint {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 40px 20px 20px;
+  background: linear-gradient(to top, rgba(0,0,0,0.55) 0%, transparent 100%);
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  pointer-events: none;
+}
+
+.cat-stack-tap-text {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* Tablet/desktop — constrain width so it doesn't stretch too wide */
+@media (min-width: 600px) {
+  .cat-stack-bloom-square {
+    max-height: 600px;
+    aspect-ratio: 1 / 1;
+  }
+  .cat-stack-section {
+    padding: 64px 0 40px;
+  }
+  .cat-stack-name {
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+  }
+}
 
 /* ============================================
    FAQ SECTION

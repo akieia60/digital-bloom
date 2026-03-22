@@ -8,8 +8,8 @@
      ============================================ */
 
   /* ── Page Foundations ── */
-  --bg-page: #0A0A0A;
-  --bg-hero: #000000;
+  --bg-page: #0D1B36;
+  --bg-hero: #0D1B36;
 
   /* ── Surface System (White-Forward) ── */
   --surface-white: #FFFFFF;
@@ -47,7 +47,7 @@
   --deep-blue-text: #0B1F3A;
 
   /* ── Navigation (dark framing) ── */
-  --nav-bg: #0A0A0A;
+  --nav-bg: #0D1B36;
   --nav-bg-scrolled: rgba(10, 10, 10, 0.95);
   --nav-border-scrolled: rgba(255, 255, 255, 0.05);
 
