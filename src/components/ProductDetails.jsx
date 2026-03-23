@@ -3,7 +3,7 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useProduct, useProducts } from '../hooks/useProducts';
 import ProductCard from './ProductCard';
-import ExperienceCustomizer from './ExperienceCustomizer';
+import Customizer from './Customizer';
 import OCCASIONS from '../data/occasions';
 
 const ProductDetails = () => {
@@ -75,8 +75,8 @@ const ProductDetails = () => {
 
   const handleCustomizationComplete = (customization) => {
     addToCart(product, 1, customization);
-    setIsCustomizerOpen(false);
-    toggleCart(); // Open cart drawer immediately so customer can checkout
+    // Show success toast instead of forcing cart open — user can keep shopping (Fashion Nova style)
+    setShowSuccess(true);
   };
 
   const heroVideoSrc = product.video_file_url || product.video_url;
@@ -85,15 +85,14 @@ const ProductDetails = () => {
 
   return (
     <div className="min-h-screen bg-[var(--surface-soft,#F7F7F7)] text-[var(--text-primary)]">
-      {/* Customizer Panel — ExperienceCustomizer mounts only when open */}
-      {isCustomizerOpen && (
-        <ExperienceCustomizer
-          key={product.id}
-          product={product}
-          onComplete={handleCustomizationComplete}
-          onCancel={() => setIsCustomizerOpen(false)}
-        />
-      )}
+      {/* Customizer Panel — slides up from bottom on mobile, side panel on desktop */}
+      <Customizer
+        product={product}
+        isOpen={isCustomizerOpen}
+        onClose={() => setIsCustomizerOpen(false)}
+        onComplete={handleCustomizationComplete}
+        defaults={customizerDefaults}
+      />
 
       {/* ── HERO MEDIA ── */}
       <div className="db-watermark relative w-full aspect-[3/4] sm:aspect-[16/10] lg:aspect-[16/7] overflow-hidden bg-black">

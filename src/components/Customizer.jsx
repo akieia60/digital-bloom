@@ -62,6 +62,10 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {} }) => 
         audioRef.current.pause();
         audioRef.current = null;
       }
+      if (webAudioCtxRef.current) {
+        webAudioCtxRef.current.close();
+        webAudioCtxRef.current = null;
+      }
       document.body.classList.remove('customizer-open');
       document.body.style.position = '';
       document.body.style.top = '';
@@ -89,45 +93,119 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {} }) => 
     setExtras(prev => ({ ...prev, [extraId]: !prev[extraId] }));
   }, []);
 
-  // Sound preview playback
-  const handleSoundPreview = useCallback((track) => {
-    // If already playing this track, stop it
-    if (playingTrack === track.id) {
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current = null;
+  // Web Audio API fallback — plays a pleasant chord when no MP3 file exists yet
+  const webAudioCtxRef = useRef(null);
+  const playWebAudioTone = useCallback((trackId) => {
+    try {
+      // Stop previous web audio
+      if (webAudioCtxRef.current) {
+        webAudioCtxRef.current.close();
+        webAudioCtxRef.current = null;
       }
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      webAudioCtxRef.current = ctx;
+
+      // Each track gets its own chord voicing and character
+      const configs = {
+        'gentle-piano':  { freqs: [261.63, 329.63, 392.00, 523.25], type: 'triangle', duration: 3.5 }, // C major chord
+        'soft-strings':  { freqs: [196.00, 246.94, 293.66, 392.00], type: 'sine',     duration: 4.0 }, // G major
+        'ambient-bloom': { freqs: [220.00, 277.18, 329.63, 440.00], type: 'sine',     duration: 4.5 }, // A major
+      };
+      const { freqs, type, duration } = configs[trackId] || configs['gentle-piano'];
+
+      freqs.forEach((freq, i) => {
+        const osc = ctx.createOscillator();
+        const oscGain = ctx.createGain();
+        const masterGain = ctx.createGain();
+        masterGain.gain.value = 0.18;
+        osc.connect(oscGain);
+        oscGain.connect(masterGain);
+        masterGain.connect(ctx.destination);
+
+        osc.type = type;
+        osc.frequency.value = freq;
+
+        const startTime = ctx.currentTime + i * 0.06;
+        oscGain.gain.setValueAtTime(0, startTime);
+        oscGain.gain.linearRampToValueAtTime(0.7, startTime + 0.15);
+        oscGain.gain.setValueAtTime(0.7, startTime + duration - 0.8);
+        oscGain.gain.linearRampToValueAtTime(0, startTime + duration);
+        osc.start(startTime);
+        osc.stop(startTime + duration);
+      });
+
+      setPlayingTrack(trackId);
+      // Auto-clear state after tone ends
+      const longestDuration = (duration + (freqs.length - 1) * 0.06) * 1000;
+      setTimeout(() => {
+        if (webAudioCtxRef.current === ctx) {
+          ctx.close();
+          webAudioCtxRef.current = null;
+          setPlayingTrack(null);
+        }
+      }, longestDuration + 200);
+    } catch (err) {
+      console.error('Web Audio API unavailable:', err);
       setPlayingTrack(null);
-      return;
     }
-    // Stop any current playback
+  }, []);
+
+  const stopAllAudio = useCallback(() => {
     if (audioRef.current) {
       audioRef.current.pause();
       audioRef.current = null;
     }
-    // Play new track
-    if (track.src) {
-      const audio = new Audio(track.src);
-      audio.volume = 0.5;
-      audioRef.current = audio;
-      audio.play().catch(() => {});
-      setPlayingTrack(track.id);
-      // Auto-stop after 15 seconds
-      setTimeout(() => {
-        if (audioRef.current === audio) {
-          audio.pause();
-          audioRef.current = null;
-          setPlayingTrack(null);
-        }
-      }, 15000);
-      // Stop when track ends
-      audio.onended = () => {
-        setPlayingTrack(null);
-        audioRef.current = null;
-      };
+    if (webAudioCtxRef.current) {
+      webAudioCtxRef.current.close();
+      webAudioCtxRef.current = null;
     }
+    setPlayingTrack(null);
+  }, []);
+
+  // Sound preview playback — tries real MP3 first, falls back to Web Audio API tone
+  const handleSoundPreview = useCallback((track) => {
+    // Tapping the playing track stops it
+    if (playingTrack === track.id) {
+      stopAllAudio();
+      return;
+    }
+    stopAllAudio();
     setSelectedSound(track.id);
-  }, [playingTrack]);
+
+    if (!track.src) {
+      // No file path — go straight to Web Audio tone
+      playWebAudioTone(track.id);
+      return;
+    }
+
+    // Try loading the real MP3 file
+    const audio = new Audio(track.src);
+    audio.volume = 0.5;
+    audioRef.current = audio;
+
+    audio.play()
+      .then(() => {
+        // Real file loaded and playing
+        setPlayingTrack(track.id);
+        const autoStop = setTimeout(() => {
+          if (audioRef.current === audio) {
+            audio.pause();
+            audioRef.current = null;
+            setPlayingTrack(null);
+          }
+        }, 15000);
+        audio.onended = () => {
+          clearTimeout(autoStop);
+          setPlayingTrack(null);
+          audioRef.current = null;
+        };
+      })
+      .catch(() => {
+        // MP3 not found yet — fall back to Web Audio API tone
+        audioRef.current = null;
+        playWebAudioTone(track.id);
+      });
+  }, [playingTrack, stopAllAudio, playWebAudioTone]);
 
   // Pricing
   const basePrice = parseFloat(product?.price || 0);
@@ -152,13 +230,10 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {} }) => 
     // Build composition manifest for fulfillment
     const composition = buildCartComposition({ message, colorTheme, extras });
     // Stop audio on complete
-    if (audioRef.current) {
-      audioRef.current.pause();
-      audioRef.current = null;
-    }
+    stopAllAudio();
     onComplete({ productId: product.id, message, colorTheme, extras, selectedSound, totalPrice, composition });
     onClose();
-  }, [isProductValid, product, message, colorTheme, extras, selectedSound, totalPrice, themeStyle, onComplete, onClose]);
+  }, [isProductValid, product, message, colorTheme, extras, selectedSound, totalPrice, themeStyle, stopAllAudio, onComplete, onClose]);
 
   if (!isOpen) return null;
 
