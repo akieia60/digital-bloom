@@ -73,11 +73,11 @@ const Header = ({ onSearchChange, searchQuery }) => {
           </div>
 
           {/* Right: Desktop Nav + Cart + Hamburger */}
-          <div className="flex-1 flex justify-end items-center space-x-4 sm:space-x-8">
-            <nav className="hidden lg:flex items-center space-x-8">
-              <Link to="/shop" className="text-[12px] uppercase tracking-[0.12em] text-[var(--accent-gold)] hover:text-[var(--text-primary)] transition-colors font-medium">Occasions</Link>
-              <Link to="/shop" className="text-[12px] uppercase tracking-[0.12em] text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors font-medium">Shop</Link>
-              <Link to="/credits" className="text-[12px] uppercase tracking-[0.12em] text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors font-medium">Credits</Link>
+          <div className="flex-1 flex justify-end items-center space-x-4 sm:space-x-8 ml-4">
+            <nav className="hidden lg:flex items-center space-x-6 xl:space-x-8">
+              <Link to="/shop" className="text-[11px] xl:text-[12px] uppercase tracking-[0.12em] text-[var(--accent-gold)] hover:text-[var(--text-primary)] transition-colors font-medium whitespace-nowrap">Occasions</Link>
+              <Link to="/shop" className="text-[11px] xl:text-[12px] uppercase tracking-[0.12em] text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors font-medium whitespace-nowrap">Shop</Link>
+              <Link to="/credits" className="text-[11px] xl:text-[12px] uppercase tracking-[0.12em] text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors font-medium whitespace-nowrap">Credits</Link>
             </nav>
             <button
               onClick={toggleCart}

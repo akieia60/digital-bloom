@@ -10,6 +10,13 @@ const EXTRAS = [
   { id: 'sparkle', icon: '✨', name: 'Sparkle Effect', price: 3.99 },
 ];
 
+const SOUND_TRACKS = [
+  { id: 'gentle-piano', name: 'Gentle Piano', icon: '🎹', src: '/audio/gentle-piano.mp3' },
+  { id: 'soft-strings', name: 'Soft Strings', icon: '🎻', src: '/audio/soft-strings.mp3' },
+  { id: 'ambient-bloom', name: 'Ambient Bloom', icon: '🌸', src: '/audio/ambient-bloom.mp3' },
+  { id: 'give-flowers', name: 'Give Them Their Flowers', icon: '💐', src: null, comingSoon: true },
+];
+
 const COLOR_THEMES = [
   { id: 'original', name: 'Original', colors: ['#FF69B4', '#FFB6C1'] },
   { id: 'warm', name: 'Warm Sunset', colors: ['#FF6B6B', '#FFA07A'] },
@@ -30,6 +37,9 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {} }) => 
   });
   const [colorTheme, setColorTheme] = useState(stateDefaults.colorTheme || 'original');
   const [extras, setExtras] = useState({ balloon: false, ribbon: false, sparkle: false });
+  const [selectedSound, setSelectedSound] = useState(stateDefaults.sound || '');
+  const [playingTrack, setPlayingTrack] = useState(null);
+  const audioRef = useRef(null);
 
   // Safari-safe scroll lock
   useEffect(() => {
@@ -47,6 +57,11 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {} }) => 
       window.scrollTo(0, scrollPosRef.current);
     }
     return () => {
+      // Clean up audio on unmount
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+      }
       document.body.classList.remove('customizer-open');
       document.body.style.position = '';
       document.body.style.top = '';
@@ -74,6 +89,46 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {} }) => 
     setExtras(prev => ({ ...prev, [extraId]: !prev[extraId] }));
   }, []);
 
+  // Sound preview playback
+  const handleSoundPreview = useCallback((track) => {
+    // If already playing this track, stop it
+    if (playingTrack === track.id) {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+      }
+      setPlayingTrack(null);
+      return;
+    }
+    // Stop any current playback
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current = null;
+    }
+    // Play new track
+    if (track.src) {
+      const audio = new Audio(track.src);
+      audio.volume = 0.5;
+      audioRef.current = audio;
+      audio.play().catch(() => {});
+      setPlayingTrack(track.id);
+      // Auto-stop after 15 seconds
+      setTimeout(() => {
+        if (audioRef.current === audio) {
+          audio.pause();
+          audioRef.current = null;
+          setPlayingTrack(null);
+        }
+      }, 15000);
+      // Stop when track ends
+      audio.onended = () => {
+        setPlayingTrack(null);
+        audioRef.current = null;
+      };
+    }
+    setSelectedSound(track.id);
+  }, [playingTrack]);
+
   // Pricing
   const basePrice = parseFloat(product?.price || 0);
   const extrasTotal = EXTRAS.reduce((sum, e) => sum + (extras[e.id] ? e.price : 0), 0);
@@ -96,9 +151,14 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {} }) => 
     })();
     // Build composition manifest for fulfillment
     const composition = buildCartComposition({ message, colorTheme, extras });
-    onComplete({ productId: product.id, message, colorTheme, extras, totalPrice, composition });
+    // Stop audio on complete
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current = null;
+    }
+    onComplete({ productId: product.id, message, colorTheme, extras, selectedSound, totalPrice, composition });
     onClose();
-  }, [isProductValid, product, message, colorTheme, extras, totalPrice, themeStyle, onComplete, onClose]);
+  }, [isProductValid, product, message, colorTheme, extras, selectedSound, totalPrice, themeStyle, onComplete, onClose]);
 
   if (!isOpen) return null;
 
@@ -201,6 +261,38 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {} }) => 
                     <input type="checkbox" tabIndex={-1} checked={extras[extra.id]} readOnly />
                     <span className="toggle-switch__slider" />
                   </span>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* ── SOUND ── */}
+          <div className="customizer-section">
+            <div className="customizer-section__header">
+              <span className="customizer-section__number">4</span>
+              <h3 className="customizer-section__title">Sound</h3>
+            </div>
+            <div className="extras-grid">
+              {SOUND_TRACKS.map(track => (
+                <button key={track.id} type="button"
+                  className={`extra-toggle ${selectedSound === track.id ? 'extra-toggle--active' : ''} ${track.comingSoon ? 'opacity-50 cursor-not-allowed' : ''}`}
+                  onClick={() => !track.comingSoon && handleSoundPreview(track)}
+                  disabled={track.comingSoon}
+                  aria-label={track.comingSoon ? `${track.name} — coming soon` : `Preview ${track.name}`}>
+                  <div className="extra-toggle__info">
+                    <span className="extra-toggle__icon" aria-hidden="true">{track.icon}</span>
+                    <div>
+                      <span className="extra-toggle__name">{track.name}</span>
+                      {track.comingSoon && (
+                        <span className="extra-toggle__price" style={{ color: '#C9A14A' }}>Coming Soon</span>
+                      )}
+                    </div>
+                  </div>
+                  {!track.comingSoon && (
+                    <span style={{ fontSize: '18px', color: playingTrack === track.id ? '#C9A14A' : '#AEAEB2', transition: 'color 0.2s' }}>
+                      {playingTrack === track.id ? '⏸' : '▶'}
+                    </span>
+                  )}
                 </button>
               ))}
             </div>
