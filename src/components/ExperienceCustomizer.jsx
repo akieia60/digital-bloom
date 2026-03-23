@@ -47,17 +47,6 @@ export default function ExperienceCustomizer({ product, onComplete, onCancel }) 
     { id: 'romantic',  name: 'Romantic Rose',   colors: ['#C41E3A', '#FF1744'] },
   ];
 
-  const occasions = [
-    { id: 'celebration',  name: 'Celebration',   icon: '🎉' },
-    { id: 'gratitude',    name: 'Gratitude',      icon: '🙏' },
-    { id: 'remembrance',  name: 'Remembrance',    icon: '💭' },
-    { id: 'encouragement',name: 'Encouragement',  icon: '💪' },
-    { id: 'love',         name: 'Love',           icon: '❤️' },
-    { id: 'sympathy',     name: 'Sympathy',       icon: '🕊️' },
-    { id: 'birthday',     name: 'Birthday',       icon: '🎂' },
-    { id: 'grief',        name: 'In Memory',      icon: '🌹' },
-  ];
-
   const animationEffects = [
     { id: 'goldSparkles',   label: '✨ Gold Sparkles',   desc: 'Shimmering gold sparks' },
     { id: 'butterflies',    label: '🦋 Butterflies',     desc: 'Floating butterflies' },
@@ -137,24 +126,7 @@ export default function ExperienceCustomizer({ product, onComplete, onCancel }) 
             {step === 1 && (
               <div className="wizard-step-content">
 
-                {/* Occasion */}
-                <div className="customizer-section">
-                  <label className="customizer-label">Occasion</label>
-                  <div className="occasion-grid">
-                    {occasions.map(occ => (
-                      <button
-                        key={occ.id}
-                        className={`occasion-btn ${customization.occasion === occ.id ? 'active' : ''}`}
-                        onClick={() => handle('occasion', occ.id)}
-                      >
-                        <span className="occasion-icon">{occ.icon}</span>
-                        <span className="occasion-name">{occ.name}</span>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* To / From */}
+                {/* To / From — shown first, most important */}
                 <div className="customizer-section">
                   <label className="customizer-label">To & From</label>
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>

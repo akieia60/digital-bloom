@@ -185,12 +185,6 @@ export default function CustomizationPreview({ product, customization, colorThem
               <span className="preview-value">{customization.fromName}</span>
             </div>
           )}
-          {customization.occasion && (
-            <div className="preview-detail">
-              <span className="preview-label">Occasion:</span>
-              <span className="preview-value">{customization.occasion}</span>
-            </div>
-          )}
           {customization.colorTheme && customization.colorTheme !== 'original' && (
             <div className="preview-detail">
               <span className="preview-label">Theme:</span>
