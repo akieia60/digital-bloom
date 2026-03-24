@@ -178,6 +178,13 @@ export default function BloomDelivery() {
           <div className="bloom-watermark">
             <span className="bloom-watermark__text">Digital Bloom™</span>
           </div>
+          <div className="bloom-protection-tag bloom-protection-tag--tm" aria-hidden="true">TM</div>
+          <div className="bloom-protection-tag bloom-protection-tag--brand" aria-hidden="true">Digital Bloom™</div>
+          {message.toName && (
+            <div className="bloom-protection-tag bloom-protection-tag--recipient" aria-hidden="true">
+              For {message.toName}
+            </div>
+          )}
         </div>
 
         {/* ── Message Reveal ── */}

@@ -93,6 +93,7 @@ const TEXT_POSITIONS = {
   'bottom-center': { bottom: '12%', left: '50%', transform: 'translateX(-50%)', textAlign: 'center' },
   'bottom-left':   { bottom: '12%', left: '8%', textAlign: 'left' },
   'center':        { top: '50%', left: '50%', transform: 'translate(-50%, -50%)', textAlign: 'center' },
+  'upper-third-center': { top: '14%', left: '50%', transform: 'translateX(-50%)', textAlign: 'center' },
 };
 
 // ── MAIN COMPOSITION FUNCTION ──
@@ -169,11 +170,14 @@ export function getCompositionLayers({ product, colorTheme = 'original', extras 
     brightness: theme.brightness,
   };
 
+  const recipientName = message.toName || null;
+  const senderName = message.fromName || null;
+
   // Text layer
   const textLayer = message?.short ? {
     text: message.short,
-    toName: message.toName || null,
-    fromName: message.fromName || null,
+    toName: recipientName,
+    fromName: senderName,
     position: 'bottom-center',
     positionStyle: TEXT_POSITIONS['bottom-center'],
     font: 'Playfair Display',
@@ -181,11 +185,24 @@ export function getCompositionLayers({ product, colorTheme = 'original', extras 
     shadow: true,
   } : null;
 
+  const protectionLayer = {
+    recipientName,
+    senderName,
+    tmText: 'TM',
+    brandText: 'Digital Bloom™',
+    recipientPosition: 'upper-third-center',
+    recipientPositionStyle: TEXT_POSITIONS['upper-third-center'],
+    tmPosition: 'bottom-left',
+    tmPositionStyle: TEXT_POSITIONS['bottom-left'],
+    brandPosition: 'bottom-right',
+  };
+
   return {
     baseMedia,
     colorFilter,
     overlays,
     textLayer,
+    protectionLayer,
     // Summary for quick display
     activeExtras: overlays.map(o => o.id),
     themeLabel: theme.label,

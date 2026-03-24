@@ -96,9 +96,38 @@ export function buildFulfillmentManifest(product, customization) {
     fadeIn: { start: 0.5, duration: 1.0 },
   } : null;
 
+  const recipientName = message.toName || null;
+  const senderName = message.fromName || null;
+
+  const protectionPlan = {
+    burnIntoDeliveredFile: true,
+    recipientName,
+    senderName,
+    tm: {
+      enabled: true,
+      text: 'TM',
+      position: 'bottom-left',
+      style: 'subtle-white',
+    },
+    brandWatermark: {
+      enabled: true,
+      text: 'Digital Bloom™',
+      position: 'bottom-right',
+      alternatePosition: 'top-right',
+      style: 'subtle-gold',
+    },
+    personalizationWatermark: {
+      enabled: Boolean(recipientName),
+      text: recipientName ? `For ${recipientName}` : null,
+      position: 'upper-third-center',
+      style: 'embedded-screen-safe',
+      persistent: true,
+    },
+  };
+
   // Assemble manifest
   return {
-    version: '1.0',
+    version: '1.1',
     createdAt: new Date().toISOString(),
     product: {
       id: product.id,
@@ -137,6 +166,7 @@ export function buildFulfillmentManifest(product, customization) {
       outroBrandCard: true,
       trademarkText: 'Digital Bloom™',
     },
+    protectionPlan,
   };
 }
 

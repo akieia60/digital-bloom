@@ -29,7 +29,7 @@ export default function LivePreview({ product, colorTheme, extras, message, clas
     );
   }
 
-  const { baseMedia, colorFilter, overlays, textLayer } = composition;
+  const { baseMedia, colorFilter, overlays, textLayer, protectionLayer } = composition;
 
   return (
     <div className={`db-watermark composition-preview ${className}`}>
@@ -107,6 +107,27 @@ export default function LivePreview({ product, colorTheme, extras, message, clas
           )}
         </div>
       )}
+
+      {/* Brand protection overlays */}
+      {protectionLayer?.recipientName && (
+        <div
+          className="composition-protection composition-protection--recipient"
+          style={protectionLayer.recipientPositionStyle}
+        >
+          For {protectionLayer.recipientName}
+        </div>
+      )}
+
+      <div
+        className="composition-protection composition-protection--tm"
+        style={protectionLayer?.tmPositionStyle}
+      >
+        {protectionLayer?.tmText || 'TM'}
+      </div>
+
+      <div className="composition-protection composition-protection--brand">
+        {protectionLayer?.brandText || 'Digital Bloom™'}
+      </div>
 
       {/* Subtle vignette for depth */}
       <div style={{

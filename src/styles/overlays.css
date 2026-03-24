@@ -239,3 +239,46 @@
   60% { opacity: 0.8; }
   100% { opacity: 1; transform: translateY(0) scale(1); }
 }
+
+/* ── BRAND PROTECTION LAYERS ── */
+.composition-protection {
+  position: absolute;
+  z-index: 45;
+  pointer-events: none;
+  user-select: none;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.72);
+}
+
+.composition-protection--recipient {
+  width: min(78%, 480px);
+  padding: 0 18px;
+  box-sizing: border-box;
+  font-family: 'Outfit', sans-serif;
+  font-size: clamp(0.92rem, 2.6vw, 1.35rem);
+  font-weight: 700;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.34);
+  mix-blend-mode: screen;
+}
+
+.composition-protection--tm {
+  bottom: 8%;
+  left: 6%;
+  font-family: 'Outfit', sans-serif;
+  font-size: clamp(0.72rem, 2vw, 0.92rem);
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.composition-protection--brand {
+  right: 6%;
+  bottom: 8%;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: clamp(0.74rem, 2vw, 1rem);
+  font-style: italic;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  color: rgba(212, 175, 55, 0.76);
+}
