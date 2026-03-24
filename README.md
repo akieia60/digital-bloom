@@ -96,6 +96,97 @@ Push to `main` → Vercel auto-deploys. No manual steps needed.
 - **CLEANUP_AUDIT.md** — Detailed audit of issues found during repo cleanup
 - **CLEANUP_SUMMARY.md** — Summary of what was changed during cleanup
 
+## Claude Project Handoff
+
+Use this section as the fast-entry project brief for Claude or any other coding agent.
+
+### What this project is
+Digital Bloom is the **main customer-facing website/storefront** for a luxury digital gifting platform. Customers browse blooms, customize a bloom, pay, and receive a personalized digital experience. This repo is **not** the Prompt Engine / Command Center app.
+
+### Critical separation
+There are two separate Digital Bloom systems and they must not be mixed:
+- **Website/storefront repo:** `digital-bloom` → customer product, checkout, delivery, payment, personalized bloom rendering
+- **Prompt Engine / Command Center repo:** separate system for AK’s internal mobile workflow, voice/chat assistant, prompt library, subscriptions, and operator tools
+
+If a request involves shopper UX, bloom customization, checkout, rendering, delivery files, Stripe, or the public site, it belongs in **this repo**.
+If a request involves Monique chat, the command center, prompt library, subscriptions, or AK’s internal operator workflow, it likely belongs in the **other repo**.
+
+### Current project state
+Recent work completed or partially completed in this website repo:
+- Added product-protection overlays to the bloom delivery/viewing experience
+- Added a first-pass personalized render endpoint for delivered MP4 output
+- Began refactoring the customizer into a multi-step, preview-first flow
+- Build passes locally after the current customizer refactor
+
+### Stakeholder feedback that currently matters most
+Gamble’s current feedback is for the **main web app** and should be treated as priority product direction.
+
+#### Product protection requirements
+Personalized bloom experiences and delivered video output should visibly include:
+- TM mark at bottom-left
+- Digital Bloom watermark at bottom-right or top-right
+- Recipient name embedded visibly in the personalized output to discourage duplication or screen-record reuse
+
+#### Desired customer customization / checkout flow
+The desired UX is a **persistent-preview, step-by-step flow**:
+1. **Message step**
+   - Customer enters To / From / short message
+   - Bloom stays visible
+   - Text updates live on the bloom preview
+2. **Frame step**
+   - Bloom stays visible with existing message choices
+   - Customer chooses border/frame color
+   - Preview updates live
+3. **Effect step**
+   - Bloom stays visible with previous selections preserved
+   - Customer chooses decorative effect (examples: stars, butterflies, snowflakes, confetti)
+   - Preview updates live
+4. **Review/final choice step**
+   - Customer clearly sees all chosen options together before purchase
+5. **Payment options**
+   - New credit/debit card
+   - Instant wallet options such as Apple Pay and other supported methods
+   - Buy credits for current or future use
+
+### What appears to be true in code right now
+- A first structural pass of a multi-step customizer has already been started
+- Current step structure includes Message, Frame, Effect, Sound, and Review
+- Persistent top preview shell and step progress UI were added
+- The implementation is **not finished** relative to the requested Gamble flow and likely still needs tightening in UX, state handling, and payment alignment
+
+### Likely next best tasks
+If picking up work in this repo, prioritize in roughly this order:
+1. Audit the current customizer implementation in `src/components/Customizer.jsx`
+2. Make the preview-first flow match Gamble’s requested step-by-step behavior exactly
+3. Ensure To / From / message, frame, and decorative effects all update live and persist cleanly between steps
+4. Make the review screen clearly summarize what the customer is buying
+5. Verify checkout/payment paths support:
+   - card payments
+   - wallet payments via Stripe-supported methods
+   - credits purchase / credits usage logic where appropriate
+6. Verify the personalized render path actually burns in the required protection overlays on delivered output
+7. Test the end-to-end purchase → render → delivery flow
+
+### Constraints and guidance
+- Preserve clean separation between storefront concerns and internal tooling concerns
+- Do not move command-center or Monique assistant logic into this repo
+- Keep implementation practical and shippable over abstract rewrites
+- Prefer small, testable commits
+- If changing checkout or render logic, be careful with env-dependent code paths and Vercel serverless assumptions
+
+### Environment / deployment notes
+- This repo auto-deploys from `main` on Vercel
+- Stripe is configured through Vercel server-side env vars
+- Some functionality is difficult to fully validate locally without deployment env vars
+- End-to-end validation may require deployed testing, not just local build success
+
+### Useful working summary for Claude
+If you are Claude picking this up, assume:
+- The repo already has active in-progress work
+- The priority is customer-facing website UX and personalized delivery behavior
+- The main objective is to finish and harden the preview-first customizer/checkout flow based on Gamble’s spec
+- A secondary objective is verifying the product-protection overlays and delivered rendered output are truly working in production-like conditions
+
 ## Archived During Cleanup
 
 The following were moved to `archive/` during the repo slimming pass:
