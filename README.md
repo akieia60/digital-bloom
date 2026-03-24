@@ -121,11 +121,27 @@ Recent work completed or partially completed in this website repo:
 ### Stakeholder feedback that currently matters most
 Gamble’s current feedback is for the **main web app** and should be treated as priority product direction.
 
+### Gamble handwritten sketches / visual references
+The actual handwritten sketches are included in this repo here:
+- `docs/gamble-sketches/01-selection-message-flow.jpg`
+- `docs/gamble-sketches/02-selection-border-and-effects.jpg`
+- `docs/gamble-sketches/03-watermark-and-name-protection.jpg`
+- `docs/gamble-sketches/README.md`
+
+These should be treated as source visual direction, not just loose inspiration.
+They show the intended step-by-step customer flow, persistent preview behavior, frame/effect choices, final preview concept, and anti-copy watermark/name-overlay direction.
+
 #### Product protection requirements
 Personalized bloom experiences and delivered video output should visibly include:
 - TM mark at bottom-left
 - Digital Bloom watermark at bottom-right or top-right
 - Recipient name embedded visibly in the personalized output to discourage duplication or screen-record reuse
+
+Additional sketch-based notes from Gamble’s visuals:
+- recipient names should fade in periodically, approximately every 10 seconds from the beginning of the video
+- Digital Bloom watermarking should appear repeatedly through the video, not just once
+- watermark direction includes both horizontal and diagonal treatment concepts
+- intent is to make copied or screen-recorded output clearly branded and recipient-specific
 
 #### Desired customer customization / checkout flow
 The desired UX is a **persistent-preview, step-by-step flow**:
@@ -133,16 +149,31 @@ The desired UX is a **persistent-preview, step-by-step flow**:
    - Customer enters To / From / short message
    - Bloom stays visible
    - Text updates live on the bloom preview
+   - Sketch suggests the bloom preview should already show To / From placement and Digital Bloom TM branding area
 2. **Frame step**
    - Bloom stays visible with existing message choices
    - Customer chooses border/frame color
    - Preview updates live
+   - Gamble’s sketch explicitly shows border-style selection examples including:
+     - Original
+     - Warm Sunset
+     - Cool Breeze
+     - Elegant Gold
+     - Romantic Rose
 3. **Effect step**
    - Bloom stays visible with previous selections preserved
-   - Customer chooses decorative effect (examples: stars, butterflies, snowflakes, confetti)
+   - Customer chooses decorative effect
    - Preview updates live
-4. **Review/final choice step**
+   - Gamble’s sketch explicitly lists effect ideas including:
+     - Balloons
+     - Ribbon Wrap
+     - Sparkle Effect
+     - Gold Dust
+   - There is also a handwritten note near Balloons indicating: "Take this out... We have balloons"
+   - Another sketch note indicates the typed message may fade away when playback starts, suggesting message treatment may differ between preview and playback
+4. **Final preview / music step**
    - Customer clearly sees all chosen options together before purchase
+   - Sketches also indicate a final preview state and a music selection step/area
 5. **Payment options**
    - New credit/debit card
    - Instant wallet options such as Apple Pay and other supported methods
