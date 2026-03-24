@@ -25,6 +25,14 @@ const COLOR_THEMES = [
   { id: 'romantic', name: 'Romantic Rose', colors: ['#C41E3A', '#FF1744'] },
 ];
 
+const FLOW_STEPS = [
+  { id: 1, key: 'message', label: 'Message' },
+  { id: 2, key: 'frame', label: 'Frame' },
+  { id: 3, key: 'effect', label: 'Effect' },
+  { id: 4, key: 'sound', label: 'Sound' },
+  { id: 5, key: 'review', label: 'Review' },
+];
+
 const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {} }) => {
   const { messagePlaceholder, toPlaceholder, ...stateDefaults } = defaults;
   const scrollPosRef = useRef(0);
@@ -39,6 +47,7 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {} }) => 
   const [extras, setExtras] = useState({ balloon: false, ribbon: false, sparkle: false });
   const [selectedSound, setSelectedSound] = useState(stateDefaults.sound || '');
   const [playingTrack, setPlayingTrack] = useState(null);
+  const [activeStep, setActiveStep] = useState(1);
   const audioRef = useRef(null);
 
   // Safari-safe scroll lock
@@ -235,6 +244,9 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {} }) => 
     onClose();
   }, [isProductValid, product, message, colorTheme, extras, selectedSound, totalPrice, themeStyle, stopAllAudio, onComplete, onClose]);
 
+  const goNext = () => setActiveStep((prev) => Math.min(prev + 1, FLOW_STEPS.length));
+  const goBack = () => setActiveStep((prev) => Math.max(prev - 1, 1));
+
   if (!isOpen) return null;
 
   return (
@@ -250,10 +262,33 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {} }) => 
           <button type="button" className="customizer-sheet__close" onClick={onClose} aria-label="Close">✕</button>
         </div>
 
-        {/* Body — streamlined: Message → Style → Extras */}
+        {/* Body — step flow with persistent top preview */}
         <div className="customizer-sheet__body">
+          <div className="customizer-progress">
+            {FLOW_STEPS.map((step) => (
+              <div
+                key={step.key}
+                className={`customizer-progress__step ${activeStep === step.id ? 'active' : ''} ${activeStep > step.id ? 'done' : ''}`}
+              >
+                <span>{step.id}</span>
+                <small>{step.label}</small>
+              </div>
+            ))}
+          </div>
 
-          {/* ── MESSAGE (simplified — just short msg + to/from) ── */}
+          <div className="customizer-preview-shell">
+            <div className="customizer-preview-shell__label">Live Bloom Preview</div>
+            <LivePreview
+              product={product}
+              colorTheme={colorTheme}
+              extras={extras}
+              message={message}
+              className="composition-preview--square"
+            />
+          </div>
+
+          {activeStep === 1 && (
+            <>
           <div className="customizer-section">
             <div className="customizer-section__header">
               <span className="customizer-section__number">1</span>
@@ -291,7 +326,16 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {} }) => 
             </div>
           </div>
 
-          {/* ── STYLE ── */}
+          <div className="customizer-step-actions">
+            <button type="button" className="customizer-nav-btn customizer-nav-btn--primary" onClick={goNext}>
+              Next: Frame
+            </button>
+          </div>
+            </>
+          )}
+
+          {activeStep === 2 && (
+            <>
           <div className="customizer-section">
             <div className="customizer-section__header">
               <span className="customizer-section__number">2</span>
@@ -312,7 +356,17 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {} }) => 
             </div>
           </div>
 
-          {/* ── EXTRAS ── */}
+          <div className="customizer-step-actions">
+            <button type="button" className="customizer-nav-btn" onClick={goBack}>Back</button>
+            <button type="button" className="customizer-nav-btn customizer-nav-btn--primary" onClick={goNext}>
+              Next: Effect
+            </button>
+          </div>
+            </>
+          )}
+
+          {activeStep === 3 && (
+            <>
           <div className="customizer-section">
             <div className="customizer-section__header">
               <span className="customizer-section__number">3</span>
@@ -341,7 +395,17 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {} }) => 
             </div>
           </div>
 
-          {/* ── SOUND ── */}
+          <div className="customizer-step-actions">
+            <button type="button" className="customizer-nav-btn" onClick={goBack}>Back</button>
+            <button type="button" className="customizer-nav-btn customizer-nav-btn--primary" onClick={goNext}>
+              Next: Sound
+            </button>
+          </div>
+            </>
+          )}
+
+          {activeStep === 4 && (
+            <>
           <div className="customizer-section">
             <div className="customizer-section__header">
               <span className="customizer-section__number">4</span>
@@ -373,19 +437,31 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {} }) => 
             </div>
           </div>
 
-          {/* ── LIVE PREVIEW ── */}
-          {(extras.balloon || extras.ribbon || extras.sparkle || message.short) && (
-            <div className="customizer-section">
+          <div className="customizer-step-actions">
+            <button type="button" className="customizer-nav-btn" onClick={goBack}>Back</button>
+            <button type="button" className="customizer-nav-btn customizer-nav-btn--primary" onClick={goNext}>
+              Next: Review
+            </button>
+          </div>
+            </>
+          )}
+
+          {activeStep === 5 && (
+            <div className="customizer-section customizer-section--review">
               <div className="customizer-section__header">
-                <h3 className="customizer-section__title">Preview</h3>
+                <span className="customizer-section__number">5</span>
+                <h3 className="customizer-section__title">Review Your Bloom</h3>
               </div>
-              <div style={{ maxWidth: 280, margin: '0 auto' }}>
-                <LivePreview
-                  product={product}
-                  colorTheme={colorTheme}
-                  extras={extras}
-                  message={message}
-                />
+              <div className="customizer-review-card">
+                <p><strong>To:</strong> {message.toName || '—'}</p>
+                <p><strong>From:</strong> {message.fromName || '—'}</p>
+                <p><strong>Message:</strong> {message.short || '—'}</p>
+                <p><strong>Frame:</strong> {COLOR_THEMES.find((theme) => theme.id === colorTheme)?.name || 'Original'}</p>
+                <p><strong>Effects:</strong> {EXTRAS.filter((extra) => extras[extra.id]).map((extra) => extra.name).join(', ') || 'None selected'}</p>
+                <p><strong>Sound:</strong> {SOUND_TRACKS.find((track) => track.id === selectedSound)?.name || 'None selected'}</p>
+              </div>
+              <div className="customizer-step-actions">
+                <button type="button" className="customizer-nav-btn" onClick={goBack}>Back</button>
               </div>
             </div>
           )}
