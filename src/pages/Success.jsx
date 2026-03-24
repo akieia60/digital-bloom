@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { updatePurchaseStatus, saveBloomDelivery } from '../lib/supabase';
+import { updatePurchaseStatus, saveBloomDelivery, supabase } from '../lib/supabase';
 import { generateBloomSlug } from '../lib/deliveryResolver';
 import '../styles/success.css';
 
@@ -11,6 +11,7 @@ const Success = () => {
   const [error, setError] = useState(null);
   const [copied, setCopied] = useState(false);
   const [bloomSlug, setBloomSlug] = useState(null);
+  const [renderStatus, setRenderStatus] = useState('idle');
 
   const sessionId = searchParams.get('session_id');
 
@@ -60,6 +61,31 @@ const Success = () => {
             await saveBloomDelivery(updatedPurchase.id, slug, compositionManifest);
           }
           setBloomSlug(slug);
+
+          if (compositionManifest?.customization) {
+            try {
+              setRenderStatus('processing');
+              const { data: authData } = await supabase.auth.getSession();
+              const token = authData?.session?.access_token;
+              const response = await fetch('/api/render-bloom', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  ...(token ? { Authorization: `Bearer ${token}` } : {}),
+                },
+                body: JSON.stringify({ purchaseId: updatedPurchase.id }),
+              });
+
+              if (!response.ok) {
+                throw new Error('render_failed');
+              }
+
+              setRenderStatus('ready');
+            } catch (renderError) {
+              console.error('Bloom render trigger failed:', renderError);
+              setRenderStatus('failed');
+            }
+          }
         }
       } catch (err) {
         console.error('Error processing purchase:', err);
@@ -181,8 +207,8 @@ const Success = () => {
               <p className="success-card-text">We're preparing your experience now.</p>
               <ul className="success-status-list">
                 <li>✓ Confirmation sent to your email</li>
-                <li>⏳ Experience processing (est. 2–4 hours)</li>
-                <li>📧 You'll be notified when it's ready</li>
+                <li>{renderStatus === 'processing' ? '🎬 Personalizing your protected delivery file now' : '⏳ Experience processing (est. 2–4 hours)'}</li>
+                <li>{renderStatus === 'ready' ? '✅ Personalized delivery file generated' : renderStatus === 'failed' ? '⚠️ Personalized file render needs retry' : '📧 You\'ll be notified when it\'s ready'}</li>
               </ul>
             </div>
           )}
