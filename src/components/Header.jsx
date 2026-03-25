@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
+import { useLanguage } from '../contexts/LanguageContext';
 
 const Header = ({ onSearchChange, searchQuery }) => {
   const { getCartCount, toggleCart } = useCart();
+  const { lang, toggleLanguage, t } = useLanguage();
   const cartCount = getCartCount();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -72,12 +74,12 @@ const Header = ({ onSearchChange, searchQuery }) => {
             </Link>
           </div>
 
-          {/* Right: Desktop Nav + Cart + Hamburger */}
-          <div className="flex-1 flex justify-end items-center space-x-4 sm:space-x-8 ml-4">
+          {/* Right: Desktop Nav + Cart + Lang + Hamburger */}
+          <div className="flex-1 flex justify-end items-center space-x-4 sm:space-x-6 ml-4">
             <nav className="hidden lg:flex items-center space-x-6 xl:space-x-8">
-              <Link to="/shop" className="text-[11px] xl:text-[12px] uppercase tracking-[0.12em] text-[var(--accent-gold)] hover:text-[var(--text-primary)] transition-colors font-medium whitespace-nowrap">Occasions</Link>
-              <Link to="/shop" className="text-[11px] xl:text-[12px] uppercase tracking-[0.12em] text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors font-medium whitespace-nowrap">Shop</Link>
-              <Link to="/credits" className="text-[11px] xl:text-[12px] uppercase tracking-[0.12em] text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors font-medium whitespace-nowrap">Credits</Link>
+              <Link to="/shop" className="text-[11px] xl:text-[12px] uppercase tracking-[0.12em] text-[var(--accent-gold)] hover:text-[var(--text-primary)] transition-colors font-medium whitespace-nowrap">{t('nav_occasions')}</Link>
+              <Link to="/shop" className="text-[11px] xl:text-[12px] uppercase tracking-[0.12em] text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors font-medium whitespace-nowrap">{t('nav_shop')}</Link>
+              <Link to="/credits" className="text-[11px] xl:text-[12px] uppercase tracking-[0.12em] text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors font-medium whitespace-nowrap">{t('nav_credits')}</Link>
             </nav>
             <button
               onClick={toggleCart}
@@ -97,6 +99,12 @@ const Header = ({ onSearchChange, searchQuery }) => {
                   {cartCount}
                 </span>
               )}
+            </button>
+            <button
+              onClick={toggleLanguage}
+              className="hidden lg:flex items-center justify-center h-8 w-8 rounded-full border border-[var(--border-default)] text-[10px] font-bold uppercase tracking-wider text-[var(--text-secondary)] hover:text-[var(--accent-gold)] hover:border-[var(--accent-gold)] transition-all"
+            >
+              {lang}
             </button>
             {/* Hamburger Button - Mobile Only (RIGHT side) */}
             <button
@@ -172,7 +180,7 @@ const Header = ({ onSearchChange, searchQuery }) => {
                 className="block text-lg transition-colors py-5"
                 style={{ color: '#D4AF37', borderBottom: '1px solid rgba(255,255,255,0.08)' }}
               >
-                Occasions
+                {t('nav_occasions')}
               </Link>
               <Link
                 to="/shop"
@@ -180,7 +188,7 @@ const Header = ({ onSearchChange, searchQuery }) => {
                 className="block text-lg transition-colors py-5"
                 style={{ color: '#FFFFFF', borderBottom: '1px solid rgba(255,255,255,0.08)' }}
               >
-                Shop
+                {t('nav_shop')}
               </Link>
               <Link
                 to="/credits"
@@ -188,14 +196,24 @@ const Header = ({ onSearchChange, searchQuery }) => {
                 className="block text-lg transition-colors py-5"
                 style={{ color: '#FFFFFF', borderBottom: '1px solid rgba(255,255,255,0.08)' }}
               >
-                Experience Credits
+                {t('nav_credits')}
               </Link>
+              <button
+                onClick={() => { setIsMobileMenuOpen(false); toggleLanguage(); }}
+                className="w-full flex items-center justify-between text-lg transition-colors py-5"
+                style={{ color: '#D4AF37', borderBottom: '1px solid rgba(255,255,255,0.08)' }}
+              >
+                <span>Language (Idioma)</span>
+                <span className="text-sm font-bold uppercase tracking-wider px-3 py-1 rounded-full border border-[rgba(212,175,55,0.4)]">
+                  {lang}
+                </span>
+              </button>
               <button
                 onClick={() => { setIsMobileMenuOpen(false); toggleCart(); }}
                 className="w-full flex items-center justify-between text-lg transition-colors py-5"
                 style={{ color: '#FFFFFF', borderBottom: '1px solid rgba(255,255,255,0.08)' }}
               >
-                <span>Cart</span>
+                <span>{t('nav_cart')}</span>
                 {cartCount > 0 && (
                   <span className="text-xs font-bold rounded-full h-6 w-6 flex items-center justify-center" style={{ background: '#D4AF37', color: '#1a2744' }}>
                     {cartCount}

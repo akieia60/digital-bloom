@@ -49,6 +49,7 @@ class ErrorBoundary extends Component {
     return this.props.children;
   }
 }
+import { LanguageProvider } from './contexts/LanguageContext';
 import { CartProvider } from './context/CartContext';
 import Header from './components/Header';
 import LandingPage from './pages/LandingPage';
@@ -109,6 +110,7 @@ function App() {
   return (
     <ErrorBoundary>
     <ToastProvider>
+    <LanguageProvider>
     <CartProvider>
       <Router>
         <div className="min-h-screen bg-white relative overflow-x-hidden">
@@ -121,6 +123,7 @@ function App() {
         </div>
       </Router>
     </CartProvider>
+    </LanguageProvider>
     </ToastProvider>
     </ErrorBoundary>
   );
