@@ -33,6 +33,9 @@ const OVERLAY_ASSETS = {
   sparkle: {
     default:  { src: null, css: true, label: 'Sparkle Effect' },
   },
+  goldDust: {
+    default:  { src: null, css: true, label: 'Gold Dust' },
+  },
 };
 
 // ── COLOR THEME SPECS ──
@@ -154,6 +157,18 @@ export function getCompositionLayers({ product, colorTheme = 'original', extras 
       themeVariant: 'default',
       label: asset.label,
       zIndex: 30,
+    });
+  }
+
+  if (extras.goldDust) {
+    const asset = OVERLAY_ASSETS.goldDust.default;
+    overlays.push({
+      id: 'goldDust',
+      type: asset.src ? 'video' : 'css',
+      src: asset.src,
+      themeVariant: 'default',
+      label: asset.label,
+      zIndex: 25,
     });
   }
 

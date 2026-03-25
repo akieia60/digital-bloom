@@ -5,9 +5,9 @@ import LivePreview from './LivePreview';
 import '../styles/customizer.css';
 
 const EXTRAS = [
-  { id: 'balloon', icon: '🎈', name: 'Balloons', price: 2.99 },
-  { id: 'ribbon', icon: '🎀', name: 'Ribbon Wrap', price: 1.99 },
-  { id: 'sparkle', icon: '✨', name: 'Sparkle Effect', price: 3.99 },
+  { id: 'ribbon', icon: '🎀', name: 'Ribbon Wrap' },
+  { id: 'sparkle', icon: '✨', name: 'Sparkle Effect' },
+  { id: 'goldDust', icon: '🌟', name: 'Gold Dust' },
 ];
 
 const SOUND_TRACKS = [
@@ -44,7 +44,7 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {} }) => 
     fromName: stateDefaults.fromName || '',
   });
   const [colorTheme, setColorTheme] = useState(stateDefaults.colorTheme || 'original');
-  const [extras, setExtras] = useState({ balloon: false, ribbon: false, sparkle: false });
+  const [extras, setExtras] = useState({ ribbon: false, sparkle: false, goldDust: false });
   const [selectedSound, setSelectedSound] = useState(stateDefaults.sound || '');
   const [playingTrack, setPlayingTrack] = useState(null);
   const [activeStep, setActiveStep] = useState(1);
@@ -216,10 +216,9 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {} }) => 
       });
   }, [playingTrack, stopAllAudio, playWebAudioTone]);
 
-  // Pricing
+  // Pricing — extras are included (no extra cost per Gamble's spec)
   const basePrice = parseFloat(product?.price || 0);
-  const extrasTotal = EXTRAS.reduce((sum, e) => sum + (extras[e.id] ? e.price : 0), 0);
-  const totalPrice = basePrice + extrasTotal;
+  const totalPrice = basePrice;
   const isProductValid = Boolean(product?.id && basePrice > 0);
 
   // Non-blocking Add to Cart
@@ -264,17 +263,6 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {} }) => 
 
         {/* Body — step flow with persistent top preview */}
         <div className="customizer-sheet__body">
-          <div className="customizer-progress">
-            {FLOW_STEPS.map((step) => (
-              <div
-                key={step.key}
-                className={`customizer-progress__step ${activeStep === step.id ? 'active' : ''} ${activeStep > step.id ? 'done' : ''}`}
-              >
-                <span>{step.id}</span>
-                <small>{step.label}</small>
-              </div>
-            ))}
-          </div>
 
           <div className="customizer-preview-shell">
             <div className="customizer-preview-shell__label">Live Bloom Preview</div>
@@ -325,12 +313,6 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {} }) => 
               </div>
             </div>
           </div>
-
-          <div className="customizer-step-actions">
-            <button type="button" className="customizer-nav-btn customizer-nav-btn--primary" onClick={goNext}>
-              Next: Frame
-            </button>
-          </div>
             </>
           )}
 
@@ -355,13 +337,6 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {} }) => 
               ))}
             </div>
           </div>
-
-          <div className="customizer-step-actions">
-            <button type="button" className="customizer-nav-btn" onClick={goBack}>Back</button>
-            <button type="button" className="customizer-nav-btn customizer-nav-btn--primary" onClick={goNext}>
-              Next: Effect
-            </button>
-          </div>
             </>
           )}
 
@@ -378,12 +353,11 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {} }) => 
                   className={`extra-toggle ${extras[extra.id] ? 'extra-toggle--active' : ''}`}
                   onClick={() => toggleExtra(extra.id)}
                   aria-pressed={extras[extra.id]}
-                  aria-label={`${extra.name} — $${extra.price.toFixed(2)}`}>
+                  aria-label={extra.name}>
                   <div className="extra-toggle__info">
                     <span className="extra-toggle__icon" aria-hidden="true">{extra.icon}</span>
                     <div>
                       <span className="extra-toggle__name">{extra.name}</span>
-                      <span className="extra-toggle__price">+${extra.price.toFixed(2)}</span>
                     </div>
                   </div>
                   <span className="toggle-switch" aria-hidden="true">
@@ -393,13 +367,6 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {} }) => 
                 </button>
               ))}
             </div>
-          </div>
-
-          <div className="customizer-step-actions">
-            <button type="button" className="customizer-nav-btn" onClick={goBack}>Back</button>
-            <button type="button" className="customizer-nav-btn customizer-nav-btn--primary" onClick={goNext}>
-              Next: Sound
-            </button>
           </div>
             </>
           )}
@@ -436,13 +403,6 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {} }) => 
               ))}
             </div>
           </div>
-
-          <div className="customizer-step-actions">
-            <button type="button" className="customizer-nav-btn" onClick={goBack}>Back</button>
-            <button type="button" className="customizer-nav-btn customizer-nav-btn--primary" onClick={goNext}>
-              Next: Review
-            </button>
-          </div>
             </>
           )}
 
@@ -460,32 +420,30 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {} }) => 
                 <p><strong>Effects:</strong> {EXTRAS.filter((extra) => extras[extra.id]).map((extra) => extra.name).join(', ') || 'None selected'}</p>
                 <p><strong>Sound:</strong> {SOUND_TRACKS.find((track) => track.id === selectedSound)?.name || 'None selected'}</p>
               </div>
-              <div className="customizer-step-actions">
-                <button type="button" className="customizer-nav-btn" onClick={goBack}>Back</button>
-              </div>
             </div>
           )}
         </div>
 
-        {/* ── STICKY CTA ── */}
+        {/* ── UNIFIED BOTTOM BAR — Back / Next or Add to Cart ── */}
         <div className="customizer-sticky-cta">
-          <div className="cta-preview">
-            <LivePreview
-              product={product}
-              colorTheme={colorTheme}
-              extras={extras}
-              message={message}
-              className="composition-preview--square"
-            />
-          </div>
+          {activeStep > 1 ? (
+            <button type="button" className="cta-back-btn" onClick={goBack}>← Back</button>
+          ) : (
+            <button type="button" className="cta-back-btn" onClick={onClose}>✕ Close</button>
+          )}
           <div className="cta-pricing">
-            <div className="cta-pricing__label">Total</div>
             <div className="cta-pricing__amount">${totalPrice.toFixed(2)}</div>
           </div>
-          <button type="button" className="cta-add-btn" onClick={handleComplete}
-            disabled={!isProductValid} aria-label={`Add to cart for $${totalPrice.toFixed(2)}`}>
-            Add to Cart
-          </button>
+          {activeStep < FLOW_STEPS.length ? (
+            <button type="button" className="cta-add-btn" onClick={goNext}>
+              Next →
+            </button>
+          ) : (
+            <button type="button" className="cta-add-btn" onClick={handleComplete}
+              disabled={!isProductValid} aria-label={`Add to cart for $${totalPrice.toFixed(2)}`}>
+              Add to Cart
+            </button>
+          )}
         </div>
       </div>
     </>

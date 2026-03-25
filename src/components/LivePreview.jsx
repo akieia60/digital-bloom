@@ -129,6 +129,15 @@ export default function LivePreview({ product, colorTheme, extras, message, clas
         {protectionLayer?.brandText || 'Digital Bloom™'}
       </div>
 
+      {/* Gamble's diagonal repeating watermark — both horizontal & diagonal */}
+      {protectionLayer?.recipientName && (
+        <div className="composition-watermark-pattern">
+          {Array.from({ length: 8 }).map((_, i) => (
+            <span key={i} className="composition-watermark-pattern__text">Digital Bloom</span>
+          ))}
+        </div>
+      )}
+
       {/* Subtle vignette for depth */}
       <div style={{
         position: 'absolute', inset: 0, zIndex: 50, pointerEvents: 'none',
@@ -166,6 +175,15 @@ function CSSOverlay({ overlayId, themeVariant }) {
         <div className="overlay-sparkle">
           {Array.from({ length: 10 }, (_, i) => (
             <span key={i} className="overlay-sparkle__particle" />
+          ))}
+        </div>
+      );
+
+    case 'goldDust':
+      return (
+        <div className="overlay-gold-dust">
+          {Array.from({ length: 15 }, (_, i) => (
+            <span key={i} className="overlay-gold-dust__particle" />
           ))}
         </div>
       );
