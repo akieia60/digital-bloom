@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
-import { useLanguage } from '../contexts/LanguageContext';
+import { useLanguage, AVAILABLE_LANGUAGES } from '../contexts/LanguageContext';
 
 const Header = ({ onSearchChange, searchQuery }) => {
   const { getCartCount, toggleCart } = useCart();
-  const { lang, toggleLanguage, t } = useLanguage();
+  const { lang, changeLanguage, t } = useLanguage();
   const cartCount = getCartCount();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -100,12 +100,34 @@ const Header = ({ onSearchChange, searchQuery }) => {
                 </span>
               )}
             </button>
-            <button
-              onClick={toggleLanguage}
-              className="hidden lg:flex items-center justify-center h-8 w-8 rounded-full border border-[var(--border-default)] text-[10px] font-bold uppercase tracking-wider text-[var(--text-secondary)] hover:text-[var(--accent-gold)] hover:border-[var(--accent-gold)] transition-all"
-            >
-              {lang}
-            </button>
+            {/* Desktop Language Dropdown */}
+            <div className="hidden lg:relative lg:block group">
+              <button
+                className="flex items-center justify-center h-8 px-3 gap-1 rounded-full border border-[var(--border-default)] text-[10px] font-bold uppercase tracking-wider text-[var(--text-secondary)] hover:text-[var(--accent-gold)] hover:border-[var(--accent-gold)] transition-all"
+              >
+                <span>{lang}</span>
+                <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+              </button>
+              
+              {/* Dropdown panel */}
+              <div className="absolute right-0 mt-2 w-32 rounded-xl shadow-xl bg-[var(--bg-surface)] border border-[var(--border-default)] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform origin-top-right z-50 overflow-hidden">
+                <div className="py-1">
+                  {AVAILABLE_LANGUAGES.map(l => (
+                    <button
+                      key={l.code}
+                      onClick={() => changeLanguage(l.code)}
+                      className={`w-full text-left px-4 py-2 text-xs font-medium transition-colors ${
+                        lang === l.code
+                          ? 'text-[var(--accent-gold)] bg-[var(--bg-page)]'
+                          : 'text-[var(--text-primary)] hover:bg-[var(--bg-page)] hover:text-[var(--accent-gold)]'
+                      }`}
+                    >
+                      {l.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
             {/* Hamburger Button - Mobile Only (RIGHT side) */}
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -194,15 +216,25 @@ const Header = ({ onSearchChange, searchQuery }) => {
               >
                 {t('nav_credits')}
               </Link>
-              <button
-                onClick={() => { setIsMobileMenuOpen(false); toggleLanguage(); }}
-                className="w-full flex items-center justify-between text-lg transition-colors py-5 border-b border-white/10 text-[var(--accent-gold)]"
-              >
-                <span>Language (Idioma)</span>
-                <span className="text-sm font-bold uppercase tracking-wider px-3 py-1 rounded-full border border-[rgba(212,175,55,0.4)]">
-                  {lang}
-                </span>
-              </button>
+              {/* Language Selector */}
+              <div className="py-5 border-b border-white/10">
+                <div className="text-xs font-bold uppercase tracking-widest text-white/50 mb-3">Select Language</div>
+                <div className="flex flex-wrap gap-2">
+                  {AVAILABLE_LANGUAGES.map(l => (
+                    <button
+                      key={l.code}
+                      onClick={() => { changeLanguage(l.code); setIsMobileMenuOpen(false); }}
+                      className={`px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all border ${
+                        lang === l.code
+                          ? 'border-[var(--accent-gold)] text-[var(--accent-gold)] bg-[rgba(212,175,55,0.1)]'
+                          : 'border-white/20 text-white/60 hover:border-white/40'
+                      }`}
+                    >
+                      {l.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
               <button
                 onClick={() => { setIsMobileMenuOpen(false); toggleCart(); }}
                 className="w-full flex items-center justify-between text-lg transition-colors py-5 border-b border-white/10 text-white"
