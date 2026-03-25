@@ -8,8 +8,7 @@ const LanguageContext = createContext();
 
 export const LanguageProvider = ({ children }) => {
   const [lang, setLang] = useState(() => {
-    // Default to Spanish per Gamble's feedback if no preference is stored
-    return localStorage.getItem('digital_bloom_lang') || 'es';
+    return localStorage.getItem('digital_bloom_lang') || 'en';
   });
 
   useEffect(() => {
