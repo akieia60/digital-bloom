@@ -168,12 +168,10 @@ export default async function handler(req, res) {
         cart_items: JSON.stringify(
           cartItems.map((item) => ({
             id: item.product.id,
-            title: item.product.title || item.product.name,
-            tier: item.product.tier || null,
-            quantity: item.quantity,
-            price: item.product.price,
+            q: item.quantity,
+            t: item.product.tier || null
           }))
-        ),
+        ).substring(0, 500),
       },
     };
 

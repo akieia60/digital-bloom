@@ -11,6 +11,16 @@ export const en = {
   nav_shop: "Shop",
   nav_credits: "Credits",
   nav_cart: "Cart",
+  nav_home: "Home",
+  nav_balance: "Balance",
+  
+  // Shop Page
+  shop_title: "Choose Your Occasion",
+  shop_subtitle: "Browse curated digital bloom experiences crafted for every moment.",
+  shop_search_placeholder: "Search blooms…",
+  shop_search_button: "Search",
+  shop_see_all: "See all →",
+  shop_loading: "Loading collection...",
   
   // Category Headers
   category_title: "Browse by Occasion",
@@ -26,6 +36,18 @@ export const en = {
   cat_general: "General Collection",
   cat_family: "Family Reunion",
   cat_religion: "Faith & Religion",
+
+  // Category Taglines
+  cat_mothers_day_tagline: "Celebrate the woman who gave you everything",
+  cat_birthday_tagline: "Make their special day unforgettable",
+  cat_love_tagline: "Express your deepest feelings",
+  cat_valentine: "Valentine's Day",
+  cat_valentine_tagline: "For the one who has your heart",
+  cat_celebration_tagline: "Celebrate their achievements in style",
+  cat_grief_tagline: "Honor those we hold dear",
+  cat_friendship_tagline: "Let them know they matter",
+  cat_luxury_tagline: "Where fashion meets floral artistry",
+  cat_general_tagline: "Beautiful blooms for every moment",
   
   // Customizer
   customize_button: "Customize",

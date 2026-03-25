@@ -134,7 +134,7 @@ const Header = ({ onSearchChange, searchQuery }) => {
           />
           
           {/* Menu Panel — slides from RIGHT, lighter background */}
-          <div className="absolute top-0 right-0 bottom-0 w-4/5 max-w-sm flex flex-col animate-slide-in-right shadow-2xl" style={{ background: '#1a2744', borderLeft: '1px solid rgba(212,175,55,0.2)' }}>
+          <div className="absolute top-0 right-0 bottom-0 w-4/5 max-w-sm flex flex-col animate-slide-in-right shadow-2xl bg-[#090b10] z-[100] border-l border-[rgba(212,175,55,0.2)]">
             {/* Menu Header */}
               <div className="p-6" style={{ borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
               <div className="flex items-center justify-between">
@@ -165,43 +165,38 @@ const Header = ({ onSearchChange, searchQuery }) => {
             </div>
 
             {/* Navigation Links */}
-            <nav className="flex-1 p-6 space-y-2">
+            <nav className="flex-1 px-6 overflow-y-auto">
               <Link
                 to="/"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="block text-lg transition-colors py-5"
-                style={{ color: '#FFFFFF', borderBottom: '1px solid rgba(255,255,255,0.08)' }}
+                className="block text-lg transition-colors py-5 border-b border-white/10 text-white"
               >
-                Home
+                {t('nav_home')}
               </Link>
               <Link
                 to="/shop"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="block text-lg transition-colors py-5"
-                style={{ color: '#D4AF37', borderBottom: '1px solid rgba(255,255,255,0.08)' }}
+                className="block text-lg transition-colors py-5 border-b border-white/10 text-[var(--accent-gold)]"
               >
                 {t('nav_occasions')}
               </Link>
               <Link
                 to="/shop"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="block text-lg transition-colors py-5"
-                style={{ color: '#FFFFFF', borderBottom: '1px solid rgba(255,255,255,0.08)' }}
+                className="block text-lg transition-colors py-5 border-b border-white/10 text-white"
               >
                 {t('nav_shop')}
               </Link>
               <Link
                 to="/credits"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="block text-lg transition-colors py-5"
-                style={{ color: '#FFFFFF', borderBottom: '1px solid rgba(255,255,255,0.08)' }}
+                className="block text-lg transition-colors py-5 border-b border-white/10 text-white"
               >
                 {t('nav_credits')}
               </Link>
               <button
                 onClick={() => { setIsMobileMenuOpen(false); toggleLanguage(); }}
-                className="w-full flex items-center justify-between text-lg transition-colors py-5"
-                style={{ color: '#D4AF37', borderBottom: '1px solid rgba(255,255,255,0.08)' }}
+                className="w-full flex items-center justify-between text-lg transition-colors py-5 border-b border-white/10 text-[var(--accent-gold)]"
               >
                 <span>Language (Idioma)</span>
                 <span className="text-sm font-bold uppercase tracking-wider px-3 py-1 rounded-full border border-[rgba(212,175,55,0.4)]">
@@ -210,8 +205,7 @@ const Header = ({ onSearchChange, searchQuery }) => {
               </button>
               <button
                 onClick={() => { setIsMobileMenuOpen(false); toggleCart(); }}
-                className="w-full flex items-center justify-between text-lg transition-colors py-5"
-                style={{ color: '#FFFFFF', borderBottom: '1px solid rgba(255,255,255,0.08)' }}
+                className="w-full flex items-center justify-between text-lg transition-colors py-5 border-b border-white/10 text-white"
               >
                 <span>{t('nav_cart')}</span>
                 {cartCount > 0 && (
