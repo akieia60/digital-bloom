@@ -28,9 +28,9 @@ export const useProducts = ({ tier = null } = {}) => {
         if (data && data.length > 0) {
           setProducts(data);
           setUsingMockData(false);
-          console.log('✅ Loaded', data.length, 'products from Supabase');
+          if (import.meta.env.DEV) console.log('✅ Loaded', data.length, 'products from Supabase');
         } else {
-          console.log('⚠️ No products in database');
+          if (import.meta.env.DEV) console.log('⚠️ No products in database');
           setProducts([]);
           setUsingMockData(false);
         }
