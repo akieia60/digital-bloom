@@ -1,5 +1,27 @@
-import { useState, useEffect, Component } from 'react';
+import { useState, lazy, Suspense, Component } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { CartProvider } from './context/CartContext';
+import { LanguageProvider } from './contexts/LanguageContext';
+import { ToastProvider } from './components/tracker/Toast';
+import Header from './components/Header';
+import ShoppingCart from './components/ShoppingCart';
+
+// Eagerly loaded — needed on first paint
+import LandingPage from './pages/LandingPage';
+import Shop from './pages/Shop';
+
+// Lazily loaded — heavy or infrequently visited pages
+const CategoryPage = lazy(() => import('./pages/CategoryPage'));
+const ProductDetails = lazy(() => import('./components/ProductDetails'));
+const ExperienceCredits = lazy(() => import('./pages/ExperienceCredits'));
+const CreditBalance = lazy(() => import('./pages/CreditBalance'));
+const Success = lazy(() => import('./pages/Success'));
+const Admin = lazy(() => import('./pages/Admin'));
+const PromptBrowser = lazy(() => import('./components/PromptBrowser'));
+const Experience1 = lazy(() => import('./pages/Experience1'));
+const FounderDashboard = lazy(() => import('./pages/FounderDashboard'));
+const BloomDelivery = lazy(() => import('./pages/BloomDelivery'));
+const ComingSoon = lazy(() => import('./pages/ComingSoon'));
 
 /**
  * ErrorBoundary — catches any JavaScript error inside a child component tree,
@@ -17,7 +39,6 @@ class ErrorBoundary extends Component {
   }
 
   componentDidCatch(error, info) {
-    // Log to console so you can see what broke in Vercel's function logs
     console.error('[Digital Bloom] Uncaught render error:', error, info);
   }
 
@@ -49,25 +70,6 @@ class ErrorBoundary extends Component {
     return this.props.children;
   }
 }
-import { LanguageProvider } from './contexts/LanguageContext';
-import { CartProvider } from './context/CartContext';
-import Header from './components/Header';
-import LandingPage from './pages/LandingPage';
-import Shop from './pages/Shop';
-import CategoryPage from './pages/CategoryPage';
-import ProductDetails from './components/ProductDetails';
-import ShoppingCart from './components/ShoppingCart';
-import Success from './pages/Success';
-import Admin from './pages/Admin';
-import PromptBrowser from './components/PromptBrowser';
-import ExperienceCredits from './pages/ExperienceCredits';
-import CreditBalance from './pages/CreditBalance';
-import Experience1 from './pages/Experience1';
-import FounderDashboard from './pages/FounderDashboard';
-// PromptVault removed from public routing (admin-only, kept in codebase)
-import ComingSoon from './pages/ComingSoon';
-import BloomDelivery from './pages/BloomDelivery';
-import { ToastProvider } from './components/tracker/Toast';
 
 function AppContent({ searchQuery, setSearchQuery }) {
   const location = useLocation();
@@ -76,27 +78,32 @@ function AppContent({ searchQuery, setSearchQuery }) {
   return (
     <>
       {!isLandingPage && <Header onSearchChange={setSearchQuery} searchQuery={searchQuery} />}
-      <Routes>
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/shop" element={<Shop searchQuery={searchQuery} setSearchQuery={setSearchQuery} />} />
-        <Route path="/shop/:categorySlug" element={<CategoryPage />} />
-        <Route path="/product/:id" element={<ProductDetails />} />
-        <Route path="/credits" element={<ExperienceCredits />} />
-        <Route path="/credits/balance" element={<CreditBalance />} />
-        <Route path="/success" element={<Success />} />
-        <Route path="/admin" element={<Admin />} />
-        <Route path="/admin/prompts" element={<PromptBrowser />} />
-        <Route path="/experience/1" element={<Experience1 />} />
-        <Route path="/founder" element={<FounderDashboard />} />
-        {/* Prompt Vault removed from public nav — admin only */}
-        <Route path="/balance" element={<CreditBalance />} />
-        <Route path="/about" element={<ComingSoon />} />
-        <Route path="/contact" element={<ComingSoon />} />
-        <Route path="/checkout" element={<ComingSoon />} />
-        <Route path="/bloom/:id" element={<BloomDelivery />} />
-        {/* Catch-all for unknown routes */}
-        <Route path="*" element={<ComingSoon />} />
-      </Routes>
+      <Suspense fallback={
+        <div className="min-h-screen bg-obsidian flex items-center justify-center">
+          <div className="w-10 h-10 border-2 border-pure-gold/20 border-t-pure-gold rounded-full animate-spin" />
+        </div>
+      }>
+        <Routes>
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/shop" element={<Shop searchQuery={searchQuery} setSearchQuery={setSearchQuery} />} />
+          <Route path="/shop/:categorySlug" element={<CategoryPage />} />
+          <Route path="/product/:id" element={<ProductDetails />} />
+          <Route path="/credits" element={<ExperienceCredits />} />
+          <Route path="/credits/balance" element={<CreditBalance />} />
+          <Route path="/success" element={<Success />} />
+          <Route path="/admin" element={<Admin />} />
+          <Route path="/admin/prompts" element={<PromptBrowser />} />
+          <Route path="/experience/1" element={<Experience1 />} />
+          <Route path="/founder" element={<FounderDashboard />} />
+          {/* Prompt Vault removed from public nav — admin only */}
+          <Route path="/balance" element={<CreditBalance />} />
+          <Route path="/about" element={<ComingSoon />} />
+          <Route path="/contact" element={<ComingSoon />} />
+          <Route path="/checkout" element={<ComingSoon />} />
+          <Route path="/bloom/:id" element={<BloomDelivery />} />
+          <Route path="*" element={<ComingSoon />} />
+        </Routes>
+      </Suspense>
       {!isLandingPage && <ShoppingCart />}
     </>
   );
@@ -105,26 +112,23 @@ function AppContent({ searchQuery, setSearchQuery }) {
 function App() {
   const [searchQuery, setSearchQuery] = useState('');
 
-
-
   return (
     <ErrorBoundary>
-    <ToastProvider>
-    <LanguageProvider>
-    <CartProvider>
-      <Router>
-        <div className="min-h-screen bg-white relative overflow-x-hidden">
-          {/* Content */}
-          <div className="relative z-10">
-            <ErrorBoundary>
-              <AppContent searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
-            </ErrorBoundary>
-          </div>
-        </div>
-      </Router>
-    </CartProvider>
-    </LanguageProvider>
-    </ToastProvider>
+      <ToastProvider>
+        <LanguageProvider>
+          <CartProvider>
+            <Router>
+              <div className="min-h-screen bg-white relative overflow-x-hidden">
+                <div className="relative z-10">
+                  <ErrorBoundary>
+                    <AppContent searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+                  </ErrorBoundary>
+                </div>
+              </div>
+            </Router>
+          </CartProvider>
+        </LanguageProvider>
+      </ToastProvider>
     </ErrorBoundary>
   );
 }
