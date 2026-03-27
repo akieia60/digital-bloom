@@ -190,6 +190,43 @@ Gamble is Ak's business partner who does UI/UX walkthroughs of the live site. Wh
 
 ---
 
+## INTERNATIONALIZATION (i18n)
+
+The entire site supports multiple languages via a custom LanguageContext system.
+
+### How it works
+- Translation files live in `src/locales/` — one file per language (`en.js`, `es.js`)
+- Both files export an object with **identical keys**, just different translated values
+- The active language state lives in `src/contexts/LanguageContext.jsx`
+- Every component imports `useLanguage` and calls `t('key')` to get the translated string
+- Default language is **Spanish (`es`)** — this is intentional per business preference
+- The language switcher UI is in `src/components/landing/LandingNav.jsx`
+
+### Key files
+| File | Purpose |
+|------|---------|
+| `src/locales/en.js` | English strings (~200 keys — source of truth for all keys) |
+| `src/locales/es.js` | Spanish strings (must have all the same keys as `en.js`) |
+| `src/contexts/LanguageContext.jsx` | Language state + `t()` function |
+| `src/components/landing/LandingNav.jsx` | Language switcher UI |
+
+### Components already translated
+Every user-facing component uses `t()`: VideoHero, LandingNav, ValueProps, AboutSection, HowItWorks, FAQ, LandingFooter, CategoryGrid, Shop, CategoryPage, ProductDetails, CartItem, ShoppingCart, GiftingForm, Customizer, ExperienceCredits, CreditBalance, ComingSoon, Success.
+
+### To add a new language (e.g. French)
+1. Copy `src/locales/en.js` → `src/locales/fr.js`
+2. Translate every **value** in the new file (never change the keys)
+3. In `src/contexts/LanguageContext.jsx`, import `{ fr }` and add it to the languages map
+4. Add the new language option in the switcher in `LandingNav.jsx`
+
+### Rules
+- **Every key in `en.js` must also exist in `es.js` (and any other locale file) with the same key name**
+- Never hardcode user-visible text in a component — always use `t('key')`
+- For arrays with translatable content (FAQ questions, step titles, etc.), define the array **inside the component function** where `t()` is available
+- For computed keys (e.g. theme names, extra names), use pattern: `t('cust_theme_' + theme.id)`
+
+---
+
 ## IF YOU'RE EVER UNSURE
 
 Just ask Ak. A quick question saves a lot of cleanup. Ak prefers short, clear communication over long explanations. If you get confused between the two repos or aren't sure what page/file to edit — **stop and ask first**.

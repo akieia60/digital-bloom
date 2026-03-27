@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { supabase } from '../lib/supabase';
 import { buildCartComposition } from '../lib/fulfillmentMapper';
 import LivePreview from './LivePreview';
+import { useLanguage } from '../contexts/LanguageContext';
 import '../styles/customizer.css';
 
 const EXTRAS = [
@@ -34,6 +35,7 @@ const FLOW_STEPS = [
 ];
 
 const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {} }) => {
+  const { t } = useLanguage();
   const { messagePlaceholder, toPlaceholder, ...stateDefaults } = defaults;
   const scrollPosRef = useRef(0);
 
@@ -252,12 +254,12 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {} }) => 
     <>
       <div className={`customizer-overlay ${isOpen ? 'active' : ''}`} onClick={onClose} role="presentation" />
 
-      <div className={`customizer-sheet ${isOpen ? 'open' : ''}`} role="dialog" aria-modal="true" aria-label="Customize your experience">
+      <div className={`customizer-sheet ${isOpen ? 'open' : ''}`} role="dialog" aria-modal="true" aria-label={t('cust_title')}>
         <div className="customizer-sheet__drag-indicator" />
 
         {/* Header */}
         <div className="customizer-sheet__header">
-          <h2 className="customizer-sheet__title">Customize</h2>
+          <h2 className="customizer-sheet__title">{t('cust_title')}</h2>
           <button type="button" className="customizer-sheet__close" onClick={onClose} aria-label="Close">✕</button>
         </div>
 
@@ -265,7 +267,7 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {} }) => 
         <div className="customizer-sheet__body">
 
           <div className="customizer-preview-shell">
-            <div className="customizer-preview-shell__label">Live Bloom Preview</div>
+            <div className="customizer-preview-shell__label">{t('cust_preview_label')}</div>
             <LivePreview
               product={product}
               colorTheme={colorTheme}
@@ -280,7 +282,7 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {} }) => 
           <div className="customizer-section">
             <div className="customizer-section__header">
               <span className="customizer-section__number">1</span>
-              <h3 className="customizer-section__title">Your Message</h3>
+              <h3 className="customizer-section__title">{t('cust_step1_title')}</h3>
             </div>
 
             <div className="customizer-field">
@@ -288,7 +290,7 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {} }) => 
                 id="cust-msg"
                 type="text"
                 className="customizer-input"
-                placeholder={messagePlaceholder || 'e.g., Happy Birthday!'}
+                placeholder={messagePlaceholder || t('cust_msg_placeholder')}
                 maxLength="150"
                 value={message.short}
                 onChange={(e) => handleMessageChange('short', e.target.value)}
@@ -298,16 +300,16 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {} }) => 
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
               <div className="customizer-field">
-                <label className="customizer-label" htmlFor="cust-to">To</label>
+                <label className="customizer-label" htmlFor="cust-to">{t('cust_to_label')}</label>
                 <input id="cust-to" type="text" className="customizer-input"
-                  placeholder={toPlaceholder || 'Recipient'}
+                  placeholder={toPlaceholder || t('cust_to_placeholder')}
                   value={message.toName}
                   onChange={(e) => handleMessageChange('toName', e.target.value)} />
               </div>
               <div className="customizer-field">
-                <label className="customizer-label" htmlFor="cust-from">From</label>
+                <label className="customizer-label" htmlFor="cust-from">{t('cust_from_label')}</label>
                 <input id="cust-from" type="text" className="customizer-input"
-                  placeholder="Your name"
+                  placeholder={t('cust_from_placeholder')}
                   value={message.fromName}
                   onChange={(e) => handleMessageChange('fromName', e.target.value)} />
               </div>
@@ -321,9 +323,9 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {} }) => 
           <div className="customizer-section">
             <div className="customizer-section__header">
               <span className="customizer-section__number">2</span>
-              <h3 className="customizer-section__title">Style</h3>
+              <h3 className="customizer-section__title">{t('cust_step2_title')}</h3>
             </div>
-            <div className="theme-grid" role="radiogroup" aria-label="Color theme">
+            <div className="theme-grid" role="radiogroup" aria-label={t('cust_step2_title')}>
               {COLOR_THEMES.map(theme => (
                 <button key={theme.id} type="button" role="radio" aria-checked={colorTheme === theme.id}
                   className={`theme-swatch ${colorTheme === theme.id ? 'active' : ''}`}
@@ -332,7 +334,7 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {} }) => 
                     <span style={{ background: theme.colors[0] }} />
                     <span style={{ background: theme.colors[1] }} />
                   </div>
-                  <span className="theme-name">{theme.name}</span>
+                  <span className="theme-name">{t('cust_theme_' + theme.id)}</span>
                 </button>
               ))}
             </div>
@@ -345,7 +347,7 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {} }) => 
           <div className="customizer-section">
             <div className="customizer-section__header">
               <span className="customizer-section__number">3</span>
-              <h3 className="customizer-section__title">Extras</h3>
+              <h3 className="customizer-section__title">{t('cust_step3_title')}</h3>
             </div>
             <div className="extras-grid">
               {EXTRAS.map(extra => (
@@ -353,11 +355,11 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {} }) => 
                   className={`extra-toggle ${extras[extra.id] ? 'extra-toggle--active' : ''}`}
                   onClick={() => toggleExtra(extra.id)}
                   aria-pressed={extras[extra.id]}
-                  aria-label={extra.name}>
+                  aria-label={t('cust_extra_' + extra.id)}>
                   <div className="extra-toggle__info">
                     <span className="extra-toggle__icon" aria-hidden="true">{extra.icon}</span>
                     <div>
-                      <span className="extra-toggle__name">{extra.name}</span>
+                      <span className="extra-toggle__name">{t('cust_extra_' + extra.id)}</span>
                     </div>
                   </div>
                   <span className="toggle-switch" aria-hidden="true">
@@ -376,21 +378,23 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {} }) => 
           <div className="customizer-section">
             <div className="customizer-section__header">
               <span className="customizer-section__number">4</span>
-              <h3 className="customizer-section__title">Sound</h3>
+              <h3 className="customizer-section__title">{t('cust_step4_title')}</h3>
             </div>
             <div className="extras-grid">
-              {SOUND_TRACKS.map(track => (
+              {SOUND_TRACKS.map(track => {
+                const trackName = t('cust_sound_' + track.id.replace(/-/g, '_'));
+                return (
                 <button key={track.id} type="button"
                   className={`extra-toggle ${selectedSound === track.id ? 'extra-toggle--active' : ''} ${track.comingSoon ? 'opacity-50 cursor-not-allowed' : ''}`}
                   onClick={() => !track.comingSoon && handleSoundPreview(track)}
                   disabled={track.comingSoon}
-                  aria-label={track.comingSoon ? `${track.name} — coming soon` : `Preview ${track.name}`}>
+                  aria-label={track.comingSoon ? `${trackName} — ${t('cust_coming_soon')}` : `Preview ${trackName}`}>
                   <div className="extra-toggle__info">
                     <span className="extra-toggle__icon" aria-hidden="true">{track.icon}</span>
                     <div>
-                      <span className="extra-toggle__name">{track.name}</span>
+                      <span className="extra-toggle__name">{trackName}</span>
                       {track.comingSoon && (
-                        <span className="extra-toggle__price" style={{ color: '#C9A14A' }}>Coming Soon</span>
+                        <span className="extra-toggle__price" style={{ color: '#C9A14A' }}>{t('cust_coming_soon')}</span>
                       )}
                     </div>
                   </div>
@@ -400,7 +404,7 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {} }) => 
                     </span>
                   )}
                 </button>
-              ))}
+              );})}
             </div>
           </div>
             </>
@@ -410,15 +414,15 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {} }) => 
             <div className="customizer-section customizer-section--review">
               <div className="customizer-section__header">
                 <span className="customizer-section__number">5</span>
-                <h3 className="customizer-section__title">Review Your Bloom</h3>
+                <h3 className="customizer-section__title">{t('cust_step5_title')}</h3>
               </div>
               <div className="customizer-review-card">
-                <p><strong>To:</strong> {message.toName || '—'}</p>
-                <p><strong>From:</strong> {message.fromName || '—'}</p>
-                <p><strong>Message:</strong> {message.short || '—'}</p>
-                <p><strong>Frame:</strong> {COLOR_THEMES.find((theme) => theme.id === colorTheme)?.name || 'Original'}</p>
-                <p><strong>Effects:</strong> {EXTRAS.filter((extra) => extras[extra.id]).map((extra) => extra.name).join(', ') || 'None selected'}</p>
-                <p><strong>Sound:</strong> {SOUND_TRACKS.find((track) => track.id === selectedSound)?.name || 'None selected'}</p>
+                <p><strong>{t('cust_review_to')}</strong> {message.toName || '—'}</p>
+                <p><strong>{t('cust_review_from')}</strong> {message.fromName || '—'}</p>
+                <p><strong>{t('cust_review_message')}</strong> {message.short || '—'}</p>
+                <p><strong>{t('cust_review_frame')}</strong> {COLOR_THEMES.find((theme) => theme.id === colorTheme) ? t('cust_theme_' + colorTheme) : t('cust_theme_original')}</p>
+                <p><strong>{t('cust_review_effects')}</strong> {EXTRAS.filter((extra) => extras[extra.id]).map((extra) => t('cust_extra_' + extra.id)).join(', ') || t('cust_review_none')}</p>
+                <p><strong>{t('cust_review_sound')}</strong> {selectedSound ? t('cust_sound_' + selectedSound.replace(/-/g, '_')) : t('cust_review_none')}</p>
               </div>
             </div>
           )}
@@ -427,21 +431,21 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {} }) => 
         {/* ── UNIFIED BOTTOM BAR — Back / Next or Add to Cart ── */}
         <div className="customizer-sticky-cta">
           {activeStep > 1 ? (
-            <button type="button" className="cta-back-btn" onClick={goBack}>← Back</button>
+            <button type="button" className="cta-back-btn" onClick={goBack}>{t('cust_back_btn')}</button>
           ) : (
-            <button type="button" className="cta-back-btn" onClick={onClose}>✕ Close</button>
+            <button type="button" className="cta-back-btn" onClick={onClose}>{t('cust_close_btn')}</button>
           )}
           <div className="cta-pricing">
             <div className="cta-pricing__amount">${totalPrice.toFixed(2)}</div>
           </div>
           {activeStep < FLOW_STEPS.length ? (
             <button type="button" className="cta-add-btn" onClick={goNext}>
-              Next →
+              {t('cust_next_btn')}
             </button>
           ) : (
             <button type="button" className="cta-add-btn" onClick={handleComplete}
-              disabled={!isProductValid} aria-label={`Add to cart for $${totalPrice.toFixed(2)}`}>
-              Add to Cart
+              disabled={!isProductValid} aria-label={`${t('cust_add_btn')} $${totalPrice.toFixed(2)}`}>
+              {t('cust_add_btn')}
             </button>
           )}
         </div>

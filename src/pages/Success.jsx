@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { updatePurchaseStatus, saveBloomDelivery, supabase } from '../lib/supabase';
 import { generateBloomSlug } from '../lib/deliveryResolver';
+import { useLanguage } from '../contexts/LanguageContext';
 import '../styles/success.css';
 
 const Success = () => {
@@ -12,13 +13,14 @@ const Success = () => {
   const [copied, setCopied] = useState(false);
   const [bloomSlug, setBloomSlug] = useState(null);
   const [renderStatus, setRenderStatus] = useState('idle');
+  const { t } = useLanguage();
 
   const sessionId = searchParams.get('session_id');
 
   useEffect(() => {
     const processPurchase = async () => {
       if (!sessionId) {
-        setError('Session token unavailable.');
+        setError(t('success_session_error'));
         setIsProcessing(false);
         return;
       }
@@ -89,14 +91,14 @@ const Success = () => {
         }
       } catch (err) {
         console.error('Error processing purchase:', err);
-        setError('Failed to process your purchase. Please contact support.');
+        setError(t('success_purchase_error'));
       } finally {
         setIsProcessing(false);
       }
     };
 
     processPurchase();
-  }, [sessionId]);
+  }, [sessionId]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const copyLink = async () => {
     const shareUrl = `${window.location.origin}/shop`;
@@ -127,7 +129,7 @@ const Success = () => {
       <div className="success-page">
         <div className="success-loading">
           <div className="success-spinner" />
-          <p className="success-loading-text">Preparing Your Experience...</p>
+          <p className="success-loading-text">{t('success_loading')}</p>
         </div>
       </div>
     );
@@ -137,9 +139,9 @@ const Success = () => {
     return (
       <div className="success-page">
         <div className="success-error-card">
-          <h2 className="success-error-title">Something Went Wrong</h2>
+          <h2 className="success-error-title">{t('success_error_title')}</h2>
           <p className="success-error-msg">{error}</p>
-          <Link to="/" className="success-btn-outline">Return Home</Link>
+          <Link to="/" className="success-btn-outline">{t('success_error_return')}</Link>
         </div>
       </div>
     );
@@ -159,56 +161,54 @@ const Success = () => {
               <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
             </svg>
           </div>
-          <h1 className="success-title">Your Bloom Is On Its Way!</h1>
-          <p className="success-subtitle">
-            Your experience has been created and is being prepared for delivery.
-          </p>
+          <h1 className="success-title">{t('success_title')}</h1>
+          <p className="success-subtitle">{t('success_subtitle')}</p>
         </div>
 
         {/* ── ORDER SUMMARY ── */}
         {purchase && (
           <div className="success-card">
-            <h3 className="success-card-label">Order Summary</h3>
+            <h3 className="success-card-label">{t('success_order_heading')}</h3>
             <div className="success-row">
-              <span className="success-row-label">Order ID</span>
+              <span className="success-row-label">{t('success_order_id')}</span>
               <span className="success-row-value success-row-mono">{displayId}</span>
             </div>
             <div className="success-row">
-              <span className="success-row-label">Total</span>
+              <span className="success-row-label">{t('success_order_total')}</span>
               <span className="success-row-value success-row-gold">${displayPrice}</span>
             </div>
             <div className="success-row success-row-last">
-              <span className="success-row-label">Status</span>
-              <span className="success-badge">Confirmed ✓</span>
+              <span className="success-row-label">{t('success_order_status')}</span>
+              <span className="success-badge">{t('success_order_confirmed')}</span>
             </div>
           </div>
         )}
 
         {/* ── YOUR EXPERIENCE ── */}
         <div className="success-card">
-          <h3 className="success-card-label">Your Experience</h3>
+          <h3 className="success-card-label">{t('success_experience_heading')}</h3>
           {purchase?.download_url ? (
             new Date(purchase.download_expires_at) > new Date() ? (
               <div>
-                <p className="success-card-text">Your customized bloom is ready! Download it now or share directly.</p>
+                <p className="success-card-text">{t('success_exp_download_ready')}</p>
                 <a href={purchase.download_url} download className="success-btn-gold">
                   <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                   </svg>
-                  Download Experience
+                  {t('success_exp_download_btn')}
                 </a>
-                <p className="success-note">Your download link is valid for 48 hours.</p>
+                <p className="success-note">{t('success_exp_download_note')}</p>
               </div>
             ) : (
-              <p className="success-expired">Your download link has expired (48h). Please contact support.</p>
+              <p className="success-expired">{t('success_exp_expired')}</p>
             )
           ) : (
             <div>
-              <p className="success-card-text">We're preparing your experience now.</p>
+              <p className="success-card-text">{t('success_exp_preparing')}</p>
               <ul className="success-status-list">
-                <li>✓ Confirmation sent to your email</li>
-                <li>{renderStatus === 'processing' ? '🎬 Personalizing your protected delivery file now' : '⏳ Experience processing (est. 2–4 hours)'}</li>
-                <li>{renderStatus === 'ready' ? '✅ Personalized delivery file generated' : renderStatus === 'failed' ? '⚠️ Personalized file render needs retry' : '📧 You\'ll be notified when it\'s ready'}</li>
+                <li>{t('success_exp_confirmation')}</li>
+                <li>{renderStatus === 'processing' ? t('success_exp_personalizing') : t('success_exp_processing')}</li>
+                <li>{renderStatus === 'ready' ? t('success_exp_file_ready') : renderStatus === 'failed' ? t('success_exp_file_failed') : t('success_exp_notify')}</li>
               </ul>
             </div>
           )}
@@ -217,25 +217,21 @@ const Success = () => {
         {/* ── VIEW YOUR BLOOM ── */}
         {bloomSlug && (
           <div className="success-card">
-            <h3 className="success-card-label">Your Bloom</h3>
-            <p className="success-card-text">
-              Your personalized bloom experience is ready to view and share.
-            </p>
+            <h3 className="success-card-label">{t('success_bloom_heading')}</h3>
+            <p className="success-card-text">{t('success_bloom_desc')}</p>
             <Link to={`/bloom/${bloomSlug}`} className="success-btn-gold">
-              ✨ View Your Bloom
+              {t('success_bloom_view')}
             </Link>
-            <p className="success-note">
-              Share this link with your recipient so they can experience their bloom.
-            </p>
+            <p className="success-note">{t('success_bloom_note')}</p>
           </div>
         )}
 
         {/* ── SHARE ── */}
         <div className="success-card">
-          <h3 className="success-card-label">Share Digital Bloom</h3>
+          <h3 className="success-card-label">{t('success_share_heading')}</h3>
           <div className="success-share-row">
             <button type="button" onClick={copyLink} className="success-share-btn">
-              {copied ? '✓ Copied!' : '🔗 Copy Link'}
+              {copied ? t('success_share_copied') : t('success_share_copy')}
             </button>
             <button
               type="button"
@@ -256,13 +252,13 @@ const Success = () => {
 
         {/* ── ACTIONS ── */}
         <div className="success-actions">
-          <Link to="/" className="success-btn-primary">Return to Homepage</Link>
+          <Link to="/" className="success-btn-primary">{t('success_return_home')}</Link>
         </div>
 
         {/* ── BRAND FOOTER ── */}
         <div className="success-brand">
           <p className="success-brand-name">Digital Bloom™</p>
-          <p className="success-brand-sub">Digital Gifting Experience</p>
+          <p className="success-brand-sub">{t('success_brand_sub')}</p>
         </div>
       </div>
     </div>

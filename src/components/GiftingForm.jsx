@@ -1,22 +1,23 @@
+import { useLanguage } from '../contexts/LanguageContext';
+
 const MAX_MESSAGE = 150;
 
 export default function GiftingForm({ recipientName, recipientEmail, deliveryDate, giftMessage, senderName, onChange }) {
+  const { t } = useLanguage();
   const charsLeft = MAX_MESSAGE - (giftMessage?.length || 0);
   const charsUsed = giftMessage?.length || 0;
 
   return (
     <div className="gifting-form">
-      <h3 className="gifting-title">Gift Delivery Details</h3>
-      <p className="gifting-subtitle">
-        This Digital Bloom™ experience will be delivered privately as a cinematic digital gift.
-      </p>
+      <h3 className="gifting-title">{t('gift_title')}</h3>
+      <p className="gifting-subtitle">{t('gift_subtitle')}</p>
 
       <div className="form-group">
-        <label className="customizer-label">Recipient Name</label>
+        <label className="customizer-label">{t('gift_recipient_name')}</label>
         <input
           type="text"
           className="customizer-input"
-          placeholder="Who is this for?"
+          placeholder={t('gift_recipient_name_placeholder')}
           value={recipientName}
           onChange={(e) => onChange('recipientName', e.target.value)}
           required
@@ -24,7 +25,7 @@ export default function GiftingForm({ recipientName, recipientEmail, deliveryDat
       </div>
 
       <div className="form-group">
-        <label className="customizer-label">Recipient Email</label>
+        <label className="customizer-label">{t('gift_recipient_email')}</label>
         <input
           type="email"
           className="customizer-input"
@@ -36,18 +37,18 @@ export default function GiftingForm({ recipientName, recipientEmail, deliveryDat
       </div>
 
       <div className="form-group">
-        <label className="customizer-label">Your Name (From)</label>
+        <label className="customizer-label">{t('gift_sender_name')}</label>
         <input
           type="text"
           className="customizer-input"
-          placeholder="Your name"
+          placeholder={t('gift_sender_name_placeholder')}
           value={senderName || ''}
           onChange={(e) => onChange('senderName', e.target.value)}
         />
       </div>
 
       <div className="form-group">
-        <label className="customizer-label">Delivery Date (Optional)</label>
+        <label className="customizer-label">{t('gift_delivery_date')}</label>
         <input
           type="date"
           className="customizer-input"
@@ -55,14 +56,14 @@ export default function GiftingForm({ recipientName, recipientEmail, deliveryDat
           onChange={(e) => onChange('deliveryDate', e.target.value)}
           min={new Date().toISOString().split('T')[0]}
         />
-        <span className="customizer-hint">Leave blank for immediate delivery</span>
+        <span className="customizer-hint">{t('gift_delivery_date_hint')}</span>
       </div>
 
       {/* Message field with preview */}
       <div className="form-group">
-        <label className="customizer-label">Sign Your Card</label>
+        <label className="customizer-label">{t('gift_sign_card')}</label>
         <p style={{ fontSize: '0.78rem', color: '#6E6E73', marginBottom: '10px', fontFamily: "'Outfit', sans-serif" }}>
-          Write a personal note — your recipient will see this as part of their bloom experience
+          {t('gift_sign_hint')}
         </p>
 
         {/* Live gift card preview */}
@@ -74,7 +75,7 @@ export default function GiftingForm({ recipientName, recipientEmail, deliveryDat
           <div className="gifting-preview-to">
             <span className="gifting-preview-label">To:</span>
             <span className="gifting-preview-name">
-              {recipientName || 'Your Recipient'}
+              {recipientName || t('gift_recipient_fallback')}
             </span>
           </div>
 
@@ -82,15 +83,15 @@ export default function GiftingForm({ recipientName, recipientEmail, deliveryDat
           <p className="gifting-preview-text">
             {giftMessage
               ? giftMessage
-              : <span className="gifting-preview-placeholder">✦ Your heartfelt message will appear here ✦</span>
+              : <span className="gifting-preview-placeholder">{t('gift_placeholder_message')}</span>
             }
           </p>
 
           {/* FROM: bottom right */}
           <div className="gifting-preview-from">
-            <span className="gifting-preview-label">With love, from:</span>
+            <span className="gifting-preview-label">{t('gift_preview_from')}</span>
             <span className="gifting-preview-name">
-              {senderName || 'Your Name'}
+              {senderName || t('gift_sender_fallback')}
             </span>
           </div>
 
@@ -102,7 +103,7 @@ export default function GiftingForm({ recipientName, recipientEmail, deliveryDat
 
         <textarea
           className="customizer-textarea"
-          placeholder="Write a personal message to accompany your bloom…"
+          placeholder={t('gift_message_placeholder')}
           maxLength={MAX_MESSAGE}
           rows="3"
           value={giftMessage}
@@ -116,7 +117,7 @@ export default function GiftingForm({ recipientName, recipientEmail, deliveryDat
           </span>
           {charsLeft <= 20 && (
             <span className="gifting-char-count--warning">
-              {charsLeft} remaining
+              {charsLeft} {t('gift_chars_remaining')}
             </span>
           )}
         </div>
