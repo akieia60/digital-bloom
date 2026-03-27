@@ -1,34 +1,43 @@
-import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { useState, useEffect, useRef } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../../context/CartContext';
+import { useLanguage, AVAILABLE_LANGUAGES } from '../../contexts/LanguageContext';
 
 export default function LandingNav() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isLangOpen, setIsLangOpen] = useState(false);
   const { getCartCount, toggleCart } = useCart();
+  const { lang, changeLanguage } = useLanguage();
   const cartCount = getCartCount();
+  const langRef = useRef(null);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 80);
-    };
+    const handleScroll = () => setIsScrolled(window.scrollY > 80);
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   useEffect(() => {
-    if (isMobileMenuOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
-    }
+    document.body.style.overflow = isMobileMenuOpen ? 'hidden' : 'unset';
     return () => { document.body.style.overflow = 'unset'; };
   }, [isMobileMenuOpen]);
 
+  // Close lang dropdown on outside click
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (langRef.current && !langRef.current.contains(e.target)) {
+        setIsLangOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const currentLang = AVAILABLE_LANGUAGES.find(l => l.code === lang) || AVAILABLE_LANGUAGES[0];
+
   return (
-    <nav
-      className={`landing-nav ${isScrolled ? 'landing-nav--scrolled' : ''}`}
-    >
+    <nav className={`landing-nav ${isScrolled ? 'landing-nav--scrolled' : ''}`}>
       <div className="landing-nav__inner">
         {/* Hamburger Button — mobile left side */}
         <button
@@ -53,22 +62,61 @@ export default function LandingNav() {
           <Link to="/credits" className="landing-nav__link">Credits</Link>
         </div>
 
-        {/* Cart Icon — right side */}
-        <button
-          onClick={toggleCart}
-          className="landing-nav__cart-btn"
-          aria-label="Shopping cart"
-          style={{ position: 'relative', background: 'none', border: 'none', cursor: 'pointer', padding: '10px', marginLeft: 'auto' }}
-        >
-          <svg style={{ width: '26px', height: '26px', color: 'rgba(255,255,255,0.95)' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-          </svg>
-          {cartCount > 0 && (
-            <span style={{ position: 'absolute', top: '4px', right: '4px', background: '#D4AF37', color: '#050510', fontSize: '10px', fontWeight: '800', borderRadius: '50%', width: '18px', height: '18px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              {cartCount}
-            </span>
-          )}
-        </button>
+        {/* Right side: Language Switcher + Cart */}
+        <div className="landing-nav__right">
+          {/* Language Switcher — always visible */}
+          <div className="lang-switcher" ref={langRef}>
+            <button
+              className="lang-switcher__btn"
+              onClick={() => setIsLangOpen(!isLangOpen)}
+              aria-label="Change language"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="10" />
+                <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+              </svg>
+              <span>{currentLang.short}</span>
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                <path d="M6 9l6 6 6-6" />
+              </svg>
+            </button>
+
+            {isLangOpen && (
+              <div className="lang-switcher__dropdown">
+                {AVAILABLE_LANGUAGES.map(l => (
+                  <button
+                    key={l.code}
+                    className={`lang-switcher__option ${lang === l.code ? 'lang-switcher__option--active' : ''}`}
+                    onClick={() => { changeLanguage(l.code); setIsLangOpen(false); }}
+                  >
+                    <span className="lang-switcher__option-label">{l.label}</span>
+                    {lang === l.code && (
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#D4AF37" strokeWidth="2.5" strokeLinecap="round">
+                        <path d="M20 6L9 17l-5-5" />
+                      </svg>
+                    )}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Cart Icon */}
+          <button
+            onClick={toggleCart}
+            className="landing-nav__cart-btn"
+            aria-label="Shopping cart"
+          >
+            <svg style={{ width: '26px', height: '26px', color: 'rgba(255,255,255,0.95)' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+            </svg>
+            {cartCount > 0 && (
+              <span style={{ position: 'absolute', top: '4px', right: '4px', background: '#D4AF37', color: '#050510', fontSize: '10px', fontWeight: '800', borderRadius: '50%', width: '18px', height: '18px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                {cartCount}
+              </span>
+            )}
+          </button>
+        </div>
       </div>
 
       {/* Mobile Menu Overlay */}
@@ -77,11 +125,7 @@ export default function LandingNav() {
           <div className="landing-nav__mobile-menu" onClick={(e) => e.stopPropagation()}>
             <div className="landing-nav__mobile-header">
               <span className="landing-nav__mobile-brand">Digital Bloom™</span>
-              <button
-                className="landing-nav__mobile-close"
-                onClick={() => setIsMobileMenuOpen(false)}
-                aria-label="Close menu"
-              >
+              <button className="landing-nav__mobile-close" onClick={() => setIsMobileMenuOpen(false)} aria-label="Close menu">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
                   <path d="M6 18L18 6M6 6l12 12" />
                 </svg>

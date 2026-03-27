@@ -167,13 +167,29 @@ const CartItem = ({ item }) => {
             </div>
           )}
 
+          {/* Edit Customization — only show if bespoke */}
+          {item.customization && (
+            <Link
+              to={`/product/${item.id}`}
+              state={{ editCustomization: item.customization }}
+              className="inline-flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-pure-gold hover:text-white transition-colors font-semibold mb-2"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+              </svg>
+              Edit Customization
+            </Link>
+          )}
+
           {/* View Full Product link */}
           <Link
             to={`/product/${item.id}`}
-            className="inline-block text-[10px] uppercase tracking-widest text-pure-gold hover:text-white transition-colors font-semibold"
+            className="inline-block text-[10px] uppercase tracking-widest text-white/30 hover:text-white transition-colors font-semibold"
             onClick={(e) => e.stopPropagation()}
           >
-            View Full Product →
+            View Product →
           </Link>
         </div>
       </div>
