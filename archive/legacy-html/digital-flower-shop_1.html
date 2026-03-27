@@ -1,0 +1,1746 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Bloom - Send Beautiful Flowers Digitally</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --rose-red: #ff1744;
+            --rose-pink: #ff80ab;
+            --deep-purple: #4a148c;
+            --gold: #ffd700;
+            --cream: #fff8e1;
+            --dark: #1a1a2e;
+            --light: #ffffff;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: var(--light);
+            overflow-x: hidden;
+        }
+
+        /* Floating particles background */
+        .particles {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(255, 215, 0, 0.3);
+            border-radius: 50%;
+            animation: float 15s infinite;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) translateX(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) translateX(50px);
+                opacity: 0;
+            }
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 1.5rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            background: rgba(26, 26, 46, 0.9);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 215, 0, 0.1);
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #ffd700, #ff80ab);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        nav {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        nav a {
+            color: var(--light);
+            text-decoration: none;
+            font-weight: 400;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gold);
+            transition: width 0.3s ease;
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        .cart {
+            position: relative;
+            cursor: pointer;
+            font-size: 1.5rem;
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: var(--rose-red);
+            color: white;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 8rem 5% 4rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #ffd700, #ff80ab, #ffd700);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientShift 3s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 3rem;
+            font-weight: 300;
+        }
+
+        .cta-btn {
+            display: inline-block;
+            padding: 1.2rem 3rem;
+            background: linear-gradient(135deg, #ff1744, #ff80ab);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            box-shadow: 0 10px 30px rgba(255, 23, 68, 0.4);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .cta-btn:hover::before {
+            left: 100%;
+        }
+
+        .cta-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(255, 23, 68, 0.6);
+        }
+
+        /* Collections Section */
+        .collections {
+            padding: 6rem 5%;
+            position: relative;
+            z-index: 1;
+        }
+
+        .section-title {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #ffd700, #ffffff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 4rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2.5rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .flower-card {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 20px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            border: 1px solid rgba(255, 215, 0, 0.1);
+            position: relative;
+        }
+
+        .flower-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 60px rgba(255, 215, 0, 0.3);
+            border-color: rgba(255, 215, 0, 0.4);
+        }
+
+        .flower-img {
+            width: 100%;
+            height: 450px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .flower-img::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 120px;
+            background: linear-gradient(to top, rgba(26, 26, 46, 1), transparent);
+            z-index: 1;
+        }
+
+        .flower-svg {
+            width: 85%;
+            height: 85%;
+            position: relative;
+            z-index: 0;
+        }
+
+        .song-instructions {
+            background: linear-gradient(135deg, rgba(255, 23, 68, 0.1), rgba(255, 128, 171, 0.1));
+            border: 2px solid rgba(255, 128, 171, 0.3);
+            border-radius: 20px;
+            padding: 2.5rem;
+            margin: 4rem auto;
+            max-width: 800px;
+            text-align: center;
+        }
+
+        .song-instructions h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #ffd700, #ff80ab);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1.5rem;
+        }
+
+        .song-instructions p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 1rem;
+        }
+
+        .song-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .song-step {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1.5rem;
+            border-radius: 15px;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+        }
+
+        .song-step-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--rose-red);
+            margin-bottom: 0.5rem;
+        }
+
+        .song-step p {
+            font-size: 0.95rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: var(--rose-red);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            z-index: 10;
+            box-shadow: 0 5px 15px rgba(255, 23, 68, 0.4);
+        }
+
+        .flower-info {
+            padding: 2rem;
+        }
+
+        .flower-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+            color: var(--gold);
+        }
+
+        .flower-desc {
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+        }
+
+        .flower-price {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #ffd700, #ff80ab);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .buy-btn {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, #ff1744, #ff80ab);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        .buy-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 25px rgba(255, 23, 68, 0.5);
+        }
+
+        /* Features */
+        .features {
+            padding: 6rem 5%;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 3rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .feature {
+            text-align: center;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 215, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .feature:hover {
+            transform: translateY(-5px);
+            border-color: rgba(255, 215, 0, 0.3);
+        }
+
+        .feature-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--gold);
+        }
+
+        .feature p {
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.8;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            padding: 3rem;
+            border-radius: 30px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            animation: slideUp 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #ffd700, #ff80ab);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .modal p {
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+        }
+
+        .modal-btns {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .modal-btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .modal-btn.primary {
+            background: linear-gradient(135deg, #ff1744, #ff80ab);
+            color: white;
+        }
+
+        .modal-btn.secondary {
+            background: transparent;
+            color: var(--gold);
+            border: 2px solid var(--gold);
+        }
+
+        .modal-btn:hover {
+            transform: scale(1.05);
+        }
+
+        /* Footer */
+        footer {
+            padding: 3rem 5%;
+            text-align: center;
+            border-top: 1px solid rgba(255, 215, 0, 0.1);
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        footer p {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 3rem; }
+            .hero p { font-size: 1.1rem; }
+            .grid { grid-template-columns: 1fr; }
+            nav { gap: 1rem; }
+        }
+
+        /* Realistic flower backgrounds using gradients */
+        .rose-red-bg {
+            background: 
+                radial-gradient(ellipse at 30% 40%, #ff1744 0%, #c51162 30%, #880e4f 60%, transparent 70%),
+                radial-gradient(ellipse at 70% 60%, #f50057 0%, #c51162 40%, transparent 70%),
+                radial-gradient(ellipse at 50% 30%, #ff4569 0%, transparent 60%),
+                linear-gradient(135deg, #1a0911 0%, #330a1f 100%);
+        }
+
+        .rose-pink-bg {
+            background: 
+                radial-gradient(ellipse at 35% 45%, #ff80ab 0%, #ff4081 30%, #f50057 60%, transparent 70%),
+                radial-gradient(ellipse at 65% 55%, #ffb3d0 0%, #ff80ab 40%, transparent 70%),
+                radial-gradient(ellipse at 50% 35%, #ffc4dd 0%, transparent 60%),
+                linear-gradient(135deg, #1f1020 0%, #2d1a2e 100%);
+        }
+
+        .rose-white-bg {
+            background: 
+                radial-gradient(ellipse at 40% 45%, #ffffff 0%, #f5f5f5 30%, #e0e0e0 60%, transparent 70%),
+                radial-gradient(ellipse at 60% 55%, #fafafa 0%, #f0f0f0 40%, transparent 70%),
+                radial-gradient(ellipse at 50% 30%, #ffffff 0%, transparent 60%),
+                linear-gradient(135deg, #1a1a2e 0%, #252539 100%);
+        }
+
+        .rose-black-bg {
+            background: 
+                radial-gradient(ellipse at 35% 40%, #2d1f2f 0%, #1a0f1f 30%, #0d0709 60%, transparent 70%),
+                radial-gradient(ellipse at 65% 60%, #1f1420 0%, #0f0a10 40%, transparent 70%),
+                radial-gradient(circle at 50% 50%, #ffd700 0%, transparent 20%),
+                linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+        }
+
+        .rose-purple-bg {
+            background: 
+                radial-gradient(ellipse at 40% 45%, #ce93d8 0%, #ab47bc 30%, #8e24aa 60%, transparent 70%),
+                radial-gradient(ellipse at 60% 55%, #e1bee7 0%, #ba68c8 40%, transparent 70%),
+                radial-gradient(ellipse at 50% 35%, #f3e5f5 0%, transparent 60%),
+                linear-gradient(135deg, #1a0a1f 0%, #2d1a39 100%);
+        }
+
+        .rose-yellow-bg {
+            background: 
+                radial-gradient(ellipse at 35% 40%, #ffd700 0%, #ffb300 30%, #ff8f00 60%, transparent 70%),
+                radial-gradient(ellipse at 65% 60%, #ffe082 0%, #ffd54f 40%, transparent 70%),
+                radial-gradient(ellipse at 50% 30%, #fff9c4 0%, transparent 60%),
+                linear-gradient(135deg, #1f1a0a 0%, #332d14 100%);
+        }
+    </style>
+</head>
+<body>
+    <div class="particles" id="particles"></div>
+
+    <header>
+        <div class="logo">Digital Bloom</div>
+        <nav>
+            <a href="#collections">Bouquets</a>
+            <a href="#features">How It Works</a>
+            <div class="cart">
+                🛍️
+                <div class="cart-count">0</div>
+            </div>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <div>
+            <h1>Send Love Digitally</h1>
+            <p>Beautiful virtual flowers for your special someone 💐✨</p>
+            <a href="#collections" class="cta-btn">Shop Bouquets</a>
+        </div>
+    </section>
+
+    <section id="collections" class="collections">
+        <h2 class="section-title">Our Bouquets</h2>
+        <p class="section-subtitle">Premium digital flowers perfect for Instagram & TikTok</p>
+        
+        <!-- Premium 3D Showcase Section -->
+        <div style="margin-bottom: 4rem;">
+            <h3 style="font-family: 'Playfair Display', serif; font-size: 2.5rem; text-align: center; margin-bottom: 2rem; background: linear-gradient(135deg, #ffd700, #ff80ab); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+                ✨ Luxury 3D Collection
+            </h3>
+            <div class="grid">
+                <!-- 3D Rose Heel Video Card -->
+                <div class="flower-card" style="grid-column: span 2;">
+                    <div class="badge" style="background: linear-gradient(135deg, #FFD700, #FFA500);">Premium 3D</div>
+                    <div class="flower-img" style="height: 500px; background: linear-gradient(180deg, #f5f5f5, #ffffff); position: relative; overflow: hidden;">
+                        <video
+                            autoplay
+                            loop
+                            muted
+                            playsinline
+                            style="width: 100%; height: 100%; object-fit: contain;"
+                            poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 600'%3E%3Crect fill='%23f5f5f5' width='800' height='600'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' fill='%23999' font-size='24' font-family='Arial'%3ELoading 3D Rose Heel...%3C/text%3E%3C/svg%3E">
+                            <source src="media/videos/grok-video-06fc35b4-7fae-420e-a7e9-a056c87ac8f1-2.mp4" type="video/mp4">
+                            Your browser doesn't support video.
+                        </video>
+                        <div style="position: absolute; bottom: 20px; left: 20px; right: 20px; background: rgba(0,0,0,0.7); padding: 1.5rem; border-radius: 15px; backdrop-filter: blur(10px);">
+                            <p style="color: white; font-size: 0.9rem; margin: 0;">🎬 <strong>ANIMATED 3D VIDEO</strong> • Perfect for TikTok & Instagram Reels</p>
+                        </div>
+                    </div>
+                    <div class="flower-info">
+                        <h3 class="flower-name">Rose Stiletto Luxury</h3>
+                        <p class="flower-desc">Stunning 3D animated roses on a designer heel. Rotating video with pearl accents, floating petals, and luxury vibes. INSTANT viral content for your social media!</p>
+                        <div class="flower-price">$12.99</div>
+                        <button class="buy-btn" onclick="purchase('Rose Stiletto Luxury', '$12.99')">Get This Video 🎬</button>
+                    </div>
+                </div>
+
+                <!-- 3D Flower Video 2 -->
+                <div class="flower-card">
+                    <div class="badge" style="background: linear-gradient(135deg, #FFD700, #FFA500);">Premium 3D</div>
+                    <div class="flower-img" style="height: 450px; background: linear-gradient(180deg, #f5f5f5, #ffffff); position: relative; overflow: hidden;">
+                        <video
+                            autoplay
+                            loop
+                            muted
+                            playsinline
+                            style="width: 100%; height: 100%; object-fit: cover;">
+                            <source src="media/videos/grok-video-06fc35b4-7fae-420e-a7e9-a056c87ac8f1-3.mp4" type="video/mp4">
+                            Your browser doesn't support video.
+                        </video>
+                    </div>
+                    <div class="flower-info">
+                        <h3 class="flower-name">Digital Bloom 3D</h3>
+                        <p class="flower-desc">Animated 3D flower video perfect for Instagram stories and TikTok posts.</p>
+                        <div class="flower-price">$12.99</div>
+                        <button class="buy-btn" onclick="purchase('Digital Bloom 3D', '$12.99')">Get This Video 🎬</button>
+                    </div>
+                </div>
+
+                <!-- 3D Flower Video 3 -->
+                <div class="flower-card">
+                    <div class="badge" style="background: linear-gradient(135deg, #FFD700, #FFA500);">Premium 3D</div>
+                    <div class="flower-img" style="height: 450px; background: linear-gradient(180deg, #f5f5f5, #ffffff); position: relative; overflow: hidden;">
+                        <video
+                            autoplay
+                            loop
+                            muted
+                            playsinline
+                            style="width: 100%; height: 100%; object-fit: cover;">
+                            <source src="media/videos/grok-video-06fc35b4-7fae-420e-a7e9-a056c87ac8f1-4.mp4" type="video/mp4">
+                            Your browser doesn't support video.
+                        </video>
+                    </div>
+                    <div class="flower-info">
+                        <h3 class="flower-name">Floral Dreams</h3>
+                        <p class="flower-desc">Mesmerizing 3D animated bouquet with stunning visual effects.</p>
+                        <div class="flower-price">$12.99</div>
+                        <button class="buy-btn" onclick="purchase('Floral Dreams', '$12.99')">Get This Video 🎬</button>
+                    </div>
+                </div>
+
+                <!-- 3D Flower Video 4 -->
+                <div class="flower-card">
+                    <div class="badge" style="background: linear-gradient(135deg, #FFD700, #FFA500);">Premium 3D</div>
+                    <div class="flower-img" style="height: 450px; background: linear-gradient(180deg, #f5f5f5, #ffffff); position: relative; overflow: hidden;">
+                        <video
+                            autoplay
+                            loop
+                            muted
+                            playsinline
+                            style="width: 100%; height: 100%; object-fit: cover;">
+                            <source src="media/videos/grok-video-06fc35b4-7fae-420e-a7e9-a056c87ac8f1-5.mp4" type="video/mp4">
+                            Your browser doesn't support video.
+                        </video>
+                    </div>
+                    <div class="flower-info">
+                        <h3 class="flower-name">Petal Paradise</h3>
+                        <p class="flower-desc">Gorgeous 3D animation perfect for creating viral social media moments.</p>
+                        <div class="flower-price">$12.99</div>
+                        <button class="buy-btn" onclick="purchase('Petal Paradise', '$12.99')">Get This Video 🎬</button>
+                    </div>
+                </div>
+
+                <!-- 3D Flower Video 5 -->
+                <div class="flower-card">
+                    <div class="badge" style="background: linear-gradient(135deg, #FFD700, #FFA500);">Premium 3D</div>
+                    <div class="flower-img" style="height: 450px; background: linear-gradient(180deg, #f5f5f5, #ffffff); position: relative; overflow: hidden;">
+                        <video
+                            autoplay
+                            loop
+                            muted
+                            playsinline
+                            style="width: 100%; height: 100%; object-fit: cover;">
+                            <source src="media/videos/grok-video-06fc35b4-7fae-420e-a7e9-a056c87ac8f1-6.mp4" type="video/mp4">
+                            Your browser doesn't support video.
+                        </video>
+                    </div>
+                    <div class="flower-info">
+                        <h3 class="flower-name">Bloom Luxury</h3>
+                        <p class="flower-desc">Premium 3D flower video with eye-catching animations and effects.</p>
+                        <div class="flower-price">$12.99</div>
+                        <button class="buy-btn" onclick="purchase('Bloom Luxury', '$12.99')">Get This Video 🎬</button>
+                    </div>
+                </div>
+
+                <!-- 3D Flower Video 6 -->
+                <div class="flower-card">
+                    <div class="badge" style="background: linear-gradient(135deg, #FFD700, #FFA500);">Premium 3D</div>
+                    <div class="flower-img" style="height: 450px; background: linear-gradient(180deg, #f5f5f5, #ffffff); position: relative; overflow: hidden;">
+                        <video
+                            autoplay
+                            loop
+                            muted
+                            playsinline
+                            style="width: 100%; height: 100%; object-fit: cover;">
+                            <source src="media/videos/grok-video-06fc35b4-7fae-420e-a7e9-a056c87ac8f1-7.mp4" type="video/mp4">
+                            Your browser doesn't support video.
+                        </video>
+                    </div>
+                    <div class="flower-info">
+                        <h3 class="flower-name">Rose Essence</h3>
+                        <p class="flower-desc">Elegant 3D rose animation ideal for romantic gestures and special occasions.</p>
+                        <div class="flower-price">$12.99</div>
+                        <button class="buy-btn" onclick="purchase('Rose Essence', '$12.99')">Get This Video 🎬</button>
+                    </div>
+                </div>
+
+                <!-- 3D Flower Video 7 -->
+                <div class="flower-card">
+                    <div class="badge" style="background: linear-gradient(135deg, #FFD700, #FFA500);">Premium 3D</div>
+                    <div class="flower-img" style="height: 450px; background: linear-gradient(180deg, #f5f5f5, #ffffff); position: relative; overflow: hidden;">
+                        <video
+                            autoplay
+                            loop
+                            muted
+                            playsinline
+                            style="width: 100%; height: 100%; object-fit: cover;">
+                            <source src="media/videos/grok-video-06fc35b4-7fae-420e-a7e9-a056c87ac8f1-8.mp4" type="video/mp4">
+                            Your browser doesn't support video.
+                        </video>
+                    </div>
+                    <div class="flower-info">
+                        <h3 class="flower-name">Crystal Petals</h3>
+                        <p class="flower-desc">Stunning 3D flower video with crystalline effects and smooth animations.</p>
+                        <div class="flower-price">$12.99</div>
+                        <button class="buy-btn" onclick="purchase('Crystal Petals', '$12.99')">Get This Video 🎬</button>
+                    </div>
+                </div>
+
+                <!-- 3D Flower Video 8 -->
+                <div class="flower-card">
+                    <div class="badge" style="background: linear-gradient(135deg, #FFD700, #FFA500);">Premium 3D</div>
+                    <div class="flower-img" style="height: 450px; background: linear-gradient(180deg, #f5f5f5, #ffffff); position: relative; overflow: hidden;">
+                        <video
+                            autoplay
+                            loop
+                            muted
+                            playsinline
+                            style="width: 100%; height: 100%; object-fit: cover;">
+                            <source src="media/videos/grok-video-06fc35b4-7fae-420e-a7e9-a056c87ac8f1-9.mp4" type="video/mp4">
+                            Your browser doesn't support video.
+                        </video>
+                    </div>
+                    <div class="flower-info">
+                        <h3 class="flower-name">Golden Blossom</h3>
+                        <p class="flower-desc">Radiant 3D animation featuring golden accents and beautiful flower effects.</p>
+                        <div class="flower-price">$12.99</div>
+                        <button class="buy-btn" onclick="purchase('Golden Blossom', '$12.99')">Get This Video 🎬</button>
+                    </div>
+                </div>
+
+                <!-- 3D Flower Video 9 -->
+                <div class="flower-card">
+                    <div class="badge" style="background: linear-gradient(135deg, #FFD700, #FFA500);">Premium 3D</div>
+                    <div class="flower-img" style="height: 450px; background: linear-gradient(180deg, #f5f5f5, #ffffff); position: relative; overflow: hidden;">
+                        <video
+                            autoplay
+                            loop
+                            muted
+                            playsinline
+                            style="width: 100%; height: 100%; object-fit: cover;">
+                            <source src="media/videos/grok-video-06fc35b4-7fae-420e-a7e9-a056c87ac8f1.mp4" type="video/mp4">
+                            Your browser doesn't support video.
+                        </video>
+                    </div>
+                    <div class="flower-info">
+                        <h3 class="flower-name">Velvet Rose</h3>
+                        <p class="flower-desc">Sophisticated 3D rose video with luxurious textures and smooth motion.</p>
+                        <div class="flower-price">$12.99</div>
+                        <button class="buy-btn" onclick="purchase('Velvet Rose', '$12.99')">Get This Video 🎬</button>
+                    </div>
+                </div>
+
+                <!-- More 3D Videos -->
+                <div class="flower-card">
+                    <div class="badge" style="background: linear-gradient(135deg, #FFD700, #FFA500);">Premium 3D</div>
+                    <div class="flower-img" style="height: 450px; background: linear-gradient(180deg, #f5f5f5, #ffffff); position: relative; overflow: hidden;">
+                        <video
+                            autoplay
+                            loop
+                            muted
+                            playsinline
+                            style="width: 100%; height: 100%; object-fit: cover;">
+                            <source src="media/videos/grok-video-0ef46ac4-961f-436b-a5c3-1ca9c6c19b40-3.mp4" type="video/mp4">
+                            Your browser doesn't support video.
+                        </video>
+                    </div>
+                    <div class="flower-info">
+                        <h3 class="flower-name">Enchanted Garden</h3>
+                        <p class="flower-desc">Magical 3D flower animation with enchanting visual storytelling.</p>
+                        <div class="flower-price">$12.99</div>
+                        <button class="buy-btn" onclick="purchase('Enchanted Garden', '$12.99')">Get This Video 🎬</button>
+                    </div>
+                </div>
+
+                <div class="flower-card">
+                    <div class="badge" style="background: linear-gradient(135deg, #FFD700, #FFA500);">Premium 3D</div>
+                    <div class="flower-img" style="height: 450px; background: linear-gradient(180deg, #f5f5f5, #ffffff); position: relative; overflow: hidden;">
+                        <video
+                            autoplay
+                            loop
+                            muted
+                            playsinline
+                            style="width: 100%; height: 100%; object-fit: cover;">
+                            <source src="media/videos/grok-video-0ef46ac4-961f-436b-a5c3-1ca9c6c19b40.mp4" type="video/mp4">
+                            Your browser doesn't support video.
+                        </video>
+                    </div>
+                    <div class="flower-info">
+                        <h3 class="flower-name">Floral Fantasy</h3>
+                        <p class="flower-desc">Stunning 3D animated flowers with dreamy effects and transitions.</p>
+                        <div class="flower-price">$12.99</div>
+                        <button class="buy-btn" onclick="purchase('Floral Fantasy', '$12.99')">Get This Video 🎬</button>
+                    </div>
+                </div>
+
+                <div class="flower-card">
+                    <div class="badge" style="background: linear-gradient(135deg, #FFD700, #FFA500);">Premium 3D</div>
+                    <div class="flower-img" style="height: 450px; background: linear-gradient(180deg, #f5f5f5, #ffffff); position: relative; overflow: hidden;">
+                        <video
+                            autoplay
+                            loop
+                            muted
+                            playsinline
+                            style="width: 100%; height: 100%; object-fit: cover;">
+                            <source src="media/videos/grok-video-12fef274-ccd1-452a-b897-63f707c90342.mp4" type="video/mp4">
+                            Your browser doesn't support video.
+                        </video>
+                    </div>
+                    <div class="flower-info">
+                        <h3 class="flower-name">Blooming Beauty</h3>
+                        <p class="flower-desc">Captivating 3D flower animation perfect for social media sharing.</p>
+                        <div class="flower-price">$12.99</div>
+                        <button class="buy-btn" onclick="purchase('Blooming Beauty', '$12.99')">Get This Video 🎬</button>
+                    </div>
+                </div>
+
+                <div class="flower-card">
+                    <div class="badge" style="background: linear-gradient(135deg, #FFD700, #FFA500);">Premium 3D</div>
+                    <div class="flower-img" style="height: 450px; background: linear-gradient(180deg, #f5f5f5, #ffffff); position: relative; overflow: hidden;">
+                        <video
+                            autoplay
+                            loop
+                            muted
+                            playsinline
+                            style="width: 100%; height: 100%; object-fit: cover;">
+                            <source src="media/videos/grok-video-20b1910c-3ec1-46ca-af77-d6673185b13d-2.mp4" type="video/mp4">
+                            Your browser doesn't support video.
+                        </video>
+                    </div>
+                    <div class="flower-info">
+                        <h3 class="flower-name">Rose Majesty</h3>
+                        <p class="flower-desc">Majestic 3D rose video with premium quality and elegant motion.</p>
+                        <div class="flower-price">$12.99</div>
+                        <button class="buy-btn" onclick="purchase('Rose Majesty', '$12.99')">Get This Video 🎬</button>
+                    </div>
+                </div>
+
+                <div class="flower-card">
+                    <div class="badge" style="background: linear-gradient(135deg, #FFD700, #FFA500);">Premium 3D</div>
+                    <div class="flower-img" style="height: 450px; background: linear-gradient(180deg, #f5f5f5, #ffffff); position: relative; overflow: hidden;">
+                        <video
+                            autoplay
+                            loop
+                            muted
+                            playsinline
+                            style="width: 100%; height: 100%; object-fit: cover;">
+                            <source src="media/videos/grok-video-20b1910c-3ec1-46ca-af77-d6673185b13d-3.mp4" type="video/mp4">
+                            Your browser doesn't support video.
+                        </video>
+                    </div>
+                    <div class="flower-info">
+                        <h3 class="flower-name">Petal Elegance</h3>
+                        <p class="flower-desc">Refined 3D flower animation showcasing delicate petals in motion.</p>
+                        <div class="flower-price">$12.99</div>
+                        <button class="buy-btn" onclick="purchase('Petal Elegance', '$12.99')">Get This Video 🎬</button>
+                    </div>
+                </div>
+
+                <div class="flower-card">
+                    <div class="badge" style="background: linear-gradient(135deg, #FFD700, #FFA500);">Premium 3D</div>
+                    <div class="flower-img" style="height: 450px; background: linear-gradient(180deg, #f5f5f5, #ffffff); position: relative; overflow: hidden;">
+                        <video
+                            autoplay
+                            loop
+                            muted
+                            playsinline
+                            style="width: 100%; height: 100%; object-fit: cover;">
+                            <source src="media/videos/grok-video-20b1910c-3ec1-46ca-af77-d6673185b13d.mp4" type="video/mp4">
+                            Your browser doesn't support video.
+                        </video>
+                    </div>
+                    <div class="flower-info">
+                        <h3 class="flower-name">Radiant Roses</h3>
+                        <p class="flower-desc">Brilliant 3D rose animation with radiant colors and smooth transitions.</p>
+                        <div class="flower-price">$12.99</div>
+                        <button class="buy-btn" onclick="purchase('Radiant Roses', '$12.99')">Get This Video 🎬</button>
+                    </div>
+                </div>
+
+                <div class="flower-card">
+                    <div class="badge" style="background: linear-gradient(135deg, #FFD700, #FFA500);">Premium 3D</div>
+                    <div class="flower-img" style="height: 450px; background: linear-gradient(180deg, #f5f5f5, #ffffff); position: relative; overflow: hidden;">
+                        <video
+                            autoplay
+                            loop
+                            muted
+                            playsinline
+                            style="width: 100%; height: 100%; object-fit: cover;">
+                            <source src="media/videos/grok-video-5dd06d53-5c97-44ee-81c9-7bbcd0f5db0d-2.mp4" type="video/mp4">
+                            Your browser doesn't support video.
+                        </video>
+                    </div>
+                    <div class="flower-info">
+                        <h3 class="flower-name">Divine Bloom</h3>
+                        <p class="flower-desc">Divine 3D flower video with heavenly aesthetics and graceful movement.</p>
+                        <div class="flower-price">$12.99</div>
+                        <button class="buy-btn" onclick="purchase('Divine Bloom', '$12.99')">Get This Video 🎬</button>
+                    </div>
+                </div>
+
+                <div class="flower-card">
+                    <div class="badge" style="background: linear-gradient(135deg, #FFD700, #FFA500);">Premium 3D</div>
+                    <div class="flower-img" style="height: 450px; background: linear-gradient(180deg, #f5f5f5, #ffffff); position: relative; overflow: hidden;">
+                        <video
+                            autoplay
+                            loop
+                            muted
+                            playsinline
+                            style="width: 100%; height: 100%; object-fit: cover;">
+                            <source src="media/videos/grok-video-5dd06d53-5c97-44ee-81c9-7bbcd0f5db0d.mp4" type="video/mp4">
+                            Your browser doesn't support video.
+                        </video>
+                    </div>
+                    <div class="flower-info">
+                        <h3 class="flower-name">Bloom Bliss</h3>
+                        <p class="flower-desc">Blissful 3D flower animation bringing joy and beauty to every share.</p>
+                        <div class="flower-price">$12.99</div>
+                        <button class="buy-btn" onclick="purchase('Bloom Bliss', '$12.99')">Get This Video 🎬</button>
+                    </div>
+                </div>
+
+                <div class="flower-card">
+                    <div class="badge" style="background: linear-gradient(135deg, #FFD700, #FFA500);">Premium 3D</div>
+                    <div class="flower-img" style="height: 450px; background: linear-gradient(180deg, #f5f5f5, #ffffff); position: relative; overflow: hidden;">
+                        <video
+                            autoplay
+                            loop
+                            muted
+                            playsinline
+                            style="width: 100%; height: 100%; object-fit: cover;">
+                            <source src="media/videos/openart-video_pTzy9rKu3FUQjBAn1lP9_1769294782373_1769294782478.mp4" type="video/mp4">
+                            Your browser doesn't support video.
+                        </video>
+                    </div>
+                    <div class="flower-info">
+                        <h3 class="flower-name">Artistic Petals</h3>
+                        <p class="flower-desc">Artistically rendered 3D flower video with unique visual style.</p>
+                        <div class="flower-price">$12.99</div>
+                        <button class="buy-btn" onclick="purchase('Artistic Petals', '$12.99')">Get This Video 🎬</button>
+                    </div>
+                </div>
+
+                <div class="flower-card">
+                    <div class="badge" style="background: linear-gradient(135deg, #FFD700, #FFA500);">Premium 3D</div>
+                    <div class="flower-img" style="height: 450px; background: linear-gradient(180deg, #f5f5f5, #ffffff); position: relative; overflow: hidden;">
+                        <video
+                            autoplay
+                            loop
+                            muted
+                            playsinline
+                            style="width: 100%; height: 100%; object-fit: cover;">
+                            <source src="media/videos/video_pTzy9rKu3FUQjBAn1lP9_1769267883763_1769267883996.mp4" type="video/mp4">
+                            Your browser doesn't support video.
+                        </video>
+                    </div>
+                    <div class="flower-info">
+                        <h3 class="flower-name">Petal Symphony</h3>
+                        <p class="flower-desc">Harmonious 3D flower video with synchronized motion and beauty.</p>
+                        <div class="flower-price">$12.99</div>
+                        <button class="buy-btn" onclick="purchase('Petal Symphony', '$12.99')">Get This Video 🎬</button>
+                    </div>
+                </div>
+
+                <!-- AI Image Card -->
+                <div class="flower-card">
+                    <div class="badge" style="background: linear-gradient(135deg, #FF1744, #FF80AB);">AI Art</div>
+                    <div class="flower-img" style="height: 450px; background: linear-gradient(180deg, #f5f5f5, #ffffff); position: relative; overflow: hidden;">
+                        <img src="media/images/AI Video Generator.png" alt="AI Generated Flowers" style="width: 100%; height: 100%; object-fit: cover;">
+                    </div>
+                    <div class="flower-info">
+                        <h3 class="flower-name">AI Flower Art</h3>
+                        <p class="flower-desc">Beautiful AI-generated flower artwork perfect for unique digital gifts.</p>
+                        <div class="flower-price">$9.99</div>
+                        <button class="buy-btn" onclick="purchase('AI Flower Art', '$9.99')">Get This Image 🖼️</button>
+                    </div>
+                </div>
+
+                <!-- Additional Videos -->
+                <div class="flower-card">
+                    <div class="badge" style="background: linear-gradient(135deg, #FFD700, #FFA500);">Premium 3D</div>
+                    <div class="flower-img" style="height: 450px; background: linear-gradient(180deg, #f5f5f5, #ffffff); position: relative; overflow: hidden;">
+                        <video
+                            autoplay
+                            loop
+                            muted
+                            playsinline
+                            style="width: 100%; height: 100%; object-fit: cover;">
+                            <source src="media/videos/grok-video-65edde49-c31e-464c-8169-4225af9e5d79-2.mp4" type="video/mp4">
+                            Your browser doesn't support video.
+                        </video>
+                    </div>
+                    <div class="flower-info">
+                        <h3 class="flower-name">Twilight Petals</h3>
+                        <p class="flower-desc">Mystical 3D flower video with twilight tones and ethereal beauty.</p>
+                        <div class="flower-price">$12.99</div>
+                        <button class="buy-btn" onclick="purchase('Twilight Petals', '$12.99')">Get This Video 🎬</button>
+                    </div>
+                </div>
+
+                <div class="flower-card">
+                    <div class="badge" style="background: linear-gradient(135deg, #FFD700, #FFA500);">Premium 3D</div>
+                    <div class="flower-img" style="height: 450px; background: linear-gradient(180deg, #f5f5f5, #ffffff); position: relative; overflow: hidden;">
+                        <video
+                            autoplay
+                            loop
+                            muted
+                            playsinline
+                            style="width: 100%; height: 100%; object-fit: cover;">
+                            <source src="media/videos/grok-video-65edde49-c31e-464c-8169-4225af9e5d79.mp4" type="video/mp4">
+                            Your browser doesn't support video.
+                        </video>
+                    </div>
+                    <div class="flower-info">
+                        <h3 class="flower-name">Moonlight Roses</h3>
+                        <p class="flower-desc">Romantic 3D rose animation with soft moonlit glow effects.</p>
+                        <div class="flower-price">$12.99</div>
+                        <button class="buy-btn" onclick="purchase('Moonlight Roses', '$12.99')">Get This Video 🎬</button>
+                    </div>
+                </div>
+
+                <div class="flower-card">
+                    <div class="badge" style="background: linear-gradient(135deg, #FFD700, #FFA500);">Premium 3D</div>
+                    <div class="flower-img" style="height: 450px; background: linear-gradient(180deg, #f5f5f5, #ffffff); position: relative; overflow: hidden;">
+                        <video
+                            autoplay
+                            loop
+                            muted
+                            playsinline
+                            style="width: 100%; height: 100%; object-fit: cover;">
+                            <source src="media/videos/grok-video-7977c2d3-342c-4803-a9cd-0a6d847301e9.mp4" type="video/mp4">
+                            Your browser doesn't support video.
+                        </video>
+                    </div>
+                    <div class="flower-info">
+                        <h3 class="flower-name">Sunset Bloom</h3>
+                        <p class="flower-desc">Warm 3D flower video with sunset-inspired colors and gentle motion.</p>
+                        <div class="flower-price">$12.99</div>
+                        <button class="buy-btn" onclick="purchase('Sunset Bloom', '$12.99')">Get This Video 🎬</button>
+                    </div>
+                </div>
+
+                <div class="flower-card">
+                    <div class="badge" style="background: linear-gradient(135deg, #FFD700, #FFA500);">Premium 3D</div>
+                    <div class="flower-img" style="height: 450px; background: linear-gradient(180deg, #f5f5f5, #ffffff); position: relative; overflow: hidden;">
+                        <video
+                            autoplay
+                            loop
+                            muted
+                            playsinline
+                            style="width: 100%; height: 100%; object-fit: cover;">
+                            <source src="media/videos/grok-video-8ef11355-170b-4464-8a17-c906455e31da-2.mp4" type="video/mp4">
+                            Your browser doesn't support video.
+                        </video>
+                    </div>
+                    <div class="flower-info">
+                        <h3 class="flower-name">Starlight Bouquet</h3>
+                        <p class="flower-desc">Celestial 3D flower animation with twinkling star effects.</p>
+                        <div class="flower-price">$12.99</div>
+                        <button class="buy-btn" onclick="purchase('Starlight Bouquet', '$12.99')">Get This Video 🎬</button>
+                    </div>
+                </div>
+
+                <div class="flower-card">
+                    <div class="badge" style="background: linear-gradient(135deg, #FFD700, #FFA500);">Premium 3D</div>
+                    <div class="flower-img" style="height: 450px; background: linear-gradient(180deg, #f5f5f5, #ffffff); position: relative; overflow: hidden;">
+                        <video
+                            autoplay
+                            loop
+                            muted
+                            playsinline
+                            style="width: 100%; height: 100%; object-fit: cover;">
+                            <source src="media/videos/grok-video-8ef11355-170b-4464-8a17-c906455e31da-3.mp4" type="video/mp4">
+                            Your browser doesn't support video.
+                        </video>
+                    </div>
+                    <div class="flower-info">
+                        <h3 class="flower-name">Aurora Petals</h3>
+                        <p class="flower-desc">Stunning 3D video with aurora-inspired colors dancing across petals.</p>
+                        <div class="flower-price">$12.99</div>
+                        <button class="buy-btn" onclick="purchase('Aurora Petals', '$12.99')">Get This Video 🎬</button>
+                    </div>
+                </div>
+
+                <div class="flower-card">
+                    <div class="badge" style="background: linear-gradient(135deg, #FFD700, #FFA500);">Premium 3D</div>
+                    <div class="flower-img" style="height: 450px; background: linear-gradient(180deg, #f5f5f5, #ffffff); position: relative; overflow: hidden;">
+                        <video
+                            autoplay
+                            loop
+                            muted
+                            playsinline
+                            style="width: 100%; height: 100%; object-fit: cover;">
+                            <source src="media/videos/grok-video-8ef11355-170b-4464-8a17-c906455e31da-4.mp4" type="video/mp4">
+                            Your browser doesn't support video.
+                        </video>
+                    </div>
+                    <div class="flower-info">
+                        <h3 class="flower-name">Cosmic Bloom</h3>
+                        <p class="flower-desc">Otherworldly 3D flower animation with cosmic vibes and flowing motion.</p>
+                        <div class="flower-price">$12.99</div>
+                        <button class="buy-btn" onclick="purchase('Cosmic Bloom', '$12.99')">Get This Video 🎬</button>
+                    </div>
+                </div>
+
+                <div class="flower-card">
+                    <div class="badge" style="background: linear-gradient(135deg, #FFD700, #FFA500);">Premium 3D</div>
+                    <div class="flower-img" style="height: 450px; background: linear-gradient(180deg, #f5f5f5, #ffffff); position: relative; overflow: hidden;">
+                        <video
+                            autoplay
+                            loop
+                            muted
+                            playsinline
+                            style="width: 100%; height: 100%; object-fit: cover;">
+                            <source src="media/videos/grok-video-8ef11355-170b-4464-8a17-c906455e31da.mp4" type="video/mp4">
+                            Your browser doesn't support video.
+                        </video>
+                    </div>
+                    <div class="flower-info">
+                        <h3 class="flower-name">Dream Petals</h3>
+                        <p class="flower-desc">Dreamy 3D flower video with soft animations and romantic aesthetics.</p>
+                        <div class="flower-price">$12.99</div>
+                        <button class="buy-btn" onclick="purchase('Dream Petals', '$12.99')">Get This Video 🎬</button>
+                    </div>
+                </div>
+
+                <div class="flower-card">
+                    <div class="badge" style="background: linear-gradient(135deg, #FFD700, #FFA500);">Premium 3D</div>
+                    <div class="flower-img" style="height: 450px; background: linear-gradient(180deg, #f5f5f5, #ffffff); position: relative; overflow: hidden;">
+                        <video
+                            autoplay
+                            loop
+                            muted
+                            playsinline
+                            style="width: 100%; height: 100%; object-fit: cover;">
+                            <source src="media/videos/grok-video-f4d1b7c6-65f5-4308-b62e-41a7a72be2c3.mp4" type="video/mp4">
+                            Your browser doesn't support video.
+                        </video>
+                    </div>
+                    <div class="flower-info">
+                        <h3 class="flower-name">Infinity Roses</h3>
+                        <p class="flower-desc">Infinite beauty captured in 3D animation with mesmerizing loop effects.</p>
+                        <div class="flower-price">$12.99</div>
+                        <button class="buy-btn" onclick="purchase('Infinity Roses', '$12.99')">Get This Video 🎬</button>
+                    </div>
+                </div>
+
+                <!-- Easy Upload Template - Keep this for adding new videos -->
+                <div class="flower-card" style="border: 3px dashed rgba(255, 215, 0, 0.3);">
+                    <div class="badge" style="background: #6B2FE2;">Add More</div>
+                    <div class="flower-img" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; flex-direction: column;">
+                        <div style="font-size: 5rem; margin-bottom: 1rem;">📤</div>
+                        <div style="font-size: 1.5rem; font-weight: 600; text-align: center; padding: 0 2rem;">Add Your Next Video Here</div>
+                        <div style="font-size: 0.9rem; margin-top: 1rem; color: rgba(255,255,255,0.8); padding: 0 2rem;">Copy this card and update the video filename</div>
+                    </div>
+                    <div class="flower-info">
+                        <h3 class="flower-name">Upload Template</h3>
+                        <p class="flower-desc">Copy this card's HTML code and replace the video filename with your new file. Just drop the new video in the "digital bloom" folder!</p>
+                        <div class="flower-price">$12.99</div>
+                        <button class="buy-btn" style="background: linear-gradient(135deg, #667eea, #764ba2);" onclick="alert('💡 TO ADD NEW VIDEOS:\n\n1. Save your new video to \"digital bloom/media/videos/\" folder\n   (For images: \"digital bloom/media/images/\")\n\n2. Open digital-flower-shop_1.html in a text editor\n\n3. Copy this template card\'s HTML code\n\n4. Paste it BEFORE this template card\n\n5. Update:\n   - Video filename in src=\"media/videos/YOUR-FILE.mp4\"\n   - Flower name (e.g., \"Sunset Dreams\")\n   - Description\n   - Price (if different from $12.99)\n\n6. Save the HTML file\n\n✨ Refresh your browser and your new video is live!\n\nSee HOW-TO-ADD-VIDEOS.txt for detailed examples!')">How to Add 💡</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Regular Bouquet Collection -->
+        <h3 style="font-family: 'Playfair Display', serif; font-size: 2.5rem; text-align: center; margin: 4rem 0 2rem; background: linear-gradient(135deg, #ffd700, #ffffff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+            🌹 Classic Collection
+        </h3>
+        
+        <div class="grid">
+            <!-- Red Roses -->
+            <div class="flower-card">
+                <div class="badge">Bestseller</div>
+                <div class="flower-img rose-red-bg">
+                    <svg class="flower-svg" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Center Rose -->
+                        <g transform="translate(200, 180)">
+                            <!-- Outer petals -->
+                            <ellipse cx="0" cy="-45" rx="35" ry="55" fill="#8B0000" opacity="0.9" transform="rotate(0)"/>
+                            <ellipse cx="0" cy="-45" rx="35" ry="55" fill="#A00000" opacity="0.9" transform="rotate(72)"/>
+                            <ellipse cx="0" cy="-45" rx="35" ry="55" fill="#8B0000" opacity="0.9" transform="rotate(144)"/>
+                            <ellipse cx="0" cy="-45" rx="35" ry="55" fill="#A00000" opacity="0.9" transform="rotate(216)"/>
+                            <ellipse cx="0" cy="-45" rx="35" ry="55" fill="#8B0000" opacity="0.9" transform="rotate(288)"/>
+                            <!-- Middle petals -->
+                            <ellipse cx="0" cy="-30" rx="28" ry="45" fill="#C41E3A" opacity="0.95" transform="rotate(36)"/>
+                            <ellipse cx="0" cy="-30" rx="28" ry="45" fill="#DC143C" opacity="0.95" transform="rotate(108)"/>
+                            <ellipse cx="0" cy="-30" rx="28" ry="45" fill="#C41E3A" opacity="0.95" transform="rotate(180)"/>
+                            <ellipse cx="0" cy="-30" rx="28" ry="45" fill="#DC143C" opacity="0.95" transform="rotate(252)"/>
+                            <ellipse cx="0" cy="-30" rx="28" ry="45" fill="#C41E3A" opacity="0.95" transform="rotate(324)"/>
+                            <!-- Inner petals -->
+                            <ellipse cx="0" cy="-18" rx="20" ry="32" fill="#E63946" transform="rotate(0)"/>
+                            <ellipse cx="0" cy="-18" rx="20" ry="32" fill="#FF1744" transform="rotate(72)"/>
+                            <ellipse cx="0" cy="-18" rx="20" ry="32" fill="#E63946" transform="rotate(144)"/>
+                            <ellipse cx="0" cy="-18" rx="20" ry="32" fill="#FF1744" transform="rotate(216)"/>
+                            <ellipse cx="0" cy="-18" rx="20" ry="32" fill="#E63946" transform="rotate(288)"/>
+                            <!-- Center -->
+                            <circle cx="0" cy="0" r="15" fill="#8B0000"/>
+                            <circle cx="0" cy="0" r="12" fill="#A00000"/>
+                            <circle cx="-3" cy="-3" r="6" fill="#C41E3A" opacity="0.7"/>
+                        </g>
+                        <!-- Left Rose -->
+                        <g transform="translate(100, 240) scale(0.7)">
+                            <ellipse cx="0" cy="-45" rx="35" ry="55" fill="#8B0000" opacity="0.85" transform="rotate(20)"/>
+                            <ellipse cx="0" cy="-45" rx="35" ry="55" fill="#A00000" opacity="0.85" transform="rotate(92)"/>
+                            <ellipse cx="0" cy="-30" rx="28" ry="45" fill="#DC143C" opacity="0.9" transform="rotate(56)"/>
+                            <circle cx="0" cy="0" r="15" fill="#8B0000"/>
+                        </g>
+                        <!-- Right Rose -->
+                        <g transform="translate(300, 240) scale(0.7)">
+                            <ellipse cx="0" cy="-45" rx="35" ry="55" fill="#8B0000" opacity="0.85" transform="rotate(-20)"/>
+                            <ellipse cx="0" cy="-45" rx="35" ry="55" fill="#A00000" opacity="0.85" transform="rotate(52)"/>
+                            <ellipse cx="0" cy="-30" rx="28" ry="45" fill="#DC143C" opacity="0.9" transform="rotate(16)"/>
+                            <circle cx="0" cy="0" r="15" fill="#8B0000"/>
+                        </g>
+                        <!-- Small accent roses -->
+                        <g transform="translate(150, 120) scale(0.5)" opacity="0.8">
+                            <ellipse cx="0" cy="-30" rx="25" ry="40" fill="#C41E3A" transform="rotate(45)"/>
+                            <circle cx="0" cy="0" r="12" fill="#8B0000"/>
+                        </g>
+                        <g transform="translate(250, 120) scale(0.5)" opacity="0.8">
+                            <ellipse cx="0" cy="-30" rx="25" ry="40" fill="#C41E3A" transform="rotate(-45)"/>
+                            <circle cx="0" cy="0" r="12" fill="#8B0000"/>
+                        </g>
+                    </svg>
+                </div>
+                <div class="flower-info">
+                    <h3 class="flower-name">Eternal Love</h3>
+                    <p class="flower-desc">Deep red roses representing passionate, eternal love. Perfect for anniversaries and romantic gestures.</p>
+                    <div class="flower-price">$4.99</div>
+                    <button class="buy-btn" onclick="purchase('Eternal Love', '$4.99')">Send Now 💝</button>
+                </div>
+            </div>
+
+            <!-- Pink Roses -->
+            <div class="flower-card">
+                <div class="flower-img rose-pink-bg">
+                    <svg class="flower-svg" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+                        <g transform="translate(200, 180)">
+                            <ellipse cx="0" cy="-45" rx="35" ry="55" fill="#FF69B4" opacity="0.9" transform="rotate(0)"/>
+                            <ellipse cx="0" cy="-45" rx="35" ry="55" fill="#FF85C1" opacity="0.9" transform="rotate(72)"/>
+                            <ellipse cx="0" cy="-45" rx="35" ry="55" fill="#FF69B4" opacity="0.9" transform="rotate(144)"/>
+                            <ellipse cx="0" cy="-45" rx="35" ry="55" fill="#FF85C1" opacity="0.9" transform="rotate(216)"/>
+                            <ellipse cx="0" cy="-45" rx="35" ry="55" fill="#FF69B4" opacity="0.9" transform="rotate(288)"/>
+                            <ellipse cx="0" cy="-30" rx="28" ry="45" fill="#FFA0CE" opacity="0.95" transform="rotate(36)"/>
+                            <ellipse cx="0" cy="-30" rx="28" ry="45" fill="#FFB3D9" opacity="0.95" transform="rotate(108)"/>
+                            <ellipse cx="0" cy="-30" rx="28" ry="45" fill="#FFA0CE" opacity="0.95" transform="rotate(180)"/>
+                            <ellipse cx="0" cy="-30" rx="28" ry="45" fill="#FFB3D9" opacity="0.95" transform="rotate(252)"/>
+                            <ellipse cx="0" cy="-30" rx="28" ry="45" fill="#FFA0CE" opacity="0.95" transform="rotate(324)"/>
+                            <ellipse cx="0" cy="-18" rx="20" ry="32" fill="#FFC4E1" transform="rotate(0)"/>
+                            <ellipse cx="0" cy="-18" rx="20" ry="32" fill="#FFD6EC" transform="rotate(72)"/>
+                            <ellipse cx="0" cy="-18" rx="20" ry="32" fill="#FFC4E1" transform="rotate(144)"/>
+                            <circle cx="0" cy="0" r="15" fill="#FF1493"/>
+                            <circle cx="-3" cy="-3" r="6" fill="#FFC0CB" opacity="0.8"/>
+                        </g>
+                        <g transform="translate(110, 250) scale(0.65)">
+                            <ellipse cx="0" cy="-40" rx="32" ry="50" fill="#FF85C1" opacity="0.85" transform="rotate(15)"/>
+                            <ellipse cx="0" cy="-25" rx="25" ry="40" fill="#FFA0CE" opacity="0.9" transform="rotate(55)"/>
+                            <circle cx="0" cy="0" r="14" fill="#FF1493"/>
+                        </g>
+                        <g transform="translate(290, 250) scale(0.65)">
+                            <ellipse cx="0" cy="-40" rx="32" ry="50" fill="#FF85C1" opacity="0.85" transform="rotate(-15)"/>
+                            <ellipse cx="0" cy="-25" rx="25" ry="40" fill="#FFA0CE" opacity="0.9" transform="rotate(35)"/>
+                            <circle cx="0" cy="0" r="14" fill="#FF1493"/>
+                        </g>
+                    </svg>
+                </div>
+                <div class="flower-info">
+                    <h3 class="flower-name">Sweet Romance</h3>
+                    <p class="flower-desc">Soft pink roses symbolizing grace, joy, and admiration. Ideal for new relationships and sweet moments.</p>
+                    <div class="flower-price">$4.99</div>
+                    <button class="buy-btn" onclick="purchase('Sweet Romance', '$4.99')">Send Now 💝</button>
+                </div>
+            </div>
+
+            <!-- White Roses -->
+            <div class="flower-card">
+                <div class="flower-img rose-white-bg">
+                    <svg class="flower-svg" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <radialGradient id="whiteGrad">
+                                <stop offset="0%" style="stop-color:#ffffff;stop-opacity:1" />
+                                <stop offset="70%" style="stop-color:#f0f0f0;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#d0d0d0;stop-opacity:1" />
+                            </radialGradient>
+                        </defs>
+                        <g transform="translate(200, 180)">
+                            <ellipse cx="0" cy="-45" rx="35" ry="55" fill="url(#whiteGrad)" opacity="0.95" transform="rotate(0)"/>
+                            <ellipse cx="0" cy="-45" rx="35" ry="55" fill="#f5f5f5" opacity="0.95" transform="rotate(72)"/>
+                            <ellipse cx="0" cy="-45" rx="35" ry="55" fill="url(#whiteGrad)" opacity="0.95" transform="rotate(144)"/>
+                            <ellipse cx="0" cy="-45" rx="35" ry="55" fill="#f5f5f5" opacity="0.95" transform="rotate(216)"/>
+                            <ellipse cx="0" cy="-45" rx="35" ry="55" fill="url(#whiteGrad)" opacity="0.95" transform="rotate(288)"/>
+                            <ellipse cx="0" cy="-30" rx="28" ry="45" fill="#fafafa" transform="rotate(36)"/>
+                            <ellipse cx="0" cy="-30" rx="28" ry="45" fill="#ffffff" transform="rotate(108)"/>
+                            <ellipse cx="0" cy="-30" rx="28" ry="45" fill="#fafafa" transform="rotate(180)"/>
+                            <ellipse cx="0" cy="-18" rx="20" ry="32" fill="#ffffff" transform="rotate(0)"/>
+                            <ellipse cx="0" cy="-18" rx="20" ry="32" fill="#fafafa" transform="rotate(90)"/>
+                            <circle cx="0" cy="0" r="15" fill="#e8e8e8"/>
+                            <circle cx="-3" cy="-3" r="6" fill="#ffffff" opacity="0.9"/>
+                        </g>
+                        <g transform="translate(100, 240) scale(0.7)">
+                            <ellipse cx="0" cy="-45" rx="35" ry="55" fill="#f5f5f5" opacity="0.9" transform="rotate(20)"/>
+                            <ellipse cx="0" cy="-30" rx="28" ry="45" fill="#ffffff" transform="rotate(56)"/>
+                            <circle cx="0" cy="0" r="15" fill="#e8e8e8"/>
+                        </g>
+                        <g transform="translate(300, 240) scale(0.7)">
+                            <ellipse cx="0" cy="-45" rx="35" ry="55" fill="#f5f5f5" opacity="0.9" transform="rotate(-20)"/>
+                            <ellipse cx="0" cy="-30" rx="28" ry="45" fill="#ffffff" transform="rotate(16)"/>
+                            <circle cx="0" cy="0" r="15" fill="#e8e8e8"/>
+                        </g>
+                    </svg>
+                </div>
+                <div class="flower-info">
+                    <h3 class="flower-name">Pure Elegance</h3>
+                    <p class="flower-desc">Pristine white roses representing purity, innocence, and new beginnings. Timeless and sophisticated.</p>
+                    <div class="flower-price">$5.99</div>
+                    <button class="buy-btn" onclick="purchase('Pure Elegance', '$5.99')">Send Now 💝</button>
+                </div>
+            </div>
+
+            <!-- Black Roses -->
+            <div class="flower-card">
+                <div class="badge">Limited</div>
+                <div class="flower-img rose-black-bg">
+                    <svg class="flower-svg" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+                        <g transform="translate(200, 180)">
+                            <ellipse cx="0" cy="-45" rx="35" ry="55" fill="#1a0a0f" opacity="0.95" transform="rotate(0)"/>
+                            <ellipse cx="0" cy="-45" rx="35" ry="55" fill="#2d1420" opacity="0.95" transform="rotate(72)"/>
+                            <ellipse cx="0" cy="-45" rx="35" ry="55" fill="#1a0a0f" opacity="0.95" transform="rotate(144)"/>
+                            <ellipse cx="0" cy="-45" rx="35" ry="55" fill="#2d1420" opacity="0.95" transform="rotate(216)"/>
+                            <ellipse cx="0" cy="-45" rx="35" ry="55" fill="#1a0a0f" opacity="0.95" transform="rotate(288)"/>
+                            <ellipse cx="0" cy="-30" rx="28" ry="45" fill="#3d1f2f" transform="rotate(36)"/>
+                            <ellipse cx="0" cy="-30" rx="28" ry="45" fill="#4a253a" transform="rotate(108)"/>
+                            <ellipse cx="0" cy="-30" rx="28" ry="45" fill="#3d1f2f" transform="rotate(180)"/>
+                            <ellipse cx="0" cy="-18" rx="20" ry="32" fill="#562d45" transform="rotate(0)"/>
+                            <circle cx="0" cy="0" r="15" fill="#0d0509"/>
+                            <circle cx="3" cy="3" r="4" fill="#FFD700" opacity="0.8"/>
+                            <circle cx="-4" cy="-2" r="3" fill="#FFD700" opacity="0.6"/>
+                            <circle cx="5" cy="-5" r="2" fill="#FFD700" opacity="0.9"/>
+                        </g>
+                        <g transform="translate(110, 250) scale(0.65)">
+                            <ellipse cx="0" cy="-40" rx="32" ry="50" fill="#2d1420" opacity="0.9" transform="rotate(15)"/>
+                            <ellipse cx="0" cy="-25" rx="25" ry="40" fill="#3d1f2f" transform="rotate(55)"/>
+                            <circle cx="0" cy="0" r="14" fill="#0d0509"/>
+                            <circle cx="3" cy="2" r="3" fill="#FFD700" opacity="0.7"/>
+                        </g>
+                        <g transform="translate(290, 250) scale(0.65)">
+                            <ellipse cx="0" cy="-40" rx="32" ry="50" fill="#2d1420" opacity="0.9" transform="rotate(-15)"/>
+                            <ellipse cx="0" cy="-25" rx="25" ry="40" fill="#3d1f2f" transform="rotate(35)"/>
+                            <circle cx="0" cy="0" r="14" fill="#0d0509"/>
+                            <circle cx="-3" cy="2" r="3" fill="#FFD700" opacity="0.7"/>
+                        </g>
+                        <!-- Gold sparkles -->
+                        <circle cx="150" cy="120" r="3" fill="#FFD700" opacity="0.8">
+                            <animate attributeName="opacity" values="0.4;1;0.4" dur="2s" repeatCount="indefinite"/>
+                        </circle>
+                        <circle cx="260" cy="140" r="2" fill="#FFD700" opacity="0.6">
+                            <animate attributeName="opacity" values="0.3;0.9;0.3" dur="2.5s" repeatCount="indefinite"/>
+                        </circle>
+                    </svg>
+                </div>
+                <div class="flower-info">
+                    <h3 class="flower-name">Midnight Mystery</h3>
+                    <p class="flower-desc">Rare black roses with gold shimmer. Symbol of elegance, mystery, and dramatic romance.</p>
+                    <div class="flower-price">$7.99</div>
+                    <button class="buy-btn" onclick="purchase('Midnight Mystery', '$7.99')">Send Now 💝</button>
+                </div>
+            </div>
+
+            <!-- Purple Roses -->
+            <div class="flower-card">
+                <div class="flower-img rose-purple-bg">
+                    <svg class="flower-svg" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+                        <g transform="translate(200, 180)">
+                            <ellipse cx="0" cy="-45" rx="35" ry="55" fill="#7B3FF2" opacity="0.9" transform="rotate(0)"/>
+                            <ellipse cx="0" cy="-45" rx="35" ry="55" fill="#8B5FE8" opacity="0.9" transform="rotate(72)"/>
+                            <ellipse cx="0" cy="-45" rx="35" ry="55" fill="#7B3FF2" opacity="0.9" transform="rotate(144)"/>
+                            <ellipse cx="0" cy="-45" rx="35" ry="55" fill="#8B5FE8" opacity="0.9" transform="rotate(216)"/>
+                            <ellipse cx="0" cy="-45" rx="35" ry="55" fill="#7B3FF2" opacity="0.9" transform="rotate(288)"/>
+                            <ellipse cx="0" cy="-30" rx="28" ry="45" fill="#9B7FEE" transform="rotate(36)"/>
+                            <ellipse cx="0" cy="-30" rx="28" ry="45" fill="#AB8FF4" transform="rotate(108)"/>
+                            <ellipse cx="0" cy="-30" rx="28" ry="45" fill="#9B7FEE" transform="rotate(180)"/>
+                            <ellipse cx="0" cy="-18" rx="20" ry="32" fill="#BB9FFA" transform="rotate(0)"/>
+                            <ellipse cx="0" cy="-18" rx="20" ry="32" fill="#CBAFFF" transform="rotate(72)"/>
+                            <circle cx="0" cy="0" r="15" fill="#6B2FE2"/>
+                            <circle cx="-3" cy="-3" r="6" fill="#9B7FEE" opacity="0.8"/>
+                        </g>
+                        <g transform="translate(100, 240) scale(0.7)">
+                            <ellipse cx="0" cy="-45" rx="35" ry="55" fill="#8B5FE8" opacity="0.85" transform="rotate(20)"/>
+                            <ellipse cx="0" cy="-30" rx="28" ry="45" fill="#9B7FEE" transform="rotate(56)"/>
+                            <circle cx="0" cy="0" r="15" fill="#6B2FE2"/>
+                        </g>
+                        <g transform="translate(300, 240) scale(0.7)">
+                            <ellipse cx="0" cy="-45" rx="35" ry="55" fill="#8B5FE8" opacity="0.85" transform="rotate(-20)"/>
+                            <ellipse cx="0" cy="-30" rx="28" ry="45" fill="#9B7FEE" transform="rotate(16)"/>
+                            <circle cx="0" cy="0" r="15" fill="#6B2FE2"/>
+                        </g>
+                    </svg>
+                </div>
+                <div class="flower-info">
+                    <h3 class="flower-name">Royal Romance</h3>
+                    <p class="flower-desc">Luxurious purple roses symbolizing enchantment, majesty, and love at first sight.</p>
+                    <div class="flower-price">$5.99</div>
+                    <button class="buy-btn" onclick="purchase('Royal Romance', '$5.99')">Send Now 💝</button>
+                </div>
+            </div>
+
+            <!-- Yellow Roses -->
+            <div class="flower-card">
+                <div class="badge">New</div>
+                <div class="flower-img rose-yellow-bg">
+                    <svg class="flower-svg" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+                        <g transform="translate(200, 180)">
+                            <ellipse cx="0" cy="-45" rx="35" ry="55" fill="#FFD700" opacity="0.9" transform="rotate(0)"/>
+                            <ellipse cx="0" cy="-45" rx="35" ry="55" fill="#FFED4E" opacity="0.9" transform="rotate(72)"/>
+                            <ellipse cx="0" cy="-45" rx="35" ry="55" fill="#FFD700" opacity="0.9" transform="rotate(144)"/>
+                            <ellipse cx="0" cy="-45" rx="35" ry="55" fill="#FFED4E" opacity="0.9" transform="rotate(216)"/>
+                            <ellipse cx="0" cy="-45" rx="35" ry="55" fill="#FFD700" opacity="0.9" transform="rotate(288)"/>
+                            <ellipse cx="0" cy="-30" rx="28" ry="45" fill="#FFF176" transform="rotate(36)"/>
+                            <ellipse cx="0" cy="-30" rx="28" ry="45" fill="#FFF59D" transform="rotate(108)"/>
+                            <ellipse cx="0" cy="-30" rx="28" ry="45" fill="#FFF176" transform="rotate(180)"/>
+                            <ellipse cx="0" cy="-18" rx="20" ry="32" fill="#FFF9C4" transform="rotate(0)"/>
+                            <ellipse cx="0" cy="-18" rx="20" ry="32" fill="#FFFDE7" transform="rotate(72)"/>
+                            <circle cx="0" cy="0" r="15" fill="#FFB300"/>
+                            <circle cx="-3" cy="-3" r="6" fill="#FFECB3" opacity="0.8"/>
+                        </g>
+                        <g transform="translate(110, 250) scale(0.65)">
+                            <ellipse cx="0" cy="-40" rx="32" ry="50" fill="#FFED4E" opacity="0.85" transform="rotate(15)"/>
+                            <ellipse cx="0" cy="-25" rx="25" ry="40" fill="#FFF176" transform="rotate(55)"/>
+                            <circle cx="0" cy="0" r="14" fill="#FFB300"/>
+                        </g>
+                        <g transform="translate(290, 250) scale(0.65)">
+                            <ellipse cx="0" cy="-40" rx="32" ry="50" fill="#FFED4E" opacity="0.85" transform="rotate(-15)"/>
+                            <ellipse cx="0" cy="-25" rx="25" ry="40" fill="#FFF176" transform="rotate(35)"/>
+                            <circle cx="0" cy="0" r="14" fill="#FFB300"/>
+                        </g>
+                    </svg>
+                </div>
+                <div class="flower-info">
+                    <h3 class="flower-name">Golden Joy</h3>
+                    <p class="flower-desc">Radiant yellow roses representing friendship, joy, and caring. Perfect for celebrating happiness.</p>
+                    <div class="flower-price">$4.99</div>
+                    <button class="buy-btn" onclick="purchase('Golden Joy', '$4.99')">Send Now 💝</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Upload Your Own Section -->
+        <div style="margin-top: 5rem; padding: 3rem; background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 128, 171, 0.1)); border-radius: 30px; border: 2px solid rgba(255, 215, 0, 0.3); text-align: center;">
+            <h3 style="font-family: 'Playfair Display', serif; font-size: 2.5rem; margin-bottom: 1.5rem; background: linear-gradient(135deg, #ffd700, #ff80ab); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+                📤 Add Your Own Luxury Flowers
+            </h3>
+            <p style="font-size: 1.2rem; margin-bottom: 2rem; line-height: 1.8; color: rgba(255, 255, 255, 0.9);">
+                Got amazing 3D flower videos like the Rose Stiletto?<br>
+                <strong>Upload them to your shop and sell them as digital gifts!</strong>
+            </p>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin-top: 2rem;">
+                <div style="background: rgba(255, 255, 255, 0.05); padding: 2rem; border-radius: 15px; border: 1px solid rgba(255, 215, 0, 0.2);">
+                    <div style="font-size: 3rem; margin-bottom: 1rem;">🎬</div>
+                    <h4 style="font-size: 1.3rem; margin-bottom: 0.5rem; color: var(--gold);">3D Videos</h4>
+                    <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.95rem;">MP4, MOV, rotating flowers, animated bouquets</p>
+                </div>
+                <div style="background: rgba(255, 255, 255, 0.05); padding: 2rem; border-radius: 15px; border: 1px solid rgba(255, 215, 0, 0.2);">
+                    <div style="font-size: 3rem; margin-bottom: 1rem;">🖼️</div>
+                    <h4 style="font-size: 1.3rem; margin-bottom: 0.5rem; color: var(--gold);">High-Res Images</h4>
+                    <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.95rem;">PNG, JPG, AI-generated, photorealistic</p>
+                </div>
+                <div style="background: rgba(255, 255, 255, 0.05); padding: 2rem; border-radius: 15px; border: 1px solid rgba(255, 215, 0, 0.2);">
+                    <div style="font-size: 3rem; margin-bottom: 1rem;">✨</div>
+                    <h4 style="font-size: 1.3rem; margin-bottom: 0.5rem; color: var(--gold);">GIF Animations</h4>
+                    <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.95rem;">Animated flowers, sparkles, glitter effects</p>
+                </div>
+            </div>
+            <button class="cta-btn" onclick="showUploadInstructions()" style="margin-top: 2rem;">
+                Upload Custom Flowers 📤
+            </button>
+        </div>
+    </section>
+
+    <!-- Song Instructions Section -->
+    <section class="collections">
+        <div class="song-instructions">
+            <h3>🎵 Add Your Signature Song</h3>
+            <p>Make your digital bouquet go viral! Here's how to create the perfect TikTok or Instagram moment:</p>
+            
+            <div class="song-steps">
+                <div class="song-step">
+                    <div class="song-step-number">1️⃣</div>
+                    <p><strong>Purchase</strong> your favorite bouquet and download the image</p>
+                </div>
+                
+                <div class="song-step">
+                    <div class="song-step-number">2️⃣</div>
+                    <p><strong>Open TikTok/Instagram</strong> and create a new video or story</p>
+                </div>
+                
+                <div class="song-step">
+                    <div class="song-step-number">3️⃣</div>
+                    <p><strong>Upload</strong> your flower image as the background</p>
+                </div>
+                
+                <div class="song-step">
+                    <div class="song-step-number">4️⃣</div>
+                    <p><strong>Add your song</strong> - pick a romantic track that fits the vibe</p>
+                </div>
+                
+                <div class="song-step">
+                    <div class="song-step-number">5️⃣</div>
+                    <p><strong>Tag</strong> your special someone and use #DigitalBloom</p>
+                </div>
+                
+                <div class="song-step">
+                    <div class="song-step-number">6️⃣</div>
+                    <p><strong>Post & Share!</strong> Watch the love (and likes) pour in! 💕</p>
+                </div>
+            </div>
+            
+            <p style="margin-top: 2rem; font-size: 1.2rem; font-weight: 500;">
+                🔥 <strong>Pro Tip:</strong> Use trending love songs for maximum engagement! Popular choices include "Perfect" by Ed Sheeran, "Lover" by Taylor Swift, or create your own signature sound!
+            </p>
+        </div>
+    </section>
+
+    <section id="features" class="features">
+        <h2 class="section-title">Why Digital Bloom?</h2>
+        <p class="section-subtitle">The modern way to send flowers</p>
+        
+        <div class="features-grid">
+            <div class="feature">
+                <div class="feature-icon">⚡</div>
+                <h3>Instant Delivery</h3>
+                <p>Send beautiful digital bouquets instantly to anyone, anywhere in the world. No shipping, no waiting.</p>
+            </div>
+            
+            <div class="feature">
+                <div class="feature-icon">💰</div>
+                <h3>Affordable Love</h3>
+                <p>Express your feelings without breaking the bank. Premium bouquets starting at just $4.99.</p>
+            </div>
+            
+            <div class="feature">
+                <div class="feature-icon">📱</div>
+                <h3>TikTok Ready</h3>
+                <p>Perfect for social media! Download your bouquet and share with your signature song. #DigitalBloom</p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>© 2026 Digital Bloom • Spreading Love Digitally 💐✨ #DigitalBloom #SendLove</p>
+    </footer>
+
+    <!-- Purchase Modal -->
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <h2>Purchase Successful! 🎉</h2>
+            <p id="modal-text">You've purchased <strong id="flower-name"></strong></p>
+            <div class="modal-btns">
+                <button class="modal-btn primary" onclick="downloadFlower()">Download Image 📥</button>
+                <button class="modal-btn primary" onclick="shareToSocial()">Share 📱</button>
+                <button class="modal-btn secondary" onclick="closeModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Create floating particles
+        function createParticles() {
+            const container = document.getElementById('particles');
+            for (let i = 0; i < 30; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 15 + 's';
+                particle.style.animationDuration = (10 + Math.random() * 10) + 's';
+                container.appendChild(particle);
+            }
+        }
+        createParticles();
+
+        let cart = 0;
+        let currentFlower = '';
+
+        function purchase(name, price) {
+            cart++;
+            document.querySelector('.cart-count').textContent = cart;
+            currentFlower = name;
+            
+            // Show modal
+            document.getElementById('flower-name').textContent = name;
+            document.getElementById('modal').classList.add('active');
+            
+            // Animate cart
+            const cartCount = document.querySelector('.cart-count');
+            cartCount.style.transform = 'scale(1.5)';
+            setTimeout(() => {
+                cartCount.style.transform = 'scale(1)';
+            }, 300);
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.remove('active');
+        }
+
+        function downloadFlower() {
+            alert(`🌹 Your "${currentFlower}" bouquet is ready!\n\n📸 HOW TO CREATE YOUR VIRAL MOMENT:\n\n1. Screenshot or save this flower image\n2. Open TikTok or Instagram\n3. Create a new video/story\n4. Upload your flower image\n5. Add your signature romantic song 🎵\n6. Tag your special someone\n7. Use #DigitalBloom #SendLove\n\n💡 SONG IDEAS:\n• "Perfect" - Ed Sheeran\n• "Lover" - Taylor Swift  \n• "All of Me" - John Legend\n• Or use YOUR special song!\n\n🔥 Watch it go viral! 💕`);
+        }
+
+        function shareToSocial() {
+            const text = `I just sent "${currentFlower}" digital flowers! 💐✨ The sweetest way to show you care 💝\n\n#DigitalBloom #SendLove #VirtualFlowers`;
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Digital Bloom',
+                    text: text,
+                    url: window.location.href
+                }).catch(() => copyShare(text));
+            } else {
+                copyShare(text);
+            }
+        }
+
+        function showUploadInstructions() {
+            alert(`📤 TO ADD YOUR CUSTOM FLOWERS:\n\n1. Create or find your luxury flower content:\n   • 3D videos (MP4, MOV)\n   • High-res images (PNG, JPG)\n   • GIF animations\n   • AI-generated designs\n\n2. Prepare the details:\n   • Flower name\n   • Description\n   • Price you want to charge\n   • Signature song suggestion\n\n3. Add to your website:\n   • Save files to your server\n   • Update the HTML with new flower cards\n   • Or use a CMS to manage uploads\n\n💡 TIP: Use AI tools like:\n   • Grok AI for 3D flower videos\n   • Midjourney for photorealistic images  \n   • DALL-E for creative designs\n   • RunwayML for video animations\n\n🚀 Your custom flowers will be viral-ready!`);
+        }
+
+        function copyShare(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                alert('✨ Share text copied!\n\nPaste it on:\n📱 TikTok\n📸 Instagram\n💙 Facebook\n🐦 Twitter\n\n+ Include a screenshot of your bouquet + your song = Viral moment! 🔥');
+            });
+        }
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Close modal on outside click
+        document.getElementById('modal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>

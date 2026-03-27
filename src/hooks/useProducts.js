@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
 import { getProducts, getProductById } from '../lib/supabase';
-import { flowers } from '../data/flowers';
+
+// Supabase is the source of truth for products.
+// If unavailable, we show an empty state rather than stale demo data.
 
 /**
  * Custom hook to fetch products from Supabase.
- * Falls back to mock data if Supabase is not configured or returns empty.
+ * Returns empty array if Supabase is not configured or returns empty.
  *
  * @param {object} options
  * @param {number|null} options.tier - Filter by pricing tier (1-4), or null for all
@@ -28,22 +30,19 @@ export const useProducts = ({ tier = null } = {}) => {
           setUsingMockData(false);
           if (import.meta.env.DEV) console.log('✅ Loaded', data.length, 'products from Supabase');
         } else {
-          // Fallback to mock data only if database is empty
-          if (import.meta.env.DEV) console.log('⚠️ No products in database, using demo data');
-          const filtered = tier ? flowers.filter((f) => f.tier === tier) : flowers;
-          setProducts(filtered);
-          setUsingMockData(true);
+          if (import.meta.env.DEV) console.log('⚠️ No products in database');
+          setProducts([]);
+          setUsingMockData(false);
         }
       } catch (err) {
         console.error('Error fetching products:', err);
         setError(err.message);
-        // Fallback to mock data on error
-        const filtered = tier ? flowers.filter((f) => f.tier === tier) : flowers;
-        setProducts(filtered);
-        setUsingMockData(true);
+        setProducts([]);
+        setUsingMockData(false);
       } finally {
         setLoading(false);
       }
+    
     };
 
     fetchProducts();
@@ -54,7 +53,7 @@ export const useProducts = ({ tier = null } = {}) => {
 
 /**
  * Custom hook to fetch a single product by ID.
- * Falls back to mock data if Supabase is not configured.
+ * Returns null if not found in Supabase.
  */
 export const useProduct = (id) => {
   const [product, setProduct] = useState(null);
@@ -79,17 +78,14 @@ export const useProduct = (id) => {
           setProduct(data);
           setUsingMockData(false);
         } else {
-          // Fallback to mock data if product not found in database
-          const mockProduct = flowers.find((f) => f.id === parseInt(id));
-          setProduct(mockProduct || null);
-          setUsingMockData(true);
+          setProduct(null);
+          setUsingMockData(false);
         }
       } catch (err) {
         console.error('Error fetching product:', err);
         setError(err.message);
-        const mockProduct = flowers.find((f) => f.id === parseInt(id));
-        setProduct(mockProduct || null);
-        setUsingMockData(true);
+        setProduct(null);
+        setUsingMockData(false);
       } finally {
         setLoading(false);
       }

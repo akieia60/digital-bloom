@@ -1,0 +1,203 @@
+================================================================================
+DIGITAL BLOOM - HOW TO ADD NEW VIDEOS & PHOTOS
+================================================================================
+
+FOLDER STRUCTURE:
+----------------
+digital bloom/
+  ├── digital-flower-shop_1.html  (Your website file)
+  ├── media/
+  │   ├── videos/  (Put all MP4 videos here)
+  │   └── images/  (Put all PNG/JPG/GIF images here)
+  └── HOW-TO-ADD-VIDEOS.txt  (This file)
+
+
+STEP-BY-STEP: ADD A NEW VIDEO
+================================================================================
+
+STEP 1: Save Your Video
+------------------------
+1. Create or download your new flower video
+2. Save it to: digital bloom/media/videos/
+   Example: my-awesome-flower.mp4
+
+
+STEP 2: Copy the Template Code
+-------------------------------
+1. Open digital-flower-shop_1.html in a text editor (Notepad, TextEdit, VS Code, etc.)
+2. Find the "Easy Upload Template" card (has dashed border)
+3. Copy this ENTIRE block of code (the template below):
+
+<!-- COPY THIS TEMPLATE ↓ -->
+                <div class="flower-card">
+                    <div class="badge" style="background: linear-gradient(135deg, #FFD700, #FFA500);">Premium 3D</div>
+                    <div class="flower-img" style="height: 450px; background: linear-gradient(180deg, #f5f5f5, #ffffff); position: relative; overflow: hidden;">
+                        <video
+                            autoplay
+                            loop
+                            muted
+                            playsinline
+                            style="width: 100%; height: 100%; object-fit: cover;">
+                            <source src="media/videos/YOUR-VIDEO-FILENAME.mp4" type="video/mp4">
+                            Your browser doesn't support video.
+                        </video>
+                    </div>
+                    <div class="flower-info">
+                        <h3 class="flower-name">Your Flower Name</h3>
+                        <p class="flower-desc">Your description here - what makes this video special?</p>
+                        <div class="flower-price">$12.99</div>
+                        <button class="buy-btn" onclick="purchase('Your Flower Name', '$12.99')">Get This Video 🎬</button>
+                    </div>
+                </div>
+<!-- COPY THIS TEMPLATE ↑ -->
+
+
+STEP 3: Paste BEFORE the Template Card
+---------------------------------------
+1. Paste the copied code BEFORE the "Easy Upload Template" card
+   (The template card should always stay at the end)
+
+
+STEP 4: Update Your Video Details
+----------------------------------
+Change these 4 things:
+
+1. VIDEO FILENAME:
+   src="media/videos/YOUR-VIDEO-FILENAME.mp4"
+   ↓
+   src="media/videos/my-awesome-flower.mp4"
+
+2. FLOWER NAME (appears twice - keep them the same):
+   <h3 class="flower-name">Your Flower Name</h3>
+   ↓
+   <h3 class="flower-name">Sunset Dreams</h3>
+
+   AND in the button:
+   onclick="purchase('Your Flower Name', '$12.99')"
+   ↓
+   onclick="purchase('Sunset Dreams', '$12.99')"
+
+3. DESCRIPTION:
+   <p class="flower-desc">Your description here...</p>
+   ↓
+   <p class="flower-desc">Beautiful 3D sunset roses perfect for romantic TikToks.</p>
+
+4. PRICE (optional - default is $12.99):
+   <div class="flower-price">$12.99</div>
+   ↓
+   <div class="flower-price">$15.99</div>
+
+
+STEP 5: Save & View
+-------------------
+1. Save the HTML file
+2. Open digital-flower-shop_1.html in your browser
+3. Your new video should appear!
+
+
+================================================================================
+QUICK EXAMPLE: Adding "my-rose-video.mp4"
+================================================================================
+
+BEFORE:
+-------
+You have a new video called: my-rose-video.mp4
+You saved it to: digital bloom/media/videos/my-rose-video.mp4
+
+AFTER EDITING:
+--------------
+                <div class="flower-card">
+                    <div class="badge" style="background: linear-gradient(135deg, #FFD700, #FFA500);">Premium 3D</div>
+                    <div class="flower-img" style="height: 450px; background: linear-gradient(180deg, #f5f5f5, #ffffff); position: relative; overflow: hidden;">
+                        <video
+                            autoplay
+                            loop
+                            muted
+                            playsinline
+                            style="width: 100%; height: 100%; object-fit: cover;">
+                            <source src="media/videos/my-rose-video.mp4" type="video/mp4">
+                            Your browser doesn't support video.
+                        </video>
+                    </div>
+                    <div class="flower-info">
+                        <h3 class="flower-name">Crimson Dreams</h3>
+                        <p class="flower-desc">Deep red roses swirling in 3D with dramatic lighting and effects.</p>
+                        <div class="flower-price">$14.99</div>
+                        <button class="buy-btn" onclick="purchase('Crimson Dreams', '$14.99')">Get This Video 🎬</button>
+                    </div>
+                </div>
+
+
+================================================================================
+ADD A NEW IMAGE (PNG/JPG)
+================================================================================
+
+Same process, but use this template instead:
+
+<!-- IMAGE TEMPLATE -->
+                <div class="flower-card">
+                    <div class="badge" style="background: linear-gradient(135deg, #FF1744, #FF80AB);">AI Art</div>
+                    <div class="flower-img" style="height: 450px; background: linear-gradient(180deg, #f5f5f5, #ffffff); position: relative; overflow: hidden;">
+                        <img src="media/images/your-image.png" alt="Flower Description" style="width: 100%; height: 100%; object-fit: cover;">
+                    </div>
+                    <div class="flower-info">
+                        <h3 class="flower-name">Image Name</h3>
+                        <p class="flower-desc">Description of your image.</p>
+                        <div class="flower-price">$9.99</div>
+                        <button class="buy-btn" onclick="purchase('Image Name', '$9.99')">Get This Image 🖼️</button>
+                    </div>
+                </div>
+
+
+TIPS & TRICKS:
+================================================================================
+
+✅ BADGE OPTIONS:
+   Change the badge text and color:
+   - Premium 3D: style="background: linear-gradient(135deg, #FFD700, #FFA500);"
+   - AI Art: style="background: linear-gradient(135deg, #FF1744, #FF80AB);"
+   - New: style="background: #4CAF50;"
+   - Limited: style="background: #FF6B6B;"
+   - Bestseller: (default red - no style needed)
+
+✅ PRICING:
+   Images: $9.99
+   Standard 3D videos: $12.99
+   Premium/longer videos: $14.99-$19.99
+
+✅ BUTTON TEXT:
+   For videos: "Get This Video 🎬"
+   For images: "Get This Image 🖼️"
+
+✅ VIDEO SIZING:
+   - object-fit: cover (fills the space, may crop)
+   - object-fit: contain (shows full video, may have black bars)
+
+✅ GRID LAYOUT:
+   To make a card take 2 columns (wider):
+   <div class="flower-card" style="grid-column: span 2;">
+
+
+TROUBLESHOOTING:
+================================================================================
+
+Q: Video doesn't play?
+A: Check the filename is correct and the video is in media/videos/ folder
+
+Q: Video path shows wrong?
+A: Make sure path is: media/videos/filename.mp4 (no slash at start)
+
+Q: Want to reorder videos?
+A: Cut and paste the entire card block to move it
+
+Q: How to delete a video from the site?
+A: Delete the entire <div class="flower-card">...</div> block
+
+Q: Videos slowing down the page?
+A: Remove autoplay from some videos or use poster images
+
+
+CURRENT VIDEO COUNT: 28 videos + 1 image
+================================================================================
+
+Need help? Just ask Claude to add more videos for you!

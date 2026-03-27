@@ -3,7 +3,7 @@
  * All credit operations go through server endpoints
  */
 
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+const API_BASE = import.meta.env.VITE_API_URL || '';
 
 /**
  * Create Stripe checkout session for credit purchase

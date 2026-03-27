@@ -1,10 +1,9 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useCallback, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useProduct, useProducts } from '../hooks/useProducts';
 import ProductCard from './ProductCard';
 import Customizer from './Customizer';
-import ShoppingCart from './ShoppingCart';
 import OCCASIONS from '../data/occasions';
 
 const ProductDetails = () => {
@@ -24,18 +23,37 @@ const ProductDetails = () => {
       .slice(0, 4);
   }, [product, products]);
 
-  // Look up occasion-based customizer defaults for this product's category
   const customizerDefaults = useMemo(() => {
     if (!product?.category) return {};
     const occasion = OCCASIONS[product.category];
     return occasion?.customizerDefaults || {};
   }, [product?.category]);
 
+  // Auto-dismiss success after 6 seconds
+  useEffect(() => {
+    if (!showSuccess) return;
+    const timer = setTimeout(() => setShowSuccess(false), 6000);
+    return () => clearTimeout(timer);
+  }, [showSuccess]);
+
+  const openCustomizer = useCallback(() => {
+    setShowSuccess(false);
+    setIsCustomizerOpen(true);
+  }, []);
+
+  const goBack = useCallback(() => {
+    if (window.history.length > 1) {
+      navigate(-1);
+    } else {
+      navigate('/shop');
+    }
+  }, [navigate]);
+
   if (loading) {
     return (
       <div className="min-h-screen bg-[var(--bg-page)] flex items-center justify-center">
         <div className="text-center">
-          <div className="w-10 h-10 border-2 border-[var(--border-default)] border-t-[#D4AF37] rounded-full animate-spin mx-auto mb-6"></div>
+          <div className="w-10 h-10 border-2 border-[var(--border-default)] border-t-[var(--accent-gold)] rounded-full animate-spin mx-auto mb-6" />
           <p className="text-[11px] uppercase tracking-[0.2em] text-[var(--text-secondary)]">Loading...</p>
         </div>
       </div>
@@ -47,7 +65,9 @@ const ProductDetails = () => {
       <div className="min-h-screen bg-[var(--bg-page)] flex items-center justify-center p-6 text-center">
         <div>
           <h2 className="text-2xl font-display text-[var(--text-primary)] mb-6">Product not found.</h2>
-          <Link to="/shop" className="inline-block px-8 py-3 rounded-full text-[12px] uppercase tracking-widest border border-[var(--border-default)] text-white hover:border-[var(--accent-gold)] hover:text-[var(--accent-gold)] transition-colors">Return to Shop</Link>
+          <Link to="/shop" className="inline-block px-8 py-3 rounded-full text-[12px] uppercase tracking-widest border border-[var(--border-default)] text-white hover:border-[var(--accent-gold)] hover:text-[var(--accent-gold)] transition-colors">
+            Return to Shop
+          </Link>
         </div>
       </div>
     );
@@ -55,144 +75,160 @@ const ProductDetails = () => {
 
   const handleCustomizationComplete = (customization) => {
     addToCart(product, 1, customization);
+    // Show success toast instead of forcing cart open — user can keep shopping (Fashion Nova style)
     setShowSuccess(true);
   };
 
+  const heroVideoSrc = product.video_file_url || product.video_url;
+  const heroImageSrc = product.image_url;
+  const displayPrice = Number(product.price || 0).toFixed(2);
+
   return (
-    <div className="min-h-screen bg-[var(--bg-page)] text-white pt-32 pb-24">
-      {/* Customizer Overlay — key resets state when product changes */}
-      <Customizer 
-        key={product.id}
-        product={product} 
-        isOpen={isCustomizerOpen} 
+    <div className="min-h-screen bg-[var(--surface-soft,#F7F7F7)] text-[var(--text-primary)]">
+      {/* Customizer Panel — slides up from bottom on mobile, side panel on desktop */}
+      <Customizer
+        product={product}
+        isOpen={isCustomizerOpen}
         onClose={() => setIsCustomizerOpen(false)}
         onComplete={handleCustomizationComplete}
         defaults={customizerDefaults}
       />
 
-      <div className="max-w-7xl mx-auto px-6 lg:px-12">
-        {/* Navigation */}
-        <button
-          onClick={() => navigate(-1)}
-          className="group flex items-center text-[var(--text-secondary)] hover:text-white transition-all mb-12"
-        >
-          <div className="w-8 h-8 rounded-full border border-[var(--border-default)] flex items-center justify-center mr-4 group-hover:border-[var(--accent-gold)]">
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 19l-7-7 7-7" />
-            </svg>
-          </div>
-          <span className="text-[11px] uppercase tracking-[0.15em] font-medium">Back</span>
+      {/* ── HERO MEDIA ── */}
+      <div className="db-watermark relative w-full aspect-[3/4] sm:aspect-[16/10] lg:aspect-[16/7] overflow-hidden bg-black">
+        {heroVideoSrc ? (
+          <video
+            src={heroVideoSrc}
+            autoPlay muted loop playsInline preload="auto"
+            poster={heroImageSrc}
+            className="w-full h-full object-cover"
+            onError={(e) => { e.target.style.display = 'none'; }}
+          />
+        ) : heroImageSrc ? (
+          <img src={heroImageSrc} alt={product.name} className="w-full h-full object-cover" />
+        ) : (
+          <div className="w-full h-full bg-gradient-to-b from-[#1a1a2e] to-[#0a0a0a]" />
+        )}
+
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+
+        {/* Back */}
+        <button type="button" onClick={goBack}
+          className="absolute top-6 left-5 z-10 w-11 h-11 rounded-full bg-black/40 backdrop-blur-md border border-white/15 flex items-center justify-center text-white hover:bg-black/60 transition-all"
+          aria-label="Go back">
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+          </svg>
         </button>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 mb-32 items-center">
-          {/* Video Viewport */}
-          <div className="relative aspect-[3/4] sm:aspect-square lg:aspect-[4/5] rounded-3xl overflow-hidden bg-[var(--bg-surface)] border border-[var(--border-subtle)] shadow-lg">
-            <video
-              src={product.video_file_url || product.video_url}
-              autoPlay
-              muted
-              loop
-              playsInline
-              preload="metadata"
-              poster={product.image_url}
-              className="w-full h-full object-cover"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-30"></div>
-          </div>
-
-          {/* Details */}
-          <div className="flex flex-col">
-            <div className="mb-8">
-              <span className="text-[11px] uppercase tracking-[0.2em] text-[var(--accent-gold)] font-semibold mb-4 block">
-                {product.category || 'Digital Experience'}
-              </span>
-              <h1 className="text-4xl sm:text-5xl font-medium font-display tracking-tight leading-tight mb-6 text-white">
-                {product.name}
-              </h1>
-              <p className="text-3xl font-light tracking-tight text-[var(--accent-gold)]">
-                ${parseFloat(product.price).toFixed(2)}
-              </p>
-            </div>
-
-            <p className="text-lg text-[var(--text-secondary)] mb-12 font-light leading-relaxed max-w-xl">
-              {product.description}
-            </p>
-
-            <div className="space-y-10">
-              {/* Feature Points */}
-              <div className="grid grid-cols-2 gap-8 border-t border-[var(--border-default)] pt-10">
-                <div>
-                  <h3 className="text-[11px] uppercase tracking-[0.15em] text-[var(--accent-gold)] mb-2 font-semibold">Format</h3>
-                  <p className="text-sm text-[var(--text-secondary)] font-light">4K Cinematic Video (MP4)</p>
-                </div>
-                <div>
-                  <h3 className="text-[11px] uppercase tracking-[0.15em] text-[var(--accent-gold)] mb-2 font-semibold">Delivery</h3>
-                  <p className="text-sm text-[var(--text-secondary)] font-light">Instant Digital Download</p>
-                </div>
-              </div>
-
-              {/* Primary CTA */}
-              <div className="space-y-6">
-                <button
-                  onClick={() => setIsCustomizerOpen(true)}
-                  className="w-full py-5 rounded-full text-sm font-medium tracking-[0.2em] uppercase transition-all bg-[var(--accent-gold)] text-[var(--bg-page)] hover:bg-[var(--accent-gold-hover)] shadow-lg"
-                >
-                  Customize Experience
-                </button>
-                
-                <div className="flex items-center justify-center space-x-4 text-[10px] uppercase tracking-[0.2em] text-[var(--text-muted)]">
-                  <span>4K Resolution</span>
-                  <span className="w-1 h-1 rounded-full bg-white/10"></span>
-                  <span>Custom Music</span>
-                  <span className="w-1 h-1 rounded-full bg-white/10"></span>
-                  <span>Lifetime Access</span>
-                </div>
-              </div>
-
-              {/* Success — Checkout Prompt */}
-              {showSuccess && (
-                <div className="animate-fade-in space-y-4">
-                  <div className="bg-[var(--accent-gold)]/10 border border-[var(--accent-gold-border-hover)] p-5 rounded-2xl flex items-center space-x-4">
-                    <div className="w-10 h-10 rounded-full bg-[var(--accent-gold)] flex items-center justify-center flex-shrink-0">
-                      <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-                      </svg>
-                    </div>
-                    <div>
-                      <p className="text-base font-semibold text-white">Added to your cart!</p>
-                      <p className="text-sm text-[var(--text-secondary)] mt-1">Your personalized bloom is ready for checkout.</p>
-                    </div>
-                  </div>
-                  <button
-                    onClick={() => { setShowSuccess(false); toggleCart(); }}
-                    className="w-full py-4 rounded-full text-sm font-medium tracking-[0.15em] uppercase transition-all bg-[var(--accent-gold)] text-[#1D1D1F] hover:bg-[var(--accent-gold-hover)] shadow-lg"
-                  >
-                    View Cart &amp; Checkout
-                  </button>
-                  <Link
-                    to="/shop"
-                    className="block w-full py-3 rounded-full text-sm font-medium tracking-[0.15em] uppercase transition-all text-center border border-[var(--border-default)] text-[var(--text-secondary)] hover:border-[var(--accent-gold)] hover:text-[var(--accent-gold)]"
-                  >
-                    Continue Shopping
-                  </Link>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-
-        {/* Related Products */}
-        {relatedProducts.length > 0 && (
-          <div className="border-t border-[var(--border-default)] pt-24">
-            <h2 className="text-3xl font-display font-medium text-[var(--text-primary)] mb-16 tracking-tight">You may also like</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
-              {relatedProducts.map(flower => (
-                <ProductCard key={flower.id} product={flower} />
-              ))}
-            </div>
+        {/* Category */}
+        {product.category && (
+          <div className="absolute top-6 right-5 z-10 px-4 py-1.5 rounded-full bg-black/40 backdrop-blur-md border border-white/15">
+            <span className="text-[11px] uppercase tracking-[0.15em] text-white/80 font-medium">{product.category}</span>
           </div>
         )}
       </div>
+
+      {/* ── PRODUCT INFO — More breathing room ── */}
+      <div className="max-w-3xl mx-auto px-5 sm:px-8 -mt-8 relative z-10 pb-24">
+
+        {/* Title + Price Card — generous padding */}
+        <div className="bg-[var(--surface-white)] rounded-2xl p-7 sm:p-10 shadow-lg mb-8">
+          <h1 className="text-2xl sm:text-3xl font-display font-medium tracking-tight text-[#1D1D1F] mb-4">
+            {product.name}
+          </h1>
+          <p className="text-3xl font-semibold text-[var(--accent-gold)] mb-5">
+            ${displayPrice}
+          </p>
+          {product.description && (
+            <p className="text-base text-[#6E6E73] leading-relaxed mb-8">
+              {product.description}
+            </p>
+          )}
+
+          {/* PRIMARY CTA — more padding/presence */}
+          <button
+            type="button"
+            onClick={openCustomizer}
+            className="w-full py-4.5 rounded-full text-[15px] font-bold tracking-[0.08em] uppercase transition-all bg-[var(--accent-gold)] text-white hover:brightness-110 shadow-lg active:scale-[0.98]"
+            style={{ padding: '18px 0' }}
+          >
+            Customize Experience
+          </button>
+
+          {/* Feature labels — clearer and readable */}
+          <div className="flex items-center justify-center gap-5 mt-6 flex-wrap">
+            {['Digital Experience', 'Instant Delivery', 'Personalized'].map((label, i) => (
+              <span key={i} className="text-[12px] uppercase tracking-[0.1em] text-[#8E8E93] font-medium">
+                {label}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        {/* ── SUCCESS TOAST — Premium brand-aligned ── */}
+        {showSuccess && (
+          <div className="bg-[var(--surface-white)] rounded-2xl p-7 shadow-lg mb-8 animate-fade-in border border-[var(--accent-gold-border)]">
+            <div className="flex items-center gap-4 mb-5">
+              <div className="w-12 h-12 rounded-full bg-[rgba(201,161,74,0.1)] border border-[rgba(201,161,74,0.25)] flex items-center justify-center flex-shrink-0">
+                <svg className="w-6 h-6 text-[var(--accent-gold)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+              <div>
+                <p className="text-lg font-display font-semibold text-[#1D1D1F]">Added to Your Cart</p>
+                <p className="text-sm text-[#6E6E73] mt-1">Your personalized bloom is ready.</p>
+              </div>
+            </div>
+            <div className="space-y-3">
+              <button
+                type="button"
+                onClick={() => { setShowSuccess(false); toggleCart(); }}
+                className="w-full py-4 rounded-full text-[14px] font-bold tracking-[0.08em] uppercase bg-[var(--accent-gold)] text-white hover:brightness-110 transition-all"
+              >
+                View Cart & Checkout
+              </button>
+              <Link
+                to="/shop"
+                className="block w-full py-3.5 rounded-full text-[13px] font-medium tracking-[0.08em] uppercase text-center border border-[#E5E5EA] text-[#6E6E73] hover:border-[var(--accent-gold)] hover:text-[var(--accent-gold)] transition-all"
+              >
+                Continue Shopping
+              </Link>
+            </div>
+          </div>
+        )}
+
+        {/* ── Details Card — clear separation ── */}
+        <div className="bg-[var(--surface-white)] rounded-2xl p-7 sm:p-10 shadow-lg mb-8">
+          <h3 className="text-[11px] uppercase tracking-[0.15em] text-[var(--accent-gold)] font-bold mb-5">Details</h3>
+          {[
+            { label: 'Format', value: 'Digital Video Experience' },
+            { label: 'Delivery', value: 'Instant Digital Download' },
+            { label: 'Access', value: 'Lifetime — download anytime' },
+          ].map((item, i) => (
+            <div key={i} className="flex justify-between items-center py-4 border-b border-[#F0F0F0] last:border-b-0">
+              <span className="text-[14px] text-[#6E6E73]">{item.label}</span>
+              <span className="text-[14px] font-medium text-[#1D1D1F]">{item.value}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* ── RELATED PRODUCTS ── */}
+      {relatedProducts.length > 0 && (
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 pb-24">
+          <h2 className="text-2xl font-display font-medium text-[var(--text-primary)] mb-8 tracking-tight">
+            You may also like
+          </h2>
+          <div className="flex gap-5 overflow-x-auto pb-4 snap-x snap-mandatory -mx-5 px-5 sm:mx-0 sm:px-0 sm:grid sm:grid-cols-2 lg:grid-cols-4 sm:overflow-visible">
+            {relatedProducts.map(flower => (
+              <div key={flower.id} className="min-w-[260px] snap-start sm:min-w-0">
+                <ProductCard product={flower} />
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

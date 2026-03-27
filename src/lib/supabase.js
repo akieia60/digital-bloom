@@ -172,6 +172,63 @@ export const getUserPurchases = async (userId) => {
 };
 
 // ============================================
+// BLOOM DELIVERY QUERIES
+// ============================================
+
+/**
+ * Save bloom delivery data to a purchase record.
+ * Sets bloom_slug and composition_manifest for delivery page rendering.
+ * 
+ * @param {string} purchaseId - Purchase UUID
+ * @param {string} bloomSlug - Unique delivery slug
+ * @param {Object} compositionManifest - Full composition data (customization, extras, etc.)
+ * @returns {Object|null} Updated purchase record
+ */
+export const saveBloomDelivery = async (purchaseId, bloomSlug, compositionManifest) => {
+  try {
+    const { data, error } = await supabase
+      .from('purchases')
+      .update({
+        bloom_slug: bloomSlug,
+        composition_manifest: compositionManifest,
+        updated_at: new Date().toISOString(),
+      })
+      .eq('id', purchaseId)
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data;
+  } catch (error) {
+    console.error('Error saving bloom delivery:', error);
+    return null;
+  }
+};
+
+/**
+ * Fetch a bloom delivery by its unique slug.
+ * Returns purchase + product data for the delivery page.
+ * 
+ * @param {string} bloomSlug - Unique delivery identifier
+ * @returns {Object|null} Purchase with product data
+ */
+export const getBloomBySlug = async (bloomSlug) => {
+  try {
+    const { data, error } = await supabase
+      .from('purchases')
+      .select('*, products(*)')
+      .eq('bloom_slug', bloomSlug)
+      .single();
+
+    if (error) throw error;
+    return data;
+  } catch (error) {
+    console.error('Error fetching bloom by slug:', error);
+    return null;
+  }
+};
+
+// ============================================
 // CART QUERIES (if using persistent cart)
 // ============================================
 

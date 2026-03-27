@@ -1,0 +1,378 @@
+/* ============================================
+   BLOOM DELIVERY — Premium Experience Page
+   /bloom/:id
+   Dark cinematic, mobile-first, gold accents
+   ============================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Outfit:wght@300;400;500;600&display=swap');
+
+/* ── Base Container ── */
+.bloom-delivery {
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: #0A0A0A;
+  color: #FFFFFF;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+  overflow-x: hidden;
+}
+
+/* ── Hero / Composition Area ── */
+.bloom-delivery__hero {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 48px 24px 32px;
+  flex: 1;
+  justify-content: center;
+  min-height: 60vh;
+}
+
+.bloom-delivery__composition {
+  position: relative;
+  width: 100%;
+  max-width: 480px;
+  aspect-ratio: 9 / 16;
+  max-height: 70vh;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #111;
+  box-shadow: 0 20px 80px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(212, 175, 55, 0.1);
+}
+
+.bloom-delivery__preview {
+  width: 100%;
+  height: 100%;
+}
+
+/* ── Watermark / Brand Protection ── */
+.bloom-watermark {
+  position: absolute;
+  bottom: 16px;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  text-align: center;
+  pointer-events: none;
+}
+
+.bloom-watermark__text {
+  font-family: 'Cormorant Garamond', 'Georgia', serif;
+  font-size: 0.7rem;
+  font-weight: 400;
+  font-style: italic;
+  letter-spacing: 0.2em;
+  color: rgba(212, 175, 55, 0.35);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  user-select: none;
+}
+
+.bloom-protection-tag {
+  position: absolute;
+  z-index: 12;
+  pointer-events: none;
+  user-select: none;
+  text-shadow: 0 1px 6px rgba(0,0,0,0.75);
+}
+
+.bloom-protection-tag--tm {
+  left: 18px;
+  bottom: 18px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  color: rgba(255,255,255,0.55);
+}
+
+.bloom-protection-tag--brand {
+  right: 18px;
+  top: 18px;
+  font-family: 'Cormorant Garamond', 'Georgia', serif;
+  font-size: 0.86rem;
+  font-style: italic;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  color: rgba(212, 175, 55, 0.78);
+}
+
+.bloom-protection-tag--recipient {
+  top: 14%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(78%, 420px);
+  text-align: center;
+  font-family: 'Outfit', sans-serif;
+  font-size: clamp(0.94rem, 2.6vw, 1.35rem);
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.3);
+  mix-blend-mode: screen;
+}
+
+/* ── Message Reveal ── */
+.bloom-delivery__message {
+  margin-top: 32px;
+  text-align: center;
+  max-width: 400px;
+  padding: 0 16px;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.bloom-delivery__message--visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.bloom-delivery__message-text {
+  font-family: 'Cormorant Garamond', 'Georgia', serif;
+  font-size: clamp(1.3rem, 4vw, 1.8rem);
+  font-weight: 400;
+  font-style: italic;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.92);
+  margin: 0 0 16px;
+  letter-spacing: 0.02em;
+}
+
+.bloom-delivery__message-names {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 300;
+  color: rgba(255, 255, 255, 0.5);
+  letter-spacing: 0.08em;
+}
+
+.bloom-delivery__message-divider {
+  color: rgba(212, 175, 55, 0.4);
+}
+
+/* ── Controls ── */
+.bloom-delivery__controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  padding: 24px;
+  width: 100%;
+  max-width: 400px;
+}
+
+.bloom-delivery__control-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 980px;
+  color: rgba(255, 255, 255, 0.6);
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.bloom-delivery__control-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(212, 175, 55, 0.3);
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* ── Brand Footer ── */
+.bloom-delivery__brand {
+  text-align: center;
+  padding: 40px 24px;
+  margin-top: auto;
+}
+
+.bloom-delivery__brand-name {
+  font-family: 'Cormorant Garamond', 'Georgia', serif;
+  font-size: 1rem;
+  font-weight: 500;
+  font-style: italic;
+  color: #D4AF37;
+  letter-spacing: 0.15em;
+  margin: 0 0 6px;
+}
+
+.bloom-delivery__brand-tagline {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 300;
+  color: rgba(255, 255, 255, 0.3);
+  letter-spacing: 0.12em;
+  margin: 0;
+}
+
+/* ============================================
+   FALLBACK STATES
+   ============================================ */
+
+/* Loading */
+.bloom-delivery--loading {
+  justify-content: center;
+}
+
+.bloom-delivery__loader {
+  text-align: center;
+}
+
+.bloom-delivery__spinner {
+  width: 36px;
+  height: 36px;
+  border: 2px solid rgba(212, 175, 55, 0.15);
+  border-top-color: #D4AF37;
+  border-radius: 50%;
+  animation: bloomSpin 0.8s linear infinite;
+  margin: 0 auto 20px;
+}
+
+@keyframes bloomSpin {
+  to { transform: rotate(360deg); }
+}
+
+.bloom-delivery__loader-text {
+  font-family: 'Cormorant Garamond', 'Georgia', serif;
+  font-size: 1.1rem;
+  font-style: italic;
+  color: rgba(255, 255, 255, 0.5);
+  letter-spacing: 0.08em;
+}
+
+/* Status Cards (Processing, Not Found, Error) */
+.bloom-delivery--processing,
+.bloom-delivery--not-found,
+.bloom-delivery--error {
+  justify-content: center;
+}
+
+.bloom-delivery__status-card {
+  text-align: center;
+  padding: 48px 32px;
+  max-width: 420px;
+}
+
+.bloom-delivery__status-icon {
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+}
+
+.bloom-delivery__status-title {
+  font-family: 'Cormorant Garamond', 'Georgia', serif;
+  font-size: clamp(1.4rem, 4vw, 1.8rem);
+  font-weight: 500;
+  font-style: italic;
+  color: #D4AF37;
+  letter-spacing: 0.04em;
+  margin: 0 0 16px;
+}
+
+.bloom-delivery__status-message {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 300;
+  color: rgba(255, 255, 255, 0.55);
+  line-height: 1.7;
+  margin: 0 0 24px;
+}
+
+.bloom-delivery__status-product {
+  font-family: 'Cormorant Garamond', 'Georgia', serif;
+  font-size: 0.9rem;
+  font-style: italic;
+  color: rgba(212, 175, 55, 0.5);
+  letter-spacing: 0.1em;
+}
+
+.bloom-delivery__home-btn {
+  display: inline-block;
+  padding: 12px 32px;
+  background: rgba(212, 175, 55, 0.12);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  border-radius: 980px;
+  color: #D4AF37;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  margin-bottom: 12px;
+}
+
+.bloom-delivery__home-btn:hover {
+  background: rgba(212, 175, 55, 0.2);
+  border-color: #D4AF37;
+}
+
+.bloom-delivery__home-link {
+  display: block;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.3);
+  text-decoration: none;
+  letter-spacing: 0.08em;
+  transition: color 0.25s;
+}
+
+.bloom-delivery__home-link:hover {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media (min-width: 768px) {
+  .bloom-delivery__hero {
+    padding: 64px 32px 40px;
+  }
+
+  .bloom-delivery__composition {
+    max-width: 400px;
+    max-height: 65vh;
+    border-radius: 20px;
+  }
+
+  .bloom-delivery__message {
+    margin-top: 40px;
+  }
+
+  .bloom-delivery__controls {
+    gap: 32px;
+  }
+}
+
+@media (max-width: 380px) {
+  .bloom-delivery__hero {
+    padding: 32px 16px 24px;
+  }
+
+  .bloom-delivery__composition {
+    border-radius: 12px;
+  }
+
+  .bloom-delivery__message-text {
+    font-size: 1.1rem;
+  }
+
+  .bloom-delivery__control-btn {
+    padding: 8px 16px;
+    font-size: 0.78rem;
+  }
+}

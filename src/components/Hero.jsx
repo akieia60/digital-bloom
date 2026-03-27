@@ -1,4 +1,7 @@
+import { useLanguage } from '../contexts/LanguageContext';
+
 const Hero = () => {
+  const { t } = useLanguage();
   const scrollToProducts = () => {
     const productsSection = document.getElementById('products-section');
     if (productsSection) {
@@ -18,22 +21,22 @@ const Hero = () => {
         {/* Cinematic Prelude */}
         <div className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full bg-white/5 border border-black/5 mb-12 animate-fade-in">
           <span className="w-1 h-1 rounded-full bg-[#D4AF37]/40 animate-pulse"></span>
-          <span className="text-[11px] uppercase tracking-[0.2em] text-[#6E6E73] font-medium">The Future of Gifting</span>
+          <span className="text-[11px] uppercase tracking-[0.2em] text-[#6E6E73] font-medium">{t('hero_prelude')}</span>
         </div>
 
         {/* Hero Title - Refined Hierarchy */}
         <div className="mb-20 animate-slide-up">
           <h1 className="font-display text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-medium text-[#1D1D1F] leading-[1.05] tracking-[0.02em] mb-8">
-            Give them their flowers
+            {t('hero_title_1')}
           </h1>
           <h2 className="font-display text-xl sm:text-3xl md:text-4xl lg:text-5xl font-medium text-[#D4AF37]/85 leading-[1.05] tracking-[0.02em]">
-            while they can still see them
+            {t('hero_title_2')}
           </h2>
         </div>
 
         {/* Hero Subtitle */}
         <p className="text-base sm:text-lg md:text-xl text-[#6E6E73] mb-16 max-w-xl mx-auto animate-slide-up font-light leading-relaxed" style={{ animationDelay: '0.2s' }}>
-          Digital Bloom was created to express love and appreciation with intention. We believe in giving people their flowers while they are still here to experience the gesture.
+          {t('hero_subtitle')}
         </p>
 
         {/* Primary Action — Single CTA, no Watch the Film */}
@@ -42,7 +45,7 @@ const Hero = () => {
             onClick={scrollToProducts}
             className="group px-12 py-5 rounded-full text-sm font-medium tracking-[0.2em] uppercase transition-all bg-[#1D1D1F] text-white hover:bg-[#D4AF37] hover:text-[#1D1D1F]"
           >
-            Begin Your Story
+            {t('hero_cta')}
           </button>
         </div>
       </div>

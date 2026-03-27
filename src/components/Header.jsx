@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
+import { useLanguage } from '../contexts/LanguageContext';
 
 const Header = ({ onSearchChange, searchQuery }) => {
   const { getCartCount, toggleCart } = useCart();
+  const { lang, toggleLanguage, t } = useLanguage();
   const cartCount = getCartCount();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -32,23 +34,8 @@ const Header = ({ onSearchChange, searchQuery }) => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
         <div className="flex items-center h-12 relative">
           
-          {/* Left: Hamburger Menu (Mobile) + Search (Desktop) */}
+          {/* Left: Desktop Search only */}
           <div className="flex-1 flex items-center">
-            {/* Hamburger Button - Mobile Only */}
-            <button
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="lg:hidden p-2 -ml-2 text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
-              aria-label="Menu"
-            >
-              <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                {isMobileMenuOpen ? (
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M6 18L18 6M6 6l12 12" />
-                ) : (
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 6h16M4 12h16M4 18h16" />
-                )}
-              </svg>
-            </button>
-
             {/* Desktop Search */}
             <div className="hidden md:flex relative group">
               <input
@@ -87,12 +74,12 @@ const Header = ({ onSearchChange, searchQuery }) => {
             </Link>
           </div>
 
-          {/* Right: Desktop Nav + Cart */}
-          <div className="flex-1 flex justify-end items-center space-x-4 sm:space-x-8">
-            <nav className="hidden lg:flex items-center space-x-8">
-              <Link to="/shop" className="text-[12px] uppercase tracking-[0.12em] text-[var(--accent-gold)] hover:text-[var(--text-primary)] transition-colors font-medium">Occasions</Link>
-              <Link to="/shop" className="text-[12px] uppercase tracking-[0.12em] text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors font-medium">Shop</Link>
-              <Link to="/credits" className="text-[12px] uppercase tracking-[0.12em] text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors font-medium">Credits</Link>
+          {/* Right: Desktop Nav + Cart + Lang + Hamburger */}
+          <div className="flex-1 flex justify-end items-center space-x-4 sm:space-x-6 ml-4">
+            <nav className="hidden lg:flex items-center space-x-6 xl:space-x-8">
+              <Link to="/shop" className="text-[11px] xl:text-[12px] uppercase tracking-[0.12em] text-[var(--accent-gold)] hover:text-[var(--text-primary)] transition-colors font-medium whitespace-nowrap">{t('nav_occasions')}</Link>
+              <Link to="/shop" className="text-[11px] xl:text-[12px] uppercase tracking-[0.12em] text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors font-medium whitespace-nowrap">{t('nav_shop')}</Link>
+              <Link to="/credits" className="text-[11px] xl:text-[12px] uppercase tracking-[0.12em] text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors font-medium whitespace-nowrap">{t('nav_credits')}</Link>
             </nav>
             <button
               onClick={toggleCart}
@@ -113,6 +100,26 @@ const Header = ({ onSearchChange, searchQuery }) => {
                 </span>
               )}
             </button>
+            <button
+              onClick={toggleLanguage}
+              className="hidden lg:flex items-center justify-center h-8 w-8 rounded-full border border-[var(--border-default)] text-[10px] font-bold uppercase tracking-wider text-[var(--text-secondary)] hover:text-[var(--accent-gold)] hover:border-[var(--accent-gold)] transition-all"
+            >
+              {lang}
+            </button>
+            {/* Hamburger Button - Mobile Only (RIGHT side) */}
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="lg:hidden p-2 text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
+              aria-label="Menu"
+            >
+              <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                {isMobileMenuOpen ? (
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M6 18L18 6M6 6l12 12" />
+                ) : (
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 6h16M4 12h16M4 18h16" />
+                )}
+              </svg>
+            </button>
           </div>
         </div>
       </div>
@@ -126,15 +133,15 @@ const Header = ({ onSearchChange, searchQuery }) => {
             onClick={() => setIsMobileMenuOpen(false)}
           />
           
-          {/* Menu Panel */}
-          <div className="absolute top-0 left-0 bottom-0 w-4/5 max-w-sm bg-[var(--bg-page)] border-r border-[var(--nav-border-scrolled)] flex flex-col animate-slide-in shadow-2xl">
+          {/* Menu Panel — slides from RIGHT, lighter background */}
+          <div className="absolute top-0 right-0 bottom-0 w-4/5 max-w-sm flex flex-col animate-slide-in-right shadow-2xl" style={{ background: '#1a2744', borderLeft: '1px solid rgba(212,175,55,0.2)' }}>
             {/* Menu Header */}
-              <div className="p-6 border-b border-[var(--nav-border-scrolled)]">
+              <div className="p-6" style={{ borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
               <div className="flex items-center justify-between">
-                <span className="text-xl font-display uppercase text-[var(--text-primary)] tracking-wider">Menu</span>
+                <span className="text-xl font-display uppercase tracking-wider" style={{ color: '#D4AF37' }}>Digital Bloom</span>
                 <button
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="p-2 text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors"
+                  className="p-2 transition-colors" style={{ color: 'rgba(255,255,255,0.6)' }}
                 >
                   <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M6 18L18 6M6 6l12 12" />
@@ -144,14 +151,15 @@ const Header = ({ onSearchChange, searchQuery }) => {
             </div>
 
             {/* Mobile Search */}
-            <div className="p-6 border-b border-[var(--nav-border-scrolled)]">
+            <div className="p-6" style={{ borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
               <div className="relative">
                 <input
                   type="text"
                   placeholder="Search..."
                   value={searchQuery}
                   onChange={(e) => onSearchChange(e.target.value)}
-                  className="w-full px-4 py-3 bg-[var(--bg-surface)] border border-[var(--border-default)] rounded-lg text-base text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--accent-gold-border-hover)] transition-all"
+                  className="w-full px-4 py-3 rounded-lg text-base focus:outline-none focus:ring-2 transition-all"
+                  style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)', color: '#FFFFFF', placeholder: 'rgba(255,255,255,0.4)' }}
                 />
               </div>
             </div>
@@ -161,37 +169,63 @@ const Header = ({ onSearchChange, searchQuery }) => {
               <Link
                 to="/"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="block text-base text-[var(--text-primary)] hover:text-[var(--accent-gold)] transition-colors py-4 border-b border-[var(--border-subtle)]"
+                className="block text-lg transition-colors py-5"
+                style={{ color: '#FFFFFF', borderBottom: '1px solid rgba(255,255,255,0.08)' }}
               >
                 Home
               </Link>
               <Link
                 to="/shop"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="block text-base text-[var(--accent-gold)] hover:text-[var(--text-primary)] transition-colors py-4 border-b border-[var(--border-subtle)]"
+                className="block text-lg transition-colors py-5"
+                style={{ color: '#D4AF37', borderBottom: '1px solid rgba(255,255,255,0.08)' }}
               >
-                Occasions
+                {t('nav_occasions')}
               </Link>
               <Link
                 to="/shop"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="block text-base text-[var(--text-primary)] hover:text-[var(--accent-gold)] transition-colors py-4 border-b border-[var(--border-subtle)]"
+                className="block text-lg transition-colors py-5"
+                style={{ color: '#FFFFFF', borderBottom: '1px solid rgba(255,255,255,0.08)' }}
               >
-                Shop
+                {t('nav_shop')}
               </Link>
               <Link
                 to="/credits"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="block text-base text-[var(--text-primary)] hover:text-[var(--accent-gold)] transition-colors py-4 border-b border-[var(--border-subtle)]"
+                className="block text-lg transition-colors py-5"
+                style={{ color: '#FFFFFF', borderBottom: '1px solid rgba(255,255,255,0.08)' }}
               >
-                Experience Credits
+                {t('nav_credits')}
               </Link>
+              <button
+                onClick={() => { setIsMobileMenuOpen(false); toggleLanguage(); }}
+                className="w-full flex items-center justify-between text-lg transition-colors py-5"
+                style={{ color: '#D4AF37', borderBottom: '1px solid rgba(255,255,255,0.08)' }}
+              >
+                <span>Language (Idioma)</span>
+                <span className="text-sm font-bold uppercase tracking-wider px-3 py-1 rounded-full border border-[rgba(212,175,55,0.4)]">
+                  {lang}
+                </span>
+              </button>
+              <button
+                onClick={() => { setIsMobileMenuOpen(false); toggleCart(); }}
+                className="w-full flex items-center justify-between text-lg transition-colors py-5"
+                style={{ color: '#FFFFFF', borderBottom: '1px solid rgba(255,255,255,0.08)' }}
+              >
+                <span>{t('nav_cart')}</span>
+                {cartCount > 0 && (
+                  <span className="text-xs font-bold rounded-full h-6 w-6 flex items-center justify-center" style={{ background: '#D4AF37', color: '#1a2744' }}>
+                    {cartCount}
+                  </span>
+                )}
+              </button>
             </nav>
 
             {/* Menu Footer */}
-            <div className="p-6 border-t border-[var(--nav-border-scrolled)]">
-              <p className="text-xs text-[var(--text-muted)] uppercase tracking-wider">Digital Bloom</p>
-              <p className="text-[10px] text-[var(--text-muted)] opacity-50 mt-1">Luxury Motion Art</p>
+            <div className="p-6" style={{ borderTop: '1px solid rgba(255,255,255,0.1)' }}>
+              <p className="text-xs uppercase tracking-wider" style={{ color: '#D4AF37' }}>Digital Bloom</p>
+              <p className="text-[10px] mt-1" style={{ color: 'rgba(255,255,255,0.4)' }}>Cinematic Digital Experiences</p>
             </div>
           </div>
         </div>

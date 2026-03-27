@@ -1,9 +1,11 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { getCreditBalance } from '../lib/creditStripe';
 import { isValidCreditCodeFormat, formatCreditAmount } from '../utils/creditCode';
 import '../styles/credits.css';
 
 export default function CreditBalance() {
+  const navigate = useNavigate();
   const [code, setCode] = useState('');
   const [balance, setBalance] = useState(null);
   const [history, setHistory] = useState([]);
@@ -38,6 +40,18 @@ export default function CreditBalance() {
     <div className="credits-page">
       <div className="landing-container">
         <div className="credits-hero">
+          <button
+            onClick={() => navigate(-1)}
+            className="group inline-flex items-center mb-8"
+            style={{ color: 'var(--text-secondary)' }}
+          >
+            <div style={{ width: '32px', height: '32px', borderRadius: '50%', border: '1px solid var(--border-default)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginRight: '12px', transition: 'border-color 0.2s' }}>
+              <svg style={{ width: '16px', height: '16px' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 19l-7-7 7-7" />
+              </svg>
+            </div>
+            <span style={{ fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.15em', fontWeight: '500' }}>Back</span>
+          </button>
           <h1 className="section-title">Check Your Balance</h1>
           <p className="section-subtitle">
             Enter your credit code to view your remaining balance and usage history

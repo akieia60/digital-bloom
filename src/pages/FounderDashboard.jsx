@@ -36,7 +36,7 @@ const MONEY_FLOW_TESTS = [
     label: 'Create Credit Checkout',
     method: 'POST',
     endpoint: '/api/create-credit-checkout',
-    body: { amount: 1000, successUrl: '/success', cancelUrl: '/credits' },
+    body: { amount_cents: 1000, purchaser_email: 'founder-test@digitalbloom.app' },
   },
   {
     id: 'create_checkout_session',
@@ -68,7 +68,7 @@ const MONEY_FLOW_TESTS = [
     label: 'Reserve Credits',
     method: 'POST',
     endpoint: '/api/credits/reserve',
-    body: { code: '', amount_cents: 100 },
+    body: { code: '', order_total_cents: 100 },
     hasInput: true,
     inputPlaceholder: 'Enter credit code...',
   },
@@ -93,7 +93,7 @@ const QUICK_LINKS = [
   { label: 'Stripe Dashboard', url: 'https://dashboard.stripe.com', icon: '💳' },
   { label: 'Supabase Project', url: 'https://supabase.com/dashboard', icon: '⚡' },
   { label: 'GitHub Repo', url: 'https://github.com/akieia60/digital-bloom', icon: '🐙' },
-  { label: 'Prompt Vault', url: '/vault', icon: '🗃️', internal: true },
+  // Prompt Vault removed from public nav
   { label: 'Incident Log', url: '#', icon: '📋', optional: true },
 ];
 

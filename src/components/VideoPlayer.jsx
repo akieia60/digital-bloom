@@ -12,7 +12,7 @@ const VideoPlayer = ({ videoUrl, posterUrl, alt }) => {
   }
 
   return (
-    <div className="w-full h-full relative group overflow-hidden bg-black">
+    <div className="db-watermark w-full h-full relative group overflow-hidden bg-black">
       <video
         src={videoUrl}
         autoPlay

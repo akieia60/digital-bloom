@@ -1,12 +1,11 @@
 import { useEffect, useRef, useState, useCallback, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 
-// Auto-detect the nearest upcoming (or current) holiday for the live banner
+// Auto-detect the nearest upcoming (or current) holiday for a subtle banner
 function getUpcomingHoliday() {
   const now = new Date();
   const year = now.getFullYear();
 
-  // Helper: nth weekday of month (weekday: 0=Sun…6=Sat)
   function nthWeekday(yr, mo, weekday, n) {
     const d = new Date(yr, mo - 1, 1);
     let count = 0;
@@ -23,61 +22,38 @@ function getUpcomingHoliday() {
   const holidays = [
     { name: "Happy New Year",          label: "New Year's Day",    date: new Date(year, 0, 1) },
     { name: "Happy Valentine's Day",   label: "Valentine's Day",   date: new Date(year, 1, 14) },
-    { name: "Happy St. Patrick's Day", label: "St. Patrick's Day", date: new Date(year, 2, 17) },
     { name: "Happy Mother's Day",      label: "Mother's Day",      date: nthWeekday(year, 5, 0, 2) },
     { name: "Happy Father's Day",      label: "Father's Day",      date: nthWeekday(year, 6, 0, 3) },
-    { name: "Happy 4th of July",       label: "Independence Day",  date: new Date(year, 6, 4) },
-    { name: "Happy Halloween",         label: "Halloween",         date: new Date(year, 9, 31) },
-    { name: "Happy Thanksgiving",      label: "Thanksgiving",      date: nthWeekday(year, 11, 4, 4) },
     { name: "Merry Christmas",         label: "Christmas",         date: new Date(year, 11, 25) },
-    { name: "Happy New Year's Eve",    label: "New Year's Eve",    date: new Date(year, 11, 31) },
   ].filter(h => h.date);
 
   const today = new Date(year, now.getMonth(), now.getDate());
   holidays.sort((a, b) => a.date - b.date);
 
-  // Show if within 3 days past OR within 45 days upcoming
   const active = holidays.find(h => {
     const diff = (h.date - today) / (1000 * 60 * 60 * 24);
-    return diff >= -3 && diff <= 45;
+    return diff >= -3 && diff <= 30;
   });
 
-  return active || { name: "Give Them Their Flowers", label: "Special Occasion" };
+  return active || null;
 }
 
 export default function VideoHero() {
   const heroRef = useRef(null);
   const videoRef = useRef(null);
-  const [scrollY, setScrollY] = useState(0);
-
-  // ── Cinematic Intro Sequence ──
-  const [introPhase, setIntroPhase] = useState('blackHold');
-  const introPlayed = useRef(false);
+  const [videoLoaded, setVideoLoaded] = useState(false);
+  const [videoFailed, setVideoFailed] = useState(false);
+  const [contentVisible, setContentVisible] = useState(false);
 
   const holiday = useMemo(() => getUpcomingHoliday(), []);
 
+  // Simplified intro — content visible quickly, no long cinematic wait
   useEffect(() => {
-    if (introPlayed.current) return;
-    introPlayed.current = true;
-
-    const t1 = setTimeout(() => setIntroPhase('videoFade'), 600);
-    const t2 = setTimeout(() => setIntroPhase('titleIn'), 1800);
-    const t3 = setTimeout(() => setIntroPhase('taglineIn'), 2200);
-    const t4 = setTimeout(() => setIntroPhase('ctaIn'), 2600);
-    const t5 = setTimeout(() => setIntroPhase('complete'), 3200);
-
-    return () => {
-      clearTimeout(t1); clearTimeout(t2); clearTimeout(t3);
-      clearTimeout(t4); clearTimeout(t5);
-    };
+    const timer = setTimeout(() => setContentVisible(true), 400);
+    return () => clearTimeout(timer);
   }, []);
 
-  useEffect(() => {
-    const handleScroll = () => setScrollY(window.scrollY);
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
+  // Play video
   useEffect(() => {
     const video = videoRef.current;
     if (video) {
@@ -85,84 +61,85 @@ export default function VideoHero() {
     }
   }, []);
 
-  const heroOpacity = Math.max(0, 1 - scrollY / (window.innerHeight * 0.8));
-  const heroScale = 1 + scrollY * 0.0003;
-
-  const phaseReached = useCallback(
-    (target) => {
-      const order = ['blackHold', 'videoFade', 'titleIn', 'taglineIn', 'ctaIn', 'complete'];
-      return order.indexOf(introPhase) >= order.indexOf(target);
-    },
-    [introPhase]
-  );
-
-  const scrollToContent = () => {
+  const scrollToContent = useCallback(() => {
     const hero = heroRef.current;
     if (hero) {
       const next = hero.nextElementSibling;
       if (next) next.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
-  };
+  }, []);
 
   return (
     <>
       <section ref={heroRef} className="video-hero">
-        {/* Cinematic curtain */}
-        <div
-          className={`video-hero__curtain ${phaseReached('videoFade') ? 'video-hero__curtain--lifted' : ''}`}
-        />
-
-        {/* Live Holiday Banner */}
-        <div className="video-hero__banner">
-          <span className="video-hero__banner-eyebrow">Celebrated Holiday / Special Occasion</span>
-          <span className="video-hero__banner-title">{holiday.name}</span>
-        </div>
-
-        {/* Video Background */}
-        <div
-          className="video-hero__bg"
-          style={{ transform: `scale(${heroScale})`, opacity: heroOpacity }}
-        >
+        {/* Video Background — with graceful fallback */}
+        <div className="video-hero__bg">
           <div className="video-hero__video-wrap">
-            <video
-              ref={videoRef}
-              className="video-hero__video"
-              autoPlay
-              muted
-              loop
-              playsInline
-              poster="/videos/hero_bloom_poster.jpg"
-              preload="auto"
-            >
-              <source src="/videos/digital_bloom_hero_morph.mp4" type="video/mp4" />
-            </video>
+            {!videoFailed && (
+              <video
+                ref={videoRef}
+                className="video-hero__video"
+                autoPlay
+                muted
+                loop
+                playsInline
+                poster="/videos/hero_bloom_poster.jpg"
+                preload="auto"
+                onCanPlay={() => setVideoLoaded(true)}
+                onError={() => setVideoFailed(true)}
+              >
+                <source src="/videos/digital_bloom_hero_morph.mp4" type="video/mp4" />
+              </video>
+            )}
+            {/* Fallback: poster image if video fails */}
+            {(videoFailed || !videoLoaded) && (
+              <img
+                src="/videos/hero_bloom_poster.jpg"
+                alt="Digital Bloom"
+                className="video-hero__fallback-img"
+                style={{
+                  position: 'absolute',
+                  inset: 0,
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                  zIndex: videoLoaded ? -1 : 0,
+                }}
+              />
+            )}
           </div>
           <div className="video-hero__overlay" />
+          {/* Persistent watermark — always visible in screenshots & recordings */}
+          <div className="video-hero__watermark" aria-hidden="true">
+            Digital Bloom™
+          </div>
         </div>
 
-        {/* Text Content */}
-        <div className="video-hero__content" style={{ opacity: heroOpacity }}>
-          <h1
-            className={`video-hero__title ${
-              phaseReached('titleIn') ? 'video-hero__animate-in' : 'video-hero__hidden'
-            }`}
-          >
-            Digital Bloom
+        {/* Text Content — visible immediately on mobile */}
+        <div
+          className="video-hero__content"
+          style={{
+            opacity: contentVisible ? 1 : 0,
+            transform: contentVisible ? 'translateY(0)' : 'translateY(12px)',
+            transition: 'opacity 0.6s ease, transform 0.6s ease',
+          }}
+        >
+          {/* Holiday banner — subtle, secondary */}
+          {holiday && (
+            <div className="video-hero__banner" style={{ marginBottom: '16px' }}>
+              <span className="video-hero__banner-title">{holiday.name}</span>
+            </div>
+          )}
+
+          <h1 className="video-hero__title">
+            Digital Bloom<sup style={{ fontSize: '0.45em', verticalAlign: 'super', marginLeft: '3px', opacity: 0.75 }}>™</sup>
           </h1>
-          <p
-            className={`video-hero__tagline ${
-              phaseReached('taglineIn') ? 'video-hero__animate-in' : 'video-hero__hidden'
-            }`}
-          >
+          <p className="video-hero__tagline">
             Give Them Their Flowers While They&rsquo;re Here
           </p>
-          <div
-            className={`video-hero__cta-wrap ${
-              phaseReached('ctaIn') ? 'video-hero__animate-in' : 'video-hero__hidden'
-            }`}
-          >
+          <div className="video-hero__cta-wrap">
             <Link to="/shop" className="video-hero__btn">
-              <span className="video-hero__btn-text">Choose Your Occasion</span>
+              <span className="video-hero__btn-text">Start Your Bloom</span>
               <span className="video-hero__btn-shimmer" />
               <span className="video-hero__btn-glow" />
             </Link>
@@ -171,12 +148,14 @@ export default function VideoHero() {
 
         {/* Scroll Indicator */}
         <button
-          className={`video-hero__scroll-indicator ${
-            phaseReached('complete') ? 'video-hero__animate-in' : 'video-hero__hidden'
-          }`}
+          type="button"
+          className="video-hero__scroll-indicator"
           onClick={scrollToContent}
           aria-label="Scroll down"
-          style={{ opacity: heroOpacity }}
+          style={{
+            opacity: contentVisible ? 0.7 : 0,
+            transition: 'opacity 0.5s ease 0.3s',
+          }}
         >
           <span className="video-hero__scroll-text">Scroll</span>
           <svg
@@ -195,7 +174,7 @@ export default function VideoHero() {
         </button>
       </section>
 
-      {/* Scroll fade — dark to transparent */}
+      {/* Scroll fade */}
       <div className="video-hero__scroll-fade" aria-hidden="true" />
     </>
   );

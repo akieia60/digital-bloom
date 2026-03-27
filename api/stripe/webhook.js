@@ -11,9 +11,11 @@ export const config = {
   },
 };
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+  apiVersion: '2023-10-16',
+});
 const supabase = createClient(
-  process.env.VITE_SUPABASE_URL,
+  process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL,
   process.env.SUPABASE_SERVICE_ROLE_KEY
 );
 
@@ -85,9 +87,8 @@ async function handleCreditPurchase(session, metadata) {
   // Create ledger entry
   await supabase.from('experience_credit_ledger').insert({
     credit_id: credit.id,
-    type: 'purchase',
-    amount_cents: parseInt(amount_cents),
-    description: `Credit purchased for $${parseInt(amount_cents) / 100}`
+    delta_cents: parseInt(amount_cents),
+    reason: 'purchase'
   });
 
   // Schedule email if delivery_date is in the future
@@ -126,10 +127,9 @@ async function captureReservation(reservationId, stripeSessionId) {
   // Create ledger entry
   await supabase.from('experience_credit_ledger').insert({
     credit_id: reservation.credit_id,
-    type: 'redemption',
-    amount_cents: -reservation.reserved_cents,
-    description: `Credit applied to purchase`,
-    stripe_session_id: stripeSessionId
+    delta_cents: -reservation.reserved_cents,
+    reason: 'redemption',
+    related_order_id: stripeSessionId
   });
 
   // Mark reservation as captured

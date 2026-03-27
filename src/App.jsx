@@ -1,6 +1,7 @@
 import { useState, lazy, Suspense, Component } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { CartProvider } from './context/CartContext';
+import { LanguageProvider } from './contexts/LanguageContext';
 import { ToastProvider } from './components/tracker/Toast';
 import Header from './components/Header';
 import ShoppingCart from './components/ShoppingCart';
@@ -19,7 +20,7 @@ const Admin = lazy(() => import('./pages/Admin'));
 const PromptBrowser = lazy(() => import('./components/PromptBrowser'));
 const Experience1 = lazy(() => import('./pages/Experience1'));
 const FounderDashboard = lazy(() => import('./pages/FounderDashboard'));
-const PromptVault = lazy(() => import('./pages/PromptVault'));
+const BloomDelivery = lazy(() => import('./pages/BloomDelivery'));
 const ComingSoon = lazy(() => import('./pages/ComingSoon'));
 
 /**
@@ -94,11 +95,12 @@ function AppContent({ searchQuery, setSearchQuery }) {
           <Route path="/admin/prompts" element={<PromptBrowser />} />
           <Route path="/experience/1" element={<Experience1 />} />
           <Route path="/founder" element={<FounderDashboard />} />
-          <Route path="/vault" element={<PromptVault />} />
+          {/* Prompt Vault removed from public nav — admin only */}
           <Route path="/balance" element={<CreditBalance />} />
           <Route path="/about" element={<ComingSoon />} />
           <Route path="/contact" element={<ComingSoon />} />
           <Route path="/checkout" element={<ComingSoon />} />
+          <Route path="/bloom/:id" element={<BloomDelivery />} />
           <Route path="*" element={<ComingSoon />} />
         </Routes>
       </Suspense>
@@ -113,17 +115,19 @@ function App() {
   return (
     <ErrorBoundary>
       <ToastProvider>
-        <CartProvider>
-          <Router>
-            <div className="min-h-screen bg-white relative overflow-x-hidden">
-              <div className="relative z-10">
-                <ErrorBoundary>
-                  <AppContent searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
-                </ErrorBoundary>
+        <LanguageProvider>
+          <CartProvider>
+            <Router>
+              <div className="min-h-screen bg-white relative overflow-x-hidden">
+                <div className="relative z-10">
+                  <ErrorBoundary>
+                    <AppContent searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+                  </ErrorBoundary>
+                </div>
               </div>
-            </div>
-          </Router>
-        </CartProvider>
+            </Router>
+          </CartProvider>
+        </LanguageProvider>
       </ToastProvider>
     </ErrorBoundary>
   );

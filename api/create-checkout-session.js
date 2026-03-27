@@ -2,10 +2,12 @@ import Stripe from 'stripe';
 import { createClient } from '@supabase/supabase-js';
 import { applyCors } from './_lib/cors.js';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+  apiVersion: '2023-10-16',
+});
 const supabase = createClient(
   process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.VITE_SUPABASE_ANON_KEY
+  process.env.SUPABASE_SERVICE_ROLE_KEY
 );
 
 /**
@@ -78,9 +80,9 @@ export default async function handler(req, res) {
 
       await supabase.from('experience_credit_ledger').insert({
         credit_id: reservation.credit_id,
-        type: 'redemption',
-        amount_cents: -reservation.reserved_cents,
-        description: `Redeemed for cart purchase (${cartItems.length} items)`
+        delta_cents: -reservation.reserved_cents,
+        reason: 'redemption',
+        related_order_id: 'free_' + reservation_id
       });
 
       await supabase
@@ -150,7 +152,9 @@ export default async function handler(req, res) {
 
     // Prepare session config
     const sessionConfig = {
-      payment_method_types: ['card'],
+      // Let Stripe dynamically display all payment methods enabled in the dashboard
+      // (Cards, Apple Pay, Google Pay, Cash App Pay, Link/Venmo, Affirm, Klarna, etc.)
+      automatic_payment_methods: { enabled: true },
       line_items: lineItems,
       mode: 'payment',
       success_url: successUrl,
@@ -191,7 +195,21 @@ export default async function handler(req, res) {
     }
 
     // Create Stripe checkout session
-    const session = await stripe.checkout.sessions.create(sessionConfig);
+    // Try automatic_payment_methods first; fall back to payment_method_types
+    // if the Stripe account API version is too old.
+    let session;
+    try {
+      session = await stripe.checkout.sessions.create(sessionConfig);
+    } catch (stripeError) {
+      if (stripeError.message && stripeError.message.includes('automatic_payment_methods')) {
+        console.warn('automatic_payment_methods not supported, falling back to payment_method_types');
+        delete sessionConfig.automatic_payment_methods;
+        sessionConfig.payment_method_types = ['card'];
+        session = await stripe.checkout.sessions.create(sessionConfig);
+      } else {
+        throw stripeError;
+      }
+    }
 
     res.status(200).json({
       sessionId: session.id,

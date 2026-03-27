@@ -53,7 +53,7 @@ export default function SignatureBloom() {
             transition: 'opacity 1s cubic-bezier(0.16, 1, 0.3, 1) 0.2s, transform 1s cubic-bezier(0.16, 1, 0.3, 1) 0.2s',
           }}
         >
-          <div className="signature-bloom__video-frame">
+          <div className="db-watermark signature-bloom__video-frame">
             {/* Gold corner accents */}
             <div className="signature-bloom__corner signature-bloom__corner--tl" />
             <div className="signature-bloom__corner signature-bloom__corner--tr" />

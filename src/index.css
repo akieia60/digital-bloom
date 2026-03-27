@@ -3,138 +3,359 @@
 
 :root {
   /* ============================================
-     THEME TOKEN SYSTEM
-     Dark Luxury = default active theme
+     DIGITAL BLOOM — MERGED DESIGN SYSTEM
+     Black brand framing + white-forward readability
      ============================================ */
 
-  /* Page foundations */
-  --bg-page: #0A0A0A;
-  --bg-surface: rgba(255, 255, 255, 0.04);
-  --bg-surface-hover: rgba(255, 255, 255, 0.08);
+  /* ── Page Foundations ── */
+  --bg-page: #0D1B36;
+  --bg-hero: #0D1B36;
 
-  /* Text hierarchy */
-  --text-primary: #FFFFFF;
-  --text-secondary: rgba(255, 255, 255, 0.5);
-  --text-muted: rgba(255, 255, 255, 0.3);
+  /* ── Surface System (White-Forward) ── */
+  --surface-white: #FFFFFF;
+  --surface-soft: #F7F7F7;
+  --surface-card: #FFFFFF;
+  --surface-muted: #FAFAFA;
+  --bg-surface: #FFFFFF;
+  --bg-surface-hover: #F0F0F0;
 
-  /* Borders */
-  --border-subtle: rgba(255, 255, 255, 0.06);
-  --border-default: rgba(255, 255, 255, 0.1);
+  /* ── Text — Dark-on-Light (primary readability) ── */
+  --text-primary: #1D1D1F;
+  --text-secondary: #6E6E73;
+  --text-muted: #AEAEB2;
+  --text-on-dark: #FFFFFF;
+  --text-on-dark-secondary: rgba(255, 255, 255, 0.6);
+  --text-on-dark-muted: rgba(255, 255, 255, 0.35);
 
-  /* Accent — gold (same in both themes) */
-  --accent-gold: #D4AF37;
-  --accent-gold-hover: #C4A030;
-  --accent-gold-glow: rgba(212, 175, 55, 0.08);
-  --accent-gold-border: rgba(212, 175, 55, 0.15);
-  --accent-gold-border-hover: rgba(212, 175, 55, 0.3);
+  /* ── Borders ── */
+  --border-subtle: #F0F0F0;
+  --border-default: #E5E5EA;
+  --border-strong: #D2D2D7;
+  --border-on-dark: rgba(255, 255, 255, 0.08);
 
-  /* Glass morphism */
-  --glass-bg: rgba(255, 255, 255, 0.06);
-  --glass-border: rgba(255, 255, 255, 0.08);
+  /* ── Brand Accent — Gold (accent only, never dominant) ── */
+  --accent-gold: #C9A14A;
+  --accent-gold-hover: #B8923F;
+  --accent-gold-glow: rgba(201, 161, 74, 0.08);
+  --accent-gold-border: rgba(201, 161, 74, 0.2);
+  --accent-gold-border-hover: rgba(201, 161, 74, 0.4);
+  --spec-gold: #C9A14A;
 
-  /* Navigation */
-  --nav-bg: #0A0A0A;
-  --nav-bg-scrolled: rgba(10, 10, 10, 0.9);
+  /* ── Deep Blue — Subtle premium accent ── */
+  --deep-blue: #0B1F3A;
+  --deep-blue-soft: rgba(11, 31, 58, 0.06);
+  --deep-blue-text: #0B1F3A;
+
+  /* ── Navigation (dark framing) ── */
+  --nav-bg: #0D1B36;
+  --nav-bg-scrolled: rgba(10, 10, 10, 0.95);
   --nav-border-scrolled: rgba(255, 255, 255, 0.05);
 
-  /* Scrollbar */
-  --scrollbar-thumb: rgba(255, 255, 255, 0.15);
-  --scrollbar-thumb-hover: rgba(255, 255, 255, 0.3);
+  /* ── Spacing Tokens ── */
+  --section-space-mobile: 56px;
+  --section-space-desktop: 96px;
+  --card-padding-mobile: 16px;
+  --card-padding-desktop: 24px;
+  --safe-area-bottom: env(safe-area-inset-bottom, 0px);
 
-  /* Legacy aliases (backward compat) */
+  /* ── Scrollbar ── */
+  --scrollbar-thumb: rgba(0, 0, 0, 0.15);
+  --scrollbar-thumb-hover: rgba(0, 0, 0, 0.3);
+
+  /* ── Dynamic Theme Engine ── */
+  --bloom-primary: #FF69B4;
+  --bloom-primary-rgb: 255, 105, 180;
+  --bloom-radius: 20px;
+  --bloom-glow: 0.15;
+
+  /* ── Legacy aliases (backward compat) ── */
   --apple-white: #FFFFFF;
   --apple-gray: #FAFAFA;
   --apple-text: #1D1D1F;
   --apple-secondary: #6E6E73;
   --apple-border: #D2D2D7;
-  --apple-accent: #D4AF37;
-  --pure-gold: #D4AF37;
+  --apple-accent: #C9A14A;
+  --pure-gold: #C9A14A;
   --champagne-white: #F5F5F7;
-
-  /* Dynamic Theme Engine Defaults */
-  --bloom-primary: #FF69B4;
-  --bloom-primary-rgb: 255, 105, 180;
-  --bloom-radius: 20px;
-  --bloom-glow: 0.15;
 }
 
 /* ============================================
-   LIGHT THEME OVERRIDE (future-ready)
-   Activate by adding data-theme="light" to <html>
+   DIGITAL BLOOM™ WATERMARK UTILITY
+   Add class "db-watermark" to any video wrapper
+   to get the branded watermark automatically.
    ============================================ */
-[data-theme="light"] {
-  --bg-page: #FFFFFF;
-  --bg-surface: #F5F5F7;
-  --bg-surface-hover: #E8E8ED;
-
-  --text-primary: #1D1D1F;
-  --text-secondary: #6E6E73;
-  --text-muted: #86868b;
-
-  --border-subtle: rgba(0, 0, 0, 0.06);
-  --border-default: #D2D2D7;
-
-  --glass-bg: rgba(255, 255, 255, 0.8);
-  --glass-border: rgba(0, 0, 0, 0.06);
-
-  --nav-bg: #FFFFFF;
-  --nav-bg-scrolled: rgba(255, 255, 255, 0.85);
-  --nav-border-scrolled: rgba(0, 0, 0, 0.06);
-
-  --scrollbar-thumb: rgba(0, 0, 0, 0.15);
-  --scrollbar-thumb-hover: rgba(0, 0, 0, 0.3);
+.db-watermark {
+  position: relative;
+  overflow: hidden;
 }
 
+.db-watermark::after {
+  content: 'Digital Bloom™';
+  position: absolute;
+  bottom: 10px;
+  left: 12px;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 0.62rem;
+  font-style: italic;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: rgba(212, 175, 55, 0.7);
+  pointer-events: none;
+  z-index: 20;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+  user-select: none;
+}
+
+/* ============================================
+   GLOBAL RESET + TYPOGRAPHY
+   ============================================ */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Outfit', 'Inter', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter', 'Segoe UI', Roboto, sans-serif;
   background: var(--bg-page);
   color: var(--text-primary);
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  font-size: 16px;
+  line-height: 1.6;
 }
 
+/* Serif headlines — luxury feel */
 h1, h2, h3, .font-display {
   font-family: 'Playfair Display', 'Georgia', serif;
   letter-spacing: 0.02em;
 }
 
-/* Dark luxury background */
-.bg-obsidian {
+/* ============================================
+   SURFACE UTILITY CLASSES
+   White-forward panels for readable content
+   ============================================ */
+
+/* White panel — primary readable surface */
+.panel-white {
+  background: var(--surface-white);
+  border-radius: 20px;
+  padding: var(--card-padding-mobile);
+  border: 1px solid var(--border-subtle);
+}
+
+/* Soft panel — grouped content, forms */
+.panel-soft {
+  background: var(--surface-soft);
+  border-radius: 16px;
+  padding: var(--card-padding-mobile);
+  border: 1px solid var(--border-subtle);
+}
+
+/* Dark panel — hero framing, luxury contrast */
+.panel-dark {
   background: var(--bg-page);
+  border-radius: 20px;
+  padding: var(--card-padding-mobile);
+  border: 1px solid var(--border-on-dark);
+  color: var(--text-on-dark);
 }
 
-/* Remove floating particles — Apple-style is clean */
-.particles {
-  display: none;
+/* Deep blue accent panel */
+.panel-blue {
+  background: var(--deep-blue);
+  border-radius: 16px;
+  padding: var(--card-padding-mobile);
+  color: var(--surface-white);
 }
 
-/* Custom scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
+@media (min-width: 768px) {
+  .panel-white,
+  .panel-soft,
+  .panel-dark,
+  .panel-blue {
+    padding: var(--card-padding-desktop);
+  }
 }
 
-::-webkit-scrollbar-track {
+/* ============================================
+   SECTION SPACING UTILITY
+   ============================================ */
+.section-spacing {
+  padding-top: var(--section-space-mobile);
+  padding-bottom: var(--section-space-mobile);
+}
+
+@media (min-width: 768px) {
+  .section-spacing {
+    padding-top: var(--section-space-desktop);
+    padding-bottom: var(--section-space-desktop);
+  }
+}
+
+/* ============================================
+   HERO TEXT OVERLAY
+   Readable text on busy images
+   ============================================ */
+.hero-text-overlay {
+  position: relative;
+  z-index: 2;
+}
+
+.hero-text-overlay::before {
+  content: '';
+  position: absolute;
+  inset: -20px;
+  background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 60%, transparent 100%);
+  z-index: -1;
+  border-radius: 12px;
+}
+
+/* ============================================
+   FORM SECTION GROUPING
+   ============================================ */
+.form-group-section {
+  background: var(--surface-soft);
+  border-radius: 14px;
+  padding: 20px;
+  margin-bottom: 16px;
+  border: 1px solid var(--border-subtle);
+}
+
+.form-group-section__title {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+}
+
+/* ============================================
+   STICKY MOBILE CTA BAR
+   Reusable fixed-bottom action area
+   ============================================ */
+.sticky-cta-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  background: var(--surface-white);
+  border-top: 1px solid var(--border-default);
+  padding: 12px 20px;
+  padding-bottom: calc(12px + var(--safe-area-bottom));
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.sticky-cta-bar__price {
+  flex: 1;
+}
+
+.sticky-cta-bar__label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  font-family: 'Outfit', sans-serif;
+  margin-bottom: 2px;
+}
+
+.sticky-cta-bar__amount {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text-primary);
+  font-family: 'Outfit', sans-serif;
+}
+
+.sticky-cta-bar__btn {
+  padding: 14px 28px;
+  background: var(--accent-gold);
+  color: #FFFFFF;
+  border: none;
+  border-radius: 980px;
+  font-size: 15px;
+  font-weight: 700;
+  font-family: 'Outfit', sans-serif;
+  cursor: pointer;
+  transition: all 0.2s;
+  min-height: 48px;
+  flex-shrink: 0;
+}
+
+.sticky-cta-bar__btn:hover {
+  background: var(--accent-gold-hover);
+}
+
+/* ============================================
+   BUTTONS — Premium Feel
+   ============================================ */
+.btn-primary {
+  background: var(--accent-gold);
+  color: #FFFFFF;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 980px;
+  border: none;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 600;
+  cursor: pointer;
+  min-height: 48px;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(201, 161, 74, 0.25);
+  background: var(--accent-gold-hover);
+}
+
+.btn-secondary {
+  border: 1.5px solid var(--border-strong);
   background: transparent;
+  color: var(--text-primary);
+  transition: all 0.3s ease;
+  border-radius: 980px;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 500;
+  cursor: pointer;
+  min-height: 48px;
 }
 
-::-webkit-scrollbar-thumb {
-  background: var(--scrollbar-thumb);
-  border-radius: 10px;
+.btn-secondary:hover {
+  border-color: var(--accent-gold);
+  color: var(--accent-gold);
+  background: var(--accent-gold-glow);
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: var(--scrollbar-thumb-hover);
+/* Deep blue button variant */
+.btn-deep-blue {
+  background: var(--deep-blue);
+  color: #FFFFFF;
+  border: none;
+  border-radius: 980px;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 600;
+  cursor: pointer;
+  min-height: 48px;
+  transition: all 0.3s ease;
 }
 
-/* Gradient text - Subtle gold */
+.btn-deep-blue:hover {
+  background: #132d4f;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(11, 31, 58, 0.3);
+}
+
+/* ============================================
+   GRADIENT TEXT — Subtle gold
+   ============================================ */
 .gradient-text {
   background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent-gold) 100%);
   -webkit-background-clip: text;
@@ -142,43 +363,19 @@ h1, h2, h3, .font-display {
   background-clip: text;
 }
 
-/* Glass morphism */
-.glass {
-  background: var(--glass-bg);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid var(--glass-border);
+/* Deep blue heading accent */
+.text-deep-blue {
+  color: var(--deep-blue);
 }
 
-/* Buttons - Premium Feel */
-.btn-primary {
-  background: var(--accent-gold);
-  color: var(--bg-page);
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  border-radius: 980px;
-}
-
-.btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
-  background: var(--accent-gold-hover);
-}
-
-.btn-secondary {
-  border: 1px solid var(--border-default);
-  background: transparent;
-  color: var(--text-primary);
-  transition: all 0.4s ease;
-  border-radius: 980px;
-}
-
-.btn-secondary:hover {
-  background: var(--bg-surface-hover);
-  border-color: var(--accent-gold);
+/* Gold accent text */
+.text-gold {
   color: var(--accent-gold);
 }
 
-/* Product Protection — excludes demo video player */
+/* ============================================
+   PRODUCT VIDEO PROTECTION
+   ============================================ */
 video {
   user-select: none;
   pointer-events: none;
@@ -190,7 +387,7 @@ video {
   pointer-events: auto;
 }
 
-/* Lazy loading helper for images */
+/* Lazy loading images */
 img[loading="lazy"] {
   opacity: 0;
   transition: opacity 0.3s ease;
@@ -202,7 +399,26 @@ img {
 }
 
 /* ============================================
-   BLOOM LIST CARD — Full-width category page card
+   GLASS — Decorative use only (nav, hover)
+   NOT for primary readable UI
+   ============================================ */
+.glass {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Nav-specific glass */
+.glass-nav {
+  background: rgba(10, 10, 10, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* ============================================
+   BLOOM LIST CARD — White-forward merge
    ============================================ */
 .bloom-list-card {
   display: flex;
@@ -210,8 +426,8 @@ img {
   text-decoration: none;
   border-radius: 20px;
   overflow: hidden;
-  border: 1px solid var(--border-subtle);
-  background: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  background: var(--surface-white);
   transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1),
               border-color 0.4s,
               box-shadow 0.4s;
@@ -221,7 +437,7 @@ img {
 .bloom-list-card:hover {
   transform: translateY(-4px);
   border-color: var(--accent-gold-border-hover);
-  box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 0 1px var(--accent-gold-border);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.1), 0 0 0 1px var(--accent-gold-border);
 }
 
 .bloom-list-card__media {
@@ -235,7 +451,7 @@ img {
 .bloom-list-card__media-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.55) 100%);
+  background: linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.45) 100%);
   z-index: 1;
   pointer-events: none;
 }
@@ -246,7 +462,7 @@ img {
   justify-content: space-between;
   gap: 16px;
   padding: 20px 24px;
-  background: var(--bg-surface);
+  background: var(--surface-white);
 }
 
 .bloom-list-card__meta {
@@ -289,6 +505,7 @@ img {
   margin: 0;
   display: -webkit-box;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
@@ -310,7 +527,7 @@ img {
 
 .bloom-list-card__cta {
   display: inline-block;
-  padding: 6px 18px;
+  padding: 8px 20px;
   border: 1px solid var(--accent-gold-border);
   border-radius: 980px;
   font-size: 0.72rem;
@@ -319,31 +536,100 @@ img {
   color: var(--accent-gold);
   font-family: 'Outfit', sans-serif;
   transition: background 0.3s, border-color 0.3s, color 0.3s;
+  min-height: 36px;
+  display: inline-flex;
+  align-items: center;
 }
 
 .bloom-list-card:hover .bloom-list-card__cta {
   background: var(--accent-gold);
-  color: var(--bg-page);
+  color: #FFFFFF;
   border-color: var(--accent-gold);
 }
 
-/* Mobile Menu Slide-in Animation */
+/* Dark background context — flip bloom card to dark mode */
+.bg-obsidian .bloom-list-card {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: var(--border-on-dark);
+}
+
+.bg-obsidian .bloom-list-card__info {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.bg-obsidian .bloom-list-card__name {
+  color: var(--text-on-dark);
+}
+
+.bg-obsidian .bloom-list-card__desc {
+  color: var(--text-on-dark-secondary);
+}
+
+.bg-obsidian .bloom-list-card:hover {
+  box-shadow: 0 16px 48px rgba(0,0,0,0.5), 0 0 0 1px var(--accent-gold-border);
+}
+
+/* ============================================
+   DARK BACKGROUND UTILITY
+   ============================================ */
+.bg-obsidian {
+  background: var(--bg-page);
+  color: var(--text-on-dark);
+}
+
+/* ============================================
+   ANIMATIONS
+   ============================================ */
 @keyframes slide-in {
-  from {
-    transform: translateX(-100%);
-    opacity: 0;
-  }
-  to {
-    transform: translateX(0);
-    opacity: 1;
-  }
+  from { transform: translateX(-100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
 }
 
 .animate-slide-in {
   animation: slide-in 0.3s ease-out forwards;
 }
 
-/* Mobile Responsiveness */
+@keyframes slide-in-right {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+.animate-slide-in-right {
+  animation: slide-in-right 0.3s ease-out forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.4s ease forwards;
+}
+
+/* ============================================
+   SCROLLBAR
+   ============================================ */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-thumb-hover);
+}
+
+/* ============================================
+   MOBILE-FIRST RULES (STRICT)
+   ============================================ */
 @media (max-width: 640px) {
   /* Prevent iOS zoom on input focus */
   input,
@@ -351,37 +637,106 @@ img {
   select {
     font-size: 16px !important;
   }
-  
-  /* Touch-friendly buttons */
+
+  /* Touch-friendly targets — 44px minimum */
   button,
   .btn-primary,
-  .btn-secondary {
+  .btn-secondary,
+  a[role="button"] {
     min-height: 44px;
     min-width: 44px;
   }
-  
-  /* Readable text sizes */
+
   body {
     font-size: 16px;
   }
-  
-  h1 {
-    font-size: 2rem;
-  }
-  
-  h2 {
-    font-size: 1.5rem;
-  }
-  
-  h3 {
-    font-size: 1.25rem;
-  }
+
+  h1 { font-size: 2rem; }
+  h2 { font-size: 1.5rem; }
+  h3 { font-size: 1.25rem; }
 }
 
 @media (max-width: 768px) {
-  /* Tablet adjustments */
   .container {
     padding-left: 1rem;
     padding-right: 1rem;
   }
+}
+
+/* ============================================
+   BOTTOM SHEET PANEL SUPPORT (MOBILE)
+   White surface, rounded top, internal scroll
+   ============================================ */
+.bottom-sheet {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: var(--surface-white);
+  border-radius: 20px 20px 0 0;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  transform: translateY(100%);
+  transition: transform 0.35s cubic-bezier(0.32, 0.72, 0, 1);
+  box-shadow: 0 -8px 40px rgba(0, 0, 0, 0.15);
+}
+
+.bottom-sheet.open {
+  transform: translateY(0);
+}
+
+.bottom-sheet__body {
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  padding: 0 20px 120px;
+}
+
+.bottom-sheet__footer {
+  position: sticky;
+  bottom: 0;
+  background: var(--surface-white);
+  border-top: 1px solid var(--border-default);
+  padding: 16px 20px;
+  padding-bottom: calc(16px + var(--safe-area-bottom));
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.06);
+  flex-shrink: 0;
+}
+
+/* Desktop: convert bottom sheet to side panel */
+@media (min-width: 769px) {
+  .bottom-sheet {
+    top: 0;
+    left: auto;
+    right: 0;
+    width: 520px;
+    max-height: 100vh;
+    border-radius: 0;
+    transform: translateX(100%);
+  }
+
+  .bottom-sheet.open {
+    transform: translateX(0);
+  }
+}
+
+/* ============================================
+   DEEP BLUE ACCENT USAGE
+   Selected states, section headings, premium details
+   ============================================ */
+.accent-blue-bar {
+  display: block;
+  width: 40px;
+  height: 3px;
+  background: var(--deep-blue);
+  border-radius: 3px;
+  margin-bottom: 12px;
+}
+
+.selected-state-blue {
+  background: var(--deep-blue-soft);
+  border-color: var(--deep-blue);
 }

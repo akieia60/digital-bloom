@@ -1,0 +1,359 @@
+/* ============================================
+   OVERLAY ANIMATIONS — V1 CSS Placeholders
+   
+   These are temporary CSS-only overlays used until
+   real transparent WebM/APNG assets are added.
+   When real assets are ready, the LivePreview component
+   will render <video> layers instead of these CSS effects.
+   ============================================ */
+
+/* ── COMPOSITION CONTAINER ── */
+.composition-preview {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 9 / 16;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #000;
+}
+
+.composition-preview--square {
+  aspect-ratio: 1 / 1;
+}
+
+.composition-preview--landscape {
+  aspect-ratio: 16 / 9;
+}
+
+/* ── BASE MEDIA LAYER ── */
+.composition-layer--base {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.composition-layer--base video,
+.composition-layer--base img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ── COLOR FILTER LAYER ── */
+.composition-layer--color {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+  transition: background 0.4s ease, opacity 0.4s ease;
+}
+
+/* ── OVERLAY LAYERS (shared) ── */
+.composition-layer--overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+
+.composition-layer--overlay.entering {
+  animation: overlayFadeIn 0.4s ease forwards;
+}
+
+.composition-layer--overlay.exiting {
+  animation: overlayFadeOut 0.3s ease forwards;
+}
+
+@keyframes overlayFadeIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+@keyframes overlayFadeOut {
+  from { opacity: 1; transform: scale(1); }
+  to   { opacity: 0; transform: scale(0.95); }
+}
+
+/* ── BALLOON OVERLAY (CSS Placeholder) ── */
+.overlay-balloon {
+  z-index: 10;
+}
+
+.overlay-balloon__item {
+  position: absolute;
+  font-size: 56px;
+  animation: balloonFloat 4s ease-in-out infinite;
+  filter: drop-shadow(0 6px 16px rgba(0,0,0,0.4));
+}
+
+.overlay-balloon__item:nth-child(1) { left: 10%; bottom: -10%; animation-delay: 0s; animation-duration: 4.2s; }
+.overlay-balloon__item:nth-child(2) { left: 35%; bottom: -15%; animation-delay: 0.6s; animation-duration: 3.8s; font-size: 48px; }
+.overlay-balloon__item:nth-child(3) { left: 60%; bottom: -8%; animation-delay: 1.2s; animation-duration: 4.5s; font-size: 52px; }
+.overlay-balloon__item:nth-child(4) { left: 80%; bottom: -12%; animation-delay: 0.3s; animation-duration: 3.6s; font-size: 44px; }
+.overlay-balloon__item:nth-child(5) { left: 25%; bottom: -18%; animation-delay: 1.8s; animation-duration: 4.0s; font-size: 60px; }
+
+@keyframes balloonFloat {
+  0%   { transform: translateY(0) rotate(0deg); opacity: 0; }
+  8%   { opacity: 1; }
+  50%  { transform: translateY(-350px) rotate(10deg); opacity: 0.9; }
+  85%  { opacity: 0.5; }
+  100% { transform: translateY(-600px) rotate(-8deg); opacity: 0; }
+}
+
+/* Balloon colors per theme */
+.overlay-balloon--warm .overlay-balloon__item:nth-child(1) { color: #FF6B6B; }
+.overlay-balloon--warm .overlay-balloon__item:nth-child(2) { color: #FFA07A; }
+.overlay-balloon--warm .overlay-balloon__item:nth-child(3) { color: #FFD700; }
+.overlay-balloon--warm .overlay-balloon__item:nth-child(4) { color: #FF8C42; }
+.overlay-balloon--warm .overlay-balloon__item:nth-child(5) { color: #FF6B6B; }
+
+.overlay-balloon--cool .overlay-balloon__item:nth-child(1) { color: #4ECDC4; }
+.overlay-balloon--cool .overlay-balloon__item:nth-child(2) { color: #95E1D3; }
+.overlay-balloon--cool .overlay-balloon__item:nth-child(3) { color: #67C5E5; }
+.overlay-balloon--cool .overlay-balloon__item:nth-child(4) { color: #A8E6CF; }
+.overlay-balloon--cool .overlay-balloon__item:nth-child(5) { color: #4ECDC4; }
+
+.overlay-balloon--elegant .overlay-balloon__item { color: #D4AF37; }
+.overlay-balloon--romantic .overlay-balloon__item { color: #FF69B4; }
+.overlay-balloon--original .overlay-balloon__item { color: #FF69B4; }
+
+/* ── RIBBON OVERLAY (CSS Placeholder) ── */
+.overlay-ribbon {
+  z-index: 20;
+}
+
+.overlay-ribbon__border {
+  position: absolute;
+  inset: 0;
+  border: 8px solid;
+  border-radius: 4px;
+  opacity: 0.85;
+  animation: ribbonShimmer 3s ease-in-out infinite;
+}
+
+.overlay-ribbon__corner {
+  position: absolute;
+  width: 36px;
+  height: 36px;
+  opacity: 0.85;
+  font-size: 24px;
+}
+
+.overlay-ribbon__corner--tl { top: 2px; left: 2px; }
+.overlay-ribbon__corner--tr { top: 2px; right: 2px; transform: scaleX(-1); }
+.overlay-ribbon__corner--bl { bottom: 2px; left: 2px; transform: scaleY(-1); }
+.overlay-ribbon__corner--br { bottom: 2px; right: 2px; transform: scale(-1); }
+
+@keyframes ribbonShimmer {
+  0%, 100% { opacity: 0.5; }
+  50%      { opacity: 0.9; }
+}
+
+.overlay-ribbon--warm .overlay-ribbon__border { border-color: #FFA07A; }
+.overlay-ribbon--cool .overlay-ribbon__border { border-color: #4ECDC4; }
+.overlay-ribbon--elegant .overlay-ribbon__border { border-color: #D4AF37; }
+.overlay-ribbon--romantic .overlay-ribbon__border { border-color: #FF69B4; }
+.overlay-ribbon--original .overlay-ribbon__border { border-color: #FFB6C1; }
+
+/* ── SPARKLE OVERLAY (CSS Placeholder) ── */
+.overlay-sparkle {
+  z-index: 30;
+}
+
+.overlay-sparkle__particle {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: #FFFFFF;
+  border-radius: 50%;
+  box-shadow: 0 0 12px 4px rgba(255,255,255,0.8), 0 0 24px 8px rgba(212,175,55,0.3);
+  animation: sparkleGlow 2s ease-in-out infinite;
+}
+
+.overlay-sparkle__particle:nth-child(1)  { top: 12%; left: 20%; animation-delay: 0s; }
+.overlay-sparkle__particle:nth-child(2)  { top: 25%; left: 75%; animation-delay: 0.3s; width: 10px; height: 10px; }
+.overlay-sparkle__particle:nth-child(3)  { top: 40%; left: 45%; animation-delay: 0.7s; }
+.overlay-sparkle__particle:nth-child(4)  { top: 55%; left: 15%; animation-delay: 1.0s; width: 6px; height: 6px; }
+.overlay-sparkle__particle:nth-child(5)  { top: 60%; left: 80%; animation-delay: 0.5s; width: 12px; height: 12px; }
+.overlay-sparkle__particle:nth-child(6)  { top: 75%; left: 35%; animation-delay: 1.3s; }
+.overlay-sparkle__particle:nth-child(7)  { top: 30%; left: 60%; animation-delay: 0.2s; width: 6px; height: 6px; }
+.overlay-sparkle__particle:nth-child(8)  { top: 85%; left: 55%; animation-delay: 0.8s; width: 10px; height: 10px; }
+.overlay-sparkle__particle:nth-child(9)  { top: 18%; left: 40%; animation-delay: 1.5s; width: 14px; height: 14px; }
+.overlay-sparkle__particle:nth-child(10) { top: 70%; left: 70%; animation-delay: 0.4s; }
+
+@keyframes sparkleGlow {
+  0%, 100% { opacity: 0; transform: scale(0.3); }
+  50%      { opacity: 1; transform: scale(1.5); }
+}
+
+/* ── TEXT OVERLAY LAYER — Etched into video ── */
+.composition-layer--text {
+  position: absolute;
+  z-index: 40;
+  pointer-events: none;
+  padding: 0 16px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.composition-text__message {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(18px, 5vw, 32px);
+  font-weight: 600;
+  color: #FFFFFF;
+  text-shadow:
+    0 2px 8px rgba(0,0,0,0.7),
+    0 0 30px rgba(212,175,55,0.3),
+    0 0 60px rgba(212,175,55,0.15);
+  -webkit-text-stroke: 0.5px rgba(212,175,55,0.25);
+  line-height: 1.35;
+  animation: textEtchIn 1s ease forwards;
+  mix-blend-mode: screen;
+  letter-spacing: 0.02em;
+}
+
+/* Etched variant — embeds text into video */
+.composition-text__message--etched {
+  mix-blend-mode: overlay;
+  text-shadow:
+    0 1px 3px rgba(0,0,0,0.9),
+    0 0 20px rgba(255,255,255,0.2),
+    inset 0 1px 0 rgba(255,255,255,0.1);
+  -webkit-text-stroke: 0.3px rgba(255,255,255,0.15);
+}
+
+.composition-text__names {
+  font-family: 'Outfit', sans-serif;
+  font-size: clamp(11px, 2.8vw, 15px);
+  color: rgba(255,255,255,0.8);
+  text-shadow: 0 1px 6px rgba(0,0,0,0.6);
+  margin-top: 8px;
+  letter-spacing: 0.08em;
+  mix-blend-mode: soft-light;
+  animation: textEtchIn 1s ease 0.3s forwards;
+  opacity: 0;
+}
+
+@keyframes textEtchIn {
+  0% { opacity: 0; transform: translateY(12px) scale(0.97); }
+  60% { opacity: 0.8; }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* ── BRAND PROTECTION LAYERS ── */
+.composition-protection {
+  position: absolute;
+  z-index: 45;
+  pointer-events: none;
+  user-select: none;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.72);
+}
+
+.composition-protection--recipient {
+  width: min(78%, 480px);
+  padding: 0 18px;
+  box-sizing: border-box;
+  font-family: 'Outfit', sans-serif;
+  font-size: clamp(0.92rem, 2.6vw, 1.35rem);
+  font-weight: 700;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.34);
+  mix-blend-mode: screen;
+}
+
+.composition-protection--tm {
+  bottom: 8%;
+  left: 6%;
+  font-family: 'Outfit', sans-serif;
+  font-size: clamp(0.72rem, 2vw, 0.92rem);
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.composition-protection--brand {
+  right: 6%;
+  bottom: 8%;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: clamp(0.74rem, 2vw, 1rem);
+  font-style: italic;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  color: rgba(212, 175, 55, 0.76);
+}
+
+/* ── GOLD DUST OVERLAY (CSS Placeholder) ── */
+.overlay-gold-dust {
+  z-index: 25;
+}
+
+.overlay-gold-dust__particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: #D4AF37;
+  border-radius: 50%;
+  box-shadow: 0 0 6px 2px rgba(212, 175, 55, 0.6), 0 0 14px 6px rgba(212, 175, 55, 0.2);
+  animation: goldDustDrift 3.5s ease-in-out infinite;
+}
+
+.overlay-gold-dust__particle:nth-child(1)  { top: 8%;  left: 18%; animation-delay: 0s; }
+.overlay-gold-dust__particle:nth-child(2)  { top: 15%; left: 65%; animation-delay: 0.4s; width: 6px; height: 6px; }
+.overlay-gold-dust__particle:nth-child(3)  { top: 28%; left: 40%; animation-delay: 0.8s; }
+.overlay-gold-dust__particle:nth-child(4)  { top: 35%; left: 85%; animation-delay: 1.2s; width: 3px; height: 3px; }
+.overlay-gold-dust__particle:nth-child(5)  { top: 45%; left: 12%; animation-delay: 0.3s; width: 5px; height: 5px; }
+.overlay-gold-dust__particle:nth-child(6)  { top: 52%; left: 55%; animation-delay: 0.7s; }
+.overlay-gold-dust__particle:nth-child(7)  { top: 60%; left: 78%; animation-delay: 1.0s; width: 6px; height: 6px; }
+.overlay-gold-dust__particle:nth-child(8)  { top: 70%; left: 30%; animation-delay: 1.5s; }
+.overlay-gold-dust__particle:nth-child(9)  { top: 78%; left: 50%; animation-delay: 0.6s; width: 5px; height: 5px; }
+.overlay-gold-dust__particle:nth-child(10) { top: 85%; left: 72%; animation-delay: 0.2s; }
+.overlay-gold-dust__particle:nth-child(11) { top: 22%; left: 25%; animation-delay: 1.8s; width: 3px; height: 3px; }
+.overlay-gold-dust__particle:nth-child(12) { top: 42%; left: 92%; animation-delay: 0.9s; }
+.overlay-gold-dust__particle:nth-child(13) { top: 90%; left: 15%; animation-delay: 1.3s; width: 6px; height: 6px; }
+.overlay-gold-dust__particle:nth-child(14) { top: 18%; left: 82%; animation-delay: 0.5s; }
+.overlay-gold-dust__particle:nth-child(15) { top: 65%; left: 8%;  animation-delay: 1.1s; width: 4px; height: 4px; }
+
+@keyframes goldDustDrift {
+  0%   { opacity: 0; transform: translateY(0) scale(0.5); }
+  20%  { opacity: 1; }
+  50%  { transform: translateY(-20px) scale(1.2); }
+  80%  { opacity: 0.6; }
+  100% { opacity: 0; transform: translateY(-40px) scale(0.3); }
+}
+
+/* ── DIAGONAL WATERMARK PATTERN (Gamble's anti-duplication) ── */
+/* Flashes every 10 seconds for ~5 seconds — both horizontal and diagonal */
+.composition-watermark-pattern {
+  position: absolute;
+  inset: 0;
+  z-index: 42;
+  pointer-events: none;
+  user-select: none;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  transform: rotate(-30deg) scale(1.4);
+  opacity: 0;
+  animation: watermarkFlash 10s ease-in-out infinite;
+}
+
+.composition-watermark-pattern__text {
+  font-family: 'Outfit', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.15);
+  white-space: nowrap;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  mix-blend-mode: overlay;
+}
+
+@keyframes watermarkFlash {
+  0%, 40%, 100% { opacity: 0; }
+  45% { opacity: 1; }
+  55% { opacity: 1; }
+  60% { opacity: 0; }
+}
