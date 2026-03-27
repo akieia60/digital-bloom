@@ -1,14 +1,16 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useLanguage } from '../../contexts/LanguageContext';
 
 export default function ValueProps() {
   const sectionRef = useRef(null);
   const [visibleCards, setVisibleCards] = useState(new Set());
+  const { t } = useLanguage();
 
   const values = [
     {
-      title: "HANDPICKED",
-      description: "Every bloom is hand-selected for quality and beauty. We choose only the best so you don\u2019t have to\u00A0\u2014\u00A0each one crafted with care and intention.",
+      title: t('vp_1_title'),
+      description: t('vp_1_desc'),
       icon: (
         <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" className="vp-icon">
           <circle cx="32" cy="32" r="30" stroke="url(#goldGrad1)" strokeWidth="1.5" opacity="0.4"/>
@@ -25,8 +27,8 @@ export default function ValueProps() {
       )
     },
     {
-      title: "MADE FOR THEM",
-      description: "Your words, your music, your story. Every detail is personalized and crafted with love\u00A0\u2014\u00A0because the people you care about deserve something truly\u00A0theirs.",
+      title: t('vp_2_title'),
+      description: t('vp_2_desc'),
       icon: (
         <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" className="vp-icon">
           <circle cx="32" cy="32" r="30" stroke="url(#goldGrad2)" strokeWidth="1.5" opacity="0.4"/>
@@ -42,8 +44,8 @@ export default function ValueProps() {
       )
     },
     {
-      title: "LASTS FOREVER",
-      description: "Delivered instantly to their phone or inbox. A bloom that never wilts\u00A0\u2014\u00A0a digital keepsake they can revisit, replay, and treasure for a\u00A0lifetime.",
+      title: t('vp_3_title'),
+      description: t('vp_3_desc'),
       icon: (
         <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" className="vp-icon">
           <circle cx="32" cy="32" r="30" stroke="url(#goldGrad3)" strokeWidth="1.5" opacity="0.4"/>
@@ -99,12 +101,9 @@ export default function ValueProps() {
 
         {/* Section header */}
         <div className="vp-header">
-          <span className="vp-eyebrow">THE FUTURE OF GIFTING</span>
-          <h2 className="vp-headline">Give them their flowers<br/>while they can still see them</h2>
-          <p className="vp-subtext">
-            Digital Bloom was created to express love and appreciation with intention. 
-            We believe in giving people their flowers while they are still here to experience the gesture.
-          </p>
+          <span className="vp-eyebrow">{t('vp_eyebrow')}</span>
+          <h2 className="vp-headline">{t('vp_headline_1')}<br/>{t('vp_headline_2')}</h2>
+          <p className="vp-subtext">{t('vp_subtext')}</p>
         </div>
 
         {/* Value cards */}
@@ -132,7 +131,7 @@ export default function ValueProps() {
         {/* Premium CTA */}
         <div className="vp-cta-section">
           <Link to="/shop" className="vp-btn-primary">
-            <span className="vp-btn-primary-text">Begin Your Story</span>
+            <span className="vp-btn-primary-text">{t('vp_cta')}</span>
             <span className="vp-btn-primary-glow" />
           </Link>
         </div>

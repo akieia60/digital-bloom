@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { createCreditCheckoutSession } from '../lib/creditStripe';
+import { useLanguage } from '../contexts/LanguageContext';
 import '../styles/credits.css';
 
 export default function ExperienceCredits() {
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const [selectedAmount, setSelectedAmount] = useState(null);
   const [isGift, setIsGift] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -34,7 +36,7 @@ export default function ExperienceCredits() {
       if (isGift) {
         if (!giftDetails.recipientEmail) {
           setLoading(false);
-          throw new Error('Recipient email is required for gifts');
+          throw new Error(t('credits_error_recipient'));
         }
       }
 
@@ -42,7 +44,7 @@ export default function ExperienceCredits() {
       const purchaserEmail = prompt('Enter your email address:');
       if (!purchaserEmail) {
         setLoading(false);
-        setError('Email is required to purchase credits');
+        setError(t('credits_error_email'));
         return;
       }
 
@@ -78,12 +80,10 @@ export default function ExperienceCredits() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 19l-7-7 7-7" />
               </svg>
             </div>
-            <span style={{ fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.15em', fontWeight: '500' }}>Back</span>
+            <span style={{ fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.15em', fontWeight: '500' }}>{t('credits_back')}</span>
           </button>
-          <h1 className="section-title">Experience Credits</h1>
-          <p className="section-subtitle">
-            Prepaid access to DigitalBloom digital multimedia experiences
-          </p>
+          <h1 className="section-title">{t('credits_title')}</h1>
+          <p className="section-subtitle">{t('credits_subtitle')}</p>
         </div>
 
         {/* Error Display */}
@@ -109,7 +109,7 @@ export default function ExperienceCredits() {
               className={`credit-card ${selectedAmount === amount.value ? 'selected' : ''}`}
               onClick={() => !loading && setSelectedAmount(amount.value)}
             >
-              {amount.popular && <span className="credit-badge">Popular</span>}
+              {amount.popular && <span className="credit-badge">{t('credits_popular')}</span>}
               <div className="credit-amount">{amount.label}</div>
               <button
                 className="cta-primary"
@@ -122,7 +122,7 @@ export default function ExperienceCredits() {
                 disabled={loading}
                 style={{ opacity: loading ? 0.5 : 1, cursor: loading ? 'not-allowed' : 'pointer' }}
               >
-                {loading ? 'Processing...' : 'Buy Experience Credit'}
+                {loading ? t('credits_processing') : t('credits_buy_btn')}
               </button>
             </div>
           ))}
@@ -136,37 +136,37 @@ export default function ExperienceCredits() {
               checked={isGift}
               onChange={(e) => setIsGift(e.target.checked)}
             />
-            <span className="toggle-label">Send as a gift</span>
+            <span className="toggle-label">{t('credits_gift_toggle')}</span>
           </label>
 
           {isGift && (
             <div className="gift-form">
-              <h3 className="gift-form-title">Gift Details</h3>
-              
+              <h3 className="gift-form-title">{t('credits_gift_title')}</h3>
+
               <div className="form-group">
-                <label>Recipient Name</label>
+                <label>{t('credits_gift_name_label')}</label>
                 <input
                   type="text"
                   className="customizer-input"
-                  placeholder="Who is this for?"
+                  placeholder={t('credits_gift_name_placeholder')}
                   value={giftDetails.recipientName}
                   onChange={(e) => setGiftDetails({...giftDetails, recipientName: e.target.value})}
                 />
               </div>
 
               <div className="form-group">
-                <label>Recipient Email</label>
+                <label>{t('credits_gift_email_label')}</label>
                 <input
                   type="email"
                   className="customizer-input"
-                  placeholder="their@email.com"
+                  placeholder={t('credits_gift_email_placeholder')}
                   value={giftDetails.recipientEmail}
                   onChange={(e) => setGiftDetails({...giftDetails, recipientEmail: e.target.value})}
                 />
               </div>
 
               <div className="form-group">
-                <label>Delivery Date (Optional)</label>
+                <label>{t('credits_gift_date_label')}</label>
                 <input
                   type="date"
                   className="customizer-input"
@@ -174,14 +174,14 @@ export default function ExperienceCredits() {
                   onChange={(e) => setGiftDetails({...giftDetails, deliveryDate: e.target.value})}
                   min={new Date().toISOString().split('T')[0]}
                 />
-                <span className="customizer-hint">Leave blank for immediate delivery</span>
+                <span className="customizer-hint">{t('credits_gift_date_hint')}</span>
               </div>
 
               <div className="form-group">
-                <label>Personal Note (Optional)</label>
+                <label>{t('credits_gift_note_label')}</label>
                 <textarea
                   className="customizer-textarea"
-                  placeholder="Add a personal message..."
+                  placeholder={t('credits_gift_note_placeholder')}
                   maxLength="200"
                   rows="3"
                   value={giftDetails.note}
@@ -195,43 +195,43 @@ export default function ExperienceCredits() {
 
         {/* How It Works */}
         <div className="credits-info">
-          <h2 className="section-title">How Experience Credits Work</h2>
+          <h2 className="section-title">{t('credits_how_title')}</h2>
           <div className="info-grid">
             <div className="info-card">
               <div className="info-number">01</div>
-              <h3>Purchase</h3>
-              <p>Select an amount and complete your purchase. You'll receive a unique credit code.</p>
+              <h3>{t('credits_step1_title')}</h3>
+              <p>{t('credits_step1_desc')}</p>
             </div>
             <div className="info-card">
               <div className="info-number">02</div>
-              <h3>Customize</h3>
-              <p>Browse experiences and customize one to your preferences.</p>
+              <h3>{t('credits_step2_title')}</h3>
+              <p>{t('credits_step2_desc')}</p>
             </div>
             <div className="info-card">
               <div className="info-number">03</div>
-              <h3>Redeem</h3>
-              <p>Enter your credit code at checkout to apply it toward publishing your experience.</p>
+              <h3>{t('credits_step3_title')}</h3>
+              <p>{t('credits_step3_desc')}</p>
             </div>
           </div>
         </div>
 
         {/* Legal Disclaimers */}
         <div className="credits-legal">
-          <h3>Important Information</h3>
+          <h3>{t('credits_legal_title')}</h3>
           <ul>
-            <li>Redeemable only on DigitalBloom</li>
-            <li>Not redeemable for cash</li>
-            <li>Non-refundable</li>
-            <li>Intended for DigitalBloom experience publishing only</li>
-            <li>No expiration date</li>
+            <li>{t('credits_legal_1')}</li>
+            <li>{t('credits_legal_2')}</li>
+            <li>{t('credits_legal_3')}</li>
+            <li>{t('credits_legal_4')}</li>
+            <li>{t('credits_legal_5')}</li>
           </ul>
         </div>
 
         {/* Check Balance CTA */}
         <div className="credits-balance-cta">
-          <p>Already have a credit code?</p>
+          <p>{t('credits_have_code')}</p>
           <Link to="/credits/balance" className="cta-secondary">
-            Check Your Balance
+            {t('credits_check_balance')}
           </Link>
         </div>
       </div>

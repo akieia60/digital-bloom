@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, useCallback, useMemo } from 'react';
 import { Link } from 'react-router-dom';
+import { useLanguage } from '../../contexts/LanguageContext';
 
 // Auto-detect the nearest upcoming (or current) holiday for a subtle banner
 function getUpcomingHoliday() {
@@ -46,6 +47,7 @@ export default function VideoHero() {
   const [contentVisible, setContentVisible] = useState(false);
 
   const holiday = useMemo(() => getUpcomingHoliday(), []);
+  const { t } = useLanguage();
 
   // Simplified intro — content visible quickly, no long cinematic wait
   useEffect(() => {
@@ -135,11 +137,11 @@ export default function VideoHero() {
             Digital Bloom<sup style={{ fontSize: '0.45em', verticalAlign: 'super', marginLeft: '3px', opacity: 0.75 }}>™</sup>
           </h1>
           <p className="video-hero__tagline">
-            Give Them Their Flowers While They&rsquo;re Here
+            {t('hero_tagline')}
           </p>
           <div className="video-hero__cta-wrap">
             <Link to="/shop" className="video-hero__btn">
-              <span className="video-hero__btn-text">Start Your Bloom</span>
+              <span className="video-hero__btn-text">{t('hero_start')}</span>
               <span className="video-hero__btn-shimmer" />
               <span className="video-hero__btn-glow" />
             </Link>
@@ -151,13 +153,13 @@ export default function VideoHero() {
           type="button"
           className="video-hero__scroll-indicator"
           onClick={scrollToContent}
-          aria-label="Scroll down"
+          aria-label={t('hero_scroll')}
           style={{
             opacity: contentVisible ? 0.7 : 0,
             transition: 'opacity 0.5s ease 0.3s',
           }}
         >
-          <span className="video-hero__scroll-text">Scroll</span>
+          <span className="video-hero__scroll-text">{t('hero_scroll')}</span>
           <svg
             className="video-hero__chevron"
             width="20"

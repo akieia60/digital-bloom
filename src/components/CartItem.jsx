@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
+import { useLanguage } from '../contexts/LanguageContext';
 
 const CartItem = ({ item }) => {
   const { updateQuantity, removeFromCart } = useCart();
+  const { t } = useLanguage();
   const [isExpanded, setIsExpanded] = useState(false);
 
   const handleIncrement = () => updateQuantity(item.id, item.quantity + 1);
@@ -20,7 +22,7 @@ const CartItem = ({ item }) => {
         onClick={() => setIsExpanded(!isExpanded)}
         role="button"
         aria-expanded={isExpanded}
-        aria-label={`${isExpanded ? 'Collapse' : 'Expand'} ${item.name} details`}
+        aria-label={`${isExpanded ? t('cart_item_collapse') : t('cart_item_expand')} ${item.name}`}
       >
         {/* Visual Asset Preview */}
         <div className="w-20 h-24 flex-shrink-0 rounded-2xl overflow-hidden glass border border-white/5 relative">
@@ -56,15 +58,15 @@ const CartItem = ({ item }) => {
 
           {/* Bespoke tag */}
           {item.customization ? (
-            <span className="text-[9px] uppercase tracking-widest text-pure-gold font-bold">Bespoke</span>
+            <span className="text-[9px] uppercase tracking-widest text-pure-gold font-bold">{t('cart_item_bespoke')}</span>
           ) : (
-            <span className="text-[9px] uppercase tracking-widest text-white/20 font-light">Gallery Piece</span>
+            <span className="text-[9px] uppercase tracking-widest text-white/20 font-light">{t('cart_item_gallery')}</span>
           )}
 
           {/* Expand indicator */}
           <div className="flex items-center mt-2">
             <span className="text-[10px] uppercase tracking-widest text-white/30 font-light">
-              {isExpanded ? 'Tap to collapse' : 'Tap to view details'}
+              {isExpanded ? t('cart_item_collapse') : t('cart_item_expand')}
             </span>
             <svg
               className={`w-3 h-3 ml-1 text-white/30 transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`}
@@ -107,12 +109,12 @@ const CartItem = ({ item }) => {
           {/* Customization Details */}
           {item.customization && (
             <div className="space-y-3 bg-white/[0.03] rounded-xl p-4 border border-white/5">
-              <p className="text-[10px] uppercase tracking-widest text-pure-gold font-bold mb-2">Your Selections</p>
+              <p className="text-[10px] uppercase tracking-widest text-pure-gold font-bold mb-2">{t('cart_item_selections')}</p>
 
               {/* Message */}
               {item.customization.message && (
                 <div>
-                  <span className="text-[9px] uppercase tracking-widest text-white/30 block mb-1">Message</span>
+                  <span className="text-[9px] uppercase tracking-widest text-white/30 block mb-1">{t('cart_item_message')}</span>
                   <p className="text-xs text-white/60 font-light italic">
                     "{typeof item.customization.message === 'string'
                       ? item.customization.message
@@ -121,10 +123,10 @@ const CartItem = ({ item }) => {
                   {typeof item.customization.message === 'object' && (
                     <div className="flex gap-4 mt-1">
                       {item.customization.message.toName && (
-                        <span className="text-[9px] text-white/30">To: {item.customization.message.toName}</span>
+                        <span className="text-[9px] text-white/30">{t('cart_item_to')} {item.customization.message.toName}</span>
                       )}
                       {item.customization.message.fromName && (
-                        <span className="text-[9px] text-white/30">From: {item.customization.message.fromName}</span>
+                        <span className="text-[9px] text-white/30">{t('cart_item_from')} {item.customization.message.fromName}</span>
                       )}
                     </div>
                   )}
@@ -134,7 +136,7 @@ const CartItem = ({ item }) => {
               {/* Color Theme */}
               {(item.customization.colorTheme || item.customization.theme) && (
                 <div>
-                  <span className="text-[9px] uppercase tracking-widest text-white/30 block mb-1">Style</span>
+                  <span className="text-[9px] uppercase tracking-widest text-white/30 block mb-1">{t('cart_item_style')}</span>
                   <span className="text-xs text-white/50 capitalize">
                     {item.customization.colorTheme || item.customization.theme}
                   </span>
@@ -144,7 +146,7 @@ const CartItem = ({ item }) => {
               {/* Sound */}
               {item.customization.selectedSound && (
                 <div>
-                  <span className="text-[9px] uppercase tracking-widest text-white/30 block mb-1">Sound</span>
+                  <span className="text-[9px] uppercase tracking-widest text-white/30 block mb-1">{t('cart_item_sound')}</span>
                   <span className="text-xs text-white/50 capitalize">
                     {item.customization.selectedSound.replace(/-/g, ' ')}
                   </span>
@@ -154,7 +156,7 @@ const CartItem = ({ item }) => {
               {/* Extras */}
               {item.customization.composition?.activeOverlays?.length > 0 && (
                 <div>
-                  <span className="text-[9px] uppercase tracking-widest text-white/30 block mb-1">Extras</span>
+                  <span className="text-[9px] uppercase tracking-widest text-white/30 block mb-1">{t('cart_item_extras')}</span>
                   <div className="flex flex-wrap gap-2">
                     {item.customization.composition.activeOverlays.map(overlay => (
                       <span key={overlay} className="text-[10px] uppercase tracking-wider bg-white/5 px-3 py-1 rounded-full text-white/40 border border-white/5">
@@ -173,7 +175,7 @@ const CartItem = ({ item }) => {
             className="inline-block text-[10px] uppercase tracking-widest text-pure-gold hover:text-white transition-colors font-semibold"
             onClick={(e) => e.stopPropagation()}
           >
-            View Full Product →
+            {t('cart_item_view')}
           </Link>
         </div>
       </div>
@@ -208,7 +210,7 @@ const CartItem = ({ item }) => {
           onClick={(e) => { e.stopPropagation(); removeFromCart(item.id); }}
           className="text-[9px] uppercase tracking-widest text-white/20 hover:text-red-400 transition-colors font-semibold"
         >
-          Remove
+          {t('cart_item_remove')}
         </button>
       </div>
     </div>
