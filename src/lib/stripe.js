@@ -134,7 +134,7 @@ export const createCartCheckoutSession = async (cartItems, creditMetadata = null
 
   } catch (error) {
     console.error('Error creating cart checkout session:', error);
-    return null;
+    throw error;
   }
 };
 

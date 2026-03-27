@@ -13,25 +13,32 @@ const ShoppingCart = () => {
   const [isApplyingCredit, setIsApplyingCredit] = useState(false);
   const total = getCartTotal();
   const totalCents = Math.round(total * 100);
-  const remainingDue = creditApplied ? totalCents - creditApplied.applied_cents : totalCents;
+  const remainingDue = creditApplied ? Math.max(0, totalCents - creditApplied.applied_cents) : totalCents;
 
   const handleApplyCredit = async () => {
     setError(null);
+
+    const formatted = creditCode.toUpperCase().trim();
+    if (!/^DBLOOM-[A-Z0-9]{4}-[A-Z0-9]{4}$/.test(formatted)) {
+      setError('Invalid credit code format. Expected: DBLOOM-XXXX-XXXX');
+      return;
+    }
+
     setIsApplyingCredit(true);
 
     try {
       // Validate credit code first
-      const validation = await validateCreditCode(creditCode.toUpperCase());
+      const validation = await validateCreditCode(formatted);
       
       if (!validation.valid) {
         throw new Error(validation.error || 'Invalid credit code');
       }
 
       // Reserve credit
-      const reservation = await reserveCredit(creditCode.toUpperCase(), totalCents);
-      
+      const reservation = await reserveCredit(formatted, totalCents);
+
       setCreditApplied({
-        code: creditCode.toUpperCase(),
+        code: formatted,
         reservation_id: reservation.reservation_id,
         applied_cents: reservation.applied_cents,
         remaining_after_cents: reservation.remaining_after_cents

@@ -26,10 +26,10 @@ export const useProducts = ({ tier = null } = {}) => {
         if (data && data.length > 0) {
           setProducts(data);
           setUsingMockData(false);
-          console.log('✅ Loaded', data.length, 'products from Supabase');
+          if (import.meta.env.DEV) console.log('✅ Loaded', data.length, 'products from Supabase');
         } else {
           // Fallback to mock data only if database is empty
-          console.log('⚠️ No products in database, using demo data');
+          if (import.meta.env.DEV) console.log('⚠️ No products in database, using demo data');
           const filtered = tier ? flowers.filter((f) => f.tier === tier) : flowers;
           setProducts(filtered);
           setUsingMockData(true);
