@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback, useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import '../styles/gradient-hero.css';
+import '../../styles/gradient-hero.css';
 
 // ── Holiday auto-detection (kept from original VideoHero) ────────────────────
 function getUpcomingHoliday() {
