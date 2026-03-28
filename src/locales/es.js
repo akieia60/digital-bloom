@@ -52,4 +52,12 @@ export const es = {
   
   // Customizer
   customize_button: "Personalizar",
+
+  // Gradient Hero
+  hero_new_title_1: "Brilla Tu Amor",
+  hero_new_title_2: "en el Mundo.",
+  hero_new_tagline: "Dales sus flores mientras aún están aquí.",
+  hero_new_cta: "Comienza Tu Bloom",
+  hero_new_from: "Blooms desde",
+  hero_new_no_app: "sin necesidad de app.",
 };

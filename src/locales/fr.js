@@ -52,4 +52,12 @@ export const fr = {
   
   // Customizer
   customize_button: "Personnaliser",
+
+  // Gradient Hero
+  hero_new_title_1: "Rayonne Ton Amour",
+  hero_new_title_2: "dans le Monde.",
+  hero_new_tagline: "Offrez-leur leurs fleurs pendant qu'ils sont encore là.",
+  hero_new_cta: "Commencez Votre Bloom",
+  hero_new_from: "Blooms à partir de",
+  hero_new_no_app: "sans application.",
 };

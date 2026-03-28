@@ -1,5 +1,6 @@
 import { useEffect, useState, useCallback, useMemo } from 'react';
 import { Link } from 'react-router-dom';
+import { useLanguage } from '../../contexts/LanguageContext';
 import '../../styles/gradient-hero.css';
 
 // ── Holiday auto-detection (kept from original VideoHero) ────────────────────
@@ -11,10 +12,7 @@ function getUpcomingHoliday() {
     const d = new Date(yr, mo - 1, 1);
     let count = 0;
     while (d.getMonth() === mo - 1) {
-      if (d.getDay() === weekday) {
-        count++;
-        if (count === n) return new Date(d);
-      }
+      if (d.getDay() === weekday) { count++; if (count === n) return new Date(d); }
       d.setDate(d.getDate() + 1);
     }
     return null;
@@ -39,6 +37,7 @@ function getUpcomingHoliday() {
 // ── Component ────────────────────────────────────────────────────────────────
 export default function GradientHero() {
   const [contentVisible, setContentVisible] = useState(false);
+  const { t } = useLanguage();
   const holiday = useMemo(() => getUpcomingHoliday(), []);
 
   useEffect(() => {
@@ -66,9 +65,7 @@ export default function GradientHero() {
         </div>
 
         {/* ── Watermark ── */}
-        <div className="gradient-hero__watermark" aria-hidden="true">
-          Digital Bloom™
-        </div>
+        <div className="gradient-hero__watermark" aria-hidden="true">Digital Bloom\u2122</div>
 
         {/* ── Main content ── */}
         <div
@@ -86,28 +83,28 @@ export default function GradientHero() {
             </div>
           )}
 
-          {/* Headline */}
+          {/* Headline — translated */}
           <h1 className="gradient-hero__title">
-            Shine Your Love<br />
-            <em>in the World.</em>
+            {t('hero_new_title_1')}<br />
+            <em>{t('hero_new_title_2')}</em>
           </h1>
 
-          {/* Sub-tagline */}
+          {/* Sub-tagline — translated */}
           <p className="gradient-hero__tagline">
-            Give them their flowers while they&rsquo;re here.
+            {t('hero_new_tagline')}
           </p>
 
-          {/* CTA */}
+          {/* CTA — translated */}
           <div className="gradient-hero__cta-wrap">
             <Link to="/shop" className="gradient-hero__btn">
-              <span className="gradient-hero__btn-text">Start Your Bloom</span>
+              <span className="gradient-hero__btn-text">{t('hero_new_cta')}</span>
               <span className="gradient-hero__btn-shimmer" aria-hidden="true" />
             </Link>
           </div>
 
           {/* Pricing note */}
           <p className="gradient-hero__from">
-            Blooms from <strong>$0.99</strong> &mdash; no app needed.
+            {t('hero_new_from')} <strong>$0.99</strong> &mdash; {t('hero_new_no_app')}
           </p>
         </div>
 
@@ -117,10 +114,7 @@ export default function GradientHero() {
           className="gradient-hero__scroll-indicator"
           onClick={scrollToContent}
           aria-label="Scroll to content"
-          style={{
-            opacity: contentVisible ? 0.7 : 0,
-            transition: 'opacity 0.5s ease 0.5s',
-          }}
+          style={{ opacity: contentVisible ? 0.7 : 0, transition: 'opacity 0.5s ease 0.5s' }}
         >
           <span className="gradient-hero__scroll-text">Scroll</span>
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
@@ -132,8 +126,6 @@ export default function GradientHero() {
         </button>
 
       </section>
-
-      {/* Fade into next section */}
       <div className="gradient-hero__scroll-fade" aria-hidden="true" />
     </>
   );

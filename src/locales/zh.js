@@ -52,4 +52,12 @@ export const zh = {
   
   // Customizer
   customize_button: "个性化定制",
+
+  // Gradient Hero
+  hero_new_title_1: "让你的爱闪耀",
+  hero_new_title_2: "于这个世界。",
+  hero_new_tagline: "趁他们还在，送上心意。",
+  hero_new_cta: "开始你的绽放",
+  hero_new_from: "绽放礼从",
+  hero_new_no_app: "无需应用程序。",
 };

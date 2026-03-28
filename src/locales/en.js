@@ -51,4 +51,12 @@ export const en = {
   
   // Customizer
   customize_button: "Customize",
+
+  // Gradient Hero
+  hero_new_title_1: "Shine Your Love",
+  hero_new_title_2: "in the World.",
+  hero_new_tagline: "Give them their flowers while they're here.",
+  hero_new_cta: "Start Your Bloom",
+  hero_new_from: "Blooms from",
+  hero_new_no_app: "no app needed.",
 };

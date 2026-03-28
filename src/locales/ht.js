@@ -52,4 +52,12 @@ export const ht = {
   
   // Customizer
   customize_button: "Pèsonalize",
+
+  // Gradient Hero
+  hero_new_title_1: "Klere Renmen Ou",
+  hero_new_title_2: "nan Mond lan.",
+  hero_new_tagline: "Ba yo flè yo pandan yo la toujou.",
+  hero_new_cta: "Kòmanse Bloom Ou",
+  hero_new_from: "Blooms depi",
+  hero_new_no_app: "pa bezwen aplikasyon.",
 };
