@@ -1,0 +1,267 @@
+/* ── Digital Bloom — Gradient Hero ──────────────────────────────────────────
+   Replaces the VideoHero with a rich animated navy + rose gold gradient.
+   Drop this file at: src/styles/gradient-hero.css
+   ──────────────────────────────────────────────────────────────────────── */
+
+/* ── Base ── */
+.gradient-hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: #0c1f3f; /* midnight navy */
+}
+
+/* ── Animated glow background ── */
+.gradient-hero__bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.gradient-hero__glow {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90px);
+  will-change: transform;
+  animation: ghGlowFloat 14s ease-in-out infinite;
+}
+
+/* Rose gold glow — top left */
+.gradient-hero__glow--1 {
+  width: 650px;
+  height: 650px;
+  background: radial-gradient(circle, rgba(201,133,122,0.22) 0%, transparent 70%);
+  top: -140px;
+  left: -120px;
+  animation-delay: 0s;
+}
+
+/* Warm gold glow — bottom right */
+.gradient-hero__glow--2 {
+  width: 520px;
+  height: 520px;
+  background: radial-gradient(circle, rgba(201,168,76,0.14) 0%, transparent 70%);
+  bottom: -100px;
+  right: -80px;
+  animation-delay: -5s;
+}
+
+/* Deep navy accent — center */
+.gradient-hero__glow--3 {
+  width: 420px;
+  height: 420px;
+  background: radial-gradient(circle, rgba(26,53,96,0.9) 0%, transparent 70%);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  animation-delay: -10s;
+}
+
+@keyframes ghGlowFloat {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33%       { transform: translate(28px, -18px) scale(1.06); }
+  66%       { transform: translate(-18px, 14px) scale(0.96); }
+}
+
+/* ── Subtle grid overlay ── */
+.gradient-hero__grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(201,133,122,0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(201,133,122,0.035) 1px, transparent 1px);
+  background-size: 64px 64px;
+}
+
+/* ── Watermark ── */
+.gradient-hero__watermark {
+  position: absolute;
+  bottom: 18px;
+  right: 22px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.13em;
+  color: rgba(201,133,122,0.28);
+  z-index: 2;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* ── Holiday banner ── */
+.gradient-hero__banner {
+  display: inline-block;
+  padding: 6px 20px;
+  border: 1px solid rgba(201,133,122,0.32);
+  border-radius: 100px;
+  margin-bottom: 28px;
+  background: rgba(201,133,122,0.06);
+}
+
+.gradient-hero__banner-title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #E8B4AD;
+}
+
+/* ── Content wrapper ── */
+.gradient-hero__content {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  padding: 0 24px;
+  max-width: 820px;
+}
+
+/* ── Headline ── */
+.gradient-hero__title {
+  font-family: 'Playfair Display', 'Cormorant Garamond', Georgia, serif;
+  font-size: clamp(2.6rem, 7.5vw, 5.2rem);
+  font-weight: 400;
+  line-height: 1.08;
+  letter-spacing: -0.01em;
+  color: #FAF0EC;
+  margin-bottom: 22px;
+}
+
+.gradient-hero__title em {
+  font-style: italic;
+  color: #C9857A; /* rose gold */
+}
+
+/* ── Sub-tagline ── */
+.gradient-hero__tagline {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: clamp(1.1rem, 2.6vw, 1.45rem);
+  font-weight: 300;
+  font-style: italic;
+  letter-spacing: 0.025em;
+  color: rgba(250,240,236,0.72);
+  margin-bottom: 44px;
+}
+
+/* ── CTA wrap ── */
+.gradient-hero__cta-wrap {
+  margin-bottom: 22px;
+}
+
+/* ── CTA button ── */
+.gradient-hero__btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 17px 48px;
+  background: linear-gradient(135deg, #C9857A 0%, #E8B4AD 100%);
+  color: #0c1f3f;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border-radius: 100px;
+  overflow: hidden;
+  transition: transform 0.22s ease, box-shadow 0.22s ease;
+  box-shadow: 0 8px 32px rgba(201,133,122,0.32);
+}
+
+.gradient-hero__btn:hover,
+.gradient-hero__btn:focus-visible {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 44px rgba(201,133,122,0.48);
+  outline: none;
+}
+
+.gradient-hero__btn-text {
+  position: relative;
+  z-index: 1;
+}
+
+/* Shimmer sweep on the button */
+.gradient-hero__btn-shimmer {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255,255,255,0.22) 50%,
+    transparent 100%
+  );
+  transform: translateX(-150%);
+  animation: ghBtnShimmer 3.5s ease-in-out infinite 1.2s;
+}
+
+@keyframes ghBtnShimmer {
+  0%   { transform: translateX(-150%); }
+  100% { transform: translateX(250%); }
+}
+
+/* ── Pricing note ── */
+.gradient-hero__from {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  color: rgba(250,240,236,0.42);
+}
+
+.gradient-hero__from strong {
+  color: #C9A84C; /* warm gold */
+  font-weight: 600;
+}
+
+/* ── Scroll indicator ── */
+.gradient-hero__scroll-indicator {
+  position: absolute;
+  bottom: 34px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: rgba(250,240,236,0.5);
+  z-index: 2;
+  animation: ghScrollBounce 2.2s ease-in-out infinite;
+}
+
+.gradient-hero__scroll-text {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+@keyframes ghScrollBounce {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50%       { transform: translateX(-50%) translateY(5px); }
+}
+
+/* ── Scroll fade into next section ── */
+.gradient-hero__scroll-fade {
+  height: 90px;
+  background: linear-gradient(to bottom, transparent, #0c1f3f);
+  margin-top: -90px;
+  pointer-events: none;
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Mobile adjustments ── */
+@media (max-width: 640px) {
+  .gradient-hero__title    { font-size: 2.2rem; }
+  .gradient-hero__tagline  { font-size: 1.05rem; margin-bottom: 34px; }
+  .gradient-hero__btn      { padding: 15px 38px; font-size: 12px; }
+  .gradient-hero__glow--1  { width: 380px; height: 380px; }
+  .gradient-hero__glow--2  { width: 300px; height: 300px; }
+}

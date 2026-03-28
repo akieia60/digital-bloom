@@ -1,0 +1,140 @@
+import { useEffect, useState, useCallback, useMemo } from 'react';
+import { Link } from 'react-router-dom';
+import '../styles/gradient-hero.css';
+
+// ── Holiday auto-detection (kept from original VideoHero) ────────────────────
+function getUpcomingHoliday() {
+  const now = new Date();
+  const year = now.getFullYear();
+
+  function nthWeekday(yr, mo, weekday, n) {
+    const d = new Date(yr, mo - 1, 1);
+    let count = 0;
+    while (d.getMonth() === mo - 1) {
+      if (d.getDay() === weekday) {
+        count++;
+        if (count === n) return new Date(d);
+      }
+      d.setDate(d.getDate() + 1);
+    }
+    return null;
+  }
+
+  const holidays = [
+    { name: "Happy New Year",        date: new Date(year, 0, 1) },
+    { name: "Happy Valentine's Day", date: new Date(year, 1, 14) },
+    { name: "Happy Mother's Day",    date: nthWeekday(year, 5, 0, 2) },
+    { name: "Happy Father's Day",    date: nthWeekday(year, 6, 0, 3) },
+    { name: "Merry Christmas",       date: new Date(year, 11, 25) },
+  ].filter(h => h.date);
+
+  const today = new Date(year, now.getMonth(), now.getDate());
+  holidays.sort((a, b) => a.date - b.date);
+  return holidays.find(h => {
+    const diff = (h.date - today) / (1000 * 60 * 60 * 24);
+    return diff >= -3 && diff <= 30;
+  }) || null;
+}
+
+// ── Component ────────────────────────────────────────────────────────────────
+export default function GradientHero() {
+  const [contentVisible, setContentVisible] = useState(false);
+  const holiday = useMemo(() => getUpcomingHoliday(), []);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setContentVisible(true), 300);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const scrollToContent = useCallback(() => {
+    const hero = document.querySelector('.gradient-hero');
+    if (hero?.nextElementSibling) {
+      hero.nextElementSibling.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }, []);
+
+  return (
+    <>
+      <section className="gradient-hero">
+
+        {/* ── Animated background ── */}
+        <div className="gradient-hero__bg" aria-hidden="true">
+          <div className="gradient-hero__glow gradient-hero__glow--1" />
+          <div className="gradient-hero__glow gradient-hero__glow--2" />
+          <div className="gradient-hero__glow gradient-hero__glow--3" />
+          <div className="gradient-hero__grid" />
+        </div>
+
+        {/* ── Watermark ── */}
+        <div className="gradient-hero__watermark" aria-hidden="true">
+          Digital Bloom™
+        </div>
+
+        {/* ── Main content ── */}
+        <div
+          className="gradient-hero__content"
+          style={{
+            opacity: contentVisible ? 1 : 0,
+            transform: contentVisible ? 'translateY(0)' : 'translateY(16px)',
+            transition: 'opacity 0.7s ease, transform 0.7s ease',
+          }}
+        >
+          {/* Holiday banner */}
+          {holiday && (
+            <div className="gradient-hero__banner">
+              <span className="gradient-hero__banner-title">{holiday.name}</span>
+            </div>
+          )}
+
+          {/* Headline */}
+          <h1 className="gradient-hero__title">
+            Shine Your Love<br />
+            <em>in the World.</em>
+          </h1>
+
+          {/* Sub-tagline */}
+          <p className="gradient-hero__tagline">
+            Give them their flowers while they&rsquo;re here.
+          </p>
+
+          {/* CTA */}
+          <div className="gradient-hero__cta-wrap">
+            <Link to="/shop" className="gradient-hero__btn">
+              <span className="gradient-hero__btn-text">Start Your Bloom</span>
+              <span className="gradient-hero__btn-shimmer" aria-hidden="true" />
+            </Link>
+          </div>
+
+          {/* Pricing note */}
+          <p className="gradient-hero__from">
+            Blooms from <strong>$0.99</strong> &mdash; no app needed.
+          </p>
+        </div>
+
+        {/* ── Scroll indicator ── */}
+        <button
+          type="button"
+          className="gradient-hero__scroll-indicator"
+          onClick={scrollToContent}
+          aria-label="Scroll to content"
+          style={{
+            opacity: contentVisible ? 0.7 : 0,
+            transition: 'opacity 0.5s ease 0.5s',
+          }}
+        >
+          <span className="gradient-hero__scroll-text">Scroll</span>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" strokeWidth="1.5"
+            strokeLinecap="round" strokeLinejoin="round"
+          >
+            <polyline points="6 9 12 15 18 9" />
+          </svg>
+        </button>
+
+      </section>
+
+      {/* Fade into next section */}
+      <div className="gradient-hero__scroll-fade" aria-hidden="true" />
+    </>
+  );
+}
