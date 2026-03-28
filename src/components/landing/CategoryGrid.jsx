@@ -67,6 +67,13 @@ const CATEGORIES = [
     previewVideo: '/videos/shop/glassstiletto_glassstilettoseries_roses_artistic_v1.mp4',
   },
   {
+    name: 'Dearly Departed',
+    slug: 'dearly-departed',
+    nameKey: 'cat_dearly_departed',
+    accent: '#C9A84C',
+    previewVideo: '/videos/shop/memorial_memorial_roses_artistic_v1.mp4',
+  },
+  {
     name: 'General Collection',
     slug: 'general',
     nameKey: 'cat_general',
@@ -150,7 +157,7 @@ export default function CategoryGrid() {
                   )}
                   {/* Tap hint overlay */}
                   <div className="cat-stack-tap-hint">
-                    <span className="cat-stack-tap-text">Tap to explore</span>
+                    <span className="cat-stack-tap-text">{t('cat_tap_explore')}</span>
                   </div>
                 </div>
               </Link>
