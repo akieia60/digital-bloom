@@ -143,8 +143,6 @@ const OCCASIONS = {
       toPlaceholder: 'Recipient name',
     },
   },
-};
-
 
   'dearly-departed': {
     name: 'Dearly Departed',
@@ -160,5 +158,5 @@ const OCCASIONS = {
       toPlaceholder: 'Their name',
     },
   },
-
+};
 export default OCCASIONS;
