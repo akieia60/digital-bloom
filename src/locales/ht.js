@@ -31,6 +31,7 @@ export const ht = {
   nav_pricing: "Pri",
   nav_credits: "Kredi",
   nav_balance: "Balans",
+  nav_faq: "Kesyon yo Poze Souvan",
   nav_cart: "Panye",
   nav_send_bloom: "VOYE YON BLOOM",
   nav_brand: "Digital Bloom™",

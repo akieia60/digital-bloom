@@ -4,7 +4,7 @@ import { useCart } from '../../context/CartContext';
 import { useLanguage, AVAILABLE_LANGUAGES } from '../../contexts/LanguageContext';
 import BloomLogoMark from '../BloomLogoMark';
 
-export default function LandingNav() {
+export default function LandingNav({ onOpenFaq }) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isLangOpen, setIsLangOpen] = useState(false);
@@ -156,6 +156,20 @@ export default function LandingNav() {
                   </span>
                 )}
               </button>
+              {onOpenFaq && (
+                <button
+                  onClick={() => { setIsMobileMenuOpen(false); onOpenFaq(); }}
+                  className="landing-nav__mobile-link"
+                  style={{ background: 'none', border: 'none', cursor: 'pointer', width: '100%', textAlign: 'left', display: 'flex', alignItems: 'center', justifyContent: 'space-between', font: 'inherit', color: 'inherit', padding: '0' }}
+                >
+                  <span>{t('nav_faq') || 'FAQ'}</span>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.6 }}>
+                    <circle cx="12" cy="12" r="10" />
+                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+                    <line x1="12" y1="17" x2="12.01" y2="17" />
+                  </svg>
+                </button>
+              )}
             </div>
             <div className="landing-nav__mobile-footer">
               <p>{t('nav_brand')}</p>

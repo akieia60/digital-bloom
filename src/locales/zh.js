@@ -31,6 +31,7 @@ export const zh = {
   nav_pricing: "价格",
   nav_credits: "积分",
   nav_balance: "账户余额",
+  nav_faq: "常见问题",
   nav_cart: "购物车",
   nav_send_bloom: "发送一个绽放",
   nav_brand: "Digital Bloom™",

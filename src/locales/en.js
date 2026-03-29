@@ -31,6 +31,7 @@ export const en = {
   nav_pricing: "Pricing",
   nav_credits: "Credits",
   nav_balance: "Balance",
+  nav_faq: "FAQ",
   nav_cart: "Cart",
   nav_send_bloom: "SEND A BLOOM",
   nav_brand: "Digital Bloom™",

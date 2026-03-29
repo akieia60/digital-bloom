@@ -31,6 +31,7 @@ export const fr = {
   nav_pricing: "Tarifs",
   nav_credits: "Crédits",
   nav_balance: "Solde",
+  nav_faq: "Questions Fréquentes",
   nav_cart: "Panier",
   nav_send_bloom: "ENVOYER UNE BLOOM",
   nav_brand: "Digital Bloom™",
