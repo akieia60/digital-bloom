@@ -15,6 +15,10 @@ const SOUND_TRACKS = [
   { id: 'gentle-piano', nameKey: 'customize_sound_piano', icon: '🎹', src: '/audio/gentle-piano.mp3' },
   { id: 'soft-strings', nameKey: 'customize_sound_strings', icon: '🎻', src: '/audio/soft-strings.mp3' },
   { id: 'ambient-bloom', nameKey: 'customize_sound_bloom', icon: '🌸', src: '/audio/ambient-bloom.mp3' },
+  { id: 'golden-harp', nameKey: 'customize_sound_harp', icon: '🪕', src: '/audio/golden-harp.mp3' },
+  { id: 'ocean-breeze', nameKey: 'customize_sound_ocean', icon: '🌊', src: '/audio/ocean-breeze.mp3' },
+  { id: 'jazz-lounge', nameKey: 'customize_sound_jazz', icon: '🎷', src: '/audio/jazz-lounge.mp3' },
+  { id: 'r-and-b-soul', nameKey: 'customize_sound_rnb', icon: '🎤', src: '/audio/r-and-b-soul.mp3' },
   { id: 'give-flowers', nameKey: 'customize_sound_flowers', icon: '💐', src: null, comingSoon: true },
 ];
 
@@ -27,11 +31,11 @@ const COLOR_THEMES = [
 ];
 
 const FLOW_STEPS = [
-  { id: 1, key: 'message', labelKey: 'customize_step_message' },
-  { id: 2, key: 'frame', labelKey: 'customize_step_frame' },
-  { id: 3, key: 'effect', labelKey: 'customize_step_effect' },
-  { id: 4, key: 'sound', labelKey: 'customize_step_sound' },
-  { id: 5, key: 'review', labelKey: 'customize_step_review' },
+  { id: 1, key: 'message', labelKey: 'customize_step_message', icon: '✉️' },
+  { id: 2, key: 'frame', labelKey: 'customize_step_frame', icon: '🎨' },
+  { id: 3, key: 'effect', labelKey: 'customize_step_effect', icon: '✨' },
+  { id: 4, key: 'sound', labelKey: 'customize_step_sound', icon: '🎵' },
+  { id: 5, key: 'review', labelKey: 'customize_step_review', icon: '✓' },
 ];
 
 const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {} }) => {
@@ -118,9 +122,13 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {} }) => 
 
       // Each track gets its own chord voicing and character
       const configs = {
-        'gentle-piano':  { freqs: [261.63, 329.63, 392.00, 523.25], type: 'triangle', duration: 3.5 }, // C major chord
-        'soft-strings':  { freqs: [196.00, 246.94, 293.66, 392.00], type: 'sine',     duration: 4.0 }, // G major
-        'ambient-bloom': { freqs: [220.00, 277.18, 329.63, 440.00], type: 'sine',     duration: 4.5 }, // A major
+        'gentle-piano':  { freqs: [261.63, 329.63, 392.00, 523.25], type: 'triangle', duration: 3.5 },
+        'soft-strings':  { freqs: [196.00, 246.94, 293.66, 392.00], type: 'sine',     duration: 4.0 },
+        'ambient-bloom': { freqs: [220.00, 277.18, 329.63, 440.00], type: 'sine',     duration: 4.5 },
+        'golden-harp':   { freqs: [293.66, 369.99, 440.00, 587.33], type: 'triangle', duration: 4.0 },
+        'ocean-breeze':  { freqs: [174.61, 220.00, 261.63, 349.23], type: 'sine',     duration: 5.0 },
+        'jazz-lounge':   { freqs: [233.08, 293.66, 349.23, 466.16], type: 'triangle', duration: 3.5 },
+        'r-and-b-soul':  { freqs: [207.65, 261.63, 311.13, 415.30], type: 'sine',     duration: 4.0 },
       };
       const { freqs, type, duration } = configs[trackId] || configs['gentle-piano'];
 
@@ -263,6 +271,27 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {} }) => 
           <button type="button" className="customizer-sheet__close" onClick={onClose} aria-label={t('customize_close')}>✕</button>
         </div>
 
+        {/* Step Progress Bar */}
+        <div className="customizer-step-bar">
+          {FLOW_STEPS.map((step) => (
+            <button
+              key={step.id}
+              type="button"
+              className={`customizer-step-bar__item ${activeStep === step.id ? 'active' : ''} ${activeStep > step.id ? 'done' : ''}`}
+              onClick={() => setActiveStep(step.id)}
+            >
+              <span className="customizer-step-bar__dot">
+                {activeStep > step.id ? '✓' : step.icon}
+              </span>
+              <span className="customizer-step-bar__label">{t(step.labelKey)}</span>
+            </button>
+          ))}
+          {/* Progress line */}
+          <div className="customizer-step-bar__track">
+            <div className="customizer-step-bar__fill" style={{ width: `${((activeStep - 1) / (FLOW_STEPS.length - 1)) * 100}%` }} />
+          </div>
+        </div>
+
         {/* Body — step flow with persistent top preview */}
         <div className="customizer-sheet__body">
 
@@ -375,29 +404,24 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {} }) => 
 
           {activeStep === 4 && (
             <>
-          <div className="customizer-section">
+          <div className="customizer-section customizer-section--sound">
             <div className="customizer-section__header">
               <span className="customizer-section__number">4</span>
               <h3 className="customizer-section__title">{t('customize_sound')}</h3>
             </div>
-            <div className="extras-grid">
+            <div className="sound-grid">
               {SOUND_TRACKS.map(track => (
                 <button key={track.id} type="button"
-                  className={`extra-toggle ${selectedSound === track.id ? 'extra-toggle--active' : ''} ${track.comingSoon ? 'opacity-50 cursor-not-allowed' : ''}`}
+                  className={`sound-card ${selectedSound === track.id ? 'sound-card--active' : ''} ${track.comingSoon ? 'sound-card--disabled' : ''}`}
                   onClick={() => !track.comingSoon && handleSoundPreview(track)}
                   disabled={track.comingSoon}
                   aria-label={track.comingSoon ? `${t(track.nameKey)} — ${t('customize_coming_soon')}` : `Preview ${t(track.nameKey)}`}>
-                  <div className="extra-toggle__info">
-                    <span className="extra-toggle__icon" aria-hidden="true">{track.icon}</span>
-                    <div>
-                      <span className="extra-toggle__name">{t(track.nameKey)}</span>
-                      {track.comingSoon && (
-                        <span className="extra-toggle__price" style={{ color: '#C9A14A' }}>{t('customize_coming_soon')}</span>
-                      )}
-                    </div>
-                  </div>
-                  {!track.comingSoon && (
-                    <span style={{ fontSize: '18px', color: playingTrack === track.id ? '#C9A14A' : '#AEAEB2', transition: 'color 0.2s' }}>
+                  <span className="sound-card__icon">{track.icon}</span>
+                  <span className="sound-card__name">{t(track.nameKey)}</span>
+                  {track.comingSoon ? (
+                    <span className="sound-card__badge">{t('customize_coming_soon')}</span>
+                  ) : (
+                    <span className="sound-card__play">
                       {playingTrack === track.id ? '⏸' : '▶'}
                     </span>
                   )}
@@ -415,12 +439,12 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {} }) => 
                 <h3 className="customizer-section__title">{t('customize_review_title')}</h3>
               </div>
               <div className="customizer-review-card">
-                <p><strong>{t('customize_review_to')}</strong> {message.toName || '—'}</p>
-                <p><strong>{t('customize_review_from')}</strong> {message.fromName || '—'}</p>
-                <p><strong>{t('customize_review_message')}</strong> {message.short || '—'}</p>
-                <p><strong>{t('customize_review_frame')}</strong> {t(COLOR_THEMES.find((theme) => theme.id === colorTheme)?.nameKey) || t('customize_theme_original')}</p>
-                <p><strong>{t('customize_review_effects')}</strong> {EXTRAS.filter((extra) => extras[extra.id]).map((extra) => t(extra.nameKey)).join(', ') || 'None selected'}</p>
-                <p><strong>{t('customize_review_sound')}</strong> {SOUND_TRACKS.find((track) => track.id === selectedSound) ? t(SOUND_TRACKS.find((track) => track.id === selectedSound).nameKey) : 'None selected'}</p>
+                <div className="review-row"><span className="review-label">{t('customize_review_to')}</span><span className="review-value">{message.toName || '—'}</span></div>
+                <div className="review-row"><span className="review-label">{t('customize_review_from')}</span><span className="review-value">{message.fromName || '—'}</span></div>
+                <div className="review-row"><span className="review-label">{t('customize_review_message')}</span><span className="review-value">{message.short || '—'}</span></div>
+                <div className="review-row"><span className="review-label">{t('customize_review_frame')}</span><span className="review-value">{t(COLOR_THEMES.find((theme) => theme.id === colorTheme)?.nameKey) || t('customize_theme_original')}</span></div>
+                <div className="review-row"><span className="review-label">{t('customize_review_effects')}</span><span className="review-value">{EXTRAS.filter((extra) => extras[extra.id]).map((extra) => t(extra.nameKey)).join(', ') || 'None selected'}</span></div>
+                <div className="review-row"><span className="review-label">{t('customize_review_sound')}</span><span className="review-value">{SOUND_TRACKS.find((track) => track.id === selectedSound) ? t(SOUND_TRACKS.find((track) => track.id === selectedSound).nameKey) : 'None selected'}</span></div>
               </div>
             </div>
           )}

@@ -91,52 +91,197 @@
   min-height: 0;
 }
 
-.customizer-progress {
-  display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 6px;
-  padding: 8px 0 6px;
+/* ─── STEP PROGRESS BAR ─── */
+.customizer-step-bar {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 12px 16px 14px;
   flex-shrink: 0;
+  background: #111;
+  position: relative;
+  overflow: hidden;
 }
 
-.customizer-progress__step {
+.customizer-step-bar__track {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: rgba(255,255,255,0.08);
+}
+
+.customizer-step-bar__fill {
+  height: 100%;
+  background: linear-gradient(90deg, #C9A14A, #D4AF37);
+  border-radius: 0 3px 3px 0;
+  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.customizer-step-bar__item {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 4px;
-  opacity: 0.55;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  flex: 1;
+  opacity: 0.4;
+  transition: opacity 0.3s;
 }
 
-.customizer-progress__step span {
-  width: 24px;
-  height: 24px;
-  border-radius: 999px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #E8E8ED;
-  color: #6E6E73;
-  font-size: 11px;
-  font-weight: 700;
-}
-
-.customizer-progress__step small {
-  font-size: 10px;
-  font-weight: 600;
-  color: #6E6E73;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-}
-
-.customizer-progress__step.active,
-.customizer-progress__step.done {
+.customizer-step-bar__item.active,
+.customizer-step-bar__item.done {
   opacity: 1;
 }
 
-.customizer-progress__step.active span,
-.customizer-progress__step.done span {
-  background: var(--spec-gold, #C9A14A);
-  color: white;
+.customizer-step-bar__dot {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  background: rgba(255,255,255,0.08);
+  color: rgba(255,255,255,0.5);
+  transition: all 0.3s;
+}
+
+.customizer-step-bar__item.active .customizer-step-bar__dot {
+  background: #C9A14A;
+  color: #fff;
+  box-shadow: 0 0 12px rgba(201,161,74,0.4);
+}
+
+.customizer-step-bar__item.done .customizer-step-bar__dot {
+  background: rgba(201,161,74,0.2);
+  color: #C9A14A;
+}
+
+.customizer-step-bar__label {
+  font-family: 'Outfit', sans-serif;
+  font-size: 9px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: rgba(255,255,255,0.5);
+  white-space: nowrap;
+}
+
+.customizer-step-bar__item.active .customizer-step-bar__label {
+  color: #C9A14A;
+}
+
+.customizer-step-bar__item.done .customizer-step-bar__label {
+  color: rgba(201,161,74,0.7);
+}
+
+/* ─── SOUND CARD GRID ─── */
+.sound-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.sound-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 16px 10px;
+  background: var(--surface-soft, #F7F7F7);
+  border: 2px solid #E5E5EA;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: center;
+  min-height: 80px;
+}
+
+.sound-card:hover {
+  border-color: #D1D1D6;
+  background: #F0F0F0;
+}
+
+.sound-card--active {
+  border-color: var(--spec-gold, #C9A14A);
+  background: rgba(201, 161, 74, 0.05);
+}
+
+.sound-card--disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.sound-card__icon {
+  font-size: 24px;
+}
+
+.sound-card__name {
+  font-family: 'Outfit', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: #1D1D1F;
+  line-height: 1.2;
+}
+
+.sound-card--active .sound-card__name {
+  color: var(--spec-gold, #C9A14A);
+}
+
+.sound-card__play {
+  font-size: 16px;
+  color: #AEAEB2;
+  transition: color 0.2s;
+}
+
+.sound-card--active .sound-card__play {
+  color: var(--spec-gold, #C9A14A);
+}
+
+.sound-card__badge {
+  font-family: 'Outfit', sans-serif;
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #C9A14A;
+}
+
+/* ─── REVIEW CARD (dark-themed) ─── */
+.review-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 10px 0;
+  border-bottom: 1px solid #E8E8ED;
+  gap: 12px;
+}
+
+.review-row:last-child {
+  border-bottom: none;
+}
+
+.review-label {
+  font-family: 'Outfit', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #6E6E73;
+  flex-shrink: 0;
+}
+
+.review-value {
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: #1D1D1F;
+  text-align: right;
 }
 
 .customizer-preview-shell {

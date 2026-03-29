@@ -5,6 +5,7 @@ import { LanguageProvider } from './contexts/LanguageContext';
 import { ToastProvider } from './components/tracker/Toast';
 import Header from './components/Header';
 import ShoppingCart from './components/ShoppingCart';
+import FAQ from './components/landing/FAQ';
 
 // Eagerly loaded — needed on first paint
 import LandingPage from './pages/LandingPage';
@@ -74,17 +75,21 @@ class ErrorBoundary extends Component {
 function AppContent({ searchQuery, setSearchQuery }) {
   const location = useLocation();
   const isLandingPage = location.pathname === '/';
+  const [isFaqOpen, setIsFaqOpen] = useState(false);
+
+  const openFaq = () => setIsFaqOpen(true);
+  const closeFaq = () => setIsFaqOpen(false);
 
   return (
     <>
-      {!isLandingPage && <Header onSearchChange={setSearchQuery} searchQuery={searchQuery} />}
+      {!isLandingPage && <Header onSearchChange={setSearchQuery} searchQuery={searchQuery} onOpenFaq={openFaq} />}
       <Suspense fallback={
         <div className="min-h-screen bg-obsidian flex items-center justify-center">
           <div className="w-10 h-10 border-2 border-pure-gold/20 border-t-pure-gold rounded-full animate-spin" />
         </div>
       }>
         <Routes>
-          <Route path="/" element={<LandingPage />} />
+          <Route path="/" element={<LandingPage onOpenFaq={openFaq} />} />
           <Route path="/shop" element={<Shop searchQuery={searchQuery} setSearchQuery={setSearchQuery} />} />
           <Route path="/shop/:categorySlug" element={<CategoryPage />} />
           <Route path="/product/:id" element={<ProductDetails />} />
@@ -104,7 +109,26 @@ function AppContent({ searchQuery, setSearchQuery }) {
           <Route path="*" element={<ComingSoon />} />
         </Routes>
       </Suspense>
-      {!isLandingPage && <ShoppingCart />}
+      <ShoppingCart />
+
+      {/* Global FAQ pill button — visible on all pages */}
+      {!isFaqOpen && (
+        <button
+          className="faq-pill-btn"
+          onClick={openFaq}
+          aria-label="Open FAQ"
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <circle cx="12" cy="12" r="10" />
+            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+            <line x1="12" y1="17" x2="12.01" y2="17" />
+          </svg>
+          <span>FAQ</span>
+        </button>
+      )}
+
+      {/* Global FAQ modal */}
+      <FAQ isOpen={isFaqOpen} onClose={closeFaq} />
     </>
   );
 }

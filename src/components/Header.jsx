@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useLanguage, AVAILABLE_LANGUAGES } from '../contexts/LanguageContext';
 
-const Header = ({ onSearchChange, searchQuery }) => {
+const Header = ({ onSearchChange, searchQuery, onOpenFaq }) => {
   const { getCartCount, toggleCart } = useCart();
   const { lang, changeLanguage, t } = useLanguage();
   const cartCount = getCartCount();
@@ -246,6 +246,19 @@ const Header = ({ onSearchChange, searchQuery }) => {
                   </span>
                 )}
               </button>
+              {onOpenFaq && (
+                <button
+                  onClick={() => { setIsMobileMenuOpen(false); onOpenFaq(); }}
+                  className="w-full flex items-center justify-between text-lg transition-colors py-5 border-b border-white/10 text-white"
+                >
+                  <span>{t('nav_faq') || 'FAQ'}</span>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.6 }}>
+                    <circle cx="12" cy="12" r="10" />
+                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+                    <line x1="12" y1="17" x2="12.01" y2="17" />
+                  </svg>
+                </button>
+              )}
             </nav>
 
             {/* Menu Footer */}

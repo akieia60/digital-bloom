@@ -62,6 +62,21 @@ export default function GradientHero() {
           <div className="gradient-hero__glow gradient-hero__glow--2" />
           <div className="gradient-hero__glow gradient-hero__glow--3" />
           <div className="gradient-hero__grid" />
+          {/* Aurora light sweep */}
+          <div className="gradient-hero__aurora" />
+          {/* Floating particles */}
+          <div className="gradient-hero__particles">
+            {Array.from({ length: 18 }).map((_, i) => (
+              <span key={i} className="gradient-hero__particle" style={{
+                left: `${5 + (i * 5.3) % 90}%`,
+                animationDelay: `${(i * 1.1) % 8}s`,
+                animationDuration: `${6 + (i % 5) * 1.5}s`,
+                width: `${2 + (i % 3) * 1.5}px`,
+                height: `${2 + (i % 3) * 1.5}px`,
+                opacity: 0.15 + (i % 4) * 0.1,
+              }} />
+            ))}
+          </div>
         </div>
 
         {/* ── Watermark ── */}
