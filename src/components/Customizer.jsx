@@ -38,7 +38,7 @@ const FLOW_STEPS = [
   { id: 5, key: 'review', labelKey: 'customize_step_review', icon: '✓' },
 ];
 
-const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {} }) => {
+const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editData = null }) => {
   const { t } = useLanguage();
   const { messagePlaceholder, toPlaceholder, ...stateDefaults } = defaults;
   const scrollPosRef = useRef(0);
@@ -54,6 +54,25 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {} }) => 
   const [selectedSound, setSelectedSound] = useState(stateDefaults.sound || '');
   const [playingTrack, setPlayingTrack] = useState(null);
   const [activeStep, setActiveStep] = useState(1);
+
+  // Pre-fill from editData when editing an existing customization from cart
+  useEffect(() => {
+    if (editData && isOpen) {
+      if (editData.message) {
+        const msg = typeof editData.message === 'string'
+          ? { short: editData.message, toName: '', fromName: '' }
+          : { short: editData.message.short || '', toName: editData.message.toName || '', fromName: editData.message.fromName || '' };
+        setMessage(msg);
+      }
+      if (editData.colorTheme || editData.theme) setColorTheme(editData.colorTheme || editData.theme);
+      if (editData.selectedSound) setSelectedSound(editData.selectedSound);
+      if (editData.composition?.activeOverlays) {
+        const newExtras = { ribbon: false, sparkle: false, goldDust: false };
+        editData.composition.activeOverlays.forEach(o => { if (o in newExtras) newExtras[o] = true; });
+        setExtras(newExtras);
+      }
+    }
+  }, [editData, isOpen]);
   const audioRef = useRef(null);
 
   // Safari-safe scroll lock

@@ -6,7 +6,8 @@
 /* Credits Page */
 .credits-page {
   min-height: 100vh;
-  background: #ffffff;
+  background: var(--bg-page, #0D1B36);
+  color: #FFFFFF;
   padding: 120px 0 80px;
 }
 
@@ -27,8 +28,8 @@
 }
 
 .credit-card {
-  background: #f5f5f7;
-  border: 2px solid transparent;
+  background: rgba(255, 255, 255, 0.06);
+  border: 2px solid rgba(255, 255, 255, 0.1);
   border-radius: 16px;
   padding: 32px 24px;
   text-align: center;
@@ -38,24 +39,24 @@
 }
 
 .credit-card:hover {
-  background: #ffffff;
-  border-color: #d2d2d7;
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(201, 161, 74, 0.4);
   transform: translateY(-4px);
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3);
 }
 
 .credit-card.selected {
-  border-color: #0071e3;
-  background: #ffffff;
-  box-shadow: 0 8px 24px rgba(0, 113, 227, 0.15);
+  border-color: var(--accent-gold, #C9A14A);
+  background: rgba(201, 161, 74, 0.1);
+  box-shadow: 0 8px 24px rgba(201, 161, 74, 0.2);
 }
 
 .credit-badge {
   position: absolute;
   top: 12px;
   right: 12px;
-  background: #0071e3;
-  color: #ffffff;
+  background: var(--accent-gold, #C9A14A);
+  color: #0D1B36;
   font-size: 11px;
   font-weight: 600;
   padding: 4px 12px;
@@ -67,7 +68,7 @@
 .credit-amount {
   font-size: 48px;
   font-weight: 700;
-  color: #1d1d1f;
+  color: #FFFFFF;
   margin: 16px 0 24px;
   letter-spacing: -0.02em;
 }
@@ -83,7 +84,8 @@
   max-width: 600px;
   margin: 64px auto;
   padding: 32px;
-  background: #f5f5f7;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 16px;
 }
 
@@ -104,14 +106,14 @@
 .gift-form {
   margin-top: 24px;
   padding-top: 24px;
-  border-top: 1px solid #d2d2d7;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .gift-form-title {
   font-size: 17px;
   font-weight: 600;
   margin: 0 0 20px;
-  color: #1d1d1f;
+  color: #FFFFFF;
 }
 
 /* Info Section */
@@ -137,7 +139,7 @@
 .info-number {
   font-size: 36px;
   font-weight: 700;
-  color: #d2d2d7;
+  color: rgba(255, 255, 255, 0.2);
   margin-bottom: 16px;
 }
 
@@ -145,12 +147,12 @@
   font-size: 21px;
   font-weight: 600;
   margin: 0 0 12px;
-  color: #1d1d1f;
+  color: #FFFFFF;
 }
 
 .info-card p {
   font-size: 17px;
-  color: #6e6e73;
+  color: rgba(255, 255, 255, 0.6);
   line-height: 1.6;
   margin: 0;
 }
@@ -160,7 +162,8 @@
   max-width: 700px;
   margin: 64px auto;
   padding: 32px;
-  background: #f5f5f7;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 16px;
 }
 
@@ -168,7 +171,7 @@
   font-size: 17px;
   font-weight: 600;
   margin: 0 0 16px;
-  color: #1d1d1f;
+  color: #FFFFFF;
 }
 
 .credits-legal ul {
@@ -179,7 +182,7 @@
 
 .credits-legal li {
   font-size: 15px;
-  color: #6e6e73;
+  color: rgba(255, 255, 255, 0.6);
   padding: 8px 0;
   padding-left: 24px;
   position: relative;
@@ -189,7 +192,7 @@
   content: "•";
   position: absolute;
   left: 0;
-  color: #0071e3;
+  color: var(--accent-gold, #C9A14A);
   font-weight: 700;
 }
 
@@ -201,7 +204,7 @@
 
 .credits-balance-cta p {
   font-size: 17px;
-  color: #6e6e73;
+  color: rgba(255, 255, 255, 0.6);
   margin: 0 0 16px;
 }
 
@@ -215,7 +218,8 @@
 }
 
 .balance-form {
-  background: #f5f5f7;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   padding: 32px;
   border-radius: 16px;
   margin-bottom: 32px;
@@ -319,7 +323,8 @@
 
 /* Usage History */
 .balance-history {
-  background: #f5f5f7;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   padding: 32px;
   border-radius: 16px;
 }
@@ -328,7 +333,7 @@
   font-size: 21px;
   font-weight: 600;
   margin: 0 0 24px;
-  color: #1d1d1f;
+  color: #FFFFFF;
 }
 
 .history-list {
@@ -342,9 +347,9 @@
   justify-content: space-between;
   align-items: center;
   padding: 16px;
-  background: #ffffff;
+  background: rgba(255, 255, 255, 0.04);
   border-radius: 12px;
-  border: 1px solid #d2d2d7;
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .history-info {
@@ -356,13 +361,13 @@
 .history-reason {
   font-size: 15px;
   font-weight: 600;
-  color: #1d1d1f;
+  color: #FFFFFF;
   text-transform: capitalize;
 }
 
 .history-date {
   font-size: 13px;
-  color: #6e6e73;
+  color: rgba(255, 255, 255, 0.5);
 }
 
 .history-amount {
@@ -384,7 +389,8 @@
   margin: 48px auto;
   text-align: center;
   padding: 32px;
-  background: #f5f5f7;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 16px;
 }
 
@@ -392,12 +398,12 @@
   font-size: 19px;
   font-weight: 600;
   margin: 0 0 12px;
-  color: #1d1d1f;
+  color: #FFFFFF;
 }
 
 .balance-help p {
   font-size: 15px;
-  color: #6e6e73;
+  color: rgba(255, 255, 255, 0.6);
   line-height: 1.6;
   margin: 0;
 }
@@ -409,7 +415,8 @@
 .credit-redemption {
   margin: 24px 0;
   padding: 24px;
-  background: #f5f5f7;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 12px;
 }
 
@@ -417,7 +424,7 @@
   font-size: 15px;
   font-weight: 600;
   margin: 0 0 16px;
-  color: #1d1d1f;
+  color: #FFFFFF;
 }
 
 .credit-input-group {
@@ -429,16 +436,18 @@
   flex: 1;
   padding: 12px 16px;
   font-size: 15px;
-  border: 1px solid #d2d2d7;
+  border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #FFFFFF;
   font-family: 'Courier New', monospace;
   letter-spacing: 0.05em;
 }
 
 .credit-input-group button {
   padding: 12px 24px;
-  background: #0071e3;
-  color: #ffffff;
+  background: var(--accent-gold, #C9A14A);
+  color: #FFFFFF;
   border: none;
   border-radius: 8px;
   font-size: 14px;
@@ -448,32 +457,33 @@
 }
 
 .credit-input-group button:hover {
-  background: #0077ed;
+  background: var(--accent-gold-hover, #B8923F);
 }
 
 .credit-input-group button:disabled {
-  background: #d2d2d7;
+  background: rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 0.4);
   cursor: not-allowed;
 }
 
 .credit-applied {
   margin-top: 16px;
   padding: 16px;
-  background: #e8f5e9;
-  border: 1px solid #4caf50;
+  background: rgba(76, 175, 80, 0.1);
+  border: 1px solid rgba(76, 175, 80, 0.4);
   border-radius: 8px;
 }
 
 .credit-applied-title {
   font-size: 14px;
   font-weight: 600;
-  color: #2e7d32;
+  color: #66bb6a;
   margin: 0 0 8px;
 }
 
 .credit-applied-details {
   font-size: 13px;
-  color: #1d1d1f;
+  color: rgba(255, 255, 255, 0.8);
   display: flex;
   flex-direction: column;
   gap: 4px;

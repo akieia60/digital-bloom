@@ -1,5 +1,5 @@
 import { useState, useMemo, useCallback, useEffect } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useParams, useNavigate, useLocation, Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useProduct, useProducts } from '../hooks/useProducts';
@@ -11,11 +11,19 @@ const ProductDetails = () => {
   const { t } = useLanguage();
   const { id } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
   const { addToCart, toggleCart } = useCart();
   const [isCustomizerOpen, setIsCustomizerOpen] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
 
   const { product, loading } = useProduct(id);
+
+  // Auto-open customizer when coming from "Edit Customization" in cart
+  useEffect(() => {
+    if (location.state?.editCustomization && product && !loading) {
+      setIsCustomizerOpen(true);
+    }
+  }, [location.state, product, loading]);
   const { products } = useProducts();
 
   const relatedProducts = useMemo(() => {
@@ -86,7 +94,7 @@ const ProductDetails = () => {
   const displayPrice = Number(product.price || 0).toFixed(2);
 
   return (
-    <div className="min-h-screen bg-[var(--surface-soft,#F7F7F7)] text-[var(--text-primary)]">
+    <div className="min-h-screen bg-[var(--bg-page,#0D1B36)] text-[var(--text-on-dark)]">
       {/* Customizer Panel — slides up from bottom on mobile, side panel on desktop */}
       <Customizer
         product={product}
@@ -94,6 +102,7 @@ const ProductDetails = () => {
         onClose={() => setIsCustomizerOpen(false)}
         onComplete={handleCustomizationComplete}
         defaults={customizerDefaults}
+        editData={location.state?.editCustomization || null}
       />
 
       {/* ── HERO MEDIA ── */}
@@ -109,7 +118,7 @@ const ProductDetails = () => {
         ) : heroImageSrc ? (
           <img src={heroImageSrc} alt={product.name} className="w-full h-full object-cover" />
         ) : (
-          <div className="w-full h-full bg-gradient-to-b from-[#1a1a2e] to-[#0a0a0a]" />
+          <div className="w-full h-full bg-gradient-to-b from-[#162a4a] to-[#0D1B36]" />
         )}
 
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
@@ -219,7 +228,7 @@ const ProductDetails = () => {
       {/* ── RELATED PRODUCTS ── */}
       {relatedProducts.length > 0 && (
         <div className="max-w-7xl mx-auto px-5 sm:px-8 pb-24">
-          <h2 className="text-2xl font-display font-medium text-[var(--text-primary)] mb-8 tracking-tight">
+          <h2 className="text-2xl font-display font-medium text-white mb-8 tracking-tight">
             {t('product_also_like')}
           </h2>
           <div className="flex gap-5 overflow-x-auto pb-4 snap-x snap-mandatory -mx-5 px-5 sm:mx-0 sm:px-0 sm:grid sm:grid-cols-2 lg:grid-cols-4 sm:overflow-visible">

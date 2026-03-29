@@ -13,9 +13,9 @@ function BackButton() {
     <button
       onClick={() => navigate(-1)}
       className="group inline-flex items-center"
-      style={{ color: 'var(--text-secondary)', marginBottom: '8px' }}
+      style={{ color: 'rgba(255,255,255,0.6)', marginBottom: '8px' }}
     >
-      <div style={{ width: '32px', height: '32px', borderRadius: '50%', border: '1px solid var(--border-default)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginRight: '12px', transition: 'border-color 0.2s' }}>
+      <div style={{ width: '32px', height: '32px', borderRadius: '50%', border: '1px solid rgba(255,255,255,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginRight: '12px', transition: 'border-color 0.2s' }}>
         <svg style={{ width: '16px', height: '16px' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 19l-7-7 7-7" />
         </svg>

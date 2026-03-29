@@ -5,7 +5,7 @@ import { useLanguage } from '../contexts/LanguageContext';
 
 const CartItem = ({ item }) => {
   const { t } = useLanguage();
-  const { updateQuantity, removeFromCart } = useCart();
+  const { updateQuantity, removeFromCart, setIsCartOpen } = useCart();
   const [isExpanded, setIsExpanded] = useState(false);
 
   const handleIncrement = () => updateQuantity(item.id, item.quantity + 1);
@@ -175,7 +175,7 @@ const CartItem = ({ item }) => {
               to={`/product/${item.id}`}
               state={{ editCustomization: item.customization }}
               className="inline-flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-pure-gold hover:text-white transition-colors font-semibold mb-2"
-              onClick={(e) => e.stopPropagation()}
+              onClick={(e) => { e.stopPropagation(); setIsCartOpen(false); }}
             >
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
                 <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
@@ -189,7 +189,7 @@ const CartItem = ({ item }) => {
           <Link
             to={`/product/${item.id}`}
             className="inline-block text-[10px] uppercase tracking-widest text-white/30 hover:text-white transition-colors font-semibold"
-            onClick={(e) => e.stopPropagation()}
+            onClick={(e) => { e.stopPropagation(); setIsCartOpen(false); }}
           >
             {t('cart_item_view')}
           </Link>

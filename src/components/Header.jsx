@@ -43,7 +43,7 @@ const Header = ({ onSearchChange, searchQuery, onOpenFaq }) => {
                 placeholder={t('header_search_placeholder')}
                 value={searchQuery}
                 onChange={(e) => onSearchChange(e.target.value)}
-                className="w-48 focus:w-64 px-4 py-2 bg-[var(--bg-surface)] border border-[var(--border-default)] rounded-lg text-sm text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--accent-gold-border-hover)] transition-all duration-500 font-light"
+                className="w-48 focus:w-64 px-4 py-2 bg-white/10 border border-white/15 rounded-lg text-sm text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-[var(--accent-gold-border-hover)] transition-all duration-500 font-light"
               />
               <svg
                 className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[var(--text-muted)]"
@@ -59,7 +59,7 @@ const Header = ({ onSearchChange, searchQuery, onOpenFaq }) => {
           {/* Center: Brand */}
           <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transition-all duration-700">
             <Link to="/" className="flex flex-col items-center group" onClick={() => setIsMobileMenuOpen(false)}>
-              <span className={`font-medium font-display uppercase text-[var(--text-primary)] transition-all duration-700 ease-in-out ${
+              <span className={`font-medium font-display uppercase text-white transition-all duration-700 ease-in-out ${
                 isScrolled
                   ? 'text-lg sm:text-xl tracking-[0.15em]'
                   : 'text-xl sm:text-2xl md:text-3xl tracking-[0.2em]'
@@ -110,7 +110,7 @@ const Header = ({ onSearchChange, searchQuery, onOpenFaq }) => {
               </button>
               
               {/* Dropdown panel */}
-              <div className="absolute right-0 mt-2 w-32 rounded-xl shadow-xl bg-[var(--bg-surface)] border border-[var(--border-default)] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform origin-top-right z-50 overflow-hidden">
+              <div className="absolute right-0 mt-2 w-32 rounded-xl shadow-xl bg-[#0a1628] border border-white/15 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform origin-top-right z-50 overflow-hidden">
                 <div className="py-1">
                   {AVAILABLE_LANGUAGES.map(l => (
                     <button
@@ -118,8 +118,8 @@ const Header = ({ onSearchChange, searchQuery, onOpenFaq }) => {
                       onClick={() => changeLanguage(l.code)}
                       className={`w-full text-left px-4 py-2 text-xs font-medium transition-colors ${
                         lang === l.code
-                          ? 'text-[var(--accent-gold)] bg-[var(--bg-page)]'
-                          : 'text-[var(--text-primary)] hover:bg-[var(--bg-page)] hover:text-[var(--accent-gold)]'
+                          ? 'text-[var(--accent-gold)] bg-white/10'
+                          : 'text-white/70 hover:bg-white/10 hover:text-[var(--accent-gold)]'
                       }`}
                     >
                       {l.label}
