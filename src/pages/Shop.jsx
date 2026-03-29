@@ -15,7 +15,6 @@ const CATEGORIES = [
   { name: 'Memorial & Sympathy', slug: 'grief', nameKey: 'cat_grief', taglineKey: 'cat_grief_tagline', tagline: 'Honor those we hold dear' },
   { name: 'Thinking of You', slug: 'friendship', nameKey: 'cat_friendship', taglineKey: 'cat_friendship_tagline', tagline: 'Let them know they matter' },
   { name: 'Luxury Collection', slug: 'luxury', nameKey: 'cat_luxury', taglineKey: 'cat_luxury_tagline', tagline: 'Where fashion meets floral artistry' },
-  { name: 'Dearly Departed', slug: 'dearly-departed', nameKey: 'cat_dearly_departed', taglineKey: 'cat_dearly_departed_tagline', tagline: 'Honor those who live on in our hearts' },
   { name: 'General Collection', slug: 'general', nameKey: 'cat_general', taglineKey: 'cat_general_tagline', tagline: 'Beautiful blooms for every moment' },
 ];
 

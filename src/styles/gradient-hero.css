@@ -265,3 +265,39 @@
   .gradient-hero__glow--1  { width: 380px; height: 380px; }
   .gradient-hero__glow--2  { width: 300px; height: 300px; }
 }
+
+/* ── Pill badge ── */
+.gradient-hero__pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 32px;
+  padding: 9px 24px;
+  border: 1px solid rgba(201, 133, 122, 0.32);
+  border-radius: 40px;
+  background: rgba(201, 133, 122, 0.07);
+  backdrop-filter: blur(8px);
+}
+
+.gradient-hero__pill-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #C9857A;
+  box-shadow: 0 0 8px #C9857A;
+  flex-shrink: 0;
+  animation: pill-dot-pulse 2.5s ease-in-out infinite;
+}
+
+@keyframes pill-dot-pulse {
+  0%, 100% { box-shadow: 0 0 6px #C9857A; opacity: 1; }
+  50%       { box-shadow: 0 0 14px #C9857A, 0 0 24px rgba(201,133,122,0.4); opacity: 0.85; }
+}
+
+.gradient-hero__pill-text {
+  font-family: 'Outfit', -apple-system, sans-serif;
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.32em;
+  color: #C9857A;
+}

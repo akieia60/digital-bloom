@@ -143,20 +143,6 @@ const OCCASIONS = {
       toPlaceholder: 'Recipient name',
     },
   },
-
-  'dearly-departed': {
-    name: 'Dearly Departed',
-    title: 'Dearly Departed',
-    tagline: 'A beautiful tribute to those who live on in our hearts.',
-    salesPitch: "Honor the memory of someone you love with a beautiful digital tribute. Whether marking an anniversary, sharing a memory, or simply letting others know that their loved one is remembered — a Dearly Departed bloom is a heartfelt way to keep their light alive.",
-    accent: '#C9A84C',
-    emoji: '🕯️',
-    customizerDefaults: {
-      occasion: 'sympathy',
-      colorTheme: 'elegant',
-      messagePlaceholder: 'e.g., Forever in our hearts',
-      toPlaceholder: 'Their name',
-    },
-  },
 };
+
 export default OCCASIONS;

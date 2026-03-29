@@ -2,62 +2,52 @@
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&family=Outfit:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap');
 
 :root {
-  /* ── Digital Bloom Rose Gold Brand Palette ── */
-  --rose-gold:       #C9857A;
-  --rose-gold-light: #E8B4AD;
-  --warm-gold:       #C9A84C;
-  --bloom-cream:     #FAF0EC;
-  --bloom-champ:     #F0DDD0;
-  --navy:            #0c1f3f;
-  --navy-2:          #152b4d;
-  --navy-3:          #1a3560;
-
   /* ============================================
      DIGITAL BLOOM — MERGED DESIGN SYSTEM
      Black brand framing + white-forward readability
      ============================================ */
 
   /* ── Page Foundations ── */
-  --bg-page: #0c1f3f;
-  --bg-hero: #0c1f3f;
+  --bg-page: #0D1B36;
+  --bg-hero: #0D1B36;
 
   /* ── Surface System (White-Forward) ── */
-  --surface-white: #152b4d;
-  --surface-soft:  #1a3560;
-  --surface-card:  #152b4d;
-  --surface-muted: #152b4d;
-  --bg-surface:    #152b4d;
-  --bg-surface-hover: #1a3560;
+  --surface-white: #FFFFFF;
+  --surface-soft: #F7F7F7;
+  --surface-card: #FFFFFF;
+  --surface-muted: #FAFAFA;
+  --bg-surface: #FFFFFF;
+  --bg-surface-hover: #F0F0F0;
 
   /* ── Text — Dark-on-Light (primary readability) ── */
-  --text-primary:   #FAF0EC;
-  --text-secondary: rgba(250,240,236,0.68);
-  --text-muted:     rgba(250,240,236,0.42);
+  --text-primary: #1D1D1F;
+  --text-secondary: #6E6E73;
+  --text-muted: #AEAEB2;
   --text-on-dark: #FFFFFF;
   --text-on-dark-secondary: rgba(255, 255, 255, 0.6);
   --text-on-dark-muted: rgba(255, 255, 255, 0.35);
 
   /* ── Borders ── */
-  --border-subtle:  rgba(201,133,122,0.10);
-  --border-default: rgba(201,133,122,0.20);
-  --border-strong:  rgba(201,133,122,0.32);
+  --border-subtle: #F0F0F0;
+  --border-default: #E5E5EA;
+  --border-strong: #D2D2D7;
   --border-on-dark: rgba(255, 255, 255, 0.08);
 
   /* ── Brand Accent — Gold (accent only, never dominant) ── */
-  --accent-gold:              #C9857A;
-  --accent-gold-hover:        #E8B4AD;
-  --accent-gold-glow:  rgba(201,133,122,0.10);
-  --accent-gold-border: rgba(201,133,122,0.22);
-  --accent-gold-border-hover: rgba(201,133,122,0.45);
-  --spec-gold: #C9857A;
+  --accent-gold: #C9A14A;
+  --accent-gold-hover: #B8923F;
+  --accent-gold-glow: rgba(201, 161, 74, 0.08);
+  --accent-gold-border: rgba(201, 161, 74, 0.2);
+  --accent-gold-border-hover: rgba(201, 161, 74, 0.4);
+  --spec-gold: #C9A14A;
 
   /* ── Deep Blue — Subtle premium accent ── */
-  --deep-blue:      #0c1f3f;
-  --deep-blue-soft: rgba(201,133,122,0.06);
-  --deep-blue-text: #FAF0EC;
+  --deep-blue: #0B1F3A;
+  --deep-blue-soft: rgba(11, 31, 58, 0.06);
+  --deep-blue-text: #0B1F3A;
 
   /* ── Navigation (dark framing) ── */
-  --nav-bg: #0c1f3f;
+  --nav-bg: #0D1B36;
   --nav-bg-scrolled: rgba(10, 10, 10, 0.95);
   --nav-border-scrolled: rgba(255, 255, 255, 0.05);
 
@@ -69,8 +59,8 @@
   --safe-area-bottom: env(safe-area-inset-bottom, 0px);
 
   /* ── Scrollbar ── */
-  --scrollbar-thumb:       rgba(201,133,122,0.30);
-  --scrollbar-thumb-hover: rgba(201,133,122,0.55);
+  --scrollbar-thumb: rgba(0, 0, 0, 0.15);
+  --scrollbar-thumb-hover: rgba(0, 0, 0, 0.3);
 
   /* ── Dynamic Theme Engine ── */
   --bloom-primary: #FF69B4;
@@ -79,14 +69,14 @@
   --bloom-glow: 0.15;
 
   /* ── Legacy aliases (backward compat) ── */
-  --apple-white:    #152b4d;
-  --apple-gray:     #1a3560;
-  --apple-text:     #FAF0EC;
-  --apple-secondary: rgba(250,240,236,0.65);
-  --apple-border:   rgba(201,133,122,0.25);
-  --apple-accent:   #C9857A;
-  --pure-gold:      #C9A84C;
-  --champagne-white: #FAF0EC;
+  --apple-white: #FFFFFF;
+  --apple-gray: #FAFAFA;
+  --apple-text: #1D1D1F;
+  --apple-secondary: #6E6E73;
+  --apple-border: #D2D2D7;
+  --apple-accent: #C9A14A;
+  --pure-gold: #C9A14A;
+  --champagne-white: #F5F5F7;
 }
 
 /* ============================================
@@ -288,8 +278,8 @@ h1, h2, h3, .font-display {
 
 .sticky-cta-bar__btn {
   padding: 14px 28px;
-  background: linear-gradient(135deg, #C9857A, #E8B4AD);
-  color: #0c1f3f;
+  background: var(--accent-gold);
+  color: #FFFFFF;
   border: none;
   border-radius: 980px;
   font-size: 15px;
@@ -309,8 +299,8 @@ h1, h2, h3, .font-display {
    BUTTONS — Premium Feel
    ============================================ */
 .btn-primary {
-  background: linear-gradient(135deg, #C9857A, #E8B4AD);
-  color: #0c1f3f;
+  background: var(--accent-gold);
+  color: #FFFFFF;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   border-radius: 980px;
   border: none;
@@ -322,8 +312,8 @@ h1, h2, h3, .font-display {
 
 .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 32px rgba(201,133,122,0.35);
-  background: linear-gradient(135deg, #E8B4AD, #C9857A);
+  box-shadow: 0 8px 24px rgba(201, 161, 74, 0.25);
+  background: var(--accent-gold-hover);
 }
 
 .btn-secondary {
@@ -367,7 +357,7 @@ h1, h2, h3, .font-display {
    GRADIENT TEXT — Subtle gold
    ============================================ */
 .gradient-text {
-  background: linear-gradient(135deg, #FAF0EC 0%, #C9857A 100%);
+  background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent-gold) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;

@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useCart } from '../../context/CartContext';
 import { useLanguage, AVAILABLE_LANGUAGES } from '../../contexts/LanguageContext';
+import BloomLogoMark from '../BloomLogoMark';
 
 export default function LandingNav() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -50,19 +51,20 @@ export default function LandingNav() {
           <span className={`landing-nav__hamburger-line ${isMobileMenuOpen ? 'open' : ''}`} />
         </button>
 
-        {/* Logo — hidden on mobile */}
+        {/* Logo */}
         <Link to="/" className="landing-nav__logo">
-          Digital Bloom
+          <BloomLogoMark size={38} showText={true} animate={true} />
         </Link>
 
         {/* Desktop Links */}
         <div className="landing-nav__links">
           <Link to="/shop" className="landing-nav__link landing-nav__link--accent">Occasions</Link>
           <Link to="/shop" className="landing-nav__link">Shop</Link>
-          <Link to="/credits" className="landing-nav__link">Credits</Link>
+          <Link to="/shop?create=true" className="landing-nav__link">Create</Link>
+          <Link to="/credits" className="landing-nav__link">Pricing</Link>
         </div>
 
-        {/* Right side: Language Switcher + Cart */}
+        {/* Right side: Language Switcher + Send a Bloom CTA */}
         <div className="landing-nav__right">
           {/* Language Switcher — always visible */}
           <div className="lang-switcher" ref={langRef}>
@@ -101,21 +103,26 @@ export default function LandingNav() {
             )}
           </div>
 
-          {/* Cart Icon */}
-          <button
-            onClick={toggleCart}
-            className="landing-nav__cart-btn"
-            aria-label="Shopping cart"
-          >
-            <svg style={{ width: '26px', height: '26px', color: 'rgba(255,255,255,0.95)' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-            </svg>
-            {cartCount > 0 && (
-              <span style={{ position: 'absolute', top: '4px', right: '4px', background: '#D4AF37', color: '#050510', fontSize: '10px', fontWeight: '800', borderRadius: '50%', width: '18px', height: '18px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          {/* Cart icon — visible when items in cart */}
+          {cartCount > 0 && (
+            <button
+              onClick={toggleCart}
+              className="landing-nav__cart-btn"
+              aria-label="Shopping cart"
+            >
+              <svg style={{ width: '22px', height: '22px', color: 'rgba(255,255,255,0.95)' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+              </svg>
+              <span style={{ position: 'absolute', top: '2px', right: '2px', background: '#D4AF37', color: '#050510', fontSize: '10px', fontWeight: '800', borderRadius: '50%', width: '16px', height: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 {cartCount}
               </span>
-            )}
-          </button>
+            </button>
+          )}
+
+          {/* Send a Bloom CTA */}
+          <Link to="/shop" className="landing-nav__cta">
+            SEND A BLOOM
+          </Link>
         </div>
       </div>
 

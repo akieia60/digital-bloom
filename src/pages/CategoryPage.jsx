@@ -1,36 +1,26 @@
 import { useParams, Link } from 'react-router-dom';
 import BloomListCard from '../components/BloomListCard';
 import { useProducts } from '../hooks/useProducts';
-import { useLanguage } from '../contexts/LanguageContext';
 import OCCASIONS from '../data/occasions';
 
 const COMING_SOON_SLUGS = new Set(['zodiac']);
 
-// Convert slug like "mothers-day" to key like "mothers_day"
-function slugToKey(slug) {
-  return slug.replace(/-/g, '_');
-}
-
 export default function CategoryPage() {
   const { categorySlug } = useParams();
-  const { t } = useLanguage();
   const occasion = OCCASIONS[categorySlug];
   const isComingSoon = COMING_SOON_SLUGS.has(categorySlug);
   const { products, loading } = useProducts();
-  const categoryProducts = products.filter((p) => p.category === categorySlug);
 
-  // Translated occasion title and tagline — falls back to English data
-  const occTitle   = t('occ_title_'   + slugToKey(categorySlug || '')) || (occasion?.title ?? '');
-  const occTagline = t('occ_tagline_' + slugToKey(categorySlug || '')) || (occasion?.tagline ?? '');
+  const categoryProducts = products.filter((p) => p.category === categorySlug);
 
   if (!occasion) {
     return (
       <div className="min-h-screen bg-[var(--bg-page)] flex items-center justify-center text-center px-6">
         <div>
-          <h2 className="text-3xl font-display text-[var(--text-primary)] mb-4">{t('cat_page_not_found')}</h2>
-          <p className="text-[var(--text-secondary)] mb-8">{t('cat_page_not_found_desc')}</p>
+          <h2 className="text-3xl font-display text-[var(--text-primary)] mb-4">Category not found</h2>
+          <p className="text-[var(--text-secondary)] mb-8">The category you're looking for doesn't exist.</p>
           <Link to="/shop" className="inline-block px-8 py-3 rounded-full text-sm uppercase tracking-widest bg-[var(--accent-gold)] text-[var(--bg-page)] hover:bg-[var(--accent-gold-hover)] transition-all font-semibold">
-            {t('cat_page_back_shop')}
+            Back to Shop
           </Link>
         </div>
       </div>
@@ -43,19 +33,22 @@ export default function CategoryPage() {
       <section className="relative pt-32 pb-10 px-6 text-center overflow-hidden">
         <div className="absolute top-0 left-0 right-0 h-1" style={{ background: `linear-gradient(90deg, ${occasion.accent}, ${occasion.accent}66)` }} />
         <div className="absolute inset-0 opacity-[0.07] pointer-events-none" style={{ background: `radial-gradient(ellipse at 50% 0%, ${occasion.accent}, transparent 65%)` }} />
+
         <Link to="/shop" className="relative inline-flex items-center text-[11px] uppercase tracking-[0.15em] hover:text-[var(--accent-gold)] transition-colors mb-10 font-medium" style={{ color: 'rgba(255,255,255,0.6)' }}>
           <svg className="w-3 h-3 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
-          {t('cat_page_all_occasions')}
+          All Occasions
         </Link>
+
         <h1 className="relative text-4xl sm:text-5xl md:text-6xl font-display font-medium tracking-[0.06em] uppercase mb-4" style={{ color: '#FFFFFF' }}>
-          {occTitle}
+          {occasion.title}
         </h1>
         <p className="relative text-base sm:text-lg font-light max-w-xl mx-auto leading-relaxed" style={{ color: 'rgba(255,255,255,0.75)' }}>
-          {occTagline}
+          {occasion.tagline}
         </p>
-        {/* Gamble's Sales Pitch — kept in English as rich marketing copy */}
+
+        {/* Gamble's Sales Pitch */}
         {occasion.salesPitch && (
           <div className="relative max-w-2xl mx-auto mt-8 p-6 rounded-2xl" style={{ background: 'rgba(255,255,255,0.07)', border: `1px solid rgba(255,255,255,0.15)` }}>
             <p className="text-sm sm:text-base font-medium leading-relaxed text-center" style={{ color: 'rgba(255,255,255,0.9)' }}>
@@ -63,6 +56,7 @@ export default function CategoryPage() {
             </p>
           </div>
         )}
+        
         <div className="relative mx-auto mt-6 h-[2px] w-12 rounded-full" style={{ background: occasion.accent }} />
       </section>
 
@@ -71,31 +65,31 @@ export default function CategoryPage() {
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-full mb-8" style={{ background: `${occasion.accent}15` }}>
             <span className="text-3xl">{occasion.emoji}</span>
           </div>
-          <h2 className="text-2xl font-display font-medium text-[var(--text-primary)] mb-4">{t('cat_page_coming_soon')}</h2>
+          <h2 className="text-2xl font-display font-medium text-[var(--text-primary)] mb-4">Coming Soon</h2>
           <p className="text-[var(--text-secondary)] font-light leading-relaxed mb-10">
-            {t('cat_page_coming_soon_desc')}
+            We're crafting something special for {occasion.title}. Check back soon.
           </p>
           <Link to="/shop" className="inline-block px-8 py-3 rounded-full text-sm uppercase tracking-widest bg-[var(--accent-gold)] text-[var(--bg-page)] hover:bg-[var(--accent-gold-hover)] transition-all font-semibold">
-            {t('cat_page_browse_other')}
+            Browse Other Occasions
           </Link>
         </section>
       ) : loading ? (
         <div className="max-w-3xl mx-auto px-6 py-16 text-center">
           <div className="w-8 h-8 border-2 border-[var(--border-default)] border-t-[var(--accent-gold)] rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-[var(--text-secondary)] text-sm">{t('cat_page_loading')}</p>
+          <p className="text-[var(--text-secondary)] text-sm">Loading collection…</p>
         </div>
       ) : categoryProducts.length === 0 ? (
         <div className="max-w-xl mx-auto px-6 py-24 text-center">
-          <p className="text-[var(--text-secondary)] font-light mb-8">{t('cat_page_no_blooms')}</p>
+          <p className="text-[var(--text-secondary)] font-light mb-8">No blooms found in this collection yet.</p>
           <Link to="/shop" className="inline-block px-8 py-3 rounded-full text-sm uppercase tracking-widest bg-[var(--accent-gold)] text-[var(--bg-page)] hover:bg-[var(--accent-gold-hover)] transition-all font-semibold">
-            {t('cat_page_browse_other')}
+            Browse Other Occasions
           </Link>
         </div>
       ) : (
-        /* Full-width stacked bloom cards */
+        /* Full-width stacked bloom cards matching the hand-drawn sketch */
         <section className="max-w-3xl mx-auto px-4 sm:px-6 pb-32 pt-8">
           <p className="text-[11px] uppercase tracking-[0.15em] text-[var(--text-muted)] mb-8 font-medium">
-            {categoryProducts.length} {categoryProducts.length !== 1 ? t('cat_page_experiences') : t('cat_page_experience')} {t('cat_page_available')}
+            {categoryProducts.length} experience{categoryProducts.length !== 1 ? 's' : ''} available
           </p>
           <div className="flex flex-col gap-6">
             {categoryProducts.map((product) => (

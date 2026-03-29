@@ -83,6 +83,12 @@ export default function GradientHero() {
             </div>
           )}
 
+          {/* Pill badge */}
+          <div className="gradient-hero__pill">
+            <span className="gradient-hero__pill-dot" aria-hidden="true" />
+            <span className="gradient-hero__pill-text">DIGITAL GIFTING, REIMAGINED</span>
+          </div>
+
           {/* Headline — translated */}
           <h1 className="gradient-hero__title">
             {t('hero_new_title_1')}<br />
