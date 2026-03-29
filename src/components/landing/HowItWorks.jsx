@@ -1,40 +1,44 @@
+import { useLanguage } from '../../contexts/LanguageContext';
+
 export default function HowItWorks() {
+  const { t } = useLanguage();
+
   const steps = [
     {
       number: "01",
-      title: "Choose an Experience",
-      description: "Select a DigitalBloom experience designed around expression, mood, or occasion."
+      title: "how_step1_title",
+      description: "how_step1_desc"
     },
     {
       number: "02",
-      title: "Customize the Experience",
-      description: "Personalize your experience with custom text, colors, and creative elements."
+      title: "how_step2_title",
+      description: "how_step2_desc"
     },
     {
       number: "03",
-      title: "Digital Publishing",
-      description: "Your customized DigitalBloom experience is published as a digital multimedia creation."
+      title: "how_step3_title",
+      description: "how_step3_desc"
     },
     {
       number: "04",
-      title: "Delivery or Gifting",
-      description: "Receive your experience privately or send it as a digital gift to someone else."
+      title: "how_step4_title",
+      description: "how_step4_desc"
     }
   ];
 
   return (
     <section className="how-it-works" id="how-it-works">
       <div className="landing-container">
-        <h2 className="section-title">How It Works</h2>
+        <h2 className="section-title">{t('how_title')}</h2>
         <p className="section-subtitle">
-          Four steps to creating your personalized DigitalBloom experience
+          {t('how_subtitle')}
         </p>
         <div className="steps-grid">
           {steps.map((step, index) => (
             <div key={index} className="step-card">
               <div className="step-number">{step.number}</div>
-              <h3 className="step-title">{step.title}</h3>
-              <p className="step-description">{step.description}</p>
+              <h3 className="step-title">{t(step.title)}</h3>
+              <p className="step-description">{t(step.description)}</p>
             </div>
           ))}
         </div>

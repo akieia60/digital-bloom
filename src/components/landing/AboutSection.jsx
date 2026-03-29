@@ -1,21 +1,24 @@
 import { Link } from 'react-router-dom';
+import { useLanguage } from '../../contexts/LanguageContext';
 
 export default function AboutSection() {
+  const { t } = useLanguage();
+
   return (
     <section className="about-section">
       <div className="landing-container">
         <div className="about-content">
-          <h2 className="section-title">What Is DigitalBloom</h2>
+          <h2 className="section-title">{t('about_title')}</h2>
           <div className="about-text">
             <p>
-              DigitalBloom is a digital multimedia publishing platform focused on creating and delivering intentional digital experiences. Each experience is crafted to communicate emotion, meaning, and connection through visual and multimedia expression.
+              {t('about_p1')}
             </p>
             <p>
-              Rather than selling generic digital files, DigitalBloom publishes customized digital experiences designed to be shared, gifted, or privately enjoyed.
+              {t('about_p2')}
             </p>
           </div>
           <Link to="/shop" className="cta-secondary">
-            Explore the Experience
+            {t('about_cta')}
           </Link>
         </div>
       </div>

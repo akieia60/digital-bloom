@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { useCart } from '../context/CartContext';
+import { useLanguage } from '../contexts/LanguageContext';
 import CartItem from './CartItem';
 import { createCartCheckoutSession, redirectToCheckout } from '../lib/stripe';
 import { validateCreditCode, reserveCredit } from '../lib/creditStripe';
 
 const ShoppingCart = () => {
+  const { t } = useLanguage();
   const { cartItems, isCartOpen, toggleCart, getCartTotal, clearCart } = useCart();
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState(null);
@@ -20,7 +22,7 @@ const ShoppingCart = () => {
 
     const formatted = creditCode.toUpperCase().trim();
     if (!/^DBLOOM-[A-Z0-9]{4}-[A-Z0-9]{4}$/.test(formatted)) {
-      setError('Invalid credit code format. Expected: DBLOOM-XXXX-XXXX');
+      setError(t('cart_error_credit_format'));
       return;
     }
 
@@ -104,9 +106,9 @@ const ShoppingCart = () => {
         {/* Header */}
         <div className="flex items-center justify-between p-4 sm:p-8 border-b border-white/5">
           <div>
-            <h2 className="text-xl sm:text-2xl font-medium font-display tracking-tight text-white mb-1">Your Selection</h2>
+            <h2 className="text-xl sm:text-2xl font-medium font-display tracking-tight text-white mb-1">{t('cart_title')}</h2>
             <p className="text-[10px] uppercase tracking-[0.3em] text-white/30 font-light">
-              {cartItems.length} Piece{cartItems.length !== 1 ? 's' : ''} Collected
+              {cartItems.length} {cartItems.length === 1 ? t('cart_piece') : t('cart_pieces')} Collected
             </p>
           </div>
           <button
@@ -127,15 +129,15 @@ const ShoppingCart = () => {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
               </svg>
             </div>
-            <h3 className="text-lg font-medium font-display text-white mb-4">Gallery Empty</h3>
+            <h3 className="text-lg font-medium font-display text-white mb-4">{t('cart_empty_title')}</h3>
             <p className="text-white/30 text-sm font-light leading-relaxed mb-10 max-w-[200px] mx-auto">
-              Your curated collection is awaiting its first masterpiece.
+              {t('cart_empty_message')}
             </p>
             <button
               onClick={toggleCart}
               className="btn-secondary px-8 py-3 rounded-full text-[10px] uppercase tracking-widest font-semibold"
             >
-              Discover Art
+              {t('cart_empty_cta')}
             </button>
           </div>
         ) : (
@@ -156,14 +158,14 @@ const ShoppingCart = () => {
 
               {/* Credit Redemption */}
               <div className="credit-redemption">
-                <h4 className="credit-redemption-title">Apply Experience Credit</h4>
-                
+                <h4 className="credit-redemption-title">{t('cart_credit_section')}</h4>
+
                 {!creditApplied ? (
                   <>
                     <div className="credit-input-group flex flex-col sm:flex-row gap-2 sm:gap-3">
                       <input
                         type="text"
-                        placeholder="DBLOOM-XXXX-XXXX"
+                        placeholder={t('cart_credit_placeholder')}
                         maxLength="17"
                         value={creditCode}
                         onChange={(e) => setCreditCode(e.target.value.toUpperCase())}
@@ -176,20 +178,20 @@ const ShoppingCart = () => {
                         className="px-6 py-3 bg-blue-600 text-white rounded-lg text-sm font-semibold hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
                         style={{ minHeight: '44px', minWidth: '100px' }}
                       >
-                        {isApplyingCredit ? 'Applying...' : 'Apply'}
+                        {isApplyingCredit ? t('cart_credit_applying') : t('cart_credit_apply')}
                       </button>
                     </div>
                     <p className="text-xs text-white/40 mt-2">
-                      Enter your credit code to reduce your total
+                      {t('cart_credit_hint')}
                     </p>
                   </>
                 ) : (
                   <div className="credit-applied">
-                    <div className="credit-applied-title">✓ Credit Applied</div>
+                    <div className="credit-applied-title">{t('cart_credit_applied')}</div>
                     <div className="credit-applied-details">
-                      <div>Code: {creditApplied.code}</div>
-                      <div>Applied: ${(creditApplied.applied_cents / 100).toFixed(2)}</div>
-                      <div>Remaining on card: ${(creditApplied.remaining_after_cents / 100).toFixed(2)}</div>
+                      <div>{t('cart_credit_code_label')} {creditApplied.code}</div>
+                      <div>{t('cart_credit_applied_label')} ${(creditApplied.applied_cents / 100).toFixed(2)}</div>
+                      <div>{t('cart_credit_remaining_label')} ${(creditApplied.remaining_after_cents / 100).toFixed(2)}</div>
                     </div>
                     <button
                       onClick={() => {
@@ -207,7 +209,7 @@ const ShoppingCart = () => {
                         cursor: 'pointer'
                       }}
                     >
-                      Remove Credit
+                      {t('cart_credit_remove')}
                     </button>
                   </div>
                 )}
@@ -215,7 +217,7 @@ const ShoppingCart = () => {
               <div className="flex items-end justify-between">
                 <div>
                   <p className="text-[10px] uppercase tracking-widest text-white/30 mb-2">
-                    {creditApplied ? 'Remaining Due' : 'Total Value'}
+                    {creditApplied ? t('cart_remaining_due') : t('cart_total_value')}
                   </p>
                   <p className="text-3xl font-light tracking-tight text-white font-display">
                     ${(remainingDue / 100).toFixed(2)}
@@ -227,8 +229,8 @@ const ShoppingCart = () => {
                   )}
                 </div>
                 <div className="text-right">
-                   <p className="text-[10px] uppercase tracking-widest text-pure-gold/60">Digital Concierge</p>
-                   <p className="text-[10px] text-white/20 mt-1">Stripe Checkout Secure</p>
+                   <p className="text-[10px] uppercase tracking-widest text-pure-gold/60">{t('cart_concierge')}</p>
+                   <p className="text-[10px] text-white/20 mt-1">{t('cart_stripe_secure')}</p>
                 </div>
               </div>
 
@@ -241,11 +243,11 @@ const ShoppingCart = () => {
                   {isProcessing ? (
                     <>
                       <div className="w-4 h-4 border-2 border-black/20 border-t-black rounded-full animate-spin"></div>
-                      <span>Initializing...</span>
+                      <span>{t('cart_initializing')}</span>
                     </>
                   ) : (
                     <>
-                      <span>Check Out &amp; Publish</span>
+                      <span>{t('cart_checkout')}</span>
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                       </svg>
@@ -258,7 +260,7 @@ const ShoppingCart = () => {
                     onClick={clearCart}
                     className="flex-1 text-white/20 hover:text-red-400 py-3 text-[9px] uppercase tracking-widest font-semibold transition-colors"
                   >
-                    Clear Collection
+                    {t('cart_clear')}
                   </button>
                 </div>
                 </div>

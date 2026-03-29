@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
+import { useLanguage } from '../../contexts/LanguageContext';
 
 export default function DemoVideo() {
+  const { t } = useLanguage();
   const sectionRef = useRef(null);
   const [isVisible, setIsVisible] = useState(false);
 
@@ -41,8 +43,8 @@ export default function DemoVideo() {
           transition: 'opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1)',
         }}
       >
-        <span className="demo-video-eyebrow">THE EXPERIENCE</span>
-        <h2 className="demo-video-title">Watch a Bloom Come to Life</h2>
+        <span className="demo-video-eyebrow">{t('demo_eyebrow')}</span>
+        <h2 className="demo-video-title">{t('demo_title')}</h2>
       </div>
 
       {/* Video Player */}
@@ -62,7 +64,7 @@ export default function DemoVideo() {
             poster="/videos/digital_bloom_poster.jpg"
           >
             <source src="/videos/digital_bloom_seamless.mp4" type="video/mp4" />
-            Your browser does not support the video tag.
+            {t('demo_fallback')}
           </video>
         </div>
       </div>
@@ -77,7 +79,7 @@ export default function DemoVideo() {
         }}
       >
         <p>
-          Every bloom is a cinematic experience, crafted with intention and delivered with love.
+          {t('demo_caption')}
         </p>
       </div>
     </section>

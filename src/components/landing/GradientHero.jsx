@@ -19,11 +19,11 @@ function getUpcomingHoliday() {
   }
 
   const holidays = [
-    { name: "Happy New Year",        date: new Date(year, 0, 1) },
-    { name: "Happy Valentine's Day", date: new Date(year, 1, 14) },
-    { name: "Happy Mother's Day",    date: nthWeekday(year, 5, 0, 2) },
-    { name: "Happy Father's Day",    date: nthWeekday(year, 6, 0, 3) },
-    { name: "Merry Christmas",       date: new Date(year, 11, 25) },
+    { name: "holiday_new_year",        date: new Date(year, 0, 1) },
+    { name: "holiday_valentine", date: new Date(year, 1, 14) },
+    { name: "holiday_mothers_day",    date: nthWeekday(year, 5, 0, 2) },
+    { name: "holiday_fathers_day",    date: nthWeekday(year, 6, 0, 3) },
+    { name: "holiday_christmas",       date: new Date(year, 11, 25) },
   ].filter(h => h.date);
 
   const today = new Date(year, now.getMonth(), now.getDate());
@@ -79,14 +79,14 @@ export default function GradientHero() {
           {/* Holiday banner */}
           {holiday && (
             <div className="gradient-hero__banner">
-              <span className="gradient-hero__banner-title">{holiday.name}</span>
+              <span className="gradient-hero__banner-title">{t(holiday.name)}</span>
             </div>
           )}
 
           {/* Pill badge */}
           <div className="gradient-hero__pill">
             <span className="gradient-hero__pill-dot" aria-hidden="true" />
-            <span className="gradient-hero__pill-text">DIGITAL GIFTING, REIMAGINED</span>
+            <span className="gradient-hero__pill-text">{t('hero_pill_badge')}</span>
           </div>
 
           {/* Headline — translated */}
@@ -122,7 +122,7 @@ export default function GradientHero() {
           aria-label="Scroll to content"
           style={{ opacity: contentVisible ? 0.7 : 0, transition: 'opacity 0.5s ease 0.5s' }}
         >
-          <span className="gradient-hero__scroll-text">Scroll</span>
+          <span className="gradient-hero__scroll-text">{t('hero_scroll')}</span>
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
             stroke="currentColor" strokeWidth="1.5"
             strokeLinecap="round" strokeLinejoin="round"

@@ -1,7 +1,9 @@
 import { Link } from 'react-router-dom';
+import { useLanguage } from '../contexts/LanguageContext';
 import VideoPlayer from './VideoPlayer';
 
 const ProductCard = ({ product, compact = false }) => {
+  const { t } = useLanguage();
   const displayPrice = Number(product?.price || 0).toFixed(2);
 
   return (
@@ -24,7 +26,7 @@ const ProductCard = ({ product, compact = false }) => {
           {!compact && (
             <div className="absolute inset-x-0 bottom-0 flex justify-center pb-5 sm:opacity-0 sm:group-hover:opacity-100 sm:translate-y-2 sm:group-hover:translate-y-0 transition-all duration-400">
               <div className="px-7 py-3 bg-[var(--accent-gold)] rounded-full text-[12px] uppercase tracking-[0.12em] font-bold text-white shadow-lg">
-                Customize
+                {t('customize_button')}
               </div>
             </div>
           )}
@@ -38,14 +40,14 @@ const ProductCard = ({ product, compact = false }) => {
           {!compact && (
             <>
               <p className="text-[13px] text-[#6E6E73] mt-1.5 line-clamp-1 font-light">
-                {product.description || product.category || 'Digital Experience'}
+                {product.description || product.category || t('product_digital_experience')}
               </p>
               <div className="flex items-center justify-between mt-3 pt-3 border-t border-[#F0F0F0]">
                 <span className="text-base font-bold text-[var(--accent-gold)]">
                   ${displayPrice}
                 </span>
                 <span className="text-[11px] uppercase tracking-[0.1em] text-[#AEAEB2] font-semibold">
-                  Customize →
+                  {t('product_card_customize')}
                 </span>
               </div>
             </>

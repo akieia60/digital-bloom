@@ -1,6 +1,8 @@
 import { useState } from 'react';
+import { useLanguage } from '../../contexts/LanguageContext';
 
 export default function ContactSection() {
+  const { t } = useLanguage();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -32,9 +34,9 @@ export default function ContactSection() {
       <div className="landing-container">
         <div className="contact-content">
           <div className="contact-info">
-            <h2 className="section-title">Get in Touch</h2>
+            <h2 className="section-title">{t('contact_title')}</h2>
             <p className="contact-description">
-              Have a question or special request? We'd love to hear from you.
+              {t('contact_subtitle')}
             </p>
             <div className="contact-details">
               <p>
@@ -45,7 +47,7 @@ export default function ContactSection() {
           </div>
           <form className="contact-form" onSubmit={handleSubmit}>
             <div className="form-group">
-              <label htmlFor="name">Name</label>
+              <label htmlFor="name">{t('contact_label_name')}</label>
               <input
                 type="text"
                 id="name"
@@ -53,11 +55,11 @@ export default function ContactSection() {
                 value={formData.name}
                 onChange={handleChange}
                 required
-                placeholder="Your name"
+                placeholder={t('contact_placeholder_name')}
               />
             </div>
             <div className="form-group">
-              <label htmlFor="email">Email</label>
+              <label htmlFor="email">{t('contact_label_email')}</label>
               <input
                 type="email"
                 id="email"
@@ -65,11 +67,11 @@ export default function ContactSection() {
                 value={formData.email}
                 onChange={handleChange}
                 required
-                placeholder="your@email.com"
+                placeholder={t('contact_placeholder_email')}
               />
             </div>
             <div className="form-group">
-              <label htmlFor="message">Message</label>
+              <label htmlFor="message">{t('contact_label_message')}</label>
               <textarea
                 id="message"
                 name="message"
@@ -77,15 +79,15 @@ export default function ContactSection() {
                 onChange={handleChange}
                 required
                 rows="5"
-                placeholder="How can we help?"
+                placeholder={t('contact_placeholder_message')}
               />
             </div>
-            <button 
-              type="submit" 
+            <button
+              type="submit"
               className="cta-primary"
               disabled={status === 'sending'}
             >
-              {status === 'sending' ? 'Sending...' : status === 'success' ? 'Sent!' : 'Send Message'}
+              {status === 'sending' ? t('contact_button_sending') : status === 'success' ? t('contact_button_sent') : t('contact_button_send')}
             </button>
           </form>
         </div>

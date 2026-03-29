@@ -150,7 +150,7 @@ export default function CategoryGrid() {
                   )}
                   {/* Tap hint overlay */}
                   <div className="cat-stack-tap-hint">
-                    <span className="cat-stack-tap-text">Tap to explore</span>
+                    <span className="cat-stack-tap-text">{t('cat_tap_explore')}</span>
                   </div>
                 </div>
               </Link>

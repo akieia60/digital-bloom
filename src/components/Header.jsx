@@ -40,7 +40,7 @@ const Header = ({ onSearchChange, searchQuery }) => {
             <div className="hidden md:flex relative group">
               <input
                 type="text"
-                placeholder="Search..."
+                placeholder={t('header_search_placeholder')}
                 value={searchQuery}
                 onChange={(e) => onSearchChange(e.target.value)}
                 className="w-48 focus:w-64 px-4 py-2 bg-[var(--bg-surface)] border border-[var(--border-default)] rounded-lg text-sm text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--accent-gold-border-hover)] transition-all duration-500 font-light"
@@ -60,16 +60,16 @@ const Header = ({ onSearchChange, searchQuery }) => {
           <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transition-all duration-700">
             <Link to="/" className="flex flex-col items-center group" onClick={() => setIsMobileMenuOpen(false)}>
               <span className={`font-medium font-display uppercase text-[var(--text-primary)] transition-all duration-700 ease-in-out ${
-                isScrolled 
-                  ? 'text-lg sm:text-xl tracking-[0.15em]' 
+                isScrolled
+                  ? 'text-lg sm:text-xl tracking-[0.15em]'
                   : 'text-xl sm:text-2xl md:text-3xl tracking-[0.2em]'
               }`}>
-                Digital Bloom
+                {t('header_brand')}
               </span>
               <span className={`text-[9px] tracking-[0.3em] uppercase text-[var(--text-muted)] font-light transition-all duration-700 ${
                 isScrolled ? 'opacity-0 -translate-y-2 pointer-events-none' : 'opacity-100 translate-y-0'
               }`}>
-                Luxury Motion Art
+                {t('header_tagline')}
               </span>
             </Link>
           </div>
@@ -177,7 +177,7 @@ const Header = ({ onSearchChange, searchQuery }) => {
               <div className="relative">
                 <input
                   type="text"
-                  placeholder="Search..."
+                  placeholder={t('header_search_placeholder')}
                   value={searchQuery}
                   onChange={(e) => onSearchChange(e.target.value)}
                   className="w-full px-4 py-3 rounded-lg text-base focus:outline-none focus:ring-2 transition-all"
@@ -218,7 +218,7 @@ const Header = ({ onSearchChange, searchQuery }) => {
               </Link>
               {/* Language Selector */}
               <div className="py-5 border-b border-white/10">
-                <div className="text-xs font-bold uppercase tracking-widest text-white/50 mb-3">Select Language</div>
+                <div className="text-xs font-bold uppercase tracking-widest text-white/50 mb-3">{t('header_select_language')}</div>
                 <div className="flex flex-wrap gap-2">
                   {AVAILABLE_LANGUAGES.map(l => (
                     <button
@@ -250,8 +250,8 @@ const Header = ({ onSearchChange, searchQuery }) => {
 
             {/* Menu Footer */}
             <div className="p-6" style={{ borderTop: '1px solid rgba(255,255,255,0.1)' }}>
-              <p className="text-xs uppercase tracking-wider" style={{ color: '#D4AF37' }}>Digital Bloom</p>
-              <p className="text-[10px] mt-1" style={{ color: 'rgba(255,255,255,0.4)' }}>Cinematic Digital Experiences</p>
+              <p className="text-xs uppercase tracking-wider" style={{ color: '#D4AF37' }}>{t('header_brand')}</p>
+              <p className="text-[10px] mt-1" style={{ color: 'rgba(255,255,255,0.4)' }}>{t('header_tagline')}</p>
             </div>
           </div>
         </div>

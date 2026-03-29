@@ -1,39 +1,41 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { supabase } from '../lib/supabase';
 import { buildCartComposition } from '../lib/fulfillmentMapper';
+import { useLanguage } from '../contexts/LanguageContext';
 import LivePreview from './LivePreview';
 import '../styles/customizer.css';
 
 const EXTRAS = [
-  { id: 'ribbon', icon: '🎀', name: 'Ribbon Wrap' },
-  { id: 'sparkle', icon: '✨', name: 'Sparkle Effect' },
-  { id: 'goldDust', icon: '🌟', name: 'Gold Dust' },
+  { id: 'ribbon', icon: '🎀', nameKey: 'customize_extra_ribbon' },
+  { id: 'sparkle', icon: '✨', nameKey: 'customize_extra_sparkle' },
+  { id: 'goldDust', icon: '🌟', nameKey: 'customize_extra_gold' },
 ];
 
 const SOUND_TRACKS = [
-  { id: 'gentle-piano', name: 'Gentle Piano', icon: '🎹', src: '/audio/gentle-piano.mp3' },
-  { id: 'soft-strings', name: 'Soft Strings', icon: '🎻', src: '/audio/soft-strings.mp3' },
-  { id: 'ambient-bloom', name: 'Ambient Bloom', icon: '🌸', src: '/audio/ambient-bloom.mp3' },
-  { id: 'give-flowers', name: 'Give Them Their Flowers', icon: '💐', src: null, comingSoon: true },
+  { id: 'gentle-piano', nameKey: 'customize_sound_piano', icon: '🎹', src: '/audio/gentle-piano.mp3' },
+  { id: 'soft-strings', nameKey: 'customize_sound_strings', icon: '🎻', src: '/audio/soft-strings.mp3' },
+  { id: 'ambient-bloom', nameKey: 'customize_sound_bloom', icon: '🌸', src: '/audio/ambient-bloom.mp3' },
+  { id: 'give-flowers', nameKey: 'customize_sound_flowers', icon: '💐', src: null, comingSoon: true },
 ];
 
 const COLOR_THEMES = [
-  { id: 'original', name: 'Original', colors: ['#FF69B4', '#FFB6C1'] },
-  { id: 'warm', name: 'Warm Sunset', colors: ['#FF6B6B', '#FFA07A'] },
-  { id: 'cool', name: 'Cool Breeze', colors: ['#4ECDC4', '#95E1D3'] },
-  { id: 'elegant', name: 'Elegant Gold', colors: ['#D4AF37', '#F4E4C1'] },
-  { id: 'romantic', name: 'Romantic Rose', colors: ['#C41E3A', '#FF1744'] },
+  { id: 'original', nameKey: 'customize_theme_original', colors: ['#FF69B4', '#FFB6C1'] },
+  { id: 'warm', nameKey: 'customize_theme_sunset', colors: ['#FF6B6B', '#FFA07A'] },
+  { id: 'cool', nameKey: 'customize_theme_breeze', colors: ['#4ECDC4', '#95E1D3'] },
+  { id: 'elegant', nameKey: 'customize_theme_gold', colors: ['#D4AF37', '#F4E4C1'] },
+  { id: 'romantic', nameKey: 'customize_theme_rose', colors: ['#C41E3A', '#FF1744'] },
 ];
 
 const FLOW_STEPS = [
-  { id: 1, key: 'message', label: 'Message' },
-  { id: 2, key: 'frame', label: 'Frame' },
-  { id: 3, key: 'effect', label: 'Effect' },
-  { id: 4, key: 'sound', label: 'Sound' },
-  { id: 5, key: 'review', label: 'Review' },
+  { id: 1, key: 'message', labelKey: 'customize_step_message' },
+  { id: 2, key: 'frame', labelKey: 'customize_step_frame' },
+  { id: 3, key: 'effect', labelKey: 'customize_step_effect' },
+  { id: 4, key: 'sound', labelKey: 'customize_step_sound' },
+  { id: 5, key: 'review', labelKey: 'customize_step_review' },
 ];
 
 const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {} }) => {
+  const { t } = useLanguage();
   const { messagePlaceholder, toPlaceholder, ...stateDefaults } = defaults;
   const scrollPosRef = useRef(0);
 
@@ -257,15 +259,15 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {} }) => 
 
         {/* Header */}
         <div className="customizer-sheet__header">
-          <h2 className="customizer-sheet__title">Customize</h2>
-          <button type="button" className="customizer-sheet__close" onClick={onClose} aria-label="Close">✕</button>
+          <h2 className="customizer-sheet__title">{t('customize_title')}</h2>
+          <button type="button" className="customizer-sheet__close" onClick={onClose} aria-label={t('customize_close')}>✕</button>
         </div>
 
         {/* Body — step flow with persistent top preview */}
         <div className="customizer-sheet__body">
 
           <div className="customizer-preview-shell">
-            <div className="customizer-preview-shell__label">Live Bloom Preview</div>
+            <div className="customizer-preview-shell__label">{t('customize_preview')}</div>
             <LivePreview
               product={product}
               colorTheme={colorTheme}
@@ -280,7 +282,7 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {} }) => 
           <div className="customizer-section">
             <div className="customizer-section__header">
               <span className="customizer-section__number">1</span>
-              <h3 className="customizer-section__title">Your Message</h3>
+              <h3 className="customizer-section__title">{t('customize_your_message')}</h3>
             </div>
 
             <div className="customizer-field">
@@ -288,7 +290,7 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {} }) => 
                 id="cust-msg"
                 type="text"
                 className="customizer-input"
-                placeholder={messagePlaceholder || 'e.g., Happy Birthday!'}
+                placeholder={messagePlaceholder || t('customize_message_placeholder')}
                 maxLength="150"
                 value={message.short}
                 onChange={(e) => handleMessageChange('short', e.target.value)}
@@ -298,16 +300,16 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {} }) => 
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
               <div className="customizer-field">
-                <label className="customizer-label" htmlFor="cust-to">To</label>
+                <label className="customizer-label" htmlFor="cust-to">{t('customize_to')}</label>
                 <input id="cust-to" type="text" className="customizer-input"
-                  placeholder={toPlaceholder || 'Recipient'}
+                  placeholder={toPlaceholder || t('customize_to_placeholder')}
                   value={message.toName}
                   onChange={(e) => handleMessageChange('toName', e.target.value)} />
               </div>
               <div className="customizer-field">
-                <label className="customizer-label" htmlFor="cust-from">From</label>
+                <label className="customizer-label" htmlFor="cust-from">{t('customize_from')}</label>
                 <input id="cust-from" type="text" className="customizer-input"
-                  placeholder="Your name"
+                  placeholder={t('customize_from_placeholder')}
                   value={message.fromName}
                   onChange={(e) => handleMessageChange('fromName', e.target.value)} />
               </div>
@@ -321,7 +323,7 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {} }) => 
           <div className="customizer-section">
             <div className="customizer-section__header">
               <span className="customizer-section__number">2</span>
-              <h3 className="customizer-section__title">Style</h3>
+              <h3 className="customizer-section__title">{t('customize_style')}</h3>
             </div>
             <div className="theme-grid" role="radiogroup" aria-label="Color theme">
               {COLOR_THEMES.map(theme => (
@@ -332,7 +334,7 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {} }) => 
                     <span style={{ background: theme.colors[0] }} />
                     <span style={{ background: theme.colors[1] }} />
                   </div>
-                  <span className="theme-name">{theme.name}</span>
+                  <span className="theme-name">{t(theme.nameKey)}</span>
                 </button>
               ))}
             </div>
@@ -345,7 +347,7 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {} }) => 
           <div className="customizer-section">
             <div className="customizer-section__header">
               <span className="customizer-section__number">3</span>
-              <h3 className="customizer-section__title">Extras</h3>
+              <h3 className="customizer-section__title">{t('customize_extras')}</h3>
             </div>
             <div className="extras-grid">
               {EXTRAS.map(extra => (
@@ -353,11 +355,11 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {} }) => 
                   className={`extra-toggle ${extras[extra.id] ? 'extra-toggle--active' : ''}`}
                   onClick={() => toggleExtra(extra.id)}
                   aria-pressed={extras[extra.id]}
-                  aria-label={extra.name}>
+                  aria-label={t(extra.nameKey)}>
                   <div className="extra-toggle__info">
                     <span className="extra-toggle__icon" aria-hidden="true">{extra.icon}</span>
                     <div>
-                      <span className="extra-toggle__name">{extra.name}</span>
+                      <span className="extra-toggle__name">{t(extra.nameKey)}</span>
                     </div>
                   </div>
                   <span className="toggle-switch" aria-hidden="true">
@@ -376,7 +378,7 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {} }) => 
           <div className="customizer-section">
             <div className="customizer-section__header">
               <span className="customizer-section__number">4</span>
-              <h3 className="customizer-section__title">Sound</h3>
+              <h3 className="customizer-section__title">{t('customize_sound')}</h3>
             </div>
             <div className="extras-grid">
               {SOUND_TRACKS.map(track => (
@@ -384,13 +386,13 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {} }) => 
                   className={`extra-toggle ${selectedSound === track.id ? 'extra-toggle--active' : ''} ${track.comingSoon ? 'opacity-50 cursor-not-allowed' : ''}`}
                   onClick={() => !track.comingSoon && handleSoundPreview(track)}
                   disabled={track.comingSoon}
-                  aria-label={track.comingSoon ? `${track.name} — coming soon` : `Preview ${track.name}`}>
+                  aria-label={track.comingSoon ? `${t(track.nameKey)} — ${t('customize_coming_soon')}` : `Preview ${t(track.nameKey)}`}>
                   <div className="extra-toggle__info">
                     <span className="extra-toggle__icon" aria-hidden="true">{track.icon}</span>
                     <div>
-                      <span className="extra-toggle__name">{track.name}</span>
+                      <span className="extra-toggle__name">{t(track.nameKey)}</span>
                       {track.comingSoon && (
-                        <span className="extra-toggle__price" style={{ color: '#C9A14A' }}>Coming Soon</span>
+                        <span className="extra-toggle__price" style={{ color: '#C9A14A' }}>{t('customize_coming_soon')}</span>
                       )}
                     </div>
                   </div>
@@ -410,15 +412,15 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {} }) => 
             <div className="customizer-section customizer-section--review">
               <div className="customizer-section__header">
                 <span className="customizer-section__number">5</span>
-                <h3 className="customizer-section__title">Review Your Bloom</h3>
+                <h3 className="customizer-section__title">{t('customize_review_title')}</h3>
               </div>
               <div className="customizer-review-card">
-                <p><strong>To:</strong> {message.toName || '—'}</p>
-                <p><strong>From:</strong> {message.fromName || '—'}</p>
-                <p><strong>Message:</strong> {message.short || '—'}</p>
-                <p><strong>Frame:</strong> {COLOR_THEMES.find((theme) => theme.id === colorTheme)?.name || 'Original'}</p>
-                <p><strong>Effects:</strong> {EXTRAS.filter((extra) => extras[extra.id]).map((extra) => extra.name).join(', ') || 'None selected'}</p>
-                <p><strong>Sound:</strong> {SOUND_TRACKS.find((track) => track.id === selectedSound)?.name || 'None selected'}</p>
+                <p><strong>{t('customize_review_to')}</strong> {message.toName || '—'}</p>
+                <p><strong>{t('customize_review_from')}</strong> {message.fromName || '—'}</p>
+                <p><strong>{t('customize_review_message')}</strong> {message.short || '—'}</p>
+                <p><strong>{t('customize_review_frame')}</strong> {t(COLOR_THEMES.find((theme) => theme.id === colorTheme)?.nameKey) || t('customize_theme_original')}</p>
+                <p><strong>{t('customize_review_effects')}</strong> {EXTRAS.filter((extra) => extras[extra.id]).map((extra) => t(extra.nameKey)).join(', ') || 'None selected'}</p>
+                <p><strong>{t('customize_review_sound')}</strong> {SOUND_TRACKS.find((track) => track.id === selectedSound) ? t(SOUND_TRACKS.find((track) => track.id === selectedSound).nameKey) : 'None selected'}</p>
               </div>
             </div>
           )}
@@ -427,21 +429,21 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {} }) => 
         {/* ── UNIFIED BOTTOM BAR — Back / Next or Add to Cart ── */}
         <div className="customizer-sticky-cta">
           {activeStep > 1 ? (
-            <button type="button" className="cta-back-btn" onClick={goBack}>← Back</button>
+            <button type="button" className="cta-back-btn" onClick={goBack}>{t('customize_btn_back')}</button>
           ) : (
-            <button type="button" className="cta-back-btn" onClick={onClose}>✕ Close</button>
+            <button type="button" className="cta-back-btn" onClick={onClose}>{t('customize_btn_close')}</button>
           )}
           <div className="cta-pricing">
             <div className="cta-pricing__amount">${totalPrice.toFixed(2)}</div>
           </div>
           {activeStep < FLOW_STEPS.length ? (
             <button type="button" className="cta-add-btn" onClick={goNext}>
-              Next →
+              {t('customize_btn_next')}
             </button>
           ) : (
             <button type="button" className="cta-add-btn" onClick={handleComplete}
               disabled={!isProductValid} aria-label={`Add to cart for $${totalPrice.toFixed(2)}`}>
-              Add to Cart
+              {t('customize_btn_add_cart')}
             </button>
           )}
         </div>

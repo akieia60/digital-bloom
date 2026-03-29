@@ -1,12 +1,14 @@
 import { useState, useMemo, useCallback, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
+import { useLanguage } from '../contexts/LanguageContext';
 import { useProduct, useProducts } from '../hooks/useProducts';
 import ProductCard from './ProductCard';
 import Customizer from './Customizer';
 import OCCASIONS from '../data/occasions';
 
 const ProductDetails = () => {
+  const { t } = useLanguage();
   const { id } = useParams();
   const navigate = useNavigate();
   const { addToCart, toggleCart } = useCart();
@@ -54,7 +56,7 @@ const ProductDetails = () => {
       <div className="min-h-screen bg-[var(--bg-page)] flex items-center justify-center">
         <div className="text-center">
           <div className="w-10 h-10 border-2 border-[var(--border-default)] border-t-[var(--accent-gold)] rounded-full animate-spin mx-auto mb-6" />
-          <p className="text-[11px] uppercase tracking-[0.2em] text-[var(--text-secondary)]">Loading...</p>
+          <p className="text-[11px] uppercase tracking-[0.2em] text-[var(--text-secondary)]">{t('product_loading')}</p>
         </div>
       </div>
     );
@@ -64,9 +66,9 @@ const ProductDetails = () => {
     return (
       <div className="min-h-screen bg-[var(--bg-page)] flex items-center justify-center p-6 text-center">
         <div>
-          <h2 className="text-2xl font-display text-[var(--text-primary)] mb-6">Product not found.</h2>
+          <h2 className="text-2xl font-display text-[var(--text-primary)] mb-6">{t('product_not_found')}</h2>
           <Link to="/shop" className="inline-block px-8 py-3 rounded-full text-[12px] uppercase tracking-widest border border-[var(--border-default)] text-white hover:border-[var(--accent-gold)] hover:text-[var(--accent-gold)] transition-colors">
-            Return to Shop
+            {t('product_return')}
           </Link>
         </div>
       </div>
@@ -153,12 +155,12 @@ const ProductDetails = () => {
             className="w-full py-4.5 rounded-full text-[15px] font-bold tracking-[0.08em] uppercase transition-all bg-[var(--accent-gold)] text-white hover:brightness-110 shadow-lg active:scale-[0.98]"
             style={{ padding: '18px 0' }}
           >
-            Customize Experience
+            {t('product_customize')}
           </button>
 
           {/* Feature labels — clearer and readable */}
           <div className="flex items-center justify-center gap-5 mt-6 flex-wrap">
-            {['Digital Experience', 'Instant Delivery', 'Personalized'].map((label, i) => (
+            {[t('product_digital_experience'), 'Instant Delivery', 'Personalized'].map((label, i) => (
               <span key={i} className="text-[12px] uppercase tracking-[0.1em] text-[#8E8E93] font-medium">
                 {label}
               </span>
@@ -176,8 +178,8 @@ const ProductDetails = () => {
                 </svg>
               </div>
               <div>
-                <p className="text-lg font-display font-semibold text-[#1D1D1F]">Added to Your Cart</p>
-                <p className="text-sm text-[#6E6E73] mt-1">Your personalized bloom is ready.</p>
+                <p className="text-lg font-display font-semibold text-[#1D1D1F]">{t('product_added')}</p>
+                <p className="text-sm text-[#6E6E73] mt-1">{t('product_added_msg')}</p>
               </div>
             </div>
             <div className="space-y-3">
@@ -186,13 +188,13 @@ const ProductDetails = () => {
                 onClick={() => { setShowSuccess(false); toggleCart(); }}
                 className="w-full py-4 rounded-full text-[14px] font-bold tracking-[0.08em] uppercase bg-[var(--accent-gold)] text-white hover:brightness-110 transition-all"
               >
-                View Cart & Checkout
+                {t('product_view_cart')}
               </button>
               <Link
                 to="/shop"
                 className="block w-full py-3.5 rounded-full text-[13px] font-medium tracking-[0.08em] uppercase text-center border border-[#E5E5EA] text-[#6E6E73] hover:border-[var(--accent-gold)] hover:text-[var(--accent-gold)] transition-all"
               >
-                Continue Shopping
+                {t('product_continue')}
               </Link>
             </div>
           </div>
@@ -200,11 +202,11 @@ const ProductDetails = () => {
 
         {/* ── Details Card — clear separation ── */}
         <div className="bg-[var(--surface-white)] rounded-2xl p-7 sm:p-10 shadow-lg mb-8">
-          <h3 className="text-[11px] uppercase tracking-[0.15em] text-[var(--accent-gold)] font-bold mb-5">Details</h3>
+          <h3 className="text-[11px] uppercase tracking-[0.15em] text-[var(--accent-gold)] font-bold mb-5">{t('product_details')}</h3>
           {[
-            { label: 'Format', value: 'Digital Video Experience' },
-            { label: 'Delivery', value: 'Instant Digital Download' },
-            { label: 'Access', value: 'Lifetime — download anytime' },
+            { label: t('product_format'), value: t('product_format_value') },
+            { label: t('product_delivery'), value: t('product_delivery_value') },
+            { label: t('product_access'), value: t('product_access_value') },
           ].map((item, i) => (
             <div key={i} className="flex justify-between items-center py-4 border-b border-[#F0F0F0] last:border-b-0">
               <span className="text-[14px] text-[#6E6E73]">{item.label}</span>
@@ -218,7 +220,7 @@ const ProductDetails = () => {
       {relatedProducts.length > 0 && (
         <div className="max-w-7xl mx-auto px-5 sm:px-8 pb-24">
           <h2 className="text-2xl font-display font-medium text-[var(--text-primary)] mb-8 tracking-tight">
-            You may also like
+            {t('product_also_like')}
           </h2>
           <div className="flex gap-5 overflow-x-auto pb-4 snap-x snap-mandatory -mx-5 px-5 sm:mx-0 sm:px-0 sm:grid sm:grid-cols-2 lg:grid-cols-4 sm:overflow-visible">
             {relatedProducts.map(flower => (

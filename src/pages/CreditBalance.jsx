@@ -2,10 +2,12 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getCreditBalance } from '../lib/creditStripe';
 import { isValidCreditCodeFormat, formatCreditAmount } from '../utils/creditCode';
+import { useLanguage } from '../contexts/LanguageContext';
 import '../styles/credits.css';
 
 export default function CreditBalance() {
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const [code, setCode] = useState('');
   const [balance, setBalance] = useState(null);
   const [history, setHistory] = useState([]);
@@ -50,23 +52,23 @@ export default function CreditBalance() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 19l-7-7 7-7" />
               </svg>
             </div>
-            <span style={{ fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.15em', fontWeight: '500' }}>Back</span>
+            <span style={{ fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.15em', fontWeight: '500' }}>{t('balance_back')}</span>
           </button>
-          <h1 className="section-title">Check Your Balance</h1>
+          <h1 className="section-title">{t('balance_title')}</h1>
           <p className="section-subtitle">
-            Enter your credit code to view your remaining balance and usage history
+            {t('balance_subtitle')}
           </p>
         </div>
 
         {/* Balance Lookup Form */}
         <div className="balance-lookup">
           <div className="balance-form">
-            <label className="customizer-label">Credit Code</label>
+            <label className="customizer-label">{t('balance_label')}</label>
             <div className="balance-input-group">
               <input
                 type="text"
                 className="customizer-input"
-                placeholder="DBLOOM-XXXX-XXXX"
+                placeholder={t('balance_placeholder')}
                 value={code}
                 onChange={(e) => setCode(e.target.value.toUpperCase())}
                 maxLength="17"
@@ -76,7 +78,7 @@ export default function CreditBalance() {
                 onClick={handleCheckBalance}
                 disabled={loading || !code}
               >
-                {loading ? 'Checking...' : 'Check Balance'}
+                {loading ? t('balance_checking') : t('balance_check')}
               </button>
             </div>
             {error && <p className="balance-error">{error}</p>}
@@ -86,25 +88,25 @@ export default function CreditBalance() {
           {balance && (
             <div className="balance-result">
               <div className="balance-card">
-                <h2>Remaining Balance</h2>
+                <h2>{t('balance_remaining')}</h2>
                 <div className="balance-amount">
                   {formatCreditAmount(balance.remaining_amount_cents)}
                 </div>
                 <div className="balance-details">
                   <div className="balance-detail">
-                    <span className="detail-label">Original Amount:</span>
+                    <span className="detail-label">{t('balance_original')}</span>
                     <span className="detail-value">
                       {formatCreditAmount(balance.initial_amount_cents)}
                     </span>
                   </div>
                   <div className="balance-detail">
-                    <span className="detail-label">Status:</span>
+                    <span className="detail-label">{t('balance_status')}</span>
                     <span className={`detail-value status-${balance.status}`}>
                       {balance.status.replace('_', ' ')}
                     </span>
                   </div>
                   <div className="balance-detail">
-                    <span className="detail-label">Created:</span>
+                    <span className="detail-label">{t('balance_created')}</span>
                     <span className="detail-value">
                       {new Date(balance.created_at).toLocaleDateString()}
                     </span>
@@ -115,7 +117,7 @@ export default function CreditBalance() {
               {/* Usage History */}
               {history.length > 0 && (
                 <div className="balance-history">
-                  <h3>Usage History</h3>
+                  <h3>{t('balance_history')}</h3>
                   <div className="history-list">
                     {history.map((entry) => (
                       <div key={entry.id} className="history-item">
@@ -140,10 +142,9 @@ export default function CreditBalance() {
 
         {/* Help Text */}
         <div className="balance-help">
-          <h3>Need Help?</h3>
+          <h3>{t('balance_help_title')}</h3>
           <p>
-            If you have questions about your Experience Credit or need assistance,
-            please contact us at support@digitalbloom.com
+            {t('balance_help_text')}
           </p>
         </div>
       </div>
