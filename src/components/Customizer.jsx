@@ -50,7 +50,7 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
     fromName: stateDefaults.fromName || '',
   });
   const [colorTheme, setColorTheme] = useState(stateDefaults.colorTheme || 'original');
-  const [extras, setExtras] = useState({ ribbon: false, sparkle: false, goldDust: false });
+  const [extras, setExtras] = useState({ ribbon: false, sparkle: false, goldDust: true });
   const [selectedSound, setSelectedSound] = useState(stateDefaults.sound || '');
   const [playingTrack, setPlayingTrack] = useState(null);
   const [activeStep, setActiveStep] = useState(1);

@@ -224,12 +224,12 @@
 
 .composition-text__names {
   font-family: 'Outfit', sans-serif;
-  font-size: clamp(11px, 2.8vw, 15px);
-  color: rgba(255,255,255,0.8);
-  text-shadow: 0 1px 6px rgba(0,0,0,0.6);
+  font-size: clamp(14px, 3.5vw, 20px);
+  color: rgba(255,255,255,0.95);
+  text-shadow: 0 1px 6px rgba(0,0,0,0.8);
+  -webkit-text-stroke: 0.5px rgba(0,0,0,0.4);
   margin-top: 8px;
   letter-spacing: 0.08em;
-  mix-blend-mode: soft-light;
   animation: textEtchIn 1s ease 0.3s forwards;
   opacity: 0;
 }
@@ -254,11 +254,12 @@
   padding: 0 18px;
   box-sizing: border-box;
   font-family: 'Outfit', sans-serif;
-  font-size: clamp(0.92rem, 2.6vw, 1.35rem);
+  font-size: clamp(1.1rem, 3.2vw, 1.6rem);
   font-weight: 700;
   letter-spacing: 0.24em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.34);
+  color: rgba(255, 255, 255, 0.55);
+  -webkit-text-stroke: 0.6px rgba(0, 0, 0, 0.5);
   mix-blend-mode: screen;
 }
 
@@ -266,21 +267,25 @@
   bottom: 8%;
   left: 6%;
   font-family: 'Outfit', sans-serif;
-  font-size: clamp(0.72rem, 2vw, 0.92rem);
+  font-size: clamp(1rem, 3vw, 1.4rem);
   font-weight: 700;
   letter-spacing: 0.2em;
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(255, 255, 255, 0.7);
+  -webkit-text-stroke: 0.8px rgba(0, 0, 0, 0.7);
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
 }
 
 .composition-protection--brand {
   right: 6%;
   bottom: 8%;
   font-family: 'Cormorant Garamond', Georgia, serif;
-  font-size: clamp(0.74rem, 2vw, 1rem);
+  font-size: clamp(1rem, 3vw, 1.4rem);
   font-style: italic;
   font-weight: 600;
   letter-spacing: 0.16em;
-  color: rgba(212, 175, 55, 0.76);
+  color: rgba(212, 175, 55, 0.9);
+  -webkit-text-stroke: 0.8px rgba(0, 0, 0, 0.7);
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
 }
 
 /* ── GOLD DUST OVERLAY (CSS Placeholder) ── */

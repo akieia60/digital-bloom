@@ -114,7 +114,7 @@ export default function LivePreview({ product, colorTheme, extras, message, clas
           className="composition-protection composition-protection--recipient"
           style={protectionLayer.recipientPositionStyle}
         >
-          For {protectionLayer.recipientName}
+          To {protectionLayer.recipientName}
         </div>
       )}
 
