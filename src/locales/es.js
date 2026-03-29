@@ -52,4 +52,12 @@ export const es = {
   
   // Customizer
   customize_button: "Personalizar",
+
+  // Hero (GradientHero — design-upgrade)
+  hero_new_title_1: "Dales Sus Flores",
+  hero_new_title_2: "Mientras Están Aquí",
+  hero_new_tagline: "Arte en movimiento de lujo para cada ocasión — cumpleaños, amor, celebraciones y más",
+  hero_new_cta: "ENVIAR UN BLOOM",
+  hero_new_from: "Regalos desde",
+  hero_new_no_app: "sin aplicación",
 };

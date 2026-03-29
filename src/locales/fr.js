@@ -52,4 +52,12 @@ export const fr = {
   
   // Customizer
   customize_button: "Personnaliser",
+
+  // Hero (GradientHero — design-upgrade)
+  hero_new_title_1: "Offrez-leur Leurs Fleurs",
+  hero_new_title_2: "Pendant Qu'ils Sont Là",
+  hero_new_tagline: "Art en mouvement de luxe pour chaque occasion — anniversaires, amour, célébrations et plus",
+  hero_new_cta: "ENVOYER UN BLOOM",
+  hero_new_from: "Cadeaux à partir de",
+  hero_new_no_app: "sans application",
 };

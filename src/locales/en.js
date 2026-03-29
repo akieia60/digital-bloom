@@ -51,4 +51,12 @@ export const en = {
   
   // Customizer
   customize_button: "Customize",
+
+  // Hero (GradientHero — design-upgrade)
+  hero_new_title_1: "Give Them Their Flowers",
+  hero_new_title_2: "While They're Here",
+  hero_new_tagline: "Luxury motion art for every occasion — birthdays, love, celebrations & more",
+  hero_new_cta: "SEND A BLOOM",
+  hero_new_from: "Gifts starting from",
+  hero_new_no_app: "no app needed",
 };

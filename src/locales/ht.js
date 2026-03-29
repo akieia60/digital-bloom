@@ -52,4 +52,12 @@ export const ht = {
   
   // Customizer
   customize_button: "Pèsonalize",
+
+  // Hero (GradientHero — design-upgrade)
+  hero_new_title_1: "Ba Yo Flè Yo",
+  hero_new_title_2: "Pandan Y'ap Toujou La",
+  hero_new_tagline: "Atizay mouvman lukse pou chak okazyon — anivèsè, lanmou, selebrasyon ak plis",
+  hero_new_cta: "VOYE YON BLOOM",
+  hero_new_from: "Kado ki kòmanse nan",
+  hero_new_no_app: "pa bezwen aplikasyon",
 };

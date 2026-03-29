@@ -52,4 +52,12 @@ export const zh = {
   
   // Customizer
   customize_button: "个性化定制",
+
+  // Hero (GradientHero — design-upgrade)
+  hero_new_title_1: "送他们鲜花",
+  hero_new_title_2: "趁他们还在身边",
+  hero_new_tagline: "为每个场合打造的奢华动态艺术 — 生日、爱情、庆典等",
+  hero_new_cta: "发送花礼",
+  hero_new_from: "礼物起价",
+  hero_new_no_app: "无需下载应用",
 };

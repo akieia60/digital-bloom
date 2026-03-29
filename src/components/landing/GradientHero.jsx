@@ -110,7 +110,7 @@ export default function GradientHero() {
 
           {/* Pricing note */}
           <p className="gradient-hero__from">
-            {t('hero_new_from')} <strong>$0.99</strong> &mdash; {t('hero_new_no_app')}
+            {t('hero_new_from')} <strong>$1.99</strong> &mdash; {t('hero_new_no_app')}
           </p>
         </div>
 
