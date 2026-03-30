@@ -224,12 +224,13 @@
 
 .composition-text__names {
   font-family: 'Outfit', sans-serif;
-  font-size: clamp(14px, 3.5vw, 20px);
-  color: rgba(255,255,255,0.95);
-  text-shadow: 0 1px 6px rgba(0,0,0,0.8);
-  -webkit-text-stroke: 0.5px rgba(0,0,0,0.4);
+  font-size: clamp(16px, 4.5vw, 26px);
+  color: rgba(255,255,255,1.0);
+  text-shadow: 0 2px 8px rgba(0,0,0,0.9);
+  -webkit-text-stroke: 0.6px rgba(0,0,0,0.5);
   margin-top: 8px;
   letter-spacing: 0.08em;
+  font-weight: 600;
   animation: textEtchIn 1s ease 0.3s forwards;
   opacity: 0;
 }
@@ -250,42 +251,56 @@
 }
 
 .composition-protection--recipient {
-  width: min(78%, 480px);
+  width: min(85%, 520px);
   padding: 0 18px;
   box-sizing: border-box;
   font-family: 'Outfit', sans-serif;
-  font-size: clamp(1.1rem, 3.2vw, 1.6rem);
+  font-size: clamp(1.4rem, 5vw, 2.2rem);
   font-weight: 700;
   letter-spacing: 0.24em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.55);
-  -webkit-text-stroke: 0.6px rgba(0, 0, 0, 0.5);
-  mix-blend-mode: screen;
+  color: rgba(255, 255, 255, 0.65);
+  -webkit-text-stroke: 1px rgba(0, 0, 0, 0.6);
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
 }
 
 .composition-protection--tm {
-  bottom: 8%;
-  left: 6%;
+  bottom: 6%;
+  left: 5%;
   font-family: 'Outfit', sans-serif;
-  font-size: clamp(1rem, 3vw, 1.4rem);
-  font-weight: 700;
+  font-size: clamp(1.4rem, 5vw, 2rem);
+  font-weight: 800;
   letter-spacing: 0.2em;
-  color: rgba(255, 255, 255, 0.7);
-  -webkit-text-stroke: 0.8px rgba(0, 0, 0, 0.7);
-  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+  color: rgba(255, 255, 255, 0.9);
+  -webkit-text-stroke: 1.2px rgba(0, 0, 0, 0.85);
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8), 0 0 12px rgba(0, 0, 0, 0.4);
 }
 
 .composition-protection--brand {
-  right: 6%;
-  bottom: 8%;
+  right: 5%;
+  bottom: 6%;
   font-family: 'Cormorant Garamond', Georgia, serif;
-  font-size: clamp(1rem, 3vw, 1.4rem);
+  font-size: clamp(1.3rem, 4.5vw, 1.9rem);
   font-style: italic;
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: 0.16em;
-  color: rgba(212, 175, 55, 0.9);
-  -webkit-text-stroke: 0.8px rgba(0, 0, 0, 0.7);
-  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+  color: rgba(212, 175, 55, 1.0);
+  -webkit-text-stroke: 1.2px rgba(0, 0, 0, 0.85);
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8), 0 0 12px rgba(0, 0, 0, 0.4);
+}
+
+.composition-protection--sender {
+  width: min(85%, 520px);
+  padding: 0 18px;
+  box-sizing: border-box;
+  font-family: 'Outfit', sans-serif;
+  font-size: clamp(1.2rem, 4.5vw, 1.8rem);
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.6);
+  -webkit-text-stroke: 1px rgba(0, 0, 0, 0.6);
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
 }
 
 /* ── GOLD DUST OVERLAY (CSS Placeholder) ── */

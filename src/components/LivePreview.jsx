@@ -118,6 +118,15 @@ export default function LivePreview({ product, colorTheme, extras, message, clas
         </div>
       )}
 
+      {protectionLayer?.senderName && (
+        <div
+          className="composition-protection composition-protection--sender"
+          style={protectionLayer.senderPositionStyle}
+        >
+          From {protectionLayer.senderName}
+        </div>
+      )}
+
       <div
         className="composition-protection composition-protection--tm"
         style={protectionLayer?.tmPositionStyle}

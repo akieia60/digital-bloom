@@ -97,6 +97,7 @@ const TEXT_POSITIONS = {
   'bottom-left':   { bottom: '12%', left: '8%', textAlign: 'left' },
   'center':        { top: '50%', left: '50%', transform: 'translate(-50%, -50%)', textAlign: 'center' },
   'upper-third-center': { top: '14%', left: '50%', transform: 'translateX(-50%)', textAlign: 'center' },
+  'lower-third-center': { bottom: '18%', left: '50%', transform: 'translateX(-50%)', textAlign: 'center' },
 };
 
 // ── MAIN COMPOSITION FUNCTION ──
@@ -207,6 +208,8 @@ export function getCompositionLayers({ product, colorTheme = 'original', extras 
     brandText: 'Digital Bloom™',
     recipientPosition: 'upper-third-center',
     recipientPositionStyle: TEXT_POSITIONS['upper-third-center'],
+    senderPosition: 'lower-third-center',
+    senderPositionStyle: TEXT_POSITIONS['lower-third-center'],
     tmPosition: 'bottom-left',
     tmPositionStyle: TEXT_POSITIONS['bottom-left'],
     brandPosition: 'bottom-right',
