@@ -534,38 +534,109 @@
   100% { background-position: 150% 0; }
 }
 
-/* ── DIAGONAL WATERMARK PATTERN (Gamble's anti-duplication) ── */
-/* Flashes every 10 seconds for ~5 seconds — both horizontal and diagonal */
-.composition-watermark-pattern {
+/* ═══════════════════════════════════════════════════════════
+   FULL-COVERAGE DIAGONAL WATERMARK — Getty Images Style
+   Permanent, uncroppable "© Digital Bloom" across every video.
+   Screenshots always capture the watermark.
+   ═══════════════════════════════════════════════════════════ */
+
+/* Site-wide watermark container — apply to any parent with a video */
+.db-watermark {
+  position: relative;
+}
+
+/* Full-coverage overlay sits on top of the entire video */
+.db-watermark-overlay {
   position: absolute;
   inset: 0;
-  z-index: 42;
+  z-index: 50;
   pointer-events: none;
+  overflow: hidden;
   user-select: none;
+}
+
+/* Diagonal repeating grid — rotated to cover entire frame */
+.db-watermark-grid {
+  position: absolute;
+  inset: -50%;
+  width: 200%;
+  height: 200%;
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
+  justify-content: space-around;
+  transform: rotate(-35deg);
+  transform-origin: center center;
+}
+
+/* Each row of watermark text */
+.db-watermark-row {
+  display: flex;
+  justify-content: space-around;
   align-items: center;
-  justify-content: center;
-  gap: 18px;
-  transform: rotate(-30deg) scale(1.4);
-  opacity: 0;
-  animation: watermarkFlash 10s ease-in-out infinite;
+  width: 100%;
 }
 
-.composition-watermark-pattern__text {
-  font-family: 'Outfit', sans-serif;
-  font-size: 13px;
-  font-weight: 700;
-  color: rgba(255, 255, 255, 0.15);
-  white-space: nowrap;
+/* Individual watermark text — luxury serif italic in gold */
+.db-watermark-row span {
+  font-family: 'Playfair Display', 'Georgia', serif;
+  font-style: italic;
+  font-size: 14px;
+  font-weight: 500;
   letter-spacing: 0.12em;
-  text-transform: uppercase;
-  mix-blend-mode: overlay;
+  white-space: nowrap;
+  color: #D4AF37;
+  opacity: 0.22;
+  text-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.9),
+    0 0 6px rgba(0, 0, 0, 0.7);
+  padding: 0 28px;
+  user-select: none;
+  -webkit-font-smoothing: antialiased;
 }
 
-@keyframes watermarkFlash {
-  0%, 40%, 100% { opacity: 0; }
-  45% { opacity: 1; }
-  55% { opacity: 1; }
-  60% { opacity: 0; }
+/* Corner badge — always visible, solid brand mark */
+.db-watermark-corner {
+  position: absolute;
+  bottom: 10px;
+  right: 12px;
+  font-family: 'Playfair Display', 'Georgia', serif;
+  font-style: italic;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  line-height: 1;
+  color: #D4AF37;
+  opacity: 0.90;
+  text-shadow:
+    0 1px 4px rgba(0, 0, 0, 0.95),
+    0 0 10px rgba(0, 0, 0, 0.8);
+  user-select: none;
+  -webkit-font-smoothing: antialiased;
+  z-index: 51;
 }
+
+/* Hero/product page — slightly more prominent */
+.db-watermark--hero .db-watermark-row span {
+  font-size: 16px;
+  opacity: 0.25;
+  padding: 0 36px;
+}
+
+.db-watermark--hero .db-watermark-corner {
+  font-size: 14px;
+  bottom: 20px;
+  right: 22px;
+}
+
+/* Responsive — smaller on mobile */
+@media (max-width: 480px) {
+  .db-watermark-row span {
+    font-size: 10px;
+    padding: 0 16px;
+  }
+  .db-watermark-corner {
+    font-size: 9px;
+    bottom: 7px;
+    right: 9px;
+  }
+}
+

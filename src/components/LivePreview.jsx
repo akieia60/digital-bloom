@@ -138,14 +138,20 @@ export default function LivePreview({ product, colorTheme, extras, message, clas
         {protectionLayer?.brandText || 'Digital Bloom™'}
       </div>
 
-      {/* Gamble's diagonal repeating watermark — both horizontal & diagonal */}
-      {protectionLayer?.recipientName && (
-        <div className="composition-watermark-pattern">
-          {Array.from({ length: 8 }).map((_, i) => (
-            <span key={i} className="composition-watermark-pattern__text">Digital Bloom</span>
+      {/* Getty-style diagonal watermark — permanent, full-coverage */}
+      <div className="db-watermark-overlay">
+        <div className="db-watermark-grid">
+          {Array.from({ length: 12 }, (_, i) => (
+            <div key={i} className="db-watermark-row">
+              <span>© Digital Bloom</span>
+              <span>© Digital Bloom</span>
+              <span>© Digital Bloom</span>
+              <span>© Digital Bloom</span>
+            </div>
           ))}
         </div>
-      )}
+        <div className="db-watermark-corner">© Digital Bloom</div>
+      </div>
 
       {/* Subtle vignette for depth */}
       <div style={{

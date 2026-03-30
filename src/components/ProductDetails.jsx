@@ -106,7 +106,7 @@ const ProductDetails = () => {
       />
 
       {/* ── HERO MEDIA ── */}
-      <div className="db-watermark relative w-full aspect-[3/4] sm:aspect-[16/10] lg:aspect-[16/7] overflow-hidden bg-black">
+      <div className="db-watermark db-watermark--hero relative w-full aspect-[3/4] sm:aspect-[16/10] lg:aspect-[16/7] overflow-hidden bg-black">
         {heroVideoSrc ? (
           <video
             src={heroVideoSrc}
@@ -132,6 +132,21 @@ const ProductDetails = () => {
 
         {/* Subtle golden light sweep */}
         <div className="product-golden-sweep" aria-hidden="true" />
+
+        {/* ── GETTY-STYLE DIAGONAL WATERMARK — full coverage © Digital Bloom ── */}
+        <div className="db-watermark-overlay" aria-hidden="true">
+          <div className="db-watermark-grid">
+            {Array.from({ length: 12 }, (_, i) => (
+              <div key={i} className="db-watermark-row">
+                <span>© Digital Bloom</span>
+                <span>© Digital Bloom</span>
+                <span>© Digital Bloom</span>
+                <span>© Digital Bloom</span>
+              </div>
+            ))}
+          </div>
+          <div className="db-watermark-corner">© Digital Bloom</div>
+        </div>
 
         {/* Back */}
         <button type="button" onClick={goBack}
