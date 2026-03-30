@@ -123,6 +123,16 @@ const ProductDetails = () => {
 
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
 
+        {/* Gold Dust Particles — ambient luxury shimmer on product page */}
+        <div className="product-gold-dust" aria-hidden="true">
+          {Array.from({ length: 25 }, (_, i) => (
+            <span key={i} className="product-gold-dust__particle" />
+          ))}
+        </div>
+
+        {/* Subtle golden light sweep */}
+        <div className="product-golden-sweep" aria-hidden="true" />
+
         {/* Back */}
         <button type="button" onClick={goBack}
           className="absolute top-6 left-5 z-10 w-11 h-11 rounded-full bg-black/40 backdrop-blur-md border border-white/15 flex items-center justify-center text-white hover:bg-black/60 transition-all"

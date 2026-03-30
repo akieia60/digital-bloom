@@ -6,9 +6,11 @@ import LivePreview from './LivePreview';
 import '../styles/customizer.css';
 
 const EXTRAS = [
+  { id: 'goldDust', icon: '✨', nameKey: 'customize_extra_gold' },
+  { id: 'sparkle', icon: '💎', nameKey: 'customize_extra_sparkle' },
   { id: 'ribbon', icon: '🎀', nameKey: 'customize_extra_ribbon' },
-  { id: 'sparkle', icon: '✨', nameKey: 'customize_extra_sparkle' },
-  { id: 'goldDust', icon: '🌟', nameKey: 'customize_extra_gold' },
+  { id: 'softGlow', icon: '🕯️', nameKey: 'customize_extra_glow' },
+  { id: 'rosePetals', icon: '🌹', nameKey: 'customize_extra_petals' },
 ];
 
 const SOUND_TRACKS = [
@@ -50,7 +52,7 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
     fromName: stateDefaults.fromName || '',
   });
   const [colorTheme, setColorTheme] = useState(stateDefaults.colorTheme || 'original');
-  const [extras, setExtras] = useState({ ribbon: false, sparkle: false, goldDust: true });
+  const [extras, setExtras] = useState({ ribbon: false, sparkle: false, goldDust: true, softGlow: false, rosePetals: false });
   const [selectedSound, setSelectedSound] = useState(stateDefaults.sound || '');
   const [playingTrack, setPlayingTrack] = useState(null);
   const [activeStep, setActiveStep] = useState(1);

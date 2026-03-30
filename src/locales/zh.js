@@ -196,6 +196,8 @@ export const zh = {
   customize_extra_ribbon: "丝带包裹",
   customize_extra_sparkle: "闪闪效果",
   customize_extra_gold: "金色粉末",
+  customize_extra_glow: "柔光效果",
+  customize_extra_petals: "玫瑰花瓣",
   customize_sound_piano: "柔和钢琴",
   customize_sound_strings: "柔和弦乐",
   customize_sound_bloom: "环境绽放",

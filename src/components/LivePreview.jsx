@@ -197,6 +197,23 @@ function CSSOverlay({ overlayId, themeVariant }) {
         </div>
       );
 
+    case 'softGlow':
+      return (
+        <div className="overlay-soft-glow">
+          <div className="overlay-soft-glow__halo" />
+          <div className="overlay-soft-glow__flare" />
+        </div>
+      );
+
+    case 'rosePetals':
+      return (
+        <div className="overlay-rose-petals">
+          {Array.from({ length: 12 }, (_, i) => (
+            <span key={i} className="overlay-rose-petals__petal">🌸</span>
+          ))}
+        </div>
+      );
+
     default:
       return null;
   }

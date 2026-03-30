@@ -196,6 +196,8 @@ export const en = {
   customize_extra_ribbon: "Ribbon Wrap",
   customize_extra_sparkle: "Sparkle Effect",
   customize_extra_gold: "Gold Dust",
+  customize_extra_glow: "Soft Glow",
+  customize_extra_petals: "Rose Petals",
   customize_sound_piano: "Gentle Piano",
   customize_sound_strings: "Soft Strings",
   customize_sound_bloom: "Ambient Bloom",

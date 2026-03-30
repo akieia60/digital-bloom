@@ -196,6 +196,8 @@ export const es = {
   customize_extra_ribbon: "Envoltura de Cinta",
   customize_extra_sparkle: "Efecto Destello",
   customize_extra_gold: "Polvo Dorado",
+  customize_extra_glow: "Brillo Suave",
+  customize_extra_petals: "Pétalos de Rosa",
   customize_sound_piano: "Piano Suave",
   customize_sound_strings: "Cuerdas Suaves",
   customize_sound_bloom: "Bloom Ambiental",

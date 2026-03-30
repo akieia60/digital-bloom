@@ -1,0 +1,1071 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="Digital Bloom — Shine your love in the world. Give them their flowers while they're here."/>
+  <title>Digital Bloom ✦</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.development.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.development.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Montserrat:wght@300;400;500;600&display=swap');
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { background:#0c1f3f; font-family:'Cormorant Garamond', Georgia, serif; }
+    ::-webkit-scrollbar { width:5px; }
+    ::-webkit-scrollbar-track { background:#0c1f3f; }
+    ::-webkit-scrollbar-thumb { background:#C9857A; border-radius:3px; }
+    select option { background:#152b4d; color:#FAF0EC; }
+    ::selection { background:rgba(201,133,122,0.3); }
+  </style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+
+// ── PALETTE ──────────────────────────────────────────────
+const NAVY      = "#0c1f3f";   // midnight navy — the base (lightened)
+const NAVY2     = "#152b4d";   // medium navy — secondary sections
+const NAVY3     = "#1a3560";   // card surfaces
+const RG        = "#C9857A";   // rose gold — primary accent
+const RGL       = "#E8B4AD";   // rose gold light
+const GOLD      = "#C9A84C";   // warm gold — tertiary accent
+const CREAM     = "#FAF0EC";   // warm white text
+const CHAMP     = "#F0DDD0";   // champagne
+const MUTED     = "rgba(250,240,236,0.5)";
+const BORDER    = "rgba(201,133,122,0.18)";
+const GOLDBDR   = "rgba(201,168,76,0.2)";
+
+// ── FONTS ─────────────────────────────────────────────────
+const SERIF  = "'Playfair Display', 'Cormorant Garamond', Georgia, serif";
+const SANS   = "'Montserrat', sans-serif";
+
+// ── LANGUAGES ────────────────────────────────────────────
+const LANGS = ["EN","ES","FR","PT","AR","ZH","JA","DE"];
+const LANG_NAMES = {
+  EN:"English", ES:"Español", FR:"Français", PT:"Português",
+  AR:"العربية", ZH:"中文", JA:"日本語", DE:"Deutsch"
+};
+
+// ── FULL TRANSLATIONS ─────────────────────────────────────
+const T = {
+  EN:{
+    headline:"Shine Your Love\nin the World.",
+    sub:"Give them their flowers while they're here.",
+    pill:"Digital gifting, reimagined",
+    cta1:"Create Your Bloom",
+    cta2:"Watch Preview",
+    from:"Blooms from",
+    to:"to",
+    statsLabel:["Blooms Sent","Categories","Languages","Experience Length","Rating"],
+    builderTitle:"Build Your Bloom",
+    builderSub:"Pick a style, write your message, choose your music. We create something beautiful — instantly.",
+    steps:["Visual Style","Your Message","Music","Preview & Send"],
+    styleLabel:"Choose your visual style",
+    msgLabel:"Write your message",
+    recipientLabel:"Recipient's name (optional)",
+    msgPlaceholder:"Write something from the heart... it will bloom beautifully.",
+    musicLabel:"Choose the music",
+    musicSub:"The right music turns a message into a memory.",
+    previewTitle:"Your bloom is ready",
+    previewSub:"Here's exactly what",
+    previewSub2:"will receive.",
+    tierLabel:"Choose your bloom tier",
+    sendBtn:"Send This Bloom",
+    sendNote:"They receive a beautiful link — no app needed.",
+    back:"← Back",
+    next:"Next →",
+    selectFirst:"Select a style first",
+    writeFirst:"Write your message first",
+    selectMusic:"Select music first",
+    featuredTitle:"Featured Blooms",
+    featuredPill:"Handpicked for you",
+    catTitle:"Every Moment Has a Bloom",
+    catPill:"Browse by occasion",
+    pricingTitle:"Simple, Beautiful Pricing",
+    pricingPill:"Every bloom, every budget",
+    howTitle:"How Digital Bloom Works",
+    howPill:"Simple · Beautiful · Instant",
+    howSteps:[
+      {title:"Choose Your Style", desc:"Browse occasions from birthdays to Dearly Departed — each with its own visual world."},
+      {title:"Make It Personal", desc:"Write your message and add their name. Available in 8 languages."},
+      {title:"Set the Mood with Music", desc:"Gentle piano, soft R&B, ocean waves — or keep it silent."},
+      {title:"Send Instantly", desc:"They get a beautiful link. No app. No wait. Just love, delivered."},
+    ],
+    langTitle:"Desktop & Mobile, Any Language.",
+    langSub:"Share love across every border. Digital Bloom speaks beautifully in 8 languages on every device.",
+    footerTag:"Shine your love in the world.",
+    nav:["Occasions","Shop","Create","Pricing"],
+    sendBloom:"Send a Bloom",
+  },
+  ES:{
+    headline:"Brilla con tu Amor\nen el Mundo.",
+    sub:"Dale sus flores mientras aún está aquí.",
+    pill:"Regalos digitales, reinventados",
+    cta1:"Crea tu Bloom",
+    cta2:"Ver Vista Previa",
+    from:"Blooms desde",
+    to:"hasta",
+    statsLabel:["Blooms Enviados","Categorías","Idiomas","Duración","Calificación"],
+    builderTitle:"Construye tu Bloom",
+    builderSub:"Elige un estilo, escribe tu mensaje, selecciona música. Creamos algo hermoso — al instante.",
+    steps:["Estilo Visual","Tu Mensaje","Música","Vista Previa"],
+    styleLabel:"Elige tu estilo visual",
+    msgLabel:"Escribe tu mensaje",
+    recipientLabel:"Nombre del destinatario (opcional)",
+    msgPlaceholder:"Escribe algo del corazón...",
+    musicLabel:"Elige la música",
+    musicSub:"La música correcta convierte un mensaje en un recuerdo.",
+    previewTitle:"Tu bloom está listo",
+    previewSub:"Esto es exactamente lo que",
+    previewSub2:"recibirá.",
+    tierLabel:"Elige tu nivel de bloom",
+    sendBtn:"Enviar este Bloom",
+    sendNote:"Recibirán un enlace hermoso — sin necesidad de app.",
+    back:"← Atrás",
+    next:"Siguiente →",
+    selectFirst:"Selecciona un estilo primero",
+    writeFirst:"Escribe tu mensaje primero",
+    selectMusic:"Selecciona música primero",
+    featuredTitle:"Blooms Destacados",
+    featuredPill:"Seleccionados para ti",
+    catTitle:"Cada Momento Tiene un Bloom",
+    catPill:"Explorar por ocasión",
+    pricingTitle:"Precios Simples y Hermosos",
+    pricingPill:"Cada bloom, cada presupuesto",
+    howTitle:"Cómo Funciona Digital Bloom",
+    howPill:"Simple · Hermoso · Instantáneo",
+    howSteps:[
+      {title:"Elige tu Estilo", desc:"Navega por ocasiones, desde cumpleaños hasta Queridos Difuntos."},
+      {title:"Hazlo Personal", desc:"Escribe tu mensaje y agrega su nombre. Disponible en 8 idiomas."},
+      {title:"Pon el Ambiente con Música", desc:"Piano suave, R&B, olas del océano — o sin música."},
+      {title:"Envía al Instante", desc:"Reciben un enlace hermoso. Sin app. Solo amor, entregado."},
+    ],
+    langTitle:"Escritorio y Móvil, en Cualquier Idioma.",
+    langSub:"Comparte amor en cada frontera. Digital Bloom habla con fluidez en 8 idiomas.",
+    footerTag:"Brilla con tu amor en el mundo.",
+    nav:["Ocasiones","Tienda","Crear","Precios"],
+    sendBloom:"Enviar un Bloom",
+  },
+  FR:{
+    headline:"Rayonnez votre Amour\ndans le Monde.",
+    sub:"Offrez-leur leurs fleurs pendant qu'ils sont là.",
+    pill:"Cadeaux numériques, réinventés",
+    cta1:"Créez votre Bloom",
+    cta2:"Voir l'Aperçu",
+    from:"Blooms à partir de",
+    to:"jusqu'à",
+    statsLabel:["Blooms Envoyés","Catégories","Langues","Durée","Note"],
+    builderTitle:"Construisez votre Bloom",
+    builderSub:"Choisissez un style, écrivez votre message, sélectionnez de la musique. Nous créons quelque chose de beau — instantanément.",
+    steps:["Style Visuel","Votre Message","Musique","Aperçu"],
+    styleLabel:"Choisissez votre style visuel",
+    msgLabel:"Écrivez votre message",
+    recipientLabel:"Nom du destinataire (optionnel)",
+    msgPlaceholder:"Écrivez quelque chose du cœur...",
+    musicLabel:"Choisissez la musique",
+    musicSub:"La bonne musique transforme un message en souvenir.",
+    previewTitle:"Votre bloom est prêt",
+    previewSub:"Voici exactement ce que",
+    previewSub2:"recevra.",
+    tierLabel:"Choisissez votre niveau",
+    sendBtn:"Envoyer ce Bloom",
+    sendNote:"Ils reçoivent un lien magnifique — sans application.",
+    back:"← Retour",
+    next:"Suivant →",
+    selectFirst:"Choisissez un style d'abord",
+    writeFirst:"Écrivez votre message d'abord",
+    selectMusic:"Choisissez de la musique d'abord",
+    featuredTitle:"Blooms en Vedette",
+    featuredPill:"Sélectionnés pour vous",
+    catTitle:"Chaque Moment a un Bloom",
+    catPill:"Parcourir par occasion",
+    pricingTitle:"Tarifs Simples et Beaux",
+    pricingPill:"Chaque bloom, chaque budget",
+    howTitle:"Comment Fonctionne Digital Bloom",
+    howPill:"Simple · Beau · Instantané",
+    howSteps:[
+      {title:"Choisissez votre Style", desc:"Parcourez les occasions, des anniversaires aux Chers Disparus."},
+      {title:"Personnalisez-le", desc:"Écrivez votre message et ajoutez leur nom. En 8 langues."},
+      {title:"Créez l'Ambiance", desc:"Piano doux, R&B, vagues de l'océan — ou sans musique."},
+      {title:"Envoyez Instantanément", desc:"Ils reçoivent un lien magnifique. Sans app. Juste de l'amour."},
+    ],
+    langTitle:"Bureau et Mobile, en Toutes Langues.",
+    langSub:"Partagez l'amour au-delà des frontières. Digital Bloom parle couramment dans 8 langues.",
+    footerTag:"Rayonnez votre amour dans le monde.",
+    nav:["Occasions","Boutique","Créer","Tarifs"],
+    sendBloom:"Envoyer un Bloom",
+  },
+  PT:{
+    headline:"Brilhe seu Amor\nno Mundo.",
+    sub:"Dê a eles suas flores enquanto ainda estão aqui.",
+    pill:"Presentes digitais, reinventados",
+    cta1:"Crie seu Bloom",cta2:"Ver Prévia",from:"Blooms a partir de",to:"até",
+    statsLabel:["Blooms Enviados","Categorias","Idiomas","Duração","Avaliação"],
+    builderTitle:"Construa seu Bloom",builderSub:"Escolha um estilo, escreva sua mensagem, selecione música.",
+    steps:["Estilo Visual","Sua Mensagem","Música","Prévia"],
+    styleLabel:"Escolha seu estilo visual",msgLabel:"Escreva sua mensagem",
+    recipientLabel:"Nome do destinatário (opcional)",msgPlaceholder:"Escreva algo do coração...",
+    musicLabel:"Escolha a música",musicSub:"A música certa transforma uma mensagem em memória.",
+    previewTitle:"Seu bloom está pronto",previewSub:"Isso é exatamente o que",previewSub2:"receberá.",
+    tierLabel:"Escolha seu nível",sendBtn:"Enviar este Bloom",sendNote:"Eles recebem um link lindo — sem app.",
+    back:"← Voltar",next:"Próximo →",selectFirst:"Selecione um estilo primeiro",
+    writeFirst:"Escreva sua mensagem primeiro",selectMusic:"Selecione música primeiro",
+    featuredTitle:"Blooms em Destaque",featuredPill:"Selecionados para você",
+    catTitle:"Cada Momento Tem um Bloom",catPill:"Navegar por ocasião",
+    pricingTitle:"Preços Simples e Belos",pricingPill:"Cada bloom, cada orçamento",
+    howTitle:"Como o Digital Bloom Funciona",howPill:"Simples · Belo · Instantâneo",
+    howSteps:[{title:"Escolha seu Estilo",desc:"Navegue pelas ocasiões."},{title:"Personalize",desc:"Escreva sua mensagem em 8 idiomas."},{title:"Defina o Clima",desc:"Piano suave, R&B, ondas do oceano."},{title:"Envie Instantaneamente",desc:"Eles recebem um link lindo."}],
+    langTitle:"Desktop e Mobile, em Qualquer Idioma.",langSub:"Compartilhe amor além das fronteiras.",
+    footerTag:"Brilhe seu amor no mundo.",nav:["Ocasiões","Loja","Criar","Preços"],sendBloom:"Enviar um Bloom",
+  },
+  AR:{
+    headline:"أضئ حبك\nفي العالم.",
+    sub:"أعطهم زهورهم وهم لا يزالون هنا.",
+    pill:"هدايا رقمية، مُعادة الابتكار",
+    cta1:"ابتكر بلومك",cta2:"شاهد المعاينة",from:"بلومز من",to:"إلى",
+    statsLabel:["بلومز مُرسلة","فئات","لغات","مدة التجربة","التقييم"],
+    builderTitle:"ابنِ بلومك",builderSub:"اختر أسلوبًا، اكتب رسالتك، اختر موسيقى.",
+    steps:["الأسلوب البصري","رسالتك","الموسيقى","معاينة"],
+    styleLabel:"اختر أسلوبك البصري",msgLabel:"اكتب رسالتك",
+    recipientLabel:"اسم المستلم (اختياري)",msgPlaceholder:"اكتب شيئًا من القلب...",
+    musicLabel:"اختر الموسيقى",musicSub:"الموسيقى المناسبة تحول رسالة إلى ذكرى.",
+    previewTitle:"بلومك جاهز",previewSub:"هذا بالضبط ما سيتلقاه",previewSub2:"",
+    tierLabel:"اختر مستوى بلومك",sendBtn:"أرسل هذا البلوم",sendNote:"يتلقون رابطًا جميلًا — بدون تطبيق.",
+    back:"← رجوع",next:"التالي →",selectFirst:"اختر أسلوبًا أولاً",
+    writeFirst:"اكتب رسالتك أولاً",selectMusic:"اختر موسيقى أولاً",
+    featuredTitle:"بلومز مميزة",featuredPill:"مختارة لك",
+    catTitle:"كل لحظة لها بلوم",catPill:"تصفح حسب المناسبة",
+    pricingTitle:"أسعار بسيطة وجميلة",pricingPill:"كل بلوم، كل ميزانية",
+    howTitle:"كيف يعمل Digital Bloom",howPill:"بسيط · جميل · فوري",
+    howSteps:[{title:"اختر أسلوبك",desc:"تصفح المناسبات."},{title:"اجعله شخصيًا",desc:"اكتب رسالتك بـ 8 لغات."},{title:"حدد المزاج بالموسيقى",desc:"بيانو هادئ، R&B، أمواج المحيط."},{title:"أرسل فورًا",desc:"يتلقون رابطًا جميلًا."}],
+    langTitle:"سطح المكتب والجوال، بأي لغة.",langSub:"شارك الحب عبر كل الحدود.",
+    footerTag:"أضئ حبك في العالم.",nav:["المناسبات","المتجر","إنشاء","الأسعار"],sendBloom:"أرسل بلوم",
+  },
+  ZH:{
+    headline:"让爱\n照耀世界。",
+    sub:"趁他们还在，送上你的鲜花。",
+    pill:"数字礼物，全新演绎",
+    cta1:"创建你的花绽",cta2:"观看预览",from:"花绽从",to:"起",
+    statsLabel:["已送出花绽","类别","语言","体验时长","评分"],
+    builderTitle:"打造你的花绽",builderSub:"选择风格，写下留言，选择音乐。我们即刻为你创造美好。",
+    steps:["视觉风格","你的留言","音乐","预览"],
+    styleLabel:"选择你的视觉风格",msgLabel:"写下你的留言",
+    recipientLabel:"收件人姓名（可选）",msgPlaceholder:"发自内心地写下一些话...",
+    musicLabel:"选择音乐",musicSub:"合适的音乐将留言变成记忆。",
+    previewTitle:"你的花绽已就绪",previewSub:"这正是",previewSub2:"将收到的内容。",
+    tierLabel:"选择你的花绽级别",sendBtn:"发送这个花绽",sendNote:"他们会收到一个美丽的链接——无需下载应用。",
+    back:"← 返回",next:"下一步 →",selectFirst:"请先选择风格",writeFirst:"请先写下留言",selectMusic:"请先选择音乐",
+    featuredTitle:"精选花绽",featuredPill:"为你精心挑选",
+    catTitle:"每个时刻都有专属花绽",catPill:"按场合浏览",
+    pricingTitle:"简单美丽的定价",pricingPill:"每个花绽，每种预算",
+    howTitle:"Digital Bloom 如何运作",howPill:"简单 · 美丽 · 即时",
+    howSteps:[{title:"选择你的风格",desc:"浏览各种场合。"},{title:"个性化定制",desc:"用8种语言写下留言。"},{title:"用音乐营造氛围",desc:"轻柔钢琴、R&B、海浪声。"},{title:"即时发送",desc:"他们收到美丽的链接。"}],
+    langTitle:"桌面与移动端，任何语言。",langSub:"跨越每个边界分享爱。Digital Bloom 流畅支持8种语言。",
+    footerTag:"让爱照耀世界。",nav:["场合","商店","创建","定价"],sendBloom:"发送花绽",
+  },
+  JA:{
+    headline:"愛を世界に\n輝かせよう。",
+    sub:"まだここにいる間に、花を贈ろう。",
+    pill:"デジタルギフト、再発明",
+    cta1:"ブルームを作る",cta2:"プレビューを見る",from:"ブルーム",to:"から",
+    statsLabel:["送信ブルーム数","カテゴリ","言語","体験時間","評価"],
+    builderTitle:"あなたのブルームを作る",builderSub:"スタイルを選び、メッセージを書き、音楽を選ぶ。",
+    steps:["ビジュアルスタイル","あなたのメッセージ","音楽","プレビュー"],
+    styleLabel:"ビジュアルスタイルを選ぶ",msgLabel:"メッセージを書く",
+    recipientLabel:"受取人の名前（任意）",msgPlaceholder:"心から何かを書いてください...",
+    musicLabel:"音楽を選ぶ",musicSub:"適切な音楽がメッセージを思い出に変える。",
+    previewTitle:"ブルームの準備ができました",previewSub:"",previewSub2:"が受け取るものです。",
+    tierLabel:"ブルームのティアを選ぶ",sendBtn:"このブルームを送る",sendNote:"美しいリンクが届きます — アプリ不要。",
+    back:"← 戻る",next:"次へ →",selectFirst:"まずスタイルを選んでください",writeFirst:"まずメッセージを書いてください",selectMusic:"まず音楽を選んでください",
+    featuredTitle:"注目のブルーム",featuredPill:"あなたのために厳選",
+    catTitle:"すべての瞬間にブルームがある",catPill:"場面で選ぶ",
+    pricingTitle:"シンプルで美しい価格設定",pricingPill:"すべてのブルーム、すべての予算",
+    howTitle:"Digital Bloomの使い方",howPill:"シンプル · 美しい · 即時",
+    howSteps:[{title:"スタイルを選ぶ",desc:"さまざまな場面を探す。"},{title:"パーソナライズ",desc:"8言語でメッセージを書く。"},{title:"音楽で雰囲気を",desc:"穏やかなピアノ、R&B、波の音。"},{title:"即時に送る",desc:"美しいリンクが届く。"}],
+    langTitle:"デスクトップ＆モバイル、あらゆる言語で。",langSub:"すべての国境を越えて愛を分かち合う。",
+    footerTag:"愛を世界に輝かせよう。",nav:["場面","ショップ","作成","料金"],sendBloom:"ブルームを送る",
+  },
+  DE:{
+    headline:"Strahle deine Liebe\nin die Welt.",
+    sub:"Gib ihnen ihre Blumen, solange sie noch hier sind.",
+    pill:"Digitale Geschenke, neu erfunden",
+    cta1:"Dein Bloom erstellen",cta2:"Vorschau ansehen",from:"Blooms ab",to:"bis",
+    statsLabel:["Versendete Blooms","Kategorien","Sprachen","Erlebnisdauer","Bewertung"],
+    builderTitle:"Baue deinen Bloom",builderSub:"Wähle einen Stil, schreibe deine Nachricht, wähle Musik.",
+    steps:["Visueller Stil","Deine Nachricht","Musik","Vorschau"],
+    styleLabel:"Wähle deinen visuellen Stil",msgLabel:"Schreibe deine Nachricht",
+    recipientLabel:"Name des Empfängers (optional)",msgPlaceholder:"Schreibe etwas von Herzen...",
+    musicLabel:"Wähle die Musik",musicSub:"Die richtige Musik verwandelt eine Nachricht in eine Erinnerung.",
+    previewTitle:"Dein Bloom ist bereit",previewSub:"Das ist genau das, was",previewSub2:"erhalten wird.",
+    tierLabel:"Wähle dein Bloom-Level",sendBtn:"Diesen Bloom senden",sendNote:"Sie erhalten einen schönen Link — keine App nötig.",
+    back:"← Zurück",next:"Weiter →",selectFirst:"Zuerst einen Stil auswählen",writeFirst:"Zuerst Nachricht schreiben",selectMusic:"Zuerst Musik auswählen",
+    featuredTitle:"Ausgewählte Blooms",featuredPill:"Handverlesen für dich",
+    catTitle:"Jeder Moment hat einen Bloom",catPill:"Nach Anlass durchsuchen",
+    pricingTitle:"Einfache, schöne Preise",pricingPill:"Jeder Bloom, jedes Budget",
+    howTitle:"Wie Digital Bloom funktioniert",howPill:"Einfach · Schön · Sofort",
+    howSteps:[{title:"Stil wählen",desc:"Anlässe durchsuchen."},{title:"Personalisieren",desc:"Nachricht in 8 Sprachen schreiben."},{title:"Stimmung mit Musik",desc:"Sanftes Klavier, R&B, Meereswellen."},{title:"Sofort senden",desc:"Sie erhalten einen schönen Link."}],
+    langTitle:"Desktop & Mobil, in jeder Sprache.",langSub:"Liebe über alle Grenzen hinweg teilen.",
+    footerTag:"Strahle deine Liebe in die Welt.",nav:["Anlässe","Shop","Erstellen","Preise"],sendBloom:"Einen Bloom senden",
+  },
+};
+
+// ── DATA ──────────────────────────────────────────────────
+const CATEGORIES = [
+  {name:"Birthdays",       emoji:"🎂", count:"240+"},
+  {name:"Anniversary",     emoji:"💍", count:"180+"},
+  {name:"Love & Romance",  emoji:"🌹", count:"320+"},
+  {name:"New Baby",        emoji:"🍼", count:"150+"},
+  {name:"Graduation",      emoji:"🎓", count:"120+"},
+  {name:"Weddings",        emoji:"💒", count:"200+"},
+  {name:"Sympathy",        emoji:"🕊️", count:"90+"},
+  {name:"Friendship",      emoji:"🌸", count:"160+"},
+  {name:"Holidays",        emoji:"✨", count:"280+"},
+  {name:"Thank You",       emoji:"💌", count:"110+"},
+  {name:"Just Because",    emoji:"🎁", count:"300+"},
+  {name:"Milestones",      emoji:"🏆", count:"140+"},
+  {name:"Dearly Departed", emoji:"🕯️", count:"60+", special:true},
+];
+
+const STYLES = [
+  {name:"Blooming Garden", emoji:"🌸", desc:"Petals and light",    bg:"linear-gradient(135deg,#12091a,#2d1228,#1a0d14)"},
+  {name:"Starry Night",    emoji:"🌌", desc:"Cosmic & dreamy",    bg:"linear-gradient(135deg,#070820,#0f0e3a,#0c1f3f)"},
+  {name:"Golden Hour",     emoji:"🌅", desc:"Warm & glowing",     bg:"linear-gradient(135deg,#1a0e00,#2d1a00,#3a2200)"},
+  {name:"Ocean Drift",     emoji:"🌊", desc:"Calm & serene",      bg:"linear-gradient(135deg,#030e20,#062840,#041420)"},
+  {name:"Petal Storm",     emoji:"🌪️", desc:"Bold & dramatic",   bg:"linear-gradient(135deg,#14081a,#280a40,#1a0828)"},
+  {name:"Rose Gold",       emoji:"✨", desc:"Luxe & romantic",    bg:"linear-gradient(135deg,#1a0e0c,#2d1816,#1a0e0c)"},
+  {name:"Candlelight",     emoji:"🕯️", desc:"Soft & reverent",   bg:"linear-gradient(135deg,#0f0800,#1e1000,#140c00)", dearly:true},
+  {name:"Eternal Garden",  emoji:"🌿", desc:"Peaceful & forever", bg:"linear-gradient(135deg,#060e08,#0a1e0c,#060e08)", dearly:true},
+];
+
+const MUSIC = [
+  {name:"Gentle Piano",     icon:"🎹", desc:"Soft & emotional"},
+  {name:"Romantic Strings", icon:"🎻", desc:"Rich & sweeping"},
+  {name:"Soft R&B",         icon:"🎵", desc:"Warm & soulful"},
+  {name:"Lo-Fi Chill",      icon:"🎧", desc:"Laid-back & cozy"},
+  {name:"Ocean Waves",      icon:"🌊", desc:"Peaceful & natural"},
+  {name:"Upbeat Jazz",      icon:"🎷", desc:"Bright & joyful"},
+  {name:"Cinematic",        icon:"🎬", desc:"Epic & moving"},
+  {name:"Hymn / Gospel",    icon:"🙏", desc:"Sacred & uplifting"},
+  {name:"No Music",         icon:"🔇", desc:"Message only"},
+];
+
+const GIFTS = [
+  {title:"Eternal Bloom",    category:"Love & Romance", price:"$2.99", badge:"Bestseller", bg:"linear-gradient(145deg,#120818,#2a0f20,#120818)", glow:"rgba(201,133,122,0.22)", icon:"🌹", desc:"A cinematic floral journey with your message woven through petals of light."},
+  {title:"Celestial Love",   category:"Anniversary",    price:"$4.99", badge:"Premium",    bg:"linear-gradient(145deg,#060818,#0f0e2a,#060820)", glow:"rgba(120,100,220,0.22)", icon:"✨", desc:"Stars spell out your words across the night sky in a breathtaking 45-second experience."},
+  {title:"Golden Birthday",  category:"Birthdays",      price:"$0.99", badge:"Popular",    bg:"linear-gradient(145deg,#100a00,#1e1200,#100a00)", glow:"rgba(201,168,76,0.22)",  icon:"🎂", desc:"Warm, joyful celebration with confetti, music, and your heartfelt message — just $0.99."},
+  {title:"Candlelight",      category:"Dearly Departed",price:"$3.99", badge:"Meaningful", bg:"linear-gradient(145deg,#0c0800,#1a1000,#0c0800)", glow:"rgba(201,168,76,0.18)",  icon:"🕯️", desc:"A soft, reverent experience to honor someone's heavenly birthday or a day of remembrance.", dearly:true},
+];
+
+const TIERS = [
+  {price:"$0.99", name:"Spark",      desc:"Animated still + message", icon:"🌱"},
+  {price:"$1.99", name:"Glow",       desc:"Short looping video",       icon:"🌸"},
+  {price:"$2.99", name:"Bloom",      desc:"30s video with music",      icon:"🌺"},
+  {price:"$3.99", name:"Luxe Bloom", desc:"45s personalized",          icon:"💐"},
+  {price:"$4.99", name:"Grand Bloom",desc:"Premium full experience",   icon:"✨"},
+];
+
+// ── COMPONENT ─────────────────────────────────────────────
+function App() {
+  const [lang,       setLang]       = React.useState("EN");
+  const [activeCat,  setActiveCat]  = React.useState(null);
+  const [hoveredGift,setHoveredGift]= React.useState(null);
+  const [step,       setStep]       = React.useState(1);
+  const [selStyle,   setSelStyle]   = React.useState(null);
+  const [selMusic,   setSelMusic]   = React.useState(null);
+  const [selTier,    setSelTier]    = React.useState(2);
+  const [msg,        setMsg]        = React.useState("");
+  const [recipient,  setRecipient]  = React.useState("");
+
+  const t = T[lang] || T.EN;
+  const scrollTo = id => document.getElementById(id)?.scrollIntoView({behavior:"smooth"});
+
+  // ── helpers
+  const btn = (label, onClick, active, disabled) => (
+    <button onClick={onClick} disabled={disabled}
+      style={{background: active ? `linear-gradient(135deg,${RG},${RGL})` : "rgba(255,255,255,0.05)",
+        border:`1px solid ${active ? RG : "rgba(250,240,236,0.1)"}`,
+        color: active ? NAVY : MUTED,
+        padding:"12px 32px", fontSize:"11px", letterSpacing:"3px",
+        cursor: disabled ? "not-allowed" : "pointer",
+        borderRadius:"3px", fontFamily:SANS, fontWeight: active?"600":"400",
+        transition:"all 0.3s", opacity: disabled ? 0.5 : 1}}>
+      {label}
+    </button>
+  );
+
+  return (
+    <div style={{fontFamily:SERIF, background:NAVY, color:CREAM, minHeight:"100vh", overflowX:"hidden"}}>
+
+      {/* ══ NAV ══ */}
+      <nav style={{position:"sticky",top:0,zIndex:200,
+        background:"rgba(7,16,30,0.95)", backdropFilter:"blur(20px)", WebkitBackdropFilter:"blur(20px)",
+        borderBottom:`1px solid ${BORDER}`, padding:"0 5%", height:"70px",
+        display:"flex", alignItems:"center", justifyContent:"space-between"}}>
+
+        {/* Logo */}
+        <div style={{display:"flex",alignItems:"center",gap:"12px",cursor:"pointer"}}>
+          <div style={{width:"40px",height:"40px",borderRadius:"50%",
+            background:`linear-gradient(135deg,${NAVY2},${NAVY3})`,
+            border:`1.5px solid ${RG}`,
+            display:"flex",alignItems:"center",justifyContent:"center",
+            fontSize:"20px",boxShadow:`0 0 16px rgba(201,133,122,0.3),inset 0 0 12px rgba(201,133,122,0.05)`}}>
+            🌸
+          </div>
+          <div>
+            <div style={{fontSize:"16px",letterSpacing:"3.5px",fontWeight:"400",
+              fontFamily:SANS, lineHeight:1, color:CREAM}}>DIGITAL BLOOM</div>
+            <div style={{fontSize:"7.5px",letterSpacing:"4px",color:RG,
+              marginTop:"3px",fontFamily:SANS}}>✦ GIFTING EXPERIENCES ✦</div>
+          </div>
+        </div>
+
+        {/* Nav links */}
+        <div style={{display:"flex",gap:"32px",fontSize:"10px",letterSpacing:"2.5px",
+          color:MUTED,fontFamily:SANS}}>
+          {t.nav.map(l=>(
+            <span key={l} style={{cursor:"pointer",transition:"color 0.2s",padding:"4px 0"}}
+              onMouseEnter={e=>e.target.style.color=RGL}
+              onMouseLeave={e=>e.target.style.color=MUTED}>{l.toUpperCase()}</span>
+          ))}
+        </div>
+
+        {/* Right: language + CTA */}
+        <div style={{display:"flex",alignItems:"center",gap:"14px"}}>
+          <div style={{position:"relative"}}>
+            <select value={lang} onChange={e=>setLang(e.target.value)}
+              style={{background:NAVY2,border:`1px solid rgba(201,133,122,0.35)`,
+                color:RGL,padding:"7px 28px 7px 11px",fontSize:"10px",letterSpacing:"1px",
+                cursor:"pointer",borderRadius:"3px",appearance:"none",outline:"none",
+                fontFamily:SANS}}>
+              {LANGS.map(l=><option key={l} value={l}>{l} — {LANG_NAMES[l]}</option>)}
+            </select>
+            <span style={{position:"absolute",right:"9px",top:"50%",
+              transform:"translateY(-50%)",color:RG,pointerEvents:"none",fontSize:"9px"}}>▾</span>
+          </div>
+          <button onClick={()=>scrollTo("builder")}
+            style={{background:`linear-gradient(135deg,${RG},${RGL})`,
+              border:"none",color:NAVY,padding:"10px 22px",fontSize:"10px",
+              letterSpacing:"2px",cursor:"pointer",fontWeight:"600",
+              borderRadius:"3px",boxShadow:`0 4px 20px rgba(201,133,122,0.35)`,
+              fontFamily:SANS}}>
+            {t.sendBloom.toUpperCase()}
+          </button>
+        </div>
+      </nav>
+
+      {/* ══ HERO ══ */}
+      <div style={{minHeight:"92vh",display:"flex",flexDirection:"column",
+        alignItems:"center",justifyContent:"center",textAlign:"center",
+        position:"relative",overflow:"hidden",padding:"100px 5% 80px"}}>
+
+        {/* Background glows — navy + rose gold */}
+        <div style={{position:"absolute",top:"10%",left:"5%",width:"600px",height:"600px",
+          background:"radial-gradient(circle,rgba(13,24,40,0.9) 0%,rgba(201,133,122,0.06) 50%,transparent 70%)",
+          borderRadius:"50%",filter:"blur(60px)",pointerEvents:"none"}}/>
+        <div style={{position:"absolute",bottom:"5%",right:"5%",width:"500px",height:"500px",
+          background:"radial-gradient(circle,rgba(201,133,122,0.07) 0%,rgba(7,16,30,0.5) 60%,transparent 80%)",
+          borderRadius:"50%",filter:"blur(60px)",pointerEvents:"none"}}/>
+        <div style={{position:"absolute",top:"40%",left:"50%",transform:"translate(-50%,-50%)",
+          width:"800px",height:"400px",
+          background:"radial-gradient(ellipse,rgba(201,168,76,0.04) 0%,transparent 65%)",
+          filter:"blur(50px)",pointerEvents:"none"}}/>
+        {/* Subtle grid overlay */}
+        <div style={{position:"absolute",inset:0,
+          backgroundImage:"linear-gradient(rgba(201,133,122,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(201,133,122,0.03) 1px,transparent 1px)",
+          backgroundSize:"60px 60px",pointerEvents:"none"}}/>
+
+        {/* Pill */}
+        <div style={{display:"inline-flex",alignItems:"center",gap:"10px",
+          marginBottom:"40px",padding:"9px 28px",
+          border:`1px solid rgba(201,133,122,0.3)`,borderRadius:"40px",
+          background:"rgba(201,133,122,0.06)"}}>
+          <span style={{width:"6px",height:"6px",background:RG,borderRadius:"50%",
+            display:"inline-block",boxShadow:`0 0 8px ${RG}`}}/>
+          <span style={{fontSize:"10px",letterSpacing:"4px",color:RG,fontFamily:SANS}}>
+            {t.pill.toUpperCase()}
+          </span>
+        </div>
+
+        {/* Main headline */}
+        <h1 style={{fontSize:"clamp(52px,9vw,108px)",fontWeight:"300",lineHeight:"1.08",
+          letterSpacing:"-1px",margin:"0 0 20px",whiteSpace:"pre-line",fontFamily:SERIF,
+          background:`linear-gradient(160deg,${CREAM} 0%,${CHAMP} 50%,rgba(201,133,122,0.7) 100%)`,
+          WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",backgroundClip:"text"}}>
+          {t.headline}
+        </h1>
+
+        {/* Sub-tagline */}
+        <p style={{fontSize:"clamp(16px,2.2vw,22px)",color:"rgba(201,133,122,0.8)",
+          fontStyle:"italic",fontFamily:SERIF,letterSpacing:"0.5px",
+          marginBottom:"16px",fontWeight:"300"}}>
+          {t.sub}
+        </p>
+
+        {/* Price range */}
+        <p style={{fontSize:"12px",color:MUTED,letterSpacing:"3.5px",
+          marginBottom:"52px",fontFamily:SANS}}>
+          {t.from} <span style={{color:RGL,fontSize:"14px",fontFamily:SERIF}}>$0.99</span>
+          &nbsp;—&nbsp;
+          <span style={{color:RGL,fontSize:"14px",fontFamily:SERIF}}>$4.99</span>
+        </p>
+
+        {/* CTAs */}
+        <div style={{display:"flex",gap:"16px",flexWrap:"wrap",justifyContent:"center"}}>
+          <button onClick={()=>scrollTo("builder")}
+            style={{background:`linear-gradient(135deg,${RG},${RGL})`,
+              border:"none",color:NAVY,padding:"18px 48px",fontSize:"12px",
+              letterSpacing:"3px",cursor:"pointer",fontWeight:"600",
+              borderRadius:"3px",boxShadow:`0 6px 32px rgba(201,133,122,0.45)`,
+              fontFamily:SANS}}>
+            {t.cta1.toUpperCase()}
+          </button>
+          <button style={{background:"transparent",
+            border:`1px solid rgba(250,240,236,0.2)`,
+            color:"rgba(250,240,236,0.6)",padding:"18px 48px",fontSize:"12px",
+            letterSpacing:"3px",cursor:"pointer",borderRadius:"3px",fontFamily:SANS}}>
+            ▶ &nbsp;{t.cta2.toUpperCase()}
+          </button>
+        </div>
+
+        {/* Scroll nudge */}
+        <div style={{position:"absolute",bottom:"40px",left:"50%",
+          transform:"translateX(-50%)",display:"flex",flexDirection:"column",
+          alignItems:"center",gap:"8px",opacity:0.3}}>
+          <span style={{fontSize:"9px",letterSpacing:"4px",fontFamily:SANS}}>SCROLL</span>
+          <div style={{width:"1px",height:"44px",
+            background:`linear-gradient(to bottom,${RGL},transparent)`}}/>
+        </div>
+      </div>
+
+      {/* ══ STATS ══ */}
+      <div style={{borderTop:`1px solid ${BORDER}`,borderBottom:`1px solid ${BORDER}`,
+        background:"rgba(201,133,122,0.04)",padding:"30px 5%",
+        display:"flex",justifyContent:"center",
+        gap:"clamp(20px,6vw,80px)",flexWrap:"wrap"}}>
+        {[{n:"2M+",i:0},{n:"50+",i:1},{n:"8",i:2},{n:"30–45s",i:3},{n:"4.9 ★",i:4}].map((s,idx)=>(
+          <div key={idx} style={{textAlign:"center"}}>
+            <div style={{fontSize:"26px",fontWeight:"300",color:RGL,
+              letterSpacing:"2px",fontFamily:SERIF}}>{s.n}</div>
+            <div style={{fontSize:"9px",letterSpacing:"3px",color:MUTED,
+              marginTop:"6px",fontFamily:SANS}}>{t.statsLabel[s.i]}</div>
+          </div>
+        ))}
+      </div>
+
+      {/* ══ BUILD YOUR BLOOM ══ */}
+      <div id="builder" style={{padding:"88px 5%",background:NAVY2}}>
+        <div style={{textAlign:"center",marginBottom:"52px"}}>
+          <div style={{fontSize:"9px",letterSpacing:"5px",color:RG,
+            marginBottom:"14px",fontFamily:SANS}}>PERSONALIZE EVERYTHING</div>
+          <h2 style={{fontSize:"clamp(28px,4vw,54px)",fontWeight:"300",
+            margin:"0 0 14px",fontFamily:SERIF,color:CREAM}}>{t.builderTitle}</h2>
+          <p style={{color:MUTED,fontSize:"16px",lineHeight:"1.8",
+            maxWidth:"480px",margin:"0 auto",fontFamily:SERIF,fontStyle:"italic"}}>{t.builderSub}</p>
+        </div>
+
+        {/* Step indicator */}
+        <div style={{display:"flex",justifyContent:"center",alignItems:"flex-start",
+          maxWidth:"600px",margin:"0 auto 52px"}}>
+          {t.steps.map((stepName,i)=>{
+            const num=i+1, active=step===num, done=step>num;
+            return (
+              <div key={stepName} style={{display:"flex",alignItems:"center",flex:1}}>
+                <div style={{display:"flex",flexDirection:"column",alignItems:"center",
+                  gap:"7px",flex:1,cursor:done?"pointer":"default"}}
+                  onClick={()=>done&&setStep(num)}>
+                  <div style={{width:"36px",height:"36px",borderRadius:"50%",
+                    border:`1.5px solid ${active||done?RG:"rgba(250,240,236,0.15)"}`,
+                    background:done?RG:active?"rgba(201,133,122,0.12)":"transparent",
+                    display:"flex",alignItems:"center",justifyContent:"center",
+                    fontSize:"13px",color:done?NAVY:active?RG:MUTED,
+                    fontWeight:"600",transition:"all 0.3s",fontFamily:SANS}}>
+                    {done?"✓":num}
+                  </div>
+                  <div style={{fontSize:"8px",letterSpacing:"2px",
+                    color:active?RGL:MUTED,whiteSpace:"nowrap",fontFamily:SANS}}>
+                    {stepName.toUpperCase()}
+                  </div>
+                </div>
+                {i<t.steps.length-1&&(
+                  <div style={{height:"1px",flex:1,
+                    background:done?`linear-gradient(to right,${RG},rgba(201,133,122,0.3))`:"rgba(250,240,236,0.08)",
+                    margin:"0 6px",marginBottom:"22px"}}/>
+                )}
+              </div>
+            );
+          })}
+        </div>
+
+        {/* STEP 1: Style */}
+        {step===1&&(
+          <div style={{maxWidth:"760px",margin:"0 auto"}}>
+            <h3 style={{textAlign:"center",fontWeight:"300",fontSize:"20px",
+              marginBottom:"28px",fontFamily:SERIF,color:CREAM,fontStyle:"italic"}}>
+              {t.styleLabel}
+            </h3>
+            <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(210px,1fr))",
+              gap:"14px",marginBottom:"32px"}}>
+              {STYLES.map(vs=>{
+                const sel=selStyle===vs.name;
+                return (
+                  <div key={vs.name} onClick={()=>setSelStyle(vs.name)}
+                    style={{padding:"22px 18px",borderRadius:"10px",cursor:"pointer",
+                      background:vs.bg,
+                      border:`1.5px solid ${sel?RGL:vs.dearly?GOLDBDR:"rgba(250,240,236,0.06)"}`,
+                      boxShadow:sel?`0 0 28px rgba(201,133,122,0.3)`:"none",
+                      transition:"all 0.28s",transform:sel?"scale(1.02)":"scale(1)"}}>
+                    <div style={{fontSize:"30px",marginBottom:"10px"}}>{vs.emoji}</div>
+                    <div style={{fontSize:"15px",marginBottom:"4px",
+                      color:vs.dearly?GOLD:CREAM,fontFamily:SERIF}}>{vs.name}</div>
+                    <div style={{fontSize:"11px",color:MUTED,fontFamily:SANS}}>{vs.desc}</div>
+                    {vs.dearly&&<div style={{fontSize:"9px",color:GOLD,letterSpacing:"2px",
+                      marginTop:"6px",fontFamily:SANS}}>✦ DEARLY DEPARTED</div>}
+                    {sel&&<div style={{marginTop:"8px",fontSize:"9px",letterSpacing:"2px",
+                      color:RGL,fontFamily:SANS}}>✓ SELECTED</div>}
+                  </div>
+                );
+              })}
+            </div>
+            <div style={{textAlign:"center"}}>
+              {btn(selStyle?`${t.next.replace("→","")} ${t.steps[1].toUpperCase()} →`:t.selectFirst,
+                ()=>selStyle&&setStep(2), !!selStyle, !selStyle)}
+            </div>
+          </div>
+        )}
+
+        {/* STEP 2: Message */}
+        {step===2&&(
+          <div style={{maxWidth:"560px",margin:"0 auto"}}>
+            <h3 style={{textAlign:"center",fontWeight:"300",fontSize:"20px",
+              marginBottom:"10px",fontFamily:SERIF,color:CREAM,fontStyle:"italic"}}>
+              {t.msgLabel}
+            </h3>
+            <p style={{textAlign:"center",color:MUTED,fontSize:"14px",
+              marginBottom:"30px",fontFamily:SANS}}>{t.builderSub.split(".")[0]}.</p>
+            <div style={{marginBottom:"18px"}}>
+              <label style={{fontSize:"9px",letterSpacing:"3px",color:RG,
+                display:"block",marginBottom:"8px",fontFamily:SANS}}>
+                {t.recipientLabel.toUpperCase()}
+              </label>
+              <input value={recipient} onChange={e=>setRecipient(e.target.value)}
+                placeholder="e.g. Mom, Sofia, My Love..."
+                style={{width:"100%",background:"rgba(255,255,255,0.04)",
+                  border:`1px solid rgba(201,133,122,0.28)`,color:CREAM,
+                  padding:"12px 16px",fontSize:"16px",borderRadius:"5px",
+                  outline:"none",fontFamily:SERIF}}/>
+            </div>
+            <div style={{marginBottom:"26px"}}>
+              <label style={{fontSize:"9px",letterSpacing:"3px",color:RG,
+                display:"block",marginBottom:"8px",fontFamily:SANS}}>
+                {t.msgLabel.toUpperCase()}
+              </label>
+              <textarea value={msg} onChange={e=>setMsg(e.target.value)} rows={5}
+                placeholder={t.msgPlaceholder}
+                style={{width:"100%",background:"rgba(255,255,255,0.04)",
+                  border:`1px solid rgba(201,133,122,0.28)`,color:CREAM,
+                  padding:"13px 16px",fontSize:"15px",borderRadius:"5px",
+                  outline:"none",resize:"vertical",lineHeight:"1.75",fontFamily:SERIF}}/>
+              <div style={{textAlign:"right",fontSize:"10px",color:MUTED,
+                marginTop:"5px",fontFamily:SANS}}>{msg.length} characters</div>
+            </div>
+            <div style={{display:"flex",gap:"10px",justifyContent:"center"}}>
+              {btn(t.back,()=>setStep(1),false,false)}
+              {btn(msg.trim()?`${t.steps[2].toUpperCase()} →`:t.writeFirst,
+                ()=>msg.trim()&&setStep(3), msg.trim().length>0, !msg.trim())}
+            </div>
+          </div>
+        )}
+
+        {/* STEP 3: Music */}
+        {step===3&&(
+          <div style={{maxWidth:"700px",margin:"0 auto"}}>
+            <h3 style={{textAlign:"center",fontWeight:"300",fontSize:"20px",
+              marginBottom:"8px",fontFamily:SERIF,color:CREAM,fontStyle:"italic"}}>
+              {t.musicLabel}
+            </h3>
+            <p style={{textAlign:"center",color:MUTED,fontSize:"14px",
+              marginBottom:"30px",fontFamily:SANS}}>{t.musicSub}</p>
+            <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(145px,1fr))",
+              gap:"12px",marginBottom:"30px"}}>
+              {MUSIC.map(m=>{
+                const sel=selMusic===m.name;
+                return (
+                  <div key={m.name} onClick={()=>setSelMusic(m.name)}
+                    style={{padding:"18px 14px",borderRadius:"10px",cursor:"pointer",
+                      textAlign:"center",
+                      border:`1.5px solid ${sel?RGL:m.name==="Hymn / Gospel"?GOLDBDR:"rgba(250,240,236,0.07)"}`,
+                      background:sel?"rgba(201,133,122,0.1)":"rgba(255,255,255,0.02)",
+                      boxShadow:sel?`0 0 20px rgba(201,133,122,0.2)`:"none",
+                      transition:"all 0.28s",transform:sel?"scale(1.03)":"scale(1)"}}>
+                    <div style={{fontSize:"26px",marginBottom:"8px"}}>{m.icon}</div>
+                    <div style={{fontSize:"12px",marginBottom:"4px",
+                      color:sel?CREAM:MUTED,fontFamily:SANS}}>{m.name}</div>
+                    <div style={{fontSize:"10px",
+                      color:sel?RGL:"rgba(250,240,236,0.3)",fontFamily:SANS}}>{m.desc}</div>
+                    {sel&&<div style={{marginTop:"7px",fontSize:"9px",letterSpacing:"2px",
+                      color:RGL,fontFamily:SANS}}>♪ SELECTED</div>}
+                  </div>
+                );
+              })}
+            </div>
+            <div style={{display:"flex",gap:"10px",justifyContent:"center"}}>
+              {btn(t.back,()=>setStep(2),false,false)}
+              {btn(selMusic?`${t.steps[3].toUpperCase()} →`:t.selectMusic,
+                ()=>selMusic&&setStep(4), !!selMusic, !selMusic)}
+            </div>
+          </div>
+        )}
+
+        {/* STEP 4: Preview */}
+        {step===4&&(
+          <div style={{maxWidth:"520px",margin:"0 auto",textAlign:"center"}}>
+            <h3 style={{fontWeight:"300",fontSize:"20px",marginBottom:"6px",
+              fontFamily:SERIF,color:CREAM,fontStyle:"italic"}}>
+              {t.previewTitle} ✦
+            </h3>
+            <p style={{color:MUTED,fontSize:"13px",marginBottom:"28px",fontFamily:SANS}}>
+              {t.previewSub} {recipient||"your recipient"} {t.previewSub2}
+            </p>
+            {/* Preview card */}
+            <div style={{borderRadius:"14px",overflow:"hidden",
+              border:`1px solid rgba(201,133,122,0.35)`,
+              boxShadow:`0 28px 80px rgba(0,0,0,0.7),0 0 40px rgba(201,133,122,0.12)`,
+              marginBottom:"26px"}}>
+              <div style={{height:"230px",
+                background:STYLES.find(v=>v.name===selStyle)?.bg||"linear-gradient(135deg,#0c1f3f,#152b4d)",
+                display:"flex",flexDirection:"column",alignItems:"center",
+                justifyContent:"center",position:"relative"}}>
+                <div style={{position:"absolute",top:"50%",left:"50%",
+                  transform:"translate(-50%,-50%)",width:"200px",height:"200px",
+                  background:"radial-gradient(circle,rgba(201,133,122,0.15),transparent 70%)",
+                  borderRadius:"50%"}}/>
+                <div style={{fontSize:"52px",marginBottom:"12px",position:"relative"}}>
+                  {STYLES.find(v=>v.name===selStyle)?.emoji}
+                </div>
+                <div style={{fontSize:"9px",letterSpacing:"3px",
+                  color:"rgba(250,240,236,0.5)",fontFamily:SANS}}>30s BLOOM · HD</div>
+                <div style={{position:"absolute",bottom:"14px",left:"14px",
+                  display:"flex",alignItems:"center",gap:"7px",
+                  background:"rgba(0,0,0,0.55)",padding:"6px 14px",
+                  borderRadius:"22px",backdropFilter:"blur(8px)"}}>
+                  <span style={{fontSize:"13px"}}>{MUSIC.find(m=>m.name===selMusic)?.icon}</span>
+                  <span style={{fontSize:"9px",letterSpacing:"2px",
+                    color:RGL,fontFamily:SANS}}>{selMusic}</span>
+                </div>
+              </div>
+              <div style={{padding:"24px",background:NAVY3,textAlign:"left"}}>
+                {recipient&&<div style={{fontSize:"9px",letterSpacing:"3px",
+                  color:RG,marginBottom:"8px",fontFamily:SANS}}>
+                  FOR {recipient.toUpperCase()}
+                </div>}
+                <div style={{fontSize:"16px",lineHeight:"1.85",color:CREAM,
+                  fontStyle:"italic",marginBottom:"16px",fontFamily:SERIF}}>
+                  "{msg}"
+                </div>
+                <div style={{display:"flex",gap:"8px",flexWrap:"wrap"}}>
+                  <span style={{fontSize:"9px",letterSpacing:"1.5px",
+                    padding:"4px 12px",border:`1px solid rgba(201,133,122,0.25)`,
+                    borderRadius:"22px",color:MUTED,fontFamily:SANS}}>{selStyle}</span>
+                  <span style={{fontSize:"9px",letterSpacing:"1.5px",
+                    padding:"4px 12px",border:`1px solid rgba(201,133,122,0.25)`,
+                    borderRadius:"22px",color:MUTED,fontFamily:SANS}}>♪ {selMusic}</span>
+                </div>
+              </div>
+            </div>
+            {/* Tier picker */}
+            <div style={{marginBottom:"26px"}}>
+              <div style={{fontSize:"9px",letterSpacing:"3px",color:RG,
+                marginBottom:"16px",fontFamily:SANS}}>{t.tierLabel.toUpperCase()}</div>
+              <div style={{display:"flex",gap:"8px",justifyContent:"center",flexWrap:"wrap"}}>
+                {TIERS.map((tier,i)=>(
+                  <div key={tier.price} onClick={()=>setSelTier(i)}
+                    style={{padding:"10px 12px",
+                      border:`1px solid ${selTier===i?"rgba(201,133,122,0.7)":"rgba(250,240,236,0.1)"}`,
+                      borderRadius:"8px",
+                      background:selTier===i?"rgba(201,133,122,0.12)":"transparent",
+                      cursor:"pointer",textAlign:"center",minWidth:"80px",
+                      transition:"all 0.25s"}}>
+                    <div style={{fontSize:"14px"}}>{tier.icon}</div>
+                    <div style={{fontSize:"17px",
+                      color:selTier===i?RGL:MUTED,fontWeight:"300",fontFamily:SERIF}}>{tier.price}</div>
+                    <div style={{fontSize:"8px",letterSpacing:"1px",
+                      color:selTier===i?RG:MUTED,fontFamily:SANS}}>{tier.name}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div style={{display:"flex",gap:"10px",justifyContent:"center",marginBottom:"16px"}}>
+              {btn(t.back,()=>setStep(3),false,false)}
+              <button style={{background:`linear-gradient(135deg,${RG},${RGL})`,
+                border:"none",color:NAVY,padding:"14px 40px",fontSize:"11px",
+                letterSpacing:"3px",cursor:"pointer",fontWeight:"600",
+                borderRadius:"3px",fontFamily:SANS,
+                boxShadow:`0 6px 28px rgba(201,133,122,0.45)`}}>
+                {t.sendBtn.toUpperCase()} ✦
+              </button>
+            </div>
+            <p style={{fontSize:"11px",color:MUTED,fontFamily:SANS}}>{t.sendNote}</p>
+          </div>
+        )}
+      </div>
+
+      {/* ══ FEATURED ══ */}
+      <div style={{padding:"88px 5%"}}>
+        <div style={{textAlign:"center",marginBottom:"52px"}}>
+          <div style={{fontSize:"9px",letterSpacing:"5px",color:RG,
+            marginBottom:"14px",fontFamily:SANS}}>{t.featuredPill.toUpperCase()}</div>
+          <h2 style={{fontSize:"clamp(26px,4vw,50px)",fontWeight:"300",
+            margin:0,fontFamily:SERIF,color:CREAM}}>{t.featuredTitle}</h2>
+        </div>
+        <div style={{display:"grid",
+          gridTemplateColumns:"repeat(auto-fill,minmax(265px,1fr))",gap:"22px"}}>
+          {GIFTS.map((gift,i)=>(
+            <div key={gift.title}
+              onMouseEnter={()=>setHoveredGift(i)}
+              onMouseLeave={()=>setHoveredGift(null)}
+              style={{borderRadius:"12px",overflow:"hidden",
+                border:`1px solid ${hoveredGift===i?gift.dearly?GOLD:RG:"rgba(201,133,122,0.14)"}`,
+                transition:"all 0.35s",
+                transform:hoveredGift===i?"translateY(-7px)":"none",
+                boxShadow:hoveredGift===i
+                  ?`0 24px 64px rgba(0,0,0,0.6),0 0 32px ${gift.glow}`
+                  :"0 4px 24px rgba(0,0,0,0.4)",
+                cursor:"pointer",background:NAVY3}}>
+              <div style={{height:"200px",background:gift.bg,
+                display:"flex",flexDirection:"column",
+                alignItems:"center",justifyContent:"center",position:"relative"}}>
+                <div style={{position:"absolute",top:"50%",left:"50%",
+                  transform:"translate(-50%,-50%)",width:"160px",height:"160px",
+                  background:`radial-gradient(circle,${gift.glow},transparent 70%)`,
+                  borderRadius:"50%"}}/>
+                <div style={{fontSize:"40px",marginBottom:"10px",position:"relative"}}>{gift.icon}</div>
+                <div style={{width:"44px",height:"44px",borderRadius:"50%",
+                  border:"1.5px solid rgba(250,240,236,0.22)",
+                  display:"flex",alignItems:"center",justifyContent:"center",
+                  fontSize:"14px",background:"rgba(0,0,0,0.3)"}}>▶</div>
+                <div style={{position:"absolute",top:"12px",left:"12px"}}>
+                  <span style={{fontSize:"8px",letterSpacing:"2px",
+                    padding:"4px 10px",
+                    background:gift.dearly
+                      ?`linear-gradient(135deg,${GOLD},#E8C97A)`
+                      :`linear-gradient(135deg,${RG},${RGL})`,
+                    color:NAVY,fontWeight:"600",borderRadius:"3px",fontFamily:SANS}}>
+                    {gift.badge.toUpperCase()}
+                  </span>
+                </div>
+                <div style={{position:"absolute",bottom:"10px",right:"12px",
+                  fontSize:"9px",color:"rgba(250,240,236,0.4)",
+                  letterSpacing:"1.5px",fontFamily:SANS}}>30–45s · HD</div>
+                {gift.dearly&&<div style={{position:"absolute",top:"12px",right:"12px",
+                  fontSize:"9px",color:GOLD,letterSpacing:"1px",fontFamily:SANS}}>✦</div>}
+              </div>
+              <div style={{padding:"22px"}}>
+                <div style={{fontSize:"9px",letterSpacing:"3px",
+                  color:gift.dearly?GOLD:RG,marginBottom:"8px",fontFamily:SANS}}>
+                  {gift.category.toUpperCase()}
+                </div>
+                <div style={{fontSize:"18px",fontWeight:"300",
+                  marginBottom:"8px",color:CREAM,fontFamily:SERIF}}>{gift.title}</div>
+                <div style={{fontSize:"12px",color:MUTED,lineHeight:"1.8",
+                  marginBottom:"20px",fontFamily:SANS}}>{gift.desc}</div>
+                <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+                  <span style={{fontSize:"22px",
+                    color:gift.dearly?GOLD:RGL,fontWeight:"300",fontFamily:SERIF}}>{gift.price}</span>
+                  <button style={{background:"transparent",
+                    border:`1px solid ${gift.dearly?"rgba(201,168,76,0.4)":"rgba(201,133,122,0.38)"}`,
+                    color:gift.dearly?GOLD:RGL,padding:"8px 18px",
+                    fontSize:"10px",letterSpacing:"2px",cursor:"pointer",
+                    borderRadius:"3px",fontFamily:SANS,transition:"all 0.25s"}}
+                    onMouseEnter={e=>{e.currentTarget.style.background=gift.dearly?GOLD:RG;e.currentTarget.style.color=NAVY;}}
+                    onMouseLeave={e=>{e.currentTarget.style.background="transparent";e.currentTarget.style.color=gift.dearly?GOLD:RGL;}}>
+                    SEND NOW
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* ══ CATEGORIES ══ */}
+      <div style={{padding:"60px 5% 88px",background:NAVY2}}>
+        <div style={{textAlign:"center",marginBottom:"52px"}}>
+          <div style={{fontSize:"9px",letterSpacing:"5px",color:RG,
+            marginBottom:"14px",fontFamily:SANS}}>{t.catPill.toUpperCase()}</div>
+          <h2 style={{fontSize:"clamp(24px,3.5vw,46px)",fontWeight:"300",
+            margin:0,fontFamily:SERIF,color:CREAM}}>{t.catTitle}</h2>
+        </div>
+        <div style={{display:"grid",
+          gridTemplateColumns:"repeat(auto-fill,minmax(140px,1fr))",gap:"12px"}}>
+          {CATEGORIES.map(cat=>{
+            const active=activeCat===cat.name;
+            return (
+              <div key={cat.name}
+                onClick={()=>setActiveCat(active?null:cat.name)}
+                style={{padding:"22px 14px",borderRadius:"8px",textAlign:"center",
+                  cursor:"pointer",
+                  border:`1px solid ${active?cat.special?GOLD:RG:cat.special?GOLDBDR:"rgba(250,240,236,0.07)"}`,
+                  background:active
+                    ?cat.special?"rgba(201,168,76,0.09)":"rgba(201,133,122,0.09)"
+                    :cat.special?"rgba(201,168,76,0.03)":"rgba(255,255,255,0.02)",
+                  transition:"all 0.28s",
+                  boxShadow:active?cat.special?`0 0 20px rgba(201,168,76,0.18)`:`0 0 20px rgba(201,133,122,0.18)`:"none",
+                  transform:active?"scale(1.04)":"scale(1)"}}>
+                <div style={{fontSize:"26px",marginBottom:"9px"}}>{cat.emoji}</div>
+                <div style={{fontSize:"12px",marginBottom:"5px",
+                  color:cat.special?GOLD:CREAM,fontFamily:SANS}}>{cat.name}</div>
+                <div style={{fontSize:"9px",
+                  color:cat.special?GOLD:RG,letterSpacing:"1px",fontFamily:SANS}}>
+                  {cat.count} blooms
+                </div>
+                {cat.special&&<div style={{fontSize:"8px",color:GOLD,
+                  letterSpacing:"1.5px",marginTop:"5px",fontFamily:SANS}}>✦ SPECIAL</div>}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* ══ PRICING ══ */}
+      <div style={{padding:"88px 5%",textAlign:"center"}}>
+        <div style={{fontSize:"9px",letterSpacing:"5px",color:RG,
+          marginBottom:"16px",fontFamily:SANS}}>{t.pricingPill.toUpperCase()}</div>
+        <h2 style={{fontSize:"clamp(24px,3.5vw,46px)",fontWeight:"300",
+          margin:"0 0 52px",fontFamily:SERIF,color:CREAM}}>{t.pricingTitle}</h2>
+        <div style={{display:"flex",justifyContent:"center",
+          gap:"clamp(8px,1.5vw,16px)",flexWrap:"wrap",maxWidth:"880px",margin:"0 auto"}}>
+          {TIERS.map((tier,i)=>(
+            <div key={tier.price}
+              style={{padding:"32px 20px",minWidth:"152px",flex:1,
+                border:`1px solid ${i===2?RG:BORDER}`,borderRadius:"12px",
+                background:i===2?"rgba(201,133,122,0.07)":"rgba(255,255,255,0.02)",
+                boxShadow:i===2?`0 0 32px rgba(201,133,122,0.2)`:"none",
+                position:"relative"}}>
+              {i===2&&<div style={{position:"absolute",top:"-12px",left:"50%",
+                transform:"translateX(-50%)",
+                background:`linear-gradient(135deg,${RG},${RGL})`,
+                color:NAVY,fontSize:"8px",letterSpacing:"2px",
+                padding:"4px 14px",borderRadius:"14px",fontWeight:"600",
+                whiteSpace:"nowrap",fontFamily:SANS}}>MOST LOVED</div>}
+              <div style={{fontSize:"28px",marginBottom:"10px"}}>{tier.icon}</div>
+              <div style={{fontSize:"28px",color:i===2?RGL:CREAM,
+                fontWeight:"300",marginBottom:"5px",fontFamily:SERIF}}>{tier.price}</div>
+              <div style={{fontSize:"13px",letterSpacing:"1px",
+                marginBottom:"8px",color:i===2?CREAM:MUTED,fontFamily:SANS}}>{tier.name}</div>
+              <div style={{fontSize:"11px",color:MUTED,lineHeight:"1.65",fontFamily:SANS}}>{tier.desc}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* ══ HOW IT WORKS ══ */}
+      <div style={{padding:"80px 5%",borderTop:`1px solid ${BORDER}`,background:NAVY2}}>
+        <div style={{textAlign:"center",marginBottom:"56px"}}>
+          <div style={{fontSize:"9px",letterSpacing:"5px",color:RG,
+            marginBottom:"14px",fontFamily:SANS}}>{t.howPill.toUpperCase()}</div>
+          <h2 style={{fontSize:"clamp(24px,4vw,48px)",fontWeight:"300",
+            margin:0,fontFamily:SERIF,color:CREAM}}>{t.howTitle}</h2>
+        </div>
+        <div style={{display:"flex",flexWrap:"wrap",justifyContent:"center",
+          maxWidth:"980px",margin:"0 auto",gap:"24px"}}>
+          {t.howSteps.map((item,i)=>(
+            <div key={i} style={{flex:"1",minWidth:"210px",textAlign:"center",padding:"0 20px"}}>
+              <div style={{fontSize:"48px",fontWeight:"100",
+                color:"rgba(201,133,122,0.15)",letterSpacing:"4px",
+                marginBottom:"4px",fontFamily:SERIF}}>0{i+1}</div>
+              <div style={{fontSize:"26px",marginBottom:"12px"}}>
+                {["🌸","💌","🎵","✨"][i]}
+              </div>
+              <div style={{fontSize:"14px",letterSpacing:"1.5px",
+                marginBottom:"10px",color:CREAM,fontFamily:SANS}}>{item.title}</div>
+              <div style={{fontSize:"12px",color:MUTED,lineHeight:"1.85",fontFamily:SANS}}>{item.desc}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* ══ LANGUAGE BANNER ══ */}
+      <div style={{margin:"0 5% 88px",padding:"52px 44px",
+        background:`linear-gradient(135deg,rgba(13,24,40,0.8),rgba(201,133,122,0.06),rgba(13,24,40,0.8))`,
+        border:`1px solid ${BORDER}`,borderRadius:"14px",
+        display:"flex",alignItems:"center",justifyContent:"space-between",
+        flexWrap:"wrap",gap:"32px"}}>
+        <div>
+          <div style={{fontSize:"9px",letterSpacing:"5px",color:RG,
+            marginBottom:"16px",fontFamily:SANS}}>AVAILABLE EVERYWHERE</div>
+          <h3 style={{fontSize:"28px",fontWeight:"300",margin:"0 0 12px",
+            fontFamily:SERIF,color:CREAM}}>{t.langTitle}</h3>
+          <p style={{color:MUTED,fontSize:"13px",lineHeight:"1.85",
+            maxWidth:"380px",margin:"0 0 20px",fontFamily:SANS}}>{t.langSub}</p>
+          <div style={{display:"flex",flexWrap:"wrap",gap:"8px"}}>
+            {LANGS.map(l=>(
+              <span key={l}
+                onClick={()=>setLang(l)}
+                style={{fontSize:"10px",letterSpacing:"1px",padding:"5px 13px",
+                  border:`1px solid ${lang===l?RG:"rgba(201,133,122,0.22)"}`,
+                  borderRadius:"24px",
+                  color:lang===l?RGL:"rgba(250,240,236,0.55)",
+                  cursor:"pointer",transition:"all 0.2s",
+                  background:lang===l?"rgba(201,133,122,0.1)":"transparent",
+                  fontFamily:SANS}}>
+                {LANG_NAMES[l]}
+              </span>
+            ))}
+          </div>
+        </div>
+        <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
+          <button style={{background:CREAM,border:"none",color:NAVY,
+            padding:"14px 30px",fontSize:"11px",letterSpacing:"2px",
+            cursor:"pointer",borderRadius:"6px",fontFamily:SANS,fontWeight:"600"}}>
+            🍎 &nbsp;APP STORE
+          </button>
+          <button style={{background:"transparent",
+            border:`1px solid rgba(250,240,236,0.25)`,
+            color:"rgba(250,240,236,0.7)",padding:"14px 30px",fontSize:"11px",
+            letterSpacing:"2px",cursor:"pointer",borderRadius:"6px",fontFamily:SANS}}>
+            ▶ &nbsp;GOOGLE PLAY
+          </button>
+        </div>
+      </div>
+
+      {/* ══ FOOTER ══ */}
+      <footer style={{borderTop:`1px solid ${BORDER}`,padding:"40px 5%",
+        display:"flex",justifyContent:"space-between",alignItems:"center",
+        flexWrap:"wrap",gap:"20px",background:NAVY}}>
+        <div style={{display:"flex",flexDirection:"column",gap:"6px"}}>
+          <div style={{display:"flex",alignItems:"center",gap:"10px"}}>
+            <div style={{width:"24px",height:"24px",borderRadius:"50%",
+              border:`1px solid ${RG}`,display:"flex",alignItems:"center",
+              justifyContent:"center",fontSize:"12px"}}>🌸</div>
+            <span style={{fontSize:"13px",letterSpacing:"3px",
+              fontWeight:"400",color:CREAM,fontFamily:SANS}}>DIGITAL BLOOM</span>
+          </div>
+          <div style={{fontSize:"11px",color:RG,fontStyle:"italic",
+            fontFamily:SERIF,paddingLeft:"34px"}}>{t.footerTag}</div>
+          <div style={{fontSize:"10px",color:MUTED,fontFamily:SANS,
+            paddingLeft:"34px",letterSpacing:"1px"}}>Home grown in Madison, AL ✦</div>
+        </div>
+        <div style={{fontSize:"10px",color:"rgba(250,240,236,0.2)",
+          letterSpacing:"1px",fontFamily:SANS}}>
+          © 2026 Digital Bloom · All rights reserved
+        </div>
+        <div style={{display:"flex",gap:"22px",fontSize:"10px",
+          letterSpacing:"2px",color:"rgba(250,240,236,0.35)",fontFamily:SANS}}>
+          {["PRIVACY","TERMS","CONTACT","CAREERS"].map(l=>(
+            <span key={l} style={{cursor:"pointer",transition:"color 0.2s"}}
+              onMouseEnter={e=>e.target.style.color=RG}
+              onMouseLeave={e=>e.target.style.color="rgba(250,240,236,0.35)"}>
+              {l}
+            </span>
+          ))}
+        </div>
+      </footer>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
+</script>
+</body>
+</html>

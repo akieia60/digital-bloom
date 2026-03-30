@@ -196,6 +196,8 @@ export const ht = {
   customize_extra_ribbon: "Efè Riban",
   customize_extra_sparkle: "Efè Lamesèl",
   customize_extra_gold: "Poudre òr",
+  customize_extra_glow: "Limyè Dous",
+  customize_extra_petals: "Petal Wòz",
   customize_sound_piano: "Piano Dou",
   customize_sound_strings: "Kòd Mou",
   customize_sound_bloom: "Bloom Ambient",

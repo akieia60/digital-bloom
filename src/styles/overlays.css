@@ -186,7 +186,105 @@
   50%      { opacity: 1; transform: scale(1.5); }
 }
 
-/* ── TEXT OVERLAY LAYER — Etched into video ── */
+/* ── SOFT GLOW OVERLAY ── */
+.overlay-soft-glow {
+  position: absolute;
+  inset: 0;
+  z-index: 15;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.overlay-soft-glow__halo {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80%;
+  height: 80%;
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(255, 215, 0, 0.15) 0%,
+    rgba(212, 175, 55, 0.08) 30%,
+    rgba(255, 200, 100, 0.04) 50%,
+    transparent 70%
+  );
+  animation: glowPulse 4s ease-in-out infinite;
+}
+
+.overlay-soft-glow__flare {
+  position: absolute;
+  top: 35%;
+  left: 45%;
+  width: 20%;
+  height: 20%;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.25) 0%,
+    rgba(255, 215, 0, 0.1) 40%,
+    transparent 70%
+  );
+  animation: flareDrift 6s ease-in-out infinite;
+  filter: blur(8px);
+}
+
+@keyframes glowPulse {
+  0%, 100% { opacity: 0.6; transform: translate(-50%, -50%) scale(1); }
+  50%      { opacity: 1; transform: translate(-50%, -50%) scale(1.08); }
+}
+
+@keyframes flareDrift {
+  0%   { transform: translate(0, 0) scale(1); opacity: 0.3; }
+  25%  { transform: translate(15px, -10px) scale(1.2); opacity: 0.6; }
+  50%  { transform: translate(-8px, -20px) scale(1.1); opacity: 0.8; }
+  75%  { transform: translate(10px, 5px) scale(0.95); opacity: 0.5; }
+  100% { transform: translate(0, 0) scale(1); opacity: 0.3; }
+}
+
+/* ── ROSE PETALS OVERLAY ── */
+.overlay-rose-petals {
+  position: absolute;
+  inset: 0;
+  z-index: 22;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.overlay-rose-petals__petal {
+  position: absolute;
+  font-size: 22px;
+  top: -30px;
+  animation: petalFall var(--petal-duration, 5s) linear infinite;
+  animation-delay: var(--petal-delay, 0s);
+  left: var(--petal-x, 50%);
+  opacity: 0.85;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+}
+
+.overlay-rose-petals__petal:nth-child(1)  { --petal-x: 5%;  --petal-delay: 0s;    --petal-duration: 6s;  font-size: 18px; }
+.overlay-rose-petals__petal:nth-child(2)  { --petal-x: 15%; --petal-delay: 0.8s;  --petal-duration: 5.5s; font-size: 24px; }
+.overlay-rose-petals__petal:nth-child(3)  { --petal-x: 28%; --petal-delay: 1.5s;  --petal-duration: 7s;  font-size: 16px; }
+.overlay-rose-petals__petal:nth-child(4)  { --petal-x: 40%; --petal-delay: 0.3s;  --petal-duration: 5s;  font-size: 20px; }
+.overlay-rose-petals__petal:nth-child(5)  { --petal-x: 52%; --petal-delay: 2.0s;  --petal-duration: 6.5s; font-size: 22px; }
+.overlay-rose-petals__petal:nth-child(6)  { --petal-x: 65%; --petal-delay: 1.2s;  --petal-duration: 5.8s; font-size: 18px; }
+.overlay-rose-petals__petal:nth-child(7)  { --petal-x: 75%; --petal-delay: 0.5s;  --petal-duration: 7.2s; font-size: 26px; }
+.overlay-rose-petals__petal:nth-child(8)  { --petal-x: 85%; --petal-delay: 1.8s;  --petal-duration: 5.2s; font-size: 16px; }
+.overlay-rose-petals__petal:nth-child(9)  { --petal-x: 92%; --petal-delay: 0.1s;  --petal-duration: 6.8s; font-size: 20px; }
+.overlay-rose-petals__petal:nth-child(10) { --petal-x: 35%; --petal-delay: 2.5s;  --petal-duration: 5.5s; font-size: 24px; }
+.overlay-rose-petals__petal:nth-child(11) { --petal-x: 58%; --petal-delay: 0.7s;  --petal-duration: 6.2s; font-size: 18px; }
+.overlay-rose-petals__petal:nth-child(12) { --petal-x: 78%; --petal-delay: 1.0s;  --petal-duration: 7.5s; font-size: 22px; }
+
+@keyframes petalFall {
+  0%   { top: -5%; transform: rotate(0deg) translateX(0); opacity: 0; }
+  10%  { opacity: 0.85; }
+  50%  { transform: rotate(180deg) translateX(30px); }
+  80%  { opacity: 0.6; }
+  100% { top: 105%; transform: rotate(360deg) translateX(-20px); opacity: 0; }
+}
+
+/* ── TEXT OVERLAY LAYER ── */
 .composition-layer--text {
   position: absolute;
   z-index: 40;
@@ -303,43 +401,137 @@
   text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
 }
 
-/* ── GOLD DUST OVERLAY (CSS Placeholder) ── */
+/* ── GOLD DUST OVERLAY (Customizer — vivid, cinematic) ── */
 .overlay-gold-dust {
+  position: absolute;
+  inset: 0;
   z-index: 25;
+  pointer-events: none;
+  overflow: hidden;
 }
 
 .overlay-gold-dust__particle {
   position: absolute;
-  width: 4px;
-  height: 4px;
-  background: #D4AF37;
   border-radius: 50%;
-  box-shadow: 0 0 6px 2px rgba(212, 175, 55, 0.6), 0 0 14px 6px rgba(212, 175, 55, 0.2);
-  animation: goldDustDrift 3.5s ease-in-out infinite;
+  background: radial-gradient(circle, #FFD700 0%, #D4AF37 40%, transparent 70%);
+  box-shadow:
+    0 0 8px 3px rgba(255, 215, 0, 0.7),
+    0 0 20px 8px rgba(212, 175, 55, 0.35),
+    0 0 40px 16px rgba(212, 175, 55, 0.1);
+  animation: goldDustFloat 4.5s ease-in-out infinite;
 }
 
-.overlay-gold-dust__particle:nth-child(1)  { top: 8%;  left: 18%; animation-delay: 0s; }
-.overlay-gold-dust__particle:nth-child(2)  { top: 15%; left: 65%; animation-delay: 0.4s; width: 6px; height: 6px; }
-.overlay-gold-dust__particle:nth-child(3)  { top: 28%; left: 40%; animation-delay: 0.8s; }
-.overlay-gold-dust__particle:nth-child(4)  { top: 35%; left: 85%; animation-delay: 1.2s; width: 3px; height: 3px; }
-.overlay-gold-dust__particle:nth-child(5)  { top: 45%; left: 12%; animation-delay: 0.3s; width: 5px; height: 5px; }
-.overlay-gold-dust__particle:nth-child(6)  { top: 52%; left: 55%; animation-delay: 0.7s; }
-.overlay-gold-dust__particle:nth-child(7)  { top: 60%; left: 78%; animation-delay: 1.0s; width: 6px; height: 6px; }
-.overlay-gold-dust__particle:nth-child(8)  { top: 70%; left: 30%; animation-delay: 1.5s; }
-.overlay-gold-dust__particle:nth-child(9)  { top: 78%; left: 50%; animation-delay: 0.6s; width: 5px; height: 5px; }
-.overlay-gold-dust__particle:nth-child(10) { top: 85%; left: 72%; animation-delay: 0.2s; }
-.overlay-gold-dust__particle:nth-child(11) { top: 22%; left: 25%; animation-delay: 1.8s; width: 3px; height: 3px; }
-.overlay-gold-dust__particle:nth-child(12) { top: 42%; left: 92%; animation-delay: 0.9s; }
-.overlay-gold-dust__particle:nth-child(13) { top: 90%; left: 15%; animation-delay: 1.3s; width: 6px; height: 6px; }
-.overlay-gold-dust__particle:nth-child(14) { top: 18%; left: 82%; animation-delay: 0.5s; }
-.overlay-gold-dust__particle:nth-child(15) { top: 65%; left: 8%;  animation-delay: 1.1s; width: 4px; height: 4px; }
+/* Varied sizes and positions — 15 particles with staggered timing */
+.overlay-gold-dust__particle:nth-child(1)  { width: 6px; height: 6px; top: 5%;  left: 15%; animation-delay: 0s; animation-duration: 4.5s; }
+.overlay-gold-dust__particle:nth-child(2)  { width: 8px; height: 8px; top: 12%; left: 62%; animation-delay: 0.6s; animation-duration: 5.2s; }
+.overlay-gold-dust__particle:nth-child(3)  { width: 4px; height: 4px; top: 25%; left: 38%; animation-delay: 1.2s; animation-duration: 3.8s; }
+.overlay-gold-dust__particle:nth-child(4)  { width: 5px; height: 5px; top: 32%; left: 82%; animation-delay: 0.3s; animation-duration: 4.8s; }
+.overlay-gold-dust__particle:nth-child(5)  { width: 7px; height: 7px; top: 40%; left: 10%; animation-delay: 0.9s; animation-duration: 5.5s; }
+.overlay-gold-dust__particle:nth-child(6)  { width: 5px; height: 5px; top: 48%; left: 50%; animation-delay: 1.5s; animation-duration: 4.2s; }
+.overlay-gold-dust__particle:nth-child(7)  { width: 8px; height: 8px; top: 55%; left: 75%; animation-delay: 0.2s; animation-duration: 5.0s; }
+.overlay-gold-dust__particle:nth-child(8)  { width: 4px; height: 4px; top: 65%; left: 28%; animation-delay: 1.8s; animation-duration: 3.5s; }
+.overlay-gold-dust__particle:nth-child(9)  { width: 6px; height: 6px; top: 72%; left: 55%; animation-delay: 0.7s; animation-duration: 4.6s; }
+.overlay-gold-dust__particle:nth-child(10) { width: 5px; height: 5px; top: 80%; left: 70%; animation-delay: 1.1s; animation-duration: 5.3s; }
+.overlay-gold-dust__particle:nth-child(11) { width: 3px; height: 3px; top: 18%; left: 90%; animation-delay: 2.0s; animation-duration: 3.9s; }
+.overlay-gold-dust__particle:nth-child(12) { width: 7px; height: 7px; top: 38%; left: 95%; animation-delay: 0.4s; animation-duration: 4.4s; }
+.overlay-gold-dust__particle:nth-child(13) { width: 6px; height: 6px; top: 88%; left: 18%; animation-delay: 1.6s; animation-duration: 5.1s; }
+.overlay-gold-dust__particle:nth-child(14) { width: 4px; height: 4px; top: 15%; left: 45%; animation-delay: 0.8s; animation-duration: 3.6s; }
+.overlay-gold-dust__particle:nth-child(15) { width: 5px; height: 5px; top: 62%; left: 5%;  animation-delay: 1.3s; animation-duration: 4.7s; }
 
-@keyframes goldDustDrift {
-  0%   { opacity: 0; transform: translateY(0) scale(0.5); }
-  20%  { opacity: 1; }
-  50%  { transform: translateY(-20px) scale(1.2); }
-  80%  { opacity: 0.6; }
-  100% { opacity: 0; transform: translateY(-40px) scale(0.3); }
+@keyframes goldDustFloat {
+  0%   { opacity: 0; transform: translateY(0) translateX(0) scale(0.3); }
+  15%  { opacity: 1; transform: translateY(-8px) translateX(3px) scale(1); }
+  40%  { opacity: 0.9; transform: translateY(-22px) translateX(-5px) scale(1.3); }
+  65%  { opacity: 0.7; transform: translateY(-35px) translateX(8px) scale(1.1); }
+  85%  { opacity: 0.3; transform: translateY(-48px) translateX(-3px) scale(0.8); }
+  100% { opacity: 0; transform: translateY(-60px) translateX(5px) scale(0.2); }
+}
+
+/* ── PRODUCT PAGE GOLD DUST (always-on ambient shimmer) ── */
+.product-gold-dust {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.product-gold-dust__particle {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle, #FFD700 0%, #D4AF37 50%, transparent 75%);
+  box-shadow:
+    0 0 6px 2px rgba(255, 215, 0, 0.6),
+    0 0 16px 6px rgba(212, 175, 55, 0.25);
+  animation: productDustDrift var(--dust-duration, 5s) ease-in-out infinite;
+  animation-delay: var(--dust-delay, 0s);
+  width: var(--dust-size, 5px);
+  height: var(--dust-size, 5px);
+  top: var(--dust-y, 50%);
+  left: var(--dust-x, 50%);
+}
+
+/* Generate 25 unique particle positions via nth-child */
+.product-gold-dust__particle:nth-child(1)  { --dust-x: 8%;  --dust-y: 6%;  --dust-size: 5px; --dust-delay: 0s;    --dust-duration: 4.8s; }
+.product-gold-dust__particle:nth-child(2)  { --dust-x: 22%; --dust-y: 14%; --dust-size: 7px; --dust-delay: 0.5s;  --dust-duration: 5.5s; }
+.product-gold-dust__particle:nth-child(3)  { --dust-x: 45%; --dust-y: 8%;  --dust-size: 4px; --dust-delay: 1.1s;  --dust-duration: 4.2s; }
+.product-gold-dust__particle:nth-child(4)  { --dust-x: 68%; --dust-y: 12%; --dust-size: 6px; --dust-delay: 0.3s;  --dust-duration: 5.0s; }
+.product-gold-dust__particle:nth-child(5)  { --dust-x: 88%; --dust-y: 5%;  --dust-size: 5px; --dust-delay: 1.6s;  --dust-duration: 4.6s; }
+.product-gold-dust__particle:nth-child(6)  { --dust-x: 12%; --dust-y: 28%; --dust-size: 8px; --dust-delay: 0.8s;  --dust-duration: 5.8s; }
+.product-gold-dust__particle:nth-child(7)  { --dust-x: 35%; --dust-y: 22%; --dust-size: 4px; --dust-delay: 2.0s;  --dust-duration: 3.9s; }
+.product-gold-dust__particle:nth-child(8)  { --dust-x: 55%; --dust-y: 30%; --dust-size: 6px; --dust-delay: 0.2s;  --dust-duration: 5.2s; }
+.product-gold-dust__particle:nth-child(9)  { --dust-x: 78%; --dust-y: 25%; --dust-size: 5px; --dust-delay: 1.4s;  --dust-duration: 4.4s; }
+.product-gold-dust__particle:nth-child(10) { --dust-x: 95%; --dust-y: 35%; --dust-size: 7px; --dust-delay: 0.6s;  --dust-duration: 5.3s; }
+.product-gold-dust__particle:nth-child(11) { --dust-x: 5%;  --dust-y: 48%; --dust-size: 5px; --dust-delay: 1.9s;  --dust-duration: 4.1s; }
+.product-gold-dust__particle:nth-child(12) { --dust-x: 28%; --dust-y: 42%; --dust-size: 8px; --dust-delay: 0.4s;  --dust-duration: 5.6s; }
+.product-gold-dust__particle:nth-child(13) { --dust-x: 50%; --dust-y: 50%; --dust-size: 6px; --dust-delay: 1.2s;  --dust-duration: 4.9s; }
+.product-gold-dust__particle:nth-child(14) { --dust-x: 72%; --dust-y: 45%; --dust-size: 4px; --dust-delay: 2.2s;  --dust-duration: 3.7s; }
+.product-gold-dust__particle:nth-child(15) { --dust-x: 90%; --dust-y: 52%; --dust-size: 7px; --dust-delay: 0.7s;  --dust-duration: 5.1s; }
+.product-gold-dust__particle:nth-child(16) { --dust-x: 15%; --dust-y: 62%; --dust-size: 5px; --dust-delay: 1.5s;  --dust-duration: 4.5s; }
+.product-gold-dust__particle:nth-child(17) { --dust-x: 38%; --dust-y: 68%; --dust-size: 6px; --dust-delay: 0.1s;  --dust-duration: 5.4s; }
+.product-gold-dust__particle:nth-child(18) { --dust-x: 60%; --dust-y: 65%; --dust-size: 8px; --dust-delay: 1.8s;  --dust-duration: 4.3s; }
+.product-gold-dust__particle:nth-child(19) { --dust-x: 82%; --dust-y: 70%; --dust-size: 4px; --dust-delay: 0.9s;  --dust-duration: 5.7s; }
+.product-gold-dust__particle:nth-child(20) { --dust-x: 20%; --dust-y: 78%; --dust-size: 7px; --dust-delay: 2.1s;  --dust-duration: 4.0s; }
+.product-gold-dust__particle:nth-child(21) { --dust-x: 42%; --dust-y: 82%; --dust-size: 5px; --dust-delay: 0.3s;  --dust-duration: 5.2s; }
+.product-gold-dust__particle:nth-child(22) { --dust-x: 65%; --dust-y: 85%; --dust-size: 6px; --dust-delay: 1.7s;  --dust-duration: 4.7s; }
+.product-gold-dust__particle:nth-child(23) { --dust-x: 85%; --dust-y: 80%; --dust-size: 8px; --dust-delay: 0.5s;  --dust-duration: 5.5s; }
+.product-gold-dust__particle:nth-child(24) { --dust-x: 48%; --dust-y: 90%; --dust-size: 4px; --dust-delay: 1.3s;  --dust-duration: 3.8s; }
+.product-gold-dust__particle:nth-child(25) { --dust-x: 75%; --dust-y: 92%; --dust-size: 6px; --dust-delay: 2.3s;  --dust-duration: 5.0s; }
+
+@keyframes productDustDrift {
+  0%   { opacity: 0; transform: translateY(0) translateX(0) scale(0.2); }
+  10%  { opacity: 0.8; }
+  25%  { transform: translateY(-12px) translateX(6px) scale(1.1); }
+  50%  { opacity: 1; transform: translateY(-28px) translateX(-4px) scale(1.4); }
+  75%  { opacity: 0.5; transform: translateY(-42px) translateX(8px) scale(1.0); }
+  90%  { opacity: 0.15; }
+  100% { opacity: 0; transform: translateY(-55px) translateX(-2px) scale(0.1); }
+}
+
+/* ── GOLDEN LIGHT SWEEP (product page ambient) ── */
+.product-golden-sweep {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+  background: linear-gradient(
+    115deg,
+    transparent 0%,
+    transparent 40%,
+    rgba(212, 175, 55, 0.08) 45%,
+    rgba(255, 215, 0, 0.12) 50%,
+    rgba(212, 175, 55, 0.08) 55%,
+    transparent 60%,
+    transparent 100%
+  );
+  background-size: 300% 100%;
+  animation: goldenSweep 6s ease-in-out infinite;
+}
+
+@keyframes goldenSweep {
+  0%   { background-position: 150% 0; }
+  50%  { background-position: -50% 0; }
+  100% { background-position: 150% 0; }
 }
 
 /* ── DIAGONAL WATERMARK PATTERN (Gamble's anti-duplication) ── */

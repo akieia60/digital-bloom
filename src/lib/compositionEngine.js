@@ -36,6 +36,12 @@ const OVERLAY_ASSETS = {
   goldDust: {
     default:  { src: null, css: true, label: 'Gold Dust' },
   },
+  softGlow: {
+    default:  { src: null, css: true, label: 'Soft Glow' },
+  },
+  rosePetals: {
+    default:  { src: null, css: true, label: 'Rose Petals' },
+  },
 };
 
 // ── COLOR THEME SPECS ──
@@ -170,6 +176,30 @@ export function getCompositionLayers({ product, colorTheme = 'original', extras 
       themeVariant: 'default',
       label: asset.label,
       zIndex: 25,
+    });
+  }
+
+  if (extras.softGlow) {
+    const asset = OVERLAY_ASSETS.softGlow.default;
+    overlays.push({
+      id: 'softGlow',
+      type: asset.src ? 'video' : 'css',
+      src: asset.src,
+      themeVariant: 'default',
+      label: asset.label,
+      zIndex: 15,
+    });
+  }
+
+  if (extras.rosePetals) {
+    const asset = OVERLAY_ASSETS.rosePetals.default;
+    overlays.push({
+      id: 'rosePetals',
+      type: asset.src ? 'video' : 'css',
+      src: asset.src,
+      themeVariant: 'default',
+      label: asset.label,
+      zIndex: 22,
     });
   }
 

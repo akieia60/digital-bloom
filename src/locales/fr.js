@@ -196,6 +196,8 @@ export const fr = {
   customize_extra_ribbon: "Ruban",
   customize_extra_sparkle: "Effet Paillettes",
   customize_extra_gold: "Poussière d'Or",
+  customize_extra_glow: "Lueur Douce",
+  customize_extra_petals: "Pétales de Rose",
   customize_sound_piano: "Piano Doux",
   customize_sound_strings: "Cordes Délicates",
   customize_sound_bloom: "Ambient Bloom",
