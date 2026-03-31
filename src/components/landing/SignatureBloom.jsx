@@ -71,6 +71,19 @@ export default function SignatureBloom() {
             >
               <source src="/videos/digital_bloom_seamless.mp4" type="video/mp4" />
             </video>
+            {/* Getty-style diagonal watermark */}
+            <div className="db-watermark-overlay" aria-hidden="true">
+              <div className="db-watermark-grid">
+                {Array.from({ length: 10 }, (_, i) => (
+                  <div key={i} className="db-watermark-row">
+                    <span>© Digital Bloom</span>
+                    <span>© Digital Bloom</span>
+                    <span>© Digital Bloom</span>
+                    <span>© Digital Bloom</span>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
 

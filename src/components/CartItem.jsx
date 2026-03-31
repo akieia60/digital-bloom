@@ -25,7 +25,7 @@ const CartItem = ({ item }) => {
         aria-label={`${isExpanded ? 'Collapse' : 'Expand'} ${item.name} details`}
       >
         {/* Visual Asset Preview */}
-        <div className="w-20 h-24 flex-shrink-0 rounded-2xl overflow-hidden glass border border-white/5 relative">
+        <div className="db-watermark w-20 h-24 flex-shrink-0 rounded-2xl overflow-hidden glass border border-white/5 relative">
           {item.video_file_url || item.video_url ? (
             <video
               src={item.video_file_url || item.video_url}
@@ -44,6 +44,16 @@ const CartItem = ({ item }) => {
               className="w-full h-full object-cover"
             />
           )}
+          <div className="db-watermark-overlay" aria-hidden="true">
+            <div className="db-watermark-grid">
+              {Array.from({ length: 6 }, (_, i) => (
+                <div key={i} className="db-watermark-row">
+                  <span>© Digital Bloom</span>
+                  <span>© Digital Bloom</span>
+                </div>
+              ))}
+            </div>
+          </div>
           <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-500"></div>
         </div>
 
@@ -86,7 +96,7 @@ const CartItem = ({ item }) => {
       >
         <div className="ml-[100px] space-y-4">
           {/* Larger Preview */}
-          <div className="w-full aspect-video max-w-xs rounded-2xl overflow-hidden border border-white/10">
+          <div className="db-watermark w-full aspect-video max-w-xs rounded-2xl overflow-hidden border border-white/10 relative">
             {item.video_file_url || item.video_url ? (
               <video
                 src={item.video_file_url || item.video_url}
@@ -104,6 +114,18 @@ const CartItem = ({ item }) => {
                 className="w-full h-full object-cover"
               />
             )}
+            <div className="db-watermark-overlay" aria-hidden="true">
+              <div className="db-watermark-grid">
+                {Array.from({ length: 10 }, (_, i) => (
+                  <div key={i} className="db-watermark-row">
+                    <span>© Digital Bloom</span>
+                    <span>© Digital Bloom</span>
+                    <span>© Digital Bloom</span>
+                    <span>© Digital Bloom</span>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
 
           {/* Customization Details */}
