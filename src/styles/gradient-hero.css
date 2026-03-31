@@ -315,11 +315,12 @@
 
 /* ── Mobile adjustments ── */
 @media (max-width: 640px) {
-  .gradient-hero__title    { font-size: 2.2rem; }
-  .gradient-hero__tagline  { font-size: 1.05rem; margin-bottom: 34px; }
-  .gradient-hero__btn      { padding: 15px 38px; font-size: 12px; }
-  .gradient-hero__glow--1  { width: 380px; height: 380px; }
-  .gradient-hero__glow--2  { width: 300px; height: 300px; }
+  .gradient-hero          { min-height: 85vh; align-items: flex-start; padding-top: 100px; }
+  .gradient-hero__title   { font-size: 2.2rem; }
+  .gradient-hero__tagline { font-size: 1.05rem; margin-bottom: 34px; }
+  .gradient-hero__btn     { padding: 15px 38px; font-size: 12px; }
+  .gradient-hero__glow--1 { width: 380px; height: 380px; }
+  .gradient-hero__glow--2 { width: 300px; height: 300px; }
 }
 
 /* ── Pill badge ── */

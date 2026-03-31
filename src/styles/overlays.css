@@ -364,9 +364,9 @@
 
 .composition-protection--tm {
   bottom: 6%;
-  left: 5%;
+  right: 5%;
   font-family: 'Outfit', sans-serif;
-  font-size: clamp(1.4rem, 5vw, 2rem);
+  font-size: clamp(1.1rem, 4vw, 1.6rem);
   font-weight: 800;
   letter-spacing: 0.2em;
   color: rgba(255, 255, 255, 0.9);
@@ -375,7 +375,7 @@
 }
 
 .composition-protection--brand {
-  right: 5%;
+  left: 5%;
   bottom: 6%;
   font-family: 'Cormorant Garamond', Georgia, serif;
   font-size: clamp(1.3rem, 4.5vw, 1.9rem);

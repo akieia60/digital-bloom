@@ -115,13 +115,7 @@ export default function GradientHero() {
             {t('hero_new_tagline')}
           </p>
 
-          {/* CTA — translated */}
-          <div className="gradient-hero__cta-wrap">
-            <Link to="/shop" className="gradient-hero__btn">
-              <span className="gradient-hero__btn-text">{t('hero_new_cta')}</span>
-              <span className="gradient-hero__btn-shimmer" aria-hidden="true" />
-            </Link>
-          </div>
+          {/* CTA removed — "SEND A BLOOM" lives in the top nav only */}
 
           {/* Pricing note */}
           <p className="gradient-hero__from">

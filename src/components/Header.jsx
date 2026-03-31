@@ -34,26 +34,21 @@ const Header = ({ onSearchChange, searchQuery, onOpenFaq }) => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
         <div className="flex items-center h-12 relative">
           
-          {/* Left: Desktop Search only */}
+          {/* Left: Hamburger menu button — visible on ALL screen sizes */}
           <div className="flex-1 flex items-center">
-            {/* Desktop Search */}
-            <div className="hidden md:flex relative group">
-              <input
-                type="text"
-                placeholder={t('header_search_placeholder')}
-                value={searchQuery}
-                onChange={(e) => onSearchChange(e.target.value)}
-                className="w-48 focus:w-64 px-4 py-2 bg-white/10 border border-white/15 rounded-lg text-sm text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-[var(--accent-gold-border-hover)] transition-all duration-500 font-light"
-              />
-              <svg
-                className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[var(--text-muted)]"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="p-2 text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
+              aria-label="Menu"
+            >
+              <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                {isMobileMenuOpen ? (
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M6 18L18 6M6 6l12 12" />
+                ) : (
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 6h16M4 12h16M4 18h16" />
+                )}
               </svg>
-            </div>
+            </button>
           </div>
 
           {/* Center: Brand */}
@@ -74,13 +69,8 @@ const Header = ({ onSearchChange, searchQuery, onOpenFaq }) => {
             </Link>
           </div>
 
-          {/* Right: Desktop Nav + Cart + Lang + Hamburger */}
+          {/* Right: Cart + SEND A BLOOM */}
           <div className="flex-1 flex justify-end items-center space-x-4 sm:space-x-6 ml-4">
-            <nav className="hidden lg:flex items-center space-x-6 xl:space-x-8">
-              <Link to="/shop" className="text-[11px] xl:text-[12px] uppercase tracking-[0.12em] text-[var(--accent-gold)] hover:text-[var(--text-primary)] transition-colors font-medium whitespace-nowrap">{t('nav_occasions')}</Link>
-              <Link to="/shop" className="text-[11px] xl:text-[12px] uppercase tracking-[0.12em] text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors font-medium whitespace-nowrap">{t('nav_shop')}</Link>
-              <Link to="/credits" className="text-[11px] xl:text-[12px] uppercase tracking-[0.12em] text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors font-medium whitespace-nowrap">{t('nav_credits')}</Link>
-            </nav>
             <button
               onClick={toggleCart}
               className="relative p-2 group"
@@ -100,55 +90,19 @@ const Header = ({ onSearchChange, searchQuery, onOpenFaq }) => {
                 </span>
               )}
             </button>
-            {/* Desktop Language Dropdown */}
-            <div className="hidden lg:relative lg:block group">
-              <button
-                className="flex items-center justify-center h-8 px-3 gap-1 rounded-full border border-[var(--border-default)] text-[10px] font-bold uppercase tracking-wider text-[var(--text-secondary)] hover:text-[var(--accent-gold)] hover:border-[var(--accent-gold)] transition-all"
-              >
-                <span>{lang}</span>
-                <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
-              </button>
-              
-              {/* Dropdown panel */}
-              <div className="absolute right-0 mt-2 w-32 rounded-xl shadow-xl bg-[#0a1628] border border-white/15 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform origin-top-right z-50 overflow-hidden">
-                <div className="py-1">
-                  {AVAILABLE_LANGUAGES.map(l => (
-                    <button
-                      key={l.code}
-                      onClick={() => changeLanguage(l.code)}
-                      className={`w-full text-left px-4 py-2 text-xs font-medium transition-colors ${
-                        lang === l.code
-                          ? 'text-[var(--accent-gold)] bg-white/10'
-                          : 'text-white/70 hover:bg-white/10 hover:text-[var(--accent-gold)]'
-                      }`}
-                    >
-                      {l.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </div>
-            {/* Hamburger Button - Mobile Only (RIGHT side) */}
-            <button
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="lg:hidden p-2 text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
-              aria-label="Menu"
+            <Link
+              to="/shop"
+              className="hidden sm:inline-flex px-5 py-2.5 bg-[var(--accent-gold)] text-[var(--bg-page)] text-[11px] uppercase tracking-[0.15em] font-bold rounded-full hover:bg-[var(--accent-gold-hover)] transition-all shadow-lg"
             >
-              <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                {isMobileMenuOpen ? (
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M6 18L18 6M6 6l12 12" />
-                ) : (
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 6h16M4 12h16M4 18h16" />
-                )}
-              </svg>
-            </button>
+              {t('nav_send_bloom')}
+            </Link>
           </div>
         </div>
       </div>
 
       {/* Mobile Menu Overlay */}
       {isMobileMenuOpen && (
-        <div className="fixed inset-0 z-50 lg:hidden">
+        <div className="fixed inset-0 z-50">
           {/* Backdrop */}
           <div 
             className="absolute inset-0 bg-black/20 backdrop-blur-sm"
