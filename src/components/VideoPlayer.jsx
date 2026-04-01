@@ -21,6 +21,19 @@ const VideoPlayer = ({ videoUrl, posterUrl, alt }) => {
         playsInline
         className="w-full h-full object-cover animate-fade-in"
       />
+      {/* Getty-style diagonal watermark */}
+      <div className="db-watermark-overlay" aria-hidden="true">
+        <div className="db-watermark-grid">
+          {Array.from({ length: 10 }, (_, i) => (
+            <div key={i} className="db-watermark-row">
+              <span>© Digital Bloom</span>
+              <span>© Digital Bloom</span>
+              <span>© Digital Bloom</span>
+              <span>© Digital Bloom</span>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 };

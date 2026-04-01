@@ -6,6 +6,25 @@ import { useProducts } from '../hooks/useProducts';
 import { useLanguage } from '../contexts/LanguageContext';
 import '../styles/gallery.css';
 
+function BackButton() {
+  const navigate = useNavigate();
+  const { t } = useLanguage();
+  return (
+    <button
+      onClick={() => navigate(-1)}
+      className="group inline-flex items-center"
+      style={{ color: 'rgba(255,255,255,0.6)', marginBottom: '8px' }}
+    >
+      <div style={{ width: '32px', height: '32px', borderRadius: '50%', border: '1px solid rgba(255,255,255,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginRight: '12px', transition: 'border-color 0.2s' }}>
+        <svg style={{ width: '16px', height: '16px' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 19l-7-7 7-7" />
+        </svg>
+      </div>
+      <span style={{ fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.15em', fontWeight: '500' }}>{t('common_back') || 'Back'}</span>
+    </button>
+  );
+}
+
 const CATEGORIES = [
   { name: "Mother's Day", slug: 'mothers-day', nameKey: 'cat_mothers_day', taglineKey: 'cat_mothers_day_tagline', tagline: 'Celebrate the woman who gave you everything' },
   { name: 'Birthday', slug: 'birthday', nameKey: 'cat_birthday', taglineKey: 'cat_birthday_tagline', tagline: 'Make their special day unforgettable' },
@@ -71,6 +90,9 @@ export default function Shop({ searchQuery, setSearchQuery }) {
   return (
     <div className="gallery-page">
       <div className="gallery-container">
+
+        {/* ── BACK BUTTON ── */}
+        <BackButton />
 
         {/* ── PAGE HEADER ── */}
         <header className="gallery-header">

@@ -1,14 +1,16 @@
 import { Link } from 'react-router-dom';
+import { useLanguage } from '../../contexts/LanguageContext';
 
 export default function TwoWaysToBloom() {
+  const { t } = useLanguage();
+
   return (
     <section className="two-ways-section">
       <div className="landing-container">
-        <span className="cat-eyebrow">FLEXIBLE GIFTING</span>
-        <h2 className="cat-headline">Two Ways to Bloom</h2>
+        <span className="cat-eyebrow">{t('two_ways_eyebrow')}</span>
+        <h2 className="cat-headline">{t('two_ways_title')}</h2>
         <p className="cat-subtext">
-          Send a bloom directly, or purchase Experience Credits as a digital gift card
-          that your loved one can redeem whenever they're ready.
+          {t('two_ways_subtitle')}
         </p>
 
         <div className="two-ways-grid">
@@ -20,13 +22,12 @@ export default function TwoWaysToBloom() {
                 <path d="M24 14V22M20 18H28" stroke="currentColor" strokeWidth="1.2" opacity="0.6"/>
               </svg>
             </div>
-            <h3 className="two-ways-title">Send a Bloom</h3>
+            <h3 className="two-ways-title">{t('two_ways_send_title')}</h3>
             <p className="two-ways-desc">
-              Choose an occasion, customize your message, and deliver a beautiful
-              digital experience directly to someone special.
+              {t('two_ways_send_desc')}
             </p>
             <span className="two-ways-cta">
-              Browse Occasions
+              {t('two_ways_send_cta')}
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M5 12H19M12 5L19 12L12 19" />
               </svg>
@@ -43,13 +44,12 @@ export default function TwoWaysToBloom() {
                 <circle cx="36" cy="30" r="3" stroke="currentColor" strokeWidth="1.2" opacity="0.6"/>
               </svg>
             </div>
-            <h3 className="two-ways-title">Experience Credits</h3>
+            <h3 className="two-ways-title">{t('two_ways_credits_title')}</h3>
             <p className="two-ways-desc">
-              Give the gift of choice. Purchase credits that can be redeemed
-              for any bloom — perfect when you want them to pick their own.
+              {t('two_ways_credits_desc')}
             </p>
             <span className="two-ways-cta">
-              Get Credits
+              {t('two_ways_credits_cta')}
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M5 12H19M12 5L19 12L12 19" />
               </svg>

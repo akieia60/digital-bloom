@@ -1,0 +1,145 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 460" width="1080" height="1380">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,300;0,400&family=Cormorant+Garamond:wght@300;400&display=swap');
+    </style>
+
+    <!-- Radial glow behind mark -->
+    <radialGradient id="bgGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%"   stop-color="#C9857A" stop-opacity="0.13"/>
+      <stop offset="65%"  stop-color="#C9857A" stop-opacity="0.04"/>
+      <stop offset="100%" stop-color="#C9857A" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Petal gradient (rose gold, base-to-tip) -->
+    <linearGradient id="pgOuter" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%"   stop-color="#D9968C" stop-opacity="0.80"/>
+      <stop offset="45%"  stop-color="#C9857A" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#905048" stop-opacity="0.85"/>
+    </linearGradient>
+
+    <!-- Inner petal gradient -->
+    <linearGradient id="pgInner" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%"   stop-color="#F0C8C0" stop-opacity="0.55"/>
+      <stop offset="100%" stop-color="#C9857A" stop-opacity="0.50"/>
+    </linearGradient>
+
+    <!-- Gold gradient for center star -->
+    <radialGradient id="goldGrad" cx="40%" cy="40%" r="60%">
+      <stop offset="0%"   stop-color="#F0DC96"/>
+      <stop offset="100%" stop-color="#A87828"/>
+    </radialGradient>
+
+    <!-- Ring glow -->
+    <radialGradient id="ringGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="82%" stop-color="#C9857A" stop-opacity="0"/>
+      <stop offset="92%" stop-color="#C9857A" stop-opacity="0.10"/>
+      <stop offset="100%" stop-color="#C9857A" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- ─── BACKGROUND ─── -->
+  <rect width="360" height="460" fill="#07101e"/>
+
+  <!-- ─── BLOOM MARK (centered at 180, 180) ─── -->
+
+  <!-- Outer ambient glow -->
+  <circle cx="180" cy="180" r="140" fill="url(#bgGlow)"/>
+  <circle cx="180" cy="180" r="112" fill="url(#ringGlow)"/>
+
+  <!-- Background disc -->
+  <circle cx="180" cy="180" r="100" fill="#0c1d3a"/>
+
+  <!-- Outer rings -->
+  <circle cx="180" cy="180" r="100" fill="none" stroke="#C9857A" stroke-width="0.65" opacity="0.40"/>
+  <circle cx="180" cy="180" r="93"  fill="none" stroke="#C9857A" stroke-width="0.28" opacity="0.16"/>
+
+  <!-- 8 MAIN PETALS — rose gold, L=83, cubic bezier leaf shape -->
+  <!-- Petal: base at origin (center), tip at (83,0), C pts create leaf -->
+  <g transform="translate(180,180)">
+    <path d="M0,0 C22,-18 55,-9 83,0 C55,9 22,18 0,0Z"    fill="url(#pgOuter)" transform="rotate(0)"/>
+    <path d="M0,0 C22,-18 55,-9 83,0 C55,9 22,18 0,0Z"    fill="url(#pgOuter)" transform="rotate(45)"/>
+    <path d="M0,0 C22,-18 55,-9 83,0 C55,9 22,18 0,0Z"    fill="url(#pgOuter)" transform="rotate(90)"/>
+    <path d="M0,0 C22,-18 55,-9 83,0 C55,9 22,18 0,0Z"    fill="url(#pgOuter)" transform="rotate(135)"/>
+    <path d="M0,0 C22,-18 55,-9 83,0 C55,9 22,18 0,0Z"    fill="url(#pgOuter)" transform="rotate(180)"/>
+    <path d="M0,0 C22,-18 55,-9 83,0 C55,9 22,18 0,0Z"    fill="url(#pgOuter)" transform="rotate(225)"/>
+    <path d="M0,0 C22,-18 55,-9 83,0 C55,9 22,18 0,0Z"    fill="url(#pgOuter)" transform="rotate(270)"/>
+    <path d="M0,0 C22,-18 55,-9 83,0 C55,9 22,18 0,0Z"    fill="url(#pgOuter)" transform="rotate(315)"/>
+  </g>
+
+  <!-- 8 INNER PETALS — light rose gold, L=47, rotated 22.5° -->
+  <g transform="translate(180,180) rotate(22.5)">
+    <path d="M0,0 C12,-10.5 31,-5.5 47,0 C31,5.5 12,10.5 0,0Z" fill="url(#pgInner)" transform="rotate(0)"/>
+    <path d="M0,0 C12,-10.5 31,-5.5 47,0 C31,5.5 12,10.5 0,0Z" fill="url(#pgInner)" transform="rotate(45)"/>
+    <path d="M0,0 C12,-10.5 31,-5.5 47,0 C31,5.5 12,10.5 0,0Z" fill="url(#pgInner)" transform="rotate(90)"/>
+    <path d="M0,0 C12,-10.5 31,-5.5 47,0 C31,5.5 12,10.5 0,0Z" fill="url(#pgInner)" transform="rotate(135)"/>
+    <path d="M0,0 C12,-10.5 31,-5.5 47,0 C31,5.5 12,10.5 0,0Z" fill="url(#pgInner)" transform="rotate(180)"/>
+    <path d="M0,0 C12,-10.5 31,-5.5 47,0 C31,5.5 12,10.5 0,0Z" fill="url(#pgInner)" transform="rotate(225)"/>
+    <path d="M0,0 C12,-10.5 31,-5.5 47,0 C31,5.5 12,10.5 0,0Z" fill="url(#pgInner)" transform="rotate(270)"/>
+    <path d="M0,0 C12,-10.5 31,-5.5 47,0 C31,5.5 12,10.5 0,0Z" fill="url(#pgInner)" transform="rotate(315)"/>
+  </g>
+
+  <!-- 4-POINT GOLD STAR at center -->
+  <g transform="translate(180,180)">
+    <path d="M0,0 C2.5,-3 6.5,-1.5 9.5,0 C6.5,1.5 2.5,3 0,0Z"    fill="url(#goldGrad)" transform="rotate(0)"/>
+    <path d="M0,0 C2.5,-3 6.5,-1.5 9.5,0 C6.5,1.5 2.5,3 0,0Z"    fill="url(#goldGrad)" transform="rotate(90)"/>
+    <path d="M0,0 C2.5,-3 6.5,-1.5 9.5,0 C6.5,1.5 2.5,3 0,0Z"    fill="url(#goldGrad)" transform="rotate(180)"/>
+    <path d="M0,0 C2.5,-3 6.5,-1.5 9.5,0 C6.5,1.5 2.5,3 0,0Z"    fill="url(#goldGrad)" transform="rotate(270)"/>
+    <!-- Center dot -->
+    <circle r="3.6" fill="url(#goldGrad)"/>
+  </g>
+
+  <!-- Tick marks at 8 petal positions on outer ring -->
+  <g transform="translate(180,180)" stroke="#C9A84C" stroke-width="0.9" opacity="0.45">
+    <line x1="102" y1="0" x2="107" y2="0" transform="rotate(0)"/>
+    <line x1="102" y1="0" x2="107" y2="0" transform="rotate(45)"/>
+    <line x1="102" y1="0" x2="107" y2="0" transform="rotate(90)"/>
+    <line x1="102" y1="0" x2="107" y2="0" transform="rotate(135)"/>
+    <line x1="102" y1="0" x2="107" y2="0" transform="rotate(180)"/>
+    <line x1="102" y1="0" x2="107" y2="0" transform="rotate(225)"/>
+    <line x1="102" y1="0" x2="107" y2="0" transform="rotate(270)"/>
+    <line x1="102" y1="0" x2="107" y2="0" transform="rotate(315)"/>
+  </g>
+
+  <!-- ─── WORDMARK ─── -->
+  <text
+    x="180" y="323"
+    font-family="'Playfair Display', 'Cormorant Garamond', Georgia, serif"
+    font-size="33"
+    font-weight="300"
+    letter-spacing="7"
+    text-anchor="middle"
+    fill="#FAF0EC">DIGITAL BLOOM</text>
+
+  <!-- TM superscript -->
+  <text
+    x="293" y="309"
+    font-family="Georgia, serif"
+    font-size="10.5"
+    fill="#C9A84C"
+    opacity="0.88">&#x2122;</text>
+
+  <!-- Thin rule -->
+  <line x1="96" y1="338" x2="264" y2="338" stroke="#C9857A" stroke-width="0.45" opacity="0.28"/>
+
+  <!-- ─── TAGLINE ─── -->
+  <!-- Ornament dots -->
+  <g fill="#C9A84C" opacity="0.62">
+    <!-- Left diamond -->
+    <ellipse cx="76"  cy="356" rx="2.8" ry="0.9"/>
+    <ellipse cx="76"  cy="356" rx="0.9" ry="2.8"/>
+    <!-- Right diamond -->
+    <ellipse cx="284" cy="356" rx="2.8" ry="0.9"/>
+    <ellipse cx="284" cy="356" rx="0.9" ry="2.8"/>
+  </g>
+
+  <text
+    x="180" y="359"
+    font-family="'Trebuchet MS', 'Gill Sans', Arial, sans-serif"
+    font-size="9"
+    letter-spacing="5.5"
+    text-anchor="middle"
+    fill="#C9857A"
+    opacity="0.82">GIFTING EXPERIENCES</text>
+
+</svg>

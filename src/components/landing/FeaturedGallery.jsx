@@ -71,6 +71,19 @@ export default function FeaturedGallery() {
                   playsInline
                   className="gallery-video"
                 />
+                {/* Getty-style diagonal watermark */}
+                <div className="db-watermark-overlay" aria-hidden="true">
+                  <div className="db-watermark-grid">
+                    {Array.from({ length: 10 }, (_, i) => (
+                      <div key={i} className="db-watermark-row">
+                        <span>© Digital Bloom</span>
+                        <span>© Digital Bloom</span>
+                        <span>© Digital Bloom</span>
+                        <span>© Digital Bloom</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
               <div className="gallery-info">
                 <h3 className="gallery-title">{product.name}</h3>

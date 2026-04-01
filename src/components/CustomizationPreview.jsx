@@ -168,6 +168,20 @@ export default function CustomizationPreview({ product, customization, colorThem
           {musicLabel && (
             <div className="preview-music-badge">{musicLabel}</div>
           )}
+
+          {/* Getty-style diagonal watermark */}
+          <div className="db-watermark-overlay" aria-hidden="true">
+            <div className="db-watermark-grid">
+              {Array.from({ length: 10 }, (_, i) => (
+                <div key={i} className="db-watermark-row">
+                  <span>© Digital Bloom</span>
+                  <span>© Digital Bloom</span>
+                  <span>© Digital Bloom</span>
+                  <span>© Digital Bloom</span>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
 
         {/* ── Summary Details ──────────────────────────────────────────────── */}

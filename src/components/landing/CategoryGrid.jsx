@@ -150,7 +150,20 @@ export default function CategoryGrid() {
                   )}
                   {/* Tap hint overlay */}
                   <div className="cat-stack-tap-hint">
-                    <span className="cat-stack-tap-text">Tap to explore</span>
+                    <span className="cat-stack-tap-text">{t('cat_tap_explore')}</span>
+                  </div>
+                  {/* Getty-style diagonal watermark */}
+                  <div className="db-watermark-overlay" aria-hidden="true">
+                    <div className="db-watermark-grid">
+                      {Array.from({ length: 10 }, (_, i) => (
+                        <div key={i} className="db-watermark-row">
+                          <span>© Digital Bloom</span>
+                          <span>© Digital Bloom</span>
+                          <span>© Digital Bloom</span>
+                          <span>© Digital Bloom</span>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 </div>
               </Link>

@@ -36,6 +36,12 @@ const OVERLAY_ASSETS = {
   goldDust: {
     default:  { src: null, css: true, label: 'Gold Dust' },
   },
+  softGlow: {
+    default:  { src: null, css: true, label: 'Soft Glow' },
+  },
+  rosePetals: {
+    default:  { src: null, css: true, label: 'Rose Petals' },
+  },
 };
 
 // ── COLOR THEME SPECS ──
@@ -97,6 +103,7 @@ const TEXT_POSITIONS = {
   'bottom-left':   { bottom: '12%', left: '8%', textAlign: 'left' },
   'center':        { top: '50%', left: '50%', transform: 'translate(-50%, -50%)', textAlign: 'center' },
   'upper-third-center': { top: '14%', left: '50%', transform: 'translateX(-50%)', textAlign: 'center' },
+  'lower-third-center': { bottom: '18%', left: '50%', transform: 'translateX(-50%)', textAlign: 'center' },
 };
 
 // ── MAIN COMPOSITION FUNCTION ──
@@ -172,6 +179,30 @@ export function getCompositionLayers({ product, colorTheme = 'original', extras 
     });
   }
 
+  if (extras.softGlow) {
+    const asset = OVERLAY_ASSETS.softGlow.default;
+    overlays.push({
+      id: 'softGlow',
+      type: asset.src ? 'video' : 'css',
+      src: asset.src,
+      themeVariant: 'default',
+      label: asset.label,
+      zIndex: 15,
+    });
+  }
+
+  if (extras.rosePetals) {
+    const asset = OVERLAY_ASSETS.rosePetals.default;
+    overlays.push({
+      id: 'rosePetals',
+      type: asset.src ? 'video' : 'css',
+      src: asset.src,
+      themeVariant: 'default',
+      label: asset.label,
+      zIndex: 22,
+    });
+  }
+
   // Color treatment layer
   const colorFilter = {
     themeId: colorTheme,
@@ -207,6 +238,8 @@ export function getCompositionLayers({ product, colorTheme = 'original', extras 
     brandText: 'Digital Bloom™',
     recipientPosition: 'upper-third-center',
     recipientPositionStyle: TEXT_POSITIONS['upper-third-center'],
+    senderPosition: 'lower-third-center',
+    senderPositionStyle: TEXT_POSITIONS['lower-third-center'],
     tmPosition: 'bottom-left',
     tmPositionStyle: TEXT_POSITIONS['bottom-left'],
     brandPosition: 'bottom-right',

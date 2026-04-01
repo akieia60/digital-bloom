@@ -114,7 +114,16 @@ export default function LivePreview({ product, colorTheme, extras, message, clas
           className="composition-protection composition-protection--recipient"
           style={protectionLayer.recipientPositionStyle}
         >
-          For {protectionLayer.recipientName}
+          To {protectionLayer.recipientName}
+        </div>
+      )}
+
+      {protectionLayer?.senderName && (
+        <div
+          className="composition-protection composition-protection--sender"
+          style={protectionLayer.senderPositionStyle}
+        >
+          From {protectionLayer.senderName}
         </div>
       )}
 
@@ -129,14 +138,20 @@ export default function LivePreview({ product, colorTheme, extras, message, clas
         {protectionLayer?.brandText || 'Digital Bloom™'}
       </div>
 
-      {/* Gamble's diagonal repeating watermark — both horizontal & diagonal */}
-      {protectionLayer?.recipientName && (
-        <div className="composition-watermark-pattern">
-          {Array.from({ length: 8 }).map((_, i) => (
-            <span key={i} className="composition-watermark-pattern__text">Digital Bloom</span>
+      {/* Getty-style diagonal watermark — permanent, full-coverage */}
+      <div className="db-watermark-overlay">
+        <div className="db-watermark-grid">
+          {Array.from({ length: 12 }, (_, i) => (
+            <div key={i} className="db-watermark-row">
+              <span>© Digital Bloom</span>
+              <span>© Digital Bloom</span>
+              <span>© Digital Bloom</span>
+              <span>© Digital Bloom</span>
+            </div>
           ))}
         </div>
-      )}
+        <div className="db-watermark-corner">© Digital Bloom</div>
+      </div>
 
       {/* Subtle vignette for depth */}
       <div style={{
@@ -184,6 +199,23 @@ function CSSOverlay({ overlayId, themeVariant }) {
         <div className="overlay-gold-dust">
           {Array.from({ length: 15 }, (_, i) => (
             <span key={i} className="overlay-gold-dust__particle" />
+          ))}
+        </div>
+      );
+
+    case 'softGlow':
+      return (
+        <div className="overlay-soft-glow">
+          <div className="overlay-soft-glow__halo" />
+          <div className="overlay-soft-glow__flare" />
+        </div>
+      );
+
+    case 'rosePetals':
+      return (
+        <div className="overlay-rose-petals">
+          {Array.from({ length: 12 }, (_, i) => (
+            <span key={i} className="overlay-rose-petals__petal">🌸</span>
           ))}
         </div>
       );

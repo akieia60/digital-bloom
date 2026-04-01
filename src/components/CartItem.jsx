@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
+import { useLanguage } from '../contexts/LanguageContext';
 
 const CartItem = ({ item }) => {
-  const { updateQuantity, removeFromCart } = useCart();
+  const { t } = useLanguage();
+  const { updateQuantity, removeFromCart, setIsCartOpen } = useCart();
   const [isExpanded, setIsExpanded] = useState(false);
 
   const handleIncrement = () => updateQuantity(item.id, item.quantity + 1);
@@ -23,7 +25,7 @@ const CartItem = ({ item }) => {
         aria-label={`${isExpanded ? 'Collapse' : 'Expand'} ${item.name} details`}
       >
         {/* Visual Asset Preview */}
-        <div className="w-20 h-24 flex-shrink-0 rounded-2xl overflow-hidden glass border border-white/5 relative">
+        <div className="db-watermark w-20 h-24 flex-shrink-0 rounded-2xl overflow-hidden glass border border-white/5 relative">
           {item.video_file_url || item.video_url ? (
             <video
               src={item.video_file_url || item.video_url}
@@ -42,6 +44,16 @@ const CartItem = ({ item }) => {
               className="w-full h-full object-cover"
             />
           )}
+          <div className="db-watermark-overlay" aria-hidden="true">
+            <div className="db-watermark-grid">
+              {Array.from({ length: 6 }, (_, i) => (
+                <div key={i} className="db-watermark-row">
+                  <span>© Digital Bloom</span>
+                  <span>© Digital Bloom</span>
+                </div>
+              ))}
+            </div>
+          </div>
           <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-500"></div>
         </div>
 
@@ -56,15 +68,15 @@ const CartItem = ({ item }) => {
 
           {/* Bespoke tag */}
           {item.customization ? (
-            <span className="text-[9px] uppercase tracking-widest text-pure-gold font-bold">Bespoke</span>
+            <span className="text-[9px] uppercase tracking-widest text-pure-gold font-bold">{t('cart_item_bespoke')}</span>
           ) : (
-            <span className="text-[9px] uppercase tracking-widest text-white/20 font-light">Gallery Piece</span>
+            <span className="text-[9px] uppercase tracking-widest text-white/20 font-light">{t('cart_item_gallery')}</span>
           )}
 
           {/* Expand indicator */}
           <div className="flex items-center mt-2">
             <span className="text-[10px] uppercase tracking-widest text-white/30 font-light">
-              {isExpanded ? 'Tap to collapse' : 'Tap to view details'}
+              {isExpanded ? t('cart_item_tap_collapse') : t('cart_item_tap_details')}
             </span>
             <svg
               className={`w-3 h-3 ml-1 text-white/30 transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`}
@@ -84,7 +96,7 @@ const CartItem = ({ item }) => {
       >
         <div className="ml-[100px] space-y-4">
           {/* Larger Preview */}
-          <div className="w-full aspect-video max-w-xs rounded-2xl overflow-hidden border border-white/10">
+          <div className="db-watermark w-full aspect-video max-w-xs rounded-2xl overflow-hidden border border-white/10 relative">
             {item.video_file_url || item.video_url ? (
               <video
                 src={item.video_file_url || item.video_url}
@@ -102,17 +114,29 @@ const CartItem = ({ item }) => {
                 className="w-full h-full object-cover"
               />
             )}
+            <div className="db-watermark-overlay" aria-hidden="true">
+              <div className="db-watermark-grid">
+                {Array.from({ length: 10 }, (_, i) => (
+                  <div key={i} className="db-watermark-row">
+                    <span>© Digital Bloom</span>
+                    <span>© Digital Bloom</span>
+                    <span>© Digital Bloom</span>
+                    <span>© Digital Bloom</span>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
 
           {/* Customization Details */}
           {item.customization && (
             <div className="space-y-3 bg-white/[0.03] rounded-xl p-4 border border-white/5">
-              <p className="text-[10px] uppercase tracking-widest text-pure-gold font-bold mb-2">Your Selections</p>
+              <p className="text-[10px] uppercase tracking-widest text-pure-gold font-bold mb-2">{t('cart_item_selections')}</p>
 
               {/* Message */}
               {item.customization.message && (
                 <div>
-                  <span className="text-[9px] uppercase tracking-widest text-white/30 block mb-1">Message</span>
+                  <span className="text-[9px] uppercase tracking-widest text-white/30 block mb-1">{t('cart_item_message')}</span>
                   <p className="text-xs text-white/60 font-light italic">
                     "{typeof item.customization.message === 'string'
                       ? item.customization.message
@@ -134,7 +158,7 @@ const CartItem = ({ item }) => {
               {/* Color Theme */}
               {(item.customization.colorTheme || item.customization.theme) && (
                 <div>
-                  <span className="text-[9px] uppercase tracking-widest text-white/30 block mb-1">Style</span>
+                  <span className="text-[9px] uppercase tracking-widest text-white/30 block mb-1">{t('cart_item_style')}</span>
                   <span className="text-xs text-white/50 capitalize">
                     {item.customization.colorTheme || item.customization.theme}
                   </span>
@@ -144,7 +168,7 @@ const CartItem = ({ item }) => {
               {/* Sound */}
               {item.customization.selectedSound && (
                 <div>
-                  <span className="text-[9px] uppercase tracking-widest text-white/30 block mb-1">Sound</span>
+                  <span className="text-[9px] uppercase tracking-widest text-white/30 block mb-1">{t('cart_item_sound')}</span>
                   <span className="text-xs text-white/50 capitalize">
                     {item.customization.selectedSound.replace(/-/g, ' ')}
                   </span>
@@ -154,7 +178,7 @@ const CartItem = ({ item }) => {
               {/* Extras */}
               {item.customization.composition?.activeOverlays?.length > 0 && (
                 <div>
-                  <span className="text-[9px] uppercase tracking-widest text-white/30 block mb-1">Extras</span>
+                  <span className="text-[9px] uppercase tracking-widest text-white/30 block mb-1">{t('cart_item_extras')}</span>
                   <div className="flex flex-wrap gap-2">
                     {item.customization.composition.activeOverlays.map(overlay => (
                       <span key={overlay} className="text-[10px] uppercase tracking-wider bg-white/5 px-3 py-1 rounded-full text-white/40 border border-white/5">
@@ -173,13 +197,13 @@ const CartItem = ({ item }) => {
               to={`/product/${item.id}`}
               state={{ editCustomization: item.customization }}
               className="inline-flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-pure-gold hover:text-white transition-colors font-semibold mb-2"
-              onClick={(e) => e.stopPropagation()}
+              onClick={(e) => { e.stopPropagation(); setIsCartOpen(false); }}
             >
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
                 <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
                 <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
               </svg>
-              Edit Customization
+              {t('cart_item_edit')}
             </Link>
           )}
 
@@ -187,9 +211,9 @@ const CartItem = ({ item }) => {
           <Link
             to={`/product/${item.id}`}
             className="inline-block text-[10px] uppercase tracking-widest text-white/30 hover:text-white transition-colors font-semibold"
-            onClick={(e) => e.stopPropagation()}
+            onClick={(e) => { e.stopPropagation(); setIsCartOpen(false); }}
           >
-            View Product →
+            {t('cart_item_view')}
           </Link>
         </div>
       </div>
@@ -224,7 +248,7 @@ const CartItem = ({ item }) => {
           onClick={(e) => { e.stopPropagation(); removeFromCart(item.id); }}
           className="text-[9px] uppercase tracking-widest text-white/20 hover:text-red-400 transition-colors font-semibold"
         >
-          Remove
+          {t('cart_item_remove')}
         </button>
       </div>
     </div>
