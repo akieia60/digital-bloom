@@ -27,6 +27,7 @@ const THEME_LABEL_KEYS = {
   cool: 'customize_theme_breeze',
   elegant: 'customize_theme_gold',
   romantic: 'customize_theme_rose',
+  custom: 'customize_theme_custom',
 };
 
 const SOUND_LABEL_KEYS = {

@@ -117,30 +117,6 @@
   animation: bloom-glow-pulse 5s ease-in-out infinite;
 }
 
-/* Send a Bloom CTA button */
-.landing-nav__cta {
-  display: inline-flex;
-  align-items: center;
-  padding: 9px 20px;
-  background: linear-gradient(135deg, #C9857A, #E8B4AD);
-  color: #07101e;
-  font-family: 'Outfit', -apple-system, sans-serif;
-  font-weight: 600;
-  font-size: 0.72rem;
-  letter-spacing: 0.2em;
-  text-decoration: none;
-  border-radius: 3px;
-  box-shadow: 0 4px 20px rgba(201, 133, 122, 0.35);
-  transition: all 0.3s ease;
-  white-space: nowrap;
-}
-
-.landing-nav__cta:hover {
-  background: linear-gradient(135deg, #D9968C, #F0C8C0);
-  box-shadow: 0 6px 28px rgba(201, 133, 122, 0.50);
-  transform: translateY(-1px);
-}
-
 /* Desktop links */
 .landing-nav__links {
   display: flex;

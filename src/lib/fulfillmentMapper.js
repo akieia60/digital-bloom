@@ -11,6 +11,8 @@ export function buildFulfillmentManifest(product, customization) {
   const {
     message = {},
     colorTheme = 'original',
+    primaryColor,
+    accentColor,
     extras = {},
     totalPrice = 0,
     selectedSound = '',
@@ -19,7 +21,7 @@ export function buildFulfillmentManifest(product, customization) {
     locale = 'en',
   } = customization;
 
-  const theme = getThemeSpec(colorTheme);
+  const theme = getThemeSpec(colorTheme, { primaryColor, accentColor });
   const engraving = ENGRAVING_STYLES[engravingStyle] || ENGRAVING_STYLES.heirloom;
 
   const baseVideoUrl = product.video_file_url || product.video_url;
@@ -101,6 +103,8 @@ export function buildFulfillmentManifest(product, customization) {
   const colorTreatment = {
     themeId: colorTheme,
     label: theme.label,
+    primaryColor: theme.primaryColor,
+    accentColor: theme.accentColor,
     hueRotate: theme.hueRotate,
     saturate: theme.saturate,
     brightness: theme.brightness,
@@ -191,6 +195,8 @@ export function buildFulfillmentManifest(product, customization) {
     },
     summary: {
       theme: theme.label,
+      primaryColor: theme.primaryColor,
+      accentColor: theme.accentColor,
       engravingStyle: engraving.label,
       soundtrack: selectedSound || null,
       fontChoice,
@@ -216,6 +222,8 @@ export function buildCartComposition(customization) {
   const {
     message = {},
     colorTheme = 'original',
+    primaryColor,
+    accentColor,
     extras = {},
     selectedSound = '',
     engravingStyle = 'heirloom',
@@ -225,6 +233,8 @@ export function buildCartComposition(customization) {
 
   return {
     colorTheme,
+    primaryColor: primaryColor || getThemeSpec(colorTheme).primaryColor,
+    accentColor: accentColor || getThemeSpec(colorTheme).accentColor,
     selectedSound,
     engravingStyle,
     fontChoice,

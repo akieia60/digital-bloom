@@ -77,9 +77,12 @@ export async function resolveBloomDelivery(bloomSlug) {
         name: product.name,
       },
       colorTheme: customization.colorTheme || 'original',
+      primaryColor: customization.primaryColor,
+      accentColor: customization.accentColor,
       extras: customization.extras || {},
       message: customization.message || {},
       engravingStyle: customization.engravingStyle || 'heirloom',
+      fontChoice: customization.fontChoice || 'playfair',
     });
 
     return {
@@ -95,8 +98,11 @@ export async function resolveBloomDelivery(bloomSlug) {
         // Customization details for display
         message: customization.message || {},
         colorTheme: customization.colorTheme || 'original',
+        primaryColor: customization.primaryColor,
+        accentColor: customization.accentColor,
         extras: customization.extras || {},
         engravingStyle: customization.engravingStyle || 'heirloom',
+        fontChoice: customization.fontChoice || 'playfair',
       },
       composition,
       error: null,

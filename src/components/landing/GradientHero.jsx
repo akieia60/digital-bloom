@@ -58,7 +58,12 @@ export default function GradientHero() {
     }
   }, []);
 
-  const scrollToContent = useCallback(() => {
+  const scrollToDemo = useCallback(() => {
+    const demo = document.getElementById('demo');
+    if (demo) {
+      demo.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      return;
+    }
     const hero = heroRef.current;
     if (hero?.nextElementSibling) {
       hero.nextElementSibling.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -126,20 +131,9 @@ export default function GradientHero() {
                 <span className="gradient-hero__btn-text">{t('hero_new_primary_cta')}</span>
                 <span className="gradient-hero__btn-shimmer" />
               </Link>
-              <button type="button" className="gradient-hero__ghost-btn" onClick={scrollToContent}>
+              <button type="button" className="gradient-hero__ghost-btn" onClick={scrollToDemo}>
                 {t('hero_new_secondary_cta')}
               </button>
-            </div>
-
-            <div className="gradient-hero__details">
-              <div className="gradient-hero__detail-card">
-                <span className="gradient-hero__detail-label">{t('hero_detail_engraved_label')}</span>
-                <span className="gradient-hero__detail-value">{t('hero_detail_engraved_value')}</span>
-              </div>
-              <div className="gradient-hero__detail-card">
-                <span className="gradient-hero__detail-label">{t('hero_detail_protected_label')}</span>
-                <span className="gradient-hero__detail-value">{t('hero_detail_protected_value')}</span>
-              </div>
             </div>
 
             <p className="gradient-hero__from">
@@ -183,17 +177,24 @@ export default function GradientHero() {
                 <span>{t('hero_media_protected')}</span>
               </div>
             </div>
+          </div>
+        </div>
 
-            <p className="gradient-hero__media-caption">
-              {t('hero_media_caption')}
-            </p>
+        <div className="gradient-hero__details">
+          <div className="gradient-hero__detail-card">
+            <span className="gradient-hero__detail-label">{t('hero_detail_engraved_label')}</span>
+            <span className="gradient-hero__detail-value">{t('hero_detail_engraved_value')}</span>
+          </div>
+          <div className="gradient-hero__detail-card">
+            <span className="gradient-hero__detail-label">{t('hero_detail_protected_label')}</span>
+            <span className="gradient-hero__detail-value">{t('hero_detail_protected_value')}</span>
           </div>
         </div>
 
         <button
           type="button"
           className="gradient-hero__scroll-indicator"
-          onClick={scrollToContent}
+          onClick={scrollToDemo}
           aria-label="Scroll to content"
           style={{ opacity: contentVisible ? 0.75 : 0, transition: 'opacity 0.5s ease 0.4s' }}
         >

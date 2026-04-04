@@ -169,8 +169,12 @@ export default function BloomDelivery() {
               image_url: composition?.baseMedia?.poster,
             }}
             colorTheme={delivery.colorTheme}
+            primaryColor={delivery.primaryColor}
+            accentColor={delivery.accentColor}
             extras={delivery.extras}
             message={delivery.message}
+            engravingStyle={delivery.engravingStyle}
+            fontChoice={delivery.fontChoice}
             className="bloom-delivery__preview"
           />
 

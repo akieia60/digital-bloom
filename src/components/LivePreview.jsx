@@ -16,11 +16,21 @@ import '../styles/overlays.css';
 
 const BALLOON_EMOJIS = ['🎈', '🎈', '🎈', '🎈', '🎈'];
 
-export default function LivePreview({ product, colorTheme, extras, message, engravingStyle = 'heirloom', fontChoice = 'playfair', className = '' }) {
+export default function LivePreview({
+  product,
+  colorTheme,
+  primaryColor,
+  accentColor,
+  extras,
+  message,
+  engravingStyle = 'heirloom',
+  fontChoice = 'playfair',
+  className = '',
+}) {
   const { t } = useLanguage();
   const composition = useMemo(
-    () => getCompositionLayers({ product, colorTheme, extras, message, engravingStyle, fontChoice }),
-    [product, colorTheme, extras, message, engravingStyle, fontChoice]
+    () => getCompositionLayers({ product, colorTheme, primaryColor, accentColor, extras, message, engravingStyle, fontChoice }),
+    [product, colorTheme, primaryColor, accentColor, extras, message, engravingStyle, fontChoice]
   );
 
   if (!composition?.baseMedia?.src && !composition?.baseMedia?.poster) {
@@ -34,7 +44,17 @@ export default function LivePreview({ product, colorTheme, extras, message, engr
   const { baseMedia, colorFilter, overlays, textLayer, protectionLayer } = composition;
 
   return (
-    <div className={`db-watermark composition-preview ${className}`}>
+    <div
+      className={`db-watermark composition-preview ${className}`}
+      style={{
+        '--db-primary': colorFilter?.primaryColor || '#C53A5C',
+        '--db-accent': colorFilter?.accentColor || '#EED7B8',
+        '--db-message-panel': colorFilter?.messagePanelColor || 'rgba(7, 17, 31, 0.35)',
+        '--db-rail': colorFilter?.railColor || 'rgba(5, 16, 29, 0.82)',
+        '--db-edge-glow': colorFilter?.edgeGlowColor || 'rgba(238, 215, 184, 0.24)',
+        '--db-brand': colorFilter?.brandColor || '#EED7B8',
+      }}
+    >
       {/* Layer 0: Base Media */}
       <div className="composition-layer--base">
         {baseMedia.type === 'video' ? (
@@ -105,7 +125,10 @@ export default function LivePreview({ product, colorTheme, extras, message, engr
 
       {/* Brand protection overlays */}
       {protectionLayer?.showBrandRail && (
-        <div className={`composition-brand-rail composition-brand-rail--${protectionLayer.engravingStyle || 'heirloom'}`} />
+        <div
+          className={`composition-brand-rail composition-brand-rail--${protectionLayer.engravingStyle || 'heirloom'}`}
+          style={{ background: protectionLayer.railColor }}
+        />
       )}
 
       {protectionLayer?.recipientName && (
@@ -135,7 +158,7 @@ export default function LivePreview({ product, colorTheme, extras, message, engr
 
       <div
         className="composition-protection composition-protection--brand"
-        style={protectionLayer?.brandPositionStyle}
+        style={{ ...protectionLayer?.brandPositionStyle, color: protectionLayer?.brandColor || 'var(--db-brand)' }}
       >
         {protectionLayer?.brandText || 'Digital Bloom™'}
       </div>

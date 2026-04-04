@@ -71,6 +71,15 @@ const LOCALE_LABELS = {
   zh: { to: '致', from: '来自' },
 };
 
+function normalizeHex(hex, fallback = 'D4AF37') {
+  const value = String(hex || '').replace('#', '').trim();
+  return /^[0-9a-f]{6}$/i.test(value) ? value.toUpperCase() : fallback;
+}
+
+function withAlpha(hex, alpha) {
+  return `0x${normalizeHex(hex)}@${alpha}`;
+}
+
 function sanitizeFilePart(value, fallback = 'bloom') {
   return String(value || fallback)
     .toLowerCase()
@@ -130,14 +139,30 @@ async function downloadFile(url, destination) {
   await fs.promises.writeFile(destination, Buffer.from(arrayBuffer));
 }
 
-function buildFilterGraph({ recipientName, senderName, shortMessage, engravingStyle = 'heirloom', fontChoice = 'playfair', locale = 'en' }) {
+function buildFilterGraph({
+  recipientName,
+  senderName,
+  shortMessage,
+  engravingStyle = 'heirloom',
+  fontChoice = 'playfair',
+  locale = 'en',
+  primaryColor = '#C53A5C',
+  accentColor = '#EED7B8',
+}) {
   const preset = RENDER_PRESETS[engravingStyle] || RENDER_PRESETS.heirloom;
   const font = FONT_PRESETS[fontChoice] || FONT_PRESETS.playfair;
   const labels = LOCALE_LABELS[locale] || LOCALE_LABELS.en;
   const filters = [];
+  const railColor = withAlpha(primaryColor, 0.56);
+  const accentRailColor = withAlpha(accentColor, 0.84);
+  const tintColor = withAlpha(primaryColor, 0.07);
+  const messageBoxColor = withAlpha(primaryColor, 0.24);
+  const dedicationBoxColor = withAlpha(accentColor, 0.12);
+  const signatureBoxColor = withAlpha(accentColor, 0.10);
 
-  filters.push(`drawbox=x=w*0.035:y=h*0.865:w=w*0.93:h=h*0.09:color=${preset.railColor}:t=fill`);
-  filters.push(`drawbox=x=w*0.055:y=h*0.865:w=w*0.89:h=h*0.0025:color=${preset.accentColor}:t=fill`);
+  filters.push(`drawbox=x=0:y=0:w=iw:h=ih:color=${tintColor}:t=fill`);
+  filters.push(`drawbox=x=w*0.035:y=h*0.865:w=w*0.93:h=h*0.09:color=${railColor}:t=fill`);
+  filters.push(`drawbox=x=w*0.055:y=h*0.865:w=w*0.89:h=h*0.0025:color=${accentRailColor}:t=fill`);
 
   if (recipientName) {
     filters.push(
@@ -146,7 +171,7 @@ function buildFilterGraph({ recipientName, senderName, shortMessage, engravingSt
         fontsize: font.recipientSize,
         x: 'w*0.06',
         y: 'h*0.10',
-        boxcolor: 'black@0.16',
+        boxcolor: dedicationBoxColor,
         boxborderw: 16,
         font: font.renderFont,
       })
@@ -154,11 +179,11 @@ function buildFilterGraph({ recipientName, senderName, shortMessage, engravingSt
   }
 
   if (shortMessage) {
-    filters.push(`drawbox=x=w*0.055:y=h*0.73:w=w*0.42:h=h*0.10:color=${preset.messageBox}:t=fill`);
+    filters.push(`drawbox=x=w*0.055:y=h*0.71:w=w*0.52:h=h*0.12:color=${messageBoxColor}:t=fill`);
     filters.push(
       buildDrawText(shortMessage, {
         fontcolor: preset.messageColor,
-        fontsize: engravingStyle === 'signature' ? 'h*0.027' : font.messageSize,
+        fontsize: engravingStyle === 'signature' ? 'h*0.025' : font.messageSize,
         x: 'w*0.075',
         y: 'h*0.765',
         font: font.renderFont,
@@ -172,8 +197,8 @@ function buildFilterGraph({ recipientName, senderName, shortMessage, engravingSt
         fontcolor: preset.signatureColor,
         fontsize: font.senderSize,
         x: 'w-tw-w*0.06',
-        y: 'h*0.81',
-        boxcolor: 'black@0.14',
+        y: 'h*0.80',
+        boxcolor: signatureBoxColor,
         boxborderw: 12,
         font: font.renderFont,
       })
@@ -182,7 +207,7 @@ function buildFilterGraph({ recipientName, senderName, shortMessage, engravingSt
 
   filters.push(
     buildDrawText('Digital Bloom™', {
-      fontcolor: preset.brandColor,
+      fontcolor: withAlpha(accentColor, 0.94),
       fontsize: 'h*0.025',
       x: 'w*0.09',
       y: 'h*0.895',
@@ -222,6 +247,8 @@ export async function renderBloomDelivery(purchaseId) {
   const engravingStyle = customization.engravingStyle || purchase.composition_manifest?.composition?.engravingStyle || 'heirloom';
   const fontChoice = customization.fontChoice || purchase.composition_manifest?.composition?.fontChoice || 'playfair';
   const locale = customization.locale || purchase.composition_manifest?.composition?.locale || 'en';
+  const primaryColor = customization.primaryColor || purchase.composition_manifest?.composition?.primaryColor || '#C53A5C';
+  const accentColor = customization.accentColor || purchase.composition_manifest?.composition?.accentColor || '#EED7B8';
   const sourceVideoUrl = purchase.products?.video_file_url || purchase.products?.video_url;
 
   if (!sourceVideoUrl) {
@@ -236,7 +263,16 @@ export async function renderBloomDelivery(purchaseId) {
     const outputPath = path.join(tmpDir, outputFile);
 
     await downloadFile(sourceVideoUrl, inputPath);
-    const filterGraph = buildFilterGraph({ recipientName, senderName, shortMessage, engravingStyle, fontChoice, locale });
+    const filterGraph = buildFilterGraph({
+      recipientName,
+      senderName,
+      shortMessage,
+      engravingStyle,
+      fontChoice,
+      locale,
+      primaryColor,
+      accentColor,
+    });
 
     await execFileAsync('ffmpeg', [
       '-y',

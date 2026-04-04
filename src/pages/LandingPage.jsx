@@ -1,5 +1,6 @@
 import LandingNav from '../components/landing/LandingNav';
 import GradientHero from '../components/landing/GradientHero';
+import DemoVideo from '../components/landing/DemoVideo';
 import StatsBar from '../components/landing/StatsBar';
 import CategoryGrid from '../components/landing/CategoryGrid';
 import TwoWaysToBloom from '../components/landing/TwoWaysToBloom';
@@ -13,6 +14,7 @@ export default function LandingPage({ onOpenFaq }) {
     <div className="landing-page" style={{ background: '#0c1f3f' }}>
       <LandingNav onOpenFaq={onOpenFaq} />
       <GradientHero />
+      <DemoVideo />
       <StatsBar />
       <CategoryGrid />
       <TwoWaysToBloom />

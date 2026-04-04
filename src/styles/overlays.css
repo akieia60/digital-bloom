@@ -48,6 +48,17 @@
   transition: background 0.4s ease, opacity 0.4s ease;
 }
 
+.composition-preview::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at top left, var(--db-edge-glow, rgba(238, 215, 184, 0.24)), transparent 36%),
+    radial-gradient(circle at bottom right, rgba(255,255,255,0.08), transparent 34%);
+}
+
 /* ── OVERLAY LAYERS (shared) ── */
 .composition-layer--overlay {
   position: absolute;
@@ -129,6 +140,7 @@
   border-radius: 4px;
   opacity: 0.85;
   animation: ribbonShimmer 3s ease-in-out infinite;
+  box-shadow: inset 0 0 24px rgba(255,255,255,0.08);
 }
 
 .overlay-ribbon__corner {
@@ -149,11 +161,11 @@
   50%      { opacity: 0.9; }
 }
 
-.overlay-ribbon--warm .overlay-ribbon__border { border-color: #FFA07A; }
-.overlay-ribbon--cool .overlay-ribbon__border { border-color: #4ECDC4; }
-.overlay-ribbon--elegant .overlay-ribbon__border { border-color: #D4AF37; }
-.overlay-ribbon--romantic .overlay-ribbon__border { border-color: #FF69B4; }
-.overlay-ribbon--original .overlay-ribbon__border { border-color: #FFB6C1; }
+.overlay-ribbon--warm .overlay-ribbon__border,
+.overlay-ribbon--cool .overlay-ribbon__border,
+.overlay-ribbon--elegant .overlay-ribbon__border,
+.overlay-ribbon--romantic .overlay-ribbon__border,
+.overlay-ribbon--original .overlay-ribbon__border { border-color: var(--db-accent, #EED7B8); }
 
 /* ── SPARKLE OVERLAY (CSS Placeholder) ── */
 .overlay-sparkle {
@@ -164,7 +176,7 @@
   position: absolute;
   width: 8px;
   height: 8px;
-  background: #FFFFFF;
+  background: var(--db-accent, #FFFFFF);
   border-radius: 50%;
   box-shadow: 0 0 12px 4px rgba(255,255,255,0.8), 0 0 24px 8px rgba(212,175,55,0.3);
   animation: sparkleGlow 2s ease-in-out infinite;
@@ -205,9 +217,9 @@
   border-radius: 50%;
   background: radial-gradient(
     ellipse at center,
-    rgba(255, 215, 0, 0.15) 0%,
-    rgba(212, 175, 55, 0.08) 30%,
-    rgba(255, 200, 100, 0.04) 50%,
+    color-mix(in srgb, var(--db-accent, #EED7B8) 44%, transparent) 0%,
+    color-mix(in srgb, var(--db-primary, #C53A5C) 16%, transparent) 30%,
+    color-mix(in srgb, var(--db-accent, #EED7B8) 12%, transparent) 50%,
     transparent 70%
   );
   animation: glowPulse 4s ease-in-out infinite;
@@ -223,7 +235,7 @@
   background: radial-gradient(
     circle,
     rgba(255, 255, 255, 0.25) 0%,
-    rgba(255, 215, 0, 0.1) 40%,
+    color-mix(in srgb, var(--db-accent, #EED7B8) 28%, transparent) 40%,
     transparent 70%
   );
   animation: flareDrift 6s ease-in-out infinite;
@@ -297,8 +309,8 @@
 .composition-layer--text-modern {
   padding: 14px 18px 16px;
   border-radius: 18px;
-  background: linear-gradient(180deg, rgba(9, 18, 38, 0.18), rgba(9, 18, 38, 0.38));
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: linear-gradient(180deg, var(--db-message-panel, rgba(9, 18, 38, 0.28)), rgba(9, 18, 38, 0.38));
+  border: 1px solid color-mix(in srgb, var(--db-accent, #EED7B8) 20%, rgba(255,255,255,0.16));
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
 }
@@ -382,7 +394,7 @@
   z-index: 41;
   pointer-events: none;
   border-radius: 18px;
-  background: linear-gradient(180deg, rgba(5, 12, 22, 0.2), rgba(5, 12, 22, 0.58));
+  background: linear-gradient(180deg, color-mix(in srgb, var(--db-rail, rgba(5,12,22,0.58)) 72%, transparent), rgba(5, 12, 22, 0.58));
   border: 1px solid rgba(255, 255, 255, 0.12);
   box-shadow: 0 18px 35px rgba(0, 0, 0, 0.28);
 }
@@ -394,7 +406,7 @@
   right: 18px;
   top: 0;
   height: 1px;
-  background: linear-gradient(90deg, rgba(212, 175, 55, 0.15), rgba(255, 255, 255, 0.58), rgba(212, 175, 55, 0.15));
+  background: linear-gradient(90deg, rgba(212, 175, 55, 0.15), var(--db-accent, rgba(255, 255, 255, 0.58)), rgba(212, 175, 55, 0.15));
 }
 
 .composition-brand-rail--modern {
@@ -414,12 +426,12 @@
   padding: 0 18px;
   box-sizing: border-box;
   font-family: 'Outfit', sans-serif;
-  font-size: clamp(1.4rem, 5vw, 2.2rem);
+  font-size: clamp(0.8rem, 2.4vw, 1.05rem);
   font-weight: 700;
-  letter-spacing: 0.24em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.65);
-  -webkit-text-stroke: 1px rgba(0, 0, 0, 0.6);
+  -webkit-text-stroke: 0.4px rgba(0, 0, 0, 0.6);
   text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
   white-space: nowrap;
 }
@@ -440,7 +452,7 @@
   font-style: italic;
   font-weight: 700;
   letter-spacing: 0.16em;
-  color: rgba(212, 175, 55, 1.0);
+  color: var(--db-brand, rgba(212, 175, 55, 1.0));
   -webkit-text-stroke: 1.2px rgba(0, 0, 0, 0.85);
   text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8), 0 0 12px rgba(0, 0, 0, 0.4);
 }
@@ -450,12 +462,12 @@
   padding: 0 18px;
   box-sizing: border-box;
   font-family: 'Outfit', sans-serif;
-  font-size: clamp(1.2rem, 4.5vw, 1.8rem);
+  font-size: clamp(0.78rem, 2.2vw, 1rem);
   font-weight: 700;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.6);
-  -webkit-text-stroke: 1px rgba(0, 0, 0, 0.6);
+  -webkit-text-stroke: 0.35px rgba(0, 0, 0, 0.6);
   text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
   white-space: nowrap;
 }
@@ -472,7 +484,7 @@
 .overlay-gold-dust__particle {
   position: absolute;
   border-radius: 50%;
-  background: radial-gradient(circle, #FFD700 0%, #D4AF37 40%, transparent 70%);
+  background: radial-gradient(circle, var(--db-accent, #FFD700) 0%, var(--db-primary, #D4AF37) 40%, transparent 70%);
   box-shadow:
     0 0 8px 3px rgba(255, 215, 0, 0.7),
     0 0 20px 8px rgba(212, 175, 55, 0.35),

@@ -24,6 +24,120 @@ html {
 }
 
 /* ============================================
+   HERO DEMO
+   ============================================ */
+.demo-video-section {
+  position: relative;
+  padding: 32px 18px 56px;
+  background:
+    radial-gradient(circle at top center, rgba(212, 175, 55, 0.12), transparent 34%),
+    linear-gradient(180deg, #0c1f3f 0%, #102853 46%, #f7f4ef 100%);
+}
+
+.demo-video-header {
+  max-width: 760px;
+  margin: 0 auto 20px;
+  text-align: center;
+}
+
+.demo-video-eyebrow {
+  display: block;
+  margin-bottom: 12px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: rgba(212, 175, 55, 0.92);
+}
+
+.demo-video-title {
+  margin: 0;
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(2rem, 6vw, 3.4rem);
+  font-weight: 600;
+  line-height: 1.08;
+  color: #fff4f0;
+}
+
+.demo-video-wrapper {
+  max-width: 1040px;
+  margin: 0 auto;
+}
+
+.demo-video-player {
+  position: relative;
+  overflow: hidden;
+  border-radius: 28px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: #07111f;
+  box-shadow:
+    0 28px 72px rgba(4, 12, 24, 0.38),
+    0 0 0 1px rgba(212, 175, 55, 0.08);
+}
+
+.demo-video-player::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, rgba(6, 13, 24, 0.08) 0%, rgba(6, 13, 24, 0.1) 45%, rgba(6, 13, 24, 0.54) 100%),
+    radial-gradient(circle at top right, rgba(212, 175, 55, 0.16), transparent 38%);
+}
+
+.demo-video-player video {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  background: #07111f;
+}
+
+.demo-video-caption {
+  max-width: 700px;
+  margin: 18px auto 0;
+  text-align: center;
+}
+
+.demo-video-caption p {
+  margin: 0;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.96rem;
+  line-height: 1.75;
+  color: rgba(255, 244, 240, 0.74);
+}
+
+@media (min-width: 768px) {
+  .demo-video-section {
+    padding: 44px 28px 72px;
+  }
+
+  .demo-video-header {
+    margin-bottom: 28px;
+  }
+
+  .demo-video-caption {
+    margin-top: 22px;
+  }
+}
+
+@media (max-width: 640px) {
+  .demo-video-section {
+    padding-top: 24px;
+  }
+
+  .demo-video-player {
+    border-radius: 22px;
+  }
+
+  .demo-video-caption p {
+    font-size: 0.9rem;
+  }
+}
+
+/* ============================================
    BUTTONS / CTAs
    ============================================ */
 .cta-primary {

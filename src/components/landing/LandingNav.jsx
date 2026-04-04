@@ -64,7 +64,7 @@ export default function LandingNav({ onOpenFaq }) {
           <Link to="/credits" className="landing-nav__link">{t('nav_pricing')}</Link>
         </div>
 
-        {/* Right side: Language Switcher + Send a Bloom CTA */}
+        {/* Right side: Language Switcher + Cart */}
         <div className="landing-nav__right">
           {/* Language Switcher — always visible */}
           <div className="lang-switcher" ref={langRef}>
@@ -118,11 +118,6 @@ export default function LandingNav({ onOpenFaq }) {
               </span>
             </button>
           )}
-
-          {/* Send a Bloom CTA */}
-          <Link to="/shop" className="landing-nav__cta">
-            {t('nav_send_bloom')}
-          </Link>
         </div>
       </div>
 

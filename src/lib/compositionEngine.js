@@ -35,51 +35,83 @@ const OVERLAY_ASSETS = {
   },
 };
 
-const COLOR_THEMES = {
+export const COLOR_SWATCHES = [
+  { id: 'ruby', nameKey: 'customize_color_ruby', hex: '#C53A5C' },
+  { id: 'blush', nameKey: 'customize_color_blush', hex: '#F2A7BC' },
+  { id: 'gold', nameKey: 'customize_color_gold', hex: '#D4AF37' },
+  { id: 'champagne', nameKey: 'customize_color_champagne', hex: '#EED7B8' },
+  { id: 'ivory', nameKey: 'customize_color_ivory', hex: '#F7F2EA' },
+  { id: 'emerald', nameKey: 'customize_color_emerald', hex: '#137A63' },
+  { id: 'sapphire', nameKey: 'customize_color_sapphire', hex: '#2D5B9F' },
+  { id: 'violet', nameKey: 'customize_color_violet', hex: '#7B63D9' },
+];
+
+export const COLOR_PALETTES = {
   original: {
-    label: 'Original',
-    filter: 'none',
-    hueRotate: 0,
-    saturate: 1,
-    brightness: 1,
-    overlayColor: null,
-    blendMode: 'normal',
+    label: 'Bloom Blush',
+    nameKey: 'customize_palette_original',
+    primaryColor: '#C53A5C',
+    accentColor: '#F2A7BC',
+    filter: 'saturate(1.08) brightness(1.02)',
+    hueRotate: -6,
+    saturate: 1.08,
+    brightness: 1.02,
+    blendMode: 'screen',
   },
   warm: {
-    label: 'Warm Sunset',
-    filter: 'sepia(0.15) saturate(1.3) hue-rotate(-10deg)',
-    hueRotate: -10,
-    saturate: 1.3,
-    brightness: 1.05,
-    overlayColor: 'rgba(255, 160, 122, 0.12)',
+    label: 'Sunset Gold',
+    nameKey: 'customize_palette_warm',
+    primaryColor: '#C86A38',
+    accentColor: '#E7C47D',
+    filter: 'sepia(0.12) saturate(1.28) hue-rotate(-6deg) brightness(1.06)',
+    hueRotate: -6,
+    saturate: 1.28,
+    brightness: 1.06,
     blendMode: 'overlay',
   },
   cool: {
-    label: 'Cool Breeze',
-    filter: 'saturate(1.1) hue-rotate(160deg) brightness(1.05)',
-    hueRotate: 160,
-    saturate: 1.1,
+    label: 'Ocean Silk',
+    nameKey: 'customize_palette_cool',
+    primaryColor: '#2D5B9F',
+    accentColor: '#8FD5E6',
+    filter: 'saturate(1.12) hue-rotate(148deg) brightness(1.05)',
+    hueRotate: 148,
+    saturate: 1.12,
     brightness: 1.05,
-    overlayColor: 'rgba(78, 205, 196, 0.1)',
-    blendMode: 'overlay',
+    blendMode: 'screen',
   },
   elegant: {
-    label: 'Elegant Gold',
-    filter: 'sepia(0.25) saturate(1.2) brightness(1.08)',
+    label: 'Champagne Luxe',
+    nameKey: 'customize_palette_elegant',
+    primaryColor: '#8C6B2F',
+    accentColor: '#EED7B8',
+    filter: 'sepia(0.22) saturate(1.18) brightness(1.08)',
     hueRotate: 0,
-    saturate: 1.2,
+    saturate: 1.18,
     brightness: 1.08,
-    overlayColor: 'rgba(212, 175, 55, 0.08)',
-    blendMode: 'overlay',
+    blendMode: 'soft-light',
   },
   romantic: {
-    label: 'Romantic Rose',
-    filter: 'saturate(1.4) hue-rotate(-20deg) brightness(1.02)',
-    hueRotate: -20,
-    saturate: 1.4,
-    brightness: 1.02,
-    overlayColor: 'rgba(196, 30, 58, 0.08)',
-    blendMode: 'overlay',
+    label: 'Velvet Rose',
+    nameKey: 'customize_palette_romantic',
+    primaryColor: '#8E2949',
+    accentColor: '#F4C9D7',
+    filter: 'saturate(1.34) hue-rotate(-18deg) brightness(1.03)',
+    hueRotate: -18,
+    saturate: 1.34,
+    brightness: 1.03,
+    blendMode: 'screen',
+  },
+  custom: {
+    label: 'Custom Palette',
+    nameKey: 'customize_theme_custom',
+    primaryColor: '#C53A5C',
+    accentColor: '#EED7B8',
+    filter: 'saturate(1.12) brightness(1.04)',
+    hueRotate: 0,
+    saturate: 1.12,
+    brightness: 1.04,
+    blendMode: 'screen',
   },
 };
 
@@ -88,6 +120,7 @@ export const MESSAGE_FONT_OPTIONS = {
     label: 'Classic Serif',
     previewFamily: "'Playfair Display', Georgia, serif",
     previewWeight: 600,
+    previewFontStyle: 'normal',
     previewTransform: 'none',
     previewLetterSpacing: '0.02em',
     renderFont: 'Serif',
@@ -96,6 +129,7 @@ export const MESSAGE_FONT_OPTIONS = {
     label: 'Modern Sans',
     previewFamily: "'Outfit', 'Helvetica Neue', Arial, sans-serif",
     previewWeight: 700,
+    previewFontStyle: 'normal',
     previewTransform: 'none',
     previewLetterSpacing: '0.03em',
     renderFont: 'Sans',
@@ -104,6 +138,7 @@ export const MESSAGE_FONT_OPTIONS = {
     label: 'Bold Sans',
     previewFamily: "Arial, 'Helvetica Neue', sans-serif",
     previewWeight: 700,
+    previewFontStyle: 'normal',
     previewTransform: 'uppercase',
     previewLetterSpacing: '0.06em',
     renderFont: 'Sans',
@@ -115,26 +150,31 @@ const TEXT_POSITIONS = {
     top: '8%',
     left: '6%',
     textAlign: 'left',
+    maxWidth: '40%',
   },
   'top-left-soft': {
-    top: '11%',
+    top: '10%',
     left: '8%',
     textAlign: 'left',
+    maxWidth: '42%',
   },
   'bottom-left-safe': {
-    bottom: '20%',
+    bottom: '22%',
     left: '6%',
     textAlign: 'left',
+    maxWidth: '62%',
   },
   'bottom-left-tight': {
-    bottom: '15%',
+    bottom: '19%',
     left: '6%',
     textAlign: 'left',
+    maxWidth: '58%',
   },
   'bottom-right-safe': {
-    bottom: '15%',
+    bottom: '17%',
     right: '6%',
     textAlign: 'right',
+    maxWidth: '38%',
   },
   'bottom-brand-left': {
     bottom: '6.6%',
@@ -147,12 +187,69 @@ const TEXT_POSITIONS = {
     textAlign: 'right',
   },
   'lower-third-center': {
-    bottom: '18%',
+    bottom: '20%',
     left: '50%',
     transform: 'translateX(-50%)',
     textAlign: 'center',
+    maxWidth: '70%',
   },
 };
+
+function hexToRgb(hex) {
+  const normalized = String(hex || '').replace('#', '').trim();
+  if (!/^[0-9a-f]{6}$/i.test(normalized)) return null;
+  return {
+    r: Number.parseInt(normalized.slice(0, 2), 16),
+    g: Number.parseInt(normalized.slice(2, 4), 16),
+    b: Number.parseInt(normalized.slice(4, 6), 16),
+  };
+}
+
+function withAlpha(hex, alpha) {
+  const rgb = hexToRgb(hex);
+  if (!rgb) return null;
+  return `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${alpha})`;
+}
+
+function clampBrightness(hex, multiplier = 1) {
+  const rgb = hexToRgb(hex);
+  if (!rgb) return hex;
+  const adjust = (channel) => Math.max(0, Math.min(255, Math.round(channel * multiplier)));
+  return `#${[adjust(rgb.r), adjust(rgb.g), adjust(rgb.b)].map((value) => value.toString(16).padStart(2, '0')).join('')}`;
+}
+
+function getMessageSize(messageText = '') {
+  const length = String(messageText || '').trim().length;
+  if (length > 90) {
+    return 'clamp(14px, 3.2vw, 20px)';
+  }
+  if (length > 56) {
+    return 'clamp(15px, 3.6vw, 22px)';
+  }
+  return 'clamp(17px, 4.2vw, 26px)';
+}
+
+export function getThemeSpec(themeId, overrides = {}) {
+  const base = COLOR_PALETTES[themeId] || COLOR_PALETTES.original;
+  const primaryColor = overrides.primaryColor || base.primaryColor;
+  const accentColor = overrides.accentColor || base.accentColor;
+
+  return {
+    ...base,
+    themeId: themeId in COLOR_PALETTES ? themeId : 'original',
+    primaryColor,
+    accentColor,
+    overlayColor: withAlpha(primaryColor, 0.12),
+    secondaryOverlayColor: withAlpha(accentColor, 0.2),
+    messagePanelColor: withAlpha(clampBrightness(primaryColor, 0.42), 0.40),
+    railColor: withAlpha(clampBrightness(primaryColor, 0.35), 0.82),
+    edgeGlowColor: withAlpha(accentColor, 0.28),
+    brandColor: clampBrightness(accentColor, 1.04),
+    accentTextColor: withAlpha(accentColor, 0.90),
+    dedicationTextColor: withAlpha('#FFFFFF', 0.76),
+    signatureTextColor: withAlpha('#FFFFFF', 0.70),
+  };
+}
 
 export const ENGRAVING_STYLES = {
   heirloom: {
@@ -213,12 +310,14 @@ function addOverlay(overlays, overlayId, colorTheme, zIndex) {
 export function getCompositionLayers({
   product,
   colorTheme = 'original',
+  primaryColor,
+  accentColor,
   extras = {},
   message = {},
   engravingStyle = 'heirloom',
   fontChoice = 'playfair',
 }) {
-  const theme = COLOR_THEMES[colorTheme] || COLOR_THEMES.original;
+  const theme = getThemeSpec(colorTheme, { primaryColor, accentColor });
   const engraving = ENGRAVING_STYLES[engravingStyle] || ENGRAVING_STYLES.heirloom;
   const font = MESSAGE_FONT_OPTIONS[fontChoice] || MESSAGE_FONT_OPTIONS.playfair;
 
@@ -241,6 +340,13 @@ export function getCompositionLayers({
     label: theme.label,
     cssFilter: theme.filter,
     overlayColor: theme.overlayColor,
+    secondaryOverlayColor: theme.secondaryOverlayColor,
+    primaryColor: theme.primaryColor,
+    accentColor: theme.accentColor,
+    railColor: theme.railColor,
+    messagePanelColor: theme.messagePanelColor,
+    edgeGlowColor: theme.edgeGlowColor,
+    brandColor: theme.brandColor,
     blendMode: theme.blendMode,
     hueRotate: theme.hueRotate,
     saturate: theme.saturate,
@@ -263,8 +369,10 @@ export function getCompositionLayers({
         textStyle: {
           fontFamily: font.previewFamily,
           fontWeight: font.previewWeight,
+          fontStyle: font.previewFontStyle,
           textTransform: font.previewTransform,
           letterSpacing: font.previewLetterSpacing,
+          fontSize: getMessageSize(message.short),
         },
       }
     : null;
@@ -281,22 +389,28 @@ export function getCompositionLayers({
     recipientTextStyle: {
       fontFamily: font.previewFamily,
       fontWeight: font.previewWeight,
+      fontStyle: font.previewFontStyle,
       textTransform: font.previewTransform === 'uppercase' ? 'uppercase' : 'uppercase',
       letterSpacing: font.previewLetterSpacing,
+      color: theme.dedicationTextColor,
     },
     senderPosition: engraving.senderPosition,
     senderPositionStyle: TEXT_POSITIONS[engraving.senderPosition],
     senderTextStyle: {
       fontFamily: font.previewFamily,
       fontWeight: font.previewWeight,
+      fontStyle: font.previewFontStyle,
       textTransform: font.previewTransform === 'uppercase' ? 'uppercase' : 'uppercase',
       letterSpacing: font.previewLetterSpacing,
+      color: theme.signatureTextColor,
     },
     tmPosition: engraving.tmPosition,
     tmPositionStyle: TEXT_POSITIONS[engraving.tmPosition],
     brandPosition: engraving.brandPosition,
     brandPositionStyle: TEXT_POSITIONS[engraving.brandPosition],
     showBrandRail: true,
+    railColor: theme.railColor,
+    brandColor: theme.brandColor,
   };
 
   return {
@@ -311,15 +425,11 @@ export function getCompositionLayers({
 }
 
 export function getThemeFilter(themeId) {
-  return (COLOR_THEMES[themeId] || COLOR_THEMES.original).filter;
+  return getThemeSpec(themeId).filter;
 }
 
 export function getMessageFontSpec(fontChoice) {
   return MESSAGE_FONT_OPTIONS[fontChoice] || MESSAGE_FONT_OPTIONS.playfair;
-}
-
-export function getThemeSpec(themeId) {
-  return COLOR_THEMES[themeId] || COLOR_THEMES.original;
 }
 
 export function hasRealAsset(overlayType, themeVariant = 'default') {
@@ -386,4 +496,4 @@ export function getBrandingLayer(overrides = {}) {
   };
 }
 
-export { COLOR_THEMES, OVERLAY_ASSETS, TEXT_POSITIONS };
+export { OVERLAY_ASSETS, TEXT_POSITIONS };
