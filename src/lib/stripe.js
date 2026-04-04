@@ -1,5 +1,4 @@
 import { loadStripe } from '@stripe/stripe-js';
-import { createPurchase } from './supabase';
 
 const stripePublishableKey = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY;
 
@@ -19,70 +18,8 @@ export const stripePromise = loadStripe(stripePublishableKey || '');
  * @returns {Promise<string|null>} Checkout session ID or null if error
  */
 export const createCheckoutSession = async (product, quantity = 1, customerInfo = {}) => {
-  try {
-    if (!product.stripe_price_id) {
-      console.error('Product missing stripe_price_id:', product);
-      throw new Error('This product is not configured for purchase. Please contact support.');
-    }
-
-    const successUrl = import.meta.env.VITE_STRIPE_SUCCESS_URL || `${window.location.origin}/success`;
-    const cancelUrl = import.meta.env.VITE_STRIPE_CANCEL_URL || window.location.origin;
-
-    // Create line items
-    const lineItems = [{
-      price: product.stripe_price_id,
-      quantity: quantity
-    }];
-
-    // Create pending purchase record in database
-    const purchaseData = {
-      product_id: product.id,
-      quantity,
-      unit_price: product.price,
-      total_price: product.price * quantity,
-      status: 'pending',
-      customer_email: customerInfo.email || null,
-      customer_name: customerInfo.name || null
-    };
-
-    const purchase = await createPurchase(purchaseData);
-
-    if (!purchase) {
-      throw new Error('Failed to create purchase record');
-    }
-
-    // In a real application, this would call your backend API
-    // For now, we'll use Stripe's client-side checkout
-    const response = await fetch('/api/create-checkout-session', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        priceId: product.stripe_price_id,
-        quantity,
-        successUrl: `${successUrl}?session_id={CHECKOUT_SESSION_ID}`,
-        cancelUrl,
-        customerEmail: customerInfo.email,
-        metadata: {
-          product_id: product.id,
-          product_name: product.name,
-          purchase_id: purchase.id
-        }
-      }),
-    });
-
-    if (!response.ok) {
-      throw new Error('Failed to create checkout session');
-    }
-
-    const { sessionId } = await response.json();
-    return sessionId;
-
-  } catch (error) {
-    console.error('Error creating checkout session:', error);
-    return null;
-  }
+  const result = await createCartCheckoutSession([{ product, quantity }], null, customerInfo);
+  return result?.sessionId || null;
 };
 
 /**
@@ -94,8 +31,8 @@ export const createCheckoutSession = async (product, quantity = 1, customerInfo 
  */
 export const createCartCheckoutSession = async (cartItems, creditMetadata = null, customerInfo = {}) => {
   try {
-    const successUrl = import.meta.env.VITE_STRIPE_SUCCESS_URL || `${window.location.origin}/success`;
-    const cancelUrl = import.meta.env.VITE_STRIPE_CANCEL_URL || window.location.origin;
+    const successUrl = `${window.location.origin}/success`;
+    const cancelUrl = window.location.href || window.location.origin;
 
     // Calculate total
     const totalPrice = cartItems.reduce((sum, item) =>

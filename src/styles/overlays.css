@@ -289,9 +289,24 @@
   position: absolute;
   z-index: 40;
   pointer-events: none;
-  padding: 0 16px;
-  width: 100%;
+  max-width: min(78%, 420px);
   box-sizing: border-box;
+}
+
+.composition-layer--text-heirloom,
+.composition-layer--text-modern {
+  padding: 14px 18px 16px;
+  border-radius: 18px;
+  background: linear-gradient(180deg, rgba(9, 18, 38, 0.18), rgba(9, 18, 38, 0.38));
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.composition-layer--text-signature {
+  width: min(86%, 540px);
+  max-width: none;
+  padding: 0 18px;
 }
 
 .composition-text__message {
@@ -308,6 +323,24 @@
   animation: textEtchIn 1s ease forwards;
   mix-blend-mode: screen;
   letter-spacing: 0.02em;
+}
+
+.composition-layer--text-heirloom .composition-text__message {
+  font-size: clamp(18px, 4.3vw, 28px);
+}
+
+.composition-layer--text-signature .composition-text__message {
+  font-style: italic;
+  font-size: clamp(20px, 5vw, 34px);
+  text-align: center;
+}
+
+.composition-layer--text-modern .composition-text__message {
+  font-family: 'Outfit', sans-serif;
+  font-size: clamp(16px, 4vw, 24px);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
 }
 
 /* Etched variant — embeds text into video */
@@ -340,6 +373,34 @@
 }
 
 /* ── BRAND PROTECTION LAYERS ── */
+.composition-brand-rail {
+  position: absolute;
+  left: 3.5%;
+  right: 3.5%;
+  bottom: 3.8%;
+  height: 10.5%;
+  z-index: 41;
+  pointer-events: none;
+  border-radius: 18px;
+  background: linear-gradient(180deg, rgba(5, 12, 22, 0.2), rgba(5, 12, 22, 0.58));
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 18px 35px rgba(0, 0, 0, 0.28);
+}
+
+.composition-brand-rail::before {
+  content: '';
+  position: absolute;
+  left: 18px;
+  right: 18px;
+  top: 0;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(212, 175, 55, 0.15), rgba(255, 255, 255, 0.58), rgba(212, 175, 55, 0.15));
+}
+
+.composition-brand-rail--modern {
+  background: linear-gradient(180deg, rgba(4, 12, 24, 0.18), rgba(4, 12, 24, 0.72));
+}
+
 .composition-protection {
   position: absolute;
   z-index: 45;
@@ -360,25 +421,22 @@
   color: rgba(255, 255, 255, 0.65);
   -webkit-text-stroke: 1px rgba(0, 0, 0, 0.6);
   text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
+  white-space: nowrap;
 }
 
 .composition-protection--tm {
-  bottom: 6%;
-  right: 5%;
   font-family: 'Outfit', sans-serif;
-  font-size: clamp(1.1rem, 4vw, 1.6rem);
+  font-size: clamp(0.8rem, 2.6vw, 1.05rem);
   font-weight: 800;
   letter-spacing: 0.2em;
-  color: rgba(255, 255, 255, 0.9);
+  color: rgba(255, 255, 255, 0.72);
   -webkit-text-stroke: 1.2px rgba(0, 0, 0, 0.85);
   text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8), 0 0 12px rgba(0, 0, 0, 0.4);
 }
 
 .composition-protection--brand {
-  left: 5%;
-  bottom: 6%;
   font-family: 'Cormorant Garamond', Georgia, serif;
-  font-size: clamp(1.3rem, 4.5vw, 1.9rem);
+  font-size: clamp(1rem, 3vw, 1.3rem);
   font-style: italic;
   font-weight: 700;
   letter-spacing: 0.16em;
@@ -399,6 +457,7 @@
   color: rgba(255, 255, 255, 0.6);
   -webkit-text-stroke: 1px rgba(0, 0, 0, 0.6);
   text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
+  white-space: nowrap;
 }
 
 /* ── GOLD DUST OVERLAY (Customizer — vivid, cinematic) ── */
@@ -639,4 +698,3 @@
     right: 9px;
   }
 }
-

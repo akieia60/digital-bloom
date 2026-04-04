@@ -13,13 +13,6 @@ dist/
 .env.vercel
 .env.test
 *.env
-.env.local
-.env.development
-.env.production
-.env.staging
-.env.vercel
-.env.test
-*.env
 
 # Vercel
 .vercel/
@@ -34,7 +27,7 @@ media/
 
 # Local asset staging — videos/images, NOT for git
 project_assets/
-"digital bloom"/
+digital bloom/
 
 # Editor
 .vscode/
@@ -54,5 +47,4 @@ service-account*.json
 
 # Stripe setup output (contains product/price IDs — add to .env instead)
 stripe-product-ids.json
-.vercel
 .env*.local

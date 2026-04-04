@@ -79,6 +79,7 @@ export async function resolveBloomDelivery(bloomSlug) {
       colorTheme: customization.colorTheme || 'original',
       extras: customization.extras || {},
       message: customization.message || {},
+      engravingStyle: customization.engravingStyle || 'heirloom',
     });
 
     return {
@@ -95,6 +96,7 @@ export async function resolveBloomDelivery(bloomSlug) {
         message: customization.message || {},
         colorTheme: customization.colorTheme || 'original',
         extras: customization.extras || {},
+        engravingStyle: customization.engravingStyle || 'heirloom',
       },
       composition,
       error: null,

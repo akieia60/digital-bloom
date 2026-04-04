@@ -16,8 +16,6 @@
     "@stripe/stripe-js": "^8.6.4",
     "@supabase/supabase-js": "^2.91.1",
     "canvas": "^3.2.2",
-    "cors": "^2.8.6",
-    "express": "^5.2.1",
     "glob": "^13.0.0",
     "lucide-react": "^1.6.0",
     "react": "^19.2.0",

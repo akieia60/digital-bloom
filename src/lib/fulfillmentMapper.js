@@ -1,42 +1,33 @@
 /**
  * Fulfillment Mapper
- * 
+ *
  * Translates customization selections into a render-ready specification
- * (manifest) that can drive server-side composition later.
- * 
- * Design notes:
- * - Output is a plain serializable object (JSON-safe)
- * - Not coupled to any storage layer — caller decides where to persist
- * - Designed for future use with FFmpeg, Remotion, or cloud render pipelines
+ * that can drive server-side composition and delivery rendering.
  */
 
-import { getCompositionLayers, getThemeSpec } from './compositionEngine';
+import { ENGRAVING_STYLES, getThemeSpec } from './compositionEngine';
 
-/**
- * Build a fulfillment manifest from product + customization data.
- * This manifest describes everything needed to render the final
- * composited output on the server side.
- * 
- * @param {Object} product - Product object from Supabase
- * @param {Object} customization - { message, colorTheme, extras, totalPrice }
- * @returns {Object} Fulfillment manifest
- */
 export function buildFulfillmentManifest(product, customization) {
-  const { message = {}, colorTheme = 'original', extras = {}, totalPrice = 0 } = customization;
-  const theme = getThemeSpec(colorTheme);
-  const layers = getCompositionLayers({ product, colorTheme, extras, message });
+  const {
+    message = {},
+    colorTheme = 'original',
+    extras = {},
+    totalPrice = 0,
+    selectedSound = '',
+    engravingStyle = 'heirloom',
+  } = customization;
 
-  // Determine base asset
+  const theme = getThemeSpec(colorTheme);
+  const engraving = ENGRAVING_STYLES[engravingStyle] || ENGRAVING_STYLES.heirloom;
+
   const baseVideoUrl = product.video_file_url || product.video_url;
   const baseAsset = {
     type: baseVideoUrl ? 'video' : 'image',
     url: baseVideoUrl || product.image_url || null,
     fallbackImage: product.image_url || null,
-    // If video, estimate duration from filename or default
     duration: baseVideoUrl ? estimateVideoDuration(baseVideoUrl) : null,
   };
 
-  // Build overlay instructions
   const overlayInstructions = [];
 
   if (extras.balloon) {
@@ -72,7 +63,39 @@ export function buildFulfillmentManifest(product, customization) {
     });
   }
 
-  // Build color treatment
+  if (extras.goldDust) {
+    overlayInstructions.push({
+      type: 'goldDust',
+      variant: 'default',
+      asset: null,
+      timing: { start: 0, end: baseAsset.duration || 30 },
+      position: 'full',
+      opacity: 0.7,
+    });
+  }
+
+  if (extras.softGlow) {
+    overlayInstructions.push({
+      type: 'softGlow',
+      variant: 'default',
+      asset: null,
+      timing: { start: 0, end: baseAsset.duration || 30 },
+      position: 'center',
+      opacity: 0.55,
+    });
+  }
+
+  if (extras.rosePetals) {
+    overlayInstructions.push({
+      type: 'rosePetals',
+      variant: 'default',
+      asset: null,
+      timing: { start: 0, end: baseAsset.duration || 30 },
+      position: 'full',
+      opacity: 0.7,
+    });
+  }
+
   const colorTreatment = {
     themeId: colorTheme,
     label: theme.label,
@@ -83,51 +106,63 @@ export function buildFulfillmentManifest(product, customization) {
     blendMode: theme.blendMode,
   };
 
-  // Build text overlay
-  const textOverlay = message.short ? {
-    text: message.short,
-    toName: message.toName || null,
-    fromName: message.fromName || null,
-    font: 'Playfair Display',
-    fontSize: 48,
-    position: 'bottom-center',
-    color: '#FFFFFF',
-    shadow: '0 2px 8px rgba(0,0,0,0.6)',
-    fadeIn: { start: 0.5, duration: 1.0 },
-  } : null;
-
   const recipientName = message.toName || null;
   const senderName = message.fromName || null;
 
+  const textOverlay = message.short
+    ? {
+        text: message.short,
+        font: 'Playfair Display',
+        fontSize: 42,
+        position: engraving.messagePosition,
+        color: '#FFFFFF',
+        shadow: '0 2px 8px rgba(0,0,0,0.6)',
+        fadeIn: { start: 0.5, duration: 1.0 },
+      }
+    : null;
+
   const protectionPlan = {
     burnIntoDeliveredFile: true,
+    engravingStyle,
+    engravingLabel: engraving.label,
     recipientName,
     senderName,
     tm: {
       enabled: true,
       text: 'TM',
-      position: 'bottom-left',
+      position: engraving.tmPosition,
       style: 'subtle-white',
     },
     brandWatermark: {
       enabled: true,
       text: 'Digital Bloom™',
-      position: 'bottom-right',
-      alternatePosition: 'top-right',
+      position: engraving.brandPosition,
       style: 'subtle-gold',
     },
-    personalizationWatermark: {
+    dedication: {
       enabled: Boolean(recipientName),
-      text: recipientName ? `For ${recipientName}` : null,
-      position: 'upper-third-center',
+      text: recipientName ? `To ${recipientName}` : null,
+      position: engraving.recipientPosition,
       style: 'embedded-screen-safe',
       persistent: true,
     },
+    signature: {
+      enabled: Boolean(senderName),
+      text: senderName ? `From ${senderName}` : null,
+      position: engraving.senderPosition,
+      style: 'embedded-screen-safe',
+      persistent: true,
+    },
+    messageCard: {
+      enabled: Boolean(message.short),
+      text: message.short || null,
+      position: engraving.messagePosition,
+      style: engraving.textVariant,
+    },
   };
 
-  // Assemble manifest
   return {
-    version: '1.1',
+    version: '1.2',
     createdAt: new Date().toISOString(),
     product: {
       id: product.id,
@@ -138,6 +173,9 @@ export function buildFulfillmentManifest(product, customization) {
     colorTreatment,
     overlays: overlayInstructions,
     textOverlay,
+    audio: {
+      soundtrack: selectedSound || null,
+    },
     output: {
       format: 'mp4',
       resolution: '1080p',
@@ -149,19 +187,19 @@ export function buildFulfillmentManifest(product, customization) {
       extrasTotal: totalPrice - Number(product.price || 0),
       totalPrice,
     },
-    // Flat summary for quick reference
     summary: {
       theme: theme.label,
-      extras: Object.entries(extras).filter(([, v]) => v).map(([k]) => k),
+      engravingStyle: engraving.label,
+      soundtrack: selectedSound || null,
+      extras: Object.entries(extras).filter(([, value]) => value).map(([key]) => key),
       hasMessage: Boolean(message.short),
       hasTo: Boolean(message.toName),
       hasFrom: Boolean(message.fromName),
     },
-    // Brand protection — required on all delivered outputs
     branding: {
       watermark: true,
-      watermarkStyle: 'subtle-gold',
-      watermarkPosition: 'bottom-center',
+      watermarkStyle: 'signature-strip',
+      watermarkPosition: engraving.brandPosition,
       introBrandCard: false,
       outroBrandCard: true,
       trademarkText: 'Digital Bloom™',
@@ -170,57 +208,44 @@ export function buildFulfillmentManifest(product, customization) {
   };
 }
 
-/**
- * Extract just the composition metadata for cart storage.
- * This is a lighter version of the full manifest — enough to
- * reconstruct the full manifest later from product + this data.
- * 
- * @param {Object} customization - Full customization state
- * @returns {Object} Lightweight composition descriptor
- */
 export function buildCartComposition(customization) {
-  const { message = {}, colorTheme = 'original', extras = {} } = customization;
+  const {
+    message = {},
+    colorTheme = 'original',
+    extras = {},
+    selectedSound = '',
+    engravingStyle = 'heirloom',
+  } = customization;
 
   return {
     colorTheme,
-    extras: {
-      balloon: Boolean(extras.balloon),
-      ribbon: Boolean(extras.ribbon),
-      sparkle: Boolean(extras.sparkle),
-    },
+    selectedSound,
+    engravingStyle,
+    extras: Object.fromEntries(
+      Object.entries(extras).map(([key, value]) => [key, Boolean(value)])
+    ),
     message: {
       short: message.short || '',
       toName: message.toName || '',
       fromName: message.fromName || '',
     },
-    // Active overlay list for quick rendering
-    activeOverlays: Object.entries(extras).filter(([, v]) => v).map(([k]) => k),
+    activeOverlays: Object.entries(extras)
+      .filter(([, value]) => value)
+      .map(([key]) => key),
   };
 }
 
-// ── HELPERS ──
-
-/**
- * Estimate video duration from filename conventions.
- * e.g., "mothersday_bloom_45s.mp4" → 45
- * Falls back to 29 seconds (standard bloom length).
- */
 function estimateVideoDuration(url) {
   if (!url) return 29;
   const match = url.match(/(\d+)s\./);
-  return match ? parseInt(match[1], 10) : 29;
+  return match ? Number.parseInt(match[1], 10) : 29;
 }
 
-/**
- * Get overlay asset path for a given type and variant.
- * Returns null if no real asset exists (CSS placeholder in use).
- */
 function getOverlayAssetPath(overlayType, variant) {
-  // V1: no real assets yet, return planned paths
   const paths = {
     balloon: `/overlays/balloon/balloon-${variant}.webm`,
     ribbon: `/overlays/ribbon/ribbon-${variant}.webm`,
-    sparkle: `/overlays/sparkle/sparkle-default.webm`,
+    sparkle: '/overlays/sparkle/sparkle-default.webm',
   };
   return paths[overlayType] || null;
 }

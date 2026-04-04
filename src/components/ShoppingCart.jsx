@@ -144,7 +144,7 @@ const ShoppingCart = () => {
           <>
             <div className="flex-1 overflow-y-auto px-8 py-4 space-y-6">
               {cartItems.map((item, index) => (
-                <CartItem key={`${item.id}-${index}`} item={item} />
+                <CartItem key={item.lineItemId || `${item.id}-${index}`} item={item} />
               ))}
             </div>
 

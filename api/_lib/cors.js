@@ -11,11 +11,16 @@
  * Returns 403 for any other origin.
  */
 
+const DEPLOYMENT_ORIGINS = [
+  process.env.APP_BASE_URL,
+  process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : null,
+  process.env.VERCEL_BRANCH_URL ? `https://${process.env.VERCEL_BRANCH_URL}` : null,
+].filter(Boolean);
+
 const ALLOWED_ORIGINS = [
   'https://digitabloom.com',
   'https://www.digitabloom.com',
-  // Pull in any custom deployment URL set via environment variable
-  ...(process.env.APP_BASE_URL ? [process.env.APP_BASE_URL] : []),
+  ...DEPLOYMENT_ORIGINS,
 ];
 
 /**
@@ -25,8 +30,6 @@ const ALLOWED_ORIGINS = [
 function isAllowedOrigin(origin) {
   if (!origin) return true; // server-to-server requests (no origin header)
   if (ALLOWED_ORIGINS.includes(origin)) return true;
-  // Allow any Vercel preview deployment (*.vercel.app)
-  if (/^https:\/\/[a-zA-Z0-9._-]+(\.vercel\.app)$/.test(origin)) return true;
   // Allow any localhost port for development
   if (/^https?:\/\/localhost(:\d+)?$/.test(origin)) return true;
   return false;

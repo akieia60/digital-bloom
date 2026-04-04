@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { supabase } from '../lib/supabase';
 import { buildCartComposition } from '../lib/fulfillmentMapper';
+import { ENGRAVING_STYLES } from '../lib/compositionEngine';
 import { useLanguage } from '../contexts/LanguageContext';
 import LivePreview from './LivePreview';
 import '../styles/customizer.css';
@@ -40,6 +41,17 @@ const FLOW_STEPS = [
   { id: 5, key: 'review', labelKey: 'customize_step_review', icon: '✓' },
 ];
 
+const ENGRAVING_OPTIONS = Object.entries(ENGRAVING_STYLES).map(([id, style]) => ({
+  id,
+  label: style.label,
+  description:
+    id === 'heirloom'
+      ? 'Top-left dedication, message plaque, signed finish'
+      : id === 'signature'
+        ? 'Balanced typography with a softer cinematic feel'
+        : 'Sharper gallery-style lettering with a cleaner finish',
+}));
+
 const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editData = null }) => {
   const { t } = useLanguage();
   const { messagePlaceholder, toPlaceholder, ...stateDefaults } = defaults;
@@ -53,7 +65,8 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
   });
   const [colorTheme, setColorTheme] = useState(stateDefaults.colorTheme || 'original');
   const [extras, setExtras] = useState({ ribbon: false, sparkle: false, goldDust: true, softGlow: false, rosePetals: false });
-  const [selectedSound, setSelectedSound] = useState(stateDefaults.sound || '');
+  const [selectedSound, setSelectedSound] = useState(stateDefaults.selectedSound || stateDefaults.sound || '');
+  const [engravingStyle, setEngravingStyle] = useState(stateDefaults.engravingStyle || 'heirloom');
   const [playingTrack, setPlayingTrack] = useState(null);
   const [activeStep, setActiveStep] = useState(1);
 
@@ -67,9 +80,14 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
         setMessage(msg);
       }
       if (editData.colorTheme || editData.theme) setColorTheme(editData.colorTheme || editData.theme);
-      if (editData.selectedSound) setSelectedSound(editData.selectedSound);
+      if (editData.selectedSound || editData.sound || editData.composition?.selectedSound) {
+        setSelectedSound(editData.selectedSound || editData.sound || editData.composition?.selectedSound || '');
+      }
+      if (editData.engravingStyle || editData.composition?.engravingStyle) {
+        setEngravingStyle(editData.engravingStyle || editData.composition?.engravingStyle || 'heirloom');
+      }
       if (editData.composition?.activeOverlays) {
-        const newExtras = { ribbon: false, sparkle: false, goldDust: false };
+        const newExtras = { ribbon: false, sparkle: false, goldDust: false, softGlow: false, rosePetals: false, balloon: false };
         editData.composition.activeOverlays.forEach(o => { if (o in newExtras) newExtras[o] = true; });
         setExtras(newExtras);
       }
@@ -267,12 +285,21 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
       } catch (err) { console.error('Theme save (non-blocking):', err); }
     })();
     // Build composition manifest for fulfillment
-    const composition = buildCartComposition({ message, colorTheme, extras });
+    const composition = buildCartComposition({ message, colorTheme, extras, selectedSound, engravingStyle });
     // Stop audio on complete
     stopAllAudio();
-    onComplete({ productId: product.id, message, colorTheme, extras, selectedSound, totalPrice, composition });
+    onComplete({
+      productId: product.id,
+      message,
+      colorTheme,
+      extras,
+      selectedSound,
+      engravingStyle,
+      totalPrice,
+      composition,
+    });
     onClose();
-  }, [isProductValid, product, message, colorTheme, extras, selectedSound, totalPrice, themeStyle, stopAllAudio, onComplete, onClose]);
+  }, [isProductValid, product, message, colorTheme, extras, selectedSound, engravingStyle, totalPrice, themeStyle, stopAllAudio, onComplete, onClose]);
 
   const goNext = () => setActiveStep((prev) => Math.min(prev + 1, FLOW_STEPS.length));
   const goBack = () => setActiveStep((prev) => Math.max(prev - 1, 1));
@@ -323,6 +350,7 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
               colorTheme={colorTheme}
               extras={extras}
               message={message}
+              engravingStyle={engravingStyle}
               className="composition-preview--square"
             />
           </div>
@@ -387,6 +415,32 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
                   <span className="theme-name">{t(theme.nameKey)}</span>
                 </button>
               ))}
+            </div>
+
+            <div className="customizer-section__subgroup" style={{ marginTop: '18px' }}>
+              <div className="customizer-label" style={{ marginBottom: '10px', display: 'block' }}>Engraving finish</div>
+              <div className="extras-grid">
+                {ENGRAVING_OPTIONS.map((option) => (
+                  <button
+                    key={option.id}
+                    type="button"
+                    className={`extra-toggle ${engravingStyle === option.id ? 'extra-toggle--active' : ''}`}
+                    onClick={() => setEngravingStyle(option.id)}
+                    aria-pressed={engravingStyle === option.id}
+                  >
+                    <div className="extra-toggle__info" style={{ alignItems: 'flex-start' }}>
+                      <div>
+                        <span className="extra-toggle__name">{option.label}</span>
+                        <div className="text-[11px] leading-[1.4] text-[#6E6E73] mt-1">{option.description}</div>
+                      </div>
+                    </div>
+                    <span className="toggle-switch" aria-hidden="true">
+                      <input type="checkbox" tabIndex={-1} checked={engravingStyle === option.id} readOnly />
+                      <span className="toggle-switch__slider" />
+                    </span>
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
             </>
@@ -464,8 +518,10 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
                 <div className="review-row"><span className="review-label">{t('customize_review_from')}</span><span className="review-value">{message.fromName || '—'}</span></div>
                 <div className="review-row"><span className="review-label">{t('customize_review_message')}</span><span className="review-value">{message.short || '—'}</span></div>
                 <div className="review-row"><span className="review-label">{t('customize_review_frame')}</span><span className="review-value">{t(COLOR_THEMES.find((theme) => theme.id === colorTheme)?.nameKey) || t('customize_theme_original')}</span></div>
+                <div className="review-row"><span className="review-label">Engraving</span><span className="review-value">{ENGRAVING_STYLES[engravingStyle]?.label || 'Heirloom engraving'}</span></div>
                 <div className="review-row"><span className="review-label">{t('customize_review_effects')}</span><span className="review-value">{EXTRAS.filter((extra) => extras[extra.id]).map((extra) => t(extra.nameKey)).join(', ') || 'None selected'}</span></div>
                 <div className="review-row"><span className="review-label">{t('customize_review_sound')}</span><span className="review-value">{SOUND_TRACKS.find((track) => track.id === selectedSound) ? t(SOUND_TRACKS.find((track) => track.id === selectedSound).nameKey) : 'None selected'}</span></div>
+                <div className="review-row"><span className="review-label">Protection</span><span className="review-value">Permanent Digital Bloom signature strip on the final download</span></div>
               </div>
             </div>
           )}

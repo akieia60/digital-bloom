@@ -15,10 +15,10 @@ import '../styles/overlays.css';
 
 const BALLOON_EMOJIS = ['🎈', '🎈', '🎈', '🎈', '🎈'];
 
-export default function LivePreview({ product, colorTheme, extras, message, className = '' }) {
+export default function LivePreview({ product, colorTheme, extras, message, engravingStyle = 'heirloom', className = '' }) {
   const composition = useMemo(
-    () => getCompositionLayers({ product, colorTheme, extras, message }),
-    [product, colorTheme, extras, message]
+    () => getCompositionLayers({ product, colorTheme, extras, message, engravingStyle }),
+    [product, colorTheme, extras, message, engravingStyle]
   );
 
   if (!composition?.baseMedia?.src && !composition?.baseMedia?.poster) {
@@ -94,21 +94,18 @@ export default function LivePreview({ product, colorTheme, extras, message, clas
       {/* Layer N: Text Overlay */}
       {textLayer && (
         <div
-          className="composition-layer--text"
+          className={`composition-layer--text composition-layer--text-${textLayer.variant || 'heirloom'}`}
           style={textLayer.positionStyle}
         >
           <div className="composition-text__message">{textLayer.text}</div>
-          {(textLayer.toName || textLayer.fromName) && (
-            <div className="composition-text__names">
-              {textLayer.toName && `To ${textLayer.toName}`}
-              {textLayer.toName && textLayer.fromName && ' · '}
-              {textLayer.fromName && `From ${textLayer.fromName}`}
-            </div>
-          )}
         </div>
       )}
 
       {/* Brand protection overlays */}
+      {protectionLayer?.showBrandRail && (
+        <div className={`composition-brand-rail composition-brand-rail--${protectionLayer.engravingStyle || 'heirloom'}`} />
+      )}
+
       {protectionLayer?.recipientName && (
         <div
           className="composition-protection composition-protection--recipient"
@@ -134,23 +131,11 @@ export default function LivePreview({ product, colorTheme, extras, message, clas
         {protectionLayer?.tmText || 'TM'}
       </div>
 
-      <div className="composition-protection composition-protection--brand">
+      <div
+        className="composition-protection composition-protection--brand"
+        style={protectionLayer?.brandPositionStyle}
+      >
         {protectionLayer?.brandText || 'Digital Bloom™'}
-      </div>
-
-      {/* Getty-style diagonal watermark — permanent, full-coverage */}
-      <div className="db-watermark-overlay">
-        <div className="db-watermark-grid">
-          {Array.from({ length: 12 }, (_, i) => (
-            <div key={i} className="db-watermark-row">
-              <span>© Digital Bloom</span>
-              <span>© Digital Bloom</span>
-              <span>© Digital Bloom</span>
-              <span>© Digital Bloom</span>
-            </div>
-          ))}
-        </div>
-        <div className="db-watermark-corner">© Digital Bloom</div>
       </div>
 
       {/* Subtle vignette for depth */}

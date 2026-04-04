@@ -7,11 +7,12 @@ const CartItem = ({ item }) => {
   const { t } = useLanguage();
   const { updateQuantity, removeFromCart, setIsCartOpen } = useCart();
   const [isExpanded, setIsExpanded] = useState(false);
+  const itemKey = item.lineItemId || item.id;
 
-  const handleIncrement = () => updateQuantity(item.id, item.quantity + 1);
+  const handleIncrement = () => updateQuantity(itemKey, item.quantity + 1);
   const handleDecrement = () => {
-    if (item.quantity > 1) updateQuantity(item.id, item.quantity - 1);
-    else removeFromCart(item.id);
+    if (item.quantity > 1) updateQuantity(itemKey, item.quantity - 1);
+    else removeFromCart(itemKey);
   };
 
   return (
@@ -165,6 +166,15 @@ const CartItem = ({ item }) => {
                 </div>
               )}
 
+              {item.customization.engravingStyle && (
+                <div>
+                  <span className="text-[9px] uppercase tracking-widest text-white/30 block mb-1">Engraving</span>
+                  <span className="text-xs text-white/50 capitalize">
+                    {item.customization.engravingStyle.replace(/-/g, ' ')}
+                  </span>
+                </div>
+              )}
+
               {/* Sound */}
               {item.customization.selectedSound && (
                 <div>
@@ -245,7 +255,7 @@ const CartItem = ({ item }) => {
         </div>
 
         <button
-          onClick={(e) => { e.stopPropagation(); removeFromCart(item.id); }}
+          onClick={(e) => { e.stopPropagation(); removeFromCart(itemKey); }}
           className="text-[9px] uppercase tracking-widest text-white/20 hover:text-red-400 transition-colors font-semibold"
         >
           {t('cart_item_remove')}
