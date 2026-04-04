@@ -42,6 +42,35 @@ const RENDER_PRESETS = {
   },
 };
 
+const FONT_PRESETS = {
+  playfair: {
+    renderFont: 'Serif',
+    recipientSize: 'h*0.034',
+    messageSize: 'h*0.024',
+    senderSize: 'h*0.026',
+  },
+  outfit: {
+    renderFont: 'Sans',
+    recipientSize: 'h*0.033',
+    messageSize: 'h*0.025',
+    senderSize: 'h*0.025',
+  },
+  arialBold: {
+    renderFont: 'Sans',
+    recipientSize: 'h*0.035',
+    messageSize: 'h*0.026',
+    senderSize: 'h*0.026',
+  },
+};
+
+const LOCALE_LABELS = {
+  en: { to: 'To', from: 'From' },
+  es: { to: 'Para', from: 'De' },
+  fr: { to: 'A', from: 'De' },
+  ht: { to: 'Pou', from: 'De' },
+  zh: { to: '致', from: '来自' },
+};
+
 function sanitizeFilePart(value, fallback = 'bloom') {
   return String(value || fallback)
     .toLowerCase()
@@ -72,6 +101,10 @@ function buildDrawText(text, config) {
     'shadowy=2',
   ];
 
+  if (config.font) {
+    parts.push(`font=${config.font}`);
+  }
+
   if (config.boxcolor) {
     parts.push('box=1');
     parts.push(`boxcolor=${config.boxcolor}`);
@@ -97,8 +130,10 @@ async function downloadFile(url, destination) {
   await fs.promises.writeFile(destination, Buffer.from(arrayBuffer));
 }
 
-function buildFilterGraph({ recipientName, senderName, shortMessage, engravingStyle = 'heirloom' }) {
+function buildFilterGraph({ recipientName, senderName, shortMessage, engravingStyle = 'heirloom', fontChoice = 'playfair', locale = 'en' }) {
   const preset = RENDER_PRESETS[engravingStyle] || RENDER_PRESETS.heirloom;
+  const font = FONT_PRESETS[fontChoice] || FONT_PRESETS.playfair;
+  const labels = LOCALE_LABELS[locale] || LOCALE_LABELS.en;
   const filters = [];
 
   filters.push(`drawbox=x=w*0.035:y=h*0.865:w=w*0.93:h=h*0.09:color=${preset.railColor}:t=fill`);
@@ -106,13 +141,14 @@ function buildFilterGraph({ recipientName, senderName, shortMessage, engravingSt
 
   if (recipientName) {
     filters.push(
-      buildDrawText(`To ${recipientName}`, {
+      buildDrawText(`${labels.to} ${recipientName}`, {
         fontcolor: preset.dedicationColor,
-        fontsize: 'h*0.034',
+        fontsize: font.recipientSize,
         x: 'w*0.06',
         y: 'h*0.10',
         boxcolor: 'black@0.16',
         boxborderw: 16,
+        font: font.renderFont,
       })
     );
   }
@@ -122,22 +158,24 @@ function buildFilterGraph({ recipientName, senderName, shortMessage, engravingSt
     filters.push(
       buildDrawText(shortMessage, {
         fontcolor: preset.messageColor,
-        fontsize: engravingStyle === 'signature' ? 'h*0.027' : 'h*0.024',
+        fontsize: engravingStyle === 'signature' ? 'h*0.027' : font.messageSize,
         x: 'w*0.075',
         y: 'h*0.765',
+        font: font.renderFont,
       })
     );
   }
 
   if (senderName) {
     filters.push(
-      buildDrawText(`From ${senderName}`, {
+      buildDrawText(`${labels.from} ${senderName}`, {
         fontcolor: preset.signatureColor,
-        fontsize: 'h*0.026',
+        fontsize: font.senderSize,
         x: 'w-tw-w*0.06',
         y: 'h*0.81',
         boxcolor: 'black@0.14',
         boxborderw: 12,
+        font: font.renderFont,
       })
     );
   }
@@ -148,6 +186,7 @@ function buildFilterGraph({ recipientName, senderName, shortMessage, engravingSt
       fontsize: 'h*0.025',
       x: 'w*0.09',
       y: 'h*0.895',
+      font: 'Serif',
     })
   );
 
@@ -157,6 +196,7 @@ function buildFilterGraph({ recipientName, senderName, shortMessage, engravingSt
       fontsize: 'h*0.018',
       x: 'w-tw-w*0.07',
       y: 'h*0.895',
+      font: 'Sans',
     })
   );
 
@@ -180,6 +220,8 @@ export async function renderBloomDelivery(purchaseId) {
   const senderName = message.fromName || '';
   const shortMessage = normalizeMessage(message.short || '');
   const engravingStyle = customization.engravingStyle || purchase.composition_manifest?.composition?.engravingStyle || 'heirloom';
+  const fontChoice = customization.fontChoice || purchase.composition_manifest?.composition?.fontChoice || 'playfair';
+  const locale = customization.locale || purchase.composition_manifest?.composition?.locale || 'en';
   const sourceVideoUrl = purchase.products?.video_file_url || purchase.products?.video_url;
 
   if (!sourceVideoUrl) {
@@ -194,7 +236,7 @@ export async function renderBloomDelivery(purchaseId) {
     const outputPath = path.join(tmpDir, outputFile);
 
     await downloadFile(sourceVideoUrl, inputPath);
-    const filterGraph = buildFilterGraph({ recipientName, senderName, shortMessage, engravingStyle });
+    const filterGraph = buildFilterGraph({ recipientName, senderName, shortMessage, engravingStyle, fontChoice, locale });
 
     await execFileAsync('ffmpeg', [
       '-y',

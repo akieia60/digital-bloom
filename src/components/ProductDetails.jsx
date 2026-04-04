@@ -12,7 +12,7 @@ const ProductDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
-  const { addToCart, toggleCart } = useCart();
+  const { addToCart, replaceCartItem, toggleCart } = useCart();
   const [isCustomizerOpen, setIsCustomizerOpen] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
 
@@ -51,6 +51,12 @@ const ProductDetails = () => {
     setIsCustomizerOpen(true);
   }, []);
 
+  const clearEditState = useCallback(() => {
+    if (location.state?.editCustomization || location.state?.editLineItemId) {
+      navigate(location.pathname, { replace: true });
+    }
+  }, [location.pathname, location.state, navigate]);
+
   const goBack = useCallback(() => {
     if (window.history.length > 1) {
       navigate(-1);
@@ -84,7 +90,15 @@ const ProductDetails = () => {
   }
 
   const handleCustomizationComplete = (customization) => {
-    addToCart(product, 1, customization);
+    const editLineItemId = location.state?.editLineItemId;
+    const editQuantity = Number(location.state?.editQuantity || 1);
+
+    if (editLineItemId) {
+      replaceCartItem(editLineItemId, product, editQuantity, customization);
+      clearEditState();
+    } else {
+      addToCart(product, 1, customization);
+    }
     // Show success toast instead of forcing cart open — user can keep shopping (Fashion Nova style)
     setShowSuccess(true);
   };
@@ -194,7 +208,7 @@ const ProductDetails = () => {
 
           {/* Feature labels — clearer and readable */}
           <div className="flex items-center justify-center gap-5 mt-6 flex-wrap">
-            {[t('product_digital_experience'), 'Instant Delivery', 'Personalized'].map((label, i) => (
+            {[t('product_digital_experience'), t('product_instant_delivery'), t('product_personalized')].map((label, i) => (
               <span key={i} className="text-[12px] uppercase tracking-[0.1em] text-[#8E8E93] font-medium">
                 {label}
               </span>

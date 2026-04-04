@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { supabase } from '../lib/supabase';
 import { buildCartComposition } from '../lib/fulfillmentMapper';
-import { ENGRAVING_STYLES } from '../lib/compositionEngine';
+import { ENGRAVING_STYLES, MESSAGE_FONT_OPTIONS } from '../lib/compositionEngine';
 import { useLanguage } from '../contexts/LanguageContext';
 import LivePreview from './LivePreview';
 import '../styles/customizer.css';
@@ -42,25 +42,20 @@ const FLOW_STEPS = [
 ];
 
 const MESSAGE_STARTERS = [
-  'Forever in bloom.',
-  'You are deeply loved.',
-  'Thank you for being here.',
-  'A moment worth keeping.',
+  { id: 'starter-forever', key: 'customize_starter_forever' },
+  { id: 'starter-loved', key: 'customize_starter_loved' },
+  { id: 'starter-thanks', key: 'customize_starter_thanks' },
+  { id: 'starter-moment', key: 'customize_starter_moment' },
 ];
 
-const ENGRAVING_OPTIONS = Object.entries(ENGRAVING_STYLES).map(([id, style]) => ({
+const ENGRAVING_OPTIONS = Object.keys(ENGRAVING_STYLES).map((id) => ({
   id,
-  label: style.label,
-  description:
-    id === 'heirloom'
-      ? 'Top-left dedication, message plaque, signed finish'
-      : id === 'signature'
-        ? 'Balanced typography with a softer cinematic feel'
-        : 'Sharper gallery-style lettering with a cleaner finish',
+  labelKey: `customize_engraving_${id}`,
+  descriptionKey: `customize_engraving_${id}_desc`,
 }));
 
 const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editData = null }) => {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const { messagePlaceholder, toPlaceholder, ...stateDefaults } = defaults;
   const scrollPosRef = useRef(0);
 
@@ -71,9 +66,17 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
     fromName: stateDefaults.fromName || '',
   });
   const [colorTheme, setColorTheme] = useState(stateDefaults.colorTheme || 'original');
-  const [extras, setExtras] = useState({ ribbon: false, sparkle: false, goldDust: true, softGlow: false, rosePetals: false });
+  const [extras, setExtras] = useState({
+    ribbon: false,
+    sparkle: false,
+    goldDust: false,
+    softGlow: false,
+    rosePetals: false,
+    ...(stateDefaults.extras || {}),
+  });
   const [selectedSound, setSelectedSound] = useState(stateDefaults.selectedSound || stateDefaults.sound || '');
   const [engravingStyle, setEngravingStyle] = useState(stateDefaults.engravingStyle || 'heirloom');
+  const [fontChoice, setFontChoice] = useState(stateDefaults.fontChoice || 'playfair');
   const [playingTrack, setPlayingTrack] = useState(null);
   const [activeStep, setActiveStep] = useState(1);
 
@@ -92,6 +95,9 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
       }
       if (editData.engravingStyle || editData.composition?.engravingStyle) {
         setEngravingStyle(editData.engravingStyle || editData.composition?.engravingStyle || 'heirloom');
+      }
+      if (editData.fontChoice || editData.composition?.fontChoice) {
+        setFontChoice(editData.fontChoice || editData.composition?.fontChoice || 'playfair');
       }
       if (editData.composition?.activeOverlays) {
         const newExtras = { ribbon: false, sparkle: false, goldDust: false, softGlow: false, rosePetals: false, balloon: false };
@@ -150,8 +156,8 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
     setMessage(prev => ({ ...prev, [field]: value }));
   }, []);
 
-  const applyMessageStarter = useCallback((starter) => {
-    setMessage((prev) => ({ ...prev, short: starter }));
+  const applyMessageStarter = useCallback((starterKey) => {
+    setMessage((prev) => ({ ...prev, short: t(starterKey) }));
   }, []);
 
   const toggleExtra = useCallback((extraId) => {
@@ -296,7 +302,7 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
       } catch (err) { console.error('Theme save (non-blocking):', err); }
     })();
     // Build composition manifest for fulfillment
-    const composition = buildCartComposition({ message, colorTheme, extras, selectedSound, engravingStyle });
+    const composition = buildCartComposition({ message, colorTheme, extras, selectedSound, engravingStyle, fontChoice, locale: lang });
     // Stop audio on complete
     stopAllAudio();
     onComplete({
@@ -306,11 +312,27 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
       extras,
       selectedSound,
       engravingStyle,
+      fontChoice,
+      locale: lang,
       totalPrice,
       composition,
     });
     onClose();
-  }, [isProductValid, product, message, colorTheme, extras, selectedSound, engravingStyle, totalPrice, themeStyle, stopAllAudio, onComplete, onClose]);
+  }, [isProductValid, product, message, colorTheme, extras, selectedSound, engravingStyle, fontChoice, lang, totalPrice, themeStyle, stopAllAudio, onComplete, onClose]);
+
+  const selectedExtras = useMemo(
+    () => EXTRAS.filter((extra) => extras[extra.id]).map((extra) => t(extra.nameKey)),
+    [extras, t]
+  );
+
+  const fontOptions = useMemo(
+    () => [
+      { id: 'playfair', label: t('customize_font_playfair') },
+      { id: 'outfit', label: t('customize_font_outfit') },
+      { id: 'arialBold', label: t('customize_font_arial') },
+    ],
+    [t]
+  );
 
   const goNext = () => setActiveStep((prev) => Math.min(prev + 1, FLOW_STEPS.length));
   const goBack = () => setActiveStep((prev) => Math.max(prev - 1, 1));
@@ -362,6 +384,7 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
               extras={extras}
               message={message}
               engravingStyle={engravingStyle}
+              fontChoice={fontChoice}
               className="composition-preview--square"
             />
           </div>
@@ -388,16 +411,19 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
             </div>
 
             <div className="customizer-starters">
-              {MESSAGE_STARTERS.map((starter) => (
+              {MESSAGE_STARTERS.map((starter) => {
+                const starterText = t(starter.key);
+                return (
                 <button
-                  key={starter}
+                  key={starter.id}
                   type="button"
-                  className={`customizer-starter-chip ${message.short === starter ? 'customizer-starter-chip--active' : ''}`}
-                  onClick={() => applyMessageStarter(starter)}
+                  className={`customizer-starter-chip ${message.short === starterText ? 'customizer-starter-chip--active' : ''}`}
+                  onClick={() => applyMessageStarter(starter.key)}
                 >
-                  {starter}
+                  {starterText}
                 </button>
-              ))}
+                );
+              })}
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
@@ -417,15 +443,73 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
               </div>
             </div>
 
+            <div className="customizer-field">
+              <label className="customizer-label" htmlFor="cust-font">{t('customize_font_label')}</label>
+              <select
+                id="cust-font"
+                className="customizer-select"
+                value={fontChoice}
+                onChange={(e) => setFontChoice(e.target.value)}
+              >
+                {fontOptions.map((option) => (
+                  <option key={option.id} value={option.id}>{option.label}</option>
+                ))}
+              </select>
+              <span className="customizer-hint">{t('customize_font_hint')}</span>
+            </div>
+
+            <div className="customizer-live-copy">
+              <div className="customizer-live-copy__header">
+                <span>{t('customize_live_card_label')}</span>
+                <span>{fontOptions.find((option) => option.id === fontChoice)?.label || t('customize_font_playfair')}</span>
+              </div>
+              <div className={`customizer-live-copy__stage customizer-live-copy__stage--${engravingStyle}`}>
+                <div
+                  className="customizer-live-copy__to"
+                  style={{
+                    fontFamily: MESSAGE_FONT_OPTIONS[fontChoice]?.previewFamily,
+                    fontWeight: MESSAGE_FONT_OPTIONS[fontChoice]?.previewWeight,
+                    letterSpacing: MESSAGE_FONT_OPTIONS[fontChoice]?.previewLetterSpacing,
+                    textTransform: MESSAGE_FONT_OPTIONS[fontChoice]?.previewTransform === 'uppercase' ? 'uppercase' : 'uppercase',
+                  }}
+                >
+                  {message.toName || t('customize_live_card_to')}
+                </div>
+                <div
+                  className="customizer-live-copy__message"
+                  style={{
+                    fontFamily: MESSAGE_FONT_OPTIONS[fontChoice]?.previewFamily,
+                    fontWeight: MESSAGE_FONT_OPTIONS[fontChoice]?.previewWeight,
+                    letterSpacing: MESSAGE_FONT_OPTIONS[fontChoice]?.previewLetterSpacing,
+                    textTransform: MESSAGE_FONT_OPTIONS[fontChoice]?.previewTransform,
+                  }}
+                >
+                  {message.short || t('customize_live_card_message')}
+                </div>
+                <div
+                  className="customizer-live-copy__from"
+                  style={{
+                    fontFamily: MESSAGE_FONT_OPTIONS[fontChoice]?.previewFamily,
+                    fontWeight: MESSAGE_FONT_OPTIONS[fontChoice]?.previewWeight,
+                    letterSpacing: MESSAGE_FONT_OPTIONS[fontChoice]?.previewLetterSpacing,
+                    textTransform: MESSAGE_FONT_OPTIONS[fontChoice]?.previewTransform === 'uppercase' ? 'uppercase' : 'uppercase',
+                  }}
+                >
+                  {message.fromName || t('customize_live_card_from')}
+                </div>
+              </div>
+              <p className="customizer-live-copy__note">{t('customize_live_card_note')}</p>
+            </div>
+
             <div className="customizer-engraving-map">
               <div className="customizer-engraving-map__header">
-                <span>Final delivery map</span>
-                <span>{ENGRAVING_STYLES[engravingStyle]?.label || 'Heirloom engraving'}</span>
+                <span>{t('customize_engraving_map_title')}</span>
+                <span>{t(`customize_engraving_${engravingStyle}`)}</span>
               </div>
               <div className="customizer-engraving-map__body">
-                <div className="customizer-engraving-map__to">To appears near the top-left of the bloom</div>
-                <div className="customizer-engraving-map__message">Your message becomes the engraved keepsake line</div>
-                <div className="customizer-engraving-map__from">From rests above the protected brand strip</div>
+                <div className="customizer-engraving-map__to">{t('customize_engraving_map_to')}</div>
+                <div className="customizer-engraving-map__message">{t('customize_engraving_map_message')}</div>
+                <div className="customizer-engraving-map__from">{t('customize_engraving_map_from')}</div>
               </div>
             </div>
           </div>
@@ -454,7 +538,7 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
             </div>
 
             <div className="customizer-section__subgroup" style={{ marginTop: '18px' }}>
-              <div className="customizer-label" style={{ marginBottom: '10px', display: 'block' }}>Engraving finish</div>
+              <div className="customizer-label" style={{ marginBottom: '10px', display: 'block' }}>{t('customize_engraving_finish')}</div>
               <div className="extras-grid">
                 {ENGRAVING_OPTIONS.map((option) => (
                   <button
@@ -466,8 +550,8 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
                   >
                     <div className="extra-toggle__info" style={{ alignItems: 'flex-start' }}>
                       <div>
-                        <span className="extra-toggle__name">{option.label}</span>
-                        <div className="text-[11px] leading-[1.4] text-[#6E6E73] mt-1">{option.description}</div>
+                        <span className="extra-toggle__name">{t(option.labelKey)}</span>
+                        <div className="text-[11px] leading-[1.4] text-[#6E6E73] mt-1">{t(option.descriptionKey)}</div>
                       </div>
                     </div>
                     <span className="toggle-switch" aria-hidden="true">
@@ -509,6 +593,13 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
                 </button>
               ))}
             </div>
+            <div className="customizer-sound-summary">
+              <span className="customizer-sound-summary__label">{t('customize_review_effects')}</span>
+              <span className="customizer-sound-summary__value">
+                {selectedExtras.length > 0 ? selectedExtras.join(', ') : t('customize_extras_selected_none')}
+              </span>
+              <p className="customizer-sound-summary__note">{t('customize_extras_hint')}</p>
+            </div>
           </div>
             </>
           )}
@@ -540,11 +631,11 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
               ))}
             </div>
             <div className="customizer-sound-summary">
-              <span className="customizer-sound-summary__label">Selected soundtrack</span>
+              <span className="customizer-sound-summary__label">{t('customize_sound_selected')}</span>
               <span className="customizer-sound-summary__value">
                 {SOUND_TRACKS.find((track) => track.id === selectedSound)
                   ? t(SOUND_TRACKS.find((track) => track.id === selectedSound).nameKey)
-                  : 'None selected yet'}
+                  : t('customize_sound_none')}
               </span>
             </div>
           </div>
@@ -562,10 +653,11 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
                 <div className="review-row"><span className="review-label">{t('customize_review_from')}</span><span className="review-value">{message.fromName || '—'}</span></div>
                 <div className="review-row"><span className="review-label">{t('customize_review_message')}</span><span className="review-value">{message.short || '—'}</span></div>
                 <div className="review-row"><span className="review-label">{t('customize_review_frame')}</span><span className="review-value">{t(COLOR_THEMES.find((theme) => theme.id === colorTheme)?.nameKey) || t('customize_theme_original')}</span></div>
-                <div className="review-row"><span className="review-label">Engraving</span><span className="review-value">{ENGRAVING_STYLES[engravingStyle]?.label || 'Heirloom engraving'}</span></div>
-                <div className="review-row"><span className="review-label">{t('customize_review_effects')}</span><span className="review-value">{EXTRAS.filter((extra) => extras[extra.id]).map((extra) => t(extra.nameKey)).join(', ') || 'None selected'}</span></div>
-                <div className="review-row"><span className="review-label">{t('customize_review_sound')}</span><span className="review-value">{SOUND_TRACKS.find((track) => track.id === selectedSound) ? t(SOUND_TRACKS.find((track) => track.id === selectedSound).nameKey) : 'None selected'}</span></div>
-                <div className="review-row"><span className="review-label">Protection</span><span className="review-value">Permanent Digital Bloom signature strip on the final download</span></div>
+                <div className="review-row"><span className="review-label">{t('customize_review_engraving')}</span><span className="review-value">{t(`customize_engraving_${engravingStyle}`)}</span></div>
+                <div className="review-row"><span className="review-label">{t('customize_review_font')}</span><span className="review-value">{fontOptions.find((option) => option.id === fontChoice)?.label || t('customize_font_playfair')}</span></div>
+                <div className="review-row"><span className="review-label">{t('customize_review_effects')}</span><span className="review-value">{selectedExtras.join(', ') || t('customize_extras_selected_none')}</span></div>
+                <div className="review-row"><span className="review-label">{t('customize_review_sound')}</span><span className="review-value">{SOUND_TRACKS.find((track) => track.id === selectedSound) ? t(SOUND_TRACKS.find((track) => track.id === selectedSound).nameKey) : t('customize_sound_none')}</span></div>
+                <div className="review-row"><span className="review-label">{t('customize_review_protection')}</span><span className="review-value">{t('customize_review_protection_value')}</span></div>
               </div>
             </div>
           )}

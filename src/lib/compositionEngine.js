@@ -83,6 +83,33 @@ const COLOR_THEMES = {
   },
 };
 
+export const MESSAGE_FONT_OPTIONS = {
+  playfair: {
+    label: 'Classic Serif',
+    previewFamily: "'Playfair Display', Georgia, serif",
+    previewWeight: 600,
+    previewTransform: 'none',
+    previewLetterSpacing: '0.02em',
+    renderFont: 'Serif',
+  },
+  outfit: {
+    label: 'Modern Sans',
+    previewFamily: "'Outfit', 'Helvetica Neue', Arial, sans-serif",
+    previewWeight: 700,
+    previewTransform: 'none',
+    previewLetterSpacing: '0.03em',
+    renderFont: 'Sans',
+  },
+  arialBold: {
+    label: 'Bold Sans',
+    previewFamily: "Arial, 'Helvetica Neue', sans-serif",
+    previewWeight: 700,
+    previewTransform: 'uppercase',
+    previewLetterSpacing: '0.06em',
+    renderFont: 'Sans',
+  },
+};
+
 const TEXT_POSITIONS = {
   'top-left-safe': {
     top: '8%',
@@ -189,9 +216,11 @@ export function getCompositionLayers({
   extras = {},
   message = {},
   engravingStyle = 'heirloom',
+  fontChoice = 'playfair',
 }) {
   const theme = COLOR_THEMES[colorTheme] || COLOR_THEMES.original;
   const engraving = ENGRAVING_STYLES[engravingStyle] || ENGRAVING_STYLES.heirloom;
+  const font = MESSAGE_FONT_OPTIONS[fontChoice] || MESSAGE_FONT_OPTIONS.playfair;
 
   const baseMedia = {
     type: product?.video_file_url || product?.video_url ? 'video' : 'image',
@@ -230,6 +259,13 @@ export function getCompositionLayers({
         color: '#FFFFFF',
         shadow: true,
         variant: engraving.textVariant,
+        fontChoice,
+        textStyle: {
+          fontFamily: font.previewFamily,
+          fontWeight: font.previewWeight,
+          textTransform: font.previewTransform,
+          letterSpacing: font.previewLetterSpacing,
+        },
       }
     : null;
 
@@ -242,8 +278,20 @@ export function getCompositionLayers({
     brandText: 'Digital Bloom™',
     recipientPosition: engraving.recipientPosition,
     recipientPositionStyle: TEXT_POSITIONS[engraving.recipientPosition],
+    recipientTextStyle: {
+      fontFamily: font.previewFamily,
+      fontWeight: font.previewWeight,
+      textTransform: font.previewTransform === 'uppercase' ? 'uppercase' : 'uppercase',
+      letterSpacing: font.previewLetterSpacing,
+    },
     senderPosition: engraving.senderPosition,
     senderPositionStyle: TEXT_POSITIONS[engraving.senderPosition],
+    senderTextStyle: {
+      fontFamily: font.previewFamily,
+      fontWeight: font.previewWeight,
+      textTransform: font.previewTransform === 'uppercase' ? 'uppercase' : 'uppercase',
+      letterSpacing: font.previewLetterSpacing,
+    },
     tmPosition: engraving.tmPosition,
     tmPositionStyle: TEXT_POSITIONS[engraving.tmPosition],
     brandPosition: engraving.brandPosition,
@@ -264,6 +312,10 @@ export function getCompositionLayers({
 
 export function getThemeFilter(themeId) {
   return (COLOR_THEMES[themeId] || COLOR_THEMES.original).filter;
+}
+
+export function getMessageFontSpec(fontChoice) {
+  return MESSAGE_FONT_OPTIONS[fontChoice] || MESSAGE_FONT_OPTIONS.playfair;
 }
 
 export function getThemeSpec(themeId) {

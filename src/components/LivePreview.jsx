@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import { useLanguage } from '../contexts/LanguageContext';
 import { getCompositionLayers } from '../lib/compositionEngine';
 import '../styles/overlays.css';
 
@@ -15,10 +16,11 @@ import '../styles/overlays.css';
 
 const BALLOON_EMOJIS = ['🎈', '🎈', '🎈', '🎈', '🎈'];
 
-export default function LivePreview({ product, colorTheme, extras, message, engravingStyle = 'heirloom', className = '' }) {
+export default function LivePreview({ product, colorTheme, extras, message, engravingStyle = 'heirloom', fontChoice = 'playfair', className = '' }) {
+  const { t } = useLanguage();
   const composition = useMemo(
-    () => getCompositionLayers({ product, colorTheme, extras, message, engravingStyle }),
-    [product, colorTheme, extras, message, engravingStyle]
+    () => getCompositionLayers({ product, colorTheme, extras, message, engravingStyle, fontChoice }),
+    [product, colorTheme, extras, message, engravingStyle, fontChoice]
   );
 
   if (!composition?.baseMedia?.src && !composition?.baseMedia?.poster) {
@@ -97,7 +99,7 @@ export default function LivePreview({ product, colorTheme, extras, message, engr
           className={`composition-layer--text composition-layer--text-${textLayer.variant || 'heirloom'}`}
           style={textLayer.positionStyle}
         >
-          <div className="composition-text__message">{textLayer.text}</div>
+          <div className="composition-text__message" style={textLayer.textStyle}>{textLayer.text}</div>
         </div>
       )}
 
@@ -109,18 +111,18 @@ export default function LivePreview({ product, colorTheme, extras, message, engr
       {protectionLayer?.recipientName && (
         <div
           className="composition-protection composition-protection--recipient"
-          style={protectionLayer.recipientPositionStyle}
+          style={{ ...protectionLayer.recipientPositionStyle, ...protectionLayer.recipientTextStyle }}
         >
-          To {protectionLayer.recipientName}
+          {t('customize_to')} {protectionLayer.recipientName}
         </div>
       )}
 
       {protectionLayer?.senderName && (
         <div
           className="composition-protection composition-protection--sender"
-          style={protectionLayer.senderPositionStyle}
+          style={{ ...protectionLayer.senderPositionStyle, ...protectionLayer.senderTextStyle }}
         >
-          From {protectionLayer.senderName}
+          {t('customize_from')} {protectionLayer.senderName}
         </div>
       )}
 

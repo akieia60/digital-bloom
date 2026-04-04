@@ -3,11 +3,36 @@ import { Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useLanguage } from '../contexts/LanguageContext';
 
+const OVERLAY_ICON_MAP = {
+  ribbon: '🎀',
+  sparkle: '✨',
+  goldDust: '✨',
+  softGlow: '🕯️',
+  rosePetals: '🌹',
+  balloon: '🎈',
+};
+
+const OVERLAY_LABEL_KEYS = {
+  ribbon: 'customize_extra_ribbon',
+  sparkle: 'customize_extra_sparkle',
+  goldDust: 'customize_extra_gold',
+  softGlow: 'customize_extra_glow',
+  rosePetals: 'customize_extra_petals',
+  balloon: 'customize_extra_ribbon',
+};
+
 const CartItem = ({ item }) => {
   const { t } = useLanguage();
   const { updateQuantity, removeFromCart, setIsCartOpen } = useCart();
   const [isExpanded, setIsExpanded] = useState(false);
   const itemKey = item.lineItemId || item.id;
+  const customizationMessage = typeof item.customization?.message === 'string'
+    ? { short: item.customization.message, toName: '', fromName: '' }
+    : (item.customization?.message || {});
+  const activeOverlays = item.customization?.composition?.activeOverlays || [];
+  const fontLabel = item.customization?.fontChoice
+    ? t(`customize_font_${item.customization.fontChoice === 'arialBold' ? 'arial' : item.customization.fontChoice}`)
+    : null;
 
   const handleIncrement = () => updateQuantity(itemKey, item.quantity + 1);
   const handleDecrement = () => {
@@ -72,6 +97,36 @@ const CartItem = ({ item }) => {
             <span className="text-[9px] uppercase tracking-widest text-pure-gold font-bold">{t('cart_item_bespoke')}</span>
           ) : (
             <span className="text-[9px] uppercase tracking-widest text-white/20 font-light">{t('cart_item_gallery')}</span>
+          )}
+
+          {item.customization && (
+            <div className="mt-2 space-y-1">
+              <p className="text-[11px] text-white/65 leading-relaxed line-clamp-2">
+                {customizationMessage.short || t('cart_item_summary_pending')}
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {customizationMessage.toName && (
+                  <span className="text-[9px] uppercase tracking-widest text-white/35">
+                    {t('cart_item_to')} {customizationMessage.toName}
+                  </span>
+                )}
+                {customizationMessage.fromName && (
+                  <span className="text-[9px] uppercase tracking-widest text-white/35">
+                    {t('cart_item_from')} {customizationMessage.fromName}
+                  </span>
+                )}
+                {activeOverlays.length > 0 && (
+                  <span className="text-[9px] uppercase tracking-widest text-white/35">
+                    {t('cart_item_summary_effects')} {activeOverlays.length}
+                  </span>
+                )}
+                {item.customization.selectedSound && (
+                  <span className="text-[9px] uppercase tracking-widest text-white/35">
+                    {t('cart_item_summary_sound')}
+                  </span>
+                )}
+              </div>
+            </div>
           )}
 
           {/* Expand indicator */}
@@ -146,10 +201,10 @@ const CartItem = ({ item }) => {
                   {typeof item.customization.message === 'object' && (
                     <div className="flex gap-4 mt-1">
                       {item.customization.message.toName && (
-                        <span className="text-[9px] text-white/30">To: {item.customization.message.toName}</span>
+                        <span className="text-[9px] text-white/30">{t('cart_item_to')} {item.customization.message.toName}</span>
                       )}
                       {item.customization.message.fromName && (
-                        <span className="text-[9px] text-white/30">From: {item.customization.message.fromName}</span>
+                        <span className="text-[9px] text-white/30">{t('cart_item_from')} {item.customization.message.fromName}</span>
                       )}
                     </div>
                   )}
@@ -168,9 +223,18 @@ const CartItem = ({ item }) => {
 
               {item.customization.engravingStyle && (
                 <div>
-                  <span className="text-[9px] uppercase tracking-widest text-white/30 block mb-1">Engraving</span>
+                  <span className="text-[9px] uppercase tracking-widest text-white/30 block mb-1">{t('cart_item_engraving')}</span>
                   <span className="text-xs text-white/50 capitalize">
-                    {item.customization.engravingStyle.replace(/-/g, ' ')}
+                    {t(`customize_engraving_${item.customization.engravingStyle}`)}
+                  </span>
+                </div>
+              )}
+
+              {fontLabel && (
+                <div>
+                  <span className="text-[9px] uppercase tracking-widest text-white/30 block mb-1">{t('cart_item_font')}</span>
+                  <span className="text-xs text-white/50 capitalize">
+                    {fontLabel}
                   </span>
                 </div>
               )}
@@ -192,7 +256,7 @@ const CartItem = ({ item }) => {
                   <div className="flex flex-wrap gap-2">
                     {item.customization.composition.activeOverlays.map(overlay => (
                       <span key={overlay} className="text-[10px] uppercase tracking-wider bg-white/5 px-3 py-1 rounded-full text-white/40 border border-white/5">
-                        {overlay === 'balloon' ? '🎈' : overlay === 'ribbon' ? '🎀' : overlay === 'sparkle' ? '✨' : ''} {overlay}
+                        {OVERLAY_ICON_MAP[overlay] || '✨'} {t(OVERLAY_LABEL_KEYS[overlay] || 'customize_extra_sparkle')}
                       </span>
                     ))}
                   </div>
@@ -205,7 +269,7 @@ const CartItem = ({ item }) => {
           {item.customization && (
             <Link
               to={`/product/${item.id}`}
-              state={{ editCustomization: item.customization }}
+              state={{ editCustomization: item.customization, editLineItemId: itemKey, editQuantity: item.quantity }}
               className="inline-flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-pure-gold hover:text-white transition-colors font-semibold mb-2"
               onClick={(e) => { e.stopPropagation(); setIsCartOpen(false); }}
             >

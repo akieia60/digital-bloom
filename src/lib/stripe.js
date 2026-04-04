@@ -1,4 +1,5 @@
 import { loadStripe } from '@stripe/stripe-js';
+import { getApiBase } from './apiBase';
 
 const stripePublishableKey = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY;
 
@@ -40,7 +41,7 @@ export const createCartCheckoutSession = async (cartItems, creditMetadata = null
     );
 
     // Call backend API to create checkout session
-    const apiUrl = import.meta.env.VITE_API_URL || '';
+    const apiUrl = getApiBase();
     const response = await fetch(`${apiUrl}/api/create-checkout-session`, {
       method: 'POST',
       headers: {

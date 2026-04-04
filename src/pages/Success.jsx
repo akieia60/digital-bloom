@@ -1,11 +1,13 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
+import { useLanguage } from '../contexts/LanguageContext';
 import '../styles/success.css';
 
 const POLL_LIMIT = 20;
 const POLL_INTERVAL_MS = 3000;
 
 const Success = () => {
+  const { t } = useLanguage();
   const [searchParams] = useSearchParams();
   const [isProcessing, setIsProcessing] = useState(true);
   const [checkout, setCheckout] = useState(null);
@@ -15,7 +17,7 @@ const Success = () => {
 
   useEffect(() => {
     if (!sessionId) {
-      setError('Session token unavailable.');
+      setError(t('success_missing_session'));
       setIsProcessing(false);
       return;
     }
@@ -35,11 +37,11 @@ const Success = () => {
             return;
           }
 
-          throw new Error('We could not find your order yet. Please refresh in a moment.');
+          throw new Error(t('success_not_found'));
         }
 
         if (!response.ok) {
-          throw new Error('Failed to load your checkout status.');
+          throw new Error(t('success_load_error'));
         }
 
         const data = await response.json();
@@ -56,7 +58,7 @@ const Success = () => {
         }
       } catch (err) {
         if (cancelled) return;
-        setError(err.message || 'Failed to process your purchase. Please contact support.');
+        setError(err.message || t('success_load_error'));
         setIsProcessing(false);
       }
     };
@@ -69,7 +71,7 @@ const Success = () => {
         window.clearTimeout(timeoutId);
       }
     };
-  }, [sessionId]);
+  }, [sessionId, t]);
 
   const purchases = useMemo(() => checkout?.purchases || [], [checkout]);
   const totalAmount = Number(checkout?.totals?.amount || 0).toFixed(2);
@@ -111,7 +113,7 @@ const Success = () => {
       <div className="success-page">
         <div className="success-loading">
           <div className="success-spinner" />
-          <p className="success-loading-text">Preparing Your Experience...</p>
+          <p className="success-loading-text">{t('success_processing')}</p>
         </div>
       </div>
     );
@@ -121,9 +123,9 @@ const Success = () => {
     return (
       <div className="success-page">
         <div className="success-error-card">
-          <h2 className="success-error-title">Something Went Wrong</h2>
+          <h2 className="success-error-title">{t('success_error_title')}</h2>
           <p className="success-error-msg">{error}</p>
-          <Link to="/" className="success-btn-outline">Return Home</Link>
+          <Link to="/" className="success-btn-outline">{t('success_return_home')}</Link>
         </div>
       </div>
     );
@@ -138,58 +140,58 @@ const Success = () => {
               <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
             </svg>
           </div>
-          <h1 className="success-title">Your Bloom Is On Its Way!</h1>
+          <h1 className="success-title">{t('success_title')}</h1>
           <p className="success-subtitle">
-            Your checkout is confirmed and we&apos;re preparing each experience for delivery.
+            {t('success_subtitle')}
           </p>
         </div>
 
         <div className="success-card">
-          <h3 className="success-card-label">Order Summary</h3>
+          <h3 className="success-card-label">{t('success_order_summary')}</h3>
           <div className="success-row">
-            <span className="success-row-label">Session</span>
+            <span className="success-row-label">{t('success_session')}</span>
             <span className="success-row-value success-row-mono">{displayId}</span>
           </div>
           <div className="success-row">
-            <span className="success-row-label">Items</span>
+            <span className="success-row-label">{t('success_items')}</span>
             <span className="success-row-value">{purchases.length}</span>
           </div>
           <div className="success-row">
-            <span className="success-row-label">Total</span>
+            <span className="success-row-label">{t('success_total')}</span>
             <span className="success-row-value success-row-gold">${totalAmount}</span>
           </div>
           <div className="success-row success-row-last">
-            <span className="success-row-label">Status</span>
+            <span className="success-row-label">{t('success_status')}</span>
             <span className="success-badge">
-              {checkout?.checkout_status === 'completed' ? 'Confirmed ✓' : 'Processing…'}
+              {checkout?.checkout_status === 'completed' ? t('success_status_confirmed') : t('success_status_processing')}
             </span>
           </div>
         </div>
 
         <div className="success-card">
-          <h3 className="success-card-label">Your Experiences</h3>
+          <h3 className="success-card-label">{t('success_experiences')}</h3>
           {purchases.map((purchase) => {
             const isReady = purchase.download_url && purchase.download_expires_at && new Date(purchase.download_expires_at) > new Date();
             return (
               <div key={purchase.id} className="success-row success-row-last" style={{ display: 'block', marginBottom: '16px' }}>
                 <div className="success-row" style={{ paddingTop: 0 }}>
-                  <span className="success-row-label">{purchase.products?.name || 'Digital Bloom'}</span>
+                  <span className="success-row-label">{purchase.products?.name || t('success_default_product')}</span>
                   <span className="success-row-value">{purchase.status}</span>
                 </div>
                 {isReady ? (
                   <a href={purchase.download_url} download className="success-btn-gold" style={{ marginTop: '12px' }}>
-                    Download Experience
+                    {t('success_download')}
                   </a>
                 ) : (
                   <p className="success-card-text" style={{ marginTop: '12px' }}>
                     {purchase.has_customization
-                      ? 'Personalized delivery is being prepared.'
-                      : 'Your digital file is still being finalized.'}
+                      ? t('success_personalized_pending')
+                      : t('success_standard_pending')}
                   </p>
                 )}
                 {purchase.bloom_slug && (
                   <p className="success-note" style={{ marginTop: '10px' }}>
-                    View link: <Link to={`/bloom/${purchase.bloom_slug}`}>Open your bloom</Link>
+                    {t('success_view_link')} <Link to={`/bloom/${purchase.bloom_slug}`}>{t('success_open_bloom')}</Link>
                   </p>
                 )}
               </div>
@@ -199,12 +201,12 @@ const Success = () => {
 
         {bloomPurchases.length > 0 && (
           <div className="success-card">
-            <h3 className="success-card-label">Bloom Links</h3>
+            <h3 className="success-card-label">{t('success_bloom_links')}</h3>
             {bloomPurchases.map((purchase) => (
               <div key={purchase.id} className="success-row">
-                <span className="success-row-label">{purchase.products?.name || 'Bloom'}</span>
+                <span className="success-row-label">{purchase.products?.name || t('success_bloom')}</span>
                 <Link to={`/bloom/${purchase.bloom_slug}`} className="success-row-value success-row-gold">
-                  View Bloom
+                  {t('success_view_bloom')}
                 </Link>
               </div>
             ))}
@@ -213,20 +215,20 @@ const Success = () => {
 
         {readyDownloads.length === 0 && (
           <div className="success-card">
-            <h3 className="success-card-label">Processing Status</h3>
+            <h3 className="success-card-label">{t('success_processing_title')}</h3>
             <ul className="success-status-list">
-              <li>✓ Checkout confirmed</li>
-              <li>{checkout?.checkout_status === 'completed' ? '✓ Order records finalized' : '⏳ Finalizing your order records'}</li>
-              <li>{purchases.some((purchase) => purchase.has_customization) ? '🎬 Personalized delivery files are rendering' : '📦 Standard digital files are being prepared'}</li>
+              <li>{t('success_step_checkout')}</li>
+              <li>{checkout?.checkout_status === 'completed' ? t('success_step_records_done') : t('success_step_records_pending')}</li>
+              <li>{purchases.some((purchase) => purchase.has_customization) ? t('success_step_rendering') : t('success_step_files')}</li>
             </ul>
           </div>
         )}
 
         <div className="success-card">
-          <h3 className="success-card-label">Share Digital Bloom</h3>
+          <h3 className="success-card-label">{t('success_share_title')}</h3>
           <div className="success-share-row">
             <button type="button" onClick={copyLink} className="success-share-btn">
-              {copied ? '✓ Copied!' : '🔗 Copy Link'}
+              {copied ? t('success_copied') : t('success_copy_link')}
             </button>
             <button
               type="button"
@@ -246,7 +248,7 @@ const Success = () => {
         </div>
 
         <div className="success-actions">
-          <Link to="/" className="success-btn-primary">Return to Homepage</Link>
+          <Link to="/" className="success-btn-primary">{t('success_return_homepage')}</Link>
         </div>
       </div>
     </div>

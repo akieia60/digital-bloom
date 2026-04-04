@@ -15,6 +15,8 @@ export function buildFulfillmentManifest(product, customization) {
     totalPrice = 0,
     selectedSound = '',
     engravingStyle = 'heirloom',
+    fontChoice = 'playfair',
+    locale = 'en',
   } = customization;
 
   const theme = getThemeSpec(colorTheme);
@@ -191,6 +193,7 @@ export function buildFulfillmentManifest(product, customization) {
       theme: theme.label,
       engravingStyle: engraving.label,
       soundtrack: selectedSound || null,
+      fontChoice,
       extras: Object.entries(extras).filter(([, value]) => value).map(([key]) => key),
       hasMessage: Boolean(message.short),
       hasTo: Boolean(message.toName),
@@ -205,6 +208,7 @@ export function buildFulfillmentManifest(product, customization) {
       trademarkText: 'Digital Bloom™',
     },
     protectionPlan,
+    locale,
   };
 }
 
@@ -215,12 +219,16 @@ export function buildCartComposition(customization) {
     extras = {},
     selectedSound = '',
     engravingStyle = 'heirloom',
+    fontChoice = 'playfair',
+    locale = 'en',
   } = customization;
 
   return {
     colorTheme,
     selectedSound,
     engravingStyle,
+    fontChoice,
+    locale,
     extras: Object.fromEntries(
       Object.entries(extras).map(([key, value]) => [key, Boolean(value)])
     ),

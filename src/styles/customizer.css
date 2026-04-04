@@ -312,6 +312,83 @@
   line-height: 1.5;
 }
 
+.customizer-live-copy {
+  margin-top: 16px;
+  padding: 14px;
+  border-radius: 18px;
+  background: linear-gradient(180deg, rgba(7, 17, 31, 0.06), rgba(7, 17, 31, 0.12));
+  border: 1px solid rgba(201, 161, 74, 0.18);
+}
+
+.customizer-live-copy__header {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #C9A14A;
+}
+
+.customizer-live-copy__stage {
+  position: relative;
+  min-height: 152px;
+  overflow: hidden;
+  border-radius: 16px;
+  padding: 16px;
+  background:
+    linear-gradient(180deg, rgba(12, 26, 49, 0.14), rgba(12, 26, 49, 0.28)),
+    radial-gradient(circle at top left, rgba(212, 175, 55, 0.18), transparent 38%);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+.customizer-live-copy__to,
+.customizer-live-copy__from {
+  position: absolute;
+  max-width: 72%;
+  font-size: 12px;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.66);
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.45);
+}
+
+.customizer-live-copy__to {
+  top: 16px;
+  left: 16px;
+}
+
+.customizer-live-copy__from {
+  right: 16px;
+  bottom: 18px;
+  text-align: right;
+}
+
+.customizer-live-copy__message {
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  bottom: 48px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: rgba(7, 17, 31, 0.28);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #FFFFFF;
+  font-size: 16px;
+  line-height: 1.4;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.45);
+}
+
+.customizer-live-copy__note {
+  margin: 10px 0 0;
+  color: #6E6E73;
+  font-family: 'Outfit', sans-serif;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
 .customizer-sound-summary {
   margin-top: 14px;
   padding: 14px;
@@ -336,6 +413,14 @@
   font-family: 'Outfit', sans-serif;
   font-size: 13px;
   line-height: 1.5;
+}
+
+.customizer-sound-summary__note {
+  margin: 8px 0 0;
+  color: rgba(255, 255, 255, 0.58);
+  font-family: 'Outfit', sans-serif;
+  font-size: 11px;
+  line-height: 1.45;
 }
 
 /* ─── REVIEW CARD (dark-themed) ─── */

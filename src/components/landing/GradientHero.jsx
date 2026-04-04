@@ -123,27 +123,27 @@ export default function GradientHero() {
 
             <div className="gradient-hero__cta-wrap">
               <Link to="/shop" className="gradient-hero__btn">
-                <span className="gradient-hero__btn-text">Send A Bloom</span>
+                <span className="gradient-hero__btn-text">{t('hero_new_primary_cta')}</span>
                 <span className="gradient-hero__btn-shimmer" />
               </Link>
               <button type="button" className="gradient-hero__ghost-btn" onClick={scrollToContent}>
-                Watch It Bloom
+                {t('hero_new_secondary_cta')}
               </button>
             </div>
 
             <div className="gradient-hero__details">
               <div className="gradient-hero__detail-card">
-                <span className="gradient-hero__detail-label">Engraved delivery</span>
-                <span className="gradient-hero__detail-value">To + From burned into the final video</span>
+                <span className="gradient-hero__detail-label">{t('hero_detail_engraved_label')}</span>
+                <span className="gradient-hero__detail-value">{t('hero_detail_engraved_value')}</span>
               </div>
               <div className="gradient-hero__detail-card">
-                <span className="gradient-hero__detail-label">Protected finish</span>
-                <span className="gradient-hero__detail-value">Digital Bloom signature strip on every delivery</span>
+                <span className="gradient-hero__detail-label">{t('hero_detail_protected_label')}</span>
+                <span className="gradient-hero__detail-value">{t('hero_detail_protected_value')}</span>
               </div>
             </div>
 
             <p className="gradient-hero__from">
-              {t('hero_new_from')} <strong>$1.99</strong> · Personalized keepsakes with instant delivery
+              {t('hero_new_from')} <strong>$1.99</strong> · {t('hero_from_suffix')}
             </p>
           </div>
 
@@ -175,17 +175,17 @@ export default function GradientHero() {
               )}
 
               <div className="gradient-hero__media-overlay" />
-              <div className="gradient-hero__media-chip">Hero Bloom</div>
-              <div className="gradient-hero__media-dedication">To Someone You Love</div>
-              <div className="gradient-hero__media-signature">From You</div>
+              <div className="gradient-hero__media-chip">{t('hero_media_chip')}</div>
+              <div className="gradient-hero__media-dedication">{t('hero_media_dedication')}</div>
+              <div className="gradient-hero__media-signature">{t('hero_media_signature')}</div>
               <div className="gradient-hero__media-brandbar">
                 <span>Digital Bloom™</span>
-                <span>Protected delivery</span>
+                <span>{t('hero_media_protected')}</span>
               </div>
             </div>
 
             <p className="gradient-hero__media-caption">
-              Gamble&rsquo;s hero video is back, now framed as part of the main story instead of floating on its own.
+              {t('hero_media_caption')}
             </p>
           </div>
         </div>
