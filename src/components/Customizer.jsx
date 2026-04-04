@@ -41,6 +41,13 @@ const FLOW_STEPS = [
   { id: 5, key: 'review', labelKey: 'customize_step_review', icon: '✓' },
 ];
 
+const MESSAGE_STARTERS = [
+  'Forever in bloom.',
+  'You are deeply loved.',
+  'Thank you for being here.',
+  'A moment worth keeping.',
+];
+
 const ENGRAVING_OPTIONS = Object.entries(ENGRAVING_STYLES).map(([id, style]) => ({
   id,
   label: style.label,
@@ -141,6 +148,10 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
 
   const handleMessageChange = useCallback((field, value) => {
     setMessage(prev => ({ ...prev, [field]: value }));
+  }, []);
+
+  const applyMessageStarter = useCallback((starter) => {
+    setMessage((prev) => ({ ...prev, short: starter }));
   }, []);
 
   const toggleExtra = useCallback((extraId) => {
@@ -376,6 +387,19 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
               <span className="customizer-hint">{message.short.length}/150</span>
             </div>
 
+            <div className="customizer-starters">
+              {MESSAGE_STARTERS.map((starter) => (
+                <button
+                  key={starter}
+                  type="button"
+                  className={`customizer-starter-chip ${message.short === starter ? 'customizer-starter-chip--active' : ''}`}
+                  onClick={() => applyMessageStarter(starter)}
+                >
+                  {starter}
+                </button>
+              ))}
+            </div>
+
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
               <div className="customizer-field">
                 <label className="customizer-label" htmlFor="cust-to">{t('customize_to')}</label>
@@ -390,6 +414,18 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
                   placeholder={t('customize_from_placeholder')}
                   value={message.fromName}
                   onChange={(e) => handleMessageChange('fromName', e.target.value)} />
+              </div>
+            </div>
+
+            <div className="customizer-engraving-map">
+              <div className="customizer-engraving-map__header">
+                <span>Final delivery map</span>
+                <span>{ENGRAVING_STYLES[engravingStyle]?.label || 'Heirloom engraving'}</span>
+              </div>
+              <div className="customizer-engraving-map__body">
+                <div className="customizer-engraving-map__to">To appears near the top-left of the bloom</div>
+                <div className="customizer-engraving-map__message">Your message becomes the engraved keepsake line</div>
+                <div className="customizer-engraving-map__from">From rests above the protected brand strip</div>
               </div>
             </div>
           </div>
@@ -502,6 +538,14 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
                   )}
                 </button>
               ))}
+            </div>
+            <div className="customizer-sound-summary">
+              <span className="customizer-sound-summary__label">Selected soundtrack</span>
+              <span className="customizer-sound-summary__value">
+                {SOUND_TRACKS.find((track) => track.id === selectedSound)
+                  ? t(SOUND_TRACKS.find((track) => track.id === selectedSound).nameKey)
+                  : 'None selected yet'}
+              </span>
             </div>
           </div>
             </>

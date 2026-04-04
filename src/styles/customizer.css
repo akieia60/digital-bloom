@@ -252,6 +252,92 @@
   color: #C9A14A;
 }
 
+.customizer-starters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 10px 0 14px;
+}
+
+.customizer-starter-chip {
+  border: 1px solid rgba(201, 161, 74, 0.25);
+  background: rgba(201, 161, 74, 0.08);
+  color: #C9A14A;
+  border-radius: 999px;
+  padding: 8px 12px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.customizer-starter-chip--active,
+.customizer-starter-chip:hover {
+  background: rgba(201, 161, 74, 0.16);
+  border-color: rgba(201, 161, 74, 0.55);
+}
+
+.customizer-engraving-map {
+  margin-top: 16px;
+  padding: 14px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.customizer-engraving-map__header {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #C9A14A;
+}
+
+.customizer-engraving-map__body {
+  display: grid;
+  gap: 8px;
+}
+
+.customizer-engraving-map__body > div {
+  color: rgba(255, 255, 255, 0.72);
+  font-family: 'Outfit', sans-serif;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.customizer-sound-summary {
+  margin-top: 14px;
+  padding: 14px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.customizer-sound-summary__label {
+  display: block;
+  margin-bottom: 6px;
+  color: #C9A14A;
+  font-family: 'Outfit', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.customizer-sound-summary__value {
+  color: rgba(255, 255, 255, 0.76);
+  font-family: 'Outfit', sans-serif;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
 /* ─── REVIEW CARD (dark-themed) ─── */
 .review-row {
   display: flex;
