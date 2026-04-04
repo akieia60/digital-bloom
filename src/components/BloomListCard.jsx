@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import VideoPlayer from './VideoPlayer';
 import { getTierByNumber } from '../config/pricingTiers';
+import { getPosterUrl } from '../lib/media';
 
 /**
  * Full-width stacked card for the category page list view.
@@ -9,6 +10,8 @@ import { getTierByNumber } from '../config/pricingTiers';
  */
 export default function BloomListCard({ product }) {
   const tierInfo = product.tier ? getTierByNumber(product.tier) : null;
+  const videoUrl = product.video_file_url || product.video_url;
+  const posterUrl = getPosterUrl(videoUrl, product.image_url);
 
   return (
     <Link
@@ -18,8 +21,8 @@ export default function BloomListCard({ product }) {
       {/* Bloom media — fills the card */}
       <div className="bloom-list-card__media">
         <VideoPlayer
-          videoUrl={product.video_file_url || product.video_url}
-          posterUrl={product.image_url}
+          videoUrl={videoUrl}
+          posterUrl={posterUrl}
           alt={product.name}
         />
         <div className="bloom-list-card__media-overlay" />

@@ -6,6 +6,8 @@
  * a visual layer stack for both live preview and fulfillment.
  */
 
+import { getPosterUrl } from './media';
+
 const OVERLAY_ASSETS = {
   balloon: {
     warm: { src: null, css: true, label: 'Warm Balloons' },
@@ -320,11 +322,13 @@ export function getCompositionLayers({
   const theme = getThemeSpec(colorTheme, { primaryColor, accentColor });
   const engraving = ENGRAVING_STYLES[engravingStyle] || ENGRAVING_STYLES.heirloom;
   const font = MESSAGE_FONT_OPTIONS[fontChoice] || MESSAGE_FONT_OPTIONS.playfair;
+  const baseVideoUrl = product?.video_file_url || product?.video_url || null;
+  const basePosterUrl = getPosterUrl(baseVideoUrl, product?.image_url);
 
   const baseMedia = {
-    type: product?.video_file_url || product?.video_url ? 'video' : 'image',
-    src: product?.video_file_url || product?.video_url || product?.image_url || null,
-    poster: product?.image_url || null,
+    type: baseVideoUrl ? 'video' : 'image',
+    src: baseVideoUrl || basePosterUrl || product?.image_url || null,
+    poster: basePosterUrl,
   };
 
   const overlays = [];

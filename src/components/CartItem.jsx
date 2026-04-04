@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useLanguage } from '../contexts/LanguageContext';
+import { getPosterUrl, getSafeImageUrl, primeVideoPlayback } from '../lib/media';
 
 const OVERLAY_ICON_MAP = {
   ribbon: '🎀',
@@ -46,6 +47,9 @@ const CartItem = ({ item }) => {
   const { updateQuantity, removeFromCart, setIsCartOpen } = useCart();
   const [isExpanded, setIsExpanded] = useState(false);
   const itemKey = item.lineItemId || item.id;
+  const videoUrl = item.video_file_url || item.video_url;
+  const posterUrl = getPosterUrl(videoUrl, item.image_url || item.image);
+  const imageUrl = getSafeImageUrl(item.image_url || item.image);
   const customizationMessage = typeof item.customization?.message === 'string'
     ? { short: item.customization.message, toName: '', fromName: '' }
     : (item.customization?.message || {});
@@ -74,20 +78,21 @@ const CartItem = ({ item }) => {
       >
         {/* Visual Asset Preview */}
         <div className="db-watermark w-20 h-24 flex-shrink-0 rounded-2xl overflow-hidden glass border border-white/5 relative">
-          {item.video_file_url || item.video_url ? (
+          {videoUrl ? (
             <video
-              src={item.video_file_url || item.video_url}
+              src={videoUrl}
               className="w-full h-full object-cover"
-              poster={item.image_url || item.image}
-              preload="auto"
+              poster={posterUrl || undefined}
+              preload="metadata"
               muted
               autoPlay
               loop
               playsInline
+              onLoadedMetadata={primeVideoPlayback}
             />
           ) : (
             <img
-              src={item.image_url || item.image}
+              src={imageUrl}
               alt={item.name}
               className="w-full h-full object-cover"
             />
@@ -175,19 +180,21 @@ const CartItem = ({ item }) => {
         <div className="ml-[100px] space-y-4">
           {/* Larger Preview */}
           <div className="db-watermark w-full aspect-video max-w-xs rounded-2xl overflow-hidden border border-white/10 relative">
-            {item.video_file_url || item.video_url ? (
+            {videoUrl ? (
               <video
-                src={item.video_file_url || item.video_url}
+                src={videoUrl}
                 className="w-full h-full object-cover"
-                poster={item.image_url || item.image}
+                poster={posterUrl || undefined}
+                preload="metadata"
                 muted
                 autoPlay
                 loop
                 playsInline
+                onLoadedMetadata={primeVideoPlayback}
               />
             ) : (
               <img
-                src={item.image_url || item.image}
+                src={imageUrl}
                 alt={item.name}
                 className="w-full h-full object-cover"
               />

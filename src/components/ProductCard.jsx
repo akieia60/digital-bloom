@@ -1,10 +1,13 @@
 import { Link } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
 import VideoPlayer from './VideoPlayer';
+import { getPosterUrl } from '../lib/media';
 
 const ProductCard = ({ product, compact = false }) => {
   const { t } = useLanguage();
   const displayPrice = Number(product?.price || 0).toFixed(2);
+  const videoUrl = product.video_file_url || product.video_url;
+  const posterUrl = getPosterUrl(videoUrl, product.image_url);
 
   return (
     <div className="group">
@@ -13,8 +16,8 @@ const ProductCard = ({ product, compact = false }) => {
         <div className={`relative overflow-hidden bg-[var(--surface-soft,#F7F7F7)] border border-[#E5E5EA] transition-all duration-500 group-hover:shadow-xl group-hover:border-[var(--accent-gold)]/30 ${compact ? 'rounded-xl aspect-square' : 'rounded-2xl aspect-[3/4]'}`}>
           <div className="w-full h-full transition-transform duration-700 group-hover:scale-105">
             <VideoPlayer
-              videoUrl={product.video_file_url || product.video_url}
-              posterUrl={product.image_url}
+              videoUrl={videoUrl}
+              posterUrl={posterUrl}
               alt={product.name}
             />
           </div>

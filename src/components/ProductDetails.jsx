@@ -6,6 +6,7 @@ import { useProduct, useProducts } from '../hooks/useProducts';
 import ProductCard from './ProductCard';
 import Customizer from './Customizer';
 import OCCASIONS from '../data/occasions';
+import { getPosterUrl, primeVideoPlayback } from '../lib/media';
 
 const ProductDetails = () => {
   const { t } = useLanguage();
@@ -15,6 +16,7 @@ const ProductDetails = () => {
   const { addToCart, replaceCartItem, toggleCart } = useCart();
   const [isCustomizerOpen, setIsCustomizerOpen] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [heroVideoReady, setHeroVideoReady] = useState(false);
 
   const { product, loading } = useProduct(id);
 
@@ -45,6 +47,10 @@ const ProductDetails = () => {
     const timer = setTimeout(() => setShowSuccess(false), 6000);
     return () => clearTimeout(timer);
   }, [showSuccess]);
+
+  useEffect(() => {
+    setHeroVideoReady(false);
+  }, [product?.id, product?.video_file_url, product?.video_url]);
 
   const openCustomizer = useCallback(() => {
     setShowSuccess(false);
@@ -104,7 +110,7 @@ const ProductDetails = () => {
   };
 
   const heroVideoSrc = product.video_file_url || product.video_url;
-  const heroImageSrc = product.image_url;
+  const heroImageSrc = getPosterUrl(heroVideoSrc, product.image_url);
   const displayPrice = Number(product.price || 0).toFixed(2);
 
   return (
@@ -122,13 +128,31 @@ const ProductDetails = () => {
       {/* ── HERO MEDIA ── */}
       <div className="db-watermark db-watermark--hero relative w-full aspect-[3/4] sm:aspect-[16/10] lg:aspect-[16/7] overflow-hidden bg-black">
         {heroVideoSrc ? (
-          <video
-            src={heroVideoSrc}
-            autoPlay muted loop playsInline preload="auto"
-            poster={heroImageSrc}
-            className="w-full h-full object-cover"
-            onError={(e) => { e.target.style.display = 'none'; }}
-          />
+          <>
+            {heroImageSrc && (
+              <img
+                src={heroImageSrc}
+                alt={product.name}
+                className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${
+                  heroVideoReady ? 'opacity-0' : 'opacity-100'
+                }`}
+              />
+            )}
+            <video
+              src={heroVideoSrc}
+              autoPlay muted loop playsInline preload="metadata"
+              poster={heroImageSrc}
+              onLoadedMetadata={(event) => {
+                primeVideoPlayback(event);
+              }}
+              onCanPlay={() => setHeroVideoReady(true)}
+              onLoadedData={() => setHeroVideoReady(true)}
+              className={`w-full h-full object-cover transition-opacity duration-500 ${
+                heroVideoReady ? 'opacity-100' : 'opacity-0'
+              }`}
+              onError={(e) => { e.target.style.display = 'none'; }}
+            />
+          </>
         ) : heroImageSrc ? (
           <img src={heroImageSrc} alt={product.name} className="w-full h-full object-cover" />
         ) : (
