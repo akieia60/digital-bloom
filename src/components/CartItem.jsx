@@ -21,6 +21,25 @@ const OVERLAY_LABEL_KEYS = {
   balloon: 'customize_extra_ribbon',
 };
 
+const THEME_LABEL_KEYS = {
+  original: 'customize_theme_original',
+  warm: 'customize_theme_sunset',
+  cool: 'customize_theme_breeze',
+  elegant: 'customize_theme_gold',
+  romantic: 'customize_theme_rose',
+};
+
+const SOUND_LABEL_KEYS = {
+  'gentle-piano': 'customize_sound_piano',
+  'soft-strings': 'customize_sound_strings',
+  'ambient-bloom': 'customize_sound_bloom',
+  'golden-harp': 'customize_sound_harp',
+  'ocean-breeze': 'customize_sound_ocean',
+  'jazz-lounge': 'customize_sound_jazz',
+  'r-and-b-soul': 'customize_sound_rnb',
+  'give-flowers': 'customize_sound_flowers',
+};
+
 const CartItem = ({ item }) => {
   const { t } = useLanguage();
   const { updateQuantity, removeFromCart, setIsCartOpen } = useCart();
@@ -33,6 +52,8 @@ const CartItem = ({ item }) => {
   const fontLabel = item.customization?.fontChoice
     ? t(`customize_font_${item.customization.fontChoice === 'arialBold' ? 'arial' : item.customization.fontChoice}`)
     : null;
+  const themeLabelKey = THEME_LABEL_KEYS[item.customization?.colorTheme || item.customization?.theme];
+  const soundLabelKey = SOUND_LABEL_KEYS[item.customization?.selectedSound];
 
   const handleIncrement = () => updateQuantity(itemKey, item.quantity + 1);
   const handleDecrement = () => {
@@ -216,7 +237,7 @@ const CartItem = ({ item }) => {
                 <div>
                   <span className="text-[9px] uppercase tracking-widest text-white/30 block mb-1">{t('cart_item_style')}</span>
                   <span className="text-xs text-white/50 capitalize">
-                    {item.customization.colorTheme || item.customization.theme}
+                    {themeLabelKey ? t(themeLabelKey) : (item.customization.colorTheme || item.customization.theme)}
                   </span>
                 </div>
               )}
@@ -244,7 +265,7 @@ const CartItem = ({ item }) => {
                 <div>
                   <span className="text-[9px] uppercase tracking-widest text-white/30 block mb-1">{t('cart_item_sound')}</span>
                   <span className="text-xs text-white/50 capitalize">
-                    {item.customization.selectedSound.replace(/-/g, ' ')}
+                    {soundLabelKey ? t(soundLabelKey) : item.customization.selectedSound.replace(/-/g, ' ')}
                   </span>
                 </div>
               )}

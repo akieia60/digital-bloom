@@ -6,6 +6,15 @@ import '../styles/success.css';
 const POLL_LIMIT = 20;
 const POLL_INTERVAL_MS = 3000;
 
+const PURCHASE_STATUS_LABELS = {
+  pending: 'success_purchase_status_pending',
+  processing: 'success_purchase_status_processing',
+  completed: 'success_purchase_status_completed',
+  delivered: 'success_purchase_status_completed',
+  paid: 'success_purchase_status_paid',
+  failed: 'success_purchase_status_failed',
+};
+
 const Success = () => {
   const { t } = useLanguage();
   const [searchParams] = useSearchParams();
@@ -107,6 +116,11 @@ const Success = () => {
 
   const shareUrl = `${window.location.origin}/shop`;
   const shareText = encodeURIComponent('I just sent a luxury digital bloom ✨ Check it out! #DigitalBloom');
+  const getPurchaseStatusLabel = (status) => {
+    const normalized = String(status || '').toLowerCase();
+    const labelKey = PURCHASE_STATUS_LABELS[normalized];
+    return labelKey ? t(labelKey) : status;
+  };
 
   if (isProcessing) {
     return (
@@ -176,7 +190,7 @@ const Success = () => {
               <div key={purchase.id} className="success-row success-row-last" style={{ display: 'block', marginBottom: '16px' }}>
                 <div className="success-row" style={{ paddingTop: 0 }}>
                   <span className="success-row-label">{purchase.products?.name || t('success_default_product')}</span>
-                  <span className="success-row-value">{purchase.status}</span>
+                  <span className="success-row-value">{getPurchaseStatusLabel(purchase.status)}</span>
                 </div>
                 {isReady ? (
                   <a href={purchase.download_url} download className="success-btn-gold" style={{ marginTop: '12px' }}>
