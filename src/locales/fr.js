@@ -243,7 +243,7 @@ export const fr = {
   cart_empty_title: "Galerie Vide",
   cart_empty_message: "Votre collection curatorisée attend son premier chef-d'œuvre.",
   cart_empty_cta: "Découvrir l'Art",
-  cart_credit_section: "Appliquer un Crédit d'Expérience",
+  cart_credit_section: "Appliquer un Crédit Bloom",
   cart_credit_placeholder: "DBLOOM-XXXX-XXXX",
   cart_credit_apply: "Appliquer",
   cart_credit_applying: "Application en cours...",

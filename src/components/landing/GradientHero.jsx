@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback, useMemo, useRef } from 'react';
+import { useEffect, useState, useMemo, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '../../contexts/LanguageContext';
 import '../../styles/gradient-hero.css';
@@ -41,7 +41,6 @@ export default function GradientHero() {
   const [contentVisible, setContentVisible] = useState(false);
   const [videoReady, setVideoReady] = useState(false);
   const [videoFailed, setVideoFailed] = useState(false);
-  const heroRef = useRef(null);
   const videoRef = useRef(null);
   const { t } = useLanguage();
   const holiday = useMemo(() => getUpcomingHoliday(), []);
@@ -58,21 +57,9 @@ export default function GradientHero() {
     }
   }, []);
 
-  const scrollToDemo = useCallback(() => {
-    const demo = document.getElementById('demo');
-    if (demo) {
-      demo.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      return;
-    }
-    const hero = heroRef.current;
-    if (hero?.nextElementSibling) {
-      hero.nextElementSibling.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-  }, []);
-
   return (
     <>
-      <section ref={heroRef} className="gradient-hero">
+      <section className="gradient-hero">
         <div className="gradient-hero__bg" aria-hidden="true">
           <div className="gradient-hero__glow gradient-hero__glow--1" />
           <div className="gradient-hero__glow gradient-hero__glow--2" />
@@ -126,19 +113,16 @@ export default function GradientHero() {
 
             <p className="gradient-hero__tagline">{t('hero_new_tagline')}</p>
 
-            <div className="gradient-hero__cta-wrap">
-              <Link to="/shop" className="gradient-hero__btn">
-                <span className="gradient-hero__btn-text">{t('hero_new_primary_cta')}</span>
-                <span className="gradient-hero__btn-shimmer" />
-              </Link>
-              <button type="button" className="gradient-hero__ghost-btn" onClick={scrollToDemo}>
-                {t('hero_new_secondary_cta')}
-              </button>
-            </div>
-
             <p className="gradient-hero__from">
               {t('hero_new_from')} <strong>$1.99</strong> · {t('hero_from_suffix')}
             </p>
+
+            <div className="gradient-hero__cta-wrap">
+              <Link to="/shop" className="gradient-hero__btn gradient-hero__btn--sm">
+                <span className="gradient-hero__btn-text">{t('hero_new_primary_cta')}</span>
+                <span className="gradient-hero__btn-shimmer" />
+              </Link>
+            </div>
           </div>
 
           <div className="gradient-hero__media-column">
@@ -168,41 +152,10 @@ export default function GradientHero() {
                 />
               )}
 
-              <div className="gradient-hero__media-overlay" />
-              <div className="gradient-hero__media-chip">{t('hero_media_chip')}</div>
-              <div className="gradient-hero__media-dedication">{t('hero_media_dedication')}</div>
-              <div className="gradient-hero__media-signature">{t('hero_media_signature')}</div>
-              <div className="gradient-hero__media-brandbar">
-                <span>Digital Bloom™</span>
-                <span>{t('hero_media_protected')}</span>
-              </div>
+              <div className="gradient-hero__media-brandmark">Digital Bloom™</div>
             </div>
           </div>
         </div>
-
-        <div className="gradient-hero__details">
-          <div className="gradient-hero__detail-card">
-            <span className="gradient-hero__detail-label">{t('hero_detail_engraved_label')}</span>
-            <span className="gradient-hero__detail-value">{t('hero_detail_engraved_value')}</span>
-          </div>
-          <div className="gradient-hero__detail-card">
-            <span className="gradient-hero__detail-label">{t('hero_detail_protected_label')}</span>
-            <span className="gradient-hero__detail-value">{t('hero_detail_protected_value')}</span>
-          </div>
-        </div>
-
-        <button
-          type="button"
-          className="gradient-hero__scroll-indicator"
-          onClick={scrollToDemo}
-          aria-label="Scroll to content"
-          style={{ opacity: contentVisible ? 0.75 : 0, transition: 'opacity 0.5s ease 0.4s' }}
-        >
-          <span className="gradient-hero__scroll-text">{t('hero_scroll')}</span>
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-            <polyline points="6 9 12 15 18 9" />
-          </svg>
-        </button>
       </section>
       <div className="gradient-hero__scroll-fade" aria-hidden="true" />
     </>

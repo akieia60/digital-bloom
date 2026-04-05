@@ -243,7 +243,7 @@ export const ht = {
   cart_empty_title: "Galéri Vide",
   cart_empty_message: "Koleksyon ou kire ap tann premye vre dèvr.",
   cart_empty_cta: "Dekouvri Atizay",
-  cart_credit_section: "Aplike Experience Credit",
+  cart_credit_section: "Aplike Bloom Credit",
   cart_credit_placeholder: "DBLOOM-XXXX-XXXX",
   cart_credit_apply: "Aplike",
   cart_credit_applying: "Ap aplike...",

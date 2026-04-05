@@ -428,3 +428,21 @@
   color: #D4AF37;
   font-weight: 500;
 }
+
+.landing-nav__mobile-link--home {
+  font-weight: 700;
+  color: #F5E7C8;
+  background: rgba(212, 175, 55, 0.08);
+  border-radius: 12px;
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.landing-nav__mobile-link--home span[aria-hidden="true"] {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+}

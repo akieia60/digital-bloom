@@ -134,7 +134,10 @@ export default function LandingNav({ onOpenFaq }) {
               </button>
             </div>
             <div className="landing-nav__mobile-links">
-              <Link to="/" onClick={() => setIsMobileMenuOpen(false)} className="landing-nav__mobile-link">{t('nav_home')}</Link>
+              <Link to="/" onClick={() => setIsMobileMenuOpen(false)} className="landing-nav__mobile-link landing-nav__mobile-link--home">
+                <span aria-hidden="true">⌂</span>
+                <span>{t('nav_home')}</span>
+              </Link>
               <Link to="/shop" onClick={() => setIsMobileMenuOpen(false)} className="landing-nav__mobile-link landing-nav__mobile-link--accent">{t('nav_occasions')}</Link>
               <Link to="/shop" onClick={() => setIsMobileMenuOpen(false)} className="landing-nav__mobile-link">{t('nav_shop')}</Link>
               <Link to="/credits" onClick={() => setIsMobileMenuOpen(false)} className="landing-nav__mobile-link">{t('nav_credits')}</Link>

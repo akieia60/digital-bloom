@@ -243,7 +243,7 @@ export const zh = {
   cart_empty_title: "收藏空空的",
   cart_empty_message: "你的精选收藏正等待它的第一件杰作。",
   cart_empty_cta: "探索艺术",
-  cart_credit_section: "使用体验积分",
+  cart_credit_section: "使用 Bloom 积分",
   cart_credit_placeholder: "DBLOOM-XXXX-XXXX",
   cart_credit_apply: "使用",
   cart_credit_applying: "使用中...",
