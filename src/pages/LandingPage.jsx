@@ -1,7 +1,6 @@
 import { lazy, Suspense } from 'react';
 import LandingNav from '../components/landing/LandingNav';
 import GradientHero from '../components/landing/GradientHero';
-import DemoVideo from '../components/landing/DemoVideo';
 import LazySection from '../components/LazySection';
 import '../styles/landing.css';
 import '../styles/landing-nav.css';
@@ -14,7 +13,6 @@ export default function LandingPage({ onOpenFaq }) {
     <div className="landing-page" style={{ background: '#0c1f3f' }}>
       <LandingNav onOpenFaq={onOpenFaq} />
       <GradientHero />
-      <DemoVideo />
       <LazySection
         fallback={<div style={{ minHeight: '1200px' }} aria-hidden="true" />}
       >
