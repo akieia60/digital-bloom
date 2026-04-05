@@ -1,3 +1,8 @@
+/* ── Digital Bloom — Gradient Hero ──────────────────────────────────────────
+   src/styles/gradient-hero.css
+   ──────────────────────────────────────────────────────────────────────── */
+
+/* ── Base ── */
 .gradient-hero {
   position: relative;
   min-height: 100vh;
@@ -6,6 +11,7 @@
   padding: 120px 24px 96px;
 }
 
+/* ── Animated background ── */
 .gradient-hero__bg {
   position: absolute;
   inset: 0;
@@ -106,6 +112,7 @@
   background-size: 64px 64px;
 }
 
+/* ── Corner watermark ── */
 .gradient-hero__watermark {
   position: absolute;
   bottom: 18px;
@@ -120,21 +127,7 @@
   user-select: none;
 }
 
-.gradient-hero__layout {
-  position: relative;
-  z-index: 1;
-  max-width: 1240px;
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: minmax(0, 1.05fr) minmax(320px, 0.95fr);
-  gap: 42px;
-  align-items: center;
-}
-
-.gradient-hero__content {
-  max-width: 620px;
-}
-
+/* ── Holiday banner ── */
 .gradient-hero__banner {
   display: inline-block;
   padding: 6px 20px;
@@ -153,6 +146,7 @@
   color: #e8b4ad;
 }
 
+/* ── Badge pill ── */
 .gradient-hero__pill {
   display: inline-flex;
   align-items: center;
@@ -182,6 +176,23 @@
   color: rgba(250, 240, 236, 0.78);
 }
 
+/* ── Two-column layout ── */
+.gradient-hero__layout {
+  position: relative;
+  z-index: 1;
+  max-width: 1240px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(320px, 0.95fr);
+  gap: 42px;
+  align-items: center;
+}
+
+.gradient-hero__content {
+  max-width: 620px;
+}
+
+/* ── Headline ── */
 .gradient-hero__title {
   font-family: 'Playfair Display', 'Cormorant Garamond', Georgia, serif;
   font-size: clamp(2.8rem, 6.6vw, 5.4rem);
@@ -197,51 +208,72 @@
   color: #c9857a;
 }
 
+/* ── Sub-tagline ── */
 .gradient-hero__tagline {
   font-family: 'Cormorant Garamond', Georgia, serif;
   font-size: clamp(1.15rem, 2.3vw, 1.5rem);
   font-style: italic;
   color: rgba(250, 240, 236, 0.76);
-  margin: 0 0 28px;
+  margin: 0 0 16px;
   line-height: 1.5;
   max-width: 540px;
 }
 
+/* ── Pricing note — sits directly under tagline ── */
+.gradient-hero__from {
+  font-family: 'Outfit', sans-serif;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  color: rgba(250, 240, 236, 0.42);
+  margin: 0 0 28px;
+}
+
+.gradient-hero__from strong {
+  color: #c9a84c;
+}
+
+/* ── CTA wrap ── */
 .gradient-hero__cta-wrap {
   display: flex;
   flex-wrap: wrap;
   gap: 14px;
-  margin-bottom: 24px;
 }
 
-.gradient-hero__btn,
-.gradient-hero__ghost-btn {
-  min-height: 52px;
-  border-radius: 999px;
-  padding: 0 26px;
-  font-family: 'Outfit', sans-serif;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-}
-
+/* ── Primary CTA button ── */
 .gradient-hero__btn {
   position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  min-height: 48px;
+  border-radius: 999px;
+  padding: 0 32px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
   text-decoration: none;
   color: #0c1f3f;
   background: linear-gradient(135deg, #c9857a 0%, #e8b4ad 100%);
-  box-shadow: 0 12px 40px rgba(201, 133, 122, 0.34);
+  box-shadow: 0 10px 32px rgba(201, 133, 122, 0.28);
   overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Smaller modifier — used on hero to reduce visual dominance */
+.gradient-hero__btn--sm {
+  min-height: 44px;
+  padding: 0 28px;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  box-shadow: 0 8px 24px rgba(201, 133, 122, 0.22);
 }
 
 .gradient-hero__btn:hover,
 .gradient-hero__btn:focus-visible {
   transform: translateY(-2px);
-  box-shadow: 0 16px 46px rgba(201, 133, 122, 0.46);
+  box-shadow: 0 16px 46px rgba(201, 133, 122, 0.40);
   outline: none;
 }
 
@@ -263,71 +295,7 @@
   100% { transform: translateX(250%); }
 }
 
-.gradient-hero__ghost-btn {
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  background: rgba(255, 255, 255, 0.04);
-  color: rgba(250, 240, 236, 0.82);
-  cursor: pointer;
-  transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
-}
-
-.gradient-hero__ghost-btn:hover,
-.gradient-hero__ghost-btn:focus-visible {
-  transform: translateY(-2px);
-  border-color: rgba(212, 175, 55, 0.38);
-  background: rgba(255, 255, 255, 0.07);
-  outline: none;
-}
-
-.gradient-hero__details {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 14px;
-  max-width: 1240px;
-  margin: 24px auto 0;
-  position: relative;
-  z-index: 1;
-}
-
-.gradient-hero__detail-card {
-  padding: 18px 18px 16px;
-  border-radius: 22px;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
-  border: 1px solid rgba(255, 255, 255, 0.09);
-  backdrop-filter: blur(12px);
-}
-
-.gradient-hero__detail-label {
-  display: block;
-  font-family: 'Outfit', sans-serif;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: #c9a84c;
-  margin-bottom: 8px;
-}
-
-.gradient-hero__detail-value {
-  display: block;
-  font-family: 'Outfit', sans-serif;
-  font-size: 14px;
-  line-height: 1.55;
-  color: rgba(250, 240, 236, 0.76);
-}
-
-.gradient-hero__from {
-  font-family: 'Outfit', sans-serif;
-  font-size: 12px;
-  letter-spacing: 0.08em;
-  color: rgba(250, 240, 236, 0.42);
-  margin: 0;
-}
-
-.gradient-hero__from strong {
-  color: #c9a84c;
-}
-
+/* ── Media column ── */
 .gradient-hero__media-column {
   position: relative;
 }
@@ -351,105 +319,41 @@
   object-fit: cover;
 }
 
+/* Subtle gradient vignette — depth only, no text */
 .gradient-hero__media-overlay {
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(180deg, rgba(4, 8, 18, 0.12) 0%, rgba(4, 8, 18, 0.08) 40%, rgba(4, 8, 18, 0.72) 100%),
-    radial-gradient(circle at top right, rgba(212, 175, 55, 0.16), transparent 40%);
+    linear-gradient(180deg, rgba(4, 8, 18, 0.10) 0%, rgba(4, 8, 18, 0.06) 40%, rgba(4, 8, 18, 0.60) 100%),
+    radial-gradient(circle at top right, rgba(212, 175, 55, 0.12), transparent 40%);
 }
 
-.gradient-hero__media-chip,
-.gradient-hero__media-dedication,
-.gradient-hero__media-signature,
-.gradient-hero__media-brandbar {
+/* ── Clean brand mark — only text on the video ── */
+.gradient-hero__media-brandmark {
   position: absolute;
+  bottom: 18px;
+  left: 50%;
+  transform: translateX(-50%);
   z-index: 2;
-}
-
-.gradient-hero__media-chip {
-  top: 22px;
-  right: 22px;
-  padding: 8px 14px;
-  border-radius: 999px;
-  background: rgba(6, 13, 24, 0.48);
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  font-family: 'Outfit', sans-serif;
-  font-size: 10px;
+  pointer-events: none;
+  user-select: none;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: clamp(0.9rem, 1.8vw, 1.15rem);
   font-weight: 700;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.82);
-}
-
-.gradient-hero__media-dedication {
-  top: 9%;
-  left: 6%;
-  padding: 10px 14px;
-  border-radius: 14px;
-  background: rgba(6, 13, 24, 0.24);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  font-family: 'Outfit', sans-serif;
-  font-size: clamp(0.9rem, 2vw, 1.1rem);
-  font-weight: 700;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.74);
-}
-
-.gradient-hero__media-signature {
-  right: 7%;
-  bottom: 17%;
-  font-family: 'Outfit', sans-serif;
-  font-size: clamp(0.82rem, 1.9vw, 1rem);
-  font-weight: 700;
+  font-style: italic;
   letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.74);
+  color: rgba(212, 175, 55, 0.88);
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.9), 0 0 16px rgba(0, 0, 0, 0.6);
+  white-space: nowrap;
 }
 
-.gradient-hero__media-brandbar {
-  left: 4.5%;
-  right: 4.5%;
-  bottom: 4.5%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 18px;
-  min-height: 62px;
-  padding: 0 20px;
-  border-radius: 18px;
-  background: linear-gradient(180deg, rgba(5, 12, 22, 0.26), rgba(5, 12, 22, 0.62));
-  border: 1px solid rgba(255, 255, 255, 0.12);
+.gradient-hero__media-brandmark sup {
+  font-size: 0.6em;
+  vertical-align: super;
+  letter-spacing: 0;
 }
 
-.gradient-hero__media-brandbar span:first-child {
-  font-family: 'Cormorant Garamond', Georgia, serif;
-  font-size: clamp(1rem, 2vw, 1.3rem);
-  font-weight: 700;
-  font-style: italic;
-  letter-spacing: 0.12em;
-  color: rgba(212, 175, 55, 0.96);
-}
-
-.gradient-hero__media-brandbar span:last-child {
-  font-family: 'Outfit', sans-serif;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.7);
-}
-
-.gradient-hero__media-caption {
-  margin: 16px 12px 0;
-  font-family: 'Cormorant Garamond', Georgia, serif;
-  font-size: 1.08rem;
-  font-style: italic;
-  line-height: 1.55;
-  color: rgba(250, 240, 236, 0.7);
-}
-
+/* ── Scroll indicator ── */
 .gradient-hero__scroll-indicator {
   position: absolute;
   bottom: 34px;
@@ -479,6 +383,7 @@
   50% { transform: translateX(-50%) translateY(5px); }
 }
 
+/* ── Scroll fade into next section ── */
 .gradient-hero__scroll-fade {
   height: 90px;
   background: linear-gradient(to bottom, transparent, #0c1f3f);
@@ -488,6 +393,7 @@
   z-index: 1;
 }
 
+/* ── Responsive ── */
 @media (max-width: 980px) {
   .gradient-hero {
     padding-top: 108px;
@@ -500,10 +406,6 @@
 
   .gradient-hero__content {
     max-width: none;
-  }
-
-  .gradient-hero__details {
-    grid-template-columns: 1fr;
   }
 
   .gradient-hero__media-frame {
@@ -530,7 +432,7 @@
   }
 
   .gradient-hero__btn,
-  .gradient-hero__ghost-btn {
+  .gradient-hero__btn--sm {
     width: 100%;
     justify-content: center;
   }
@@ -540,28 +442,8 @@
     border-radius: 26px;
   }
 
-  .gradient-hero__media-dedication {
-    top: 8%;
-    left: 6.5%;
-    font-size: 0.82rem;
-  }
-
-  .gradient-hero__media-signature {
-    font-size: 0.78rem;
-    bottom: 17.5%;
-  }
-
-  .gradient-hero__media-brandbar {
-    min-height: 56px;
-    padding: 0 16px;
-  }
-
-  .gradient-hero__media-brandbar span:first-child {
-    font-size: 0.95rem;
-  }
-
-  .gradient-hero__media-brandbar span:last-child {
-    font-size: 9px;
-    letter-spacing: 0.12em;
+  .gradient-hero__media-brandmark {
+    font-size: 0.88rem;
+    bottom: 14px;
   }
 }

@@ -279,6 +279,16 @@
   color: var(--accent-gold);
 }
 
+/* Home link — clearly distinct from the other nav links */
+.landing-nav__mobile-link--home {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+  color: rgba(250, 240, 236, 0.92);
+  letter-spacing: 0.10em;
+}
+
 .landing-nav__mobile-footer {
   padding: 24px;
   border-top: 1px solid var(--nav-border-scrolled);

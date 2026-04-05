@@ -243,7 +243,7 @@ export const en = {
   cart_empty_title: "Gallery Empty",
   cart_empty_message: "Your curated collection is awaiting its first masterpiece.",
   cart_empty_cta: "Discover Art",
-  cart_credit_section: "Apply Experience Credit",
+  cart_credit_section: "Apply Bloom Credit",
   cart_credit_placeholder: "DBLOOM-XXXX-XXXX",
   cart_credit_apply: "Apply",
   cart_credit_applying: "Applying...",

@@ -58,10 +58,10 @@ export default function GradientHero() {
     }
   }, []);
 
-  const scrollToDemo = useCallback(() => {
-    const demo = document.getElementById('demo');
-    if (demo) {
-      demo.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  const scrollToShop = useCallback(() => {
+    const shop = document.getElementById('shop');
+    if (shop) {
+      shop.scrollIntoView({ behavior: 'smooth', block: 'start' });
       return;
     }
     const hero = heroRef.current;
@@ -73,6 +73,7 @@ export default function GradientHero() {
   return (
     <>
       <section ref={heroRef} className="gradient-hero">
+        {/* Background layers */}
         <div className="gradient-hero__bg" aria-hidden="true">
           <div className="gradient-hero__glow gradient-hero__glow--1" />
           <div className="gradient-hero__glow gradient-hero__glow--2" />
@@ -99,6 +100,7 @@ export default function GradientHero() {
 
         <div className="gradient-hero__watermark" aria-hidden="true">Digital Bloom™</div>
 
+        {/* Main two-column layout */}
         <div
           className="gradient-hero__layout"
           style={{
@@ -107,6 +109,7 @@ export default function GradientHero() {
             transition: 'opacity 0.8s ease, transform 0.8s ease',
           }}
         >
+          {/* Left: copy */}
           <div className="gradient-hero__content">
             {holiday && (
               <div className="gradient-hero__banner">
@@ -126,21 +129,21 @@ export default function GradientHero() {
 
             <p className="gradient-hero__tagline">{t('hero_new_tagline')}</p>
 
-            <div className="gradient-hero__cta-wrap">
-              <Link to="/shop" className="gradient-hero__btn">
-                <span className="gradient-hero__btn-text">{t('hero_new_primary_cta')}</span>
-                <span className="gradient-hero__btn-shimmer" />
-              </Link>
-              <button type="button" className="gradient-hero__ghost-btn" onClick={scrollToDemo}>
-                {t('hero_new_secondary_cta')}
-              </button>
-            </div>
-
+            {/* Pricing sits directly under the tagline */}
             <p className="gradient-hero__from">
               {t('hero_new_from')} <strong>$1.99</strong> · {t('hero_from_suffix')}
             </p>
+
+            {/* Single, smaller CTA */}
+            <div className="gradient-hero__cta-wrap">
+              <Link to="/shop" className="gradient-hero__btn gradient-hero__btn--sm">
+                <span className="gradient-hero__btn-text">{t('hero_new_primary_cta')}</span>
+                <span className="gradient-hero__btn-shimmer" />
+              </Link>
+            </div>
           </div>
 
+          {/* Right: hero video — clean, no text clutter */}
           <div className="gradient-hero__media-column">
             <div className="gradient-hero__media-frame">
               {!videoFailed && (
@@ -168,34 +171,23 @@ export default function GradientHero() {
                 />
               )}
 
+              {/* Subtle gradient vignette for depth */}
               <div className="gradient-hero__media-overlay" />
-              <div className="gradient-hero__media-chip">{t('hero_media_chip')}</div>
-              <div className="gradient-hero__media-dedication">{t('hero_media_dedication')}</div>
-              <div className="gradient-hero__media-signature">{t('hero_media_signature')}</div>
-              <div className="gradient-hero__media-brandbar">
-                <span>Digital Bloom™</span>
-                <span>{t('hero_media_protected')}</span>
+
+              {/* Only brand mark on the video — no chip, no dedication, no signature */}
+              <div className="gradient-hero__media-brandmark" aria-hidden="true">
+                Digital Bloom<sup>™</sup>
               </div>
             </div>
           </div>
         </div>
 
-        <div className="gradient-hero__details">
-          <div className="gradient-hero__detail-card">
-            <span className="gradient-hero__detail-label">{t('hero_detail_engraved_label')}</span>
-            <span className="gradient-hero__detail-value">{t('hero_detail_engraved_value')}</span>
-          </div>
-          <div className="gradient-hero__detail-card">
-            <span className="gradient-hero__detail-label">{t('hero_detail_protected_label')}</span>
-            <span className="gradient-hero__detail-value">{t('hero_detail_protected_value')}</span>
-          </div>
-        </div>
-
+        {/* Scroll indicator */}
         <button
           type="button"
           className="gradient-hero__scroll-indicator"
-          onClick={scrollToDemo}
-          aria-label="Scroll to content"
+          onClick={scrollToShop}
+          aria-label="Scroll to shop"
           style={{ opacity: contentVisible ? 0.75 : 0, transition: 'opacity 0.5s ease 0.4s' }}
         >
           <span className="gradient-hero__scroll-text">{t('hero_scroll')}</span>

@@ -134,7 +134,17 @@ export default function LandingNav({ onOpenFaq }) {
               </button>
             </div>
             <div className="landing-nav__mobile-links">
-              <Link to="/" onClick={() => setIsMobileMenuOpen(false)} className="landing-nav__mobile-link">{t('nav_home')}</Link>
+              <Link
+                to="/"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="landing-nav__mobile-link landing-nav__mobile-link--home"
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <path d="M3 12L12 3l9 9" />
+                  <path d="M9 21V12h6v9" />
+                </svg>
+                {t('nav_home')}
+              </Link>
               <Link to="/shop" onClick={() => setIsMobileMenuOpen(false)} className="landing-nav__mobile-link landing-nav__mobile-link--accent">{t('nav_occasions')}</Link>
               <Link to="/shop" onClick={() => setIsMobileMenuOpen(false)} className="landing-nav__mobile-link">{t('nav_shop')}</Link>
               <Link to="/credits" onClick={() => setIsMobileMenuOpen(false)} className="landing-nav__mobile-link">{t('nav_credits')}</Link>
