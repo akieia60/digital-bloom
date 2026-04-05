@@ -22,6 +22,7 @@ const Success = () => {
   const [checkout, setCheckout] = useState(null);
   const [error, setError] = useState(null);
   const [copied, setCopied] = useState(false);
+  const [refreshNonce, setRefreshNonce] = useState(0);
   const sessionId = searchParams.get('session_id');
 
   useEffect(() => {
@@ -80,7 +81,7 @@ const Success = () => {
         window.clearTimeout(timeoutId);
       }
     };
-  }, [sessionId, t]);
+  }, [sessionId, t, refreshNonce]);
 
   const purchases = useMemo(() => checkout?.purchases || [], [checkout]);
   const totalAmount = Number(checkout?.totals?.amount || 0).toFixed(2);
@@ -93,6 +94,11 @@ const Success = () => {
     () => purchases.filter((purchase) => purchase.download_url && purchase.download_expires_at && new Date(purchase.download_expires_at) > new Date()),
     [purchases]
   );
+  const processingPurchases = useMemo(
+    () => purchases.filter((purchase) => ['pending', 'processing', 'paid'].includes(String(purchase.status || '').toLowerCase())),
+    [purchases]
+  );
+  const hasPendingWork = readyDownloads.length === 0 && (processingPurchases.length > 0 || checkout?.checkout_status !== 'completed');
 
   const copyLink = async () => {
     const shareUrl = `${window.location.origin}/shop`;
@@ -182,6 +188,33 @@ const Success = () => {
           </div>
         </div>
 
+        {hasPendingWork && (
+          <div className="success-card success-card--highlight">
+            <div className="success-processing-head">
+              <div>
+                <h3 className="success-card-label">{t('success_processing_title')}</h3>
+                <p className="success-card-text success-card-text--tight">{t('success_processing_note')}</p>
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  setIsProcessing(true);
+                  setRefreshNonce((current) => current + 1);
+                }}
+                className="success-btn-outline success-btn-outline--small"
+              >
+                {t('success_processing_refresh')}
+              </button>
+            </div>
+
+            <ul className="success-status-list">
+              <li>{t('success_step_checkout')}</li>
+              <li>{checkout?.checkout_status === 'completed' ? t('success_step_records_done') : t('success_step_records_pending')}</li>
+              <li>{purchases.some((purchase) => purchase.has_customization) ? t('success_step_rendering') : t('success_step_files')}</li>
+            </ul>
+          </div>
+        )}
+
         <div className="success-card">
           <h3 className="success-card-label">{t('success_experiences')}</h3>
           {purchases.map((purchase) => {
@@ -224,17 +257,6 @@ const Success = () => {
                 </Link>
               </div>
             ))}
-          </div>
-        )}
-
-        {readyDownloads.length === 0 && (
-          <div className="success-card">
-            <h3 className="success-card-label">{t('success_processing_title')}</h3>
-            <ul className="success-status-list">
-              <li>{t('success_step_checkout')}</li>
-              <li>{checkout?.checkout_status === 'completed' ? t('success_step_records_done') : t('success_step_records_pending')}</li>
-              <li>{purchases.some((purchase) => purchase.has_customization) ? t('success_step_rendering') : t('success_step_files')}</li>
-            </ul>
           </div>
         )}
 

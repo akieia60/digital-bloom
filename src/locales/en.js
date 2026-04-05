@@ -450,6 +450,8 @@ export const en = {
   success_bloom: "Bloom",
   success_view_bloom: "View Bloom",
   success_processing_title: "Processing Status",
+  success_processing_note: "We keep refreshing this page while your personalized delivery is being prepared.",
+  success_processing_refresh: "Refresh Status",
   success_step_checkout: "✓ Checkout confirmed",
   success_step_records_done: "✓ Order records finalized",
   success_step_records_pending: "⏳ Finalizing your order records",

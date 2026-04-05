@@ -450,6 +450,8 @@ export const zh = {
   success_bloom: "Bloom",
   success_view_bloom: "查看 Bloom",
   success_processing_title: "处理状态",
+  success_processing_note: "在你的个性化交付准备过程中，我们会持续刷新这个页面。",
+  success_processing_refresh: "刷新状态",
   success_step_checkout: "✓ 结账已确认",
   success_step_records_done: "✓ 订单记录已完成",
   success_step_records_pending: "⏳ 正在完成订单记录",

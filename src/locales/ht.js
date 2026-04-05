@@ -450,6 +450,8 @@ export const ht = {
   success_bloom: "Bloom",
   success_view_bloom: "Gade Bloom",
   success_processing_title: "Eta pwosesis la",
+  success_processing_note: "Nou kontinye mete paj sa a ajou pandan livrezon pèsonalize ou a ap prepare.",
+  success_processing_refresh: "Rafrechi estati a",
   success_step_checkout: "✓ Peman konfime",
   success_step_records_done: "✓ Dosye lòd yo finalize",
   success_step_records_pending: "⏳ N ap finalize dosye lòd yo",

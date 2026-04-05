@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useLanguage } from '../contexts/LanguageContext';
+import LivePreview from './LivePreview';
 import { getPosterUrl, getSafeImageUrl, primeVideoPlayback } from '../lib/media';
 
 const OVERLAY_ICON_MAP = {
@@ -46,6 +47,7 @@ const CartItem = ({ item }) => {
   const { t } = useLanguage();
   const { updateQuantity, removeFromCart, setIsCartOpen } = useCart();
   const [isExpanded, setIsExpanded] = useState(false);
+  const expandedRef = useRef(null);
   const itemKey = item.lineItemId || item.id;
   const videoUrl = item.video_file_url || item.video_url;
   const posterUrl = getPosterUrl(videoUrl, item.image_url || item.image);
@@ -54,6 +56,13 @@ const CartItem = ({ item }) => {
     ? { short: item.customization.message, toName: '', fromName: '' }
     : (item.customization?.message || {});
   const activeOverlays = item.customization?.composition?.activeOverlays || [];
+  const previewExtras = activeOverlays.reduce((extras, overlayId) => {
+    extras[overlayId] = true;
+    return extras;
+  }, {});
+  const previewTheme = item.customization?.colorTheme || item.customization?.theme || 'original';
+  const previewPrimaryColor = item.customization?.primaryColor || item.customization?.composition?.primaryColor;
+  const previewAccentColor = item.customization?.accentColor || item.customization?.composition?.accentColor;
   const fontLabel = item.customization?.fontChoice
     ? t(`customize_font_${item.customization.fontChoice === 'arialBold' ? 'arial' : item.customization.fontChoice}`)
     : null;
@@ -65,6 +74,17 @@ const CartItem = ({ item }) => {
     if (item.quantity > 1) updateQuantity(itemKey, item.quantity - 1);
     else removeFromCart(itemKey);
   };
+
+  useEffect(() => {
+    if (!isExpanded || !expandedRef.current) return;
+
+    window.requestAnimationFrame(() => {
+      expandedRef.current?.scrollIntoView({
+        block: 'start',
+        behavior: 'smooth',
+      });
+    });
+  }, [isExpanded]);
 
   return (
     <div className="py-5 sm:py-6 border-b border-white/5 last:border-0 animate-fade-in">
@@ -204,44 +224,59 @@ const CartItem = ({ item }) => {
 
       {/* Expanded Details */}
       <div
+        ref={expandedRef}
         className={`overflow-hidden transition-all duration-400 ease-in-out ${
           isExpanded ? 'max-h-[980px] opacity-100 mt-4' : 'max-h-0 opacity-0'
         }`}
       >
         <div className="ml-0 sm:ml-[100px] mt-4 sm:mt-0 space-y-4">
           {/* Larger Preview */}
-          <div className="db-watermark w-full aspect-video max-w-full sm:max-w-xs rounded-2xl overflow-hidden border border-white/10 relative">
-            {videoUrl ? (
-              <video
-                src={videoUrl}
-                className="w-full h-full object-cover"
-                poster={posterUrl || undefined}
-                preload="metadata"
-                muted
-                autoPlay
-                loop
-                playsInline
-                onLoadedMetadata={primeVideoPlayback}
+          <div className="w-full max-w-[250px] sm:max-w-[280px] rounded-2xl overflow-hidden border border-white/10 bg-black/40 shadow-[0_20px_60px_rgba(0,0,0,0.35)]">
+            {item.customization ? (
+              <LivePreview
+                product={item}
+                colorTheme={previewTheme}
+                primaryColor={previewPrimaryColor}
+                accentColor={previewAccentColor}
+                extras={previewExtras}
+                message={customizationMessage}
+                engravingStyle={item.customization.engravingStyle || 'heirloom'}
+                fontChoice={item.customization.fontChoice || 'playfair'}
+                className="cart-item-preview"
               />
+            ) : videoUrl ? (
+              <div className="db-watermark relative aspect-[9/14]">
+                <video
+                  src={videoUrl}
+                  className="w-full h-full object-cover"
+                  poster={posterUrl || undefined}
+                  preload="metadata"
+                  muted
+                  autoPlay
+                  loop
+                  playsInline
+                  onLoadedMetadata={primeVideoPlayback}
+                />
+                <div className="db-watermark-overlay" aria-hidden="true">
+                  <div className="db-watermark-grid">
+                    {Array.from({ length: 10 }, (_, i) => (
+                      <div key={i} className="db-watermark-row">
+                        <span>© Digital Bloom</span>
+                        <span>© Digital Bloom</span>
+                        <span>© Digital Bloom</span>
+                        <span>© Digital Bloom</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
             ) : (
               <img
                 src={imageUrl}
                 alt={item.name}
-                className="w-full h-full object-cover"
+                className="w-full aspect-[9/14] object-cover"
               />
             )}
-            <div className="db-watermark-overlay" aria-hidden="true">
-              <div className="db-watermark-grid">
-                {Array.from({ length: 10 }, (_, i) => (
-                  <div key={i} className="db-watermark-row">
-                    <span>© Digital Bloom</span>
-                    <span>© Digital Bloom</span>
-                    <span>© Digital Bloom</span>
-                    <span>© Digital Bloom</span>
-                  </div>
-                ))}
-              </div>
-            </div>
           </div>
 
           {/* Customization Details */}
