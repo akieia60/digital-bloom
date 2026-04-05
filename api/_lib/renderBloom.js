@@ -71,6 +71,63 @@ const LOCALE_LABELS = {
   zh: { to: '致', from: '来自' },
 };
 
+const THEME_TUNING = {
+  original: { hueRotate: -6, saturate: 1.08, brightness: 1.02 },
+  warm: { hueRotate: -6, saturate: 1.28, brightness: 1.06 },
+  cool: { hueRotate: 148, saturate: 1.12, brightness: 1.05 },
+  elegant: { hueRotate: 0, saturate: 1.18, brightness: 1.08 },
+  romantic: { hueRotate: -18, saturate: 1.34, brightness: 1.03 },
+  custom: { hueRotate: 0, saturate: 1.12, brightness: 1.04 },
+};
+
+const ENGRAVING_LAYOUTS = {
+  heirloom: {
+    recipient: { x: 'w*0.06', y: 'h*0.10', boxborderw: 16 },
+    messageBox: { x: 'w*0.055', y: 'h*0.705', w: 'w*0.54', h: 'h*0.12' },
+    message: { x: 'w*0.078', y: 'h*0.765' },
+    sender: { x: 'w-tw-w*0.06', y: 'h*0.80', boxborderw: 12 },
+  },
+  signature: {
+    recipient: { x: 'w*0.08', y: 'h*0.12', boxborderw: 14 },
+    messageBox: null,
+    message: { x: '(w-tw)/2', y: 'h*0.745' },
+    sender: { x: 'w-tw-w*0.06', y: 'h*0.80', boxborderw: 12 },
+  },
+  modern: {
+    recipient: { x: 'w*0.06', y: 'h*0.10', boxborderw: 14 },
+    messageBox: { x: 'w*0.055', y: 'h*0.725', w: 'w*0.50', h: 'h*0.105' },
+    message: { x: 'w*0.078', y: 'h*0.79' },
+    sender: { x: 'w-tw-w*0.06', y: 'h*0.80', boxborderw: 12 },
+  },
+};
+
+const SPARKLE_PARTICLES = [
+  { x: 'w*0.18', y: 'h*0.18', size: 'w*0.008' },
+  { x: 'w*0.74', y: 'h*0.28', size: 'w*0.010' },
+  { x: 'w*0.45', y: 'h*0.40', size: 'w*0.007' },
+  { x: 'w*0.14', y: 'h*0.57', size: 'w*0.006' },
+  { x: 'w*0.81', y: 'h*0.60', size: 'w*0.010' },
+  { x: 'w*0.36', y: 'h*0.76', size: 'w*0.008' },
+];
+
+const GOLD_DUST_PARTICLES = [
+  { x: 'w*0.10', y: 'h*0.14', size: 'w*0.005' },
+  { x: 'w*0.22', y: 'h*0.10', size: 'w*0.006' },
+  { x: 'w*0.61', y: 'h*0.12', size: 'w*0.007' },
+  { x: 'w*0.80', y: 'h*0.22', size: 'w*0.005' },
+  { x: 'w*0.32', y: 'h*0.30', size: 'w*0.004' },
+  { x: 'w*0.55', y: 'h*0.34', size: 'w*0.006' },
+  { x: 'w*0.88', y: 'h*0.48', size: 'w*0.005' },
+  { x: 'w*0.18', y: 'h*0.66', size: 'w*0.006' },
+];
+
+const PETAL_ACCENTS = [
+  { x: 'w*0.12', y: 'h*0.22', w: 'w*0.018', h: 'h*0.014' },
+  { x: 'w*0.78', y: 'h*0.18', w: 'w*0.016', h: 'h*0.012' },
+  { x: 'w*0.70', y: 'h*0.52', w: 'w*0.014', h: 'h*0.010' },
+  { x: 'w*0.22', y: 'h*0.74', w: 'w*0.018', h: 'h*0.014' },
+];
+
 function normalizeHex(hex, fallback = 'D4AF37') {
   const value = String(hex || '').replace('#', '').trim();
   return /^[0-9a-f]{6}$/i.test(value) ? value.toUpperCase() : fallback;
@@ -129,6 +186,73 @@ function normalizeMessage(text) {
   return normalized.length > 64 ? `${normalized.slice(0, 61).trimEnd()}...` : normalized;
 }
 
+function getMessageSizeExpr(messageText = '', engravingStyle = 'heirloom', fontChoice = 'playfair') {
+  const trimmedLength = String(messageText || '').trim().length;
+  const font = FONT_PRESETS[fontChoice] || FONT_PRESETS.playfair;
+
+  if (engravingStyle === 'signature') {
+    if (trimmedLength > 90) return 'h*0.020';
+    if (trimmedLength > 56) return 'h*0.022';
+    return 'h*0.025';
+  }
+
+  if (trimmedLength > 90) return 'h*0.019';
+  if (trimmedLength > 56) return 'h*0.021';
+  return font.messageSize;
+}
+
+function buildThemeFilters({
+  hueRotate = 0,
+  saturate = 1,
+  brightness = 1,
+}) {
+  const filters = [];
+  const brightnessShift = Math.max(-0.25, Math.min(0.25, Number(brightness || 1) - 1));
+
+  filters.push(`eq=saturation=${Number(saturate || 1).toFixed(2)}:brightness=${brightnessShift.toFixed(2)}`);
+
+  if (Number(hueRotate || 0) !== 0) {
+    filters.push(`hue=h=${Number(hueRotate).toFixed(0)}`);
+  }
+
+  return filters;
+}
+
+function buildEffectFilters(extras = {}, { primaryColor, accentColor }) {
+  const filters = [];
+
+  if (extras.softGlow) {
+    filters.push(`drawbox=x=w*0.16:y=h*0.12:w=w*0.68:h=h*0.56:color=${withAlpha(accentColor, 0.08)}:t=fill`);
+    filters.push(`drawbox=x=w*0.27:y=h*0.22:w=w*0.44:h=h*0.34:color=${withAlpha(primaryColor, 0.05)}:t=fill`);
+  }
+
+  if (extras.ribbon) {
+    filters.push(`drawbox=x=w*0.018:y=h*0.018:w=w*0.964:h=h*0.964:color=${withAlpha(accentColor, 0.22)}:t=fill`);
+    filters.push(`drawbox=x=w*0.032:y=h*0.032:w=w*0.936:h=h*0.936:color=black@1.0:t=fill`);
+    filters.push(`drawbox=x=w*0.03:y=h*0.03:w=w*0.94:h=h*0.94:color=${withAlpha(accentColor, 0.64)}:t=6`);
+  }
+
+  if (extras.sparkle) {
+    SPARKLE_PARTICLES.forEach((particle) => {
+      filters.push(`drawbox=x=${particle.x}:y=${particle.y}:w=${particle.size}:h=${particle.size}:color=${withAlpha(accentColor, 0.92)}:t=fill`);
+    });
+  }
+
+  if (extras.goldDust) {
+    GOLD_DUST_PARTICLES.forEach((particle) => {
+      filters.push(`drawbox=x=${particle.x}:y=${particle.y}:w=${particle.size}:h=${particle.size}:color=${withAlpha(accentColor, 0.72)}:t=fill`);
+    });
+  }
+
+  if (extras.rosePetals) {
+    PETAL_ACCENTS.forEach((petal) => {
+      filters.push(`drawbox=x=${petal.x}:y=${petal.y}:w=${petal.w}:h=${petal.h}:color=${withAlpha(primaryColor, 0.58)}:t=fill`);
+    });
+  }
+
+  return filters;
+}
+
 async function downloadFile(url, destination) {
   const response = await fetch(url);
   if (!response.ok) {
@@ -148,11 +272,16 @@ function buildFilterGraph({
   locale = 'en',
   primaryColor = '#C53A5C',
   accentColor = '#EED7B8',
+  hueRotate = 0,
+  saturate = 1,
+  brightness = 1,
+  extras = {},
 }) {
   const preset = RENDER_PRESETS[engravingStyle] || RENDER_PRESETS.heirloom;
   const font = FONT_PRESETS[fontChoice] || FONT_PRESETS.playfair;
   const labels = LOCALE_LABELS[locale] || LOCALE_LABELS.en;
-  const filters = [];
+  const layout = ENGRAVING_LAYOUTS[engravingStyle] || ENGRAVING_LAYOUTS.heirloom;
+  const filters = buildThemeFilters({ hueRotate, saturate, brightness });
   const railColor = withAlpha(primaryColor, 0.56);
   const accentRailColor = withAlpha(accentColor, 0.84);
   const tintColor = withAlpha(primaryColor, 0.07);
@@ -161,6 +290,7 @@ function buildFilterGraph({
   const signatureBoxColor = withAlpha(accentColor, 0.10);
 
   filters.push(`drawbox=x=0:y=0:w=iw:h=ih:color=${tintColor}:t=fill`);
+  filters.push(...buildEffectFilters(extras, { primaryColor, accentColor }));
   filters.push(`drawbox=x=w*0.035:y=h*0.865:w=w*0.93:h=h*0.09:color=${railColor}:t=fill`);
   filters.push(`drawbox=x=w*0.055:y=h*0.865:w=w*0.89:h=h*0.0025:color=${accentRailColor}:t=fill`);
 
@@ -169,23 +299,25 @@ function buildFilterGraph({
       buildDrawText(`${labels.to} ${recipientName}`, {
         fontcolor: preset.dedicationColor,
         fontsize: font.recipientSize,
-        x: 'w*0.06',
-        y: 'h*0.10',
+        x: layout.recipient.x,
+        y: layout.recipient.y,
         boxcolor: dedicationBoxColor,
-        boxborderw: 16,
+        boxborderw: layout.recipient.boxborderw,
         font: font.renderFont,
       })
     );
   }
 
   if (shortMessage) {
-    filters.push(`drawbox=x=w*0.055:y=h*0.71:w=w*0.52:h=h*0.12:color=${messageBoxColor}:t=fill`);
+    if (layout.messageBox) {
+      filters.push(`drawbox=x=${layout.messageBox.x}:y=${layout.messageBox.y}:w=${layout.messageBox.w}:h=${layout.messageBox.h}:color=${messageBoxColor}:t=fill`);
+    }
     filters.push(
       buildDrawText(shortMessage, {
         fontcolor: preset.messageColor,
-        fontsize: engravingStyle === 'signature' ? 'h*0.025' : font.messageSize,
-        x: 'w*0.075',
-        y: 'h*0.765',
+        fontsize: getMessageSizeExpr(shortMessage, engravingStyle, fontChoice),
+        x: layout.message.x,
+        y: layout.message.y,
         font: font.renderFont,
       })
     );
@@ -196,10 +328,10 @@ function buildFilterGraph({
       buildDrawText(`${labels.from} ${senderName}`, {
         fontcolor: preset.signatureColor,
         fontsize: font.senderSize,
-        x: 'w-tw-w*0.06',
-        y: 'h*0.80',
+        x: layout.sender.x,
+        y: layout.sender.y,
         boxcolor: signatureBoxColor,
-        boxborderw: 12,
+        boxborderw: layout.sender.boxborderw,
         font: font.renderFont,
       })
     );
@@ -247,8 +379,14 @@ export async function renderBloomDelivery(purchaseId) {
   const engravingStyle = customization.engravingStyle || purchase.composition_manifest?.composition?.engravingStyle || 'heirloom';
   const fontChoice = customization.fontChoice || purchase.composition_manifest?.composition?.fontChoice || 'playfair';
   const locale = customization.locale || purchase.composition_manifest?.composition?.locale || 'en';
+  const colorTheme = customization.colorTheme || purchase.composition_manifest?.composition?.colorTheme || 'original';
   const primaryColor = customization.primaryColor || purchase.composition_manifest?.composition?.primaryColor || '#C53A5C';
   const accentColor = customization.accentColor || purchase.composition_manifest?.composition?.accentColor || '#EED7B8';
+  const extras = customization.extras || purchase.composition_manifest?.composition?.extras || {};
+  const themeTuning = THEME_TUNING[colorTheme] || THEME_TUNING.original;
+  const hueRotate = purchase.composition_manifest?.composition?.hueRotate ?? customization.hueRotate ?? themeTuning.hueRotate;
+  const saturate = purchase.composition_manifest?.composition?.saturate ?? customization.saturate ?? themeTuning.saturate;
+  const brightness = purchase.composition_manifest?.composition?.brightness ?? customization.brightness ?? themeTuning.brightness;
   const sourceVideoUrl = purchase.products?.video_file_url || purchase.products?.video_url;
 
   if (!sourceVideoUrl) {
@@ -272,6 +410,10 @@ export async function renderBloomDelivery(purchaseId) {
       locale,
       primaryColor,
       accentColor,
+      hueRotate,
+      saturate,
+      brightness,
+      extras,
     });
 
     await execFileAsync('ffmpeg', [

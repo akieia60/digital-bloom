@@ -233,10 +233,17 @@ export function buildCartComposition(customization) {
     locale = 'en',
   } = customization;
 
+  const theme = getThemeSpec(colorTheme, { primaryColor, accentColor });
+
   return {
     colorTheme,
-    primaryColor: primaryColor || getThemeSpec(colorTheme).primaryColor,
-    accentColor: accentColor || getThemeSpec(colorTheme).accentColor,
+    primaryColor: theme.primaryColor,
+    accentColor: theme.accentColor,
+    hueRotate: theme.hueRotate,
+    saturate: theme.saturate,
+    brightness: theme.brightness,
+    overlayColor: theme.overlayColor,
+    blendMode: theme.blendMode,
     selectedSound,
     engravingStyle,
     fontChoice,
