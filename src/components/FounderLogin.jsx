@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { supabase } from '../lib/supabase';
 
 /**
  * FounderLogin — Auth gate for the Founder Command Dashboard.
@@ -19,6 +18,7 @@ const FounderLogin = ({ onLogin, error: externalError }) => {
     setLoading(true);
 
     try {
+      const { supabase } = await import('../lib/supabase');
       // Use production URL explicitly to avoid localhost redirects
       // In production, window.location.origin will be the actual domain
       const redirectUrl = `${window.location.origin}/founder`;

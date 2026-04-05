@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
-import { supabase } from '../lib/supabase';
 import { buildCartComposition } from '../lib/fulfillmentMapper';
 import { COLOR_PALETTES, COLOR_SWATCHES, ENGRAVING_STYLES, MESSAGE_FONT_OPTIONS, getThemeSpec } from '../lib/compositionEngine';
 import { useLanguage } from '../contexts/LanguageContext';
@@ -318,6 +317,7 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
     // Fire-and-forget theme save
     (async () => {
       try {
+        const { supabase } = await import('../lib/supabase');
         const { data: { user } } = await supabase.auth.getUser();
         if (user) {
           await supabase.from('digital_bloom_themes').insert([{

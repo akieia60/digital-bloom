@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { getProducts, getProductById } from '../lib/supabase';
 
 // Supabase is the source of truth for products.
 // If unavailable, we show an empty state rather than stale demo data.
@@ -23,6 +22,7 @@ export const useProducts = ({ tier = null } = {}) => {
       setError(null);
 
       try {
+        const { getProducts } = await import('../lib/supabase');
         const data = await getProducts({ tier });
 
         if (data && data.length > 0) {
@@ -72,6 +72,7 @@ export const useProduct = (id) => {
       setError(null);
 
       try {
+        const { getProductById } = await import('../lib/supabase');
         const data = await getProductById(id);
 
         if (data) {

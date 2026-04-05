@@ -1,5 +1,4 @@
 import { useState, useEffect, useCallback } from 'react';
-import { supabase } from '../lib/supabase';
 
 /**
  * Founder email allowlist.
@@ -25,11 +24,19 @@ export function useFounderAuth() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    let mounted = true;
+    let authClient = null;
+    let subscription = null;
+
     // Get initial session
     const getSession = async () => {
       try {
+        const { supabase } = await import('../lib/supabase');
+        authClient = supabase;
+
         const { data: { session: currentSession }, error: sessionError } = await supabase.auth.getSession();
         if (sessionError) throw sessionError;
+        if (!mounted) return;
 
         setSession(currentSession);
         const currentUser = currentSession?.user || null;
@@ -41,29 +48,43 @@ export function useFounderAuth() {
           setIsFounder(false);
         }
       } catch (err) {
-        setError(err.message);
+        if (mounted) {
+          setError(err.message);
+        }
       } finally {
-        setLoading(false);
+        if (mounted) {
+          setLoading(false);
+        }
       }
+    }
+
+    const setupAuth = async () => {
+      await getSession();
+      if (!mounted || !authClient) return;
+
+      // Listen for auth state changes (handles both OAuth and password-based login)
+      const { data } = authClient.auth.onAuthStateChange((_event, newSession) => {
+        if (!mounted) return;
+
+        setSession(newSession);
+        const newUser = newSession?.user || null;
+        setUser(newUser);
+
+        if (newUser?.email) {
+          setIsFounder(FOUNDER_EMAILS.includes(newUser.email.toLowerCase()));
+        } else {
+          setIsFounder(false);
+        }
+        setLoading(false);
+      });
+
+      subscription = data?.subscription || null;
     };
 
-    getSession();
-
-    // Listen for auth state changes (handles both OAuth and password-based login)
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, newSession) => {
-      setSession(newSession);
-      const newUser = newSession?.user || null;
-      setUser(newUser);
-
-      if (newUser?.email) {
-        setIsFounder(FOUNDER_EMAILS.includes(newUser.email.toLowerCase()));
-      } else {
-        setIsFounder(false);
-      }
-      setLoading(false);
-    });
+    setupAuth();
 
     return () => {
+      mounted = false;
       subscription?.unsubscribe();
     };
   }, []);
@@ -71,6 +92,7 @@ export function useFounderAuth() {
   const signIn = useCallback(async (email, password) => {
     setError(null);
     try {
+      const { supabase } = await import('../lib/supabase');
       const { data, error: signInError } = await supabase.auth.signInWithPassword({
         email,
         password,
@@ -86,6 +108,7 @@ export function useFounderAuth() {
   const signOut = useCallback(async () => {
     setError(null);
     try {
+      const { supabase } = await import('../lib/supabase');
       const { error: signOutError } = await supabase.auth.signOut();
       if (signOutError) throw signOutError;
     } catch (err) {
@@ -94,6 +117,7 @@ export function useFounderAuth() {
   }, []);
 
   const getAccessToken = useCallback(async () => {
+    const { supabase } = await import('../lib/supabase');
     const { data: { session: currentSession } } = await supabase.auth.getSession();
     return currentSession?.access_token || null;
   }, []);

@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { supabase, uploadProductImage, uploadProductVideo } from '../lib/supabase';
 import { useFounderAuth } from '../hooks/useFounderAuth';
 import FounderLogin from '../components/FounderLogin';
 import VideoLibrary from '../components/tracker/VideoLibrary';
@@ -13,6 +12,8 @@ const ADMIN_EMAILS = [
   'akieia.davis@gmail.com',
   'admin@digitalbloom.art',
 ];
+
+const loadSupabaseModule = () => import('../lib/supabase');
 
 const Admin = () => {
   // ── FIX #4 — Auth gate ─────────────────────────────────────────────────────
@@ -59,6 +60,7 @@ const Admin = () => {
   const loadProducts = async () => {
     setLoading(true);
     try {
+      const { supabase } = await loadSupabaseModule();
       const { data, error } = await supabase
         .from('products')
         .select('*')
@@ -146,6 +148,7 @@ const Admin = () => {
       // Handle Image Upload
       if (imageFile) {
         showMessage('Uploading image...', 'info');
+        const { uploadProductImage } = await loadSupabaseModule();
         const uploadedUrl = await uploadProductImage(imageFile);
         if (uploadedUrl) currentImageUrl = uploadedUrl;
       }
@@ -153,6 +156,7 @@ const Admin = () => {
       // Handle Video Upload
       if (videoFile) {
         showMessage('Uploading video...', 'info');
+        const { uploadProductVideo } = await loadSupabaseModule();
         const uploadedUrl = await uploadProductVideo(videoFile);
         if (uploadedUrl) currentVideoUrl = uploadedUrl;
       }
@@ -180,6 +184,7 @@ const Admin = () => {
 
       if (editingProduct) {
         // Update existing product
+        const { supabase } = await loadSupabaseModule();
         const { error } = await supabase
           .from('products')
           .update(productData)
@@ -189,6 +194,7 @@ const Admin = () => {
         showMessage('Product updated successfully!');
       } else {
         // Create new product
+        const { supabase } = await loadSupabaseModule();
         const { error } = await supabase
           .from('products')
           .insert(productData);

@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-import { getAllPrompts, getPromptsByCategory } from '../lib/supabase'
 
 export default function PromptBrowser() {
   const [prompts, setPrompts] = useState([])
@@ -22,13 +21,17 @@ export default function PromptBrowser() {
 
   async function loadPrompts() {
     setLoading(true)
-    
-    const data = selectedCategory === 'All' 
-      ? await getAllPrompts()
-      : await getPromptsByCategory(selectedCategory)
-    
-    setPrompts(data)
-    setLoading(false)
+
+    try {
+      const { getAllPrompts, getPromptsByCategory } = await import('../lib/supabase')
+      const data = selectedCategory === 'All'
+        ? await getAllPrompts()
+        : await getPromptsByCategory(selectedCategory)
+
+      setPrompts(data)
+    } finally {
+      setLoading(false)
+    }
   }
 
   function copyPromptToClipboard(prompt) {
