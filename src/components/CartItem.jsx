@@ -67,10 +67,10 @@ const CartItem = ({ item }) => {
   };
 
   return (
-    <div className="py-6 border-b border-white/5 last:border-0 animate-fade-in">
+    <div className="py-5 sm:py-6 border-b border-white/5 last:border-0 animate-fade-in">
       {/* Main row — tap to expand */}
       <div
-        className="flex items-start space-x-5 cursor-pointer group"
+        className="flex items-start space-x-3 sm:space-x-5 cursor-pointer group"
         onClick={() => setIsExpanded(!isExpanded)}
         role="button"
         aria-expanded={isExpanded}
@@ -112,19 +112,35 @@ const CartItem = ({ item }) => {
 
         {/* Item Info */}
         <div className="flex-1 min-w-0">
-          <div className="flex justify-between items-start mb-1">
-            <span className="text-sm font-medium text-white font-display tracking-tight truncate pr-3">
+          <div className="flex justify-between items-start gap-3 mb-1">
+            <span className="text-sm sm:text-[15px] font-medium text-white font-display tracking-tight leading-tight pr-2">
               {item.name}
             </span>
             <p className="text-sm font-light text-white/50 flex-shrink-0">${parseFloat(item.price).toFixed(2)}</p>
           </div>
 
-          {/* Bespoke tag */}
-          {item.customization ? (
-            <span className="text-[9px] uppercase tracking-widest text-pure-gold font-bold">{t('cart_item_bespoke')}</span>
-          ) : (
-            <span className="text-[9px] uppercase tracking-widest text-white/20 font-light">{t('cart_item_gallery')}</span>
-          )}
+          <div className="mt-1 flex flex-wrap items-center justify-between gap-2">
+            {item.customization ? (
+              <span className="text-[9px] uppercase tracking-widest text-pure-gold font-bold">{t('cart_item_bespoke')}</span>
+            ) : (
+              <span className="text-[9px] uppercase tracking-widest text-white/20 font-light">{t('cart_item_gallery')}</span>
+            )}
+
+            {item.customization && (
+              <Link
+                to={`/product/${item.id}`}
+                state={{ editCustomization: item.customization, editLineItemId: itemKey, editQuantity: item.quantity }}
+                className="inline-flex items-center gap-1 rounded-full border border-pure-gold/30 bg-pure-gold/10 px-2.5 py-1 text-[9px] uppercase tracking-[0.16em] text-pure-gold hover:bg-pure-gold/20 transition-colors font-semibold"
+                onClick={(e) => { e.stopPropagation(); setIsCartOpen(false); }}
+              >
+                <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                </svg>
+                {t('cart_item_edit')}
+              </Link>
+            )}
+          </div>
 
           {item.customization && (
             <div className="mt-2 space-y-1">
@@ -157,16 +173,31 @@ const CartItem = ({ item }) => {
           )}
 
           {/* Expand indicator */}
-          <div className="flex items-center mt-2">
-            <span className="text-[10px] uppercase tracking-widest text-white/30 font-light">
+          <div className="flex flex-wrap items-center gap-2 mt-3">
+            <span className="inline-flex items-center gap-1 text-[10px] uppercase tracking-widest text-white/30 font-light">
               {isExpanded ? t('cart_item_tap_collapse') : t('cart_item_tap_details')}
+              <svg
+                className={`w-3 h-3 transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`}
+                fill="none" stroke="currentColor" viewBox="0 0 24 24"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
             </span>
-            <svg
-              className={`w-3 h-3 ml-1 text-white/30 transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`}
-              fill="none" stroke="currentColor" viewBox="0 0 24 24"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-            </svg>
+
+            {item.customization && (
+              <Link
+                to={`/product/${item.id}`}
+                state={{ editCustomization: item.customization, editLineItemId: itemKey, editQuantity: item.quantity }}
+                className="inline-flex items-center gap-1.5 rounded-full border border-pure-gold/30 bg-pure-gold/10 px-3 py-1.5 text-[10px] uppercase tracking-[0.18em] text-pure-gold hover:bg-pure-gold/20 transition-colors font-semibold"
+                onClick={(e) => { e.stopPropagation(); setIsCartOpen(false); }}
+              >
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                </svg>
+                {t('cart_item_edit')}
+              </Link>
+            )}
           </div>
         </div>
       </div>
@@ -174,12 +205,12 @@ const CartItem = ({ item }) => {
       {/* Expanded Details */}
       <div
         className={`overflow-hidden transition-all duration-400 ease-in-out ${
-          isExpanded ? 'max-h-[600px] opacity-100 mt-4' : 'max-h-0 opacity-0'
+          isExpanded ? 'max-h-[980px] opacity-100 mt-4' : 'max-h-0 opacity-0'
         }`}
       >
-        <div className="ml-[100px] space-y-4">
+        <div className="ml-0 sm:ml-[100px] mt-4 sm:mt-0 space-y-4">
           {/* Larger Preview */}
-          <div className="db-watermark w-full aspect-video max-w-xs rounded-2xl overflow-hidden border border-white/10 relative">
+          <div className="db-watermark w-full aspect-video max-w-full sm:max-w-xs rounded-2xl overflow-hidden border border-white/10 relative">
             {videoUrl ? (
               <video
                 src={videoUrl}
@@ -296,37 +327,38 @@ const CartItem = ({ item }) => {
 
           {/* Edit Customization — only show if bespoke */}
           {item.customization && (
-            <Link
-              to={`/product/${item.id}`}
-              state={{ editCustomization: item.customization, editLineItemId: itemKey, editQuantity: item.quantity }}
-              className="inline-flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-pure-gold hover:text-white transition-colors font-semibold mb-2"
-              onClick={(e) => { e.stopPropagation(); setIsCartOpen(false); }}
-            >
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
-              </svg>
-              {t('cart_item_edit')}
-            </Link>
-          )}
+            <div className="flex flex-wrap gap-3">
+              <Link
+                to={`/product/${item.id}`}
+                state={{ editCustomization: item.customization, editLineItemId: itemKey, editQuantity: item.quantity }}
+                className="inline-flex items-center justify-center gap-1.5 rounded-full border border-pure-gold/30 bg-pure-gold/10 px-4 py-2.5 text-[10px] uppercase tracking-[0.18em] text-pure-gold hover:bg-pure-gold/20 transition-colors font-semibold"
+                onClick={(e) => { e.stopPropagation(); setIsCartOpen(false); }}
+              >
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                </svg>
+                {t('cart_item_edit')}
+              </Link>
 
-          {/* View Full Product link */}
-          <Link
-            to={`/product/${item.id}`}
-            className="inline-block text-[10px] uppercase tracking-widest text-white/30 hover:text-white transition-colors font-semibold"
-            onClick={(e) => { e.stopPropagation(); setIsCartOpen(false); }}
-          >
-            {t('cart_item_view')}
-          </Link>
+              <Link
+                to={`/product/${item.id}`}
+                className="inline-flex items-center justify-center rounded-full border border-white/10 px-4 py-2.5 text-[10px] uppercase tracking-[0.18em] text-white/55 hover:text-white hover:border-white/20 transition-colors font-semibold"
+                onClick={(e) => { e.stopPropagation(); setIsCartOpen(false); }}
+              >
+                {t('cart_item_view')}
+              </Link>
+            </div>
+          )}
         </div>
       </div>
 
       {/* Quantity Controls — always visible */}
-      <div className="flex items-center justify-between mt-4 ml-[100px]">
-        <div className="flex items-center space-x-4">
+      <div className="flex flex-wrap items-center justify-between gap-3 mt-4 ml-0 sm:ml-[100px]">
+        <div className="flex flex-wrap items-center gap-3 sm:gap-4">
           <button
             onClick={(e) => { e.stopPropagation(); handleDecrement(); }}
-            className="w-6 h-6 rounded-full border border-white/10 flex items-center justify-center hover:border-pure-gold/40 hover:text-white text-white/30 transition-all"
+            className="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center hover:border-pure-gold/40 hover:text-white text-white/30 transition-all"
           >
             <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
@@ -339,7 +371,7 @@ const CartItem = ({ item }) => {
 
           <button
             onClick={(e) => { e.stopPropagation(); handleIncrement(); }}
-            className="w-6 h-6 rounded-full border border-white/10 flex items-center justify-center hover:border-pure-gold/40 hover:text-white text-white/30 transition-all"
+            className="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center hover:border-pure-gold/40 hover:text-white text-white/30 transition-all"
           >
             <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -349,7 +381,7 @@ const CartItem = ({ item }) => {
 
         <button
           onClick={(e) => { e.stopPropagation(); removeFromCart(itemKey); }}
-          className="text-[9px] uppercase tracking-widest text-white/20 hover:text-red-400 transition-colors font-semibold"
+          className="text-[10px] uppercase tracking-[0.18em] text-white/25 hover:text-red-400 transition-colors font-semibold"
         >
           {t('cart_item_remove')}
         </button>

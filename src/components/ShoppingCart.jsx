@@ -142,14 +142,14 @@ const ShoppingCart = () => {
           </div>
         ) : (
           <>
-            <div className="flex-1 overflow-y-auto px-8 py-4 space-y-6">
+            <div className="flex-1 overflow-y-auto px-4 sm:px-8 py-4 space-y-5">
               {cartItems.map((item, index) => (
                 <CartItem key={item.lineItemId || `${item.id}-${index}`} item={item} />
               ))}
             </div>
 
             {/* Footer */}
-            <div className="p-8 glass border-t border-white/5 space-y-8 bg-black/40">
+            <div className="p-4 sm:p-8 glass border-t border-white/5 space-y-6 sm:space-y-8 bg-black/40">
               {error && (
                 <div className="bg-red-500/10 border border-red-500/20 text-red-500 px-4 py-3 rounded-xl text-xs font-light">
                   {error}
