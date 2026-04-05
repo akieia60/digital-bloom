@@ -583,6 +583,7 @@ export async function renderBloomDelivery(purchaseId) {
     const { error: updateError } = await supabase
       .from('purchases')
       .update({
+        status: 'completed',
         download_url: publicData.publicUrl,
         download_expires_at: expiryDate.toISOString(),
         download_count: 0,
