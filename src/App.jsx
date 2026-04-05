@@ -3,12 +3,12 @@ import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-route
 import { CartProvider } from './context/CartContext';
 import { LanguageProvider } from './contexts/LanguageContext';
 import { ToastProvider } from './components/tracker/Toast';
-import Header from './components/Header';
 
 // Eagerly loaded — needed on first paint
 import LandingPage from './pages/LandingPage';
 
 // Lazily loaded — heavy or infrequently visited pages
+const Header = lazy(() => import('./components/Header'));
 const Shop = lazy(() => import('./pages/Shop'));
 const CategoryPage = lazy(() => import('./pages/CategoryPage'));
 const ProductDetails = lazy(() => import('./components/ProductDetails'));
@@ -82,7 +82,11 @@ function AppContent({ searchQuery, setSearchQuery }) {
 
   return (
     <>
-      {!isLandingPage && <Header onSearchChange={setSearchQuery} searchQuery={searchQuery} onOpenFaq={openFaq} />}
+      {!isLandingPage && (
+        <Suspense fallback={null}>
+          <Header onSearchChange={setSearchQuery} searchQuery={searchQuery} onOpenFaq={openFaq} />
+        </Suspense>
+      )}
       <Suspense fallback={
         <div className="min-h-screen bg-obsidian flex items-center justify-center">
           <div className="w-10 h-10 border-2 border-pure-gold/20 border-t-pure-gold rounded-full animate-spin" />
