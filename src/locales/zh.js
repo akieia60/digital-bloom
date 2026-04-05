@@ -462,6 +462,20 @@ export const zh = {
   success_copied: "✓ 已复制！",
   success_return_homepage: "返回首页",
 
+  delivery_loading: "正在准备你的 Bloom...",
+  delivery_processing_title: "我们正在准备你的 Bloom",
+  delivery_processing_message: "你的个性化 Bloom 正在被精心制作。请稍后回来，或刷新此页面查看最新交付状态。",
+  delivery_refresh_status: "刷新状态",
+  delivery_not_found_title: "未找到 Bloom",
+  delivery_not_found_message: "我们找不到这个 Bloom。",
+  delivery_error_title: "出了点问题",
+  delivery_try_again: "再试一次",
+  delivery_return_home: "返回首页",
+  delivery_replay: "重播",
+  delivery_share: "分享",
+  delivery_copied: "已复制！",
+  delivery_brand_tagline: "趁他们还在的时候，把花送给他们",
+
 
   // ─── Common ───
   common_back: "返回",

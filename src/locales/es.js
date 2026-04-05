@@ -462,6 +462,20 @@ export const es = {
   success_copied: "✓ ¡Copiado!",
   success_return_homepage: "Volver a la página principal",
 
+  delivery_loading: "Preparando tu bloom...",
+  delivery_processing_title: "Estamos preparando tu Bloom",
+  delivery_processing_message: "Tu experiencia personalizada se está creando con cuidado. Vuelve en un momento o actualiza esta página para ver el estado más reciente.",
+  delivery_refresh_status: "Actualizar estado",
+  delivery_not_found_title: "Bloom no encontrado",
+  delivery_not_found_message: "No pudimos encontrar este bloom.",
+  delivery_error_title: "Algo salió mal",
+  delivery_try_again: "Intentar de nuevo",
+  delivery_return_home: "Volver al inicio",
+  delivery_replay: "Repetir",
+  delivery_share: "Compartir",
+  delivery_copied: "¡Copiado!",
+  delivery_brand_tagline: "Dales sus flores mientras están aquí",
+
 
   // ─── Common ───
   common_back: "Atrás",

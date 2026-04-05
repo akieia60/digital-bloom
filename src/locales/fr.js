@@ -462,6 +462,20 @@ export const fr = {
   success_copied: "✓ Copié !",
   success_return_homepage: "Retourner à la page d'accueil",
 
+  delivery_loading: "Préparation de votre bloom...",
+  delivery_processing_title: "Nous préparons votre Bloom",
+  delivery_processing_message: "Votre expérience personnalisée est en train d'être créée avec soin. Revenez bientôt ou actualisez cette page pour voir le statut le plus récent.",
+  delivery_refresh_status: "Actualiser le statut",
+  delivery_not_found_title: "Bloom introuvable",
+  delivery_not_found_message: "Nous n'avons pas pu trouver ce bloom.",
+  delivery_error_title: "Un problème est survenu",
+  delivery_try_again: "Réessayer",
+  delivery_return_home: "Retour à l'accueil",
+  delivery_replay: "Rejouer",
+  delivery_share: "Partager",
+  delivery_copied: "Copié !",
+  delivery_brand_tagline: "Offrez-leur leurs fleurs pendant qu'ils sont là",
+
 
   // ─── Common ───
   common_back: "Retour",

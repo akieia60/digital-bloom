@@ -462,6 +462,20 @@ export const ht = {
   success_copied: "✓ Kopye!",
   success_return_homepage: "Retounen sou paj dakèy la",
 
+  delivery_loading: "N ap prepare bloom ou a...",
+  delivery_processing_title: "Nou ap prepare Bloom ou a",
+  delivery_processing_message: "Eksperyans pèsonalize ou a ap fèt ak anpil swen. Tounen byento oswa rafrechi paj sa a pou wè dènye estati livrezon an.",
+  delivery_refresh_status: "Rafrechi estati a",
+  delivery_not_found_title: "Bloom la pa jwenn",
+  delivery_not_found_message: "Nou pa t ka jwenn bloom sa a.",
+  delivery_error_title: "Gen yon pwoblèm",
+  delivery_try_again: "Eseye ankò",
+  delivery_return_home: "Retounen lakay",
+  delivery_replay: "Repase",
+  delivery_share: "Pataje",
+  delivery_copied: "Kopye!",
+  delivery_brand_tagline: "Ba yo flè yo pandan yo la toujou",
+
 
   // ─── Common ───
   common_back: "Retou",
