@@ -4,6 +4,7 @@ import path from 'path';
 import { execFile } from 'child_process';
 import { promisify } from 'util';
 import { createClient } from '@supabase/supabase-js';
+import { createCanvas } from 'canvas';
 
 const execFileAsync = promisify(execFile);
 
@@ -137,12 +138,43 @@ function withAlpha(hex, alpha) {
   return `0x${normalizeHex(hex)}@${alpha}`;
 }
 
+function rgba(hex, alpha = 1) {
+  const normalized = normalizeHex(hex);
+  const r = Number.parseInt(normalized.slice(0, 2), 16);
+  const g = Number.parseInt(normalized.slice(2, 4), 16);
+  const b = Number.parseInt(normalized.slice(4, 6), 16);
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
+
 function sanitizeFilePart(value, fallback = 'bloom') {
   return String(value || fallback)
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-+|-+$/g, '')
     .slice(0, 48) || fallback;
+}
+
+function resolveMediaPath(source) {
+  const value = String(source || '').trim();
+  if (!value) return { type: 'missing', value: null };
+
+  if (/^https?:\/\//i.test(value)) {
+    return { type: 'remote', value };
+  }
+
+  if (value.startsWith('/')) {
+    const localPath = path.join(process.cwd(), 'public', value.replace(/^\/+/, ''));
+    if (fs.existsSync(localPath)) {
+      return { type: 'local', value: localPath };
+    }
+
+    const baseUrl = process.env.APP_BASE_URL || process.env.VITE_APP_URL || process.env.VITE_API_URL;
+    if (baseUrl) {
+      return { type: 'remote', value: new URL(value, baseUrl).toString() };
+    }
+  }
+
+  return { type: 'remote', value };
 }
 
 function escapeDrawtext(value = '') {
@@ -222,39 +254,207 @@ function buildEffectFilters(extras = {}, { primaryColor, accentColor }) {
   const filters = [];
 
   if (extras.softGlow) {
-    filters.push(`drawbox=x=w*0.16:y=h*0.12:w=w*0.68:h=h*0.56:color=${withAlpha(accentColor, 0.08)}:t=fill`);
-    filters.push(`drawbox=x=w*0.27:y=h*0.22:w=w*0.44:h=h*0.34:color=${withAlpha(primaryColor, 0.05)}:t=fill`);
+    filters.push(`drawbox=x=iw*0.16:y=ih*0.12:w=iw*0.68:h=ih*0.56:color=${withAlpha(accentColor, 0.08)}:t=fill`);
+    filters.push(`drawbox=x=iw*0.27:y=ih*0.22:w=iw*0.44:h=ih*0.34:color=${withAlpha(primaryColor, 0.05)}:t=fill`);
   }
 
   if (extras.ribbon) {
-    filters.push(`drawbox=x=w*0.018:y=h*0.018:w=w*0.964:h=h*0.964:color=${withAlpha(accentColor, 0.22)}:t=fill`);
-    filters.push(`drawbox=x=w*0.032:y=h*0.032:w=w*0.936:h=h*0.936:color=black@1.0:t=fill`);
-    filters.push(`drawbox=x=w*0.03:y=h*0.03:w=w*0.94:h=h*0.94:color=${withAlpha(accentColor, 0.64)}:t=6`);
+    filters.push(`drawbox=x=iw*0.018:y=ih*0.018:w=iw*0.964:h=ih*0.964:color=${withAlpha(accentColor, 0.22)}:t=fill`);
+    filters.push(`drawbox=x=iw*0.032:y=ih*0.032:w=iw*0.936:h=ih*0.936:color=black@1.0:t=fill`);
+    filters.push(`drawbox=x=iw*0.03:y=ih*0.03:w=iw*0.94:h=ih*0.94:color=${withAlpha(accentColor, 0.64)}:t=6`);
   }
 
   if (extras.sparkle) {
     SPARKLE_PARTICLES.forEach((particle) => {
-      filters.push(`drawbox=x=${particle.x}:y=${particle.y}:w=${particle.size}:h=${particle.size}:color=${withAlpha(accentColor, 0.92)}:t=fill`);
+      filters.push(`drawbox=x=${particle.x.replaceAll('w', 'iw').replaceAll('h', 'ih')}:y=${particle.y.replaceAll('w', 'iw').replaceAll('h', 'ih')}:w=${particle.size.replaceAll('w', 'iw').replaceAll('h', 'ih')}:h=${particle.size.replaceAll('w', 'iw').replaceAll('h', 'ih')}:color=${withAlpha(accentColor, 0.92)}:t=fill`);
     });
   }
 
   if (extras.goldDust) {
     GOLD_DUST_PARTICLES.forEach((particle) => {
-      filters.push(`drawbox=x=${particle.x}:y=${particle.y}:w=${particle.size}:h=${particle.size}:color=${withAlpha(accentColor, 0.72)}:t=fill`);
+      filters.push(`drawbox=x=${particle.x.replaceAll('w', 'iw').replaceAll('h', 'ih')}:y=${particle.y.replaceAll('w', 'iw').replaceAll('h', 'ih')}:w=${particle.size.replaceAll('w', 'iw').replaceAll('h', 'ih')}:h=${particle.size.replaceAll('w', 'iw').replaceAll('h', 'ih')}:color=${withAlpha(accentColor, 0.72)}:t=fill`);
     });
   }
 
   if (extras.rosePetals) {
     PETAL_ACCENTS.forEach((petal) => {
-      filters.push(`drawbox=x=${petal.x}:y=${petal.y}:w=${petal.w}:h=${petal.h}:color=${withAlpha(primaryColor, 0.58)}:t=fill`);
+      filters.push(`drawbox=x=${petal.x.replaceAll('w', 'iw').replaceAll('h', 'ih')}:y=${petal.y.replaceAll('w', 'iw').replaceAll('h', 'ih')}:w=${petal.w.replaceAll('w', 'iw').replaceAll('h', 'ih')}:h=${petal.h.replaceAll('w', 'iw').replaceAll('h', 'ih')}:color=${withAlpha(primaryColor, 0.58)}:t=fill`);
     });
   }
 
   return filters;
 }
 
+function roundRect(ctx, x, y, width, height, radius) {
+  const r = Math.min(radius, width / 2, height / 2);
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.arcTo(x + width, y, x + width, y + height, r);
+  ctx.arcTo(x + width, y + height, x, y + height, r);
+  ctx.arcTo(x, y + height, x, y, r);
+  ctx.arcTo(x, y, x + width, y, r);
+  ctx.closePath();
+}
+
+function getCanvasFont(fontChoice, size, weight = 600, italic = false) {
+  const family = fontChoice === 'playfair' ? 'Georgia' : 'Arial';
+  return `${italic ? 'italic ' : ''}${weight} ${Math.round(size)}px ${family}`;
+}
+
+function wrapText(ctx, text, maxWidth) {
+  const words = String(text || '').split(/\s+/).filter(Boolean);
+  const lines = [];
+  let currentLine = '';
+
+  for (const word of words) {
+    const testLine = currentLine ? `${currentLine} ${word}` : word;
+    if (ctx.measureText(testLine).width <= maxWidth || !currentLine) {
+      currentLine = testLine;
+    } else {
+      lines.push(currentLine);
+      currentLine = word;
+    }
+  }
+
+  if (currentLine) lines.push(currentLine);
+  return lines;
+}
+
+async function getVideoMetadata(inputPath) {
+  const { stdout } = await execFileAsync('ffprobe', [
+    '-v', 'error',
+    '-select_streams', 'v:0',
+    '-show_entries', 'stream=width,height',
+    '-of', 'json',
+    inputPath,
+  ]);
+
+  const parsed = JSON.parse(stdout || '{}');
+  const stream = parsed.streams?.[0] || {};
+  return {
+    width: Number(stream.width || 720),
+    height: Number(stream.height || 1280),
+  };
+}
+
+async function createOverlayImage(destination, {
+  width,
+  height,
+  recipientName,
+  senderName,
+  shortMessage,
+  engravingStyle,
+  fontChoice,
+  locale,
+  primaryColor,
+  accentColor,
+}) {
+  const layout = ENGRAVING_LAYOUTS[engravingStyle] || ENGRAVING_LAYOUTS.heirloom;
+  const labels = LOCALE_LABELS[locale] || LOCALE_LABELS.en;
+  const canvas = createCanvas(width, height);
+  const ctx = canvas.getContext('2d');
+
+  ctx.clearRect(0, 0, width, height);
+
+  const railX = width * 0.035;
+  const railY = height * 0.865;
+  const railW = width * 0.93;
+  const railH = height * 0.09;
+  roundRect(ctx, railX, railY, railW, railH, 22);
+  ctx.fillStyle = rgba(primaryColor, 0.56);
+  ctx.fill();
+
+  ctx.fillStyle = rgba(accentColor, 0.84);
+  ctx.fillRect(width * 0.055, height * 0.865, width * 0.89, Math.max(3, height * 0.0025));
+
+  if (recipientName) {
+    const x = width * (layout.recipient.x.includes('0.08') ? 0.08 : 0.06);
+    const y = height * (layout.recipient.y.includes('0.12') ? 0.12 : 0.10);
+    ctx.font = getCanvasFont(fontChoice, height * 0.034, 700, false);
+    const label = `${labels.to} ${recipientName}`;
+    const textWidth = ctx.measureText(label).width;
+    roundRect(ctx, x - 14, y - 32, textWidth + 28, 46, 18);
+    ctx.fillStyle = rgba(accentColor, 0.12);
+    ctx.fill();
+    ctx.fillStyle = 'rgba(255,255,255,0.78)';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(label, x, y - 10);
+  }
+
+  if (shortMessage) {
+    const messageSize = engravingStyle === 'signature'
+      ? (shortMessage.length > 56 ? height * 0.022 : height * 0.025)
+      : (shortMessage.length > 90 ? height * 0.019 : shortMessage.length > 56 ? height * 0.021 : height * 0.024);
+    ctx.font = getCanvasFont(fontChoice, messageSize, fontChoice === 'arialBold' ? 700 : 600, engravingStyle === 'signature');
+    const maxTextWidth = layout.messageBox ? width * 0.46 : width * 0.70;
+    const lines = wrapText(ctx, shortMessage, maxTextWidth);
+    const lineHeight = messageSize * 1.25;
+    const textBlockHeight = lines.length * lineHeight;
+
+    if (layout.messageBox) {
+      const boxX = eval(layout.messageBox.x.replace(/w/g, width).replace(/h/g, height));
+      const boxY = eval(layout.messageBox.y.replace(/w/g, width).replace(/h/g, height));
+      const boxW = eval(layout.messageBox.w.replace(/w/g, width).replace(/h/g, height));
+      const boxH = Math.max(eval(layout.messageBox.h.replace(/w/g, width).replace(/h/g, height)), textBlockHeight + 28);
+      roundRect(ctx, boxX, boxY, boxW, boxH, 24);
+      ctx.fillStyle = rgba(primaryColor, 0.24);
+      ctx.fill();
+      ctx.fillStyle = 'rgba(255,255,255,0.9)';
+      lines.forEach((line, index) => {
+        ctx.fillText(line, boxX + 18, boxY + 26 + (index * lineHeight));
+      });
+    } else {
+      ctx.fillStyle = 'rgba(255,255,255,0.92)';
+      ctx.textAlign = 'center';
+      lines.forEach((line, index) => {
+        ctx.fillText(line, width / 2, height * 0.745 + (index * lineHeight));
+      });
+      ctx.textAlign = 'start';
+    }
+  }
+
+  if (senderName) {
+    const label = `${labels.from} ${senderName}`;
+    ctx.font = getCanvasFont(fontChoice, height * 0.026, 700, false);
+    const textWidth = ctx.measureText(label).width;
+    const boxW = textWidth + 24;
+    const boxH = 42;
+    const boxX = width - boxW - (width * 0.06);
+    const boxY = height * 0.775;
+    roundRect(ctx, boxX, boxY, boxW, boxH, 18);
+    ctx.fillStyle = rgba(accentColor, 0.10);
+    ctx.fill();
+    ctx.fillStyle = 'rgba(255,255,255,0.74)';
+    ctx.fillText(label, boxX + 12, boxY + 27);
+  }
+
+  ctx.fillStyle = rgba(accentColor, 0.94);
+  ctx.font = `italic 700 ${Math.round(height * 0.025)}px Georgia`;
+  ctx.fillText('Digital Bloom™', width * 0.09, height * 0.91);
+
+  const tmText = 'TM';
+  ctx.font = getCanvasFont('arialBold', height * 0.018, 800, false);
+  const tmWidth = ctx.measureText(tmText).width;
+  ctx.fillStyle = 'rgba(255,255,255,0.72)';
+  ctx.fillText(tmText, width - tmWidth - (width * 0.07), height * 0.91);
+
+  const buffer = canvas.toBuffer('image/png');
+  await fs.promises.writeFile(destination, buffer);
+}
+
 async function downloadFile(url, destination) {
-  const response = await fetch(url);
+  const resolved = resolveMediaPath(url);
+
+  if (resolved.type === 'local' && resolved.value) {
+    await fs.promises.copyFile(resolved.value, destination);
+    return;
+  }
+
+  if (!resolved.value) {
+    throw new Error('No source video available to download');
+  }
+
+  const response = await fetch(resolved.value);
   if (!response.ok) {
     throw new Error(`Failed to download source video: ${response.status}`);
   }
@@ -264,12 +464,6 @@ async function downloadFile(url, destination) {
 }
 
 function buildFilterGraph({
-  recipientName,
-  senderName,
-  shortMessage,
-  engravingStyle = 'heirloom',
-  fontChoice = 'playfair',
-  locale = 'en',
   primaryColor = '#C53A5C',
   accentColor = '#EED7B8',
   hueRotate = 0,
@@ -277,85 +471,11 @@ function buildFilterGraph({
   brightness = 1,
   extras = {},
 }) {
-  const preset = RENDER_PRESETS[engravingStyle] || RENDER_PRESETS.heirloom;
-  const font = FONT_PRESETS[fontChoice] || FONT_PRESETS.playfair;
-  const labels = LOCALE_LABELS[locale] || LOCALE_LABELS.en;
-  const layout = ENGRAVING_LAYOUTS[engravingStyle] || ENGRAVING_LAYOUTS.heirloom;
   const filters = buildThemeFilters({ hueRotate, saturate, brightness });
-  const railColor = withAlpha(primaryColor, 0.56);
-  const accentRailColor = withAlpha(accentColor, 0.84);
   const tintColor = withAlpha(primaryColor, 0.07);
-  const messageBoxColor = withAlpha(primaryColor, 0.24);
-  const dedicationBoxColor = withAlpha(accentColor, 0.12);
-  const signatureBoxColor = withAlpha(accentColor, 0.10);
 
   filters.push(`drawbox=x=0:y=0:w=iw:h=ih:color=${tintColor}:t=fill`);
   filters.push(...buildEffectFilters(extras, { primaryColor, accentColor }));
-  filters.push(`drawbox=x=w*0.035:y=h*0.865:w=w*0.93:h=h*0.09:color=${railColor}:t=fill`);
-  filters.push(`drawbox=x=w*0.055:y=h*0.865:w=w*0.89:h=h*0.0025:color=${accentRailColor}:t=fill`);
-
-  if (recipientName) {
-    filters.push(
-      buildDrawText(`${labels.to} ${recipientName}`, {
-        fontcolor: preset.dedicationColor,
-        fontsize: font.recipientSize,
-        x: layout.recipient.x,
-        y: layout.recipient.y,
-        boxcolor: dedicationBoxColor,
-        boxborderw: layout.recipient.boxborderw,
-        font: font.renderFont,
-      })
-    );
-  }
-
-  if (shortMessage) {
-    if (layout.messageBox) {
-      filters.push(`drawbox=x=${layout.messageBox.x}:y=${layout.messageBox.y}:w=${layout.messageBox.w}:h=${layout.messageBox.h}:color=${messageBoxColor}:t=fill`);
-    }
-    filters.push(
-      buildDrawText(shortMessage, {
-        fontcolor: preset.messageColor,
-        fontsize: getMessageSizeExpr(shortMessage, engravingStyle, fontChoice),
-        x: layout.message.x,
-        y: layout.message.y,
-        font: font.renderFont,
-      })
-    );
-  }
-
-  if (senderName) {
-    filters.push(
-      buildDrawText(`${labels.from} ${senderName}`, {
-        fontcolor: preset.signatureColor,
-        fontsize: font.senderSize,
-        x: layout.sender.x,
-        y: layout.sender.y,
-        boxcolor: signatureBoxColor,
-        boxborderw: layout.sender.boxborderw,
-        font: font.renderFont,
-      })
-    );
-  }
-
-  filters.push(
-    buildDrawText('Digital Bloom™', {
-      fontcolor: withAlpha(accentColor, 0.94),
-      fontsize: 'h*0.025',
-      x: 'w*0.09',
-      y: 'h*0.895',
-      font: 'Serif',
-    })
-  );
-
-  filters.push(
-    buildDrawText('TM', {
-      fontcolor: 'white@0.72',
-      fontsize: 'h*0.018',
-      x: 'w-tw-w*0.07',
-      y: 'h*0.895',
-      font: 'Sans',
-    })
-  );
 
   return filters.join(',');
 }
@@ -397,17 +517,25 @@ export async function renderBloomDelivery(purchaseId) {
 
   try {
     const inputPath = path.join(tmpDir, 'input.mp4');
+    const overlayPath = path.join(tmpDir, 'overlay.png');
     const outputFile = `${sanitizeFilePart(purchase.id, 'purchase')}-${sanitizeFilePart(recipientName || purchase.products?.name, 'delivery')}.mp4`;
     const outputPath = path.join(tmpDir, outputFile);
 
     await downloadFile(sourceVideoUrl, inputPath);
-    const filterGraph = buildFilterGraph({
+    const { width, height } = await getVideoMetadata(inputPath);
+    await createOverlayImage(overlayPath, {
+      width,
+      height,
       recipientName,
       senderName,
       shortMessage,
       engravingStyle,
       fontChoice,
       locale,
+      primaryColor,
+      accentColor,
+    });
+    const filterGraph = buildFilterGraph({
       primaryColor,
       accentColor,
       hueRotate,
@@ -419,10 +547,13 @@ export async function renderBloomDelivery(purchaseId) {
     await execFileAsync('ffmpeg', [
       '-y',
       '-i', inputPath,
-      '-vf', filterGraph,
+      '-i', overlayPath,
+      '-filter_complex', `[0:v]${filterGraph ? `${filterGraph},` : ''}format=yuv420p[base];[1:v]format=rgba[overlay];[base][overlay]overlay=0:0[outv]`,
+      '-map', '[outv]',
       '-c:v', 'libx264',
       '-preset', 'veryfast',
       '-crf', '20',
+      '-map', '0:a?',
       '-c:a', 'copy',
       '-movflags', '+faststart',
       outputPath,
