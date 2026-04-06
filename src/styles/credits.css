@@ -16,6 +16,16 @@
   margin-bottom: 64px;
 }
 
+.credits-purchase-panel {
+  max-width: 560px;
+  margin: 0 auto 32px;
+  padding: 24px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 18px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.18);
+}
+
 /* Credit Amount Cards */
 .credits-grid {
   display: grid;
@@ -77,6 +87,7 @@
   width: 100%;
   padding: 14px 24px;
   font-size: 14px;
+  min-height: 48px;
 }
 
 /* Gifting Section */
@@ -206,6 +217,40 @@
   font-size: 17px;
   color: rgba(255, 255, 255, 0.6);
   margin: 0 0 16px;
+}
+
+@media (max-width: 768px) {
+  .credits-page {
+    padding: 104px 0 64px;
+  }
+
+  .credits-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 40px;
+  }
+
+  .credit-card {
+    padding: 24px 16px;
+  }
+
+  .credit-amount {
+    font-size: 36px;
+    margin: 20px 0 18px;
+  }
+
+  .credits-purchase-panel,
+  .credits-gifting,
+  .credits-legal {
+    margin-left: 16px;
+    margin-right: 16px;
+    padding: 20px;
+  }
+
+  .credits-hero {
+    margin-bottom: 40px;
+    padding: 0 16px;
+  }
 }
 
 /* ============================================

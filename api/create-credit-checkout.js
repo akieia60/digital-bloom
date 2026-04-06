@@ -48,17 +48,18 @@ export default async function handler(req, res) {
 
     // Generate credit code
     const code = generateCreditCode();
+    const appBaseUrl = process.env.APP_BASE_URL || 'https://digitabloom.com';
 
     // Create Stripe checkout session
-    const session = await stripe.checkout.sessions.create({
+    const sessionConfig = {
       automatic_payment_methods: { enabled: true },
       line_items: [
         {
           price_data: {
             currency: 'usd',
             product_data: {
-              name: `DigitalBloom Experience Credit - $${amountCentsInt / 100}`,
-              description: 'Prepaid access to digital multimedia experiences',
+              name: `Digital Bloom Credit - $${amountCentsInt / 100}`,
+              description: 'Prepaid Bloom Credit for digital gifting and checkout',
             },
             unit_amount: amountCentsInt,
           },
@@ -66,8 +67,8 @@ export default async function handler(req, res) {
         },
       ],
       mode: 'payment',
-      success_url: `${process.env.APP_BASE_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${process.env.APP_BASE_URL}/credits`,
+      success_url: `${appBaseUrl}/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${appBaseUrl}/credits`,
       customer_email: purchaser_email,
       metadata: {
         type: 'experience_credit',
@@ -78,7 +79,20 @@ export default async function handler(req, res) {
         delivery_date: delivery_date || '',
         note: note || ''
       },
-    });
+    };
+
+    let session;
+    try {
+      session = await stripe.checkout.sessions.create(sessionConfig);
+    } catch (stripeError) {
+      if (stripeError.message && stripeError.message.includes('automatic_payment_methods')) {
+        delete sessionConfig.automatic_payment_methods;
+        sessionConfig.payment_method_types = ['card'];
+        session = await stripe.checkout.sessions.create(sessionConfig);
+      } else {
+        throw stripeError;
+      }
+    }
 
     res.status(200).json({ url: session.url, code });
   } catch (error) {

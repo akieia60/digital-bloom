@@ -11,6 +11,7 @@ export default function ExperienceCredits() {
   const [isGift, setIsGift] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [purchaserEmail, setPurchaserEmail] = useState('');
   const [giftDetails, setGiftDetails] = useState({
     recipientName: '',
     recipientEmail: '',
@@ -32,6 +33,12 @@ export default function ExperienceCredits() {
     setLoading(true);
 
     try {
+      const normalizedPurchaserEmail = purchaserEmail.trim();
+      if (!normalizedPurchaserEmail) {
+        setLoading(false);
+        throw new Error('Your email is required to purchase Bloom Credits');
+      }
+
       // Validate gift details if gifting
       if (isGift) {
         if (!giftDetails.recipientEmail) {
@@ -40,18 +47,10 @@ export default function ExperienceCredits() {
         }
       }
 
-      // Get purchaser email (you may want to get this from user context/auth)
-      const purchaserEmail = prompt('Enter your email address:');
-      if (!purchaserEmail) {
-        setLoading(false);
-        setError('Email is required to purchase credits');
-        return;
-      }
-
       // Create checkout session
       const { url } = await createCreditCheckoutSession({
         amountDollars: amount,
-        purchaserEmail,
+        purchaserEmail: normalizedPurchaserEmail,
         recipientEmail: isGift ? giftDetails.recipientEmail : null,
         deliveryDate: isGift ? giftDetails.deliveryDate : null,
         note: isGift ? giftDetails.note : null
@@ -103,6 +102,22 @@ export default function ExperienceCredits() {
           </div>
         )}
 
+        <div className="credits-purchase-panel">
+          <div className="form-group">
+            <label>{t('contact_label_email')}</label>
+            <input
+              type="email"
+              className="customizer-input"
+              placeholder={t('contact_placeholder_email')}
+              value={purchaserEmail}
+              onChange={(e) => setPurchaserEmail(e.target.value)}
+              autoComplete="email"
+              inputMode="email"
+            />
+            <span className="customizer-hint">{t('credits_checkout_hint')}</span>
+          </div>
+        </div>
+
         {/* Credit Amount Cards */}
         <div className="credits-grid">
           {creditAmounts.map((amount) => (
@@ -118,13 +133,14 @@ export default function ExperienceCredits() {
                 onClick={(e) => {
                   e.stopPropagation();
                   if (!loading) {
+                    setSelectedAmount(amount.value);
                     handlePurchase(amount.value);
                   }
                 }}
-                disabled={loading}
+                disabled={loading || !purchaserEmail.trim()}
                 style={{ opacity: loading ? 0.5 : 1, cursor: loading ? 'not-allowed' : 'pointer' }}
               >
-                {loading ? t('credits_processing') : t('credits_buy')}
+                {loading && selectedAmount === amount.value ? t('credits_processing') : `${t('credits_buy')} ${amount.label}`}
               </button>
             </div>
           ))}

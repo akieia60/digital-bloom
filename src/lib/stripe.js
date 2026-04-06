@@ -127,7 +127,7 @@ export const startCartCheckoutRedirect = (cartItems, creditMetadata = null, cust
   const apiUrl = getApiBase();
   const form = document.createElement('form');
   form.method = 'POST';
-  form.action = `${apiUrl}/api/start-checkout`;
+  form.action = `${apiUrl}/api/create-checkout-session?mode=redirect`;
   form.style.display = 'none';
 
   const input = document.createElement('input');
