@@ -429,14 +429,13 @@ async function createOverlayImage(destination, {
   }
 
   ctx.fillStyle = rgba(accentColor, 0.94);
-  ctx.font = `italic 700 ${Math.round(height * 0.025)}px Georgia`;
-  ctx.fillText('Digital Bloom™', width * 0.09, height * 0.91);
+  ctx.font = `italic 700 ${Math.round(height * 0.022)}px Georgia`;
+  ctx.fillText('Digital Bloom', width * 0.075, height * 0.91);
 
   const tmText = 'TM';
-  ctx.font = getCanvasFont('arialBold', height * 0.018, 800, false);
-  const tmWidth = ctx.measureText(tmText).width;
-  ctx.fillStyle = 'rgba(255,255,255,0.72)';
-  ctx.fillText(tmText, width - tmWidth - (width * 0.07), height * 0.91);
+  ctx.font = getCanvasFont('arialBold', height * 0.014, 800, false);
+  ctx.fillStyle = 'rgba(255,255,255,0.62)';
+  ctx.fillText(tmText, width * 0.235, height * 0.907);
 
   const buffer = canvas.toBuffer('image/png');
   await fs.promises.writeFile(destination, buffer);

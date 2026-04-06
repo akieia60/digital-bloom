@@ -179,14 +179,14 @@ const TEXT_POSITIONS = {
     maxWidth: '38%',
   },
   'bottom-brand-left': {
-    bottom: '6.6%',
+    bottom: '5.4%',
     left: '7%',
     textAlign: 'left',
   },
-  'bottom-brand-right': {
-    bottom: '7.2%',
-    right: '7%',
-    textAlign: 'right',
+  'bottom-brand-inline': {
+    bottom: '5.45%',
+    left: '30%',
+    textAlign: 'left',
   },
   'lower-third-center': {
     bottom: '20%',
@@ -260,7 +260,7 @@ export const ENGRAVING_STYLES = {
     messagePosition: 'bottom-left-safe',
     senderPosition: 'bottom-right-safe',
     brandPosition: 'bottom-brand-left',
-    tmPosition: 'bottom-brand-right',
+    tmPosition: 'bottom-brand-inline',
     textVariant: 'heirloom',
   },
   signature: {
@@ -269,7 +269,7 @@ export const ENGRAVING_STYLES = {
     messagePosition: 'lower-third-center',
     senderPosition: 'bottom-right-safe',
     brandPosition: 'bottom-brand-left',
-    tmPosition: 'bottom-brand-right',
+    tmPosition: 'bottom-brand-inline',
     textVariant: 'signature',
   },
   modern: {
@@ -278,7 +278,7 @@ export const ENGRAVING_STYLES = {
     messagePosition: 'bottom-left-tight',
     senderPosition: 'bottom-right-safe',
     brandPosition: 'bottom-brand-left',
-    tmPosition: 'bottom-brand-right',
+    tmPosition: 'bottom-brand-inline',
     textVariant: 'modern',
   },
 };
@@ -387,7 +387,7 @@ export function getCompositionLayers({
     recipientName,
     senderName,
     tmText: 'TM',
-    brandText: 'Digital Bloom™',
+    brandText: 'Digital Bloom',
     recipientPosition: engraving.recipientPosition,
     recipientPositionStyle: TEXT_POSITIONS[engraving.recipientPosition],
     recipientTextStyle: {

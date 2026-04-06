@@ -13,6 +13,7 @@ const ShoppingCart = () => {
   const [creditCode, setCreditCode] = useState('');
   const [creditApplied, setCreditApplied] = useState(null);
   const [isApplyingCredit, setIsApplyingCredit] = useState(false);
+  const [isCreditOpen, setIsCreditOpen] = useState(false);
   const total = getCartTotal();
   const totalCents = Math.round(total * 100);
   const remainingDue = creditApplied ? Math.max(0, totalCents - creditApplied.applied_cents) : totalCents;
@@ -142,9 +143,14 @@ const ShoppingCart = () => {
           </div>
         ) : (
           <>
-            <div className="flex-1 overflow-y-auto px-4 sm:px-8 py-4 space-y-5">
+            <div className="flex-1 overflow-y-auto px-4 sm:px-8 py-4 space-y-4">
               {cartItems.map((item, index) => (
-                <CartItem key={item.lineItemId || `${item.id}-${index}`} item={item} />
+                <div
+                  key={item.lineItemId || `${item.id}-${index}`}
+                  className="rounded-[28px] border border-white/8 bg-white/[0.03] px-4 sm:px-5 shadow-[0_18px_42px_rgba(0,0,0,0.18)]"
+                >
+                  <CartItem item={item} />
+                </div>
               ))}
             </div>
 
@@ -155,64 +161,6 @@ const ShoppingCart = () => {
                   {error}
                 </div>
               )}
-
-              {/* Credit Redemption */}
-              <div className="credit-redemption">
-                <h4 className="credit-redemption-title">{t('cart_credit_section')}</h4>
-
-                {!creditApplied ? (
-                  <>
-                    <div className="credit-input-group flex flex-col sm:flex-row gap-2 sm:gap-3">
-                      <input
-                        type="text"
-                        placeholder={t('cart_credit_placeholder')}
-                        maxLength="17"
-                        value={creditCode}
-                        onChange={(e) => setCreditCode(e.target.value.toUpperCase())}
-                        className="flex-1 px-4 py-3 sm:py-3 text-base sm:text-sm border border-white/10 rounded-lg bg-white/5 text-white font-mono focus:outline-none focus:border-pure-gold transition-all"
-                        style={{ minHeight: '44px' }}
-                      />
-                      <button
-                        onClick={handleApplyCredit}
-                        disabled={isApplyingCredit || !creditCode}
-                        className="px-6 py-3 bg-blue-600 text-white rounded-lg text-sm font-semibold hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
-                        style={{ minHeight: '44px', minWidth: '100px' }}
-                      >
-                        {isApplyingCredit ? t('cart_credit_applying') : t('cart_credit_apply')}
-                      </button>
-                    </div>
-                    <p className="text-xs text-white/40 mt-2">
-                      {t('cart_credit_hint')}
-                    </p>
-                  </>
-                ) : (
-                  <div className="credit-applied">
-                    <div className="credit-applied-title">{t('cart_credit_applied')}</div>
-                    <div className="credit-applied-details">
-                      <div>{t('cart_credit_code_label')} {creditApplied.code}</div>
-                      <div>{t('cart_credit_applied_label')} ${(creditApplied.applied_cents / 100).toFixed(2)}</div>
-                      <div>{t('cart_credit_remaining_label')} ${(creditApplied.remaining_after_cents / 100).toFixed(2)}</div>
-                    </div>
-                    <button
-                      onClick={() => {
-                        setCreditApplied(null);
-                        setCreditCode('');
-                      }}
-                      style={{
-                        marginTop: '12px',
-                        padding: '8px 16px',
-                        background: 'transparent',
-                        color: 'rgba(255,255,255,0.6)',
-                        border: '1px solid rgba(255,255,255,0.2)',
-                        borderRadius: '6px',
-                        fontSize: '12px',
-                        cursor: 'pointer'
-                      }}
-                    >
-                      {t('cart_credit_remove')}
-                    </button>
-                  </div>
-                )}
 
               <div className="flex items-end justify-between">
                 <div>
@@ -255,6 +203,85 @@ const ShoppingCart = () => {
                   )}
                 </button>
 
+                <div className="rounded-2xl border border-white/8 bg-white/[0.04] p-4 sm:p-5">
+                  <button
+                    type="button"
+                    onClick={() => setIsCreditOpen((open) => !open)}
+                    className="flex w-full items-center justify-between gap-3 text-left"
+                  >
+                    <div>
+                      <p className="text-[10px] uppercase tracking-[0.28em] text-pure-gold/75 font-semibold">
+                        {t('cart_credit_section')}
+                      </p>
+                      <p className="mt-2 text-xs text-white/45">
+                        {creditApplied ? t('cart_credit_applied') : t('cart_credit_hint')}
+                      </p>
+                    </div>
+                    <span className="inline-flex h-9 min-w-9 items-center justify-center rounded-full border border-white/10 bg-white/5 px-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-white/70">
+                      {creditApplied ? t('cart_credit_applied') : (isCreditOpen ? t('cart_item_tap_collapse') : t('cart_credit_apply'))}
+                    </span>
+                  </button>
+
+                  {(isCreditOpen || creditApplied) && (
+                    <div className="mt-4 border-t border-white/8 pt-4">
+                      {!creditApplied ? (
+                        <>
+                          <div className="credit-input-group flex flex-col sm:flex-row gap-2 sm:gap-3">
+                            <input
+                              type="text"
+                              placeholder={t('cart_credit_placeholder')}
+                              maxLength="17"
+                              value={creditCode}
+                              onChange={(e) => setCreditCode(e.target.value.toUpperCase())}
+                              className="flex-1 px-4 py-3 sm:py-3 text-base sm:text-sm border border-white/10 rounded-lg bg-white/5 text-white font-mono focus:outline-none focus:border-pure-gold transition-all"
+                              style={{ minHeight: '44px' }}
+                            />
+                            <button
+                              onClick={handleApplyCredit}
+                              disabled={isApplyingCredit || !creditCode}
+                              className="px-6 py-3 bg-blue-600 text-white rounded-lg text-sm font-semibold hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                              style={{ minHeight: '44px', minWidth: '100px' }}
+                            >
+                              {isApplyingCredit ? t('cart_credit_applying') : t('cart_credit_apply')}
+                            </button>
+                          </div>
+                          <p className="mt-3 text-[11px] text-white/35">
+                            {t('cart_stripe_secure')}
+                          </p>
+                        </>
+                      ) : (
+                        <div className="credit-applied">
+                          <div className="credit-applied-title">{t('cart_credit_applied')}</div>
+                          <div className="credit-applied-details">
+                            <div>{t('cart_credit_code_label')} {creditApplied.code}</div>
+                            <div>{t('cart_credit_applied_label')} ${(creditApplied.applied_cents / 100).toFixed(2)}</div>
+                            <div>{t('cart_credit_remaining_label')} ${(creditApplied.remaining_after_cents / 100).toFixed(2)}</div>
+                          </div>
+                          <button
+                            onClick={() => {
+                              setCreditApplied(null);
+                              setCreditCode('');
+                              setIsCreditOpen(false);
+                            }}
+                            style={{
+                              marginTop: '12px',
+                              padding: '8px 16px',
+                              background: 'transparent',
+                              color: 'rgba(255,255,255,0.6)',
+                              border: '1px solid rgba(255,255,255,0.2)',
+                              borderRadius: '6px',
+                              fontSize: '12px',
+                              cursor: 'pointer'
+                            }}
+                          >
+                            {t('cart_credit_remove')}
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+
                 <div className="flex gap-4">
                    <button
                     onClick={clearCart}
@@ -262,7 +289,6 @@ const ShoppingCart = () => {
                   >
                     {t('cart_clear')}
                   </button>
-                </div>
                 </div>
               </div>
             </div>

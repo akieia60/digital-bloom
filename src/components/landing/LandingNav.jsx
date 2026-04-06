@@ -144,8 +144,7 @@ export default function LandingNav({ onOpenFaq }) {
               <Link to="/credits/balance" onClick={() => setIsMobileMenuOpen(false)} className="landing-nav__mobile-link">{t('nav_balance')}</Link>
               <button
                 onClick={() => { setIsMobileMenuOpen(false); toggleCart(); }}
-                className="landing-nav__mobile-link"
-                style={{ background: 'none', border: 'none', cursor: 'pointer', width: '100%', textAlign: 'left', display: 'flex', alignItems: 'center', justifyContent: 'space-between', font: 'inherit', color: 'inherit', padding: '0' }}
+                className="landing-nav__mobile-link landing-nav__mobile-action"
               >
                 <span>{t('nav_cart')}</span>
                 {cartCount > 0 && (
@@ -157,8 +156,7 @@ export default function LandingNav({ onOpenFaq }) {
               {onOpenFaq && (
                 <button
                   onClick={() => { setIsMobileMenuOpen(false); onOpenFaq(); }}
-                  className="landing-nav__mobile-link"
-                  style={{ background: 'none', border: 'none', cursor: 'pointer', width: '100%', textAlign: 'left', display: 'flex', alignItems: 'center', justifyContent: 'space-between', font: 'inherit', color: 'inherit', padding: '0' }}
+                  className="landing-nav__mobile-link landing-nav__mobile-action"
                 >
                   <span>{t('nav_faq') || 'FAQ'}</span>
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.6 }}>
