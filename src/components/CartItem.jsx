@@ -87,7 +87,7 @@ const CartItem = ({ item }) => {
   }, [isExpanded]);
 
   return (
-    <div className="py-5 sm:py-6 border-b border-white/5 last:border-0 animate-fade-in">
+    <div className="py-5 sm:py-6 border-b border-white/15 last:border-0 animate-fade-in">
       {/* Main row — tap to expand */}
       <div
         className="flex items-start space-x-3 sm:space-x-5 cursor-pointer group"
