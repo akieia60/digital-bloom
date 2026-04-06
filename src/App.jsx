@@ -3,15 +3,13 @@ import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-route
 import { CartProvider } from './context/CartContext';
 import { LanguageProvider } from './contexts/LanguageContext';
 import { ToastProvider } from './components/tracker/Toast';
-import Header from './components/Header';
-import ShoppingCart from './components/ShoppingCart';
-import FAQ from './components/landing/FAQ';
 
 // Eagerly loaded — needed on first paint
 import LandingPage from './pages/LandingPage';
-import Shop from './pages/Shop';
 
 // Lazily loaded — heavy or infrequently visited pages
+const Header = lazy(() => import('./components/Header'));
+const Shop = lazy(() => import('./pages/Shop'));
 const CategoryPage = lazy(() => import('./pages/CategoryPage'));
 const ProductDetails = lazy(() => import('./components/ProductDetails'));
 const ExperienceCredits = lazy(() => import('./pages/ExperienceCredits'));
@@ -23,6 +21,8 @@ const Experience1 = lazy(() => import('./pages/Experience1'));
 const FounderDashboard = lazy(() => import('./pages/FounderDashboard'));
 const BloomDelivery = lazy(() => import('./pages/BloomDelivery'));
 const ComingSoon = lazy(() => import('./pages/ComingSoon'));
+const ShoppingCart = lazy(() => import('./components/ShoppingCart'));
+const FAQ = lazy(() => import('./components/landing/FAQ'));
 
 /**
  * ErrorBoundary — catches any JavaScript error inside a child component tree,
@@ -82,7 +82,11 @@ function AppContent({ searchQuery, setSearchQuery }) {
 
   return (
     <>
-      {!isLandingPage && <Header onSearchChange={setSearchQuery} searchQuery={searchQuery} onOpenFaq={openFaq} />}
+      {!isLandingPage && (
+        <Suspense fallback={null}>
+          <Header onSearchChange={setSearchQuery} searchQuery={searchQuery} onOpenFaq={openFaq} />
+        </Suspense>
+      )}
       <Suspense fallback={
         <div className="min-h-screen bg-obsidian flex items-center justify-center">
           <div className="w-10 h-10 border-2 border-pure-gold/20 border-t-pure-gold rounded-full animate-spin" />
@@ -109,7 +113,9 @@ function AppContent({ searchQuery, setSearchQuery }) {
           <Route path="*" element={<ComingSoon />} />
         </Routes>
       </Suspense>
-      <ShoppingCart />
+      <Suspense fallback={null}>
+        <ShoppingCart />
+      </Suspense>
 
       {/* Global FAQ pill button — visible on all pages */}
       {!isFaqOpen && (
@@ -128,7 +134,9 @@ function AppContent({ searchQuery, setSearchQuery }) {
       )}
 
       {/* Global FAQ modal */}
-      <FAQ isOpen={isFaqOpen} onClose={closeFaq} />
+      <Suspense fallback={null}>
+        <FAQ isOpen={isFaqOpen} onClose={closeFaq} />
+      </Suspense>
     </>
   );
 }

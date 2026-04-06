@@ -2,19 +2,9 @@
  * /api/env-check
  * Returns present/missing status for each required environment variable.
  * NEVER exposes actual values — only boolean presence.
- * 
- * Security: Requires a valid Supabase auth token in the Authorization header.
- * Only founder emails in the allowlist can access this endpoint.
  */
-import { createClient } from '@supabase/supabase-js';
 import { applyCors } from './_lib/cors.js';
-
-// Founder email allowlist — only these emails can access the env-check endpoint
-const FOUNDER_EMAILS = [
-  'akieia60@gmail.com',
-  'akieia.davis@gmail.com',
-  'admin@digitalbloom.art',
-];
+import { requireFounder } from './_lib/founderAuth.js';
 
 const REQUIRED_ENV_VARS = [
   'SUPABASE_URL',
@@ -34,30 +24,8 @@ export default async function handler(req, res) {
   }
 
   try {
-    // Verify auth token
-    const authHeader = req.headers.authorization;
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      return res.status(401).json({ error: 'Unauthorized — missing auth token' });
-    }
-
-    const token = authHeader.replace('Bearer ', '');
-
-    // Create a Supabase client with the user's token to verify identity
-    const supabase = createClient(
-      process.env.SUPABASE_URL,
-      process.env.SUPABASE_ANON_KEY || process.env.VITE_SUPABASE_ANON_KEY
-    );
-
-    const { data: { user }, error: authError } = await supabase.auth.getUser(token);
-
-    if (authError || !user) {
-      return res.status(401).json({ error: 'Unauthorized — invalid token' });
-    }
-
-    // Check founder allowlist
-    if (!FOUNDER_EMAILS.includes(user.email?.toLowerCase())) {
-      return res.status(403).json({ error: 'Forbidden — not a founder account' });
-    }
+    const founder = await requireFounder(req, res);
+    if (!founder) return;
 
     // Build status map — NEVER expose actual values
     const envStatus = {};

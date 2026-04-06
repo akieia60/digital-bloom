@@ -64,7 +64,7 @@ export default function LandingNav({ onOpenFaq }) {
           <Link to="/credits" className="landing-nav__link">{t('nav_pricing')}</Link>
         </div>
 
-        {/* Right side: Language Switcher + Send a Bloom CTA */}
+        {/* Right side: Language Switcher + Cart */}
         <div className="landing-nav__right">
           {/* Language Switcher — always visible */}
           <div className="lang-switcher" ref={langRef}>
@@ -118,11 +118,6 @@ export default function LandingNav({ onOpenFaq }) {
               </span>
             </button>
           )}
-
-          {/* Send a Bloom CTA */}
-          <Link to="/shop" className="landing-nav__cta">
-            {t('nav_send_bloom')}
-          </Link>
         </div>
       </div>
 
@@ -139,15 +134,17 @@ export default function LandingNav({ onOpenFaq }) {
               </button>
             </div>
             <div className="landing-nav__mobile-links">
-              <Link to="/" onClick={() => setIsMobileMenuOpen(false)} className="landing-nav__mobile-link">{t('nav_home')}</Link>
+              <Link to="/" onClick={() => setIsMobileMenuOpen(false)} className="landing-nav__mobile-link landing-nav__mobile-link--home">
+                <span aria-hidden="true">⌂</span>
+                <span>{t('nav_home')}</span>
+              </Link>
               <Link to="/shop" onClick={() => setIsMobileMenuOpen(false)} className="landing-nav__mobile-link landing-nav__mobile-link--accent">{t('nav_occasions')}</Link>
               <Link to="/shop" onClick={() => setIsMobileMenuOpen(false)} className="landing-nav__mobile-link">{t('nav_shop')}</Link>
               <Link to="/credits" onClick={() => setIsMobileMenuOpen(false)} className="landing-nav__mobile-link">{t('nav_credits')}</Link>
               <Link to="/credits/balance" onClick={() => setIsMobileMenuOpen(false)} className="landing-nav__mobile-link">{t('nav_balance')}</Link>
               <button
                 onClick={() => { setIsMobileMenuOpen(false); toggleCart(); }}
-                className="landing-nav__mobile-link"
-                style={{ background: 'none', border: 'none', cursor: 'pointer', width: '100%', textAlign: 'left', display: 'flex', alignItems: 'center', justifyContent: 'space-between', font: 'inherit', color: 'inherit', padding: '0' }}
+                className="landing-nav__mobile-link landing-nav__mobile-action"
               >
                 <span>{t('nav_cart')}</span>
                 {cartCount > 0 && (
@@ -159,8 +156,7 @@ export default function LandingNav({ onOpenFaq }) {
               {onOpenFaq && (
                 <button
                   onClick={() => { setIsMobileMenuOpen(false); onOpenFaq(); }}
-                  className="landing-nav__mobile-link"
-                  style={{ background: 'none', border: 'none', cursor: 'pointer', width: '100%', textAlign: 'left', display: 'flex', alignItems: 'center', justifyContent: 'space-between', font: 'inherit', color: 'inherit', padding: '0' }}
+                  className="landing-nav__mobile-link landing-nav__mobile-action"
                 >
                   <span>{t('nav_faq') || 'FAQ'}</span>
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.6 }}>

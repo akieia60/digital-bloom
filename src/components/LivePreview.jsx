@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import { useLanguage } from '../contexts/LanguageContext';
 import { getCompositionLayers } from '../lib/compositionEngine';
 import '../styles/overlays.css';
 
@@ -15,10 +16,21 @@ import '../styles/overlays.css';
 
 const BALLOON_EMOJIS = ['🎈', '🎈', '🎈', '🎈', '🎈'];
 
-export default function LivePreview({ product, colorTheme, extras, message, className = '' }) {
+export default function LivePreview({
+  product,
+  colorTheme,
+  primaryColor,
+  accentColor,
+  extras,
+  message,
+  engravingStyle = 'heirloom',
+  fontChoice = 'playfair',
+  className = '',
+}) {
+  const { t } = useLanguage();
   const composition = useMemo(
-    () => getCompositionLayers({ product, colorTheme, extras, message }),
-    [product, colorTheme, extras, message]
+    () => getCompositionLayers({ product, colorTheme, primaryColor, accentColor, extras, message, engravingStyle, fontChoice }),
+    [product, colorTheme, primaryColor, accentColor, extras, message, engravingStyle, fontChoice]
   );
 
   if (!composition?.baseMedia?.src && !composition?.baseMedia?.poster) {
@@ -32,7 +44,17 @@ export default function LivePreview({ product, colorTheme, extras, message, clas
   const { baseMedia, colorFilter, overlays, textLayer, protectionLayer } = composition;
 
   return (
-    <div className={`db-watermark composition-preview ${className}`}>
+    <div
+      className={`db-watermark composition-preview ${className}`}
+      style={{
+        '--db-primary': colorFilter?.primaryColor || '#C53A5C',
+        '--db-accent': colorFilter?.accentColor || '#EED7B8',
+        '--db-message-panel': colorFilter?.messagePanelColor || 'rgba(7, 17, 31, 0.35)',
+        '--db-rail': colorFilter?.railColor || 'rgba(5, 16, 29, 0.82)',
+        '--db-edge-glow': colorFilter?.edgeGlowColor || 'rgba(238, 215, 184, 0.24)',
+        '--db-brand': colorFilter?.brandColor || '#EED7B8',
+      }}
+    >
       {/* Layer 0: Base Media */}
       <div className="composition-layer--base">
         {baseMedia.type === 'video' ? (
@@ -94,36 +116,36 @@ export default function LivePreview({ product, colorTheme, extras, message, clas
       {/* Layer N: Text Overlay */}
       {textLayer && (
         <div
-          className="composition-layer--text"
+          className={`composition-layer--text composition-layer--text-${textLayer.variant || 'heirloom'}`}
           style={textLayer.positionStyle}
         >
-          <div className="composition-text__message">{textLayer.text}</div>
-          {(textLayer.toName || textLayer.fromName) && (
-            <div className="composition-text__names">
-              {textLayer.toName && `To ${textLayer.toName}`}
-              {textLayer.toName && textLayer.fromName && ' · '}
-              {textLayer.fromName && `From ${textLayer.fromName}`}
-            </div>
-          )}
+          <div className="composition-text__message" style={textLayer.textStyle}>{textLayer.text}</div>
         </div>
       )}
 
       {/* Brand protection overlays */}
+      {protectionLayer?.showBrandRail && (
+        <div
+          className={`composition-brand-rail composition-brand-rail--${protectionLayer.engravingStyle || 'heirloom'}`}
+          style={{ background: protectionLayer.railColor }}
+        />
+      )}
+
       {protectionLayer?.recipientName && (
         <div
           className="composition-protection composition-protection--recipient"
-          style={protectionLayer.recipientPositionStyle}
+          style={{ ...protectionLayer.recipientPositionStyle, ...protectionLayer.recipientTextStyle }}
         >
-          To {protectionLayer.recipientName}
+          {t('customize_to')} {protectionLayer.recipientName}
         </div>
       )}
 
       {protectionLayer?.senderName && (
         <div
           className="composition-protection composition-protection--sender"
-          style={protectionLayer.senderPositionStyle}
+          style={{ ...protectionLayer.senderPositionStyle, ...protectionLayer.senderTextStyle }}
         >
-          From {protectionLayer.senderName}
+          {t('customize_from')} {protectionLayer.senderName}
         </div>
       )}
 
@@ -134,23 +156,11 @@ export default function LivePreview({ product, colorTheme, extras, message, clas
         {protectionLayer?.tmText || 'TM'}
       </div>
 
-      <div className="composition-protection composition-protection--brand">
+      <div
+        className="composition-protection composition-protection--brand"
+        style={{ ...protectionLayer?.brandPositionStyle, color: protectionLayer?.brandColor || 'var(--db-brand)' }}
+      >
         {protectionLayer?.brandText || 'Digital Bloom™'}
-      </div>
-
-      {/* Getty-style diagonal watermark — permanent, full-coverage */}
-      <div className="db-watermark-overlay">
-        <div className="db-watermark-grid">
-          {Array.from({ length: 12 }, (_, i) => (
-            <div key={i} className="db-watermark-row">
-              <span>© Digital Bloom</span>
-              <span>© Digital Bloom</span>
-              <span>© Digital Bloom</span>
-              <span>© Digital Bloom</span>
-            </div>
-          ))}
-        </div>
-        <div className="db-watermark-corner">© Digital Bloom</div>
       </div>
 
       {/* Subtle vignette for depth */}

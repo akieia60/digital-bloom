@@ -1,11 +1,5 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useMemo, useCallback } from 'react';
 import { en } from '../locales/en';
-import { es } from '../locales/es';
-import { fr } from '../locales/fr';
-import { ht } from '../locales/ht';
-import { zh } from '../locales/zh';
-
-const dictionaries = { en, es, fr, ht, zh };
 
 export const AVAILABLE_LANGUAGES = [
   { code: 'en', label: 'English', short: 'EN' },
@@ -17,33 +11,78 @@ export const AVAILABLE_LANGUAGES = [
 
 const LanguageContext = createContext();
 
+async function loadDictionary(code) {
+  switch (code) {
+    case 'es':
+      return (await import('../locales/es')).es;
+    case 'fr':
+      return (await import('../locales/fr')).fr;
+    case 'ht':
+      return (await import('../locales/ht')).ht;
+    case 'zh':
+      return (await import('../locales/zh')).zh;
+    case 'en':
+    default:
+      return en;
+  }
+}
+
 export const LanguageProvider = ({ children }) => {
   const [lang, setLang] = useState(() => {
     return localStorage.getItem('digital_bloom_lang') || 'en';
   });
+  const [dictionary, setDictionary] = useState(en);
 
   useEffect(() => {
     localStorage.setItem('digital_bloom_lang', lang);
     document.documentElement.lang = lang;
   }, [lang]);
 
-  const toggleLanguage = () => {
+  useEffect(() => {
+    let cancelled = false;
+
+    loadDictionary(lang)
+      .then((loadedDictionary) => {
+        if (!cancelled) {
+          setDictionary(loadedDictionary || en);
+        }
+      })
+      .catch((error) => {
+        console.error(`[Digital Bloom] Failed to load locale "${lang}"`, error);
+        if (!cancelled) {
+          setDictionary(en);
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [lang]);
+
+  const toggleLanguage = useCallback(() => {
     // Keep sequential toggle for simple clicks
     const idx = AVAILABLE_LANGUAGES.findIndex(l => l.code === lang);
     const nextIdx = (idx + 1) % AVAILABLE_LANGUAGES.length;
     setLang(AVAILABLE_LANGUAGES[nextIdx].code);
-  };
+  }, [lang]);
 
-  const changeLanguage = (code) => {
+  const changeLanguage = useCallback((code) => {
     setLang(code);
-  };
+  }, []);
 
-  const t = (key) => {
-    return dictionaries[lang][key] || key;
-  };
+  const t = useCallback((key) => {
+    return dictionary[key] || en[key] || key;
+  }, [dictionary]);
+
+  const value = useMemo(() => ({
+    lang,
+    toggleLanguage,
+    changeLanguage,
+    t,
+  }), [lang, toggleLanguage, changeLanguage, t]);
 
   return (
-    <LanguageContext.Provider value={{ lang, toggleLanguage, changeLanguage, t }}>
+    <LanguageContext.Provider value={value}>
       {children}
     </LanguageContext.Provider>
   );

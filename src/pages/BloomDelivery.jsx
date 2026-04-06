@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import { useLanguage } from '../contexts/LanguageContext';
 import { resolveBloomDelivery, DELIVERY_STATUS } from '../lib/deliveryResolver';
 import LivePreview from '../components/LivePreview';
 import '../styles/bloomDelivery.css';
@@ -19,6 +20,7 @@ import '../styles/bloomDelivery.css';
 
 export default function BloomDelivery() {
   const { id: bloomSlug } = useParams();
+  const { t } = useLanguage();
   const [state, setState] = useState({
     status: DELIVERY_STATUS.LOADING,
     delivery: null,
@@ -27,7 +29,9 @@ export default function BloomDelivery() {
   });
   const [messageRevealed, setMessageRevealed] = useState(false);
   const [copied, setCopied] = useState(false);
-  const videoRef = useRef(null);
+  const [previewReplayKey, setPreviewReplayKey] = useState(0);
+  const [processingTick, setProcessingTick] = useState(0);
+  const revealTimerRef = useRef(null);
 
   // Fetch delivery data
   useEffect(() => {
@@ -38,26 +42,42 @@ export default function BloomDelivery() {
     }
     load();
     return () => { cancelled = true; };
-  }, [bloomSlug]);
+  }, [bloomSlug, processingTick]);
 
   // Delayed message reveal — bloom loads first, then message fades in
   useEffect(() => {
-    if (state.status === DELIVERY_STATUS.READY && state.delivery?.message?.short) {
-      const timer = setTimeout(() => setMessageRevealed(true), 2200);
-      return () => clearTimeout(timer);
+    if (revealTimerRef.current) {
+      clearTimeout(revealTimerRef.current);
+      revealTimerRef.current = null;
     }
-  }, [state.status, state.delivery]);
+
+    if (state.status === DELIVERY_STATUS.READY && state.delivery?.message?.short) {
+      revealTimerRef.current = setTimeout(() => setMessageRevealed(true), 2200);
+    }
+
+    return () => {
+      if (revealTimerRef.current) {
+        clearTimeout(revealTimerRef.current);
+        revealTimerRef.current = null;
+      }
+    };
+  }, [state.status, state.delivery, previewReplayKey]);
+
+  // Processing bloom pages quietly re-check in the background.
+  useEffect(() => {
+    if (state.status !== DELIVERY_STATUS.PROCESSING) return undefined;
+
+    const timer = window.setTimeout(() => {
+      setProcessingTick((current) => current + 1);
+    }, 8000);
+
+    return () => window.clearTimeout(timer);
+  }, [state.status]);
 
   // Replay handler
   const handleReplay = useCallback(() => {
     setMessageRevealed(false);
-    // Re-trigger message reveal
-    setTimeout(() => setMessageRevealed(true), 2200);
-    // Restart video if present
-    if (videoRef.current) {
-      videoRef.current.currentTime = 0;
-      videoRef.current.play().catch(() => {});
-    }
+    setPreviewReplayKey((current) => current + 1);
   }, []);
 
   // Copy share link
@@ -92,7 +112,7 @@ export default function BloomDelivery() {
       <div className="bloom-delivery bloom-delivery--loading">
         <div className="bloom-delivery__loader">
           <div className="bloom-delivery__spinner" />
-          <p className="bloom-delivery__loader-text">Preparing your bloom...</p>
+          <p className="bloom-delivery__loader-text">{t('delivery_loading')}</p>
         </div>
         <BrandFooter />
       </div>
@@ -105,14 +125,20 @@ export default function BloomDelivery() {
       <div className="bloom-delivery bloom-delivery--processing">
         <div className="bloom-delivery__status-card">
           <div className="bloom-delivery__status-icon">✨</div>
-          <h1 className="bloom-delivery__status-title">We're Preparing Your Bloom</h1>
+          <h1 className="bloom-delivery__status-title">{t('delivery_processing_title')}</h1>
           <p className="bloom-delivery__status-message">
-            Your custom bloom experience is being crafted with care.
-            <br />Check back shortly.
+            {t('delivery_processing_message')}
           </p>
           {state.delivery?.productName && (
             <p className="bloom-delivery__status-product">{state.delivery.productName}</p>
           )}
+          <button
+            type="button"
+            className="bloom-delivery__home-btn"
+            onClick={() => setProcessingTick((current) => current + 1)}
+          >
+            {t('delivery_refresh_status')}
+          </button>
         </div>
         <BrandFooter />
       </div>
@@ -124,11 +150,11 @@ export default function BloomDelivery() {
     return (
       <div className="bloom-delivery bloom-delivery--not-found">
         <div className="bloom-delivery__status-card">
-          <h1 className="bloom-delivery__status-title">Bloom Not Found</h1>
+          <h1 className="bloom-delivery__status-title">{t('delivery_not_found_title')}</h1>
           <p className="bloom-delivery__status-message">
-            {state.error || 'This bloom could not be found.'}
+            {state.error || t('delivery_not_found_message')}
           </p>
-          <Link to="/" className="bloom-delivery__home-btn">Return Home</Link>
+          <Link to="/" className="bloom-delivery__home-btn">{t('delivery_return_home')}</Link>
         </div>
         <BrandFooter />
       </div>
@@ -140,12 +166,12 @@ export default function BloomDelivery() {
     return (
       <div className="bloom-delivery bloom-delivery--error">
         <div className="bloom-delivery__status-card">
-          <h1 className="bloom-delivery__status-title">Something Went Wrong</h1>
+          <h1 className="bloom-delivery__status-title">{t('delivery_error_title')}</h1>
           <p className="bloom-delivery__status-message">{state.error}</p>
           <button type="button" className="bloom-delivery__home-btn" onClick={() => window.location.reload()}>
-            Try Again
+            {t('delivery_try_again')}
           </button>
-          <Link to="/" className="bloom-delivery__home-link">Return Home</Link>
+          <Link to="/" className="bloom-delivery__home-link">{t('delivery_return_home')}</Link>
         </div>
         <BrandFooter />
       </div>
@@ -163,28 +189,21 @@ export default function BloomDelivery() {
       <div className="bloom-delivery__hero">
         <div className="bloom-delivery__composition">
           <LivePreview
+            key={previewReplayKey}
             product={{
               id: delivery.productId,
               video_file_url: composition?.baseMedia?.src,
               image_url: composition?.baseMedia?.poster,
             }}
             colorTheme={delivery.colorTheme}
+            primaryColor={delivery.primaryColor}
+            accentColor={delivery.accentColor}
             extras={delivery.extras}
             message={delivery.message}
+            engravingStyle={delivery.engravingStyle}
+            fontChoice={delivery.fontChoice}
             className="bloom-delivery__preview"
           />
-
-          {/* ── Watermark / Brand Protection ── */}
-          <div className="bloom-watermark">
-            <span className="bloom-watermark__text">Digital Bloom™</span>
-          </div>
-          <div className="bloom-protection-tag bloom-protection-tag--tm" aria-hidden="true">TM</div>
-          <div className="bloom-protection-tag bloom-protection-tag--brand" aria-hidden="true">Digital Bloom™</div>
-          {message.toName && (
-            <div className="bloom-protection-tag bloom-protection-tag--recipient" aria-hidden="true">
-              For {message.toName}
-            </div>
-          )}
         </div>
 
         {/* ── Message Reveal ── */}
@@ -193,9 +212,9 @@ export default function BloomDelivery() {
             <p className="bloom-delivery__message-text">"{message.short}"</p>
             {(message.toName || message.fromName) && (
               <div className="bloom-delivery__message-names">
-                {message.toName && <span className="bloom-delivery__message-to">To {message.toName}</span>}
+                {message.toName && <span className="bloom-delivery__message-to">{t('customize_to')} {message.toName}</span>}
                 {message.toName && message.fromName && <span className="bloom-delivery__message-divider">·</span>}
-                {message.fromName && <span className="bloom-delivery__message-from">From {message.fromName}</span>}
+                {message.fromName && <span className="bloom-delivery__message-from">{t('customize_from')} {message.fromName}</span>}
               </div>
             )}
           </div>
@@ -209,7 +228,7 @@ export default function BloomDelivery() {
             <path d="M1 4v6h6M23 20v-6h-6" />
             <path d="M20.49 9A9 9 0 005.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 013.51 15" />
           </svg>
-          <span>Replay</span>
+          <span>{t('delivery_replay')}</span>
         </button>
 
         <button type="button" className="bloom-delivery__control-btn" onClick={handleShare} aria-label="Share">
@@ -218,7 +237,7 @@ export default function BloomDelivery() {
             <polyline points="16 6 12 2 8 6" />
             <line x1="12" y1="2" x2="12" y2="15" />
           </svg>
-          <span>{copied ? 'Copied!' : 'Share'}</span>
+          <span>{copied ? t('delivery_copied') : t('delivery_share')}</span>
         </button>
       </div>
 
@@ -232,10 +251,12 @@ export default function BloomDelivery() {
  * Brand Footer — consistent Digital Bloom branding
  */
 function BrandFooter() {
+  const { t } = useLanguage();
+
   return (
     <div className="bloom-delivery__brand">
       <p className="bloom-delivery__brand-name">Digital Bloom™</p>
-      <p className="bloom-delivery__brand-tagline">Give Them Their Flowers While They're Here</p>
+      <p className="bloom-delivery__brand-tagline">{t('delivery_brand_tagline')}</p>
     </div>
   );
 }

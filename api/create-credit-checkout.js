@@ -1,16 +1,10 @@
 import Stripe from 'stripe';
-import { createClient } from '@supabase/supabase-js';
 import crypto from 'crypto';
 import { applyCors } from './_lib/cors.js';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
   apiVersion: '2023-10-16',
 });
-const supabase = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_ROLE_KEY
-);
-
 // Allowed credit amounts in cents
 const ALLOWED_AMOUNTS = [1000, 2500, 5000, 10000, 15000, 20000];
 
@@ -57,7 +51,7 @@ export default async function handler(req, res) {
 
     // Create Stripe checkout session
     const session = await stripe.checkout.sessions.create({
-      payment_method_types: ['card'],
+      automatic_payment_methods: { enabled: true },
       line_items: [
         {
           price_data: {

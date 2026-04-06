@@ -2,6 +2,20 @@ import { createContext, useContext, useState, useEffect } from 'react';
 
 const CartContext = createContext();
 
+const createLineItemId = () => {
+  if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+    return crypto.randomUUID();
+  }
+
+  return `line_${Date.now()}_${Math.random().toString(36).slice(2, 10)}`;
+};
+
+const withLineItemIds = (items = []) =>
+  items.map((item) => ({
+    ...item,
+    lineItemId: item.lineItemId || createLineItemId(),
+  }));
+
 export const useCart = () => {
   const context = useContext(CartContext);
   if (!context) {
@@ -13,7 +27,7 @@ export const useCart = () => {
 export const CartProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState(() => {
     const savedCart = localStorage.getItem('flowerShopCart');
-    return savedCart ? JSON.parse(savedCart) : [];
+    return savedCart ? withLineItemIds(JSON.parse(savedCart)) : [];
   });
   const [isCartOpen, setIsCartOpen] = useState(false);
 
@@ -37,23 +51,45 @@ export const CartProvider = ({ children }) => {
         );
       }
 
-      return [...prevItems, { ...product, quantity, customization }];
+      return [...prevItems, { ...product, lineItemId: createLineItemId(), quantity, customization }];
     });
   };
 
-  const removeFromCart = (productId) => {
-    setCartItems(prevItems => prevItems.filter(item => item.id !== productId));
+  const replaceCartItem = (targetId, product, quantity = 1, customization = null) => {
+    setCartItems((prevItems) => {
+      const remainingItems = prevItems.filter((item) => (item.lineItemId || item.id) !== targetId);
+      const matchingItem = remainingItems.find((item) =>
+        item.id === product.id &&
+        JSON.stringify(item.customization) === JSON.stringify(customization)
+      );
+
+      if (matchingItem) {
+        return remainingItems.map((item) =>
+          (item.lineItemId || item.id) === (matchingItem.lineItemId || matchingItem.id)
+            ? { ...item, quantity: item.quantity + quantity }
+            : item
+        );
+      }
+
+      return [...remainingItems, { ...product, lineItemId: targetId || createLineItemId(), quantity, customization }];
+    });
   };
 
-  const updateQuantity = (productId, quantity) => {
+  const removeFromCart = (targetId) => {
+    setCartItems(prevItems =>
+      prevItems.filter(item => (item.lineItemId || item.id) !== targetId)
+    );
+  };
+
+  const updateQuantity = (targetId, quantity) => {
     if (quantity <= 0) {
-      removeFromCart(productId);
+      removeFromCart(targetId);
       return;
     }
 
     setCartItems(prevItems =>
       prevItems.map(item =>
-        item.id === productId ? { ...item, quantity } : item
+        (item.lineItemId || item.id) === targetId ? { ...item, quantity } : item
       )
     );
   };
@@ -77,6 +113,7 @@ export const CartProvider = ({ children }) => {
   const value = {
     cartItems,
     addToCart,
+    replaceCartItem,
     removeFromCart,
     updateQuantity,
     clearCart,

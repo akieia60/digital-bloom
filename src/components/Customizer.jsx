@@ -1,16 +1,16 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
-import { supabase } from '../lib/supabase';
 import { buildCartComposition } from '../lib/fulfillmentMapper';
+import { COLOR_PALETTES, COLOR_SWATCHES, ENGRAVING_STYLES, MESSAGE_FONT_OPTIONS, getThemeSpec } from '../lib/compositionEngine';
 import { useLanguage } from '../contexts/LanguageContext';
 import LivePreview from './LivePreview';
 import '../styles/customizer.css';
 
 const EXTRAS = [
-  { id: 'goldDust', icon: '✨', nameKey: 'customize_extra_gold' },
-  { id: 'sparkle', icon: '💎', nameKey: 'customize_extra_sparkle' },
-  { id: 'ribbon', icon: '🎀', nameKey: 'customize_extra_ribbon' },
-  { id: 'softGlow', icon: '🕯️', nameKey: 'customize_extra_glow' },
-  { id: 'rosePetals', icon: '🌹', nameKey: 'customize_extra_petals' },
+  { id: 'goldDust', icon: '✨', nameKey: 'customize_extra_gold', descriptionKey: 'customize_extra_gold_desc' },
+  { id: 'sparkle', icon: '💎', nameKey: 'customize_extra_sparkle', descriptionKey: 'customize_extra_sparkle_desc' },
+  { id: 'ribbon', icon: '🎀', nameKey: 'customize_extra_ribbon', descriptionKey: 'customize_extra_ribbon_desc' },
+  { id: 'softGlow', icon: '🕯️', nameKey: 'customize_extra_glow', descriptionKey: 'customize_extra_glow_desc' },
+  { id: 'rosePetals', icon: '🌹', nameKey: 'customize_extra_petals', descriptionKey: 'customize_extra_petals_desc' },
 ];
 
 const SOUND_TRACKS = [
@@ -24,14 +24,6 @@ const SOUND_TRACKS = [
   { id: 'give-flowers', nameKey: 'customize_sound_flowers', icon: '💐', src: null, comingSoon: true },
 ];
 
-const COLOR_THEMES = [
-  { id: 'original', nameKey: 'customize_theme_original', colors: ['#FF69B4', '#FFB6C1'] },
-  { id: 'warm', nameKey: 'customize_theme_sunset', colors: ['#FF6B6B', '#FFA07A'] },
-  { id: 'cool', nameKey: 'customize_theme_breeze', colors: ['#4ECDC4', '#95E1D3'] },
-  { id: 'elegant', nameKey: 'customize_theme_gold', colors: ['#D4AF37', '#F4E4C1'] },
-  { id: 'romantic', nameKey: 'customize_theme_rose', colors: ['#C41E3A', '#FF1744'] },
-];
-
 const FLOW_STEPS = [
   { id: 1, key: 'message', labelKey: 'customize_step_message', icon: '✉️' },
   { id: 2, key: 'frame', labelKey: 'customize_step_frame', icon: '🎨' },
@@ -40,8 +32,21 @@ const FLOW_STEPS = [
   { id: 5, key: 'review', labelKey: 'customize_step_review', icon: '✓' },
 ];
 
+const MESSAGE_STARTERS = [
+  { id: 'starter-forever', key: 'customize_starter_forever' },
+  { id: 'starter-loved', key: 'customize_starter_loved' },
+  { id: 'starter-thanks', key: 'customize_starter_thanks' },
+  { id: 'starter-moment', key: 'customize_starter_moment' },
+];
+
+const ENGRAVING_OPTIONS = Object.keys(ENGRAVING_STYLES).map((id) => ({
+  id,
+  labelKey: `customize_engraving_${id}`,
+  descriptionKey: `customize_engraving_${id}_desc`,
+}));
+
 const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editData = null }) => {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const { messagePlaceholder, toPlaceholder, ...stateDefaults } = defaults;
   const scrollPosRef = useRef(0);
 
@@ -52,8 +57,26 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
     fromName: stateDefaults.fromName || '',
   });
   const [colorTheme, setColorTheme] = useState(stateDefaults.colorTheme || 'original');
-  const [extras, setExtras] = useState({ ribbon: false, sparkle: false, goldDust: true, softGlow: false, rosePetals: false });
-  const [selectedSound, setSelectedSound] = useState(stateDefaults.sound || '');
+  const initialPalette = useMemo(
+    () => getThemeSpec(stateDefaults.colorTheme || 'original', {
+      primaryColor: stateDefaults.primaryColor,
+      accentColor: stateDefaults.accentColor,
+    }),
+    [stateDefaults.accentColor, stateDefaults.colorTheme, stateDefaults.primaryColor]
+  );
+  const [primaryColor, setPrimaryColor] = useState(initialPalette.primaryColor);
+  const [accentColor, setAccentColor] = useState(initialPalette.accentColor);
+  const [extras, setExtras] = useState({
+    ribbon: false,
+    sparkle: false,
+    goldDust: false,
+    softGlow: false,
+    rosePetals: false,
+    ...(stateDefaults.extras || {}),
+  });
+  const [selectedSound, setSelectedSound] = useState(stateDefaults.selectedSound || stateDefaults.sound || '');
+  const [engravingStyle, setEngravingStyle] = useState(stateDefaults.engravingStyle || 'heirloom');
+  const [fontChoice, setFontChoice] = useState(stateDefaults.fontChoice || 'playfair');
   const [playingTrack, setPlayingTrack] = useState(null);
   const [activeStep, setActiveStep] = useState(1);
 
@@ -66,15 +89,38 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
           : { short: editData.message.short || '', toName: editData.message.toName || '', fromName: editData.message.fromName || '' };
         setMessage(msg);
       }
-      if (editData.colorTheme || editData.theme) setColorTheme(editData.colorTheme || editData.theme);
-      if (editData.selectedSound) setSelectedSound(editData.selectedSound);
+      if (editData.colorTheme || editData.theme) {
+        const nextTheme = editData.colorTheme || editData.theme;
+        const nextPalette = getThemeSpec(nextTheme, {
+          primaryColor: editData.primaryColor || editData.composition?.primaryColor,
+          accentColor: editData.accentColor || editData.composition?.accentColor,
+        });
+        setColorTheme(nextTheme);
+        setPrimaryColor(nextPalette.primaryColor);
+        setAccentColor(nextPalette.accentColor);
+      }
+      if (editData.primaryColor || editData.composition?.primaryColor) {
+        setPrimaryColor(editData.primaryColor || editData.composition?.primaryColor || initialPalette.primaryColor);
+      }
+      if (editData.accentColor || editData.composition?.accentColor) {
+        setAccentColor(editData.accentColor || editData.composition?.accentColor || initialPalette.accentColor);
+      }
+      if (editData.selectedSound || editData.sound || editData.composition?.selectedSound) {
+        setSelectedSound(editData.selectedSound || editData.sound || editData.composition?.selectedSound || '');
+      }
+      if (editData.engravingStyle || editData.composition?.engravingStyle) {
+        setEngravingStyle(editData.engravingStyle || editData.composition?.engravingStyle || 'heirloom');
+      }
+      if (editData.fontChoice || editData.composition?.fontChoice) {
+        setFontChoice(editData.fontChoice || editData.composition?.fontChoice || 'playfair');
+      }
       if (editData.composition?.activeOverlays) {
-        const newExtras = { ribbon: false, sparkle: false, goldDust: false };
+        const newExtras = { ribbon: false, sparkle: false, goldDust: false, softGlow: false, rosePetals: false, balloon: false };
         editData.composition.activeOverlays.forEach(o => { if (o in newExtras) newExtras[o] = true; });
         setExtras(newExtras);
       }
     }
-  }, [editData, isOpen]);
+  }, [editData, initialPalette.accentColor, initialPalette.primaryColor, isOpen]);
   const audioRef = useRef(null);
 
   // Safari-safe scroll lock
@@ -111,22 +157,35 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
 
   // Scoped theme
   const themeStyle = useMemo(() => {
-    const specs = {
-      original: { color: '#FF69B4' },
-      warm:     { color: '#FF6B6B' },
-      cool:     { color: '#4ECDC4' },
-      elegant:  { color: '#D4AF37' },
-      romantic: { color: '#C41E3A' },
-    };
-    return specs[colorTheme] || specs.original;
-  }, [colorTheme]);
+    return getThemeSpec(colorTheme, { primaryColor, accentColor });
+  }, [accentColor, colorTheme, primaryColor]);
 
   const handleMessageChange = useCallback((field, value) => {
     setMessage(prev => ({ ...prev, [field]: value }));
   }, []);
 
+  const applyMessageStarter = useCallback((starterKey) => {
+    setMessage((prev) => ({ ...prev, short: t(starterKey) }));
+  }, []);
+
   const toggleExtra = useCallback((extraId) => {
     setExtras(prev => ({ ...prev, [extraId]: !prev[extraId] }));
+  }, []);
+
+  const applyPalette = useCallback((paletteId) => {
+    const palette = getThemeSpec(paletteId);
+    setColorTheme(paletteId);
+    setPrimaryColor(palette.primaryColor);
+    setAccentColor(palette.accentColor);
+  }, []);
+
+  const applyColorSwatch = useCallback((kind, hex) => {
+    setColorTheme('custom');
+    if (kind === 'primary') {
+      setPrimaryColor(hex);
+      return;
+    }
+    setAccentColor(hex);
   }, []);
 
   // Web Audio API fallback — plays a pleasant chord when no MP3 file exists yet
@@ -258,21 +317,67 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
     // Fire-and-forget theme save
     (async () => {
       try {
+        const { supabase } = await import('../lib/supabase');
         const { data: { user } } = await supabase.auth.getUser();
         if (user) {
           await supabase.from('digital_bloom_themes').insert([{
-            user_id: user.id, theme_name: colorTheme, primary_color: themeStyle.color,
+            user_id: user.id,
+            theme_name: colorTheme,
+            primary_color: themeStyle.primaryColor,
+            accent_color: themeStyle.accentColor,
           }]);
         }
       } catch (err) { console.error('Theme save (non-blocking):', err); }
     })();
     // Build composition manifest for fulfillment
-    const composition = buildCartComposition({ message, colorTheme, extras });
+    const composition = buildCartComposition({
+      message,
+      colorTheme,
+      primaryColor,
+      accentColor,
+      extras,
+      selectedSound,
+      engravingStyle,
+      fontChoice,
+      locale: lang,
+    });
     // Stop audio on complete
     stopAllAudio();
-    onComplete({ productId: product.id, message, colorTheme, extras, selectedSound, totalPrice, composition });
+    onComplete({
+      productId: product.id,
+      message,
+      colorTheme,
+      primaryColor,
+      accentColor,
+      extras,
+      selectedSound,
+      engravingStyle,
+      fontChoice,
+      locale: lang,
+      totalPrice,
+      composition,
+    });
     onClose();
-  }, [isProductValid, product, message, colorTheme, extras, selectedSound, totalPrice, themeStyle, stopAllAudio, onComplete, onClose]);
+  }, [isProductValid, product, message, colorTheme, primaryColor, accentColor, extras, selectedSound, engravingStyle, fontChoice, lang, totalPrice, themeStyle, stopAllAudio, onComplete, onClose]);
+
+  const selectedExtras = useMemo(
+    () => EXTRAS.filter((extra) => extras[extra.id]).map((extra) => t(extra.nameKey)),
+    [extras, t]
+  );
+
+  const recommendedPalettes = useMemo(
+    () => ['original', 'warm', 'cool', 'elegant', 'romantic'].map((id) => ({ id, ...COLOR_PALETTES[id] })),
+    []
+  );
+
+  const fontOptions = useMemo(
+    () => [
+      { id: 'playfair', label: t('customize_font_playfair') },
+      { id: 'outfit', label: t('customize_font_outfit') },
+      { id: 'arialBold', label: t('customize_font_arial') },
+    ],
+    [t]
+  );
 
   const goNext = () => setActiveStep((prev) => Math.min(prev + 1, FLOW_STEPS.length));
   const goBack = () => setActiveStep((prev) => Math.max(prev - 1, 1));
@@ -321,8 +426,12 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
             <LivePreview
               product={product}
               colorTheme={colorTheme}
+              primaryColor={primaryColor}
+              accentColor={accentColor}
               extras={extras}
               message={message}
+              engravingStyle={engravingStyle}
+              fontChoice={fontChoice}
               className="composition-preview--square"
             />
           </div>
@@ -348,6 +457,22 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
               <span className="customizer-hint">{message.short.length}/150</span>
             </div>
 
+            <div className="customizer-starters">
+              {MESSAGE_STARTERS.map((starter) => {
+                const starterText = t(starter.key);
+                return (
+                <button
+                  key={starter.id}
+                  type="button"
+                  className={`customizer-starter-chip ${message.short === starterText ? 'customizer-starter-chip--active' : ''}`}
+                  onClick={() => applyMessageStarter(starter.key)}
+                >
+                  {starterText}
+                </button>
+                );
+              })}
+            </div>
+
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
               <div className="customizer-field">
                 <label className="customizer-label" htmlFor="cust-to">{t('customize_to')}</label>
@@ -364,6 +489,79 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
                   onChange={(e) => handleMessageChange('fromName', e.target.value)} />
               </div>
             </div>
+
+            <div className="customizer-field">
+              <label className="customizer-label" htmlFor="cust-font">{t('customize_font_label')}</label>
+              <select
+                id="cust-font"
+                className="customizer-select"
+                value={fontChoice}
+                onChange={(e) => setFontChoice(e.target.value)}
+              >
+                {fontOptions.map((option) => (
+                  <option key={option.id} value={option.id}>{option.label}</option>
+                ))}
+              </select>
+              <span className="customizer-hint">{t('customize_font_hint')}</span>
+            </div>
+
+            <div className="customizer-live-copy">
+              <div className="customizer-live-copy__header">
+                <span>{t('customize_live_card_label')}</span>
+                <span>{fontOptions.find((option) => option.id === fontChoice)?.label || t('customize_font_playfair')}</span>
+              </div>
+              <div className={`customizer-live-copy__stage customizer-live-copy__stage--${engravingStyle}`}>
+                <div
+                  className="customizer-live-copy__to"
+                  style={{
+                    fontFamily: MESSAGE_FONT_OPTIONS[fontChoice]?.previewFamily,
+                    fontWeight: MESSAGE_FONT_OPTIONS[fontChoice]?.previewWeight,
+                    fontStyle: MESSAGE_FONT_OPTIONS[fontChoice]?.previewFontStyle,
+                    letterSpacing: MESSAGE_FONT_OPTIONS[fontChoice]?.previewLetterSpacing,
+                    textTransform: MESSAGE_FONT_OPTIONS[fontChoice]?.previewTransform === 'uppercase' ? 'uppercase' : 'uppercase',
+                  }}
+                >
+                  {message.toName || t('customize_live_card_to')}
+                </div>
+                <div
+                  className="customizer-live-copy__message"
+                  style={{
+                    fontFamily: MESSAGE_FONT_OPTIONS[fontChoice]?.previewFamily,
+                    fontWeight: MESSAGE_FONT_OPTIONS[fontChoice]?.previewWeight,
+                    fontStyle: MESSAGE_FONT_OPTIONS[fontChoice]?.previewFontStyle,
+                    letterSpacing: MESSAGE_FONT_OPTIONS[fontChoice]?.previewLetterSpacing,
+                    textTransform: MESSAGE_FONT_OPTIONS[fontChoice]?.previewTransform,
+                  }}
+                >
+                  {message.short || t('customize_live_card_message')}
+                </div>
+                <div
+                  className="customizer-live-copy__from"
+                  style={{
+                    fontFamily: MESSAGE_FONT_OPTIONS[fontChoice]?.previewFamily,
+                    fontWeight: MESSAGE_FONT_OPTIONS[fontChoice]?.previewWeight,
+                    fontStyle: MESSAGE_FONT_OPTIONS[fontChoice]?.previewFontStyle,
+                    letterSpacing: MESSAGE_FONT_OPTIONS[fontChoice]?.previewLetterSpacing,
+                    textTransform: MESSAGE_FONT_OPTIONS[fontChoice]?.previewTransform === 'uppercase' ? 'uppercase' : 'uppercase',
+                  }}
+                >
+                  {message.fromName || t('customize_live_card_from')}
+                </div>
+              </div>
+              <p className="customizer-live-copy__note">{t('customize_live_card_note')}</p>
+            </div>
+
+            <div className="customizer-engraving-map">
+              <div className="customizer-engraving-map__header">
+                <span>{t('customize_engraving_map_title')}</span>
+                <span>{t(`customize_engraving_${engravingStyle}`)}</span>
+              </div>
+              <div className="customizer-engraving-map__body">
+                <div className="customizer-engraving-map__to">{t('customize_engraving_map_to')}</div>
+                <div className="customizer-engraving-map__message">{t('customize_engraving_map_message')}</div>
+                <div className="customizer-engraving-map__from">{t('customize_engraving_map_from')}</div>
+              </div>
+            </div>
           </div>
             </>
           )}
@@ -375,18 +573,96 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
               <span className="customizer-section__number">2</span>
               <h3 className="customizer-section__title">{t('customize_style')}</h3>
             </div>
-            <div className="theme-grid" role="radiogroup" aria-label="Color theme">
-              {COLOR_THEMES.map(theme => (
-                <button key={theme.id} type="button" role="radio" aria-checked={colorTheme === theme.id}
+            <div className="customizer-label customizer-label--caps">{t('customize_palette_recommended')}</div>
+            <div className="theme-grid theme-grid--palette" role="radiogroup" aria-label="Recommended palettes">
+              {recommendedPalettes.map((theme) => (
+                <button
+                  key={theme.id}
+                  type="button"
+                  role="radio"
+                  aria-checked={colorTheme === theme.id}
                   className={`theme-swatch ${colorTheme === theme.id ? 'active' : ''}`}
-                  onClick={() => setColorTheme(theme.id)}>
+                  onClick={() => applyPalette(theme.id)}
+                >
                   <div className="theme-colors">
-                    <span style={{ background: theme.colors[0] }} />
-                    <span style={{ background: theme.colors[1] }} />
+                    <span style={{ background: theme.primaryColor }} />
+                    <span style={{ background: theme.accentColor }} />
                   </div>
                   <span className="theme-name">{t(theme.nameKey)}</span>
                 </button>
               ))}
+            </div>
+
+            <div className="customizer-palette-card">
+              <div className="customizer-palette-card__header">
+                <span>{t('customize_color_primary')}</span>
+                <span>{primaryColor}</span>
+              </div>
+              <div className="color-swatch-row">
+                {COLOR_SWATCHES.map((swatch) => (
+                  <button
+                    key={`primary-${swatch.id}`}
+                    type="button"
+                    className={`color-chip ${primaryColor === swatch.hex ? 'color-chip--active' : ''}`}
+                    onClick={() => applyColorSwatch('primary', swatch.hex)}
+                    aria-label={`${t('customize_color_primary')}: ${t(swatch.nameKey)}`}
+                    title={t(swatch.nameKey)}
+                    style={{ '--chip-color': swatch.hex }}
+                  >
+                    <span className="sr-only">{t(swatch.nameKey)}</span>
+                  </button>
+                ))}
+              </div>
+              <p className="customizer-palette-card__hint">{t('customize_color_primary_hint')}</p>
+            </div>
+
+            <div className="customizer-palette-card">
+              <div className="customizer-palette-card__header">
+                <span>{t('customize_color_accent')}</span>
+                <span>{accentColor}</span>
+              </div>
+              <div className="color-swatch-row">
+                {COLOR_SWATCHES.map((swatch) => (
+                  <button
+                    key={`accent-${swatch.id}`}
+                    type="button"
+                    className={`color-chip ${accentColor === swatch.hex ? 'color-chip--active' : ''}`}
+                    onClick={() => applyColorSwatch('accent', swatch.hex)}
+                    aria-label={`${t('customize_color_accent')}: ${t(swatch.nameKey)}`}
+                    title={t(swatch.nameKey)}
+                    style={{ '--chip-color': swatch.hex }}
+                  >
+                    <span className="sr-only">{t(swatch.nameKey)}</span>
+                  </button>
+                ))}
+              </div>
+              <p className="customizer-palette-card__hint">{t('customize_color_accent_hint')}</p>
+            </div>
+
+            <div className="customizer-section__subgroup" style={{ marginTop: '18px' }}>
+              <div className="customizer-label" style={{ marginBottom: '10px', display: 'block' }}>{t('customize_engraving_finish')}</div>
+              <div className="extras-grid">
+                {ENGRAVING_OPTIONS.map((option) => (
+                  <button
+                    key={option.id}
+                    type="button"
+                    className={`extra-toggle ${engravingStyle === option.id ? 'extra-toggle--active' : ''}`}
+                    onClick={() => setEngravingStyle(option.id)}
+                    aria-pressed={engravingStyle === option.id}
+                  >
+                    <div className="extra-toggle__info" style={{ alignItems: 'flex-start' }}>
+                      <div>
+                        <span className="extra-toggle__name">{t(option.labelKey)}</span>
+                        <div className="text-[11px] leading-[1.4] text-[#6E6E73] mt-1">{t(option.descriptionKey)}</div>
+                      </div>
+                    </div>
+                    <span className="toggle-switch" aria-hidden="true">
+                      <input type="checkbox" tabIndex={-1} checked={engravingStyle === option.id} readOnly />
+                      <span className="toggle-switch__slider" />
+                    </span>
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
             </>
@@ -410,6 +686,7 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
                     <span className="extra-toggle__icon" aria-hidden="true">{extra.icon}</span>
                     <div>
                       <span className="extra-toggle__name">{t(extra.nameKey)}</span>
+                      <div className="extra-toggle__description">{t(extra.descriptionKey)}</div>
                     </div>
                   </div>
                   <span className="toggle-switch" aria-hidden="true">
@@ -418,6 +695,13 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
                   </span>
                 </button>
               ))}
+            </div>
+            <div className="customizer-sound-summary">
+              <span className="customizer-sound-summary__label">{t('customize_review_effects')}</span>
+              <span className="customizer-sound-summary__value">
+                {selectedExtras.length > 0 ? selectedExtras.join(', ') : t('customize_extras_selected_none')}
+              </span>
+              <p className="customizer-sound-summary__note">{t('customize_extras_hint')}</p>
             </div>
           </div>
             </>
@@ -449,6 +733,14 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
                 </button>
               ))}
             </div>
+            <div className="customizer-sound-summary">
+              <span className="customizer-sound-summary__label">{t('customize_sound_selected')}</span>
+              <span className="customizer-sound-summary__value">
+                {SOUND_TRACKS.find((track) => track.id === selectedSound)
+                  ? t(SOUND_TRACKS.find((track) => track.id === selectedSound).nameKey)
+                  : t('customize_sound_none')}
+              </span>
+            </div>
           </div>
             </>
           )}
@@ -463,9 +755,13 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
                 <div className="review-row"><span className="review-label">{t('customize_review_to')}</span><span className="review-value">{message.toName || '—'}</span></div>
                 <div className="review-row"><span className="review-label">{t('customize_review_from')}</span><span className="review-value">{message.fromName || '—'}</span></div>
                 <div className="review-row"><span className="review-label">{t('customize_review_message')}</span><span className="review-value">{message.short || '—'}</span></div>
-                <div className="review-row"><span className="review-label">{t('customize_review_frame')}</span><span className="review-value">{t(COLOR_THEMES.find((theme) => theme.id === colorTheme)?.nameKey) || t('customize_theme_original')}</span></div>
-                <div className="review-row"><span className="review-label">{t('customize_review_effects')}</span><span className="review-value">{EXTRAS.filter((extra) => extras[extra.id]).map((extra) => t(extra.nameKey)).join(', ') || 'None selected'}</span></div>
-                <div className="review-row"><span className="review-label">{t('customize_review_sound')}</span><span className="review-value">{SOUND_TRACKS.find((track) => track.id === selectedSound) ? t(SOUND_TRACKS.find((track) => track.id === selectedSound).nameKey) : 'None selected'}</span></div>
+                <div className="review-row"><span className="review-label">{t('customize_review_frame')}</span><span className="review-value">{t((COLOR_PALETTES[colorTheme] || COLOR_PALETTES.custom).nameKey)}</span></div>
+                <div className="review-row"><span className="review-label">{t('customize_review_palette')}</span><span className="review-value">{primaryColor} · {accentColor}</span></div>
+                <div className="review-row"><span className="review-label">{t('customize_review_engraving')}</span><span className="review-value">{t(`customize_engraving_${engravingStyle}`)}</span></div>
+                <div className="review-row"><span className="review-label">{t('customize_review_font')}</span><span className="review-value">{fontOptions.find((option) => option.id === fontChoice)?.label || t('customize_font_playfair')}</span></div>
+                <div className="review-row"><span className="review-label">{t('customize_review_effects')}</span><span className="review-value">{selectedExtras.join(', ') || t('customize_extras_selected_none')}</span></div>
+                <div className="review-row"><span className="review-label">{t('customize_review_sound')}</span><span className="review-value">{SOUND_TRACKS.find((track) => track.id === selectedSound) ? t(SOUND_TRACKS.find((track) => track.id === selectedSound).nameKey) : t('customize_sound_none')}</span></div>
+                <div className="review-row"><span className="review-label">{t('customize_review_protection')}</span><span className="review-value">{t('customize_review_protection_value')}</span></div>
               </div>
             </div>
           )}

@@ -48,6 +48,17 @@
   transition: background 0.4s ease, opacity 0.4s ease;
 }
 
+.composition-preview::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at top left, var(--db-edge-glow, rgba(238, 215, 184, 0.24)), transparent 36%),
+    radial-gradient(circle at bottom right, rgba(255,255,255,0.08), transparent 34%);
+}
+
 /* ── OVERLAY LAYERS (shared) ── */
 .composition-layer--overlay {
   position: absolute;
@@ -129,6 +140,7 @@
   border-radius: 4px;
   opacity: 0.85;
   animation: ribbonShimmer 3s ease-in-out infinite;
+  box-shadow: inset 0 0 24px rgba(255,255,255,0.08);
 }
 
 .overlay-ribbon__corner {
@@ -149,11 +161,11 @@
   50%      { opacity: 0.9; }
 }
 
-.overlay-ribbon--warm .overlay-ribbon__border { border-color: #FFA07A; }
-.overlay-ribbon--cool .overlay-ribbon__border { border-color: #4ECDC4; }
-.overlay-ribbon--elegant .overlay-ribbon__border { border-color: #D4AF37; }
-.overlay-ribbon--romantic .overlay-ribbon__border { border-color: #FF69B4; }
-.overlay-ribbon--original .overlay-ribbon__border { border-color: #FFB6C1; }
+.overlay-ribbon--warm .overlay-ribbon__border,
+.overlay-ribbon--cool .overlay-ribbon__border,
+.overlay-ribbon--elegant .overlay-ribbon__border,
+.overlay-ribbon--romantic .overlay-ribbon__border,
+.overlay-ribbon--original .overlay-ribbon__border { border-color: var(--db-accent, #EED7B8); }
 
 /* ── SPARKLE OVERLAY (CSS Placeholder) ── */
 .overlay-sparkle {
@@ -164,7 +176,7 @@
   position: absolute;
   width: 8px;
   height: 8px;
-  background: #FFFFFF;
+  background: var(--db-accent, #FFFFFF);
   border-radius: 50%;
   box-shadow: 0 0 12px 4px rgba(255,255,255,0.8), 0 0 24px 8px rgba(212,175,55,0.3);
   animation: sparkleGlow 2s ease-in-out infinite;
@@ -205,9 +217,9 @@
   border-radius: 50%;
   background: radial-gradient(
     ellipse at center,
-    rgba(255, 215, 0, 0.15) 0%,
-    rgba(212, 175, 55, 0.08) 30%,
-    rgba(255, 200, 100, 0.04) 50%,
+    color-mix(in srgb, var(--db-accent, #EED7B8) 44%, transparent) 0%,
+    color-mix(in srgb, var(--db-primary, #C53A5C) 16%, transparent) 30%,
+    color-mix(in srgb, var(--db-accent, #EED7B8) 12%, transparent) 50%,
     transparent 70%
   );
   animation: glowPulse 4s ease-in-out infinite;
@@ -223,7 +235,7 @@
   background: radial-gradient(
     circle,
     rgba(255, 255, 255, 0.25) 0%,
-    rgba(255, 215, 0, 0.1) 40%,
+    color-mix(in srgb, var(--db-accent, #EED7B8) 28%, transparent) 40%,
     transparent 70%
   );
   animation: flareDrift 6s ease-in-out infinite;
@@ -289,9 +301,24 @@
   position: absolute;
   z-index: 40;
   pointer-events: none;
-  padding: 0 16px;
-  width: 100%;
+  max-width: min(78%, 420px);
   box-sizing: border-box;
+}
+
+.composition-layer--text-heirloom,
+.composition-layer--text-modern {
+  padding: 14px 18px 16px;
+  border-radius: 18px;
+  background: linear-gradient(180deg, var(--db-message-panel, rgba(9, 18, 38, 0.28)), rgba(9, 18, 38, 0.38));
+  border: 1px solid color-mix(in srgb, var(--db-accent, #EED7B8) 20%, rgba(255,255,255,0.16));
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.composition-layer--text-signature {
+  width: min(86%, 540px);
+  max-width: none;
+  padding: 0 18px;
 }
 
 .composition-text__message {
@@ -308,6 +335,24 @@
   animation: textEtchIn 1s ease forwards;
   mix-blend-mode: screen;
   letter-spacing: 0.02em;
+}
+
+.composition-layer--text-heirloom .composition-text__message {
+  font-size: clamp(18px, 4.3vw, 28px);
+}
+
+.composition-layer--text-signature .composition-text__message {
+  font-style: italic;
+  font-size: clamp(20px, 5vw, 34px);
+  text-align: center;
+}
+
+.composition-layer--text-modern .composition-text__message {
+  font-family: 'Outfit', sans-serif;
+  font-size: clamp(16px, 4vw, 24px);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
 }
 
 /* Etched variant — embeds text into video */
@@ -340,6 +385,34 @@
 }
 
 /* ── BRAND PROTECTION LAYERS ── */
+.composition-brand-rail {
+  position: absolute;
+  left: 3.5%;
+  right: 3.5%;
+  bottom: 3.8%;
+  height: 10.5%;
+  z-index: 41;
+  pointer-events: none;
+  border-radius: 18px;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--db-rail, rgba(5,12,22,0.58)) 72%, transparent), rgba(5, 12, 22, 0.58));
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 18px 35px rgba(0, 0, 0, 0.28);
+}
+
+.composition-brand-rail::before {
+  content: '';
+  position: absolute;
+  left: 18px;
+  right: 18px;
+  top: 0;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(212, 175, 55, 0.15), var(--db-accent, rgba(255, 255, 255, 0.58)), rgba(212, 175, 55, 0.15));
+}
+
+.composition-brand-rail--modern {
+  background: linear-gradient(180deg, rgba(4, 12, 24, 0.18), rgba(4, 12, 24, 0.72));
+}
+
 .composition-protection {
   position: absolute;
   z-index: 45;
@@ -353,36 +426,33 @@
   padding: 0 18px;
   box-sizing: border-box;
   font-family: 'Outfit', sans-serif;
-  font-size: clamp(1.4rem, 5vw, 2.2rem);
+  font-size: clamp(0.8rem, 2.4vw, 1.05rem);
   font-weight: 700;
-  letter-spacing: 0.24em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.65);
-  -webkit-text-stroke: 1px rgba(0, 0, 0, 0.6);
+  -webkit-text-stroke: 0.4px rgba(0, 0, 0, 0.6);
   text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
+  white-space: nowrap;
 }
 
 .composition-protection--tm {
-  bottom: 6%;
-  right: 5%;
   font-family: 'Outfit', sans-serif;
-  font-size: clamp(1.1rem, 4vw, 1.6rem);
+  font-size: clamp(0.8rem, 2.6vw, 1.05rem);
   font-weight: 800;
   letter-spacing: 0.2em;
-  color: rgba(255, 255, 255, 0.9);
+  color: rgba(255, 255, 255, 0.72);
   -webkit-text-stroke: 1.2px rgba(0, 0, 0, 0.85);
   text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8), 0 0 12px rgba(0, 0, 0, 0.4);
 }
 
 .composition-protection--brand {
-  left: 5%;
-  bottom: 6%;
   font-family: 'Cormorant Garamond', Georgia, serif;
-  font-size: clamp(1.3rem, 4.5vw, 1.9rem);
+  font-size: clamp(1rem, 3vw, 1.3rem);
   font-style: italic;
   font-weight: 700;
   letter-spacing: 0.16em;
-  color: rgba(212, 175, 55, 1.0);
+  color: var(--db-brand, rgba(212, 175, 55, 1.0));
   -webkit-text-stroke: 1.2px rgba(0, 0, 0, 0.85);
   text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8), 0 0 12px rgba(0, 0, 0, 0.4);
 }
@@ -392,13 +462,14 @@
   padding: 0 18px;
   box-sizing: border-box;
   font-family: 'Outfit', sans-serif;
-  font-size: clamp(1.2rem, 4.5vw, 1.8rem);
+  font-size: clamp(0.78rem, 2.2vw, 1rem);
   font-weight: 700;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.6);
-  -webkit-text-stroke: 1px rgba(0, 0, 0, 0.6);
+  -webkit-text-stroke: 0.35px rgba(0, 0, 0, 0.6);
   text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
+  white-space: nowrap;
 }
 
 /* ── GOLD DUST OVERLAY (Customizer — vivid, cinematic) ── */
@@ -413,7 +484,7 @@
 .overlay-gold-dust__particle {
   position: absolute;
   border-radius: 50%;
-  background: radial-gradient(circle, #FFD700 0%, #D4AF37 40%, transparent 70%);
+  background: radial-gradient(circle, var(--db-accent, #FFD700) 0%, var(--db-primary, #D4AF37) 40%, transparent 70%);
   box-shadow:
     0 0 8px 3px rgba(255, 215, 0, 0.7),
     0 0 20px 8px rgba(212, 175, 55, 0.35),
@@ -640,3 +711,84 @@
   }
 }
 
+/* ============================================
+   FRONTEND POLISH OVERRIDES
+   Cleaner message treatment and lighter protection rail
+   ============================================ */
+
+.composition-layer--text-heirloom,
+.composition-layer--text-modern,
+.composition-layer--text-signature {
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  box-shadow: none !important;
+}
+
+.composition-layer--text-signature {
+  width: min(86%, 540px);
+}
+
+.composition-text__message {
+  text-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.92),
+    0 6px 24px rgba(0, 0, 0, 0.6),
+    0 0 18px rgba(0, 0, 0, 0.24) !important;
+  -webkit-text-stroke: 0 !important;
+  mix-blend-mode: normal !important;
+}
+
+.composition-brand-rail {
+  left: 4.5%;
+  right: auto;
+  width: clamp(136px, 41%, 218px);
+  bottom: 4.1%;
+  height: 5.8%;
+  border-radius: 999px;
+  background: linear-gradient(180deg, rgba(7, 16, 28, 0.22), rgba(7, 16, 28, 0.44));
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: none;
+}
+
+.composition-brand-rail::before {
+  left: 12px;
+  right: 12px;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.06), rgba(238, 215, 184, 0.4), rgba(255, 255, 255, 0.06));
+}
+
+.composition-protection--recipient,
+.composition-protection--sender {
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.92) !important;
+  -webkit-text-stroke: 0 !important;
+  text-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.92),
+    0 0 14px rgba(0, 0, 0, 0.32);
+}
+
+.composition-protection--recipient {
+  font-size: clamp(0.82rem, 2.5vw, 1.08rem);
+}
+
+.composition-protection--sender {
+  font-size: clamp(0.8rem, 2.3vw, 1rem);
+}
+
+.composition-protection--brand,
+.composition-protection--tm {
+  -webkit-text-stroke: 0 !important;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.78);
+}
+
+.composition-protection--brand {
+  font-size: clamp(0.84rem, 2.2vw, 1.02rem);
+  letter-spacing: 0.11em;
+}
+
+.composition-protection--tm {
+  font-size: clamp(0.64rem, 1.75vw, 0.78rem);
+  letter-spacing: 0.16em;
+  color: rgba(255, 255, 255, 0.58);
+}
