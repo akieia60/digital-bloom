@@ -5,7 +5,7 @@ import { getApiBase } from './apiBase';
  * All credit operations go through server endpoints
  */
 
-const API_BASE = getApiBase();
+const getCreditApiBase = () => getApiBase();
 
 /**
  * Create Stripe checkout session for credit purchase
@@ -20,7 +20,7 @@ export async function createCreditCheckoutSession({
   try {
     const amountCents = Math.round(amountDollars * 100);
 
-    const response = await fetch(`${API_BASE}/api/create-credit-checkout`, {
+    const response = await fetch(`${getCreditApiBase()}/api/create-credit-checkout`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -52,7 +52,7 @@ export async function createCreditCheckoutSession({
  */
 export async function getCreditBalance(code) {
   try {
-    const response = await fetch(`${API_BASE}/api/credits/balance?code=${encodeURIComponent(code)}`);
+    const response = await fetch(`${getCreditApiBase()}/api/credits/balance?code=${encodeURIComponent(code)}`);
 
     if (!response.ok) {
       const error = await response.json();
@@ -71,7 +71,7 @@ export async function getCreditBalance(code) {
  */
 export async function validateCreditCode(code) {
   try {
-    const response = await fetch(`${API_BASE}/api/credits/validate`, {
+    const response = await fetch(`${getCreditApiBase()}/api/credits/validate`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -96,7 +96,7 @@ export async function validateCreditCode(code) {
  */
 export async function reserveCredit(code, orderTotalCents) {
   try {
-    const response = await fetch(`${API_BASE}/api/credits/reserve`, {
+    const response = await fetch(`${getCreditApiBase()}/api/credits/reserve`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

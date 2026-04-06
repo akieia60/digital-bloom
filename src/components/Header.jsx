@@ -71,9 +71,16 @@ const Header = ({ onSearchChange, searchQuery, onOpenFaq }) => {
 
           {/* Right: Cart + SEND A BLOOM */}
           <div className="flex-1 flex justify-end items-center space-x-4 sm:space-x-6 ml-4">
+            <Link
+              to="/"
+              className="inline-flex min-h-11 items-center justify-center rounded-full border border-white/10 bg-white/5 px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-white/75 transition-colors hover:bg-white/10 hover:text-white"
+              aria-label={t('nav_home')}
+            >
+              {t('nav_home')}
+            </Link>
             <button
               onClick={toggleCart}
-              className="relative p-2 group"
+              className="relative inline-flex min-h-11 min-w-11 items-center justify-center rounded-full border border-white/10 bg-white/5 p-2 group transition-colors hover:bg-white/10"
               aria-label="Shopping cart"
             >
               <svg
@@ -105,7 +112,7 @@ const Header = ({ onSearchChange, searchQuery, onOpenFaq }) => {
         <div className="fixed inset-0 z-50">
           {/* Backdrop */}
           <div 
-            className="absolute inset-0 bg-black/20 backdrop-blur-sm"
+            className="absolute inset-0 bg-black/60 backdrop-blur-md"
             onClick={() => setIsMobileMenuOpen(false)}
           />
           
@@ -141,37 +148,37 @@ const Header = ({ onSearchChange, searchQuery, onOpenFaq }) => {
             </div>
 
             {/* Navigation Links */}
-            <nav className="flex-1 px-6 overflow-y-auto">
+            <nav className="flex-1 px-6 py-4 overflow-y-auto space-y-2">
               <Link
                 to="/"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="block text-lg transition-colors py-5 border-b border-white/10 text-white"
+                className="block rounded-2xl bg-white/8 px-4 py-5 text-lg text-white transition-colors"
               >
                 {t('nav_home')}
               </Link>
               <Link
                 to="/shop"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="block text-lg transition-colors py-5 border-b border-white/10 text-[var(--accent-gold)]"
+                className="block rounded-2xl bg-[rgba(212,175,55,0.12)] px-4 py-5 text-lg text-[var(--accent-gold)] transition-colors"
               >
                 {t('nav_occasions')}
               </Link>
               <Link
                 to="/shop"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="block text-lg transition-colors py-5 border-b border-white/10 text-white"
+                className="block rounded-2xl bg-white/8 px-4 py-5 text-lg text-white transition-colors"
               >
                 {t('nav_shop')}
               </Link>
               <Link
                 to="/credits"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="block text-lg transition-colors py-5 border-b border-white/10 text-white"
+                className="block rounded-2xl bg-white/8 px-4 py-5 text-lg text-white transition-colors"
               >
                 {t('nav_credits')}
               </Link>
               {/* Language Selector */}
-              <div className="py-5 border-b border-white/10">
+              <div className="rounded-2xl bg-white/6 px-4 py-5">
                 <div className="text-xs font-bold uppercase tracking-widest text-white/50 mb-3">{t('header_select_language')}</div>
                 <div className="flex flex-wrap gap-2">
                   {AVAILABLE_LANGUAGES.map(l => (
@@ -191,7 +198,7 @@ const Header = ({ onSearchChange, searchQuery, onOpenFaq }) => {
               </div>
               <button
                 onClick={() => { setIsMobileMenuOpen(false); toggleCart(); }}
-                className="w-full flex items-center justify-between text-lg transition-colors py-5 border-b border-white/10 text-white"
+                className="w-full rounded-2xl bg-white/8 px-4 py-5 flex items-center justify-between text-lg text-white transition-colors"
               >
                 <span>{t('nav_cart')}</span>
                 {cartCount > 0 && (
@@ -203,7 +210,7 @@ const Header = ({ onSearchChange, searchQuery, onOpenFaq }) => {
               {onOpenFaq && (
                 <button
                   onClick={() => { setIsMobileMenuOpen(false); onOpenFaq(); }}
-                  className="w-full flex items-center justify-between text-lg transition-colors py-5 border-b border-white/10 text-white"
+                  className="w-full rounded-2xl bg-white/8 px-4 py-5 flex items-center justify-between text-lg text-white transition-colors"
                 >
                   <span>{t('nav_faq') || 'FAQ'}</span>
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.6 }}>

@@ -1,13 +1,16 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useLanguage } from '../contexts/LanguageContext';
 import CartItem from './CartItem';
-import { createCartCheckoutSession, redirectToCheckout } from '../lib/stripe';
+import { createCartCheckoutSession, redirectToCheckout, startCartCheckoutRedirect } from '../lib/stripe';
 import { validateCreditCode, reserveCredit } from '../lib/creditStripe';
 
 const ShoppingCart = () => {
   const { t } = useLanguage();
-  const { cartItems, isCartOpen, toggleCart, getCartTotal, clearCart } = useCart();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { cartItems, isCartOpen, toggleCart, getCartTotal, clearCart, setIsCartOpen } = useCart();
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState(null);
   const [creditCode, setCreditCode] = useState('');
@@ -17,6 +20,24 @@ const ShoppingCart = () => {
   const total = getCartTotal();
   const totalCents = Math.round(total * 100);
   const remainingDue = creditApplied ? Math.max(0, totalCents - creditApplied.applied_cents) : totalCents;
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const checkoutError = params.get('checkout_error');
+    const shouldOpenCart = params.get('cart') === 'open';
+
+    if (!checkoutError) return;
+
+    setError(checkoutError);
+    if (shouldOpenCart) {
+      setIsCartOpen(true);
+    }
+
+    params.delete('checkout_error');
+    params.delete('cart');
+    const nextSearch = params.toString();
+    navigate(`${location.pathname}${nextSearch ? `?${nextSearch}` : ''}`, { replace: true });
+  }, [location.pathname, location.search, navigate, setIsCartOpen]);
 
   const handleApplyCredit = async () => {
     setError(null);
@@ -56,13 +77,12 @@ const ShoppingCart = () => {
   const handleCheckout = async () => {
     setIsProcessing(true);
     setError(null);
+    const formattedItems = cartItems.map(item => ({
+      product: item,
+      quantity: item.quantity
+    }));
 
     try {
-      const formattedItems = cartItems.map(item => ({
-        product: item,
-        quantity: item.quantity
-      }));
-
       // If credit is applied and covers full amount, skip Stripe
       if (creditApplied && remainingDue <= 0) {
         const result = await createCartCheckoutSession(formattedItems, {
@@ -86,9 +106,19 @@ const ShoppingCart = () => {
       await redirectToCheckout(result.url);
     } catch (err) {
       console.error('Checkout error:', err);
-      setError(err.message || 'Failed to proceed to checkout. Please try again.');
-      setIsProcessing(false);
+      const message = err.message || 'Failed to proceed to checkout. Please try again.';
+      if (typeof window !== 'undefined') {
+        startCartCheckoutRedirect(formattedItems, creditApplied ? {
+          reservation_id: creditApplied.reservation_id,
+          remaining_due_cents: remainingDue
+        } : null);
+        return;
+      }
+
+      setError(message);
     }
+
+    setIsProcessing(false);
   };
 
   if (!isCartOpen) return null;
@@ -204,6 +234,23 @@ const ShoppingCart = () => {
                 </button>
 
                 <div className="rounded-2xl border border-white/8 bg-white/[0.04] p-4 sm:p-5">
+                  <div className="mb-4 flex flex-wrap gap-2">
+                    <Link
+                      to="/credits"
+                      onClick={() => setIsCartOpen(false)}
+                      className="inline-flex min-h-11 items-center justify-center rounded-full border border-pure-gold/30 bg-pure-gold/10 px-4 text-[11px] font-semibold uppercase tracking-[0.18em] text-pure-gold transition-colors hover:bg-pure-gold/20"
+                    >
+                      {t('nav_credits')}
+                    </Link>
+                    <button
+                      type="button"
+                      onClick={() => setIsCreditOpen((open) => !open)}
+                      className="inline-flex min-h-11 items-center justify-center rounded-full border border-white/10 bg-white/5 px-4 text-[11px] font-semibold uppercase tracking-[0.18em] text-white/80 transition-colors hover:bg-white/10"
+                    >
+                      {creditApplied ? t('cart_credit_applied') : t('cart_credit_section')}
+                    </button>
+                  </div>
+
                   <button
                     type="button"
                     onClick={() => setIsCreditOpen((open) => !open)}
@@ -282,10 +329,24 @@ const ShoppingCart = () => {
                   )}
                 </div>
 
-                <div className="flex gap-4">
-                   <button
+                <div className="grid grid-cols-3 gap-2">
+                  <Link
+                    to="/"
+                    onClick={() => setIsCartOpen(false)}
+                    className="flex min-h-11 items-center justify-center rounded-full border border-white/10 bg-white/5 px-3 text-[10px] uppercase tracking-[0.18em] font-semibold text-white/75 transition-colors hover:bg-white/10"
+                  >
+                    {t('nav_home')}
+                  </Link>
+                  <Link
+                    to="/shop"
+                    onClick={() => setIsCartOpen(false)}
+                    className="flex min-h-11 items-center justify-center rounded-full border border-white/10 bg-white/5 px-3 text-[10px] uppercase tracking-[0.18em] font-semibold text-white/75 transition-colors hover:bg-white/10"
+                  >
+                    {t('product_continue')}
+                  </Link>
+                  <button
                     onClick={clearCart}
-                    className="flex-1 text-white/20 hover:text-red-400 py-3 text-[9px] uppercase tracking-widest font-semibold transition-colors"
+                    className="flex min-h-11 items-center justify-center rounded-full border border-white/10 bg-transparent px-3 text-[9px] uppercase tracking-widest font-semibold text-white/20 transition-colors hover:border-red-400/40 hover:text-red-400"
                   >
                     {t('cart_clear')}
                   </button>
