@@ -1,6 +1,7 @@
 import Stripe from 'stripe';
 import crypto from 'crypto';
 import { applyCors } from './_lib/cors.js';
+import { resolvePublicBaseUrl } from './_lib/publicBaseUrl.js';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
   apiVersion: '2023-10-16',
@@ -48,7 +49,7 @@ export default async function handler(req, res) {
 
     // Generate credit code
     const code = generateCreditCode();
-    const appBaseUrl = process.env.APP_BASE_URL || 'https://digitabloom.com';
+    const appBaseUrl = resolvePublicBaseUrl(req);
 
     // Create Stripe checkout session
     const sessionConfig = {
