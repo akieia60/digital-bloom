@@ -3,6 +3,14 @@
  * Generates secure, human-friendly credit codes in format: DBLOOM-XXXX-XXXX
  */
 
+export function normalizeCreditCode(code = '') {
+  return String(code)
+    .trim()
+    .toUpperCase()
+    .replace(/[–—−]/g, '-')
+    .replace(/\s+/g, '');
+}
+
 /**
  * Generate a random credit code segment
  * Uses crypto.getRandomValues for secure randomness
@@ -33,8 +41,9 @@ export function generateCreditCode() {
  * Returns true if code matches expected format
  */
 export function isValidCreditCodeFormat(code) {
-  const pattern = /^DBLOOM-[A-Z2-9]{4}-[A-Z2-9]{4}$/;
-  return pattern.test(code);
+  const normalized = normalizeCreditCode(code);
+  const pattern = /^DBLOOM-[A-Z0-9]{4}-[A-Z0-9]{4}$/;
+  return pattern.test(normalized);
 }
 
 /**

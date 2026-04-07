@@ -2,6 +2,7 @@ import Stripe from 'stripe';
 import { createClient } from '@supabase/supabase-js';
 import { captureReservedCredit } from '../_lib/creditReservations.js';
 import { finalizePurchasesBySession } from '../_lib/purchaseFlow.js';
+import { sendBloomCreditEmail } from '../_lib/creditEmail.js';
 
 export const config = {
   api: {
@@ -44,7 +45,7 @@ async function isAlreadyProcessed(stripeSessionId) {
 }
 
 async function handleCreditPurchase(session, metadata) {
-  const { code, amount_cents, purchaser_email, recipient_email, delivery_date } = metadata;
+  const { code, amount_cents, purchaser_email, recipient_email, recipient_name, delivery_date, note } = metadata;
 
   const { data: credit, error: creditError } = await supabase
     .from('experience_credits')
@@ -77,6 +78,21 @@ async function handleCreditPurchase(session, metadata) {
       delivery_date,
       status: 'pending',
     });
+  } else {
+    try {
+      await sendBloomCreditEmail({
+        req: { headers: { origin: session.success_url ? new URL(session.success_url).origin : undefined } },
+        to: recipient_email || purchaser_email,
+        code: credit.code,
+        amountCents: parseInt(amount_cents, 10),
+        remainingAmountCents: credit.remaining_amount_cents,
+        recipientName: recipient_name,
+        purchaserEmail: purchaser_email,
+        note,
+      });
+    } catch (emailError) {
+      console.error('Bloom Credit email send failed:', emailError);
+    }
   }
 }
 

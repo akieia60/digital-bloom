@@ -52,6 +52,7 @@ export default function ExperienceCredits() {
         amountDollars: amount,
         purchaserEmail: normalizedPurchaserEmail,
         recipientEmail: isGift ? giftDetails.recipientEmail : null,
+        recipientName: isGift ? giftDetails.recipientName : null,
         deliveryDate: isGift ? giftDetails.deliveryDate : null,
         note: isGift ? giftDetails.note : null
       });

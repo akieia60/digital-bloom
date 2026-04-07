@@ -205,7 +205,7 @@ const Success = () => {
             </div>
             <div className="success-row success-row-last">
               <span className="success-row-label">{t('success_credit_ready')}</span>
-              <Link to="/credits/balance" className="success-row-value success-row-gold">
+              <Link to={`/credits/balance?code=${encodeURIComponent(creditPurchase.code)}`} className="success-row-value success-row-gold">
                 {t('success_credit_check_balance')}
               </Link>
             </div>

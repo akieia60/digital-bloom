@@ -14,6 +14,7 @@ export async function createCreditCheckoutSession({
   amountDollars,
   purchaserEmail,
   recipientEmail = null,
+  recipientName = null,
   deliveryDate = null,
   note = null
 }) {
@@ -29,6 +30,7 @@ export async function createCreditCheckoutSession({
         amount_cents: amountCents,
         purchaser_email: purchaserEmail,
         recipient_email: recipientEmail,
+        recipient_name: recipientName,
         delivery_date: deliveryDate,
         note
       }),

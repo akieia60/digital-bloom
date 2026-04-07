@@ -8,9 +8,13 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
 });
 // Allowed credit amounts in cents
 const ALLOWED_AMOUNTS = [1000, 2500, 5000, 10000, 15000, 20000];
+const CREDIT_CODE_CHARS = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 
 function generateCreditCode() {
-  const randomPart = crypto.randomBytes(4).toString('hex').toUpperCase();
+  const bytes = crypto.randomBytes(8);
+  const randomPart = Array.from(bytes)
+    .map((byte) => CREDIT_CODE_CHARS[byte % CREDIT_CODE_CHARS.length])
+    .join('');
   return `DBLOOM-${randomPart.slice(0, 4)}-${randomPart.slice(4, 8)}`;
 }
 
@@ -27,6 +31,7 @@ export default async function handler(req, res) {
       amount_cents,
       purchaser_email,
       recipient_email = null,
+      recipient_name = null,
       delivery_date = null,
       note = null
     } = req.body;
@@ -77,6 +82,7 @@ export default async function handler(req, res) {
         amount_cents: amountCentsInt.toString(),
         purchaser_email,
         recipient_email: recipient_email || purchaser_email,
+        recipient_name: recipient_name || '',
         delivery_date: delivery_date || '',
         note: note || ''
       },
