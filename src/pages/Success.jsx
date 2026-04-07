@@ -84,6 +84,8 @@ const Success = () => {
   }, [sessionId, t, refreshNonce]);
 
   const purchases = useMemo(() => checkout?.purchases || [], [checkout]);
+  const creditPurchase = checkout?.kind === 'credit' ? checkout?.credit : null;
+  const isCreditPurchase = Boolean(creditPurchase);
   const totalAmount = Number(checkout?.totals?.amount || 0).toFixed(2);
   const displayId = (sessionId || 'N/A').substring(0, 18).toUpperCase();
   const bloomPurchases = useMemo(
@@ -160,9 +162,9 @@ const Success = () => {
               <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
             </svg>
           </div>
-          <h1 className="success-title">{t('success_title')}</h1>
+          <h1 className="success-title">{isCreditPurchase ? t('success_credit_title') : t('success_title')}</h1>
           <p className="success-subtitle">
-            {t('success_subtitle')}
+            {isCreditPurchase ? t('success_credit_subtitle') : t('success_subtitle')}
           </p>
         </div>
 
@@ -174,7 +176,7 @@ const Success = () => {
           </div>
           <div className="success-row">
             <span className="success-row-label">{t('success_items')}</span>
-            <span className="success-row-value">{purchases.length}</span>
+            <span className="success-row-value">{isCreditPurchase ? 1 : purchases.length}</span>
           </div>
           <div className="success-row">
             <span className="success-row-label">{t('success_total')}</span>
@@ -187,6 +189,31 @@ const Success = () => {
             </span>
           </div>
         </div>
+
+        {isCreditPurchase && (
+          <div className="success-card">
+            <h3 className="success-card-label">{t('success_credit_label')}</h3>
+            <div className="success-row">
+              <span className="success-row-label">{t('success_credit_code')}</span>
+              <span className="success-row-value success-row-mono">{creditPurchase.code}</span>
+            </div>
+            <div className="success-row">
+              <span className="success-row-label">{t('success_credit_balance')}</span>
+              <span className="success-row-value success-row-gold">
+                ${(Number(creditPurchase.remaining_amount_cents || 0) / 100).toFixed(2)}
+              </span>
+            </div>
+            <div className="success-row success-row-last">
+              <span className="success-row-label">{t('success_credit_ready')}</span>
+              <Link to="/credits/balance" className="success-row-value success-row-gold">
+                {t('success_credit_check_balance')}
+              </Link>
+            </div>
+            <p className="success-card-text" style={{ marginTop: '12px' }}>
+              {t('success_credit_note')}
+            </p>
+          </div>
+        )}
 
         {hasPendingWork && (
           <div className="success-card success-card--highlight">
@@ -215,38 +242,40 @@ const Success = () => {
           </div>
         )}
 
-        <div className="success-card">
-          <h3 className="success-card-label">{t('success_experiences')}</h3>
-          {purchases.map((purchase) => {
-            const isReady = purchase.download_url && purchase.download_expires_at && new Date(purchase.download_expires_at) > new Date();
-            return (
-              <div key={purchase.id} className="success-row success-row-last" style={{ display: 'block', marginBottom: '16px' }}>
-                <div className="success-row" style={{ paddingTop: 0 }}>
-                  <span className="success-row-label">{purchase.products?.name || t('success_default_product')}</span>
-                  <span className="success-row-value">{getPurchaseStatusLabel(purchase.status)}</span>
+        {!isCreditPurchase && (
+          <div className="success-card">
+            <h3 className="success-card-label">{t('success_experiences')}</h3>
+            {purchases.map((purchase) => {
+              const isReady = purchase.download_url && purchase.download_expires_at && new Date(purchase.download_expires_at) > new Date();
+              return (
+                <div key={purchase.id} className="success-row success-row-last" style={{ display: 'block', marginBottom: '16px' }}>
+                  <div className="success-row" style={{ paddingTop: 0 }}>
+                    <span className="success-row-label">{purchase.products?.name || t('success_default_product')}</span>
+                    <span className="success-row-value">{getPurchaseStatusLabel(purchase.status)}</span>
+                  </div>
+                  {isReady ? (
+                    <a href={purchase.download_url} download className="success-btn-gold" style={{ marginTop: '12px' }}>
+                      {t('success_download')}
+                    </a>
+                  ) : (
+                    <p className="success-card-text" style={{ marginTop: '12px' }}>
+                      {purchase.has_customization
+                        ? t('success_personalized_pending')
+                        : t('success_standard_pending')}
+                    </p>
+                  )}
+                  {purchase.bloom_slug && (
+                    <p className="success-note" style={{ marginTop: '10px' }}>
+                      {t('success_view_link')} <Link to={`/bloom/${purchase.bloom_slug}`}>{t('success_open_bloom')}</Link>
+                    </p>
+                  )}
                 </div>
-                {isReady ? (
-                  <a href={purchase.download_url} download className="success-btn-gold" style={{ marginTop: '12px' }}>
-                    {t('success_download')}
-                  </a>
-                ) : (
-                  <p className="success-card-text" style={{ marginTop: '12px' }}>
-                    {purchase.has_customization
-                      ? t('success_personalized_pending')
-                      : t('success_standard_pending')}
-                  </p>
-                )}
-                {purchase.bloom_slug && (
-                  <p className="success-note" style={{ marginTop: '10px' }}>
-                    {t('success_view_link')} <Link to={`/bloom/${purchase.bloom_slug}`}>{t('success_open_bloom')}</Link>
-                  </p>
-                )}
-              </div>
-            );
-          })}
-        </div>
+              );
+            })}
+          </div>
+        )}
 
-        {bloomPurchases.length > 0 && (
+        {!isCreditPurchase && bloomPurchases.length > 0 && (
           <div className="success-card">
             <h3 className="success-card-label">{t('success_bloom_links')}</h3>
             {bloomPurchases.map((purchase) => (
