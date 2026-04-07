@@ -256,15 +256,6 @@ const ShoppingCart = () => {
                   <CartItem item={item} />
                 </div>
               ))}
-            </div>
-
-            {/* Footer */}
-            <div className="p-4 sm:p-8 glass border-t border-white/5 space-y-6 sm:space-y-8 bg-black/40">
-              {error && (
-                <div className="bg-red-500/10 border border-red-500/20 text-red-500 px-4 py-3 rounded-xl text-xs font-light">
-                  {error}
-                </div>
-              )}
 
               {!creditApplied && !knownCredit && !isCheckingKnownCredit && (
                 <div className="cart-credits-nudge">
@@ -395,6 +386,15 @@ const ShoppingCart = () => {
                   </div>
                 )}
               </div>
+            </div>
+
+            {/* Footer */}
+            <div className="p-4 sm:p-8 glass border-t border-white/5 space-y-6 sm:space-y-8 bg-black/40">
+              {error && (
+                <div className="bg-red-500/10 border border-red-500/20 text-red-500 px-4 py-3 rounded-xl text-xs font-light">
+                  {error}
+                </div>
+              )}
 
               <div className="cart-summary-bar">
                 <div>

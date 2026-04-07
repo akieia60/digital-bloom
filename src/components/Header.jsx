@@ -38,7 +38,7 @@ const Header = ({ onSearchChange, searchQuery, onOpenFaq }) => {
           <div className="flex-1 flex items-center">
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="p-2 text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
+              className="inline-flex min-h-12 min-w-12 items-center justify-center rounded-full p-2 text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
               aria-label="Menu"
             >
               <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -73,18 +73,22 @@ const Header = ({ onSearchChange, searchQuery, onOpenFaq }) => {
           <div className="flex-1 flex justify-end items-center space-x-4 sm:space-x-6 ml-4">
             <Link
               to="/"
-              className="inline-flex min-h-11 items-center justify-center rounded-full border border-white/10 bg-white/5 px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-white/75 transition-colors hover:bg-white/10 hover:text-white"
+              className="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-white/85 transition-colors hover:bg-white/10 hover:text-white"
               aria-label={t('nav_home')}
             >
+              <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M3 10.5L12 3l9 7.5" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M5.25 9.75V21h13.5V9.75" />
+              </svg>
               {t('nav_home')}
             </Link>
             <button
               onClick={toggleCart}
-              className="relative inline-flex min-h-11 min-w-11 items-center justify-center rounded-full border border-white/10 bg-white/5 p-2 group transition-colors hover:bg-white/10"
+              className="relative inline-flex min-h-11 min-w-11 items-center justify-center rounded-full border border-white/10 bg-white/5 p-2.5 group transition-colors hover:bg-white/10"
               aria-label="Shopping cart"
             >
               <svg
-                className="h-5 w-5 text-[var(--text-secondary)] group-hover:text-[var(--text-primary)] transition-all"
+                className="h-[26px] w-[26px] text-[var(--text-secondary)] group-hover:text-[var(--text-primary)] transition-all"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -92,7 +96,7 @@ const Header = ({ onSearchChange, searchQuery, onOpenFaq }) => {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
               </svg>
               {cartCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-[var(--accent-gold)] text-[var(--bg-page)] text-[9px] font-bold rounded-full h-4 w-4 flex items-center justify-center shadow-sm">
+                <span className="absolute -top-1 -right-1 bg-[var(--accent-gold)] text-[var(--bg-page)] text-[11px] font-bold rounded-full h-[18px] w-[18px] flex items-center justify-center shadow-sm">
                   {cartCount}
                 </span>
               )}

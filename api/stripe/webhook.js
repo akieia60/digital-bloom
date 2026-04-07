@@ -64,8 +64,10 @@ async function handleCreditPurchase(session, metadata) {
 
   await supabase.from('experience_credit_ledger').insert({
     credit_id: credit.id,
-    delta_cents: parseInt(amount_cents, 10),
-    reason: 'purchase',
+    type: 'purchase',
+    amount_cents: parseInt(amount_cents, 10),
+    description: `Credit purchased for $${(parseInt(amount_cents, 10) / 100).toFixed(2)}`,
+    stripe_session_id: session.id,
   });
 
   if (delivery_date && new Date(delivery_date) > new Date()) {
