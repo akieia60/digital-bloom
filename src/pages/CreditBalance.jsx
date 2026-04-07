@@ -1,12 +1,13 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useMemo, useState } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { getCreditBalance } from '../lib/creditStripe';
-import { isValidCreditCodeFormat, formatCreditAmount } from '../utils/creditCode';
+import { isValidCreditCodeFormat, formatCreditAmount, normalizeCreditCode } from '../utils/creditCode';
 import { useLanguage } from '../contexts/LanguageContext';
 import '../styles/credits.css';
 
 export default function CreditBalance() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { t } = useLanguage();
   const [code, setCode] = useState('');
   const [balance, setBalance] = useState(null);
@@ -14,13 +15,17 @@ export default function CreditBalance() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  const handleCheckBalance = async () => {
+  const requestedCode = useMemo(() => normalizeCreditCode(searchParams.get('code') || ''), [searchParams]);
+
+  const handleCheckBalance = async (incomingCode = code) => {
     setError('');
     setBalance(null);
     setHistory([]);
 
+    const normalizedCode = normalizeCreditCode(incomingCode);
+
     // Validate format
-    if (!isValidCreditCodeFormat(code.toUpperCase())) {
+    if (!isValidCreditCodeFormat(normalizedCode)) {
       setError('Invalid credit code format. Expected format: DBLOOM-XXXX-XXXX');
       return;
     }
@@ -28,7 +33,8 @@ export default function CreditBalance() {
     setLoading(true);
 
     try {
-      const data = await getCreditBalance(code.toUpperCase());
+      setCode(normalizedCode);
+      const data = await getCreditBalance(normalizedCode);
       setBalance(data);
       setHistory(data.history || []);
     } catch (err) {
@@ -37,6 +43,14 @@ export default function CreditBalance() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (!requestedCode || !isValidCreditCodeFormat(requestedCode)) return;
+    setCode(requestedCode);
+    handleCheckBalance(requestedCode);
+    // requestedCode is the only external trigger we want here.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [requestedCode]);
 
   return (
     <div className="credits-page">
@@ -70,7 +84,7 @@ export default function CreditBalance() {
                 className="customizer-input"
                 placeholder={t('balance_placeholder')}
                 value={code}
-                onChange={(e) => setCode(e.target.value.toUpperCase())}
+                onChange={(e) => setCode(normalizeCreditCode(e.target.value))}
                 maxLength="17"
               />
               <button

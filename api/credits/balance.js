@@ -31,7 +31,7 @@ export default async function handler(req, res) {
     // Look up credit in database
     const { data: credit, error } = await supabase
       .from('experience_credits')
-      .select('code, initial_amount_cents, remaining_amount_cents, status, created_at')
+      .select('id, code, initial_amount_cents, remaining_amount_cents, status, created_at')
       .eq('code', code.toUpperCase())
       .maybeSingle();
 
@@ -44,12 +44,29 @@ export default async function handler(req, res) {
       return res.status(404).json({ error: 'Credit code not found' });
     }
 
+    const { data: historyRows, error: historyError } = await supabase
+      .from('experience_credit_ledger')
+      .select('id, type, amount_cents, description, created_at')
+      .eq('credit_id', credit.id)
+      .order('created_at', { ascending: false });
+
+    if (historyError) {
+      console.error('Error fetching credit ledger history:', historyError);
+      return res.status(500).json({ error: historyError.message || 'Internal server error' });
+    }
+
     res.status(200).json({
       code: credit.code,
       initial_amount_cents: credit.initial_amount_cents,
       remaining_amount_cents: credit.remaining_amount_cents,
       status: credit.status,
       created_at: credit.created_at,
+      history: (historyRows || []).map((entry) => ({
+        id: entry.id,
+        reason: entry.description || entry.type || 'activity',
+        delta_cents: Number(entry.amount_cents || 0) * (entry.type === 'redemption' ? -1 : 1),
+        created_at: entry.created_at,
+      })),
     });
   } catch (error) {
     console.error('Error in /api/credits/balance:', error);

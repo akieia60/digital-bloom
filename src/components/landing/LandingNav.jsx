@@ -110,10 +110,10 @@ export default function LandingNav({ onOpenFaq }) {
               className="landing-nav__cart-btn"
               aria-label="Shopping cart"
             >
-              <svg style={{ width: '22px', height: '22px', color: 'rgba(255,255,255,0.95)' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg style={{ width: '26px', height: '26px', color: 'rgba(255,255,255,0.95)' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
               </svg>
-              <span style={{ position: 'absolute', top: '2px', right: '2px', background: '#D4AF37', color: '#050510', fontSize: '10px', fontWeight: '800', borderRadius: '50%', width: '16px', height: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <span style={{ position: 'absolute', top: '1px', right: '1px', background: '#D4AF37', color: '#050510', fontSize: '11px', fontWeight: '800', borderRadius: '50%', width: '18px', height: '18px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 {cartCount}
               </span>
             </button>

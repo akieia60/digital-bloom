@@ -27,7 +27,39 @@ export default async function handler(req, res) {
 
     if (error) throw error;
     if (!purchases || purchases.length === 0) {
-      return res.status(404).json({ error: 'No purchases found for this session' });
+      const { data: credit, error: creditError } = await supabase
+        .from('experience_credits')
+        .select('id, code, initial_amount_cents, remaining_amount_cents, status, purchaser_email, recipient_email, created_at')
+        .eq('stripe_session_id', sessionId)
+        .maybeSingle();
+
+      if (creditError) throw creditError;
+
+      if (!credit) {
+        return res.status(404).json({ error: 'No purchases found for this session' });
+      }
+
+      return res.status(200).json({
+        ok: true,
+        kind: 'credit',
+        session_id: sessionId,
+        checkout_status: 'completed',
+        totals: {
+          items: 1,
+          amount: Number(credit.initial_amount_cents || 0) / 100,
+        },
+        purchases: [],
+        credit: {
+          id: credit.id,
+          code: credit.code,
+          initial_amount_cents: credit.initial_amount_cents,
+          remaining_amount_cents: credit.remaining_amount_cents,
+          status: credit.status,
+          purchaser_email: credit.purchaser_email,
+          recipient_email: credit.recipient_email,
+          created_at: credit.created_at,
+        },
+      });
     }
 
     const totalAmount = purchases.reduce((sum, purchase) => sum + Number(purchase.total_price || 0), 0);
@@ -50,6 +82,7 @@ export default async function handler(req, res) {
 
     return res.status(200).json({
       ok: true,
+      kind: 'purchase',
       session_id: sessionId,
       checkout_status: allCompleted ? 'completed' : 'processing',
       totals: {

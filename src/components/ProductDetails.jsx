@@ -13,7 +13,7 @@ const ProductDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
-  const { addToCart, replaceCartItem, toggleCart } = useCart();
+  const { addToCart, replaceCartItem, toggleCart, getCartCount } = useCart();
   const [isCustomizerOpen, setIsCustomizerOpen] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [heroVideoReady, setHeroVideoReady] = useState(false);
@@ -27,6 +27,7 @@ const ProductDetails = () => {
     }
   }, [location.state, product, loading]);
   const { products } = useProducts();
+  const cartCount = getCartCount();
 
   const relatedProducts = useMemo(() => {
     if (!product) return [];
@@ -237,6 +238,22 @@ const ProductDetails = () => {
                 {label}
               </span>
             ))}
+          </div>
+
+          <div className="mt-6 grid grid-cols-2 gap-3">
+            <Link
+              to="/shop"
+              className="flex min-h-[48px] items-center justify-center rounded-full border border-[#E5E5EA] px-4 text-[12px] font-semibold uppercase tracking-[0.12em] text-[#6E6E73] transition-all hover:border-[var(--accent-gold)] hover:text-[var(--accent-gold)]"
+            >
+              {t('product_continue')}
+            </Link>
+            <button
+              type="button"
+              onClick={toggleCart}
+              className="flex min-h-[48px] items-center justify-center rounded-full border border-[rgba(201,161,74,0.22)] bg-[rgba(201,161,74,0.08)] px-4 text-[12px] font-semibold uppercase tracking-[0.12em] text-[var(--accent-gold)] transition-all hover:bg-[rgba(201,161,74,0.14)]"
+            >
+              {t('nav_cart')} {cartCount > 0 ? `(${cartCount})` : ''}
+            </button>
           </div>
         </div>
 

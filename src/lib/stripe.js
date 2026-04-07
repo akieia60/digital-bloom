@@ -44,6 +44,7 @@ export const createCartCheckoutSession = async (cartItems, creditMetadata = null
     const apiUrl = getApiBase();
     const response = await fetch(`${apiUrl}/api/create-checkout-session`, {
       method: 'POST',
+      credentials: 'same-origin',
       headers: {
         'Content-Type': 'application/json',
       },
@@ -63,8 +64,14 @@ export const createCartCheckoutSession = async (cartItems, creditMetadata = null
     });
 
     if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.error || 'Failed to create checkout session');
+      const text = await response.text();
+      let errorData = null;
+      try {
+        errorData = JSON.parse(text);
+      } catch (parseError) {
+        errorData = null;
+      }
+      throw new Error(errorData?.error || errorData?.details || text || 'Failed to create checkout session');
     }
 
     const { sessionId, url, free_checkout } = await response.json();
@@ -94,6 +101,43 @@ export const redirectToCheckout = async (checkoutUrl) => {
     console.error('Error in redirectToCheckout:', error);
     throw error;
   }
+};
+
+export const startCartCheckoutRedirect = (cartItems, creditMetadata = null, customerInfo = {}) => {
+  const successUrl = `${window.location.origin}/success`;
+  const cancelUrl = window.location.href || `${window.location.origin}/shop`;
+  const totalPrice = cartItems.reduce((sum, item) =>
+    sum + (item.product.price * item.quantity), 0
+  );
+
+  const payload = {
+    cartItems,
+    successUrl: `${successUrl}?session_id={CHECKOUT_SESSION_ID}`,
+    cancelUrl,
+    customerEmail: customerInfo.email,
+    reservation_id: creditMetadata?.reservation_id,
+    remaining_due_cents: creditMetadata?.remaining_due_cents,
+    metadata: {
+      total_items: cartItems.length,
+      total_price: totalPrice,
+      ...(creditMetadata?.reservation_id && { reservation_id: creditMetadata.reservation_id }),
+    },
+  };
+
+  const apiUrl = getApiBase();
+  const form = document.createElement('form');
+  form.method = 'POST';
+  form.action = `${apiUrl}/api/create-checkout-session?mode=redirect`;
+  form.style.display = 'none';
+
+  const input = document.createElement('input');
+  input.type = 'hidden';
+  input.name = 'payload';
+  input.value = JSON.stringify(payload);
+  form.appendChild(input);
+
+  document.body.appendChild(form);
+  form.submit();
 };
 
 /**

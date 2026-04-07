@@ -118,7 +118,7 @@ function AppContent({ searchQuery, setSearchQuery }) {
       </Suspense>
 
       {/* Global FAQ pill button — visible on all pages */}
-      {!isFaqOpen && (
+      {isLandingPage && !isFaqOpen && (
         <button
           className="faq-pill-btn"
           onClick={openFaq}

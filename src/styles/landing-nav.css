@@ -154,20 +154,20 @@
   flex-direction: column;
   justify-content: center;
   gap: 6px;
-  width: 44px;
-  height: 44px;
+  width: 48px;
+  height: 48px;
   background: none;
   border: none;
   cursor: pointer;
-  padding: 4px;
+  padding: 6px;
   order: -1; /* Always first on the left */
   z-index: 110;
 }
 
 .landing-nav__hamburger-line {
   display: block;
-  width: 26px;
-  height: 2.5px;
+  width: 28px;
+  height: 3px;
   background: #FFFFFF;
   transition: all 0.3s ease;
   transform-origin: center;
@@ -271,7 +271,8 @@
   letter-spacing: 0.06em;
   color: rgba(255, 255, 255, 0.96);
   text-decoration: none;
-  padding: 15px 16px;
+  min-height: 56px;
+  padding: 17px 18px;
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 16px;
   background: rgba(255, 255, 255, 0.045);
@@ -367,7 +368,9 @@
   background: none;
   border: none;
   cursor: pointer;
-  padding: 10px;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 9px;
   overflow: visible;
 }
 

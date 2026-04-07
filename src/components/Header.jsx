@@ -38,7 +38,7 @@ const Header = ({ onSearchChange, searchQuery, onOpenFaq }) => {
           <div className="flex-1 flex items-center">
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="p-2 text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
+              className="inline-flex min-h-12 min-w-12 items-center justify-center rounded-full p-2 text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
               aria-label="Menu"
             >
               <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -71,13 +71,24 @@ const Header = ({ onSearchChange, searchQuery, onOpenFaq }) => {
 
           {/* Right: Cart + SEND A BLOOM */}
           <div className="flex-1 flex justify-end items-center space-x-4 sm:space-x-6 ml-4">
+            <Link
+              to="/"
+              className="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-white/85 transition-colors hover:bg-white/10 hover:text-white"
+              aria-label={t('nav_home')}
+            >
+              <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M3 10.5L12 3l9 7.5" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M5.25 9.75V21h13.5V9.75" />
+              </svg>
+              {t('nav_home')}
+            </Link>
             <button
               onClick={toggleCart}
-              className="relative p-2 group"
+              className="relative inline-flex min-h-11 min-w-11 items-center justify-center rounded-full border border-white/10 bg-white/5 p-2.5 group transition-colors hover:bg-white/10"
               aria-label="Shopping cart"
             >
               <svg
-                className="h-5 w-5 text-[var(--text-secondary)] group-hover:text-[var(--text-primary)] transition-all"
+                className="h-[26px] w-[26px] text-[var(--text-secondary)] group-hover:text-[var(--text-primary)] transition-all"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -85,7 +96,7 @@ const Header = ({ onSearchChange, searchQuery, onOpenFaq }) => {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
               </svg>
               {cartCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-[var(--accent-gold)] text-[var(--bg-page)] text-[9px] font-bold rounded-full h-4 w-4 flex items-center justify-center shadow-sm">
+                <span className="absolute -top-1 -right-1 bg-[var(--accent-gold)] text-[var(--bg-page)] text-[11px] font-bold rounded-full h-[18px] w-[18px] flex items-center justify-center shadow-sm">
                   {cartCount}
                 </span>
               )}
@@ -105,7 +116,7 @@ const Header = ({ onSearchChange, searchQuery, onOpenFaq }) => {
         <div className="fixed inset-0 z-50">
           {/* Backdrop */}
           <div 
-            className="absolute inset-0 bg-black/20 backdrop-blur-sm"
+            className="absolute inset-0 bg-black/60 backdrop-blur-md"
             onClick={() => setIsMobileMenuOpen(false)}
           />
           
@@ -141,37 +152,37 @@ const Header = ({ onSearchChange, searchQuery, onOpenFaq }) => {
             </div>
 
             {/* Navigation Links */}
-            <nav className="flex-1 px-6 overflow-y-auto">
+            <nav className="flex-1 px-6 py-4 overflow-y-auto space-y-2">
               <Link
                 to="/"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="block text-lg transition-colors py-5 border-b border-white/10 text-white"
+                className="block rounded-2xl bg-white/8 px-4 py-5 text-lg text-white transition-colors"
               >
                 {t('nav_home')}
               </Link>
               <Link
                 to="/shop"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="block text-lg transition-colors py-5 border-b border-white/10 text-[var(--accent-gold)]"
+                className="block rounded-2xl bg-[rgba(212,175,55,0.12)] px-4 py-5 text-lg text-[var(--accent-gold)] transition-colors"
               >
                 {t('nav_occasions')}
               </Link>
               <Link
                 to="/shop"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="block text-lg transition-colors py-5 border-b border-white/10 text-white"
+                className="block rounded-2xl bg-white/8 px-4 py-5 text-lg text-white transition-colors"
               >
                 {t('nav_shop')}
               </Link>
               <Link
                 to="/credits"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="block text-lg transition-colors py-5 border-b border-white/10 text-white"
+                className="block rounded-2xl bg-white/8 px-4 py-5 text-lg text-white transition-colors"
               >
                 {t('nav_credits')}
               </Link>
               {/* Language Selector */}
-              <div className="py-5 border-b border-white/10">
+              <div className="rounded-2xl bg-white/6 px-4 py-5">
                 <div className="text-xs font-bold uppercase tracking-widest text-white/50 mb-3">{t('header_select_language')}</div>
                 <div className="flex flex-wrap gap-2">
                   {AVAILABLE_LANGUAGES.map(l => (
@@ -191,7 +202,7 @@ const Header = ({ onSearchChange, searchQuery, onOpenFaq }) => {
               </div>
               <button
                 onClick={() => { setIsMobileMenuOpen(false); toggleCart(); }}
-                className="w-full flex items-center justify-between text-lg transition-colors py-5 border-b border-white/10 text-white"
+                className="w-full rounded-2xl bg-white/8 px-4 py-5 flex items-center justify-between text-lg text-white transition-colors"
               >
                 <span>{t('nav_cart')}</span>
                 {cartCount > 0 && (
@@ -203,7 +214,7 @@ const Header = ({ onSearchChange, searchQuery, onOpenFaq }) => {
               {onOpenFaq && (
                 <button
                   onClick={() => { setIsMobileMenuOpen(false); onOpenFaq(); }}
-                  className="w-full flex items-center justify-between text-lg transition-colors py-5 border-b border-white/10 text-white"
+                  className="w-full rounded-2xl bg-white/8 px-4 py-5 flex items-center justify-between text-lg text-white transition-colors"
                 >
                   <span>{t('nav_faq') || 'FAQ'}</span>
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.6 }}>

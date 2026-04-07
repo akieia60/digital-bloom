@@ -5,6 +5,7 @@ import { execFile } from 'child_process';
 import { promisify } from 'util';
 import { createClient } from '@supabase/supabase-js';
 import { createCanvas } from 'canvas';
+import { normalizePublicBaseUrl } from './publicBaseUrl.js';
 
 const execFileAsync = promisify(execFile);
 
@@ -168,7 +169,9 @@ function resolveMediaPath(source) {
       return { type: 'local', value: localPath };
     }
 
-    const baseUrl = process.env.APP_BASE_URL || process.env.VITE_APP_URL || process.env.VITE_API_URL;
+    const baseUrl = normalizePublicBaseUrl(
+      process.env.APP_BASE_URL || process.env.VITE_APP_URL || process.env.VITE_API_URL
+    );
     if (baseUrl) {
       return { type: 'remote', value: new URL(value, baseUrl).toString() };
     }
