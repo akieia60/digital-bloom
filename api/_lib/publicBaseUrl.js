@@ -1,4 +1,4 @@
-const FALLBACK_PUBLIC_BASE_URL = 'https://www.digitalbloom.store';
+const FALLBACK_PUBLIC_BASE_URL = 'https://digitalbloom.store';
 
 function normalizeHostname(hostname = '') {
   const value = String(hostname || '').toLowerCase();
@@ -7,9 +7,9 @@ function normalizeHostname(hostname = '') {
     value === 'www.digitalbloom.com' ||
     value === 'digitabloom.com' ||
     value === 'www.digitabloom.com' ||
-    value === 'digitalbloom.store'
+    value === 'www.digitalbloom.store'
   ) {
-    return 'www.digitalbloom.store';
+    return 'digitalbloom.store';
   }
   return value;
 }

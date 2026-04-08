@@ -2,10 +2,10 @@
  * Shared CORS utility for Digital Bloom API endpoints.
  *
  * Allowed origins:
- *   - https://digitabloom.com        (production)
- *   - https://www.digitabloom.com    (production www)
- *   - https://digitalbloom.store     (production alternate)
- *   - https://www.digitalbloom.store (production alternate www)
+ *   - https://digitalbloom.store     (production)
+ *   - https://www.digitalbloom.store (production www)
+ *   - https://digitabloom.com        (legacy alternate)
+ *   - https://www.digitabloom.com    (legacy alternate www)
  *   - https://*.vercel.app           (Vercel preview deployments)
  *   - APP_BASE_URL env var           (any custom deployment URL)
  *   - http://localhost:*             (local development)
@@ -20,10 +20,10 @@ const DEPLOYMENT_ORIGINS = [
 ].filter(Boolean);
 
 const ALLOWED_ORIGINS = [
-  'https://digitabloom.com',
-  'https://www.digitabloom.com',
   'https://digitalbloom.store',
   'https://www.digitalbloom.store',
+  'https://digitabloom.com',
+  'https://www.digitabloom.com',
   ...DEPLOYMENT_ORIGINS,
 ];
 
