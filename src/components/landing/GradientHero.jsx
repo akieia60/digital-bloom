@@ -1,5 +1,4 @@
 import { useEffect, useState, useMemo, useRef } from 'react';
-import { Link } from 'react-router-dom';
 import { useLanguage } from '../../contexts/LanguageContext';
 import '../../styles/gradient-hero.css';
 
@@ -117,12 +116,6 @@ export default function GradientHero() {
               {t('hero_new_from')} <strong>$1.99</strong> · {t('hero_from_suffix')}
             </p>
 
-            <div className="gradient-hero__cta-wrap">
-              <Link to="/shop" className="gradient-hero__btn gradient-hero__btn--sm">
-                <span className="gradient-hero__btn-text">{t('hero_new_primary_cta')}</span>
-                <span className="gradient-hero__btn-shimmer" />
-              </Link>
-            </div>
           </div>
 
           <div className="gradient-hero__media-column">

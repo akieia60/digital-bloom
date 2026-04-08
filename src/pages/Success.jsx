@@ -131,6 +131,11 @@ const Success = () => {
     return labelKey ? t(labelKey) : status;
   };
 
+  useEffect(() => {
+    if (typeof window === 'undefined' || !creditPurchase?.code) return;
+    window.localStorage.setItem('dbloom_credit_code', creditPurchase.code);
+  }, [creditPurchase?.code]);
+
   if (isProcessing) {
     return (
       <div className="success-page">
@@ -206,13 +211,27 @@ const Success = () => {
             </div>
             <div className="success-row success-row-last">
               <span className="success-row-label">{t('success_credit_ready')}</span>
-              <Link to={`/credits/balance?code=${encodeURIComponent(creditPurchase.code)}`} className="success-row-value success-row-gold">
-                {t('success_credit_check_balance')}
+              <Link to="/checkout" className="success-row-value success-row-gold">
+                {t('success_credit_go_checkout')}
               </Link>
             </div>
             <p className="success-card-text" style={{ marginTop: '12px' }}>
               {t('success_credit_note')}
             </p>
+            <p className="success-card-text success-card-text--tight success-card-text--muted">
+              {t('success_credit_saved_device')}
+            </p>
+            <div className="success-card-actions">
+              <Link to="/shop" className="success-btn-gold">
+                {t('success_credit_browse_blooms')}
+              </Link>
+              <Link
+                to={`/credits/balance?code=${encodeURIComponent(creditPurchase.code)}`}
+                className="success-btn-outline"
+              >
+                {t('success_credit_check_balance')}
+              </Link>
+            </div>
           </div>
         )}
 
@@ -290,28 +309,30 @@ const Success = () => {
           </div>
         )}
 
-        <div className="success-card">
-          <h3 className="success-card-label">{t('success_share_title')}</h3>
-          <div className="success-share-row">
-            <button type="button" onClick={copyLink} className="success-share-btn">
-              {copied ? t('success_copied') : t('success_copy_link')}
-            </button>
-            <button
-              type="button"
-              onClick={() => window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`, '_blank', 'width=600,height=400')}
-              className="success-share-btn"
-            >
-              Facebook
-            </button>
-            <button
-              type="button"
-              onClick={() => window.open(`https://twitter.com/intent/tweet?text=${shareText}&url=${encodeURIComponent(shareUrl)}`, '_blank', 'width=600,height=400')}
-              className="success-share-btn"
-            >
-              X
-            </button>
+        {!isCreditPurchase && (
+          <div className="success-card">
+            <h3 className="success-card-label">{t('success_share_title')}</h3>
+            <div className="success-share-row">
+              <button type="button" onClick={copyLink} className="success-share-btn">
+                {copied ? t('success_copied') : t('success_copy_link')}
+              </button>
+              <button
+                type="button"
+                onClick={() => window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`, '_blank', 'width=600,height=400')}
+                className="success-share-btn"
+              >
+                Facebook
+              </button>
+              <button
+                type="button"
+                onClick={() => window.open(`https://twitter.com/intent/tweet?text=${shareText}&url=${encodeURIComponent(shareUrl)}`, '_blank', 'width=600,height=400')}
+                className="success-share-btn"
+              >
+                X
+              </button>
+            </div>
           </div>
-        </div>
+        )}
 
         <div className="success-actions">
           <Link to="/" className="success-btn-primary">{t('success_return_homepage')}</Link>

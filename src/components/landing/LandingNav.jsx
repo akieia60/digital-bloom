@@ -66,6 +66,14 @@ export default function LandingNav({ onOpenFaq }) {
 
         {/* Right side: Language Switcher + Cart */}
         <div className="landing-nav__right">
+          <Link
+            to="/shop"
+            className="landing-nav__send-btn"
+            aria-label={t('hero_new_primary_cta')}
+          >
+            {t('hero_new_primary_cta')}
+          </Link>
+
           {/* Language Switcher — always visible */}
           <div className="lang-switcher" ref={langRef}>
             <button
