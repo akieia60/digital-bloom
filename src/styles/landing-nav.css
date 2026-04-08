@@ -350,6 +350,17 @@
   .landing-nav__inner {
     justify-content: space-between;
   }
+
+  .landing-nav__right {
+    gap: 6px;
+  }
+
+  .landing-nav__send-btn {
+    min-height: 34px;
+    padding: 5px 10px;
+    font-size: 0.68rem;
+    letter-spacing: 0.04em;
+  }
 }
 
 /* ============================================
@@ -361,6 +372,33 @@
   gap: 8px;
   margin-left: auto;
   padding-right: 4px;
+}
+
+.landing-nav__send-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 36px;
+  padding: 6px 12px;
+  border-radius: 20px;
+  border: 1px solid rgba(212, 175, 55, 0.28);
+  background: rgba(212, 175, 55, 0.12);
+  color: #f5e7c8;
+  text-decoration: none;
+  font-family: -apple-system, BlinkMacSystemFont, 'Outfit', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.landing-nav__send-btn:hover,
+.landing-nav__send-btn:focus-visible {
+  background: rgba(212, 175, 55, 0.18);
+  border-color: rgba(212, 175, 55, 0.42);
+  color: #fff4d8;
+  outline: none;
 }
 
 .landing-nav__cart-btn {
