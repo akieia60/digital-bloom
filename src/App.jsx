@@ -14,6 +14,7 @@ const CategoryPage = lazy(() => import('./pages/CategoryPage'));
 const ProductDetails = lazy(() => import('./components/ProductDetails'));
 const ExperienceCredits = lazy(() => import('./pages/ExperienceCredits'));
 const CreditBalance = lazy(() => import('./pages/CreditBalance'));
+const Checkout = lazy(() => import('./pages/Checkout'));
 const Success = lazy(() => import('./pages/Success'));
 const Admin = lazy(() => import('./pages/Admin'));
 const PromptBrowser = lazy(() => import('./components/PromptBrowser'));
@@ -108,8 +109,9 @@ function AppContent({ searchQuery, setSearchQuery }) {
           <Route path="/balance" element={<CreditBalance />} />
           <Route path="/about" element={<ComingSoon />} />
           <Route path="/contact" element={<ComingSoon />} />
-          <Route path="/checkout" element={<ComingSoon />} />
+          <Route path="/checkout" element={<Checkout />} />
           <Route path="/bloom/:id" element={<BloomDelivery />} />
+          <Route path="/gift/:id" element={<BloomDelivery />} />
           <Route path="*" element={<ComingSoon />} />
         </Routes>
       </Suspense>
@@ -117,7 +119,7 @@ function AppContent({ searchQuery, setSearchQuery }) {
         <ShoppingCart />
       </Suspense>
 
-      {/* Global FAQ pill button — visible on all pages */}
+      {/* Landing FAQ pill button */}
       {isLandingPage && !isFaqOpen && (
         <button
           className="faq-pill-btn"

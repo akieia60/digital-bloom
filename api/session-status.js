@@ -14,6 +14,44 @@ export default async function handler(req, res) {
   }
 
   try {
+    const bloomSlug = String(req.query.bloom_slug || '').trim();
+    if (bloomSlug) {
+      const { data: purchase, error: bloomError } = await supabase
+        .from('purchases')
+        .select('*, products(*)')
+        .eq('bloom_slug', bloomSlug)
+        .maybeSingle();
+
+      if (bloomError) throw bloomError;
+
+      if (!purchase) {
+        return res.status(404).json({ error: 'This bloom could not be found' });
+      }
+
+      return res.status(200).json({
+        ok: true,
+        kind: 'bloom',
+        purchase: {
+          id: purchase.id,
+          bloom_slug: purchase.bloom_slug,
+          product_id: purchase.product_id,
+          total_price: purchase.total_price,
+          status: purchase.status,
+          created_at: purchase.created_at,
+          composition_manifest: purchase.composition_manifest || {},
+        },
+        product: purchase.products
+          ? {
+              id: purchase.products.id,
+              name: purchase.products.name,
+              category: purchase.products.category,
+              video_file_url: purchase.products.video_file_url || purchase.products.video_url,
+              image_url: purchase.products.image_url,
+            }
+          : null,
+      });
+    }
+
     const sessionId = req.query.session_id;
     if (!sessionId) {
       return res.status(400).json({ error: 'session_id is required' });

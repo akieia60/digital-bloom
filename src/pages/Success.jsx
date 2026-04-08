@@ -96,6 +96,7 @@ const Success = () => {
     () => purchases.filter((purchase) => purchase.download_url && purchase.download_expires_at && new Date(purchase.download_expires_at) > new Date()),
     [purchases]
   );
+  const primaryGiftPath = bloomPurchases[0]?.bloom_slug ? `/gift/${bloomPurchases[0].bloom_slug}` : '/shop';
   const processingPurchases = useMemo(
     () => purchases.filter((purchase) => ['pending', 'processing', 'paid'].includes(String(purchase.status || '').toLowerCase())),
     [purchases]
@@ -103,7 +104,7 @@ const Success = () => {
   const hasPendingWork = readyDownloads.length === 0 && (processingPurchases.length > 0 || checkout?.checkout_status !== 'completed');
 
   const copyLink = async () => {
-    const shareUrl = `${window.location.origin}/shop`;
+    const shareUrl = `${window.location.origin}${primaryGiftPath}`;
     try {
       await navigator.clipboard.writeText(shareUrl);
       setCopied(true);
@@ -122,8 +123,8 @@ const Success = () => {
     }
   };
 
-  const shareUrl = `${window.location.origin}/shop`;
-  const shareText = encodeURIComponent('I just sent a luxury digital bloom ✨ Check it out! #DigitalBloom');
+  const shareUrl = `${window.location.origin}${primaryGiftPath}`;
+  const shareText = encodeURIComponent('A Digital Bloom gift is waiting for you ✨');
   const getPurchaseStatusLabel = (status) => {
     const normalized = String(status || '').toLowerCase();
     const labelKey = PURCHASE_STATUS_LABELS[normalized];
@@ -266,7 +267,7 @@ const Success = () => {
                   )}
                   {purchase.bloom_slug && (
                     <p className="success-note" style={{ marginTop: '10px' }}>
-                      {t('success_view_link')} <Link to={`/bloom/${purchase.bloom_slug}`}>{t('success_open_bloom')}</Link>
+                      {t('success_view_link')} <Link to={`/gift/${purchase.bloom_slug}`}>{t('success_open_bloom')}</Link>
                     </p>
                   )}
                 </div>
@@ -281,7 +282,7 @@ const Success = () => {
             {bloomPurchases.map((purchase) => (
               <div key={purchase.id} className="success-row">
                 <span className="success-row-label">{purchase.products?.name || t('success_bloom')}</span>
-                <Link to={`/bloom/${purchase.bloom_slug}`} className="success-row-value success-row-gold">
+                <Link to={`/gift/${purchase.bloom_slug}`} className="success-row-value success-row-gold">
                   {t('success_view_bloom')}
                 </Link>
               </div>
