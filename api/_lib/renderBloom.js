@@ -418,12 +418,21 @@ async function createOverlayImage(destination, {
 
   if (senderName) {
     const label = `${labels.from} ${senderName}`;
-    ctx.font = getCanvasFont(fontChoice, height * 0.026, 700, false);
-    const textWidth = ctx.measureText(label).width;
+    const maxBoxWidth = width * 0.34;
+    let senderFontSize = height * 0.024;
+    ctx.font = getCanvasFont(fontChoice, senderFontSize, 700, false);
+    let textWidth = ctx.measureText(label).width;
+
+    while ((textWidth + 24) > maxBoxWidth && senderFontSize > (height * 0.017)) {
+      senderFontSize -= 1.5;
+      ctx.font = getCanvasFont(fontChoice, senderFontSize, 700, false);
+      textWidth = ctx.measureText(label).width;
+    }
+
     const boxW = textWidth + 24;
     const boxH = 42;
-    const boxX = width - boxW - (width * 0.06);
-    const boxY = height * 0.775;
+    const boxX = width - boxW - (width * 0.085);
+    const boxY = height * 0.758;
     roundRect(ctx, boxX, boxY, boxW, boxH, 18);
     ctx.fillStyle = rgba(accentColor, 0.10);
     ctx.fill();
@@ -431,14 +440,32 @@ async function createOverlayImage(destination, {
     ctx.fillText(label, boxX + 12, boxY + 27);
   }
 
-  ctx.fillStyle = rgba(accentColor, 0.94);
-  ctx.font = `italic 700 ${Math.round(height * 0.022)}px Georgia`;
-  ctx.fillText('Digital Bloom', width * 0.075, height * 0.91);
+  const stampText = 'Digital Bloom™';
+  ctx.font = `italic 700 ${Math.round(height * 0.023)}px Georgia`;
+  const stampWidth = ctx.measureText(stampText).width;
+  const stampBoxX = width * 0.055;
+  const stampBoxY = height * 0.872;
+  const stampBoxW = stampWidth + 26;
+  const stampBoxH = height * 0.05;
 
-  const tmText = 'TM';
-  ctx.font = getCanvasFont('arialBold', height * 0.014, 800, false);
-  ctx.fillStyle = 'rgba(255,255,255,0.62)';
-  ctx.fillText(tmText, width * 0.235, height * 0.907);
+  roundRect(ctx, stampBoxX, stampBoxY, stampBoxW, stampBoxH, 18);
+  ctx.fillStyle = rgba(primaryColor, 0.40);
+  ctx.fill();
+  ctx.strokeStyle = rgba(accentColor, 0.32);
+  ctx.lineWidth = 1;
+  ctx.stroke();
+
+  ctx.fillStyle = rgba(accentColor, 0.98);
+  ctx.fillText(stampText, stampBoxX + 13, height * 0.905);
+
+  ctx.save();
+  ctx.translate(width * 0.5, height * 0.48);
+  ctx.rotate(-0.12);
+  ctx.font = `italic 700 ${Math.round(height * 0.04)}px Georgia`;
+  ctx.fillStyle = rgba(accentColor, 0.10);
+  ctx.textAlign = 'center';
+  ctx.fillText('Digital Bloom', 0, 0);
+  ctx.restore();
 
   const buffer = canvas.toBuffer('image/png');
   await fs.promises.writeFile(destination, buffer);

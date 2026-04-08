@@ -458,11 +458,12 @@
 }
 
 .composition-protection--sender {
-  width: min(85%, 520px);
-  padding: 0 18px;
+  width: auto;
+  max-width: min(52%, 300px);
+  padding: 0 12px;
   box-sizing: border-box;
   font-family: 'Outfit', sans-serif;
-  font-size: clamp(0.78rem, 2.2vw, 1rem);
+  font-size: clamp(0.72rem, 2vw, 0.94rem);
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -773,7 +774,9 @@
 }
 
 .composition-protection--sender {
-  font-size: clamp(0.8rem, 2.3vw, 1rem);
+  max-width: min(50%, 260px);
+  padding-inline: 10px 6px;
+  font-size: clamp(0.72rem, 2vw, 0.92rem);
 }
 
 .composition-protection--brand,
