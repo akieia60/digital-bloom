@@ -162,6 +162,17 @@
   margin-bottom: 0;
 }
 
+.success-card-text--muted {
+  color: rgba(255, 255, 255, 0.48);
+}
+
+.success-card-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 20px;
+}
+
 /* Rows */
 .success-row {
   display: flex;
