@@ -38,7 +38,7 @@ export async function resolveBloomDelivery(bloomSlug) {
 
   try {
     const apiUrl = getApiBase();
-    const response = await fetch(`${apiUrl}/api/bloom-delivery?slug=${encodeURIComponent(bloomSlug)}`);
+    const response = await fetch(`${apiUrl}/api/session-status?bloom_slug=${encodeURIComponent(bloomSlug)}`);
 
     if (response.status === 404) {
       return { status: DELIVERY_STATUS.NOT_FOUND, delivery: null, composition: null, error: 'This bloom could not be found' };
