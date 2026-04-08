@@ -4,6 +4,8 @@
  * Allowed origins:
  *   - https://digitabloom.com        (production)
  *   - https://www.digitabloom.com    (production www)
+ *   - https://digitalbloom.store     (production alternate)
+ *   - https://www.digitalbloom.store (production alternate www)
  *   - https://*.vercel.app           (Vercel preview deployments)
  *   - APP_BASE_URL env var           (any custom deployment URL)
  *   - http://localhost:*             (local development)
@@ -20,6 +22,8 @@ const DEPLOYMENT_ORIGINS = [
 const ALLOWED_ORIGINS = [
   'https://digitabloom.com',
   'https://www.digitabloom.com',
+  'https://digitalbloom.store',
+  'https://www.digitalbloom.store',
   ...DEPLOYMENT_ORIGINS,
 ];
 

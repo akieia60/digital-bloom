@@ -2,7 +2,7 @@ import { applyCors } from './_lib/cors.js';
 import { createCheckoutSessionResult } from './_lib/checkoutSession.js';
 
 function buildRedirectUrl(baseUrl, errorMessage) {
-  const fallback = 'https://digitabloom.com/shop';
+  const fallback = 'https://www.digitalbloom.store/shop';
 
   try {
     const url = new URL(baseUrl || fallback, fallback);
@@ -102,7 +102,7 @@ export default async function handler(req, res) {
     console.error('Error creating checkout session:', error);
 
     if (wantsRedirect) {
-      const cancelUrl = payload?.cancelUrl || 'https://digitabloom.com/shop';
+      const cancelUrl = payload?.cancelUrl || 'https://www.digitalbloom.store/shop';
       return res.redirect(303, buildRedirectUrl(cancelUrl, error.message || 'Unable to start checkout'));
     }
 

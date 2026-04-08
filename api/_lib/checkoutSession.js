@@ -39,7 +39,7 @@ function buildLineItems(cartItems) {
     const priceInCents = Math.round((Number(product.price) || 1.99) * 100);
     let imageUrl = product.image_url || '';
     if (imageUrl && !imageUrl.startsWith('http')) {
-      imageUrl = `https://digitabloom.com${imageUrl.startsWith('/') ? '' : '/'}${imageUrl}`;
+      imageUrl = `https://www.digitalbloom.store${imageUrl.startsWith('/') ? '' : '/'}${imageUrl}`;
     }
 
     const productData = {
