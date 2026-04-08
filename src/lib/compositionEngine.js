@@ -161,13 +161,13 @@ const TEXT_POSITIONS = {
     maxWidth: '42%',
   },
   'bottom-left-safe': {
-    bottom: '22%',
+    bottom: '26%',
     left: '6%',
     textAlign: 'left',
     maxWidth: '62%',
   },
   'bottom-left-tight': {
-    bottom: '19%',
+    bottom: '23%',
     left: '6%',
     textAlign: 'left',
     maxWidth: '58%',
