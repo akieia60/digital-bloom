@@ -11,8 +11,8 @@
  * - Returns everything the BloomDelivery page needs to render
  */
 
-import { supabase } from './supabase';
 import { getCompositionLayers } from './compositionEngine';
+import { getApiBase } from './apiBase';
 
 /**
  * Status constants for delivery states.
@@ -37,14 +37,22 @@ export async function resolveBloomDelivery(bloomSlug) {
   }
 
   try {
-    // Fetch purchase + product data by bloom slug
-    const { data: purchase, error: fetchError } = await supabase
-      .from('purchases')
-      .select('*, products(*)')
-      .eq('bloom_slug', bloomSlug)
-      .single();
+    const apiUrl = getApiBase();
+    const response = await fetch(`${apiUrl}/api/bloom-delivery?slug=${encodeURIComponent(bloomSlug)}`);
 
-    if (fetchError || !purchase) {
+    if (response.status === 404) {
+      return { status: DELIVERY_STATUS.NOT_FOUND, delivery: null, composition: null, error: 'This bloom could not be found' };
+    }
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch bloom delivery');
+    }
+
+    const data = await response.json();
+    const purchase = data?.purchase;
+    const product = data?.product || {};
+
+    if (!purchase) {
       return { status: DELIVERY_STATUS.NOT_FOUND, delivery: null, composition: null, error: 'This bloom could not be found' };
     }
 
@@ -66,7 +74,6 @@ export async function resolveBloomDelivery(bloomSlug) {
     // Extract composition manifest from purchase
     const manifest = purchase.composition_manifest || {};
     const customization = manifest.customization || {};
-    const product = purchase.products || {};
 
     // Rebuild composition layers from stored data
     const composition = getCompositionLayers({

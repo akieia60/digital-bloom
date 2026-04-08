@@ -3,8 +3,6 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useLanguage } from '../contexts/LanguageContext';
 import CartItem from './CartItem';
-import { createCartCheckoutSession, redirectToCheckout, startCartCheckoutRedirect } from '../lib/stripe';
-import { getCreditBalance, validateCreditCode, reserveCredit } from '../lib/creditStripe';
 import '../styles/credits.css';
 
 const ShoppingCart = () => {
@@ -12,18 +10,9 @@ const ShoppingCart = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { cartItems, isCartOpen, toggleCart, getCartTotal, clearCart, setIsCartOpen } = useCart();
-  const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState(null);
-  const [creditCode, setCreditCode] = useState('');
-  const [creditApplied, setCreditApplied] = useState(null);
-  const [isApplyingCredit, setIsApplyingCredit] = useState(false);
-  const [isCreditOpen, setIsCreditOpen] = useState(false);
-  const [knownCredit, setKnownCredit] = useState(null);
-  const [isCheckingKnownCredit, setIsCheckingKnownCredit] = useState(false);
   const total = getCartTotal();
   const totalCents = Math.round(total * 100);
-  const remainingDue = creditApplied ? Math.max(0, totalCents - creditApplied.applied_cents) : totalCents;
-  const appliedAmountCents = creditApplied?.applied_cents || 0;
   const formatCurrency = (cents) => `$${(cents / 100).toFixed(2)}`;
 
   useEffect(() => {
@@ -43,157 +32,6 @@ const ShoppingCart = () => {
     const nextSearch = params.toString();
     navigate(`${location.pathname}${nextSearch ? `?${nextSearch}` : ''}`, { replace: true });
   }, [location.pathname, location.search, navigate, setIsCartOpen]);
-
-  useEffect(() => {
-    if (!isCartOpen || creditApplied || typeof window === 'undefined') return;
-
-    const savedCode = window.localStorage.getItem('dbloom_credit_code');
-    if (!savedCode) {
-      setKnownCredit(null);
-      return;
-    }
-
-    let isCancelled = false;
-    setIsCheckingKnownCredit(true);
-
-    getCreditBalance(savedCode)
-      .then((balance) => {
-        if (isCancelled) return;
-
-        if (balance?.remaining_amount_cents > 0) {
-          setKnownCredit({
-            code: savedCode,
-            remaining_amount_cents: balance.remaining_amount_cents,
-          });
-        } else {
-          setKnownCredit(null);
-          window.localStorage.removeItem('dbloom_credit_code');
-        }
-      })
-      .catch(() => {
-        if (isCancelled) return;
-        setKnownCredit(null);
-        window.localStorage.removeItem('dbloom_credit_code');
-      })
-      .finally(() => {
-        if (!isCancelled) {
-          setIsCheckingKnownCredit(false);
-        }
-      });
-
-    return () => {
-      isCancelled = true;
-    };
-  }, [creditApplied, isCartOpen]);
-
-  const reserveAndApplyCredit = async (formattedCode, { skipValidation = false } = {}) => {
-    if (!skipValidation) {
-      const validation = await validateCreditCode(formattedCode);
-      if (!validation.valid) {
-        throw new Error(validation.error || 'Invalid credit code');
-      }
-    }
-
-    const reservation = await reserveCredit(formattedCode, totalCents);
-
-    setCreditApplied({
-      code: formattedCode,
-      reservation_id: reservation.reservation_id,
-      applied_cents: reservation.applied_cents,
-      remaining_after_cents: reservation.remaining_after_cents,
-    });
-    setKnownCredit({
-      code: formattedCode,
-      remaining_amount_cents: reservation.remaining_after_cents,
-    });
-    setIsCreditOpen(false);
-
-    if (typeof window !== 'undefined') {
-      window.localStorage.setItem('dbloom_credit_code', formattedCode);
-    }
-  };
-
-  const handleApplyCredit = async () => {
-    setError(null);
-
-    const formatted = creditCode.toUpperCase().trim();
-    if (!/^DBLOOM-[A-Z0-9]{4}-[A-Z0-9]{4}$/.test(formatted)) {
-      setError(t('cart_error_credit_format'));
-      return;
-    }
-
-    setIsApplyingCredit(true);
-
-    try {
-      await reserveAndApplyCredit(formatted);
-    } catch (err) {
-      setError(err.message || 'Failed to apply credit');
-    } finally {
-      setIsApplyingCredit(false);
-    }
-  };
-
-  const handleApplyKnownCredit = async () => {
-    if (!knownCredit?.code) return;
-
-    setError(null);
-    setIsApplyingCredit(true);
-
-    try {
-      await reserveAndApplyCredit(knownCredit.code, { skipValidation: true });
-    } catch (err) {
-      setError(err.message || 'Failed to apply credit');
-    } finally {
-      setIsApplyingCredit(false);
-    }
-  };
-
-  const handleCheckout = async () => {
-    setIsProcessing(true);
-    setError(null);
-    const formattedItems = cartItems.map(item => ({
-      product: item,
-      quantity: item.quantity
-    }));
-
-    try {
-      // If credit is applied and covers full amount, skip Stripe
-      if (creditApplied && remainingDue <= 0) {
-        const result = await createCartCheckoutSession(formattedItems, {
-          reservation_id: creditApplied.reservation_id,
-          remaining_due_cents: 0
-        });
-        
-        if (result.free_checkout) {
-          window.location.href = result.url;
-          return;
-        }
-      }
-
-      // Otherwise create Stripe session with credit metadata
-      const result = await createCartCheckoutSession(formattedItems, creditApplied ? {
-        reservation_id: creditApplied.reservation_id,
-        remaining_due_cents: remainingDue
-      } : null);
-      
-      if (!result || !result.url) throw new Error('Failed to create checkout session');
-      await redirectToCheckout(result.url);
-    } catch (err) {
-      console.error('Checkout error:', err);
-      const message = err.message || 'Failed to proceed to checkout. Please try again.';
-      if (typeof window !== 'undefined') {
-        startCartCheckoutRedirect(formattedItems, creditApplied ? {
-          reservation_id: creditApplied.reservation_id,
-          remaining_due_cents: remainingDue
-        } : null);
-        return;
-      }
-
-      setError(message);
-    }
-
-    setIsProcessing(false);
-  };
 
   if (!isCartOpen) return null;
 
@@ -257,135 +95,6 @@ const ShoppingCart = () => {
                 </div>
               ))}
 
-              {!creditApplied && !knownCredit && !isCheckingKnownCredit && (
-                <div className="cart-credits-nudge">
-                  <span>Have Bloom Credits? They apply at checkout.</span>{' '}
-                  <Link to="/credits" onClick={() => setIsCartOpen(false)}>
-                    &rarr;
-                  </Link>
-                </div>
-              )}
-
-              <div className="cart-credits-wallet">
-                {!creditApplied && !knownCredit && !isCheckingKnownCredit && (
-                  <>
-                    <div className="cart-credits-wallet__eyebrow">Bloom Credits</div>
-                    <div className="cart-credits-wallet__heading-row">
-                      <div>
-                        <h3 className="cart-credits-wallet__title">Bloom Credits</h3>
-                        <p className="cart-credits-wallet__copy">Buy credits and use them on any order</p>
-                      </div>
-                      <span className="cart-credits-wallet__icon" aria-hidden="true">💳</span>
-                    </div>
-                    <Link
-                      to="/credits"
-                      onClick={() => setIsCartOpen(false)}
-                      className="cart-credits-wallet__browse"
-                    >
-                      Browse Credits &rarr;
-                    </Link>
-                  </>
-                )}
-
-                {!creditApplied && isCheckingKnownCredit && (
-                  <>
-                    <div className="cart-credits-wallet__eyebrow">Bloom Credits</div>
-                    <div className="cart-credits-wallet__heading-row">
-                      <div>
-                        <h3 className="cart-credits-wallet__title">Bloom Credits</h3>
-                        <p className="cart-credits-wallet__copy">Checking your saved balance...</p>
-                      </div>
-                      <span className="cart-credits-wallet__icon" aria-hidden="true">💳</span>
-                    </div>
-                  </>
-                )}
-
-                {!creditApplied && knownCredit?.remaining_amount_cents > 0 && (
-                  <>
-                    <div className="cart-credits-wallet__eyebrow">Bloom Credits</div>
-                    <div className="cart-credits-wallet__heading-row">
-                      <div>
-                        <h3 className="cart-credits-wallet__title">Bloom Credits</h3>
-                        <p className="cart-credits-wallet__balance">
-                          Available balance: {formatCurrency(knownCredit.remaining_amount_cents)}
-                        </p>
-                      </div>
-                      <span className="cart-credits-wallet__icon" aria-hidden="true">💳</span>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={handleApplyKnownCredit}
-                      disabled={isApplyingCredit}
-                      className="cart-credits-wallet__apply"
-                    >
-                      {isApplyingCredit
-                        ? t('cart_credit_applying')
-                        : `Apply ${formatCurrency(Math.min(knownCredit.remaining_amount_cents, totalCents))} to this order`}
-                    </button>
-                  </>
-                )}
-
-                {creditApplied && (
-                  <div className="cart-credits-wallet__applied">
-                    <div className="cart-credits-wallet__status">
-                      <span className="cart-credits-wallet__status-icon" aria-hidden="true">✓</span>
-                      <div>
-                        <div className="cart-credits-wallet__status-title">
-                          {formatCurrency(creditApplied.applied_cents)} Bloom Credit applied
-                        </div>
-                        <div className="cart-credits-wallet__status-copy">
-                          Remaining balance: {formatCurrency(creditApplied.remaining_after_cents)}
-                        </div>
-                      </div>
-                    </div>
-                    <div className="cart-credits-wallet__status-footer">
-                      <span>New total: {formatCurrency(remainingDue)}</span>
-                      <button
-                        type="button"
-                        className="cart-credits-wallet__remove"
-                        onClick={() => {
-                          setCreditApplied(null);
-                          setCreditCode('');
-                        }}
-                      >
-                        Remove
-                      </button>
-                    </div>
-                  </div>
-                )}
-
-                {!creditApplied && (
-                  <div className="cart-credits-wallet__entry">
-                    <button
-                      type="button"
-                      onClick={() => setIsCreditOpen((open) => !open)}
-                      className="cart-credits-wallet__entry-toggle"
-                    >
-                      {isCreditOpen ? 'Hide credit code' : 'Enter a credit code'}
-                    </button>
-
-                    {isCreditOpen && (
-                      <div className="cart-credits-wallet__entry-panel">
-                        <div className="credit-input-group cart-credit-input-group">
-                          <input
-                            type="text"
-                            placeholder={t('cart_credit_placeholder')}
-                            maxLength="17"
-                            value={creditCode}
-                            onChange={(e) => setCreditCode(e.target.value.toUpperCase())}
-                          />
-                          <button
-                            onClick={handleApplyCredit}
-                            disabled={isApplyingCredit || !creditCode}
-                          >
-                            {isApplyingCredit ? t('cart_credit_applying') : t('cart_credit_apply')}
-                          </button>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
             </div>
 
             {/* Footer */}
@@ -400,13 +109,8 @@ const ShoppingCart = () => {
                 <div>
                   <p className="cart-summary-bar__label">Total</p>
                   <p className="cart-summary-bar__amount">
-                    {formatCurrency(remainingDue)}
+                    {formatCurrency(totalCents)}
                   </p>
-                  {creditApplied && (
-                    <p className="cart-summary-bar__meta">
-                      Original: {formatCurrency(totalCents)} - Credit: {formatCurrency(appliedAmountCents)}
-                    </p>
-                  )}
                 </div>
                 <div className="cart-summary-bar__secure">
                   <span aria-hidden="true">🔒</span>
@@ -416,39 +120,26 @@ const ShoppingCart = () => {
 
               <div className="space-y-4">
                 <button
-                  onClick={handleCheckout}
-                  disabled={isProcessing || cartItems.length === 0}
-                  className="w-full btn-primary py-5 rounded-full text-[11px] font-bold tracking-[0.3em] uppercase transition-all shadow-2xl flex items-center justify-center gap-4"
+                  onClick={() => {
+                    setIsCartOpen(false);
+                    navigate('/checkout');
+                  }}
+                  disabled={cartItems.length === 0}
+                  className="mx-auto flex min-h-[46px] items-center justify-center gap-3 rounded-full border border-[rgba(212,175,55,0.35)] bg-[rgba(212,175,55,0.08)] px-6 text-[10px] font-semibold uppercase tracking-[0.26em] text-[var(--accent-gold)] transition-all hover:bg-[rgba(212,175,55,0.14)]"
                 >
-                  {isProcessing ? (
-                    <>
-                      <div className="w-4 h-4 border-2 border-black/20 border-t-black rounded-full animate-spin"></div>
-                      <span>{t('cart_initializing')}</span>
-                    </>
-                  ) : (
-                    <>
-                      <span>{`${t('cart_checkout')} · ${formatCurrency(remainingDue)}`}</span>
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                      </svg>
-                    </>
-                  )}
+                  <span>{`${t('cart_checkout')} · ${formatCurrency(totalCents)}`}</span>
+                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                  </svg>
                 </button>
 
-                <div className="cart-footer-actions">
+                <div className="cart-footer-actions cart-footer-actions--minimal">
                   <Link
                     to="/shop"
                     onClick={() => setIsCartOpen(false)}
                     className="cart-footer-actions__continue"
                   >
                     {t('product_continue')}
-                  </Link>
-                  <Link
-                    to="/"
-                    onClick={() => setIsCartOpen(false)}
-                    className="cart-footer-actions__home"
-                  >
-                    {t('nav_home')}
                   </Link>
                   <button
                     onClick={clearCart}
