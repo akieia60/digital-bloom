@@ -172,7 +172,14 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
     setMessage(prev => ({ ...prev, [field]: value }));
   }, []);
 
-  // (applyMessageStarter removed — slogans now use handleMessageChange directly)
+  // Append a slogan preset to the existing message instead of replacing it
+  const appendSlogan = useCallback((slogan) => {
+    setMessage(prev => {
+      const current = prev.short.trim();
+      if (!current) return { ...prev, short: slogan };
+      return { ...prev, short: current + ' ' + slogan };
+    });
+  }, []);
 
   const toggleExtra = useCallback((extraId) => {
     setExtras(prev => ({ ...prev, [extraId]: !prev[extraId] }));
@@ -463,39 +470,62 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
               <span className="customizer-hint">{message.short.length}/150</span>
             </div>
 
-            {/* Category-aware slogan selector */}
+            {/* Category-aware slogan selector — tap/select to ADD to message, not replace */}
             <div className="customizer-slogan-selector">
-              <label className="customizer-label" htmlFor="cust-slogan-select">
-                {OCCASIONS[category || product?.category]
-                  ? `${OCCASIONS[category || product?.category].emoji || '🌸'} Message starters for ${OCCASIONS[category || product?.category].name}`
-                  : 'Message starters'}
-              </label>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '6px' }}>
+                <label className="customizer-label" htmlFor="cust-slogan-select" style={{ margin: 0 }}>
+                  {OCCASIONS[category || product?.category]
+                    ? `${OCCASIONS[category || product?.category].emoji || '🌸'} Add to message`
+                    : 'Add to message'}
+                </label>
+                {message.short.length > 0 && (
+                  <button
+                    type="button"
+                    onClick={() => handleMessageChange('short', '')}
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      color: 'rgba(255,255,255,0.4)',
+                      fontSize: '11px',
+                      cursor: 'pointer',
+                      letterSpacing: '0.05em',
+                      textDecoration: 'underline',
+                      padding: '0',
+                    }}
+                  >
+                    Clear
+                  </button>
+                )}
+              </div>
               <select
                 id="cust-slogan-select"
                 className="customizer-select"
                 value=""
                 onChange={(e) => {
                   if (e.target.value) {
-                    handleMessageChange('short', e.target.value);
+                    appendSlogan(e.target.value);
                     e.target.value = '';
                   }
                 }}
               >
-                <option value="">Choose a message starter…</option>
+                <option value="">Pick a phrase to add…</option>
                 {sloganPresets.map((slogan, i) => (
                   <option key={i} value={slogan}>{slogan}</option>
                 ))}
               </select>
-              {/* Quick-tap chip row — first 3 presets */}
+              <p style={{ fontSize: '11px', color: 'rgba(255,255,255,0.35)', margin: '4px 0 8px', letterSpacing: '0.02em' }}>
+                Each selection adds to your message — mix and match
+              </p>
+              {/* Quick-tap chip row — first 4 presets */}
               <div className="customizer-starters">
-                {sloganPresets.slice(0, 3).map((slogan, i) => (
+                {sloganPresets.slice(0, 4).map((slogan, i) => (
                   <button
                     key={i}
                     type="button"
-                    className={`customizer-starter-chip ${message.short === slogan ? 'customizer-starter-chip--active' : ''}`}
-                    onClick={() => handleMessageChange('short', slogan)}
+                    className={`customizer-starter-chip ${message.short.includes(slogan) ? 'customizer-starter-chip--active' : ''}`}
+                    onClick={() => appendSlogan(slogan)}
                   >
-                    {slogan.length > 40 ? slogan.slice(0, 38) + '…' : slogan}
+                    {slogan.length > 42 ? slogan.slice(0, 40) + '…' : slogan}
                   </button>
                 ))}
               </div>
