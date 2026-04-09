@@ -451,6 +451,9 @@ export const ht = {
   success_credit_check_balance: "Tcheke balans",
   success_credit_note: "Acha Bloom Credit ou a fini. Kounye a chwazi yon bloom epi aplike kredi sa a pandan checkout la.",
   success_credit_saved_device: "Nou sove kòd sa a sou aparèy sa a pou li pare lè ou rive nan checkout la.",
+  success_credit_note_saved_bloom: "Bloom Credit ou a pare, epi Bloom ou te sove a toujou ap tann ou. Retounen nan checkout la pou aplike li.",
+  success_credit_saved_cart: "Nou kite Bloom ou te sove a an plas epi kòd sa a pare sou aparèy sa a pou checkout la.",
+  success_credit_apply_saved_bloom: "Aplike sou Bloom mwen an",
   success_credit_browse_blooms: "Browse blooms",
   success_default_product: "Digital Bloom",
   success_download: "Telechaje eksperyans lan",
@@ -470,6 +473,8 @@ export const ht = {
   success_step_rendering: "🎬 Fichye pèsonalize yo ap rann",
   success_step_files: "📦 Fichye dijital nòmal yo ap prepare",
   success_share_title: "Pataje Digital Bloom",
+  success_send_protected_link: "Voye lyen Bloom ki pwoteje a",
+  success_protected_link_note: "Bloom sa a louvri ak yon lyen pwoteje epi nou pa bay li isit kòm yon fichye brit pou telechaje.",
   success_copy_link: "🔗 Kopye lyen an",
   success_copied: "✓ Kopye!",
   success_return_homepage: "Retounen sou paj dakèy la",
@@ -486,6 +491,9 @@ export const ht = {
   delivery_replay: "Repase",
   delivery_share: "Pataje",
   delivery_copied: "Kopye!",
+  delivery_expired_title: "Lyen Bloom nan ekspire",
+  delivery_expired_message: "Lyen bloom ki pwoteje sa a ekspire. Tanpri kontakte moun ki voye li a pou yon nouvo lyen.",
+  delivery_protection_note: "Lyen Bloom ki pwoteje yo se pou gade sèlman epi yo ekspire otomatikman.",
   delivery_brand_tagline: "Ba yo flè yo pandan yo la toujou",
 
 

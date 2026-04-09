@@ -1,4 +1,30 @@
 {
+  "redirects": [
+    {
+      "source": "/(.*)",
+      "has": [
+        { "type": "host", "value": "digitabloom.com" }
+      ],
+      "destination": "https://digitalbloom.store/$1",
+      "permanent": true
+    },
+    {
+      "source": "/(.*)",
+      "has": [
+        { "type": "host", "value": "www.digitabloom.com" }
+      ],
+      "destination": "https://digitalbloom.store/$1",
+      "permanent": true
+    },
+    {
+      "source": "/(.*)",
+      "has": [
+        { "type": "host", "value": "www.digitalbloom.store" }
+      ],
+      "destination": "https://digitalbloom.store/$1",
+      "permanent": true
+    }
+  ],
   "headers": [
     {
       "source": "/(.*).html",

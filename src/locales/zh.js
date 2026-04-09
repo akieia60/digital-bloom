@@ -451,6 +451,9 @@ export const zh = {
   success_credit_check_balance: "查看余额",
   success_credit_note: "你的 Bloom Credit 购买已经完成。接下来请选择一个 bloom，并在结账时使用这笔信用额度。",
   success_credit_saved_device: "我们已将此代码保存在这台设备上，等你到结账时就能直接使用。",
+  success_credit_note_saved_bloom: "你的 Bloom Credit 已准备好，而你保存的 Bloom 也还在等你。返回结账页即可在那里使用它。",
+  success_credit_saved_cart: "我们保留了你保存的 Bloom，并已把这组信用代码保存在这台设备上，结账时可直接使用。",
+  success_credit_apply_saved_bloom: "应用到我的 Bloom",
   success_credit_browse_blooms: "浏览 blooms",
   success_default_product: "Digital Bloom",
   success_download: "下载体验",
@@ -470,6 +473,8 @@ export const zh = {
   success_step_rendering: "🎬 个性化交付文件正在渲染",
   success_step_files: "📦 标准数字文件正在准备中",
   success_share_title: "分享 Digital Bloom",
+  success_send_protected_link: "发送受保护的 Bloom 链接",
+  success_protected_link_note: "这个 bloom 通过受保护的链接打开，这里不会提供可直接传播的原始下载文件。",
   success_copy_link: "🔗 复制链接",
   success_copied: "✓ 已复制！",
   success_return_homepage: "返回首页",
@@ -486,6 +491,9 @@ export const zh = {
   delivery_replay: "重播",
   delivery_share: "分享",
   delivery_copied: "已复制！",
+  delivery_expired_title: "Bloom 链接已过期",
+  delivery_expired_message: "这个受保护的 bloom 链接已过期。请联系发送者获取新的链接。",
+  delivery_protection_note: "受保护的 bloom 链接仅供查看，并会自动过期。",
   delivery_brand_tagline: "趁他们还在的时候，把花送给他们",
 
 

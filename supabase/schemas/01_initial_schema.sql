@@ -88,6 +88,7 @@ CREATE TABLE IF NOT EXISTS purchases (
 
   -- Download links (for digital products)
   download_url TEXT,
+  download_storage_path TEXT,
   download_expires_at TIMESTAMP WITH TIME ZONE,
   download_count INTEGER DEFAULT 0,
 

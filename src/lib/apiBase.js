@@ -12,6 +12,12 @@ export function getApiBase() {
   try {
     const configuredUrl = new URL(configuredBase, window.location.origin);
     const currentUrl = new URL(window.location.origin);
+    const liveCustomDomains = new Set([
+      'digitabloom.com',
+      'www.digitabloom.com',
+      'digitalbloom.store',
+      'www.digitalbloom.store',
+    ]);
 
     const currentIsEphemeral =
       currentUrl.hostname.includes('vercel.app') ||
@@ -22,6 +28,14 @@ export function getApiBase() {
       !configuredUrl.hostname.includes('vercel.app') &&
       configuredUrl.hostname !== 'localhost' &&
       configuredUrl.hostname !== '127.0.0.1';
+
+    const bothAreLiveCustomDomains =
+      liveCustomDomains.has(currentUrl.hostname) &&
+      liveCustomDomains.has(configuredUrl.hostname);
+
+    if (bothAreLiveCustomDomains) {
+      return '';
+    }
 
     if (currentIsEphemeral && configuredIsCustomDomain && configuredUrl.origin !== currentUrl.origin) {
       return '';

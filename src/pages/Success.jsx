@@ -23,6 +23,7 @@ const Success = () => {
   const [error, setError] = useState(null);
   const [copied, setCopied] = useState(false);
   const [refreshNonce, setRefreshNonce] = useState(0);
+  const [hasSavedCart, setHasSavedCart] = useState(false);
   const sessionId = searchParams.get('session_id');
 
   useEffect(() => {
@@ -60,7 +61,18 @@ const Success = () => {
         setCheckout(data);
         setError(null);
         setIsProcessing(false);
-        localStorage.removeItem('flowerShopCart');
+
+        if (data.kind !== 'credit') {
+          localStorage.removeItem('flowerShopCart');
+          setHasSavedCart(false);
+        } else {
+          try {
+            const savedCart = JSON.parse(localStorage.getItem('flowerShopCart') || '[]');
+            setHasSavedCart(Array.isArray(savedCart) && savedCart.length > 0);
+          } catch {
+            setHasSavedCart(false);
+          }
+        }
 
         if (data.checkout_status !== 'completed' && pollCount < POLL_LIMIT) {
           pollCount += 1;
@@ -124,12 +136,13 @@ const Success = () => {
   };
 
   const shareUrl = `${window.location.origin}${primaryGiftPath}`;
-  const shareText = encodeURIComponent('A Digital Bloom gift is waiting for you ✨');
   const getPurchaseStatusLabel = (status) => {
     const normalized = String(status || '').toLowerCase();
     const labelKey = PURCHASE_STATUS_LABELS[normalized];
     return labelKey ? t(labelKey) : status;
   };
+  const creditNextPath = hasSavedCart ? '/checkout' : '/shop';
+  const creditNextLabel = hasSavedCart ? t('success_credit_apply_saved_bloom') : t('success_credit_browse_blooms');
 
   useEffect(() => {
     if (typeof window === 'undefined' || !creditPurchase?.code) return;
@@ -211,19 +224,19 @@ const Success = () => {
             </div>
             <div className="success-row success-row-last">
               <span className="success-row-label">{t('success_credit_ready')}</span>
-              <Link to="/checkout" className="success-row-value success-row-gold">
-                {t('success_credit_go_checkout')}
+              <Link to={creditNextPath} className="success-row-value success-row-gold">
+                {hasSavedCart ? t('success_credit_go_checkout') : t('success_credit_browse_blooms')}
               </Link>
             </div>
             <p className="success-card-text" style={{ marginTop: '12px' }}>
-              {t('success_credit_note')}
+              {hasSavedCart ? t('success_credit_note_saved_bloom') : t('success_credit_note')}
             </p>
             <p className="success-card-text success-card-text--tight success-card-text--muted">
-              {t('success_credit_saved_device')}
+              {hasSavedCart ? t('success_credit_saved_cart') : t('success_credit_saved_device')}
             </p>
             <div className="success-card-actions">
-              <Link to="/shop" className="success-btn-gold">
-                {t('success_credit_browse_blooms')}
+              <Link to={creditNextPath} className="success-btn-gold">
+                {creditNextLabel}
               </Link>
               <Link
                 to={`/credits/balance?code=${encodeURIComponent(creditPurchase.code)}`}
@@ -274,9 +287,20 @@ const Success = () => {
                     <span className="success-row-value">{getPurchaseStatusLabel(purchase.status)}</span>
                   </div>
                   {isReady ? (
-                    <a href={purchase.download_url} download className="success-btn-gold" style={{ marginTop: '12px' }}>
-                      {t('success_download')}
-                    </a>
+                    purchase.has_customization && purchase.bloom_slug ? (
+                      <div style={{ marginTop: '12px' }}>
+                        <Link to={`/gift/${purchase.bloom_slug}`} className="success-btn-gold">
+                          {t('success_open_bloom')}
+                        </Link>
+                        <p className="success-card-text" style={{ marginTop: '10px' }}>
+                          {t('success_protected_link_note')}
+                        </p>
+                      </div>
+                    ) : (
+                      <a href={purchase.download_url} download className="success-btn-gold" style={{ marginTop: '12px' }}>
+                        {t('success_download')}
+                      </a>
+                    )
                   ) : (
                     <p className="success-card-text" style={{ marginTop: '12px' }}>
                       {purchase.has_customization
@@ -311,26 +335,15 @@ const Success = () => {
 
         {!isCreditPurchase && (
           <div className="success-card">
-            <h3 className="success-card-label">{t('success_share_title')}</h3>
+            <h3 className="success-card-label">{t('success_send_protected_link')}</h3>
             <div className="success-share-row">
               <button type="button" onClick={copyLink} className="success-share-btn">
                 {copied ? t('success_copied') : t('success_copy_link')}
               </button>
-              <button
-                type="button"
-                onClick={() => window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`, '_blank', 'width=600,height=400')}
-                className="success-share-btn"
-              >
-                Facebook
-              </button>
-              <button
-                type="button"
-                onClick={() => window.open(`https://twitter.com/intent/tweet?text=${shareText}&url=${encodeURIComponent(shareUrl)}`, '_blank', 'width=600,height=400')}
-                className="success-share-btn"
-              >
-                X
-              </button>
             </div>
+            <p className="success-card-text" style={{ marginTop: '12px' }}>
+              {t('success_protected_link_note')}
+            </p>
           </div>
         )}
 

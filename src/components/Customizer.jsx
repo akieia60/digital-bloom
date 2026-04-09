@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { buildCartComposition } from '../lib/fulfillmentMapper';
 import { COLOR_PALETTES, COLOR_SWATCHES, ENGRAVING_STYLES, MESSAGE_FONT_OPTIONS, getThemeSpec } from '../lib/compositionEngine';
 import { useLanguage } from '../contexts/LanguageContext';
+import OCCASIONS from '../data/occasions';
 import LivePreview from './LivePreview';
 import '../styles/customizer.css';
 
@@ -32,11 +33,12 @@ const FLOW_STEPS = [
   { id: 5, key: 'review', labelKey: 'customize_step_review', icon: '✓' },
 ];
 
-const MESSAGE_STARTERS = [
-  { id: 'starter-forever', key: 'customize_starter_forever' },
-  { id: 'starter-loved', key: 'customize_starter_loved' },
-  { id: 'starter-thanks', key: 'customize_starter_thanks' },
-  { id: 'starter-moment', key: 'customize_starter_moment' },
+// Generic fallback starters used when no category is provided
+const FALLBACK_STARTERS = [
+  'Sending you love and flowers.',
+  'You deserve to be celebrated.',
+  'Thinking of you always.',
+  'Here are your flowers — while you are here.',
 ];
 
 const ENGRAVING_OPTIONS = Object.keys(ENGRAVING_STYLES).map((id) => ({
@@ -45,9 +47,15 @@ const ENGRAVING_OPTIONS = Object.keys(ENGRAVING_STYLES).map((id) => ({
   descriptionKey: `customize_engraving_${id}_desc`,
 }));
 
-const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editData = null }) => {
+const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editData = null, category = null }) => {
   const { t, lang } = useLanguage();
   const { messagePlaceholder, toPlaceholder, ...stateDefaults } = defaults;
+
+  // Category-aware slogan presets — pull from occasions.js, fall back to generic list
+  const sloganPresets = useMemo(() => {
+    const slug = category || product?.category;
+    return OCCASIONS[slug]?.sloganPresets || FALLBACK_STARTERS;
+  }, [category, product?.category]);
   const scrollPosRef = useRef(0);
 
   // Clean, minimal state
@@ -164,8 +172,13 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
     setMessage(prev => ({ ...prev, [field]: value }));
   }, []);
 
-  const applyMessageStarter = useCallback((starterKey) => {
-    setMessage((prev) => ({ ...prev, short: t(starterKey) }));
+  // Append a slogan preset to the existing message instead of replacing it
+  const appendSlogan = useCallback((slogan) => {
+    setMessage(prev => {
+      const current = prev.short.trim();
+      if (!current) return { ...prev, short: slogan };
+      return { ...prev, short: current + ' ' + slogan };
+    });
   }, []);
 
   const toggleExtra = useCallback((extraId) => {
@@ -457,20 +470,65 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
               <span className="customizer-hint">{message.short.length}/150</span>
             </div>
 
-            <div className="customizer-starters">
-              {MESSAGE_STARTERS.map((starter) => {
-                const starterText = t(starter.key);
-                return (
-                <button
-                  key={starter.id}
-                  type="button"
-                  className={`customizer-starter-chip ${message.short === starterText ? 'customizer-starter-chip--active' : ''}`}
-                  onClick={() => applyMessageStarter(starter.key)}
-                >
-                  {starterText}
-                </button>
-                );
-              })}
+            {/* Category-aware slogan selector — tap/select to ADD to message, not replace */}
+            <div className="customizer-slogan-selector">
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '6px' }}>
+                <label className="customizer-label" htmlFor="cust-slogan-select" style={{ margin: 0 }}>
+                  {OCCASIONS[category || product?.category]
+                    ? `${OCCASIONS[category || product?.category].emoji || '🌸'} Add to message`
+                    : 'Add to message'}
+                </label>
+                {message.short.length > 0 && (
+                  <button
+                    type="button"
+                    onClick={() => handleMessageChange('short', '')}
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      color: 'rgba(255,255,255,0.4)',
+                      fontSize: '11px',
+                      cursor: 'pointer',
+                      letterSpacing: '0.05em',
+                      textDecoration: 'underline',
+                      padding: '0',
+                    }}
+                  >
+                    Clear
+                  </button>
+                )}
+              </div>
+              <select
+                id="cust-slogan-select"
+                className="customizer-select"
+                value=""
+                onChange={(e) => {
+                  if (e.target.value) {
+                    appendSlogan(e.target.value);
+                    e.target.value = '';
+                  }
+                }}
+              >
+                <option value="">Pick a phrase to add…</option>
+                {sloganPresets.map((slogan, i) => (
+                  <option key={i} value={slogan}>{slogan}</option>
+                ))}
+              </select>
+              <p style={{ fontSize: '11px', color: 'rgba(255,255,255,0.35)', margin: '4px 0 8px', letterSpacing: '0.02em' }}>
+                Each selection adds to your message — mix and match
+              </p>
+              {/* Quick-tap chip row — first 4 presets */}
+              <div className="customizer-starters">
+                {sloganPresets.slice(0, 4).map((slogan, i) => (
+                  <button
+                    key={i}
+                    type="button"
+                    className={`customizer-starter-chip ${message.short.includes(slogan) ? 'customizer-starter-chip--active' : ''}`}
+                    onClick={() => appendSlogan(slogan)}
+                  >
+                    {slogan.length > 42 ? slogan.slice(0, 40) + '…' : slogan}
+                  </button>
+                ))}
+              </div>
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>

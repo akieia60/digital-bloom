@@ -48,6 +48,14 @@
   height: 100%;
 }
 
+.bloom-delivery__rendered-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  background: #000;
+}
+
 /* ── Message Reveal ── */
 .bloom-delivery__message {
   margin-top: 28px;
@@ -103,6 +111,16 @@
   padding: 20px 24px 10px;
   width: 100%;
   max-width: 460px;
+}
+
+.bloom-delivery__protection-note {
+  width: min(100%, 460px);
+  padding: 0 24px 12px;
+  margin: 0;
+  text-align: center;
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  color: rgba(255, 255, 255, 0.42);
 }
 
 .bloom-delivery__control-btn {

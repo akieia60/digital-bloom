@@ -451,6 +451,9 @@ export const en = {
   success_credit_check_balance: "Check Balance",
   success_credit_note: "Your Bloom Credit purchase is complete. Next, choose a bloom and apply this credit during checkout.",
   success_credit_saved_device: "We saved this code on this device so it is ready when you reach checkout.",
+  success_credit_note_saved_bloom: "Your Bloom Credit is ready, and your saved Bloom is still waiting for you. Return to checkout and apply it there.",
+  success_credit_saved_cart: "We kept your saved Bloom in place and saved this credit code on this device for checkout.",
+  success_credit_apply_saved_bloom: "Apply to My Bloom",
   success_credit_browse_blooms: "Browse Blooms",
   success_default_product: "Digital Bloom",
   success_download: "Download Experience",
@@ -470,6 +473,8 @@ export const en = {
   success_step_rendering: "🎬 Personalized delivery files are rendering",
   success_step_files: "📦 Standard digital files are being prepared",
   success_share_title: "Share Digital Bloom",
+  success_send_protected_link: "Send Protected Bloom Link",
+  success_protected_link_note: "This bloom opens through a protected viewing link and is not offered here as a raw downloadable file.",
   success_copy_link: "🔗 Copy Link",
   success_copied: "✓ Copied!",
   success_return_homepage: "Return to Homepage",
@@ -486,6 +491,9 @@ export const en = {
   delivery_replay: "Replay",
   delivery_share: "Share",
   delivery_copied: "Copied!",
+  delivery_expired_title: "Bloom Link Expired",
+  delivery_expired_message: "This protected bloom link has expired. Please contact the sender for a fresh delivery link.",
+  delivery_protection_note: "Protected bloom links are view-only and expire automatically.",
   delivery_brand_tagline: "Give Them Their Flowers While They're Here",
 
 

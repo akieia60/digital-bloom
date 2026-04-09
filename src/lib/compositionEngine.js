@@ -173,10 +173,10 @@ const TEXT_POSITIONS = {
     maxWidth: '58%',
   },
   'bottom-right-safe': {
-    bottom: '17%',
-    right: '6%',
+    bottom: '18.5%',
+    right: '8%',
     textAlign: 'right',
-    maxWidth: '38%',
+    maxWidth: '42%',
   },
   'bottom-brand-left': {
     bottom: '5.4%',

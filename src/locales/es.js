@@ -451,6 +451,9 @@ export const es = {
   success_credit_check_balance: "Ver saldo",
   success_credit_note: "La compra de tu Bloom Credit ya está completa. Ahora elige un bloom y aplica este crédito durante el checkout.",
   success_credit_saved_device: "Guardamos este código en este dispositivo para que esté listo cuando llegues al checkout.",
+  success_credit_note_saved_bloom: "Tu Bloom Credit está listo y tu Bloom guardado sigue esperándote. Regresa al checkout y aplícalo allí.",
+  success_credit_saved_cart: "Conservamos tu Bloom guardado y este código quedó listo en este dispositivo para usarlo en el checkout.",
+  success_credit_apply_saved_bloom: "Aplicar a mi Bloom",
   success_credit_browse_blooms: "Ver blooms",
   success_default_product: "Digital Bloom",
   success_download: "Descargar experiencia",
@@ -470,6 +473,8 @@ export const es = {
   success_step_rendering: "🎬 Se están renderizando los archivos personalizados",
   success_step_files: "📦 Se están preparando los archivos digitales estándar",
   success_share_title: "Compartir Digital Bloom",
+  success_send_protected_link: "Enviar enlace protegido del Bloom",
+  success_protected_link_note: "Este bloom se abre con un enlace protegido y aquí no se ofrece como archivo descargable sin protección.",
   success_copy_link: "🔗 Copiar enlace",
   success_copied: "✓ ¡Copiado!",
   success_return_homepage: "Volver a la página principal",
@@ -486,6 +491,9 @@ export const es = {
   delivery_replay: "Repetir",
   delivery_share: "Compartir",
   delivery_copied: "¡Copiado!",
+  delivery_expired_title: "El enlace del Bloom venció",
+  delivery_expired_message: "Este enlace protegido del bloom ya venció. Pídele al remitente un enlace nuevo.",
+  delivery_protection_note: "Los enlaces protegidos del bloom son solo de visualización y vencen automáticamente.",
   delivery_brand_tagline: "Dales sus flores mientras están aquí",
 
 

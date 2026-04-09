@@ -28,7 +28,6 @@ export default function BloomDelivery() {
     error: null,
   });
   const [messageRevealed, setMessageRevealed] = useState(false);
-  const [copied, setCopied] = useState(false);
   const [previewReplayKey, setPreviewReplayKey] = useState(0);
   const [processingTick, setProcessingTick] = useState(0);
   const revealTimerRef = useRef(null);
@@ -80,32 +79,6 @@ export default function BloomDelivery() {
     setPreviewReplayKey((current) => current + 1);
   }, []);
 
-  // Copy share link
-  const handleShare = useCallback(async () => {
-    const url = window.location.href;
-    try {
-      if (navigator.share) {
-        await navigator.share({ title: 'Digital Bloom™', text: 'Someone sent you a bloom ✨', url });
-      } else {
-        await navigator.clipboard.writeText(url);
-        setCopied(true);
-        setTimeout(() => setCopied(false), 2000);
-      }
-    } catch {
-      // Fallback
-      const textarea = document.createElement('textarea');
-      textarea.value = url;
-      textarea.style.position = 'fixed';
-      textarea.style.opacity = '0';
-      document.body.appendChild(textarea);
-      textarea.select();
-      document.execCommand('copy');
-      document.body.removeChild(textarea);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    }
-  }, []);
-
   // ── LOADING STATE ──
   if (state.status === DELIVERY_STATUS.LOADING) {
     return (
@@ -139,6 +112,21 @@ export default function BloomDelivery() {
           >
             {t('delivery_refresh_status')}
           </button>
+        </div>
+        <BrandFooter />
+      </div>
+    );
+  }
+
+  if (state.status === DELIVERY_STATUS.EXPIRED) {
+    return (
+      <div className="bloom-delivery bloom-delivery--not-found">
+        <div className="bloom-delivery__status-card">
+          <h1 className="bloom-delivery__status-title">{t('delivery_expired_title')}</h1>
+          <p className="bloom-delivery__status-message">
+            {state.error || t('delivery_expired_message')}
+          </p>
+          <Link to="/" className="bloom-delivery__home-btn">{t('delivery_return_home')}</Link>
         </div>
         <BrandFooter />
       </div>
@@ -182,28 +170,46 @@ export default function BloomDelivery() {
   const { delivery, composition } = state;
   const message = delivery?.message || {};
   const hasMessage = Boolean(message.short);
+  const protectedVideoUrl = delivery?.downloadUrl && delivery?.downloadExpiresAt
+    ? (new Date(delivery.downloadExpiresAt).getTime() > Date.now() ? delivery.downloadUrl : null)
+    : null;
 
   return (
     <div className="bloom-delivery">
       {/* ── Cinematic Bloom Hero ── */}
       <div className="bloom-delivery__hero">
         <div className="bloom-delivery__composition">
-          <LivePreview
-            key={previewReplayKey}
-            product={{
-              id: delivery.productId,
-              video_file_url: composition?.baseMedia?.src,
-              image_url: composition?.baseMedia?.poster,
-            }}
-            colorTheme={delivery.colorTheme}
-            primaryColor={delivery.primaryColor}
-            accentColor={delivery.accentColor}
-            extras={delivery.extras}
-            message={delivery.message}
-            engravingStyle={delivery.engravingStyle}
-            fontChoice={delivery.fontChoice}
-            className="bloom-delivery__preview"
-          />
+          {protectedVideoUrl ? (
+            <video
+              key={previewReplayKey}
+              className="bloom-delivery__rendered-video"
+              src={protectedVideoUrl}
+              poster={composition?.baseMedia?.poster}
+              autoPlay
+              muted
+              loop
+              playsInline
+              controls={false}
+              preload="auto"
+            />
+          ) : (
+            <LivePreview
+              key={previewReplayKey}
+              product={{
+                id: delivery.productId,
+                video_file_url: composition?.baseMedia?.src,
+                image_url: composition?.baseMedia?.poster,
+              }}
+              colorTheme={delivery.colorTheme}
+              primaryColor={delivery.primaryColor}
+              accentColor={delivery.accentColor}
+              extras={delivery.extras}
+              message={delivery.message}
+              engravingStyle={delivery.engravingStyle}
+              fontChoice={delivery.fontChoice}
+              className="bloom-delivery__preview"
+            />
+          )}
         </div>
 
         {/* ── Message Reveal ── */}
@@ -230,16 +236,9 @@ export default function BloomDelivery() {
           </svg>
           <span>{t('delivery_replay')}</span>
         </button>
-
-        <button type="button" className="bloom-delivery__control-btn" onClick={handleShare} aria-label="Share">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8" />
-            <polyline points="16 6 12 2 8 6" />
-            <line x1="12" y1="2" x2="12" y2="15" />
-          </svg>
-          <span>{copied ? t('delivery_copied') : t('delivery_share')}</span>
-        </button>
       </div>
+
+      <p className="bloom-delivery__protection-note">{t('delivery_protection_note')}</p>
 
       {/* ── Brand Footer ── */}
       <BrandFooter />
