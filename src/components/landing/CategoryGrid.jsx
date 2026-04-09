@@ -1,78 +1,29 @@
 import { useRef, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '../../contexts/LanguageContext';
+import OCCASIONS from '../../data/occasions';
 
-const CATEGORIES = [
-  {
-    name: "Happy Mother's Day",
-    slug: 'mothers-day',
-    nameKey: 'cat_mothers_day',
-    accent: '#FF4DA6',
-    previewVideo: '/videos/category-previews/preview_mothers-day_grok1.mp4',
-  },
-  {
-    name: 'Happy Birthday',
-    slug: 'birthday',
-    nameKey: 'cat_birthday',
-    accent: '#FFD23F',
-    previewVideo: '/videos/shop/birthday_birthday_roses_bloom_v1.mp4',
-  },
-  {
-    name: 'Love & Romance',
-    slug: 'love',
-    nameKey: 'cat_love',
-    accent: '#FF3B7F',
-    previewVideo: '/videos/shop/iloveyou_iloveyou_roses_bloom_v1.mp4',
-  },
-  {
-    name: 'Congratulations',
-    slug: 'celebration',
-    nameKey: 'cat_celebration',
-    accent: '#B45FFF',
-    previewVideo: '/videos/shop/congratulations_congratulations_roses_bloom_v1.mp4',
-  },
-  {
-    name: 'Memorial & Sympathy',
-    slug: 'grief',
-    nameKey: 'cat_grief',
-    accent: '#7B9FFF',
-    previewVideo: '/videos/shop/memorial_memorial_roses_artistic_v1.mp4',
-  },
-  {
-    name: 'Thinking of You',
-    slug: 'friendship',
-    nameKey: 'cat_friendship',
-    accent: '#FF8C42',
-    previewVideo: '/videos/shop/thinkingofyou_thinkingofyou_roses_bloom_v1.mp4',
-  },
-  {
-    name: 'Family Reunion',
-    slug: 'family',
-    nameKey: 'cat_family',
-    accent: '#4CAF50',
-    previewVideo: '/videos/shop/congratulations_congratulations_roses_bloom_v1.mp4',
-  },
-  {
-    name: 'Faith & Religion',
-    slug: 'religion',
-    nameKey: 'cat_religion',
-    accent: '#8E24AA',
-    previewVideo: '/videos/shop/elegant_elegant_roses_bloom_v1.mp4',
-  },
-  {
-    name: 'Luxury Collection',
-    slug: 'luxury',
-    nameKey: 'cat_luxury',
-    accent: '#D4AF37',
-    previewVideo: '/videos/shop/glassstiletto_glassstilettoseries_roses_artistic_v1.mp4',
-  },
-  {
-    name: 'General Collection',
-    slug: 'general',
-    nameKey: 'cat_general',
-    accent: '#9E9E9E',
-    previewVideo: '/videos/shop/general_general_goldenroses_bloom_v1.mp4',
-  },
+// Ordered list of slugs to display in the grid + their video previews.
+// Edit this array to control which categories appear and in what order.
+const CATEGORY_DISPLAY = [
+  { slug: 'mothers-day',  previewVideo: '/videos/category-previews/preview_mothers-day_grok1.mp4' },
+  { slug: 'birthday',     previewVideo: '/videos/shop/birthday_birthday_roses_bloom_v1.mp4' },
+  { slug: 'love',         previewVideo: '/videos/shop/iloveyou_iloveyou_roses_bloom_v1.mp4' },
+  { slug: 'anniversary',  previewVideo: null },
+  { slug: 'celebration',  previewVideo: '/videos/shop/congratulations_congratulations_roses_bloom_v1.mp4' },
+  { slug: 'graduation',   previewVideo: null },
+  { slug: 'fathers-day',  previewVideo: null },
+  { slug: 'thank-you',    previewVideo: null },
+  { slug: 'encouragement',previewVideo: null },
+  { slug: 'friendship',   previewVideo: '/videos/shop/thinkingofyou_thinkingofyou_roses_bloom_v1.mp4' },
+  { slug: 'gratitude',    previewVideo: null },
+  { slug: 'baby',         previewVideo: null },
+  { slug: 'milestones',   previewVideo: null },
+  { slug: 'promotions',   previewVideo: null },
+  { slug: 'grief',        previewVideo: '/videos/shop/memorial_memorial_roses_artistic_v1.mp4' },
+  { slug: 'holidays',     previewVideo: null },
+  { slug: 'luxury',       previewVideo: '/videos/shop/glassstiletto_glassstilettoseries_roses_artistic_v1.mp4' },
+  { slug: 'general',      previewVideo: '/videos/shop/general_general_goldenroses_bloom_v1.mp4' },
 ];
 
 export default function CategoryGrid() {
@@ -98,6 +49,13 @@ export default function CategoryGrid() {
     return () => observer.disconnect();
   }, []);
 
+  // Build the enriched category list from OCCASIONS so there's one source of truth
+  const categories = CATEGORY_DISPLAY.map(({ slug, previewVideo }) => {
+    const occ = OCCASIONS[slug];
+    if (!occ) return null;
+    return { slug, previewVideo, name: occ.name, accent: occ.accent, emoji: occ.emoji };
+  }).filter(Boolean);
+
   return (
     <section className="cat-stack-section" ref={sectionRef}>
       {/* Section header */}
@@ -108,7 +66,7 @@ export default function CategoryGrid() {
 
       {/* Stacked category list */}
       <div className="cat-stack-list">
-        {CATEGORIES.map((cat, idx) => {
+        {categories.map((cat, idx) => {
           const visible = visibleItems.has(String(idx));
           return (
             <div
@@ -119,7 +77,10 @@ export default function CategoryGrid() {
             >
               {/* Category name row — full width */}
               <div className="cat-stack-name-row">
-                <h3 className="cat-stack-name">{cat.nameKey ? t(cat.nameKey) : cat.name}</h3>
+                <h3 className="cat-stack-name">
+                  <span style={{ marginRight: '8px', opacity: 0.85 }}>{cat.emoji}</span>
+                  {cat.name}
+                </h3>
               </div>
 
               {/* Divider line — full width */}
@@ -145,8 +106,16 @@ export default function CategoryGrid() {
                   ) : (
                     <div
                       className="cat-stack-bloom-placeholder"
-                      style={{ background: cat.accent }}
-                    />
+                      style={{
+                        background: `radial-gradient(ellipse at 50% 40%, ${cat.accent}33, #0a0a0a)`,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontSize: '3.5rem',
+                      }}
+                    >
+                      {cat.emoji}
+                    </div>
                   )}
                   {/* Tap hint overlay */}
                   <div className="cat-stack-tap-hint">
