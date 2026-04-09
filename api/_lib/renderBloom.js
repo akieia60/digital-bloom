@@ -626,7 +626,6 @@ export async function renderBloomDelivery(purchaseId) {
         .update({
           status: 'completed',
           download_url: publicData.publicUrl,
-          download_storage_path: null,
           download_expires_at: expiryDate.toISOString(),
           download_count: 0,
           updated_at: new Date().toISOString(),
@@ -648,7 +647,6 @@ export async function renderBloomDelivery(purchaseId) {
       .update({
         status: 'completed',
         download_url: storagePath,
-        download_storage_path: storagePath,
         download_expires_at: expiryDate.toISOString(),
         download_count: 0,
         updated_at: new Date().toISOString(),
