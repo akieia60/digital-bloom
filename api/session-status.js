@@ -1,11 +1,41 @@
 import { createClient } from '@supabase/supabase-js';
 import { applyCors } from './_lib/cors.js';
+import { finalizePurchaseRecord } from './_lib/purchaseFlow.js';
 import { getSignedDeliveryUrl } from './_lib/deliveryAccess.js';
 
 const supabase = createClient(
   process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL,
   process.env.SUPABASE_SERVICE_ROLE_KEY
 );
+
+const STALE_PURCHASE_RENDER_MS = 2 * 60 * 1000;
+
+function isStaleProcessingPurchase(purchase) {
+  const status = String(purchase?.status || '').toLowerCase();
+  if (status !== 'pending' && status !== 'processing') return false;
+
+  const createdAt = new Date(purchase?.created_at || 0).getTime();
+  if (!Number.isFinite(createdAt)) return false;
+
+  return Date.now() - createdAt > STALE_PURCHASE_RENDER_MS;
+}
+
+async function recoverStalePurchase(purchase) {
+  if (!purchase || !isStaleProcessingPurchase(purchase)) {
+    return purchase;
+  }
+
+  if (!purchase.composition_manifest?.customization) {
+    return purchase;
+  }
+
+  try {
+    return await finalizePurchaseRecord(purchase, null);
+  } catch (error) {
+    console.warn('Failed to recover stale bloom purchase:', error);
+    return purchase;
+  }
+}
 
 async function serializePurchaseWithProtectedDownload(purchase) {
   const downloadUrl = await getSignedDeliveryUrl(supabase, purchase).catch((error) => {
@@ -43,7 +73,7 @@ export default async function handler(req, res) {
   try {
     const bloomSlug = String(req.query.bloom_slug || '').trim();
     if (bloomSlug) {
-      const { data: purchase, error: bloomError } = await supabase
+      const { data: initialPurchase, error: bloomError } = await supabase
         .from('purchases')
         .select('*, products(*)')
         .eq('bloom_slug', bloomSlug)
@@ -51,9 +81,11 @@ export default async function handler(req, res) {
 
       if (bloomError) throw bloomError;
 
-      if (!purchase) {
+      if (!initialPurchase) {
         return res.status(404).json({ error: 'This bloom could not be found' });
       }
+
+      const purchase = await recoverStalePurchase(initialPurchase);
 
       return res.status(200).json({
         ok: true,
@@ -135,10 +167,15 @@ export default async function handler(req, res) {
       });
     }
 
-    const totalAmount = purchases.reduce((sum, purchase) => sum + Number(purchase.total_price || 0), 0);
-    const allCompleted = purchases.every((purchase) => purchase.status === 'completed');
+    const recoveredPurchases = [];
+    for (const purchase of purchases) {
+      recoveredPurchases.push(await recoverStalePurchase(purchase));
+    }
+
+    const totalAmount = recoveredPurchases.reduce((sum, purchase) => sum + Number(purchase.total_price || 0), 0);
+    const allCompleted = recoveredPurchases.every((purchase) => purchase.status === 'completed');
     const publicPurchases = await Promise.all(
-      purchases.map((purchase) => serializePurchaseWithProtectedDownload(purchase))
+      recoveredPurchases.map((purchase) => serializePurchaseWithProtectedDownload(purchase))
     );
 
     return res.status(200).json({
