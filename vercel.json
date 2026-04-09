@@ -15,14 +15,6 @@
       ],
       "destination": "https://digitalbloom.store/$1",
       "permanent": true
-    },
-    {
-      "source": "/(.*)",
-      "has": [
-        { "type": "host", "value": "www.digitalbloom.store" }
-      ],
-      "destination": "https://digitalbloom.store/$1",
-      "permanent": true
     }
   ],
   "headers": [
