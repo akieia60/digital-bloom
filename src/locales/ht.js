@@ -473,6 +473,8 @@ export const ht = {
   success_step_rendering: "🎬 Fichye pèsonalize yo ap rann",
   success_step_files: "📦 Fichye dijital nòmal yo ap prepare",
   success_share_title: "Pataje Digital Bloom",
+  success_send_protected_link: "Voye lyen Bloom ki pwoteje a",
+  success_protected_link_note: "Bloom sa a louvri ak yon lyen pwoteje epi nou pa bay li isit kòm yon fichye brit pou telechaje.",
   success_copy_link: "🔗 Kopye lyen an",
   success_copied: "✓ Kopye!",
   success_return_homepage: "Retounen sou paj dakèy la",
@@ -489,6 +491,9 @@ export const ht = {
   delivery_replay: "Repase",
   delivery_share: "Pataje",
   delivery_copied: "Kopye!",
+  delivery_expired_title: "Lyen Bloom nan ekspire",
+  delivery_expired_message: "Lyen bloom ki pwoteje sa a ekspire. Tanpri kontakte moun ki voye li a pou yon nouvo lyen.",
+  delivery_protection_note: "Lyen Bloom ki pwoteje yo se pou gade sèlman epi yo ekspire otomatikman.",
   delivery_brand_tagline: "Ba yo flè yo pandan yo la toujou",
 
 

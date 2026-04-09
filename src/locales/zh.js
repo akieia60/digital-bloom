@@ -473,6 +473,8 @@ export const zh = {
   success_step_rendering: "🎬 个性化交付文件正在渲染",
   success_step_files: "📦 标准数字文件正在准备中",
   success_share_title: "分享 Digital Bloom",
+  success_send_protected_link: "发送受保护的 Bloom 链接",
+  success_protected_link_note: "这个 bloom 通过受保护的链接打开，这里不会提供可直接传播的原始下载文件。",
   success_copy_link: "🔗 复制链接",
   success_copied: "✓ 已复制！",
   success_return_homepage: "返回首页",
@@ -489,6 +491,9 @@ export const zh = {
   delivery_replay: "重播",
   delivery_share: "分享",
   delivery_copied: "已复制！",
+  delivery_expired_title: "Bloom 链接已过期",
+  delivery_expired_message: "这个受保护的 bloom 链接已过期。请联系发送者获取新的链接。",
+  delivery_protection_note: "受保护的 bloom 链接仅供查看，并会自动过期。",
   delivery_brand_tagline: "趁他们还在的时候，把花送给他们",
 
 

@@ -136,7 +136,6 @@ const Success = () => {
   };
 
   const shareUrl = `${window.location.origin}${primaryGiftPath}`;
-  const shareText = encodeURIComponent('A Digital Bloom gift is waiting for you ✨');
   const getPurchaseStatusLabel = (status) => {
     const normalized = String(status || '').toLowerCase();
     const labelKey = PURCHASE_STATUS_LABELS[normalized];
@@ -288,9 +287,20 @@ const Success = () => {
                     <span className="success-row-value">{getPurchaseStatusLabel(purchase.status)}</span>
                   </div>
                   {isReady ? (
-                    <a href={purchase.download_url} download className="success-btn-gold" style={{ marginTop: '12px' }}>
-                      {t('success_download')}
-                    </a>
+                    purchase.has_customization && purchase.bloom_slug ? (
+                      <div style={{ marginTop: '12px' }}>
+                        <Link to={`/gift/${purchase.bloom_slug}`} className="success-btn-gold">
+                          {t('success_open_bloom')}
+                        </Link>
+                        <p className="success-card-text" style={{ marginTop: '10px' }}>
+                          {t('success_protected_link_note')}
+                        </p>
+                      </div>
+                    ) : (
+                      <a href={purchase.download_url} download className="success-btn-gold" style={{ marginTop: '12px' }}>
+                        {t('success_download')}
+                      </a>
+                    )
                   ) : (
                     <p className="success-card-text" style={{ marginTop: '12px' }}>
                       {purchase.has_customization
@@ -325,26 +335,15 @@ const Success = () => {
 
         {!isCreditPurchase && (
           <div className="success-card">
-            <h3 className="success-card-label">{t('success_share_title')}</h3>
+            <h3 className="success-card-label">{t('success_send_protected_link')}</h3>
             <div className="success-share-row">
               <button type="button" onClick={copyLink} className="success-share-btn">
                 {copied ? t('success_copied') : t('success_copy_link')}
               </button>
-              <button
-                type="button"
-                onClick={() => window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`, '_blank', 'width=600,height=400')}
-                className="success-share-btn"
-              >
-                Facebook
-              </button>
-              <button
-                type="button"
-                onClick={() => window.open(`https://twitter.com/intent/tweet?text=${shareText}&url=${encodeURIComponent(shareUrl)}`, '_blank', 'width=600,height=400')}
-                className="success-share-btn"
-              >
-                X
-              </button>
             </div>
+            <p className="success-card-text" style={{ marginTop: '12px' }}>
+              {t('success_protected_link_note')}
+            </p>
           </div>
         )}
 

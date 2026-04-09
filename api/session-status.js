@@ -38,6 +38,8 @@ export default async function handler(req, res) {
           total_price: purchase.total_price,
           status: purchase.status,
           created_at: purchase.created_at,
+          download_url: purchase.download_url,
+          download_expires_at: purchase.download_expires_at,
           composition_manifest: purchase.composition_manifest || {},
         },
         product: purchase.products

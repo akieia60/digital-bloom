@@ -21,6 +21,7 @@ export const DELIVERY_STATUS = {
   LOADING: 'loading',
   READY: 'ready',
   PROCESSING: 'processing',
+  EXPIRED: 'expired',
   NOT_FOUND: 'not_found',
   ERROR: 'error',
 };
@@ -74,6 +75,23 @@ export async function resolveBloomDelivery(bloomSlug) {
     // Extract composition manifest from purchase
     const manifest = purchase.composition_manifest || {};
     const customization = manifest.customization || {};
+    const hasExpiredDownload = Boolean(
+      purchase.download_expires_at && new Date(purchase.download_expires_at).getTime() <= Date.now()
+    );
+
+    if (hasExpiredDownload) {
+      return {
+        status: DELIVERY_STATUS.EXPIRED,
+        delivery: {
+          id: purchase.id,
+          bloomSlug: purchase.bloom_slug,
+          productName: product.name || 'Digital Bloom',
+          createdAt: purchase.created_at,
+        },
+        composition: null,
+        error: 'This protected bloom link has expired.',
+      };
+    }
 
     // Rebuild composition layers from stored data
     const composition = getCompositionLayers({
@@ -102,6 +120,8 @@ export async function resolveBloomDelivery(bloomSlug) {
         category: product.category,
         createdAt: purchase.created_at,
         totalPrice: purchase.total_price,
+        downloadUrl: purchase.download_url || null,
+        downloadExpiresAt: purchase.download_expires_at || null,
         // Customization details for display
         message: customization.message || {},
         colorTheme: customization.colorTheme || 'original',

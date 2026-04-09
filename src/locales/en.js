@@ -473,6 +473,8 @@ export const en = {
   success_step_rendering: "🎬 Personalized delivery files are rendering",
   success_step_files: "📦 Standard digital files are being prepared",
   success_share_title: "Share Digital Bloom",
+  success_send_protected_link: "Send Protected Bloom Link",
+  success_protected_link_note: "This bloom opens through a protected viewing link and is not offered here as a raw downloadable file.",
   success_copy_link: "🔗 Copy Link",
   success_copied: "✓ Copied!",
   success_return_homepage: "Return to Homepage",
@@ -489,6 +491,9 @@ export const en = {
   delivery_replay: "Replay",
   delivery_share: "Share",
   delivery_copied: "Copied!",
+  delivery_expired_title: "Bloom Link Expired",
+  delivery_expired_message: "This protected bloom link has expired. Please contact the sender for a fresh delivery link.",
+  delivery_protection_note: "Protected bloom links are view-only and expire automatically.",
   delivery_brand_tagline: "Give Them Their Flowers While They're Here",
 
 
