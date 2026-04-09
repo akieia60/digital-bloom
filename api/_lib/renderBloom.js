@@ -8,6 +8,7 @@ import { createCanvas } from 'canvas';
 import { normalizePublicBaseUrl } from './publicBaseUrl.js';
 
 const execFileAsync = promisify(execFile);
+const DELIVERY_BUCKET = process.env.BLOOM_DELIVERY_BUCKET || 'bloom-deliveries';
 
 const supabase = createClient(
   process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL,
@@ -592,7 +593,7 @@ export async function renderBloomDelivery(purchaseId) {
     const storagePath = `deliveries/${purchase.id}/${outputFile}`;
 
     const { error: uploadError } = await supabase.storage
-      .from('product-media')
+      .from(DELIVERY_BUCKET)
       .upload(storagePath, fileBuffer, {
         contentType: 'video/mp4',
         upsert: true,
@@ -602,10 +603,6 @@ export async function renderBloomDelivery(purchaseId) {
       throw uploadError;
     }
 
-    const { data: publicData } = supabase.storage
-      .from('product-media')
-      .getPublicUrl(storagePath);
-
     const expiryDate = new Date();
     expiryDate.setHours(expiryDate.getHours() + 48);
 
@@ -613,7 +610,8 @@ export async function renderBloomDelivery(purchaseId) {
       .from('purchases')
       .update({
         status: 'completed',
-        download_url: publicData.publicUrl,
+        download_url: storagePath,
+        download_storage_path: storagePath,
         download_expires_at: expiryDate.toISOString(),
         download_count: 0,
         updated_at: new Date().toISOString(),
@@ -626,7 +624,7 @@ export async function renderBloomDelivery(purchaseId) {
 
     return {
       purchaseId: purchase.id,
-      downloadUrl: publicData.publicUrl,
+      downloadUrl: storagePath,
     };
   } finally {
     await fs.promises.rm(tmpDir, { recursive: true, force: true }).catch(() => {});

@@ -1,10 +1,35 @@
 import { createClient } from '@supabase/supabase-js';
 import { applyCors } from './_lib/cors.js';
+import { getSignedDeliveryUrl } from './_lib/deliveryAccess.js';
 
 const supabase = createClient(
   process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL,
   process.env.SUPABASE_SERVICE_ROLE_KEY
 );
+
+async function serializePurchaseWithProtectedDownload(purchase) {
+  const downloadUrl = await getSignedDeliveryUrl(supabase, purchase).catch((error) => {
+    console.error('Failed to resolve signed delivery URL:', error);
+    return purchase.download_url || null;
+  });
+
+  return {
+    id: purchase.id,
+    product_id: purchase.product_id,
+    quantity: purchase.quantity,
+    total_price: purchase.total_price,
+    status: purchase.status,
+    download_url: downloadUrl,
+    download_storage_path: purchase.download_storage_path || null,
+    download_expires_at: purchase.download_expires_at,
+    bloom_slug: purchase.bloom_slug,
+    has_customization: Boolean(purchase.composition_manifest?.customization),
+    products: {
+      id: purchase.products?.id || null,
+      name: purchase.products?.name || null,
+    },
+  };
+}
 
 export default async function handler(req, res) {
   if (!applyCors(req, res)) return;
@@ -38,7 +63,11 @@ export default async function handler(req, res) {
           total_price: purchase.total_price,
           status: purchase.status,
           created_at: purchase.created_at,
-          download_url: purchase.download_url,
+          download_url: await getSignedDeliveryUrl(supabase, purchase).catch((error) => {
+            console.error('Failed to resolve bloom delivery URL:', error);
+            return purchase.download_url || null;
+          }),
+          download_storage_path: purchase.download_storage_path || null,
           download_expires_at: purchase.download_expires_at,
           composition_manifest: purchase.composition_manifest || {},
         },
@@ -104,21 +133,9 @@ export default async function handler(req, res) {
 
     const totalAmount = purchases.reduce((sum, purchase) => sum + Number(purchase.total_price || 0), 0);
     const allCompleted = purchases.every((purchase) => purchase.status === 'completed');
-    const publicPurchases = purchases.map((purchase) => ({
-      id: purchase.id,
-      product_id: purchase.product_id,
-      quantity: purchase.quantity,
-      total_price: purchase.total_price,
-      status: purchase.status,
-      download_url: purchase.download_url,
-      download_expires_at: purchase.download_expires_at,
-      bloom_slug: purchase.bloom_slug,
-      has_customization: Boolean(purchase.composition_manifest?.customization),
-      products: {
-        id: purchase.products?.id || null,
-        name: purchase.products?.name || null,
-      },
-    }));
+    const publicPurchases = await Promise.all(
+      purchases.map((purchase) => serializePurchaseWithProtectedDownload(purchase))
+    );
 
     return res.status(200).json({
       ok: true,

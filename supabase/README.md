@@ -33,6 +33,12 @@ This will create:
 4. Set it to **Public**
 5. Click **Save**
 
+For protected personalized bloom renders:
+
+1. Create another bucket named `bloom-deliveries`
+2. Set it to **Private**
+3. Leave access to the service role and signed URLs only
+
 #### Upload Files to Storage:
 ```javascript
 // Use the upload utility (see /src/utils/uploadProduct.js)
