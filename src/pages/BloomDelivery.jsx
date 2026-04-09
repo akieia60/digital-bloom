@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
 import { resolveBloomDelivery, DELIVERY_STATUS } from '../lib/deliveryResolver';
@@ -170,10 +170,9 @@ export default function BloomDelivery() {
   const { delivery, composition } = state;
   const message = delivery?.message || {};
   const hasMessage = Boolean(message.short);
-  const protectedVideoUrl = useMemo(() => {
-    if (!delivery?.downloadUrl || !delivery?.downloadExpiresAt) return null;
-    return new Date(delivery.downloadExpiresAt).getTime() > Date.now() ? delivery.downloadUrl : null;
-  }, [delivery?.downloadExpiresAt, delivery?.downloadUrl]);
+  const protectedVideoUrl = delivery?.downloadUrl && delivery?.downloadExpiresAt
+    ? (new Date(delivery.downloadExpiresAt).getTime() > Date.now() ? delivery.downloadUrl : null)
+    : null;
 
   return (
     <div className="bloom-delivery">
