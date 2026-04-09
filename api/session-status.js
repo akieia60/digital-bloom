@@ -10,7 +10,9 @@ const supabase = createClient(
 async function serializePurchaseWithProtectedDownload(purchase) {
   const downloadUrl = await getSignedDeliveryUrl(supabase, purchase).catch((error) => {
     console.error('Failed to resolve signed delivery URL:', error);
-    return purchase.download_url || null;
+    return /^https?:\/\//i.test(String(purchase.download_url || ''))
+      ? purchase.download_url
+      : null;
   });
 
   return {
@@ -65,7 +67,9 @@ export default async function handler(req, res) {
           created_at: purchase.created_at,
           download_url: await getSignedDeliveryUrl(supabase, purchase).catch((error) => {
             console.error('Failed to resolve bloom delivery URL:', error);
-            return purchase.download_url || null;
+            return /^https?:\/\//i.test(String(purchase.download_url || ''))
+              ? purchase.download_url
+              : null;
           }),
           download_storage_path: purchase.download_storage_path || null,
           download_expires_at: purchase.download_expires_at,

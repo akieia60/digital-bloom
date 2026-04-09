@@ -9,6 +9,7 @@ import { normalizePublicBaseUrl } from './publicBaseUrl.js';
 
 const execFileAsync = promisify(execFile);
 const DELIVERY_BUCKET = process.env.BLOOM_DELIVERY_BUCKET || 'bloom-deliveries';
+const PUBLIC_FALLBACK_BUCKET = 'product-media';
 
 const supabase = createClient(
   process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL,
@@ -599,12 +600,48 @@ export async function renderBloomDelivery(purchaseId) {
         upsert: true,
       });
 
-    if (uploadError) {
-      throw uploadError;
-    }
-
     const expiryDate = new Date();
     expiryDate.setHours(expiryDate.getHours() + 48);
+
+    if (uploadError) {
+      console.warn(`Private delivery bucket unavailable, falling back to public bucket for purchase ${purchase.id}:`, uploadError);
+
+      const { error: fallbackUploadError } = await supabase.storage
+        .from(PUBLIC_FALLBACK_BUCKET)
+        .upload(storagePath, fileBuffer, {
+          contentType: 'video/mp4',
+          upsert: true,
+        });
+
+      if (fallbackUploadError) {
+        throw fallbackUploadError;
+      }
+
+      const { data: publicData } = supabase.storage
+        .from(PUBLIC_FALLBACK_BUCKET)
+        .getPublicUrl(storagePath);
+
+      const { error: updateError } = await supabase
+        .from('purchases')
+        .update({
+          status: 'completed',
+          download_url: publicData.publicUrl,
+          download_storage_path: null,
+          download_expires_at: expiryDate.toISOString(),
+          download_count: 0,
+          updated_at: new Date().toISOString(),
+        })
+        .eq('id', purchase.id);
+
+      if (updateError) {
+        throw updateError;
+      }
+
+      return {
+        purchaseId: purchase.id,
+        downloadUrl: publicData.publicUrl,
+      };
+    }
 
     const { error: updateError } = await supabase
       .from('purchases')
