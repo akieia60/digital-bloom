@@ -2,6 +2,7 @@ import Stripe from 'stripe';
 import { createClient } from '@supabase/supabase-js';
 import { captureReservedCredit } from '../_lib/creditReservations.js';
 import { finalizePurchasesBySession } from '../_lib/purchaseFlow.js';
+import { processBloomDeliveryEmails } from '../_lib/bloomDeliveryEmail.js';
 import { sendBloomCreditEmail } from '../_lib/creditEmail.js';
 
 export const config = {
@@ -133,7 +134,14 @@ export default async function handler(req, res) {
       await captureReservedCredit(metadata.reservation_id, session.id);
     }
 
-    await finalizePurchasesBySession(session.id, session.payment_intent || null);
+    const purchases = await finalizePurchasesBySession(session.id, session.payment_intent || null);
+
+    await processBloomDeliveryEmails({
+      supabase,
+      purchases,
+      req: { headers: { origin: session.success_url ? new URL(session.success_url).origin : undefined } },
+      explicitTestMode: session.livemode === false,
+    });
 
     return res.status(200).json({ received: true });
   } catch (error) {

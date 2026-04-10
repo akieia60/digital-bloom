@@ -108,7 +108,21 @@ const Success = () => {
     () => purchases.filter((purchase) => purchase.download_url && purchase.download_expires_at && new Date(purchase.download_expires_at) > new Date()),
     [purchases]
   );
-  const primaryGiftPath = bloomPurchases[0]?.bloom_slug ? `/gift/${bloomPurchases[0].bloom_slug}` : '/shop';
+  const primaryGiftPath = (bloomPurchases.find((purchase) => purchase.delivery?.delivery_mode !== 'scheduled' || purchase.delivery?.email_status === 'sent')?.bloom_slug || bloomPurchases[0]?.bloom_slug)
+    ? `/gift/${(bloomPurchases.find((purchase) => purchase.delivery?.delivery_mode !== 'scheduled' || purchase.delivery?.email_status === 'sent')?.bloom_slug || bloomPurchases[0]?.bloom_slug)}`
+    : '/shop';
+  const sendReadyPurchases = useMemo(
+    () => bloomPurchases.filter((purchase) => purchase.delivery?.delivery_mode !== 'scheduled' || purchase.delivery?.email_status === 'sent'),
+    [bloomPurchases]
+  );
+  const queuedBloomPurchases = useMemo(
+    () => bloomPurchases.filter((purchase) => purchase.delivery?.delivery_mode === 'scheduled' && purchase.delivery?.email_status !== 'sent'),
+    [bloomPurchases]
+  );
+  const deliveredBloomPurchases = useMemo(
+    () => bloomPurchases.filter((purchase) => purchase.delivery?.email_status === 'sent'),
+    [bloomPurchases]
+  );
   const processingPurchases = useMemo(
     () => purchases.filter((purchase) => ['pending', 'processing', 'paid'].includes(String(purchase.status || '').toLowerCase())),
     [purchases]
@@ -275,18 +289,59 @@ const Success = () => {
           </div>
         )}
 
+        {!isCreditPurchase && queuedBloomPurchases.length > 0 && (
+          <div className="success-card success-card--highlight">
+            <h3 className="success-card-label">Scheduled delivery</h3>
+            {queuedBloomPurchases.map((purchase) => (
+              <div key={purchase.id} className="success-row success-row-last" style={{ display: 'block', marginBottom: '14px' }}>
+                <div className="success-row" style={{ paddingTop: 0 }}>
+                  <span className="success-row-label">{purchase.products?.name || t('success_bloom')}</span>
+                  <span className="success-row-value success-row-gold">{purchase.delivery?.display_date || 'Scheduled soon'}</span>
+                </div>
+                <p className="success-card-text success-card-text--tight">
+                  We’ll email this protected bloom to {purchase.delivery?.recipient_email || purchase.delivery?.purchaser_email || 'the selected inbox'} on {purchase.delivery?.display_date || 'the scheduled date'}.
+                </p>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {!isCreditPurchase && deliveredBloomPurchases.length > 0 && (
+          <div className="success-card">
+            <h3 className="success-card-label">Delivery emails sent</h3>
+            {deliveredBloomPurchases.map((purchase) => (
+              <div key={purchase.id} className="success-row success-row-last" style={{ display: 'block', marginBottom: '14px' }}>
+                <div className="success-row" style={{ paddingTop: 0 }}>
+                  <span className="success-row-label">{purchase.products?.name || t('success_bloom')}</span>
+                  <span className="success-row-value success-row-gold">
+                    {purchase.delivery?.test_label ? 'Test email sent' : 'Email sent'}
+                  </span>
+                </div>
+                <p className="success-card-text success-card-text--tight">
+                  Sent to {purchase.delivery?.recipient_email || purchase.delivery?.purchaser_email || 'the selected inbox'}.
+                </p>
+              </div>
+            ))}
+          </div>
+        )}
+
         {!isCreditPurchase && (
           <div className="success-card">
             <h3 className="success-card-label">{t('success_experiences')}</h3>
             {purchases.map((purchase) => {
               const isReady = purchase.download_url && purchase.download_expires_at && new Date(purchase.download_expires_at) > new Date();
+              const isScheduledHold = purchase.delivery?.delivery_mode === 'scheduled' && purchase.delivery?.email_status !== 'sent';
               return (
                 <div key={purchase.id} className="success-row success-row-last" style={{ display: 'block', marginBottom: '16px' }}>
                   <div className="success-row" style={{ paddingTop: 0 }}>
                     <span className="success-row-label">{purchase.products?.name || t('success_default_product')}</span>
                     <span className="success-row-value">{getPurchaseStatusLabel(purchase.status)}</span>
                   </div>
-                  {isReady ? (
+                  {isScheduledHold ? (
+                    <p className="success-card-text" style={{ marginTop: '12px' }}>
+                      Scheduled for delivery on {purchase.delivery?.display_date || 'the selected date'}.
+                    </p>
+                  ) : isReady ? (
                     purchase.has_customization && purchase.bloom_slug ? (
                       <div style={{ marginTop: '12px' }}>
                         <Link to={`/gift/${purchase.bloom_slug}`} className="success-btn-gold">
@@ -308,7 +363,7 @@ const Success = () => {
                         : t('success_standard_pending')}
                     </p>
                   )}
-                  {purchase.bloom_slug && (
+                  {purchase.bloom_slug && !isScheduledHold && (
                     <p className="success-note" style={{ marginTop: '10px' }}>
                       {t('success_view_link')} <Link to={`/gift/${purchase.bloom_slug}`}>{t('success_open_bloom')}</Link>
                     </p>
@@ -319,10 +374,10 @@ const Success = () => {
           </div>
         )}
 
-        {!isCreditPurchase && bloomPurchases.length > 0 && (
+        {!isCreditPurchase && sendReadyPurchases.length > 0 && (
           <div className="success-card">
             <h3 className="success-card-label">{t('success_bloom_links')}</h3>
-            {bloomPurchases.map((purchase) => (
+            {sendReadyPurchases.map((purchase) => (
               <div key={purchase.id} className="success-row">
                 <span className="success-row-label">{purchase.products?.name || t('success_bloom')}</span>
                 <Link to={`/gift/${purchase.bloom_slug}`} className="success-row-value success-row-gold">
@@ -333,7 +388,7 @@ const Success = () => {
           </div>
         )}
 
-        {!isCreditPurchase && (
+        {!isCreditPurchase && sendReadyPurchases.length > 0 && (
           <div className="success-card">
             <h3 className="success-card-label">{t('success_send_protected_link')}</h3>
             <div className="success-share-row">

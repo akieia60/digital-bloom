@@ -77,6 +77,7 @@ export default async function handler(req, res) {
       reservation_id,
       remaining_due_cents,
       metadata = {},
+      delivery = null,
     } = payload;
 
     if (!cartItems || !Array.isArray(cartItems) || cartItems.length === 0) {
@@ -84,6 +85,7 @@ export default async function handler(req, res) {
     }
 
     const result = await createCheckoutSessionResult({
+      req,
       cartItems,
       successUrl,
       cancelUrl,
@@ -91,6 +93,7 @@ export default async function handler(req, res) {
       reservation_id,
       remaining_due_cents,
       metadata,
+      delivery,
     });
 
     if (wantsRedirect) {

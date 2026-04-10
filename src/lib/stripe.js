@@ -53,12 +53,18 @@ export const createCartCheckoutSession = async (cartItems, creditMetadata = null
         successUrl: `${successUrl}?session_id={CHECKOUT_SESSION_ID}`,
         cancelUrl,
         customerEmail: customerInfo.email,
+        delivery: customerInfo.delivery || null,
         reservation_id: creditMetadata?.reservation_id,
         remaining_due_cents: creditMetadata?.remaining_due_cents,
         metadata: {
           total_items: cartItems.length,
           total_price: totalPrice,
-          ...(creditMetadata?.reservation_id && { reservation_id: creditMetadata.reservation_id })
+          ...(creditMetadata?.reservation_id && { reservation_id: creditMetadata.reservation_id }),
+          ...(customerInfo.delivery?.target && { delivery_target: customerInfo.delivery.target }),
+          ...(customerInfo.delivery?.recipientEmail && { recipient_email: customerInfo.delivery.recipientEmail }),
+          ...(customerInfo.delivery?.deliveryMode && { delivery_mode: customerInfo.delivery.deliveryMode }),
+          ...(customerInfo.delivery?.deliveryDate && { delivery_date: customerInfo.delivery.deliveryDate }),
+          ...(customerInfo.delivery?.buyerTimezone && { buyer_timezone: customerInfo.delivery.buyerTimezone }),
         }
       }),
     });
@@ -115,12 +121,18 @@ export const startCartCheckoutRedirect = (cartItems, creditMetadata = null, cust
     successUrl: `${successUrl}?session_id={CHECKOUT_SESSION_ID}`,
     cancelUrl,
     customerEmail: customerInfo.email,
+    delivery: customerInfo.delivery || null,
     reservation_id: creditMetadata?.reservation_id,
     remaining_due_cents: creditMetadata?.remaining_due_cents,
     metadata: {
       total_items: cartItems.length,
       total_price: totalPrice,
       ...(creditMetadata?.reservation_id && { reservation_id: creditMetadata.reservation_id }),
+      ...(customerInfo.delivery?.target && { delivery_target: customerInfo.delivery.target }),
+      ...(customerInfo.delivery?.recipientEmail && { recipient_email: customerInfo.delivery.recipientEmail }),
+      ...(customerInfo.delivery?.deliveryMode && { delivery_mode: customerInfo.delivery.deliveryMode }),
+      ...(customerInfo.delivery?.deliveryDate && { delivery_date: customerInfo.delivery.deliveryDate }),
+      ...(customerInfo.delivery?.buyerTimezone && { buyer_timezone: customerInfo.delivery.buyerTimezone }),
     },
   };
 

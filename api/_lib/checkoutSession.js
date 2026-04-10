@@ -1,9 +1,11 @@
 import Stripe from 'stripe';
 import { captureReservedCredit } from './creditReservations.js';
+import { processBloomDeliveryEmails } from './bloomDeliveryEmail.js';
 import {
   buildPurchaseRows,
   finalizePurchaseRecord,
   insertPurchaseRows,
+  supabase,
 } from './purchaseFlow.js';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
@@ -70,6 +72,7 @@ async function captureFullCreditReservation(reservationId) {
 }
 
 export async function createCheckoutSessionResult({
+  req,
   cartItems,
   successUrl,
   cancelUrl,
@@ -77,6 +80,7 @@ export async function createCheckoutSessionResult({
   reservation_id,
   remaining_due_cents,
   metadata = {},
+  delivery = null,
 }) {
   if (!cartItems || !Array.isArray(cartItems) || cartItems.length === 0) {
     throw new Error('Cart items are required');
@@ -97,14 +101,23 @@ export async function createCheckoutSessionResult({
         customerEmail,
         stripeSessionId: pseudoSessionId,
         status: 'pending',
+        delivery,
       })
     );
 
     await captureFullCreditReservation(reservation_id);
 
+    const finalizedPurchases = [];
     for (const purchase of purchases) {
-      await finalizePurchaseRecord(purchase, null);
+      finalizedPurchases.push(await finalizePurchaseRecord(purchase, null));
     }
+
+    await processBloomDeliveryEmails({
+      supabase,
+      purchases: finalizedPurchases,
+      req,
+      explicitTestMode: String(process.env.STRIPE_SECRET_KEY || '').includes('_test_'),
+    });
 
     return {
       free_checkout: true,
@@ -164,6 +177,7 @@ export async function createCheckoutSessionResult({
         customerEmail,
         stripeSessionId: session.id,
         status: 'pending',
+        delivery,
       })
     );
   } catch (purchaseError) {

@@ -118,6 +118,25 @@ export default function BloomDelivery() {
     );
   }
 
+  if (state.status === DELIVERY_STATUS.SCHEDULED) {
+    const scheduledDate = state.delivery?.delivery?.display_date || 'a future date';
+    const scheduledRecipient = state.delivery?.delivery?.recipient_email || 'the selected recipient';
+
+    return (
+      <div className="bloom-delivery bloom-delivery--processing">
+        <div className="bloom-delivery__status-card">
+          <div className="bloom-delivery__status-icon">📬</div>
+          <h1 className="bloom-delivery__status-title">This bloom is scheduled</h1>
+          <p className="bloom-delivery__status-message">
+            This protected bloom is queued to email on {scheduledDate} to {scheduledRecipient}.
+          </p>
+          <Link to="/" className="bloom-delivery__home-btn">{t('delivery_return_home')}</Link>
+        </div>
+        <BrandFooter />
+      </div>
+    );
+  }
+
   if (state.status === DELIVERY_STATUS.EXPIRED) {
     return (
       <div className="bloom-delivery bloom-delivery--not-found">

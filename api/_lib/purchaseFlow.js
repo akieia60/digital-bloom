@@ -2,7 +2,7 @@ import crypto from 'crypto';
 import { createClient } from '@supabase/supabase-js';
 import { renderBloomDelivery } from './renderBloom.js';
 
-const supabase = createClient(
+export const supabase = createClient(
   process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL,
   process.env.SUPABASE_SERVICE_ROLE_KEY
 );
@@ -12,27 +12,57 @@ function toPriceNumber(value) {
   return Number.isFinite(parsed) ? parsed : 0;
 }
 
+function normalizeDeliveryConfig(delivery = null, customerEmail = null, cartItem = null) {
+  if (!delivery || typeof delivery !== 'object') return null;
+
+  const purchaserEmail = String(delivery.purchaserEmail || customerEmail || '').trim();
+  const target = delivery.target === 'recipient' ? 'recipient' : 'self';
+  const recipientEmail = String(
+    target === 'recipient'
+      ? (delivery.recipientEmail || '')
+      : (delivery.recipientEmail || purchaserEmail || '')
+  ).trim();
+  const message = cartItem?.customization?.message || {};
+
+  return {
+    target,
+    purchaserEmail,
+    recipientEmail,
+    deliveryMode: delivery.deliveryMode === 'scheduled' && delivery.deliveryDate ? 'scheduled' : 'now',
+    deliveryDate: delivery.deliveryDate ? String(delivery.deliveryDate) : '',
+    buyerTimezone: delivery.buyerTimezone || 'America/Chicago',
+    recipientName: message.toName || '',
+    senderName: message.fromName || '',
+    emailStatus: delivery.deliveryMode === 'scheduled' && delivery.deliveryDate ? 'queued' : 'pending',
+    emailSentAt: null,
+    testLabel: false,
+  };
+}
+
 export function generateBloomSlug() {
   return crypto.randomUUID().replace(/-/g, '').slice(0, 12);
 }
 
-function buildCompositionManifest(cartItem) {
+function buildCompositionManifest(cartItem, delivery = null, customerEmail = null) {
   const product = cartItem.product || {};
   const customization = product.customization || cartItem.customization || null;
   if (!customization) return null;
 
+  const normalizedDelivery = normalizeDeliveryConfig(delivery, customerEmail, cartItem);
+
   return {
     customization,
     composition: customization.composition || product.composition || cartItem.composition || null,
+    ...(normalizedDelivery ? { delivery: normalizedDelivery } : {}),
   };
 }
 
-export function buildPurchaseRows(cartItems, { customerEmail = null, stripeSessionId, status = 'pending' }) {
+export function buildPurchaseRows(cartItems, { customerEmail = null, stripeSessionId, status = 'pending', delivery = null }) {
   return cartItems.map((item) => {
     const product = item.product || {};
     const quantity = Number(item.quantity || 1);
     const unitPrice = toPriceNumber(product.price);
-    const compositionManifest = buildCompositionManifest(item);
+    const compositionManifest = buildCompositionManifest(item, delivery, customerEmail);
     const hasCustomization = Boolean(compositionManifest?.customization);
 
     return {

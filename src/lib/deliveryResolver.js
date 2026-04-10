@@ -21,6 +21,7 @@ export const DELIVERY_STATUS = {
   LOADING: 'loading',
   READY: 'ready',
   PROCESSING: 'processing',
+  SCHEDULED: 'scheduled',
   EXPIRED: 'expired',
   NOT_FOUND: 'not_found',
   ERROR: 'error',
@@ -66,6 +67,21 @@ export async function resolveBloomDelivery(bloomSlug) {
           bloomSlug: purchase.bloom_slug,
           productName: purchase.products?.name || 'Digital Bloom',
           createdAt: purchase.created_at,
+        },
+        composition: null,
+        error: null,
+      };
+    }
+
+    if (purchase.status === 'scheduled') {
+      return {
+        status: DELIVERY_STATUS.SCHEDULED,
+        delivery: {
+          id: purchase.id,
+          bloomSlug: purchase.bloom_slug,
+          productName: product.name || 'Digital Bloom',
+          createdAt: purchase.created_at,
+          delivery: purchase.delivery || null,
         },
         composition: null,
         error: null,

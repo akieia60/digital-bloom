@@ -726,6 +726,64 @@
   margin-top: 12px;
 }
 
+.cart-credit-entry-grid {
+  display: grid;
+  gap: 14px;
+}
+
+.cart-credit-entry-label {
+  display: grid;
+  gap: 8px;
+  font-size: 0.82rem;
+  color: rgba(250, 240, 236, 0.82);
+}
+
+.cart-credit-entry-input {
+  width: 100%;
+  min-height: 48px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(5, 7, 16, 0.45);
+  color: rgba(255, 255, 255, 0.94);
+  padding: 0 14px;
+  font-size: 0.95rem;
+}
+
+.cart-credit-entry-input::placeholder {
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.cart-credit-entry-hint {
+  font-size: 0.75rem;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.52);
+}
+
+.cart-credit-choice-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.cart-credit-choice {
+  min-height: 48px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.03);
+  color: rgba(255, 255, 255, 0.76);
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0 14px;
+  transition: all 0.2s ease;
+}
+
+.cart-credit-choice.is-active {
+  border-color: rgba(212, 175, 55, 0.4);
+  background: rgba(212, 175, 55, 0.12);
+  color: var(--accent-gold, #C9A14A);
+}
+
 .cart-credit-input-group {
   display: flex;
   flex-direction: column;

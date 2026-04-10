@@ -10,6 +10,10 @@ function formatCurrency(cents) {
   return `$${(Number(cents || 0) / 100).toFixed(2)}`;
 }
 
+function isValidEmail(value) {
+  return /\S+@\S+\.\S+/.test(String(value || '').trim());
+}
+
 export default function Checkout() {
   const navigate = useNavigate();
   const { cartItems, getCartTotal } = useCart();
@@ -21,11 +25,31 @@ export default function Checkout() {
   const [isCreditOpen, setIsCreditOpen] = useState(false);
   const [knownCredit, setKnownCredit] = useState(null);
   const [isCheckingKnownCredit, setIsCheckingKnownCredit] = useState(false);
+  const [buyerEmail, setBuyerEmail] = useState(() => {
+    if (typeof window === 'undefined') return '';
+    return window.localStorage.getItem('dbloom_buyer_email') || '';
+  });
+  const [deliveryTarget, setDeliveryTarget] = useState('recipient');
+  const [recipientEmail, setRecipientEmail] = useState('');
+  const [deliveryMode, setDeliveryMode] = useState('now');
+  const [deliveryDate, setDeliveryDate] = useState('');
 
   const total = getCartTotal();
   const totalCents = Math.round(total * 100);
   const remainingDue = creditApplied ? Math.max(0, totalCents - creditApplied.applied_cents) : totalCents;
   const appliedAmountCents = creditApplied?.applied_cents || 0;
+  const hasPersonalizedBloom = cartItems.some((item) => Boolean(item.customization));
+  const buyerTimezone = typeof Intl !== 'undefined'
+    ? Intl.DateTimeFormat().resolvedOptions().timeZone || 'America/Chicago'
+    : 'America/Chicago';
+  const todayString = new Date().toISOString().split('T')[0];
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    if (buyerEmail) {
+      window.localStorage.setItem('dbloom_buyer_email', buyerEmail);
+    }
+  }, [buyerEmail]);
 
   useEffect(() => {
     if (typeof window === 'undefined' || creditApplied) return;
@@ -114,17 +138,62 @@ export default function Checkout() {
   const handleCheckout = async () => {
     setIsProcessing(true);
     setError(null);
+    const trimmedBuyerEmail = buyerEmail.trim();
+    const trimmedRecipientEmail = recipientEmail.trim();
+
+    if (hasPersonalizedBloom) {
+      if (!isValidEmail(trimmedBuyerEmail)) {
+        setError('Please enter a valid email so we can deliver your bloom.');
+        setIsProcessing(false);
+        return;
+      }
+
+      if (deliveryTarget === 'recipient' && !isValidEmail(trimmedRecipientEmail)) {
+        setError('Please enter the recipient email for delivery.');
+        setIsProcessing(false);
+        return;
+      }
+
+      if (deliveryMode === 'scheduled' && !deliveryDate) {
+        setError('Please choose a delivery date for this bloom.');
+        setIsProcessing(false);
+        return;
+      }
+
+      if (deliveryMode === 'scheduled' && deliveryDate < todayString) {
+        setError('Scheduled delivery must be today or later.');
+        setIsProcessing(false);
+        return;
+      }
+    }
+
     const formattedItems = cartItems.map((item) => ({
       product: item,
       quantity: item.quantity,
     }));
+    const deliveryConfig = hasPersonalizedBloom
+      ? {
+          target: deliveryTarget,
+          recipientEmail: deliveryTarget === 'recipient' ? trimmedRecipientEmail : trimmedBuyerEmail,
+          purchaserEmail: trimmedBuyerEmail,
+          deliveryMode,
+          deliveryDate: deliveryMode === 'scheduled' ? deliveryDate : '',
+          buyerTimezone,
+        }
+      : null;
+    const customerInfo = trimmedBuyerEmail
+      ? {
+          email: trimmedBuyerEmail,
+          delivery: deliveryConfig,
+        }
+      : {};
 
     try {
       if (creditApplied && remainingDue <= 0) {
         const result = await createCartCheckoutSession(formattedItems, {
           reservation_id: creditApplied.reservation_id,
           remaining_due_cents: 0,
-        });
+        }, customerInfo);
 
         if (result.free_checkout) {
           window.location.href = result.url;
@@ -139,7 +208,8 @@ export default function Checkout() {
               reservation_id: creditApplied.reservation_id,
               remaining_due_cents: remainingDue,
             }
-          : null
+          : null,
+        customerInfo
       );
 
       if (!result?.url) throw new Error('Failed to create checkout session');
@@ -154,7 +224,8 @@ export default function Checkout() {
                 reservation_id: creditApplied.reservation_id,
                 remaining_due_cents: remainingDue,
               }
-            : null
+            : null,
+          customerInfo
         );
         return;
       }
@@ -205,6 +276,101 @@ export default function Checkout() {
             </div>
           ))}
         </div>
+
+        {hasPersonalizedBloom && (
+          <div className="cart-credits-wallet mb-8">
+            <div className="cart-credits-wallet__eyebrow">Bloom Delivery</div>
+            <div className="cart-credits-wallet__heading-row">
+              <div>
+                <h3 className="cart-credits-wallet__title">Who should receive this bloom?</h3>
+                <p className="cart-credits-wallet__copy">
+                  We will email the protected bloom link automatically. Text delivery can be added later.
+                </p>
+              </div>
+              <span className="cart-credits-wallet__icon" aria-hidden="true">📬</span>
+            </div>
+
+            <div className="cart-credit-entry-grid" style={{ gap: '14px', display: 'grid' }}>
+              <label className="cart-credit-entry-label">
+                Your email
+                <input
+                  type="email"
+                  value={buyerEmail}
+                  onChange={(event) => setBuyerEmail(event.target.value)}
+                  placeholder="you@email.com"
+                  className="cart-credit-entry-input"
+                  autoComplete="email"
+                  inputMode="email"
+                />
+              </label>
+
+              <div className="cart-credit-choice-row">
+                <button
+                  type="button"
+                  onClick={() => setDeliveryTarget('recipient')}
+                  className={`cart-credit-choice ${deliveryTarget === 'recipient' ? 'is-active' : ''}`}
+                >
+                  Send to recipient
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setDeliveryTarget('self')}
+                  className={`cart-credit-choice ${deliveryTarget === 'self' ? 'is-active' : ''}`}
+                >
+                  Send to me
+                </button>
+              </div>
+
+              {deliveryTarget === 'recipient' && (
+                <label className="cart-credit-entry-label">
+                  Recipient email
+                  <input
+                    type="email"
+                    value={recipientEmail}
+                    onChange={(event) => setRecipientEmail(event.target.value)}
+                    placeholder="their@email.com"
+                    className="cart-credit-entry-input"
+                    autoComplete="email"
+                    inputMode="email"
+                  />
+                </label>
+              )}
+
+              <div className="cart-credit-choice-row">
+                <button
+                  type="button"
+                  onClick={() => setDeliveryMode('now')}
+                  className={`cart-credit-choice ${deliveryMode === 'now' ? 'is-active' : ''}`}
+                >
+                  Send immediately
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setDeliveryMode('scheduled')}
+                  className={`cart-credit-choice ${deliveryMode === 'scheduled' ? 'is-active' : ''}`}
+                >
+                  Schedule for later
+                </button>
+              </div>
+
+              {deliveryMode === 'scheduled' && (
+                <label className="cart-credit-entry-label">
+                  Delivery date
+                  <input
+                    type="date"
+                    value={deliveryDate}
+                    onChange={(event) => setDeliveryDate(event.target.value)}
+                    min={todayString}
+                    className="cart-credit-entry-input"
+                  />
+                  <span className="cart-credit-entry-hint">
+                    Scheduled blooms send in a morning delivery window using your timezone: {buyerTimezone}
+                  </span>
+                </label>
+              )}
+            </div>
+          </div>
+        )}
 
         <div className="cart-credits-wallet mb-8">
           {!creditApplied && !knownCredit && !isCheckingKnownCredit && (

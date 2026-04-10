@@ -39,6 +39,12 @@
       ]
     }
   ],
+  "crons": [
+    {
+      "path": "/api/cron/process-bloom-deliveries",
+      "schedule": "0 14 * * *"
+    }
+  ],
   "rewrites": [
     {
       "source": "/(.*)",
