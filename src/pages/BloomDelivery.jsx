@@ -180,18 +180,33 @@ export default function BloomDelivery() {
       <div className="bloom-delivery__hero">
         <div className="bloom-delivery__composition">
           {protectedVideoUrl ? (
-            <video
-              key={previewReplayKey}
-              className="bloom-delivery__rendered-video"
-              src={protectedVideoUrl}
-              poster={composition?.baseMedia?.poster}
-              autoPlay
-              muted
-              loop
-              playsInline
-              controls={false}
-              preload="auto"
-            />
+            <div className="db-watermark db-watermark--hero bloom-delivery__protected-frame">
+              <video
+                key={previewReplayKey}
+                className="bloom-delivery__rendered-video"
+                src={protectedVideoUrl}
+                poster={composition?.baseMedia?.poster}
+                autoPlay
+                muted
+                loop
+                playsInline
+                controls={false}
+                preload="auto"
+              />
+              <div className="db-watermark-overlay" aria-hidden="true">
+                <div className="db-watermark-grid">
+                  {Array.from({ length: 12 }, (_, i) => (
+                    <div key={i} className="db-watermark-row">
+                      <span>© Digital Bloom</span>
+                      <span>© Digital Bloom</span>
+                      <span>© Digital Bloom</span>
+                      <span>© Digital Bloom</span>
+                    </div>
+                  ))}
+                </div>
+                <div className="db-watermark-corner">© Digital Bloom</div>
+              </div>
+            </div>
           ) : (
             <LivePreview
               key={previewReplayKey}

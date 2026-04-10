@@ -464,10 +464,27 @@ async function createOverlayImage(destination, {
   ctx.translate(width * 0.5, height * 0.48);
   ctx.rotate(-0.12);
   ctx.font = `italic 700 ${Math.round(height * 0.04)}px Georgia`;
-  ctx.fillStyle = rgba(accentColor, 0.10);
+  ctx.fillStyle = rgba(accentColor, 0.16);
   ctx.textAlign = 'center';
   ctx.fillText('Digital Bloom', 0, 0);
   ctx.restore();
+
+  const cornerStamp = '© Digital Bloom';
+  ctx.font = `italic 700 ${Math.round(height * 0.02)}px Georgia`;
+  const cornerWidth = ctx.measureText(cornerStamp).width;
+  const cornerBoxW = cornerWidth + 20;
+  const cornerBoxH = height * 0.042;
+  const cornerBoxX = width - cornerBoxW - (width * 0.05);
+  const cornerBoxY = height * 0.905;
+
+  roundRect(ctx, cornerBoxX, cornerBoxY, cornerBoxW, cornerBoxH, 16);
+  ctx.fillStyle = rgba('090909', 0.36);
+  ctx.fill();
+  ctx.strokeStyle = rgba(accentColor, 0.24);
+  ctx.lineWidth = 1;
+  ctx.stroke();
+  ctx.fillStyle = rgba(accentColor, 0.96);
+  ctx.fillText(cornerStamp, cornerBoxX + 10, cornerBoxY + (cornerBoxH * 0.7));
 
   const buffer = canvas.toBuffer('image/png');
   await fs.promises.writeFile(destination, buffer);
