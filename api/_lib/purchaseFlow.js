@@ -1,11 +1,28 @@
 import crypto from 'crypto';
 import { createClient } from '@supabase/supabase-js';
+import { waitUntil } from '@vercel/functions';
 import { renderBloomDelivery } from './renderBloom.js';
 
 export const supabase = createClient(
   process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL,
   process.env.SUPABASE_SERVICE_ROLE_KEY
 );
+
+function hasPendingCustomizedRender(purchase) {
+  return Boolean(purchase?.composition_manifest?.customization) && !String(purchase?.download_url || '').trim();
+}
+
+function queueBloomRender(purchaseId) {
+  const renderTask = renderBloomDelivery(purchaseId).catch((renderError) => {
+    console.error(`render failed for purchase ${purchaseId}:`, renderError);
+  });
+
+  try {
+    waitUntil(renderTask);
+  } catch {
+    void renderTask;
+  }
+}
 
 function toPriceNumber(value) {
   const parsed = Number.parseFloat(value ?? 0);
@@ -100,7 +117,7 @@ export async function finalizePurchaseRecord(purchase, stripePaymentIntentId = n
   }
 
   const updates = {
-    status: 'completed',
+    status: hasCustomization ? 'processing' : 'completed',
     updated_at: new Date().toISOString(),
   };
 
@@ -130,12 +147,8 @@ export async function finalizePurchaseRecord(purchase, stripePaymentIntentId = n
 
   if (error) throw error;
 
-  if (hasCustomization) {
-    try {
-      await renderBloomDelivery(updated.id);
-    } catch (renderError) {
-      console.error(`render failed for purchase ${updated.id}:`, renderError);
-    }
+  if (hasCustomization && hasPendingCustomizedRender(updated)) {
+    queueBloomRender(updated.id);
   }
 
   return updated;

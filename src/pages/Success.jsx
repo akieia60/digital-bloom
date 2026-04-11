@@ -112,7 +112,7 @@ const Success = () => {
     ? `/gift/${(bloomPurchases.find((purchase) => purchase.delivery?.delivery_mode !== 'scheduled' || purchase.delivery?.email_status === 'sent')?.bloom_slug || bloomPurchases[0]?.bloom_slug)}`
     : '/shop';
   const sendReadyPurchases = useMemo(
-    () => bloomPurchases.filter((purchase) => purchase.delivery?.delivery_mode !== 'scheduled' || purchase.delivery?.email_status === 'sent'),
+    () => bloomPurchases.filter((purchase) => purchase.download_url && (purchase.delivery?.delivery_mode !== 'scheduled' || purchase.delivery?.email_status === 'sent')),
     [bloomPurchases]
   );
   const queuedBloomPurchases = useMemo(
@@ -123,11 +123,15 @@ const Success = () => {
     () => bloomPurchases.filter((purchase) => purchase.delivery?.email_status === 'sent'),
     [bloomPurchases]
   );
+  const renderingPurchases = useMemo(
+    () => purchases.filter((purchase) => purchase.has_customization && !purchase.download_url),
+    [purchases]
+  );
   const processingPurchases = useMemo(
     () => purchases.filter((purchase) => ['pending', 'processing', 'paid'].includes(String(purchase.status || '').toLowerCase())),
     [purchases]
   );
-  const hasPendingWork = readyDownloads.length === 0 && (processingPurchases.length > 0 || checkout?.checkout_status !== 'completed');
+  const hasPendingWork = renderingPurchases.length > 0 || processingPurchases.length > 0 || checkout?.checkout_status !== 'completed';
 
   const copyLink = async () => {
     const shareUrl = `${window.location.origin}${primaryGiftPath}`;
@@ -330,6 +334,7 @@ const Success = () => {
             <h3 className="success-card-label">{t('success_experiences')}</h3>
             {purchases.map((purchase) => {
               const isReady = purchase.download_url && purchase.download_expires_at && new Date(purchase.download_expires_at) > new Date();
+              const isRenderPending = purchase.has_customization && !purchase.download_url;
               const isScheduledHold = purchase.delivery?.delivery_mode === 'scheduled' && purchase.delivery?.email_status !== 'sent';
               return (
                 <div key={purchase.id} className="success-row success-row-last" style={{ display: 'block', marginBottom: '16px' }}>
@@ -340,6 +345,10 @@ const Success = () => {
                   {isScheduledHold ? (
                     <p className="success-card-text" style={{ marginTop: '12px' }}>
                       Scheduled for delivery on {purchase.delivery?.display_date || 'the selected date'}.
+                    </p>
+                  ) : isRenderPending ? (
+                    <p className="success-card-text" style={{ marginTop: '12px' }}>
+                      We’re still rendering the protected bloom video. Refresh in a moment and we’ll unlock the final delivery view here.
                     </p>
                   ) : isReady ? (
                     purchase.has_customization && purchase.bloom_slug ? (
@@ -363,7 +372,7 @@ const Success = () => {
                         : t('success_standard_pending')}
                     </p>
                   )}
-                  {purchase.bloom_slug && !isScheduledHold && (
+                  {purchase.bloom_slug && !isScheduledHold && !isRenderPending && (
                     <p className="success-note" style={{ marginTop: '10px' }}>
                       {t('success_view_link')} <Link to={`/gift/${purchase.bloom_slug}`}>{t('success_open_bloom')}</Link>
                     </p>

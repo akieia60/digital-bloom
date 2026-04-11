@@ -58,14 +58,21 @@ export async function resolveBloomDelivery(bloomSlug) {
       return { status: DELIVERY_STATUS.NOT_FOUND, delivery: null, composition: null, error: 'This bloom could not be found' };
     }
 
+    const hasCustomizedBloom = Boolean(purchase.composition_manifest?.customization);
+    const hasProtectedDownload = Boolean(purchase.download_url);
+
     // Check purchase status
-    if (purchase.status === 'pending' || purchase.status === 'processing') {
+    if (
+      purchase.status === 'pending' ||
+      purchase.status === 'processing' ||
+      (hasCustomizedBloom && !hasProtectedDownload)
+    ) {
       return {
         status: DELIVERY_STATUS.PROCESSING,
         delivery: {
           id: purchase.id,
           bloomSlug: purchase.bloom_slug,
-          productName: purchase.products?.name || 'Digital Bloom',
+          productName: product.name || 'Digital Bloom',
           createdAt: purchase.created_at,
         },
         composition: null,
