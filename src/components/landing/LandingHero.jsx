@@ -71,6 +71,18 @@ export default function LandingHero() {
       </div>
 
       {/* ── Category pill strip — horizontal scroll, full-bleed ── */}
+      <div style={{ position: 'relative' }}>
+        {/* Right fade — hints that more pills scroll off-screen */}
+        <div style={{
+          position: 'absolute',
+          right: 0,
+          top: 0,
+          bottom: 0,
+          width: '60px',
+          background: 'linear-gradient(to right, transparent, #001f3f)',
+          zIndex: 1,
+          pointerEvents: 'none',
+        }} />
       <div className="hero-category-strip" style={{
         overflowX: 'auto',
         WebkitOverflowScrolling: 'touch',
@@ -84,7 +96,7 @@ export default function LandingHero() {
           display: 'flex',
           gap: '10px',
           paddingLeft: '1.25rem',
-          paddingRight: '1.25rem',
+          paddingRight: '4rem',
           width: 'max-content',
         }}>
           {HERO_CATEGORIES.map((slug) => {
@@ -126,6 +138,7 @@ export default function LandingHero() {
             );
           })}
         </div>
+      </div>
       </div>
     </section>
   );

@@ -1,5 +1,7 @@
 import { Link, useLocation } from 'react-router-dom';
 
+const COMING_SOON_PATHS = ['/about', '/contact', '/checkout'];
+
 const PAGE_INFO = {
   '/about': {
     title: 'About Digital Bloom',
@@ -15,14 +17,20 @@ const PAGE_INFO = {
   },
 };
 
-const DEFAULT_INFO = {
+const DEFAULT_COMING_SOON = {
   title: 'Coming Soon',
   description: 'This page is being crafted with care. Check back soon.',
 };
 
+const NOT_FOUND_INFO = {
+  title: 'Page Not Found',
+  description: 'The page you\'re looking for doesn\'t exist. Let\'s get you back to something beautiful.',
+};
+
 export default function ComingSoon() {
   const location = useLocation();
-  const info = PAGE_INFO[location.pathname] || DEFAULT_INFO;
+  const isKnownPath = COMING_SOON_PATHS.includes(location.pathname) || location.pathname in PAGE_INFO;
+  const info = PAGE_INFO[location.pathname] || (isKnownPath ? DEFAULT_COMING_SOON : NOT_FOUND_INFO);
 
   return (
     <div
