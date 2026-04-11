@@ -130,11 +130,8 @@ export async function finalizePurchaseRecord(purchase, stripePaymentIntentId = n
   }
 
   if (isDigital && !hasCustomization) {
-    const expiryDate = new Date();
-    expiryDate.setHours(expiryDate.getHours() + 48);
-
     updates.download_url = product.video_file_url || product.video_url || null;
-    updates.download_expires_at = expiryDate.toISOString();
+    updates.download_expires_at = null; // bloom links never expire (per FAQ)
     updates.download_count = 0;
   }
 

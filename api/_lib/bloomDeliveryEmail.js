@@ -77,6 +77,10 @@ export function normalizeBloomDeliverySettings(purchase) {
     recipientName: delivery.recipientName || purchase.composition_manifest?.customization?.message?.toName || '',
     senderName: delivery.senderName || purchase.composition_manifest?.customization?.message?.fromName || '',
     testLabel: Boolean(delivery.testLabel),
+    buyerEmailStatus: delivery.buyerEmailStatus || 'pending',
+    buyerEmailSentAt: delivery.buyerEmailSentAt || null,
+    buyerLastAttemptAt: delivery.buyerLastAttemptAt || null,
+    buyerLastError: delivery.buyerLastError || null,
   };
 }
 
@@ -211,6 +215,109 @@ export async function sendBloomDeliveryEmail({
   return payload;
 }
 
+export async function sendBloomBuyerConfirmationEmail({
+  req,
+  to,
+  purchase,
+  delivery,
+  isTest = false,
+}) {
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) {
+    console.warn('Bloom buyer confirmation skipped: RESEND_API_KEY not configured');
+    return { skipped: true, reason: 'missing_resend_api_key' };
+  }
+
+  if (!to) {
+    console.warn('Bloom buyer confirmation skipped: missing purchaser address');
+    return { skipped: true, reason: 'missing_purchaser_email' };
+  }
+
+  const appBaseUrl = resolvePublicBaseUrl(req);
+  const giftUrl = purchase.bloom_slug
+    ? `${appBaseUrl}/gift/${encodeURIComponent(purchase.bloom_slug)}`
+    : `${appBaseUrl}/shop`;
+  const message = purchase.composition_manifest?.customization?.message || {};
+  const productName = purchase.products?.name || 'Digital Bloom';
+  const safeRecipient = escapeHtml(delivery.recipientName || message.toName || 'your recipient');
+  const safeSender = escapeHtml(delivery.senderName || message.fromName || purchase.customer_name || 'You');
+  const safeMessage = escapeHtml(message.short || '');
+  const testPrefix = isTest ? '[TEST] ' : '';
+  const hasRenderReady = Boolean(String(purchase.download_url || '').trim());
+  const isScheduled = delivery.deliveryMode === 'scheduled';
+  const targetLabel = delivery.target === 'recipient' ? safeRecipient : 'you';
+  const deliveryLine = isScheduled
+    ? `Scheduled for ${escapeHtml(formatDeliveryDate(delivery.deliveryDate, delivery.buyerTimezone) || delivery.deliveryDate)}`
+    : (hasRenderReady
+        ? `Delivery status: ready`
+        : `Delivery status: preparing your protected bloom`);
+  const headline = isScheduled
+    ? 'Your Digital Bloom is scheduled'
+    : 'Your Digital Bloom order is confirmed';
+  const bodyCopy = isScheduled
+    ? `We’ve reserved your Digital Bloom and will email it to ${targetLabel} on the scheduled date.`
+    : (delivery.target === 'recipient'
+        ? `Your Digital Bloom purchase is confirmed. We’ll email it to ${targetLabel}${hasRenderReady ? ' right away.' : ' as soon as the protected bloom is ready.'}`
+        : `Your Digital Bloom purchase is confirmed. ${hasRenderReady ? 'It is ready for you now.' : 'We’re preparing your protected bloom now.'}`);
+
+  const html = `
+    <div style="background:#f7efe7;padding:32px 16px;font-family:Georgia,'Times New Roman',serif;color:#201b17;">
+      <div style="max-width:560px;margin:0 auto;background:#fffaf5;border:1px solid rgba(201,161,74,0.28);border-radius:24px;overflow:hidden;">
+        <div style="padding:28px 28px 18px;background:linear-gradient(135deg,#0c1b3f 0%,#132a58 100%);color:#f8f1eb;">
+          <div style="font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:#d9b45d;margin-bottom:10px;">${isTest ? 'TEST ORDER · ' : ''}Digital Bloom</div>
+          <h1 style="margin:0;font-size:28px;line-height:1.15;font-weight:600;">${headline}</h1>
+          <p style="margin:12px 0 0;font-size:15px;line-height:1.6;color:rgba(248,241,235,0.84);">${bodyCopy}</p>
+        </div>
+        <div style="padding:28px;">
+          <div style="margin-bottom:18px;font-size:16px;line-height:1.7;">
+            <strong>Bloom:</strong> ${escapeHtml(productName)}<br />
+            <strong>From:</strong> ${safeSender}<br />
+            <strong>${isScheduled ? 'Delivery timing' : 'Recipient'}:</strong> ${isScheduled ? deliveryLine : targetLabel}
+          </div>
+          ${!isScheduled ? `<div style="margin-bottom:18px;font-size:15px;line-height:1.6;color:#5f554b;">${deliveryLine}</div>` : ''}
+          ${safeMessage ? `<div style="margin-bottom:18px;padding:14px 16px;border-radius:14px;background:#f5ece1;font-size:15px;line-height:1.6;"><strong>Message:</strong><br />${safeMessage}</div>` : ''}
+          <a href="${giftUrl}" style="display:inline-block;padding:14px 22px;border-radius:999px;background:#c9a14a;color:#0e0f12;text-decoration:none;font-weight:700;font-family:Arial,sans-serif;">${hasRenderReady ? 'View bloom backup link' : 'Track your bloom'}</a>
+          <p style="font-size:14px;line-height:1.6;color:#5f554b;margin:18px 0 0;">
+            Save this email for your records. Your protected bloom link stays on the Digital Bloom site.
+          </p>
+          ${isTest ? '<p style="font-size:13px;line-height:1.6;color:#8b6a1f;margin:12px 0 0;"><strong>Test mode:</strong> This is a rehearsal email generated before launch.</p>' : ''}
+        </div>
+      </div>
+    </div>
+  `;
+
+  const response = await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      from: resolveSender(),
+      to,
+      subject: `${testPrefix}${headline}`,
+      html,
+      text: [
+        `${testPrefix}${headline}`,
+        `Bloom: ${productName}`,
+        isScheduled
+          ? `Scheduled for: ${formatDeliveryDate(delivery.deliveryDate, delivery.buyerTimezone) || delivery.deliveryDate}`
+          : `Recipient: ${delivery.target === 'recipient' ? (delivery.recipientName || message.toName || 'your recipient') : 'you'}`,
+        !isScheduled ? deliveryLine : null,
+        safeMessage ? `Message: ${message.short}` : null,
+        `Backup link: ${giftUrl}`,
+      ].filter(Boolean).join('\n'),
+    }),
+  });
+
+  const payload = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    throw new Error(payload?.message || payload?.error || 'Failed to send bloom buyer confirmation email');
+  }
+
+  return payload;
+}
+
 export async function processBloomDeliveryEmails({
   supabase,
   purchases,
@@ -237,10 +344,44 @@ export async function processBloomDeliveryEmails({
     const recipientEmail = delivery.target === 'recipient'
       ? delivery.recipientEmail
       : (delivery.recipientEmail || delivery.purchaserEmail || purchase.customer_email || '');
+    const purchaserEmail = delivery.purchaserEmail || purchase.customer_email || '';
 
-    if (!recipientEmail) {
+    if (!recipientEmail && !purchaserEmail) {
       processed.push(purchase);
       continue;
+    }
+
+    if (purchaserEmail && delivery.buyerEmailStatus !== 'sent') {
+      purchase = await updatePurchaseDeliveryManifest(supabase, purchase, {
+        buyerEmailStatus: 'sending',
+        buyerLastAttemptAt: now.toISOString(),
+        buyerLastError: null,
+        testLabel: isTestModePurchase(purchase, explicitTestMode),
+      });
+
+      try {
+        await sendBloomBuyerConfirmationEmail({
+          req,
+          to: purchaserEmail,
+          purchase,
+          delivery,
+          isTest: isTestModePurchase(purchase, explicitTestMode),
+        });
+
+        purchase = await updatePurchaseDeliveryManifest(supabase, purchase, {
+          buyerEmailStatus: 'sent',
+          buyerEmailSentAt: now.toISOString(),
+          buyerLastError: null,
+          purchaserEmail,
+        });
+      } catch (error) {
+        console.error(`Bloom buyer confirmation failed for purchase ${purchase.id}:`, error);
+        purchase = await updatePurchaseDeliveryManifest(supabase, purchase, {
+          buyerEmailStatus: 'failed',
+          buyerLastError: String(error.message || error).slice(0, 240),
+          purchaserEmail,
+        });
+      }
     }
 
     const hasProtectedDeliveryReady = Boolean(String(purchase.download_url || '').trim());
@@ -325,6 +466,8 @@ export function buildDeliverySummary(delivery) {
     buyer_timezone: delivery.buyerTimezone || 'America/Chicago',
     email_status: delivery.emailStatus || 'pending',
     email_sent_at: delivery.emailSentAt || null,
+    buyer_email_status: delivery.buyerEmailStatus || 'pending',
+    buyer_email_sent_at: delivery.buyerEmailSentAt || null,
     display_date: delivery.deliveryDate ? formatDeliveryDate(delivery.deliveryDate, delivery.buyerTimezone) : '',
     test_label: Boolean(delivery.testLabel),
   };

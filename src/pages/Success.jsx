@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
+import { useCart } from '../context/CartContext';
 import '../styles/success.css';
 
 const POLL_LIMIT = 20;
@@ -17,6 +18,7 @@ const PURCHASE_STATUS_LABELS = {
 
 const Success = () => {
   const { t } = useLanguage();
+  const { clearCart } = useCart();
   const [searchParams] = useSearchParams();
   const [isProcessing, setIsProcessing] = useState(true);
   const [checkout, setCheckout] = useState(null);
@@ -63,7 +65,7 @@ const Success = () => {
         setIsProcessing(false);
 
         if (data.kind !== 'credit') {
-          localStorage.removeItem('flowerShopCart');
+          clearCart();
           setHasSavedCart(false);
         } else {
           try {
@@ -93,7 +95,7 @@ const Success = () => {
         window.clearTimeout(timeoutId);
       }
     };
-  }, [sessionId, t, refreshNonce]);
+  }, [sessionId, t, refreshNonce, clearCart]);
 
   const purchases = useMemo(() => checkout?.purchases || [], [checkout]);
   const creditPurchase = checkout?.kind === 'credit' ? checkout?.credit : null;
@@ -105,7 +107,7 @@ const Success = () => {
     [purchases]
   );
   const readyDownloads = useMemo(
-    () => purchases.filter((purchase) => purchase.download_url && purchase.download_expires_at && new Date(purchase.download_expires_at) > new Date()),
+    () => purchases.filter((purchase) => purchase.download_url && (!purchase.download_expires_at || new Date(purchase.download_expires_at) > new Date())),
     [purchases]
   );
   const primaryGiftPath = (bloomPurchases.find((purchase) => purchase.delivery?.delivery_mode !== 'scheduled' || purchase.delivery?.email_status === 'sent')?.bloom_slug || bloomPurchases[0]?.bloom_slug)
@@ -333,7 +335,7 @@ const Success = () => {
           <div className="success-card">
             <h3 className="success-card-label">{t('success_experiences')}</h3>
             {purchases.map((purchase) => {
-              const isReady = purchase.download_url && purchase.download_expires_at && new Date(purchase.download_expires_at) > new Date();
+              const isReady = purchase.download_url && (!purchase.download_expires_at || new Date(purchase.download_expires_at) > new Date());
               const isRenderPending = purchase.has_customization && !purchase.download_url;
               const isScheduledHold = purchase.delivery?.delivery_mode === 'scheduled' && purchase.delivery?.email_status !== 'sent';
               return (

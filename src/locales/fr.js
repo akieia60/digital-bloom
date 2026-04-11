@@ -203,6 +203,8 @@ export const fr = {
   customize_extra_glow_desc: "Une lueur cinématographique douce autour de la bloom.",
   customize_extra_petals: "Pluie de Pétales",
   customize_extra_petals_desc: "Des pétales en mouvement réel pour une livraison romantique.",
+  customize_extra_balloon: "Ballons Festifs",
+  customize_extra_balloon_desc: "Des ballons flottants qui montent à travers la bloom pour une ambiance festive.",
   customize_sound_piano: "Piano Doux",
   customize_sound_strings: "Cordes Délicates",
   customize_sound_bloom: "Ambient Bloom",
@@ -493,7 +495,7 @@ export const fr = {
   delivery_copied: "Copié !",
   delivery_expired_title: "Le lien du Bloom a expiré",
   delivery_expired_message: "Ce lien protégé du bloom a expiré. Demandez à l’expéditeur un nouveau lien.",
-  delivery_protection_note: "Les liens protégés du bloom sont en lecture seule et expirent automatiquement.",
+  delivery_protection_note: "Les liens protégés du bloom sont en lecture seule et peuvent être revisités à tout moment.",
   delivery_brand_tagline: "Offrez-leur leurs fleurs pendant qu'ils sont là",
 
 

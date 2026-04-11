@@ -124,12 +124,9 @@ export const updatePurchaseStatus = async (sessionId, status, additionalData = {
       updated_at: new Date().toISOString()
     };
 
-    // 2. If completed and digital, set download expiry (48 hours)
+    // 2. If completed and digital, set download URL (no expiry — bloom links last forever per FAQ)
     if (status === 'completed' && purchase.products?.product_type === 'digital') {
-      const expiryDate = new Date();
-      expiryDate.setHours(expiryDate.getHours() + 48);
-
-      updates.download_expires_at = expiryDate.toISOString();
+      updates.download_expires_at = null;
       updates.download_url = purchase.products.video_file_url || purchase.products.video_url;
       updates.download_count = 0;
     }

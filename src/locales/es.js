@@ -203,6 +203,8 @@ export const es = {
   customize_extra_glow_desc: "Un resplandor cinematográfico suave alrededor del bloom.",
   customize_extra_petals: "Lluvia de Pétalos",
   customize_extra_petals_desc: "Pétalos cayendo con movimiento real para un toque romántico.",
+  customize_extra_balloon: "Globos Festivos",
+  customize_extra_balloon_desc: "Globos flotantes que suben a través del bloom para un toque celebratorio.",
   customize_sound_piano: "Piano Suave",
   customize_sound_strings: "Cuerdas Suaves",
   customize_sound_bloom: "Bloom Ambiental",
@@ -493,7 +495,7 @@ export const es = {
   delivery_copied: "¡Copiado!",
   delivery_expired_title: "El enlace del Bloom venció",
   delivery_expired_message: "Este enlace protegido del bloom ya venció. Pídele al remitente un enlace nuevo.",
-  delivery_protection_note: "Los enlaces protegidos del bloom son solo de visualización y vencen automáticamente.",
+  delivery_protection_note: "Los enlaces protegidos del bloom son solo de visualización y se pueden volver a ver en cualquier momento.",
   delivery_brand_tagline: "Dales sus flores mientras están aquí",
 
 

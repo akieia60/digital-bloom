@@ -26,8 +26,13 @@ export const useCart = () => {
 
 export const CartProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState(() => {
-    const savedCart = localStorage.getItem('flowerShopCart');
-    return savedCart ? withLineItemIds(JSON.parse(savedCart)) : [];
+    try {
+      const savedCart = localStorage.getItem('flowerShopCart');
+      return savedCart ? withLineItemIds(JSON.parse(savedCart)) : [];
+    } catch {
+      localStorage.removeItem('flowerShopCart');
+      return [];
+    }
   });
   const [isCartOpen, setIsCartOpen] = useState(false);
 

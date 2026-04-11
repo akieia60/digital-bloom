@@ -199,6 +199,9 @@ export default function Checkout() {
           window.location.href = result.url;
           return;
         }
+        // Unexpected: server didn't confirm free checkout — fall through to standard flow
+        // but don't make a second createCartCheckoutSession call
+        throw new Error('Unexpected response from free checkout. Please try again.');
       }
 
       const result = await createCartCheckoutSession(
@@ -216,7 +219,10 @@ export default function Checkout() {
       await redirectToCheckout(result.url);
     } catch (err) {
       console.error('Checkout error:', err);
-      if (typeof window !== 'undefined') {
+      // Don't use the redirect fallback for free-checkout failures — it would
+      // create a second checkout session with remainingDue=0.
+      const isFreeCheckoutPath = creditApplied && remainingDue <= 0;
+      if (typeof window !== 'undefined' && !isFreeCheckoutPath) {
         startCartCheckoutRedirect(
           formattedItems,
           creditApplied

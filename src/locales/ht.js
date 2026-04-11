@@ -203,6 +203,8 @@ export const ht = {
   customize_extra_glow_desc: "Yon limyè sinematik ki dous toutotou bloom nan.",
   customize_extra_petals: "Lapli Petal",
   customize_extra_petals_desc: "Petal k ap tonbe ak mouvman reyèl pou yon manyen amoure.",
+  customize_extra_balloon: "Balon Fèt",
+  customize_extra_balloon_desc: "Balon k ap flote monte nan bloom nan pou yon santiman fèt.",
   customize_sound_piano: "Piano Dou",
   customize_sound_strings: "Kòd Mou",
   customize_sound_bloom: "Bloom Ambient",
@@ -493,7 +495,7 @@ export const ht = {
   delivery_copied: "Kopye!",
   delivery_expired_title: "Lyen Bloom nan ekspire",
   delivery_expired_message: "Lyen bloom ki pwoteje sa a ekspire. Tanpri kontakte moun ki voye li a pou yon nouvo lyen.",
-  delivery_protection_note: "Lyen Bloom ki pwoteje yo se pou gade sèlman epi yo ekspire otomatikman.",
+  delivery_protection_note: "Lyen Bloom ki pwoteje yo se pou gade sèlman epi ou ka retounen gade yo nenpòt ki lè.",
   delivery_brand_tagline: "Ba yo flè yo pandan yo la toujou",
 
 

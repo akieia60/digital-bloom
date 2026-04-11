@@ -203,6 +203,8 @@ export const en = {
   customize_extra_glow_desc: "A soft cinematic glow that adds warmth around the bloom.",
   customize_extra_petals: "Petal Rain",
   customize_extra_petals_desc: "Falling petals with real movement for a romantic delivery.",
+  customize_extra_balloon: "Festive Balloons",
+  customize_extra_balloon_desc: "Floating balloons that rise through the bloom for a celebratory feel.",
   customize_sound_piano: "Gentle Piano",
   customize_sound_strings: "Soft Strings",
   customize_sound_bloom: "Ambient Bloom",
@@ -493,7 +495,7 @@ export const en = {
   delivery_copied: "Copied!",
   delivery_expired_title: "Bloom Link Expired",
   delivery_expired_message: "This protected bloom link has expired. Please contact the sender for a fresh delivery link.",
-  delivery_protection_note: "Protected bloom links are view-only and expire automatically.",
+  delivery_protection_note: "Protected bloom links are view-only and can be revisited anytime.",
   delivery_brand_tagline: "Give Them Their Flowers While They're Here",
 
 

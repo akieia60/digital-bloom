@@ -20,7 +20,7 @@ const OVERLAY_LABEL_KEYS = {
   goldDust: 'customize_extra_gold',
   softGlow: 'customize_extra_glow',
   rosePetals: 'customize_extra_petals',
-  balloon: 'customize_extra_ribbon',
+  balloon: 'customize_extra_balloon',
 };
 
 const THEME_LABEL_KEYS = {

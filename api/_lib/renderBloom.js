@@ -132,6 +132,20 @@ const PETAL_ACCENTS = [
   { x: 'w*0.22', y: 'h*0.74', w: 'w*0.018', h: 'h*0.014' },
 ];
 
+/**
+ * Resolve a simple layout expression like 'w*0.055' or 'h*0.705'.
+ * All layout constants are in the form: dimension * scalar.
+ * Using explicit math instead of eval to avoid code-injection risk.
+ */
+function resolveLayoutExpr(expr, w, h) {
+  const str = String(expr).replace(/\bw\b/g, w).replace(/\bh\b/g, h);
+  const match = str.match(/^([\d.]+)\s*\*\s*([\d.]+)$/);
+  if (match) return Number(match[1]) * Number(match[2]);
+  // Fallback: try simple numeric
+  const num = Number(str);
+  return Number.isFinite(num) ? num : 0;
+}
+
 function normalizeHex(hex, fallback = 'D4AF37') {
   const value = String(hex || '').replace('#', '').trim();
   return /^[0-9a-f]{6}$/i.test(value) ? value.toUpperCase() : fallback;
@@ -397,10 +411,10 @@ async function createOverlayImage(destination, {
     const textBlockHeight = lines.length * lineHeight;
 
     if (layout.messageBox) {
-      const boxX = eval(layout.messageBox.x.replace(/w/g, width).replace(/h/g, height));
-      const boxY = eval(layout.messageBox.y.replace(/w/g, width).replace(/h/g, height));
-      const boxW = eval(layout.messageBox.w.replace(/w/g, width).replace(/h/g, height));
-      const boxH = Math.max(eval(layout.messageBox.h.replace(/w/g, width).replace(/h/g, height)), textBlockHeight + 28);
+      const boxX = resolveLayoutExpr(layout.messageBox.x, width, height);
+      const boxY = resolveLayoutExpr(layout.messageBox.y, width, height);
+      const boxW = resolveLayoutExpr(layout.messageBox.w, width, height);
+      const boxH = Math.max(resolveLayoutExpr(layout.messageBox.h, width, height), textBlockHeight + 28);
       roundRect(ctx, boxX, boxY, boxW, boxH, 24);
       ctx.fillStyle = rgba(primaryColor, 0.24);
       ctx.fill();
@@ -617,9 +631,6 @@ export async function renderBloomDelivery(purchaseId) {
         upsert: true,
       });
 
-    const expiryDate = new Date();
-    expiryDate.setHours(expiryDate.getHours() + 48);
-
     if (uploadError) {
       console.warn(`Private delivery bucket unavailable, falling back to public bucket for purchase ${purchase.id}:`, uploadError);
 
@@ -643,7 +654,7 @@ export async function renderBloomDelivery(purchaseId) {
         .update({
           status: 'completed',
           download_url: publicData.publicUrl,
-          download_expires_at: expiryDate.toISOString(),
+          download_expires_at: null,
           download_count: 0,
           updated_at: new Date().toISOString(),
         })
@@ -664,7 +675,7 @@ export async function renderBloomDelivery(purchaseId) {
       .update({
         status: 'completed',
         download_url: storagePath,
-        download_expires_at: expiryDate.toISOString(),
+        download_expires_at: null,
         download_count: 0,
         updated_at: new Date().toISOString(),
       })

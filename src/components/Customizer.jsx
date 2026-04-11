@@ -16,12 +16,12 @@ const EXTRAS = [
 
 const SOUND_TRACKS = [
   { id: 'gentle-piano', nameKey: 'customize_sound_piano', icon: '🎹', src: '/audio/gentle-piano.mp3' },
-  { id: 'soft-strings', nameKey: 'customize_sound_strings', icon: '🎻', src: '/audio/soft-strings.mp3' },
-  { id: 'ambient-bloom', nameKey: 'customize_sound_bloom', icon: '🌸', src: '/audio/ambient-bloom.mp3' },
-  { id: 'golden-harp', nameKey: 'customize_sound_harp', icon: '🪕', src: '/audio/golden-harp.mp3' },
-  { id: 'ocean-breeze', nameKey: 'customize_sound_ocean', icon: '🌊', src: '/audio/ocean-breeze.mp3' },
-  { id: 'jazz-lounge', nameKey: 'customize_sound_jazz', icon: '🎷', src: '/audio/jazz-lounge.mp3' },
-  { id: 'r-and-b-soul', nameKey: 'customize_sound_rnb', icon: '🎤', src: '/audio/r-and-b-soul.mp3' },
+  { id: 'soft-strings', nameKey: 'customize_sound_strings', icon: '🎻', src: '/audio/soft-strings.mp3', comingSoon: true },
+  { id: 'ambient-bloom', nameKey: 'customize_sound_bloom', icon: '🌸', src: '/audio/ambient-bloom.mp3', comingSoon: true },
+  { id: 'golden-harp', nameKey: 'customize_sound_harp', icon: '🪕', src: '/audio/golden-harp.mp3', comingSoon: true },
+  { id: 'ocean-breeze', nameKey: 'customize_sound_ocean', icon: '🌊', src: '/audio/ocean-breeze.mp3', comingSoon: true },
+  { id: 'jazz-lounge', nameKey: 'customize_sound_jazz', icon: '🎷', src: '/audio/jazz-lounge.mp3', comingSoon: true },
+  { id: 'r-and-b-soul', nameKey: 'customize_sound_rnb', icon: '🎤', src: '/audio/r-and-b-soul.mp3', comingSoon: true },
   { id: 'give-flowers', nameKey: 'customize_sound_flowers', icon: '💐', src: null, comingSoon: true },
 ];
 

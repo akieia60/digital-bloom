@@ -203,6 +203,8 @@ export const zh = {
   customize_extra_glow_desc: "柔和的电影感光晕，围绕 bloom 发光。",
   customize_extra_petals: "花瓣雨",
   customize_extra_petals_desc: "真实下落的花瓣动态，浪漫感更强。",
+  customize_extra_balloon: "节日气球",
+  customize_extra_balloon_desc: "漂浮的气球穿过 bloom 升起，带来节日氛围。",
   customize_sound_piano: "柔和钢琴",
   customize_sound_strings: "柔和弦乐",
   customize_sound_bloom: "环境绽放",
@@ -493,7 +495,7 @@ export const zh = {
   delivery_copied: "已复制！",
   delivery_expired_title: "Bloom 链接已过期",
   delivery_expired_message: "这个受保护的 bloom 链接已过期。请联系发送者获取新的链接。",
-  delivery_protection_note: "受保护的 bloom 链接仅供查看，并会自动过期。",
+  delivery_protection_note: "受保护的 bloom 链接仅供查看，可随时重新访问。",
   delivery_brand_tagline: "趁他们还在的时候，把花送给他们",
 
 
