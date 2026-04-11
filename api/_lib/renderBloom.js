@@ -180,17 +180,17 @@ function resolveMediaPath(source) {
   }
 
   if (value.startsWith('/')) {
-    const localPath = path.join(process.cwd(), 'public', value.replace(/^\/+/, ''));
-    if (fs.existsSync(localPath)) {
-      return { type: 'local', value: localPath };
-    }
-
     const baseUrl = normalizePublicBaseUrl(
-      process.env.APP_BASE_URL || process.env.VITE_APP_URL || process.env.VITE_API_URL
+      process.env.APP_BASE_URL ||
+      process.env.VITE_APP_URL ||
+      process.env.VITE_API_URL ||
+      (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : '')
     );
     if (baseUrl) {
       return { type: 'remote', value: new URL(value, baseUrl).toString() };
     }
+
+    return { type: 'missing', value: null };
   }
 
   return { type: 'remote', value };
