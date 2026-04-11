@@ -16,14 +16,23 @@ const supabase = createClient(
 
 const STALE_PURCHASE_RENDER_MS = 2 * 60 * 1000;
 
+function hasCustomizedBloomWithoutRender(purchase) {
+  return Boolean(purchase?.composition_manifest?.customization) && !String(purchase?.download_url || '').trim();
+}
+
+function shouldSurfaceAsProcessing(purchase) {
+  const status = String(purchase?.status || '').toLowerCase();
+  return status === 'pending' || status === 'processing' || hasCustomizedBloomWithoutRender(purchase);
+}
+
 function isStaleProcessingPurchase(purchase) {
   const status = String(purchase?.status || '').toLowerCase();
-  if (status !== 'pending' && status !== 'processing') return false;
+  if (status !== 'pending' && status !== 'processing' && !hasCustomizedBloomWithoutRender(purchase)) return false;
 
-  const createdAt = new Date(purchase?.created_at || 0).getTime();
-  if (!Number.isFinite(createdAt)) return false;
+  const activityAt = new Date(purchase?.updated_at || purchase?.created_at || 0).getTime();
+  if (!Number.isFinite(activityAt)) return false;
 
-  return Date.now() - createdAt > STALE_PURCHASE_RENDER_MS;
+  return Date.now() - activityAt > STALE_PURCHASE_RENDER_MS;
 }
 
 async function recoverStalePurchase(purchase) {
@@ -57,7 +66,7 @@ async function serializePurchaseWithProtectedDownload(purchase) {
     product_id: purchase.product_id,
     quantity: purchase.quantity,
     total_price: purchase.total_price,
-    status: purchase.status,
+    status: shouldSurfaceAsProcessing(purchase) ? 'processing' : purchase.status,
     download_url: downloadUrl,
     download_storage_path: purchase.download_storage_path || null,
     download_expires_at: purchase.download_expires_at,
@@ -135,11 +144,11 @@ export default async function handler(req, res) {
         ok: true,
         kind: 'bloom',
         purchase: {
-          id: resolvedPurchase.id,
-          bloom_slug: resolvedPurchase.bloom_slug,
-          product_id: resolvedPurchase.product_id,
-          total_price: resolvedPurchase.total_price,
-          status: resolvedPurchase.status,
+            id: resolvedPurchase.id,
+            bloom_slug: resolvedPurchase.bloom_slug,
+            product_id: resolvedPurchase.product_id,
+            total_price: resolvedPurchase.total_price,
+            status: shouldSurfaceAsProcessing(resolvedPurchase) ? 'processing' : resolvedPurchase.status,
           created_at: resolvedPurchase.created_at,
           download_url: await getSignedDeliveryUrl(supabase, resolvedPurchase).catch((error) => {
             console.error('Failed to resolve bloom delivery URL:', error);
@@ -225,7 +234,7 @@ export default async function handler(req, res) {
     });
 
     const totalAmount = deliveredOrQueuedPurchases.reduce((sum, purchase) => sum + Number(purchase.total_price || 0), 0);
-    const allCompleted = deliveredOrQueuedPurchases.every((purchase) => purchase.status === 'completed');
+    const allCompleted = deliveredOrQueuedPurchases.every((purchase) => !shouldSurfaceAsProcessing(purchase) && purchase.status === 'completed');
     const publicPurchases = await Promise.all(
       deliveredOrQueuedPurchases.map((purchase) => serializePurchaseWithProtectedDownload(purchase))
     );

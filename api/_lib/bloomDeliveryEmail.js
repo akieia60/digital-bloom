@@ -243,6 +243,23 @@ export async function processBloomDeliveryEmails({
       continue;
     }
 
+    const hasProtectedDeliveryReady = Boolean(String(purchase.download_url || '').trim());
+    if (!hasProtectedDeliveryReady) {
+      const pendingStatus = delivery.deliveryMode === 'scheduled' && !isBloomDeliveryDue(delivery, now)
+        ? 'queued'
+        : 'pending';
+
+      if (delivery.emailStatus !== pendingStatus) {
+        purchase = await updatePurchaseDeliveryManifest(supabase, purchase, {
+          emailStatus: pendingStatus,
+          lastError: null,
+        });
+      }
+
+      processed.push(purchase);
+      continue;
+    }
+
     if (delivery.emailStatus === 'sent' && delivery.emailSentAt) {
       processed.push(purchase);
       continue;
