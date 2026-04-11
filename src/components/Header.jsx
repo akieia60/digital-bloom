@@ -35,7 +35,7 @@ const Header = ({ onSearchChange, searchQuery, onOpenFaq }) => {
         <div className="flex items-center h-12 relative">
           
           {/* Left: Hamburger menu button — visible on ALL screen sizes */}
-          <div className="flex-1 flex items-center">
+          <div className="flex-1 flex items-center gap-2">
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               className="inline-flex min-h-12 min-w-12 items-center justify-center rounded-full p-2 text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
@@ -49,6 +49,18 @@ const Header = ({ onSearchChange, searchQuery, onOpenFaq }) => {
                 )}
               </svg>
             </button>
+
+            <Link
+              to="/"
+              className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-full border border-white/10 bg-white/5 p-2 text-white/82 transition-colors hover:bg-white/10 hover:text-white"
+              aria-label={t('nav_home')}
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M3 10.5L12 3l9 7.5" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M5.25 9.75V21h13.5V9.75" />
+              </svg>
+            </Link>
           </div>
 
           {/* Center: Brand */}
@@ -70,18 +82,7 @@ const Header = ({ onSearchChange, searchQuery, onOpenFaq }) => {
           </div>
 
           {/* Right: Cart + SEND A BLOOM */}
-          <div className="flex-1 flex justify-end items-center space-x-4 sm:space-x-6 ml-4">
-            <Link
-              to="/"
-              className="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-white/85 transition-colors hover:bg-white/10 hover:text-white"
-              aria-label={t('nav_home')}
-            >
-              <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M3 10.5L12 3l9 7.5" />
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M5.25 9.75V21h13.5V9.75" />
-              </svg>
-              {t('nav_home')}
-            </Link>
+          <div className="flex-1 flex justify-end items-center space-x-3 sm:space-x-5 ml-4">
             <button
               onClick={toggleCart}
               className="relative inline-flex min-h-11 min-w-11 items-center justify-center rounded-full border border-white/10 bg-white/5 p-2.5 group transition-colors hover:bg-white/10"
@@ -96,7 +97,7 @@ const Header = ({ onSearchChange, searchQuery, onOpenFaq }) => {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
               </svg>
               {cartCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-[var(--accent-gold)] text-[var(--bg-page)] text-[11px] font-bold rounded-full h-[18px] w-[18px] flex items-center justify-center shadow-sm">
+                <span className="absolute -top-1.5 -right-1.5 flex h-[22px] w-[22px] items-center justify-center rounded-full border border-[rgba(11,31,58,0.28)] bg-[var(--accent-gold)] text-[12px] font-extrabold text-[var(--bg-page)] shadow-[0_4px_12px_rgba(0,0,0,0.22)]">
                   {cartCount}
                 </span>
               )}

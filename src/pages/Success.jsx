@@ -292,6 +292,20 @@ const Success = () => {
               <li>{checkout?.checkout_status === 'completed' ? t('success_step_records_done') : t('success_step_records_pending')}</li>
               <li>{purchases.some((purchase) => purchase.has_customization) ? t('success_step_rendering') : t('success_step_files')}</li>
             </ul>
+
+            <div className="success-card-actions success-card-actions--inline">
+              {sendReadyPurchases.length > 0 && (
+                <Link to={`/gift/${sendReadyPurchases[0].bloom_slug}`} className="success-btn-gold success-btn-gold--compact">
+                  {t('success_open_bloom')}
+                </Link>
+              )}
+              <Link to="/shop" className="success-btn-outline success-btn-outline--small success-btn-outline--pill">
+                {t('nav_send_bloom')}
+              </Link>
+              <Link to="/" className="success-btn-outline success-btn-outline--small success-btn-outline--pill">
+                {t('success_return_homepage')}
+              </Link>
+            </div>
           </div>
         )}
 

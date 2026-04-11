@@ -140,27 +140,26 @@ export default function LivePreview({
         </div>
       )}
 
-      {protectionLayer?.senderName && (
+      <div
+        className={`composition-brand-lockup composition-brand-lockup--${protectionLayer?.engravingStyle || 'heirloom'}`}
+        style={protectionLayer?.brandPositionStyle}
+      >
         <div
-          className="composition-protection composition-protection--sender"
-          style={{ ...protectionLayer.senderPositionStyle, ...protectionLayer.senderTextStyle }}
+          className="composition-brand-chip"
+          style={{ color: protectionLayer?.brandColor || 'var(--db-brand)' }}
         >
-          {t('customize_from')} {protectionLayer.senderName}
+          <span className="composition-brand-chip__text">{protectionLayer?.brandText || 'Digital Bloom'}</span>
+          <span className="composition-brand-chip__tm">{protectionLayer?.tmText || 'TM'}</span>
         </div>
-      )}
 
-      <div
-        className="composition-protection composition-protection--tm"
-        style={protectionLayer?.tmPositionStyle}
-      >
-        {protectionLayer?.tmText || 'TM'}
-      </div>
-
-      <div
-        className="composition-protection composition-protection--brand"
-        style={{ ...protectionLayer?.brandPositionStyle, color: protectionLayer?.brandColor || 'var(--db-brand)' }}
-      >
-        {protectionLayer?.brandText || 'Digital Bloom™'}
+        {protectionLayer?.senderName && (
+          <div
+            className="composition-brand-lockup__sender"
+            style={protectionLayer?.senderTextStyle}
+          >
+            {t('customize_from')} {protectionLayer.senderName}
+          </div>
+        )}
       </div>
 
       {/* Subtle vignette for depth */}

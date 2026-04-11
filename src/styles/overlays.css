@@ -436,41 +436,77 @@
   white-space: nowrap;
 }
 
-.composition-protection--tm {
-  font-family: 'Outfit', sans-serif;
-  font-size: clamp(0.8rem, 2.6vw, 1.05rem);
-  font-weight: 800;
-  letter-spacing: 0.2em;
-  color: rgba(255, 255, 255, 0.72);
-  -webkit-text-stroke: 1.2px rgba(0, 0, 0, 0.85);
-  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8), 0 0 12px rgba(0, 0, 0, 0.4);
+.composition-brand-lockup {
+  position: absolute;
+  z-index: 46;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  max-width: calc(100% - 12.8%);
+  pointer-events: none;
 }
 
-.composition-protection--brand {
+.composition-brand-chip {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 4px;
+  padding: 10px 16px 9px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--db-rail, rgba(5, 12, 22, 0.62)) 78%, transparent), rgba(6, 19, 31, 0.86));
+  border: 1px solid rgba(212, 175, 55, 0.22);
+  box-shadow:
+    0 12px 24px rgba(0, 0, 0, 0.34),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  white-space: nowrap;
+}
+
+.composition-brand-chip__text {
   font-family: 'Cormorant Garamond', Georgia, serif;
-  font-size: clamp(1rem, 3vw, 1.3rem);
+  font-size: clamp(1rem, 3vw, 1.28rem);
   font-style: italic;
   font-weight: 700;
-  letter-spacing: 0.16em;
-  color: var(--db-brand, rgba(212, 175, 55, 1.0));
-  -webkit-text-stroke: 1.2px rgba(0, 0, 0, 0.85);
-  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8), 0 0 12px rgba(0, 0, 0, 0.4);
+  letter-spacing: 0.13em;
+  color: inherit;
+  -webkit-text-stroke: 0.8px rgba(0, 0, 0, 0.7);
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.75);
+  line-height: 1;
 }
 
-.composition-protection--sender {
-  width: auto;
-  max-width: min(52%, 300px);
-  padding: 0 12px;
-  box-sizing: border-box;
+.composition-brand-chip__tm {
   font-family: 'Outfit', sans-serif;
-  font-size: clamp(0.72rem, 2vw, 0.94rem);
+  font-size: clamp(0.54rem, 1.6vw, 0.66rem);
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.84);
+  -webkit-text-stroke: 0.55px rgba(0, 0, 0, 0.72);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.74);
+  transform: translateY(-0.18em);
+}
+
+.composition-brand-lockup__sender {
+  max-width: min(46%, 260px);
+  padding-top: 3px;
+  font-family: 'Outfit', sans-serif;
+  font-size: clamp(0.68rem, 1.9vw, 0.88rem);
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.6);
-  -webkit-text-stroke: 0.35px rgba(0, 0, 0, 0.6);
+  color: rgba(255, 255, 255, 0.74);
+  -webkit-text-stroke: 0.3px rgba(0, 0, 0, 0.55);
   text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
-  white-space: nowrap;
+  line-height: 1.1;
+}
+
+.composition-brand-lockup--signature {
+  gap: 14px;
+}
+
+.composition-brand-lockup--signature .composition-brand-lockup__sender {
+  max-width: min(48%, 280px);
+}
+
+.composition-brand-lockup--modern .composition-brand-lockup__sender {
+  letter-spacing: 0.16em;
 }
 
 /* ── GOLD DUST OVERLAY (Customizer — vivid, cinematic) ── */
@@ -759,8 +795,7 @@
   background: linear-gradient(90deg, rgba(255, 255, 255, 0.06), rgba(238, 215, 184, 0.4), rgba(255, 255, 255, 0.06));
 }
 
-.composition-protection--recipient,
-.composition-protection--sender {
+.composition-protection--recipient {
   font-weight: 700;
   color: rgba(255, 255, 255, 0.92) !important;
   -webkit-text-stroke: 0 !important;
@@ -773,25 +808,48 @@
   font-size: clamp(0.82rem, 2.5vw, 1.08rem);
 }
 
-.composition-protection--sender {
-  max-width: min(50%, 260px);
-  padding-inline: 10px 6px;
-  font-size: clamp(0.72rem, 2vw, 0.92rem);
+.composition-brand-lockup {
+  gap: 10px;
 }
 
-.composition-protection--brand,
-.composition-protection--tm {
-  -webkit-text-stroke: 0 !important;
-  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.78);
+.composition-brand-chip {
+  padding: 8px 13px 7px;
 }
 
-.composition-protection--brand {
+.composition-brand-chip__text {
   font-size: clamp(0.84rem, 2.2vw, 1.02rem);
   letter-spacing: 0.11em;
 }
 
-.composition-protection--tm {
+.composition-brand-chip__tm {
   font-size: clamp(0.64rem, 1.75vw, 0.78rem);
-  letter-spacing: 0.16em;
-  color: rgba(255, 255, 255, 0.58);
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.composition-brand-lockup__sender {
+  max-width: min(42%, 190px);
+  padding-top: 2px;
+  font-size: clamp(0.62rem, 1.8vw, 0.78rem);
+  letter-spacing: 0.1em;
+}
+
+@media (max-width: 480px) {
+  .composition-brand-lockup {
+    max-width: calc(100% - 11%);
+    gap: 8px;
+  }
+
+  .composition-brand-chip {
+    padding: 7px 12px 6px;
+  }
+
+  .composition-brand-chip__text {
+    letter-spacing: 0.09em;
+  }
+
+  .composition-brand-lockup__sender {
+    max-width: min(40%, 155px);
+    font-size: clamp(0.58rem, 1.7vw, 0.72rem);
+    line-height: 1.05;
+  }
 }

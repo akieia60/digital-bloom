@@ -89,7 +89,7 @@ const ShoppingCart = () => {
               {cartItems.map((item, index) => (
                 <div
                   key={item.lineItemId || `${item.id}-${index}`}
-                  className="rounded-[28px] border border-white/8 bg-white/[0.03] px-4 sm:px-5 shadow-[0_18px_42px_rgba(0,0,0,0.18)]"
+                  className="rounded-[28px] border border-white/14 bg-[linear-gradient(180deg,rgba(255,255,255,0.06),rgba(255,255,255,0.035))] px-4 sm:px-5 shadow-[0_22px_50px_rgba(0,0,0,0.24)] ring-1 ring-[rgba(212,175,55,0.08)]"
                 >
                   <CartItem item={item} />
                 </div>
