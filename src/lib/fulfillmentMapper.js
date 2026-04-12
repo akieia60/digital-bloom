@@ -230,6 +230,8 @@ export function buildCartComposition(customization) {
     selectedSound = '',
     engravingStyle = 'heirloom',
     fontChoice = 'playfair',
+    messageTextColor = '#FFFFFF',
+    messageBold = false,
     locale = 'en',
   } = customization;
 
@@ -247,6 +249,8 @@ export function buildCartComposition(customization) {
     selectedSound,
     engravingStyle,
     fontChoice,
+    messageTextColor,
+    messageBold,
     locale,
     extras: Object.fromEntries(
       Object.entries(extras).map(([key, value]) => [key, Boolean(value)])

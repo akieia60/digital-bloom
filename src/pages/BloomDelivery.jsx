@@ -241,6 +241,8 @@ export default function BloomDelivery() {
               message={delivery.message}
               engravingStyle={delivery.engravingStyle}
               fontChoice={delivery.fontChoice}
+              messageTextColor={delivery.messageTextColor}
+              messageBold={delivery.messageBold}
               className="bloom-delivery__preview"
             />
           )}

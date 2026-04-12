@@ -337,6 +337,8 @@ export function getCompositionLayers({
   message = {},
   engravingStyle = 'heirloom',
   fontChoice = 'playfair',
+  messageTextColor = '#FFFFFF',
+  messageBold = false,
 }) {
   const theme = getThemeSpec(colorTheme, { primaryColor, accentColor });
   const engraving = ENGRAVING_STYLES[engravingStyle] || ENGRAVING_STYLES.heirloom;
@@ -385,17 +387,18 @@ export function getCompositionLayers({
         position: engraving.messagePosition,
         positionStyle: TEXT_POSITIONS[engraving.messagePosition],
         font: 'Playfair Display',
-        color: '#FFFFFF',
+        color: messageTextColor || '#FFFFFF',
         shadow: true,
         variant: engraving.textVariant,
         fontChoice,
         textStyle: {
           fontFamily: font.previewFamily,
-          fontWeight: font.previewWeight,
+          fontWeight: messageBold ? '800' : font.previewWeight,
           fontStyle: font.previewFontStyle,
           textTransform: font.previewTransform,
           letterSpacing: font.previewLetterSpacing,
           fontSize: getMessageSize(message.short),
+          color: messageTextColor || '#FFFFFF',
         },
       }
     : null;

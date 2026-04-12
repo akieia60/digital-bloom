@@ -688,6 +688,14 @@
   font-family: 'Outfit', sans-serif;
 }
 
+/* ─── TEXT COLOR SWATCHES ─── */
+.customizer-color-swatches {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 4px 0;
+}
+
 /* ─── COLOR THEME SWATCHES ─── */
 .theme-grid {
   display: grid;

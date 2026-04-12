@@ -152,6 +152,8 @@ export async function resolveBloomDelivery(bloomSlug) {
         extras: customization.extras || {},
         engravingStyle: customization.engravingStyle || 'heirloom',
         fontChoice: customization.fontChoice || 'playfair',
+        messageTextColor: customization.messageTextColor || '#FFFFFF',
+        messageBold: customization.messageBold || false,
       },
       composition,
       error: null,

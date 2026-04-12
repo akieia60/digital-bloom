@@ -85,6 +85,8 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
   const [selectedSound, setSelectedSound] = useState(stateDefaults.selectedSound || stateDefaults.sound || '');
   const [engravingStyle, setEngravingStyle] = useState(stateDefaults.engravingStyle || 'heirloom');
   const [fontChoice, setFontChoice] = useState(stateDefaults.fontChoice || 'playfair');
+  const [messageTextColor, setMessageTextColor] = useState(stateDefaults.messageTextColor || '#FFFFFF');
+  const [messageBold, setMessageBold] = useState(stateDefaults.messageBold || false);
   const [playingTrack, setPlayingTrack] = useState(null);
   const [activeStep, setActiveStep] = useState(1);
 
@@ -121,6 +123,12 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
       }
       if (editData.fontChoice || editData.composition?.fontChoice) {
         setFontChoice(editData.fontChoice || editData.composition?.fontChoice || 'playfair');
+      }
+      if (editData.messageTextColor || editData.composition?.messageTextColor) {
+        setMessageTextColor(editData.messageTextColor || editData.composition?.messageTextColor || '#FFFFFF');
+      }
+      if (typeof editData.messageBold === 'boolean' || typeof editData.composition?.messageBold === 'boolean') {
+        setMessageBold(editData.messageBold ?? editData.composition?.messageBold ?? false);
       }
       if (editData.composition?.activeOverlays) {
         const newExtras = { ribbon: false, sparkle: false, goldDust: false, softGlow: false, rosePetals: false, balloon: false };
@@ -352,6 +360,8 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
       selectedSound,
       engravingStyle,
       fontChoice,
+      messageTextColor,
+      messageBold,
       locale: lang,
     });
     // Stop audio on complete
@@ -366,12 +376,14 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
       selectedSound,
       engravingStyle,
       fontChoice,
+      messageTextColor,
+      messageBold,
       locale: lang,
       totalPrice,
       composition,
     });
     onClose();
-  }, [isProductValid, product, message, colorTheme, primaryColor, accentColor, extras, selectedSound, engravingStyle, fontChoice, lang, totalPrice, themeStyle, stopAllAudio, onComplete, onClose]);
+  }, [isProductValid, product, message, colorTheme, primaryColor, accentColor, extras, selectedSound, engravingStyle, fontChoice, messageTextColor, messageBold, lang, totalPrice, themeStyle, stopAllAudio, onComplete, onClose]);
 
   const selectedExtras = useMemo(
     () => EXTRAS.filter((extra) => extras[extra.id]).map((extra) => t(extra.nameKey)),
@@ -447,6 +459,8 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
               message={message}
               engravingStyle={engravingStyle}
               fontChoice={fontChoice}
+              messageTextColor={messageTextColor}
+              messageBold={messageBold}
               className="composition-preview--square"
             />
           </div>
@@ -565,6 +579,62 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
               <span className="customizer-hint">{t('customize_font_hint')}</span>
             </div>
 
+            {/* Text color swatches */}
+            <div className="customizer-field">
+              <label className="customizer-label">{t('customize_text_color_label')}</label>
+              <div className="customizer-color-swatches">
+                {[
+                  { hex: '#FFFFFF', label: t('customize_color_white') },
+                  { hex: '#F5E6CC', label: t('customize_color_cream') },
+                  { hex: '#D4AF37', label: t('customize_color_gold') },
+                  { hex: '#F2A8B8', label: t('customize_color_blush') },
+                  { hex: '#A8D0F0', label: t('customize_color_sky') },
+                  { hex: '#A8D8B0', label: t('customize_color_sage') },
+                  { hex: '#C8AEE8', label: t('customize_color_lavender') },
+                  { hex: '#F4C4A0', label: t('customize_color_peach') },
+                ].map(({ hex, label }) => (
+                  <button
+                    key={hex}
+                    type="button"
+                    aria-label={label}
+                    title={label}
+                    onClick={() => setMessageTextColor(hex)}
+                    style={{
+                      width: '32px', height: '32px', borderRadius: '50%',
+                      background: hex, border: 'none', cursor: 'pointer', flexShrink: 0,
+                      boxShadow: messageTextColor === hex
+                        ? `0 0 0 2px #0D1B36, 0 0 0 4px ${hex}`
+                        : '0 1px 4px rgba(0,0,0,0.3)',
+                      transform: messageTextColor === hex ? 'scale(1.15)' : 'scale(1)',
+                      transition: 'box-shadow 0.15s, transform 0.15s',
+                    }}
+                  />
+                ))}
+              </div>
+            </div>
+
+            {/* Bold toggle */}
+            <div className="customizer-field">
+              <label className="customizer-label">{t('customize_text_style_label')}</label>
+              <button
+                type="button"
+                onClick={() => setMessageBold(!messageBold)}
+                style={{
+                  display: 'inline-flex', alignItems: 'center', gap: '8px',
+                  padding: '8px 18px', borderRadius: '20px', border: '1px solid',
+                  borderColor: messageBold ? '#D4AF37' : 'rgba(255,255,255,0.2)',
+                  background: messageBold ? 'rgba(212,175,55,0.15)' : 'rgba(255,255,255,0.06)',
+                  color: messageBold ? '#D4AF37' : 'rgba(255,255,255,0.75)',
+                  fontFamily: 'Outfit, sans-serif', fontSize: '0.82rem',
+                  fontWeight: messageBold ? '800' : '400',
+                  cursor: 'pointer', transition: 'all 0.18s',
+                }}
+              >
+                <span style={{ fontWeight: '800', fontSize: '1rem', lineHeight: 1 }}>B</span>
+                <span>{messageBold ? t('customize_bold_on') : t('customize_bold_off')}</span>
+              </button>
+            </div>
+
             <div className="customizer-live-copy">
               <div className="customizer-live-copy__header">
                 <span>{t('customize_live_card_label')}</span>
@@ -587,10 +657,11 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
                   className="customizer-live-copy__message"
                   style={{
                     fontFamily: MESSAGE_FONT_OPTIONS[fontChoice]?.previewFamily,
-                    fontWeight: MESSAGE_FONT_OPTIONS[fontChoice]?.previewWeight,
+                    fontWeight: messageBold ? '800' : MESSAGE_FONT_OPTIONS[fontChoice]?.previewWeight,
                     fontStyle: MESSAGE_FONT_OPTIONS[fontChoice]?.previewFontStyle,
                     letterSpacing: MESSAGE_FONT_OPTIONS[fontChoice]?.previewLetterSpacing,
                     textTransform: MESSAGE_FONT_OPTIONS[fontChoice]?.previewTransform,
+                    color: messageTextColor,
                   }}
                 >
                   {message.short || t('customize_live_card_message')}
