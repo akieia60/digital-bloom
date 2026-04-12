@@ -394,7 +394,7 @@
   z-index: 41;
   pointer-events: none;
   border-radius: 18px;
-  background: linear-gradient(180deg, color-mix(in srgb, var(--db-rail, rgba(5,12,22,0.58)) 72%, transparent), rgba(5, 12, 22, 0.58));
+  background: linear-gradient(180deg, rgba(5, 12, 22, 0.42), rgba(5, 12, 22, 0.58));
   border: 1px solid rgba(255, 255, 255, 0.12);
   box-shadow: 0 18px 35px rgba(0, 0, 0, 0.28);
 }
@@ -452,7 +452,7 @@
   gap: 4px;
   padding: 10px 16px 9px;
   border-radius: 999px;
-  background: linear-gradient(180deg, color-mix(in srgb, var(--db-rail, rgba(5, 12, 22, 0.62)) 78%, transparent), rgba(6, 19, 31, 0.86));
+  background: linear-gradient(180deg, rgba(5, 12, 22, 0.48), rgba(6, 19, 31, 0.86));
   border: 1px solid rgba(212, 175, 55, 0.22);
   box-shadow:
     0 12px 24px rgba(0, 0, 0, 0.34),
