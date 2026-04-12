@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
 import { resolveBloomDelivery, DELIVERY_STATUS } from '../lib/deliveryResolver';
 import LivePreview from '../components/LivePreview';
+import { useBloomCapture } from '../hooks/useBloomCapture';
 import '../styles/bloomDelivery.css';
 
 /**
@@ -31,6 +32,7 @@ export default function BloomDelivery() {
   const [previewReplayKey, setPreviewReplayKey] = useState(0);
   const [processingTick, setProcessingTick] = useState(0);
   const revealTimerRef = useRef(null);
+  const compositionRef = useRef(null);
 
   // Fetch delivery data
   useEffect(() => {
@@ -189,6 +191,9 @@ export default function BloomDelivery() {
   const { delivery, composition } = state;
   const message = delivery?.message || {};
   const hasMessage = Boolean(message.short);
+
+  const { share, download, cancelDownload, capturing, progress, copied, canDownload } =
+    useBloomCapture({ delivery, compositionRef });
   const protectedVideoUrl = delivery?.downloadUrl && delivery?.downloadExpiresAt
     ? (new Date(delivery.downloadExpiresAt).getTime() > Date.now() ? delivery.downloadUrl : null)
     : null;
@@ -197,7 +202,7 @@ export default function BloomDelivery() {
     <div className="bloom-delivery">
       {/* ── Cinematic Bloom Hero ── */}
       <div className="bloom-delivery__hero">
-        <div className="bloom-delivery__composition">
+        <div className="bloom-delivery__composition" ref={compositionRef}>
           {protectedVideoUrl ? (
             <div className="db-watermark db-watermark--hero bloom-delivery__protected-frame">
               <video
@@ -263,7 +268,46 @@ export default function BloomDelivery() {
         )}
       </div>
 
-      {/* ── Minimal Controls ── */}
+      {/* ── Action Buttons ── */}
+      <div className="bloom-delivery__actions">
+
+        {/* Share */}
+        <button type="button" className="bloom-delivery__share-btn" onClick={share}>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <circle cx="18" cy="5" r="3" /><circle cx="6" cy="12" r="3" /><circle cx="18" cy="19" r="3" />
+            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" /><line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
+          </svg>
+          <span>{copied ? t('delivery_link_copied') : t('delivery_share')}</span>
+        </button>
+
+        {/* Download — hidden on Safari/iOS where MediaRecorder isn't supported */}
+        {canDownload && !capturing && (
+          <button type="button" className="bloom-delivery__download-btn" onClick={download}>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
+              <polyline points="7 10 12 15 17 10" /><line x1="12" y1="15" x2="12" y2="3" />
+            </svg>
+            <span>{t('delivery_download')}</span>
+          </button>
+        )}
+
+        {/* Progress bar while recording */}
+        {capturing && (
+          <div className="bloom-delivery__capture-progress">
+            <div className="bloom-delivery__capture-bar">
+              <div className="bloom-delivery__capture-fill" style={{ width: `${progress}%` }} />
+            </div>
+            <div className="bloom-delivery__capture-row">
+              <span className="bloom-delivery__capture-label">{t('delivery_capturing')} {Math.round(progress)}%</span>
+              <button type="button" className="bloom-delivery__capture-cancel" onClick={cancelDownload}>
+                {t('delivery_cancel')}
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* ── Secondary Controls ── */}
       <div className="bloom-delivery__controls">
         <button type="button" className="bloom-delivery__control-btn" onClick={handleReplay} aria-label="Replay">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
@@ -274,7 +318,7 @@ export default function BloomDelivery() {
         </button>
       </div>
 
-      <p className="bloom-delivery__protection-note">{t('delivery_protection_note')}</p>
+      <p className="bloom-delivery__protection-note">{t('delivery_watermark_note')}</p>
 
       {/* ── Brand Footer ── */}
       <BrandFooter />

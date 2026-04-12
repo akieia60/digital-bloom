@@ -152,6 +152,126 @@
   color: rgba(255, 255, 255, 0.85);
 }
 
+/* ── Share & Download Action Buttons ── */
+.bloom-delivery__actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 24px 24px 4px;
+  width: 100%;
+  max-width: 460px;
+}
+
+.bloom-delivery__share-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  width: 100%;
+  max-width: 320px;
+  padding: 15px 24px;
+  border-radius: 980px;
+  border: none;
+  background: linear-gradient(135deg, #D4AF37 0%, #C49A28 100%);
+  color: #0A0A0A;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.92rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: transform 0.18s, box-shadow 0.18s;
+  box-shadow: 0 6px 24px rgba(212, 175, 55, 0.35);
+}
+
+.bloom-delivery__share-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 30px rgba(212, 175, 55, 0.45);
+}
+
+.bloom-delivery__share-btn:active {
+  transform: translateY(0);
+}
+
+.bloom-delivery__download-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  width: 100%;
+  max-width: 320px;
+  padding: 13px 24px;
+  border-radius: 980px;
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  background: rgba(212, 175, 55, 0.08);
+  color: rgba(212, 175, 55, 0.9);
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: all 0.18s;
+}
+
+.bloom-delivery__download-btn:hover {
+  background: rgba(212, 175, 55, 0.15);
+  border-color: rgba(212, 175, 55, 0.55);
+  color: #D4AF37;
+}
+
+/* ── Capture Progress ── */
+.bloom-delivery__capture-progress {
+  width: 100%;
+  max-width: 320px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.bloom-delivery__capture-bar {
+  width: 100%;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.bloom-delivery__capture-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #C49A28, #D4AF37);
+  border-radius: 4px;
+  transition: width 0.3s linear;
+}
+
+.bloom-delivery__capture-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.bloom-delivery__capture-label {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.5);
+  letter-spacing: 0.04em;
+}
+
+.bloom-delivery__capture-cancel {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.35);
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.75rem;
+  cursor: pointer;
+  padding: 0;
+  letter-spacing: 0.04em;
+  transition: color 0.15s;
+}
+
+.bloom-delivery__capture-cancel:hover {
+  color: rgba(255, 255, 255, 0.7);
+}
+
 /* ── Brand Footer ── */
 .bloom-delivery__brand {
   text-align: center;
