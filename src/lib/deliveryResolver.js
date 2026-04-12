@@ -64,8 +64,7 @@ export async function resolveBloomDelivery(bloomSlug) {
     // Check purchase status
     if (
       purchase.status === 'pending' ||
-      purchase.status === 'processing' ||
-      (hasCustomizedBloom && !hasProtectedDownload)
+      purchase.status === 'processing'
     ) {
       return {
         status: DELIVERY_STATUS.PROCESSING,

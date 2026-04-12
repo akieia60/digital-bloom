@@ -112,12 +112,12 @@ export async function finalizePurchaseRecord(purchase, stripePaymentIntentId = n
   const product = purchase.products || {};
   const isDigital = product.product_type === 'digital' || Boolean(product.video_file_url || product.video_url);
 
-  if (purchase.status === 'completed' && (!hasCustomization || purchase.download_url)) {
+  if (purchase.status === 'completed') {
     return purchase;
   }
 
   const updates = {
-    status: hasCustomization ? 'processing' : 'completed',
+    status: 'completed',
     updated_at: new Date().toISOString(),
   };
 
