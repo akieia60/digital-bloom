@@ -368,6 +368,8 @@ export const fr = {
   customize_font_playfair: "Sérif classique",
   customize_font_outfit: "Sans moderne",
   customize_font_arial: "Sans en gras",
+  customize_font_greatvibes: "Calligraphie",
+  customize_font_dancing: "Écriture fluide",
   customize_live_card_label: "Placement du texte en direct",
   customize_live_card_note: "Cette mini scène reste près du clavier pour que vous voyiez votre texte pendant que vous écrivez.",
   customize_live_card_to: "Nom du destinataire",

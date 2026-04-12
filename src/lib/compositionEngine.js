@@ -145,6 +145,24 @@ export const MESSAGE_FONT_OPTIONS = {
     previewLetterSpacing: '0.06em',
     renderFont: 'Sans',
   },
+  greatVibes: {
+    label: 'Calligraphy Script',
+    previewFamily: "'Great Vibes', cursive",
+    previewWeight: 400,
+    previewFontStyle: 'normal',
+    previewTransform: 'none',
+    previewLetterSpacing: '0.03em',
+    renderFont: 'Script',
+  },
+  dancingScript: {
+    label: 'Flowing Cursive',
+    previewFamily: "'Dancing Script', cursive",
+    previewWeight: 600,
+    previewFontStyle: 'normal',
+    previewTransform: 'none',
+    previewLetterSpacing: '0.02em',
+    renderFont: 'Script',
+  },
 };
 
 const TEXT_POSITIONS = {

@@ -368,6 +368,8 @@ export const ht = {
   customize_font_playfair: "Serif klasik",
   customize_font_outfit: "Sans modèn",
   customize_font_arial: "Sans an gra",
+  customize_font_greatvibes: "Kaligrafi",
+  customize_font_dancing: "Kursiv koule",
   customize_live_card_label: "Pozisyon tèks an dirèk",
   customize_live_card_note: "Ti sèn sa a rete toupre klavye a pou ou ka wè tèks la pandan w ap ekri.",
   customize_live_card_to: "Non moun nan",

@@ -371,7 +371,7 @@
   align-items: center;
   gap: 8px;
   margin-left: auto;
-  padding-right: 4px;
+  padding-right: 16px;
 }
 
 .landing-nav__send-btn {

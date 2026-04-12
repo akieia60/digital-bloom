@@ -388,6 +388,8 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
       { id: 'playfair', label: t('customize_font_playfair') },
       { id: 'outfit', label: t('customize_font_outfit') },
       { id: 'arialBold', label: t('customize_font_arial') },
+      { id: 'greatVibes', label: t('customize_font_greatvibes') },
+      { id: 'dancingScript', label: t('customize_font_dancing') },
     ],
     [t]
   );

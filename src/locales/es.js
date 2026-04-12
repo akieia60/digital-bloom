@@ -368,6 +368,8 @@ export const es = {
   customize_font_playfair: "Serif clásica",
   customize_font_outfit: "Sans moderna",
   customize_font_arial: "Sans en negrita",
+  customize_font_greatvibes: "Caligrafía",
+  customize_font_dancing: "Cursiva fluida",
   customize_live_card_label: "Ubicación del texto en vivo",
   customize_live_card_note: "Esta mini vista se queda cerca del teclado para que veas tu texto mientras escribes.",
   customize_live_card_to: "Nombre del destinatario",

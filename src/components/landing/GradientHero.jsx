@@ -1,14 +1,6 @@
 import { useEffect, useState, useMemo, useRef } from 'react';
-import { Link } from 'react-router-dom';
 import { useLanguage } from '../../contexts/LanguageContext';
-import OCCASIONS from '../../data/occasions';
 import '../../styles/gradient-hero.css';
-
-const HERO_PILL_CATEGORIES = [
-  'mothers-day', 'birthday', 'love', 'anniversary', 'celebration',
-  'thank-you', 'graduation', 'fathers-day', 'friendship', 'encouragement',
-  'grief', 'baby', 'milestones', 'promotions', 'luxury', 'holidays',
-];
 
 function getUpcomingHoliday() {
   const now = new Date();
@@ -154,59 +146,6 @@ export default function GradientHero() {
               )}
 
               <div className="gradient-hero__media-brandmark">Digital Bloom™</div>
-            </div>
-          </div>
-        </div>
-
-        {/* Category pill strip — horizontal scroll, full-bleed */}
-        <div style={{ position: 'relative', marginTop: '1.5rem' }}>
-          {/* Right fade — visual hint that more pills scroll off-screen */}
-          <div style={{
-            position: 'absolute', right: 0, top: 0, bottom: 0,
-            width: '60px', zIndex: 1, pointerEvents: 'none',
-            background: 'linear-gradient(to right, transparent, #0c1f3f)',
-          }} />
-          <div style={{
-            overflowX: 'auto', WebkitOverflowScrolling: 'touch',
-            scrollbarWidth: 'none', msOverflowStyle: 'none',
-            paddingBottom: '1.5rem', paddingTop: '0.5rem',
-          }}>
-            <div style={{
-              display: 'flex', gap: '10px',
-              paddingLeft: '1.25rem', paddingRight: '4rem',
-              width: 'max-content',
-            }}>
-              {HERO_PILL_CATEGORIES.map((slug) => {
-                const occasion = OCCASIONS[slug];
-                if (!occasion) return null;
-                return (
-                  <Link
-                    key={slug}
-                    to={`/shop/${slug}`}
-                    style={{
-                      display: 'inline-flex', alignItems: 'center', gap: '6px',
-                      padding: '8px 16px', borderRadius: '999px',
-                      border: `1px solid ${occasion.accent}55`,
-                      background: `${occasion.accent}12`,
-                      color: '#ffffff', fontSize: '13px', fontWeight: 500,
-                      letterSpacing: '0.02em', textDecoration: 'none',
-                      whiteSpace: 'nowrap', flexShrink: 0,
-                      transition: 'border-color 0.2s, background 0.2s',
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.borderColor = occasion.accent;
-                      e.currentTarget.style.background = `${occasion.accent}25`;
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.borderColor = `${occasion.accent}55`;
-                      e.currentTarget.style.background = `${occasion.accent}12`;
-                    }}
-                  >
-                    <span style={{ fontSize: '15px' }}>{occasion.emoji}</span>
-                    <span>{occasion.name}</span>
-                  </Link>
-                );
-              })}
             </div>
           </div>
         </div>

@@ -368,6 +368,8 @@ export const en = {
   customize_font_playfair: "Classic Serif",
   customize_font_outfit: "Modern Sans",
   customize_font_arial: "Bold Sans",
+  customize_font_greatvibes: "Calligraphy Script",
+  customize_font_dancing: "Flowing Cursive",
   customize_live_card_label: "Live text placement",
   customize_live_card_note: "This mini stage stays near your keyboard so you can see your wording while you type.",
   customize_live_card_to: "Recipient name",

@@ -487,7 +487,7 @@
   max-width: min(46%, 260px);
   padding-top: 3px;
   font-family: 'Outfit', sans-serif;
-  font-size: clamp(0.68rem, 1.9vw, 0.88rem);
+  font-size: clamp(0.8rem, 2.4vw, 1.05rem);
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -829,7 +829,7 @@
 .composition-brand-lockup__sender {
   max-width: min(42%, 190px);
   padding-top: 2px;
-  font-size: clamp(0.62rem, 1.8vw, 0.78rem);
+  font-size: clamp(0.82rem, 2.5vw, 1.08rem);
   letter-spacing: 0.1em;
 }
 
@@ -849,7 +849,7 @@
 
   .composition-brand-lockup__sender {
     max-width: min(40%, 155px);
-    font-size: clamp(0.58rem, 1.7vw, 0.72rem);
+    font-size: clamp(0.8rem, 2.4vw, 1.05rem);
     line-height: 1.05;
   }
 }

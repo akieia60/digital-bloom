@@ -368,6 +368,8 @@ export const zh = {
   customize_font_playfair: "经典衬线",
   customize_font_outfit: "现代无衬线",
   customize_font_arial: "粗体无衬线",
+  customize_font_greatvibes: "书法体",
+  customize_font_dancing: "流畅草书",
   customize_live_card_label: "文字实时位置",
   customize_live_card_note: "这个小预览会留在输入区附近，让你打字时也能看到效果。",
   customize_live_card_to: "收件人名字",
