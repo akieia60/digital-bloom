@@ -262,25 +262,22 @@ export async function sendBloomBuyerConfirmationEmail({
 
   const html = `
     <div style="background:#f7efe7;padding:32px 16px;font-family:Georgia,'Times New Roman',serif;color:#201b17;">
-      <div style="max-width:560px;margin:0 auto;background:#fffaf5;border:1px solid rgba(201,161,74,0.28);border-radius:24px;overflow:hidden;">
-        <div style="padding:28px 28px 18px;background:linear-gradient(135deg,#0c1b3f 0%,#132a58 100%);color:#f8f1eb;">
-          <div style="font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:#d9b45d;margin-bottom:10px;">${isTest ? 'TEST ORDER · ' : ''}Digital Bloom</div>
-          <h1 style="margin:0;font-size:28px;line-height:1.15;font-weight:600;">${headline}</h1>
-          <p style="margin:12px 0 0;font-size:15px;line-height:1.6;color:rgba(248,241,235,0.84);">${bodyCopy}</p>
+      <div style="max-width:520px;margin:0 auto;background:#fffaf5;border:1px solid rgba(201,161,74,0.28);border-radius:24px;overflow:hidden;">
+        <div style="padding:28px 28px 20px;background:linear-gradient(135deg,#0c1b3f 0%,#132a58 100%);color:#f8f1eb;text-align:center;">
+          <div style="font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:#d9b45d;margin-bottom:12px;">${isTest ? 'TEST · ' : ''}Digital Bloom™</div>
+          <h1 style="margin:0 0 10px;font-size:26px;line-height:1.2;font-weight:600;">${headline}</h1>
+          <p style="margin:0;font-size:15px;line-height:1.5;color:rgba(248,241,235,0.8);">${escapeHtml(productName)}</p>
         </div>
-        <div style="padding:28px;">
-          <div style="margin-bottom:18px;font-size:16px;line-height:1.7;">
-            <strong>Bloom:</strong> ${escapeHtml(productName)}<br />
-            <strong>From:</strong> ${safeSender}<br />
-            <strong>${isScheduled ? 'Delivery timing' : 'Recipient'}:</strong> ${isScheduled ? deliveryLine : targetLabel}
-          </div>
-          ${!isScheduled ? `<div style="margin-bottom:18px;font-size:15px;line-height:1.6;color:#5f554b;">${deliveryLine}</div>` : ''}
-          ${safeMessage ? `<div style="margin-bottom:18px;padding:14px 16px;border-radius:14px;background:#f5ece1;font-size:15px;line-height:1.6;"><strong>Message:</strong><br />${safeMessage}</div>` : ''}
-          <a href="${giftUrl}" style="display:inline-block;padding:14px 22px;border-radius:999px;background:#c9a14a;color:#0e0f12;text-decoration:none;font-weight:700;font-family:Arial,sans-serif;">${hasRenderReady ? 'View bloom backup link' : 'Track your bloom'}</a>
-          <p style="font-size:14px;line-height:1.6;color:#5f554b;margin:18px 0 0;">
-            Save this email for your records. Your protected bloom link stays on the Digital Bloom site.
+        <div style="padding:32px 28px;text-align:center;">
+          ${safeMessage ? `<div style="margin-bottom:24px;padding:16px 18px;border-radius:14px;background:#f5ece1;font-size:16px;line-height:1.65;font-style:italic;color:#3a2f22;">"${safeMessage}"</div>` : ''}
+          <p style="font-size:15px;color:#5f554b;margin:0 0 24px;line-height:1.6;">
+            From <strong>${safeSender}</strong>${isScheduled ? ` · Delivers ${escapeHtml(formatDeliveryDate(delivery.deliveryDate, delivery.buyerTimezone) || delivery.deliveryDate)}` : ''}
           </p>
-          ${isTest ? '<p style="font-size:13px;line-height:1.6;color:#8b6a1f;margin:12px 0 0;"><strong>Test mode:</strong> This is a rehearsal email generated before launch.</p>' : ''}
+          <a href="${giftUrl}" style="display:inline-block;padding:16px 32px;border-radius:999px;background:#c9a14a;color:#0e0f12;text-decoration:none;font-weight:700;font-family:Arial,sans-serif;font-size:17px;letter-spacing:0.02em;">Open Your Bloom →</a>
+          <p style="font-size:13px;line-height:1.5;color:#9e8f83;margin:20px 0 0;">
+            Save this link — it's your personal bloom page on Digital Bloom.
+          </p>
+          ${isTest ? '<p style="font-size:12px;color:#8b6a1f;margin:12px 0 0;"><strong>Test mode</strong> — rehearsal email only.</p>' : ''}
         </div>
       </div>
     </div>
@@ -300,12 +297,10 @@ export async function sendBloomBuyerConfirmationEmail({
       text: [
         `${testPrefix}${headline}`,
         `Bloom: ${productName}`,
-        isScheduled
-          ? `Scheduled for: ${formatDeliveryDate(delivery.deliveryDate, delivery.buyerTimezone) || delivery.deliveryDate}`
-          : `Recipient: ${delivery.target === 'recipient' ? (delivery.recipientName || message.toName || 'your recipient') : 'you'}`,
-        !isScheduled ? deliveryLine : null,
-        safeMessage ? `Message: ${message.short}` : null,
-        `Backup link: ${giftUrl}`,
+        `From: ${delivery.senderName || message.fromName || purchase.customer_name || 'Someone special'}`,
+        isScheduled ? `Delivers: ${formatDeliveryDate(delivery.deliveryDate, delivery.buyerTimezone) || delivery.deliveryDate}` : null,
+        safeMessage ? `"${message.short}"` : null,
+        `Open your bloom: ${giftUrl}`,
       ].filter(Boolean).join('\n'),
     }),
   });
@@ -396,8 +391,10 @@ export async function processBloomDeliveryEmails({
       }
     }
 
-    const hasProtectedDeliveryReady = Boolean(String(purchase.download_url || '').trim());
-    if (!hasProtectedDeliveryReady) {
+    // The bloom is ready when it has a bloom_slug and is completed — the LivePreview
+    // CSS composition is the delivery experience; a rendered download_url is optional.
+    const hasBloomReady = Boolean(purchase.bloom_slug) && String(purchase.status || '').toLowerCase() === 'completed';
+    if (!hasBloomReady) {
       const pendingStatus = delivery.deliveryMode === 'scheduled' && !isBloomDeliveryDue(delivery, now)
         ? 'queued'
         : 'pending';

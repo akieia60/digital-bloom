@@ -487,11 +487,11 @@
   max-width: min(46%, 260px);
   padding-top: 3px;
   font-family: 'Outfit', sans-serif;
-  font-size: clamp(0.8rem, 2.4vw, 1.05rem);
+  font-size: clamp(0.9rem, 2.6vw, 1.15rem);
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.74);
+  color: rgba(255, 255, 255, 0.92);
   -webkit-text-stroke: 0.3px rgba(0, 0, 0, 0.55);
   text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
   line-height: 1.1;
@@ -829,8 +829,9 @@
 .composition-brand-lockup__sender {
   max-width: min(42%, 190px);
   padding-top: 2px;
-  font-size: clamp(0.82rem, 2.5vw, 1.08rem);
+  font-size: clamp(0.92rem, 2.7vw, 1.18rem);
   letter-spacing: 0.1em;
+  color: rgba(255, 255, 255, 0.92);
 }
 
 @media (max-width: 480px) {
@@ -849,7 +850,8 @@
 
   .composition-brand-lockup__sender {
     max-width: min(40%, 155px);
-    font-size: clamp(0.8rem, 2.4vw, 1.05rem);
+    font-size: clamp(0.9rem, 2.6vw, 1.12rem);
     line-height: 1.05;
+    color: rgba(255, 255, 255, 0.92);
   }
 }
