@@ -62,6 +62,14 @@
   height: 100%;
 }
 
+/* Position the brand lockup inside the video frame (mirrors compositionEngine bottom-brand-lockup) */
+.bloom-delivery__protected-frame .composition-brand-lockup {
+  bottom: 5.2%;
+  left: 6.4%;
+  right: 6.4%;
+  text-align: left;
+}
+
 /* ── Message Reveal ── */
 .bloom-delivery__message {
   margin-top: 28px;
