@@ -1,5 +1,6 @@
 import Stripe from 'stripe';
 import { createClient } from '@supabase/supabase-js';
+import { waitUntil } from '@vercel/functions';
 import { captureReservedCredit } from '../_lib/creditReservations.js';
 import { finalizePurchasesBySession } from '../_lib/purchaseFlow.js';
 import { processBloomDeliveryEmails } from '../_lib/bloomDeliveryEmail.js';
@@ -9,6 +10,7 @@ export const config = {
   api: {
     bodyParser: false,
   },
+  maxDuration: 60,
 };
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
@@ -136,12 +138,22 @@ export default async function handler(req, res) {
 
     const purchases = await finalizePurchasesBySession(session.id, session.payment_intent || null);
 
-    await processBloomDeliveryEmails({
+    // Deliver emails in the background — return 200 to Stripe immediately.
+    // This prevents the webhook from timing out on Vercel serverless (10s limit).
+    const deliveryTask = processBloomDeliveryEmails({
       supabase,
       purchases,
       req: { headers: { origin: session.success_url ? new URL(session.success_url).origin : undefined } },
       explicitTestMode: session.livemode === false,
+    }).catch((emailError) => {
+      console.error('Bloom delivery email processing failed (background):', emailError);
     });
+
+    try {
+      waitUntil(deliveryTask);
+    } catch {
+      void deliveryTask;
+    }
 
     return res.status(200).json({ received: true });
   } catch (error) {

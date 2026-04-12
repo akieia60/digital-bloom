@@ -352,12 +352,16 @@ export async function processBloomDeliveryEmails({
     }
 
     if (purchaserEmail && delivery.buyerEmailStatus !== 'sent') {
-      purchase = await updatePurchaseDeliveryManifest(supabase, purchase, {
-        buyerEmailStatus: 'sending',
-        buyerLastAttemptAt: now.toISOString(),
-        buyerLastError: null,
-        testLabel: isTestModePurchase(purchase, explicitTestMode),
-      });
+      try {
+        purchase = await updatePurchaseDeliveryManifest(supabase, purchase, {
+          buyerEmailStatus: 'sending',
+          buyerLastAttemptAt: now.toISOString(),
+          buyerLastError: null,
+          testLabel: isTestModePurchase(purchase, explicitTestMode),
+        });
+      } catch (manifestError) {
+        console.error(`Failed to update buyer manifest to 'sending' for purchase ${purchase.id}:`, manifestError);
+      }
 
       try {
         await sendBloomBuyerConfirmationEmail({
@@ -368,19 +372,27 @@ export async function processBloomDeliveryEmails({
           isTest: isTestModePurchase(purchase, explicitTestMode),
         });
 
-        purchase = await updatePurchaseDeliveryManifest(supabase, purchase, {
-          buyerEmailStatus: 'sent',
-          buyerEmailSentAt: now.toISOString(),
-          buyerLastError: null,
-          purchaserEmail,
-        });
+        try {
+          purchase = await updatePurchaseDeliveryManifest(supabase, purchase, {
+            buyerEmailStatus: 'sent',
+            buyerEmailSentAt: now.toISOString(),
+            buyerLastError: null,
+            purchaserEmail,
+          });
+        } catch (manifestError) {
+          console.error(`Failed to update buyer manifest to 'sent' for purchase ${purchase.id}:`, manifestError);
+        }
       } catch (error) {
         console.error(`Bloom buyer confirmation failed for purchase ${purchase.id}:`, error);
-        purchase = await updatePurchaseDeliveryManifest(supabase, purchase, {
-          buyerEmailStatus: 'failed',
-          buyerLastError: String(error.message || error).slice(0, 240),
-          purchaserEmail,
-        });
+        try {
+          purchase = await updatePurchaseDeliveryManifest(supabase, purchase, {
+            buyerEmailStatus: 'failed',
+            buyerLastError: String(error.message || error).slice(0, 240),
+            purchaserEmail,
+          });
+        } catch (manifestError) {
+          console.error(`Failed to update buyer manifest to 'failed' for purchase ${purchase.id}:`, manifestError);
+        }
       }
     }
 
@@ -391,10 +403,14 @@ export async function processBloomDeliveryEmails({
         : 'pending';
 
       if (delivery.emailStatus !== pendingStatus) {
-        purchase = await updatePurchaseDeliveryManifest(supabase, purchase, {
-          emailStatus: pendingStatus,
-          lastError: null,
-        });
+        try {
+          purchase = await updatePurchaseDeliveryManifest(supabase, purchase, {
+            emailStatus: pendingStatus,
+            lastError: null,
+          });
+        } catch (manifestError) {
+          console.error(`Failed to update delivery manifest to '${pendingStatus}' for purchase ${purchase.id}:`, manifestError);
+        }
       }
 
       processed.push(purchase);
@@ -409,21 +425,29 @@ export async function processBloomDeliveryEmails({
     const due = isBloomDeliveryDue(delivery, now);
     if (!due) {
       if (delivery.emailStatus !== 'queued') {
-        purchase = await updatePurchaseDeliveryManifest(supabase, purchase, {
-          emailStatus: 'queued',
-          lastError: null,
-        });
+        try {
+          purchase = await updatePurchaseDeliveryManifest(supabase, purchase, {
+            emailStatus: 'queued',
+            lastError: null,
+          });
+        } catch (manifestError) {
+          console.error(`Failed to update delivery manifest to 'queued' for purchase ${purchase.id}:`, manifestError);
+        }
       }
       processed.push(purchase);
       continue;
     }
 
-    purchase = await updatePurchaseDeliveryManifest(supabase, purchase, {
-      emailStatus: 'sending',
-      lastAttemptAt: now.toISOString(),
-      lastError: null,
-      testLabel: isTestModePurchase(purchase, explicitTestMode),
-    });
+    try {
+      purchase = await updatePurchaseDeliveryManifest(supabase, purchase, {
+        emailStatus: 'sending',
+        lastAttemptAt: now.toISOString(),
+        lastError: null,
+        testLabel: isTestModePurchase(purchase, explicitTestMode),
+      });
+    } catch (manifestError) {
+      console.error(`Failed to update delivery manifest to 'sending' for purchase ${purchase.id}:`, manifestError);
+    }
 
     try {
       await sendBloomDeliveryEmail({
@@ -434,19 +458,27 @@ export async function processBloomDeliveryEmails({
         isTest: isTestModePurchase(purchase, explicitTestMode),
       });
 
-      purchase = await updatePurchaseDeliveryManifest(supabase, purchase, {
-        emailStatus: 'sent',
-        emailSentAt: now.toISOString(),
-        lastError: null,
-        recipientEmail,
-      });
+      try {
+        purchase = await updatePurchaseDeliveryManifest(supabase, purchase, {
+          emailStatus: 'sent',
+          emailSentAt: now.toISOString(),
+          lastError: null,
+          recipientEmail,
+        });
+      } catch (manifestError) {
+        console.error(`Failed to update delivery manifest to 'sent' for purchase ${purchase.id}:`, manifestError);
+      }
     } catch (error) {
       console.error(`Bloom delivery email failed for purchase ${purchase.id}:`, error);
-      purchase = await updatePurchaseDeliveryManifest(supabase, purchase, {
-        emailStatus: 'failed',
-        lastError: String(error.message || error).slice(0, 240),
-        recipientEmail,
-      });
+      try {
+        purchase = await updatePurchaseDeliveryManifest(supabase, purchase, {
+          emailStatus: 'failed',
+          lastError: String(error.message || error).slice(0, 240),
+          recipientEmail,
+        });
+      } catch (manifestError) {
+        console.error(`Failed to update delivery manifest to 'failed' for purchase ${purchase.id}:`, manifestError);
+      }
     }
 
     processed.push(purchase);

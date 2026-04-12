@@ -413,7 +413,7 @@ export function getCompositionLayers({
     tmPositionStyle: TEXT_POSITIONS[engraving.tmPosition],
     brandPosition: engraving.brandPosition,
     brandPositionStyle: TEXT_POSITIONS[engraving.brandPosition],
-    showBrandRail: true,
+    showBrandRail: false,
     railColor: theme.railColor,
     brandColor: theme.brandColor,
   };
