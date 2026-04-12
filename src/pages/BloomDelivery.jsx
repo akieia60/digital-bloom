@@ -34,6 +34,10 @@ export default function BloomDelivery() {
   const revealTimerRef = useRef(null);
   const compositionRef = useRef(null);
 
+  // Must be at top level — cannot be called conditionally (Rules of Hooks)
+  const { share, download, cancelDownload, capturing, progress, copied, canDownload } =
+    useBloomCapture({ delivery: state.delivery, compositionRef });
+
   // Fetch delivery data
   useEffect(() => {
     let cancelled = false;
@@ -192,8 +196,6 @@ export default function BloomDelivery() {
   const message = delivery?.message || {};
   const hasMessage = Boolean(message.short);
 
-  const { share, download, cancelDownload, capturing, progress, copied, canDownload } =
-    useBloomCapture({ delivery, compositionRef });
   const protectedVideoUrl = delivery?.downloadUrl && delivery?.downloadExpiresAt
     ? (new Date(delivery.downloadExpiresAt).getTime() > Date.now() ? delivery.downloadUrl : null)
     : null;
