@@ -232,6 +232,19 @@ export default function BloomDelivery() {
                 </div>
                 <div className="db-watermark-corner">© Digital Bloom</div>
               </div>
+              {/* Brand lockup — FROM slot + Digital Bloom™ chip */}
+              <div className="composition-brand-rail" aria-hidden="true" />
+              <div className="composition-brand-lockup composition-brand-lockup--heirloom" aria-hidden="true">
+                <div className="composition-brand-chip">
+                  <span className="composition-brand-chip__text">Digital Bloom</span>
+                  <sup className="composition-brand-chip__tm">™</sup>
+                </div>
+                {message.fromName && (
+                  <div className="composition-brand-lockup__sender">
+                    From {message.fromName}
+                  </div>
+                )}
+              </div>
             </div>
           ) : (
             <LivePreview
