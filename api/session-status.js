@@ -22,12 +22,12 @@ function hasCustomizedBloomWithoutRender(purchase) {
 
 function shouldSurfaceAsProcessing(purchase) {
   const status = String(purchase?.status || '').toLowerCase();
-  return status === 'pending' || status === 'processing' || hasCustomizedBloomWithoutRender(purchase);
+  return status === 'pending' || status === 'processing';
 }
 
 function isStaleProcessingPurchase(purchase) {
   const status = String(purchase?.status || '').toLowerCase();
-  if (status !== 'pending' && status !== 'processing' && !hasCustomizedBloomWithoutRender(purchase)) return false;
+  if (status !== 'pending' && status !== 'processing') return false;
 
   const activityAt = new Date(purchase?.updated_at || purchase?.created_at || 0).getTime();
   if (!Number.isFinite(activityAt)) return false;
