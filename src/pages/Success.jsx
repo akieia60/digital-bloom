@@ -114,7 +114,11 @@ const Success = () => {
     ? `/gift/${(bloomPurchases.find((purchase) => purchase.delivery?.delivery_mode !== 'scheduled' || purchase.delivery?.email_status === 'sent')?.bloom_slug || bloomPurchases[0]?.bloom_slug)}`
     : '/shop';
   const sendReadyPurchases = useMemo(
-    () => bloomPurchases.filter((purchase) => purchase.download_url && (purchase.delivery?.delivery_mode !== 'scheduled' || purchase.delivery?.email_status === 'sent')),
+    () => bloomPurchases.filter((purchase) => {
+      const hasAccess = purchase.download_url || (purchase.bloom_slug && String(purchase.status || '').toLowerCase() === 'completed');
+      const notScheduledHold = purchase.delivery?.delivery_mode !== 'scheduled' || purchase.delivery?.email_status === 'sent';
+      return hasAccess && notScheduledHold;
+    }),
     [bloomPurchases]
   );
   const queuedBloomPurchases = useMemo(
@@ -126,7 +130,7 @@ const Success = () => {
     [bloomPurchases]
   );
   const renderingPurchases = useMemo(
-    () => purchases.filter((purchase) => purchase.has_customization && !purchase.download_url),
+    () => purchases.filter((purchase) => purchase.has_customization && !purchase.download_url && String(purchase.status || '').toLowerCase() !== 'completed'),
     [purchases]
   );
   const processingPurchases = useMemo(
@@ -290,7 +294,7 @@ const Success = () => {
             <ul className="success-status-list">
               <li>{t('success_step_checkout')}</li>
               <li>{checkout?.checkout_status === 'completed' ? t('success_step_records_done') : t('success_step_records_pending')}</li>
-              <li>{purchases.some((purchase) => purchase.has_customization) ? t('success_step_rendering') : t('success_step_files')}</li>
+              <li>{purchases.some((purchase) => purchase.has_customization) ? t('success_step_bloom_ready') : t('success_step_files')}</li>
             </ul>
 
             <div className="success-card-actions success-card-actions--inline">
@@ -349,8 +353,9 @@ const Success = () => {
           <div className="success-card">
             <h3 className="success-card-label">{t('success_experiences')}</h3>
             {purchases.map((purchase) => {
-              const isReady = purchase.download_url && (!purchase.download_expires_at || new Date(purchase.download_expires_at) > new Date());
-              const isRenderPending = purchase.has_customization && !purchase.download_url;
+              const isReady = (purchase.download_url && (!purchase.download_expires_at || new Date(purchase.download_expires_at) > new Date()))
+                || (purchase.has_customization && String(purchase.status || '').toLowerCase() === 'completed' && purchase.bloom_slug);
+              const isRenderPending = purchase.has_customization && !purchase.download_url && String(purchase.status || '').toLowerCase() !== 'completed';
               const isScheduledHold = purchase.delivery?.delivery_mode === 'scheduled' && purchase.delivery?.email_status !== 'sent';
               return (
                 <div key={purchase.id} className="success-row success-row-last" style={{ display: 'block', marginBottom: '16px' }}>
@@ -367,7 +372,7 @@ const Success = () => {
                       We’re still rendering the protected bloom video. Refresh in a moment and we’ll unlock the final delivery view here.
                     </p>
                   ) : isReady ? (
-                    purchase.has_customization && purchase.bloom_slug ? (
+                    purchase.bloom_slug ? (
                       <div style={{ marginTop: '12px' }}>
                         <Link to={`/gift/${purchase.bloom_slug}`} className="success-btn-gold">
                           {t('success_open_bloom')}
@@ -376,11 +381,11 @@ const Success = () => {
                           {t('success_protected_link_note')}
                         </p>
                       </div>
-                    ) : (
+                    ) : purchase.download_url ? (
                       <a href={purchase.download_url} download className="success-btn-gold" style={{ marginTop: '12px' }}>
                         {t('success_download')}
                       </a>
-                    )
+                    ) : null
                   ) : (
                     <p className="success-card-text" style={{ marginTop: '12px' }}>
                       {purchase.has_customization
@@ -388,7 +393,7 @@ const Success = () => {
                         : t('success_standard_pending')}
                     </p>
                   )}
-                  {purchase.bloom_slug && !isScheduledHold && !isRenderPending && (
+                  {purchase.bloom_slug && !isScheduledHold && (
                     <p className="success-note" style={{ marginTop: '10px' }}>
                       {t('success_view_link')} <Link to={`/gift/${purchase.bloom_slug}`}>{t('success_open_bloom')}</Link>
                     </p>

@@ -487,6 +487,7 @@ export const zh = {
   success_step_records_done: "✓ 订单记录已完成",
   success_step_records_pending: "⏳ 正在完成订单记录",
   success_step_rendering: "🎬 个性化交付文件正在渲染",
+  success_step_bloom_ready: "✓ 您的个性化bloom已准备好",
   success_step_files: "📦 标准数字文件正在准备中",
   success_share_title: "分享 Digital Bloom",
   success_send_protected_link: "发送受保护的 Bloom 链接",

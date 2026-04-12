@@ -487,6 +487,7 @@ export const es = {
   success_step_records_done: "✓ Registros del pedido finalizados",
   success_step_records_pending: "⏳ Finalizando los registros del pedido",
   success_step_rendering: "🎬 Se están renderizando los archivos personalizados",
+  success_step_bloom_ready: "✓ Tu bloom personalizado está listo",
   success_step_files: "📦 Se están preparando los archivos digitales estándar",
   success_share_title: "Compartir Digital Bloom",
   success_send_protected_link: "Enviar enlace protegido del Bloom",

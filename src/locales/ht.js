@@ -487,6 +487,7 @@ export const ht = {
   success_step_records_done: "✓ Dosye lòd yo finalize",
   success_step_records_pending: "⏳ N ap finalize dosye lòd yo",
   success_step_rendering: "🎬 Fichye pèsonalize yo ap rann",
+  success_step_bloom_ready: "✓ Bloom pèsonalize ou a prèt",
   success_step_files: "📦 Fichye dijital nòmal yo ap prepare",
   success_share_title: "Pataje Digital Bloom",
   success_send_protected_link: "Voye lyen Bloom ki pwoteje a",

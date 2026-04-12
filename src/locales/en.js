@@ -487,6 +487,7 @@ export const en = {
   success_step_records_done: "✓ Order records finalized",
   success_step_records_pending: "⏳ Finalizing your order records",
   success_step_rendering: "🎬 Personalized delivery files are rendering",
+  success_step_bloom_ready: "✓ Your personalized bloom is ready",
   success_step_files: "📦 Standard digital files are being prepared",
   success_share_title: "Share Digital Bloom",
   success_send_protected_link: "Send Protected Bloom Link",
