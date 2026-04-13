@@ -1,3 +1,4 @@
+import Stripe from 'stripe';
 import { createClient } from '@supabase/supabase-js';
 import { applyCors } from './_lib/cors.js';
 import { finalizePurchaseRecord } from './_lib/purchaseFlow.js';
@@ -8,6 +9,10 @@ import {
   processBloomDeliveryEmails,
 } from './_lib/bloomDeliveryEmail.js';
 import { getSignedDeliveryUrl } from './_lib/deliveryAccess.js';
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+  apiVersion: '2023-10-16',
+});
 
 const supabase = createClient(
   process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL,
@@ -80,8 +85,81 @@ async function serializePurchaseWithProtectedDownload(purchase) {
   };
 }
 
+/**
+ * Self-heal credit purchases when the webhook fails to create the record.
+ * Retrieves the Stripe session, checks if it was a credit purchase, and creates the credit.
+ */
+async function selfHealCreditPurchase(stripeSessionId) {
+  try {
+    const session = await stripe.checkout.sessions.retrieve(stripeSessionId);
+    if (!session || session.payment_status !== 'paid') return null;
+
+    const metadata = session.metadata || {};
+    if (metadata.type !== 'experience_credit') return null;
+
+    const { code, amount_cents, purchaser_email, recipient_email } = metadata;
+    if (!code || !amount_cents) return null;
+
+    // Check again (race condition guard)
+    const { data: existing } = await supabase
+      .from('experience_credits')
+      .select('*')
+      .eq('stripe_session_id', stripeSessionId)
+      .maybeSingle();
+
+    if (existing) return existing;
+
+    const amountCents = parseInt(amount_cents, 10);
+
+    const { data: credit, error: insertError } = await supabase
+      .from('experience_credits')
+      .insert({
+        code,
+        initial_amount_cents: amountCents,
+        remaining_amount_cents: amountCents,
+        purchaser_email,
+        recipient_email: recipient_email || purchaser_email,
+        status: 'active',
+        stripe_session_id: stripeSessionId,
+      })
+      .select()
+      .single();
+
+    if (insertError) {
+      console.error('Self-heal credit insert failed:', insertError);
+      // Might be a duplicate code — try fetching again
+      const { data: retry } = await supabase
+        .from('experience_credits')
+        .select('*')
+        .eq('stripe_session_id', stripeSessionId)
+        .maybeSingle();
+      return retry || null;
+    }
+
+    // Also create the ledger entry
+    await supabase.from('experience_credit_ledger').insert({
+      credit_id: credit.id,
+      reason: 'purchase',
+      delta_cents: amountCents,
+      related_order_id: stripeSessionId,
+    }).catch((err) => console.error('Self-heal ledger insert failed:', err));
+
+    console.log('Self-healed credit purchase:', credit.code, 'for session:', stripeSessionId);
+    return credit;
+  } catch (err) {
+    console.error('Self-heal credit check failed:', err);
+    return null;
+  }
+}
+
 export default async function handler(req, res) {
   if (!applyCors(req, res)) return;
+
+  // Prevent Vercel edge / browser from caching polling responses (fixes 304 loop)
+  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+  res.setHeader('Pragma', 'no-cache');
+  res.setHeader('Expires', '0');
+  res.setHeader('Surrogate-Control', 'no-store');
 
   if (req.method !== 'GET') {
     return res.status(405).json({ error: 'Method not allowed' });
@@ -195,7 +273,32 @@ export default async function handler(req, res) {
       if (creditError) throw creditError;
 
       if (!credit) {
-        return res.status(404).json({ error: 'No purchases found for this session' });
+        // Self-heal: if the webhook didn't create the credit, check Stripe and create it now
+        const healed = await selfHealCreditPurchase(sessionId);
+        if (!healed) {
+          return res.status(404).json({ error: 'No purchases found for this session' });
+        }
+        return res.status(200).json({
+          ok: true,
+          kind: 'credit',
+          session_id: sessionId,
+          checkout_status: 'completed',
+          totals: {
+            items: 1,
+            amount: Number(healed.initial_amount_cents || 0) / 100,
+          },
+          purchases: [],
+          credit: {
+            id: healed.id,
+            code: healed.code,
+            initial_amount_cents: healed.initial_amount_cents,
+            remaining_amount_cents: healed.remaining_amount_cents,
+            status: healed.status,
+            purchaser_email: healed.purchaser_email,
+            recipient_email: healed.recipient_email,
+            created_at: healed.created_at,
+          },
+        });
       }
 
       return res.status(200).json({

@@ -40,8 +40,8 @@ async function isAlreadyProcessed(stripeSessionId) {
     .maybeSingle();
 
   if (error) {
-    console.error('Idempotency check error:', error);
-    return true;
+    console.error('Idempotency check error (proceeding anyway):', error);
+    return false;
   }
 
   return !!data;

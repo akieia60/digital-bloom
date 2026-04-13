@@ -41,7 +41,7 @@ const Success = () => {
 
     const fetchStatus = async () => {
       try {
-        const response = await fetch(`/api/session-status?session_id=${encodeURIComponent(sessionId)}`);
+        const response = await fetch(`/api/session-status?session_id=${encodeURIComponent(sessionId)}&_t=${Date.now()}`, { cache: 'no-store' });
 
         if (response.status === 404) {
           if (pollCount < POLL_LIMIT) {
