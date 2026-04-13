@@ -392,6 +392,8 @@ export const fr = {
   customize_color_forest: "Forêt",
   customize_color_bronze: "Bronze",
   customize_color_onyx: "Onyx",
+  customize_style_normal: "Normal",
+  customize_style_bold: "Gras",
   customize_text_style_label: "Épaisseur du texte",
   customize_bold_on: "Gras — activé",
   customize_bold_off: "Gras — désactivé",

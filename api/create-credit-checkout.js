@@ -22,6 +22,11 @@ export default async function handler(req, res) {
   // FIX #6 — CORS hardening (replaces wildcard origin)
   if (!applyCors(req, res)) return;
 
+  if (process.env.VERCEL_ENV === 'production' && process.env.STRIPE_SECRET_KEY?.startsWith('sk_test_')) {
+    console.error('CRITICAL: Production using test Stripe keys');
+    return res.status(503).json({ error: 'Payment system is being configured.' });
+  }
+
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
@@ -35,9 +40,6 @@ export default async function handler(req, res) {
       delivery_date = null,
       note = null
     } = req.body;
-
-    // Log for debugging
-    console.log('Received credit checkout request:', { amount_cents, purchaser_email });
 
     // Validate amount (ensure it's an integer)
     const amountCentsInt = parseInt(amount_cents, 10);

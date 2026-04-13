@@ -367,6 +367,7 @@ async function createOverlayImage(destination, {
   locale,
   primaryColor,
   accentColor,
+  messageBold = false,
 }) {
   const layout = ENGRAVING_LAYOUTS[engravingStyle] || ENGRAVING_LAYOUTS.heirloom;
   const labels = LOCALE_LABELS[locale] || LOCALE_LABELS.en;
@@ -389,7 +390,7 @@ async function createOverlayImage(destination, {
   if (recipientName) {
     const x = width * (layout.recipient.x.includes('0.08') ? 0.08 : 0.06);
     const y = height * (layout.recipient.y.includes('0.12') ? 0.12 : 0.10);
-    ctx.font = getCanvasFont(fontChoice, height * 0.034, 700, false);
+    ctx.font = getCanvasFont(fontChoice, height * 0.034, messageBold ? 900 : 700, false);
     const label = `${labels.to} ${recipientName}`;
     const textWidth = ctx.measureText(label).width;
     roundRect(ctx, x - 14, y - 32, textWidth + 28, 46, 18);
@@ -404,7 +405,7 @@ async function createOverlayImage(destination, {
     const messageSize = engravingStyle === 'signature'
       ? (shortMessage.length > 56 ? height * 0.022 : height * 0.025)
       : (shortMessage.length > 90 ? height * 0.019 : shortMessage.length > 56 ? height * 0.021 : height * 0.024);
-    ctx.font = getCanvasFont(fontChoice, messageSize, fontChoice === 'arialBold' ? 700 : 600, engravingStyle === 'signature');
+    ctx.font = getCanvasFont(fontChoice, messageSize, messageBold ? 900 : (fontChoice === 'arialBold' ? 700 : 600), engravingStyle === 'signature');
     const maxTextWidth = layout.messageBox ? width * 0.46 : width * 0.70;
     const lines = wrapText(ctx, shortMessage, maxTextWidth);
     const lineHeight = messageSize * 1.25;
@@ -436,12 +437,12 @@ async function createOverlayImage(destination, {
     const label = `${labels.from} ${senderName}`;
     const maxBoxWidth = width * 0.34;
     let senderFontSize = height * 0.024;
-    ctx.font = getCanvasFont(fontChoice, senderFontSize, 700, false);
+    ctx.font = getCanvasFont(fontChoice, senderFontSize, messageBold ? 900 : 700, false);
     let textWidth = ctx.measureText(label).width;
 
     while ((textWidth + 24) > maxBoxWidth && senderFontSize > (height * 0.017)) {
       senderFontSize -= 1.5;
-      ctx.font = getCanvasFont(fontChoice, senderFontSize, 700, false);
+      ctx.font = getCanvasFont(fontChoice, senderFontSize, messageBold ? 900 : 700, false);
       textWidth = ctx.measureText(label).width;
     }
 
@@ -558,6 +559,7 @@ export async function renderBloomDelivery(purchaseId) {
   const recipientName = message.toName || '';
   const senderName = message.fromName || '';
   const shortMessage = normalizeMessage(message.short || '');
+  const messageBold = customization.messageBold || false;
   const engravingStyle = customization.engravingStyle || purchase.composition_manifest?.composition?.engravingStyle || 'heirloom';
   const fontChoice = customization.fontChoice || purchase.composition_manifest?.composition?.fontChoice || 'playfair';
   const locale = customization.locale || purchase.composition_manifest?.composition?.locale || 'en';
@@ -596,6 +598,7 @@ export async function renderBloomDelivery(purchaseId) {
       locale,
       primaryColor,
       accentColor,
+      messageBold,
     });
     const filterGraph = buildFilterGraph({
       primaryColor,

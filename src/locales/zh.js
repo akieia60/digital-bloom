@@ -392,6 +392,8 @@ export const zh = {
   customize_color_forest: "森林绿",
   customize_color_bronze: "青铜",
   customize_color_onyx: "玛瑙黑",
+  customize_style_normal: "常规",
+  customize_style_bold: "粗体",
   customize_text_style_label: "文字粗细",
   customize_bold_on: "加粗 — 开",
   customize_bold_off: "加粗 — 关",

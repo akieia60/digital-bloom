@@ -639,7 +639,7 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
                   }}
                 >
                   <span style={{ fontSize: '1.05rem', lineHeight: 1 }}>A</span>
-                  <span>Normal</span>
+                  <span>{t('customize_style_normal')}</span>
                 </button>
                 <button
                   type="button"
@@ -657,7 +657,7 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
                   }}
                 >
                   <span style={{ fontWeight: '800', fontSize: '1.05rem', lineHeight: 1 }}>B</span>
-                  <span>Bold</span>
+                  <span>{t('customize_style_bold')}</span>
                 </button>
               </div>
             </div>
@@ -684,7 +684,7 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
                   className="customizer-live-copy__message"
                   style={{
                     fontFamily: MESSAGE_FONT_OPTIONS[fontChoice]?.previewFamily,
-                    fontWeight: messageBold ? '800' : MESSAGE_FONT_OPTIONS[fontChoice]?.previewWeight,
+                    fontWeight: messageBold ? '900' : MESSAGE_FONT_OPTIONS[fontChoice]?.previewWeight,
                     fontStyle: MESSAGE_FONT_OPTIONS[fontChoice]?.previewFontStyle,
                     letterSpacing: MESSAGE_FONT_OPTIONS[fontChoice]?.previewLetterSpacing,
                     textTransform: MESSAGE_FONT_OPTIONS[fontChoice]?.previewTransform,

@@ -144,7 +144,7 @@ async function selfHealCreditPurchase(stripeSessionId) {
       related_order_id: stripeSessionId,
     }).catch((err) => console.error('Self-heal ledger insert failed:', err));
 
-    console.log('Self-healed credit purchase:', credit.code, 'for session:', stripeSessionId);
+    console.warn('Self-healed credit purchase:', credit.code, 'for session:', stripeSessionId);
     return credit;
   } catch (err) {
     console.error('Self-heal credit check failed:', err);

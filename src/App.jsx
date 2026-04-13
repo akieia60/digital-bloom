@@ -112,7 +112,30 @@ function AppContent({ searchQuery, setSearchQuery }) {
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/bloom/:id" element={<BloomDelivery />} />
           <Route path="/gift/:id" element={<BloomDelivery />} />
-          <Route path="*" element={<ComingSoon />} />
+          <Route path="*" element={
+            <div style={{
+              minHeight: '100vh', background: '#0D1B36', display: 'flex',
+              flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+              color: '#FFFFFF', fontFamily: "'Outfit', -apple-system, sans-serif",
+              padding: '2rem', textAlign: 'center',
+            }}>
+              <p style={{ fontSize: '3rem', marginBottom: '0.5rem' }}>404</p>
+              <h1 style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: '1.6rem', fontStyle: 'italic', color: '#D4AF37', marginBottom: '1rem' }}>
+                Page Not Found
+              </h1>
+              <p style={{ color: 'rgba(255,255,255,0.55)', fontSize: '0.95rem', maxWidth: '360px', marginBottom: '2rem', lineHeight: 1.6 }}>
+                The page you're looking for doesn't exist or may have moved.
+              </p>
+              <a href="/" style={{
+                padding: '12px 32px', background: 'rgba(212,175,55,0.12)',
+                border: '1px solid rgba(212,175,55,0.3)', borderRadius: '980px',
+                color: '#D4AF37', fontSize: '0.85rem', fontWeight: 500,
+                letterSpacing: '0.1em', textDecoration: 'none',
+              }}>
+                Return Home
+              </a>
+            </div>
+          } />
         </Routes>
       </Suspense>
       <Suspense fallback={null}>

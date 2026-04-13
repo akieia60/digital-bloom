@@ -392,6 +392,8 @@ export const ht = {
   customize_color_forest: "Forè",
   customize_color_bronze: "Bwonz",
   customize_color_onyx: "Oniks",
+  customize_style_normal: "Nòmal",
+  customize_style_bold: "Gra",
   customize_text_style_label: "Epesè tèks",
   customize_bold_on: "Gras — aktivé",
   customize_bold_off: "Gras — désaktivé",
