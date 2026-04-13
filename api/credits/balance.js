@@ -46,7 +46,7 @@ export default async function handler(req, res) {
 
     const { data: historyRows, error: historyError } = await supabase
       .from('experience_credit_ledger')
-      .select('id, type, amount_cents, description, created_at')
+      .select('id, reason, delta_cents, related_order_id, created_at')
       .eq('credit_id', credit.id)
       .order('created_at', { ascending: false });
 

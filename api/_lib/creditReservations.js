@@ -259,10 +259,9 @@ export async function captureReservedCredit(reservationId, stripeSessionId) {
 
   const { error: ledgerError } = await supabase.from('experience_credit_ledger').insert({
     credit_id: reservation.credit_id,
-    type: 'redemption',
-    amount_cents: reservation.reserved_cents,
-    description: 'Credit redeemed at checkout',
-    stripe_session_id: stripeSessionId,
+    reason: 'redemption',
+    delta_cents: -reservation.reserved_cents,
+    related_order_id: stripeSessionId,
   });
 
   if (ledgerError) throw ledgerError;
