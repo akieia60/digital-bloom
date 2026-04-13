@@ -137,13 +137,16 @@ export default function GradientHero() {
                 </video>
               )}
 
-              {(!videoReady || videoFailed) && (
-                <img
-                  src="/videos/hero_bloom_poster.jpg"
-                  alt="Digital Bloom hero"
-                  className="gradient-hero__media-fallback"
-                />
-              )}
+              <img
+                src="/videos/hero_bloom_poster.jpg"
+                alt="Digital Bloom hero"
+                className="gradient-hero__media-fallback"
+                style={{
+                  opacity: videoReady && !videoFailed ? 0 : 1,
+                  transition: 'opacity 0.6s ease',
+                  pointerEvents: 'none',
+                }}
+              />
 
               <div className="gradient-hero__media-brandmark">Digital Bloom™</div>
             </div>
