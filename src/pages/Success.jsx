@@ -4,8 +4,8 @@ import { useLanguage } from '../contexts/LanguageContext';
 import { useCart } from '../context/CartContext';
 import '../styles/success.css';
 
-const POLL_LIMIT = 20;
-const POLL_INTERVAL_MS = 3000;
+const POLL_LIMIT = 30;
+const POLL_INTERVAL_MS = 1500;
 
 const PURCHASE_STATUS_LABELS = {
   pending: 'success_purchase_status_pending',

@@ -54,6 +54,9 @@
   object-fit: cover;
   display: block;
   background: #000;
+  /* iOS Safari: prevent video from rendering above CSS overlays */
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
 }
 
 .bloom-delivery__protected-frame {
