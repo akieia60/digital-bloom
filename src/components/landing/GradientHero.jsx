@@ -128,25 +128,17 @@ export default function GradientHero() {
                   muted
                   loop
                   playsInline
-                  poster="/videos/hero_bloom_poster.jpg"
                   preload="auto"
                   onCanPlay={() => setVideoReady(true)}
                   onError={() => setVideoFailed(true)}
+                  style={{
+                    opacity: videoReady ? 1 : 0,
+                    transition: 'opacity 0.5s ease',
+                  }}
                 >
                   <source src="/videos/digital_bloom_hero_morph.mp4" type="video/mp4" />
                 </video>
               )}
-
-              <img
-                src="/videos/hero_bloom_poster.jpg"
-                alt="Digital Bloom hero"
-                className="gradient-hero__media-fallback"
-                style={{
-                  opacity: videoReady && !videoFailed ? 0 : 1,
-                  transition: 'opacity 0.6s ease',
-                  pointerEvents: 'none',
-                }}
-              />
 
               <div className="gradient-hero__media-brandmark">Digital Bloom™</div>
             </div>
