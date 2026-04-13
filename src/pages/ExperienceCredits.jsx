@@ -57,6 +57,10 @@ export default function ExperienceCredits() {
         note: isGift ? giftDetails.note : null
       });
 
+      if (!url) {
+        throw new Error('Could not create checkout session. Please try again.');
+      }
+
       // Redirect to Stripe checkout
       window.location.href = url;
     } catch (err) {

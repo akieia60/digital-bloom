@@ -101,6 +101,11 @@ export default async function handler(req, res) {
       }
     }
 
+    if (!session || !session.url) {
+      console.error('Stripe session created but no checkout URL returned:', session);
+      return res.status(500).json({ error: 'Checkout session created but no redirect URL was returned. Please try again.' });
+    }
+
     res.status(200).json({ url: session.url, code });
   } catch (error) {
     console.error('Error creating credit checkout:', error);

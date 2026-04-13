@@ -46,6 +46,12 @@ export const COLOR_SWATCHES = [
   { id: 'emerald', nameKey: 'customize_color_emerald', hex: '#137A63' },
   { id: 'sapphire', nameKey: 'customize_color_sapphire', hex: '#2D5B9F' },
   { id: 'violet', nameKey: 'customize_color_violet', hex: '#7B63D9' },
+  { id: 'navy', nameKey: 'customize_color_navy', hex: '#1B2A4A' },
+  { id: 'charcoal', nameKey: 'customize_color_charcoal', hex: '#3A3A3C' },
+  { id: 'forest', nameKey: 'customize_color_forest', hex: '#1A3C2A' },
+  { id: 'burgundy', nameKey: 'customize_color_burgundy', hex: '#5C1A2A' },
+  { id: 'slate', nameKey: 'customize_color_slate', hex: '#4A5568' },
+  { id: 'onyx', nameKey: 'customize_color_onyx', hex: '#1D1D1F' },
 ];
 
 export const COLOR_PALETTES = {
@@ -242,12 +248,12 @@ function clampBrightness(hex, multiplier = 1) {
 function getMessageSize(messageText = '') {
   const length = String(messageText || '').trim().length;
   if (length > 90) {
-    return 'clamp(14px, 3.2vw, 20px)';
+    return 'clamp(16px, 3.6vw, 22px)';
   }
   if (length > 56) {
-    return 'clamp(15px, 3.6vw, 22px)';
+    return 'clamp(17px, 4vw, 25px)';
   }
-  return 'clamp(17px, 4.2vw, 26px)';
+  return 'clamp(19px, 4.6vw, 29px)';
 }
 
 export function getThemeSpec(themeId, overrides = {}) {
@@ -414,21 +420,21 @@ export function getCompositionLayers({
     recipientPositionStyle: TEXT_POSITIONS[engraving.recipientPosition],
     recipientTextStyle: {
       fontFamily: font.previewFamily,
-      fontWeight: font.previewWeight,
+      fontWeight: messageBold ? '800' : font.previewWeight,
       fontStyle: font.previewFontStyle,
       textTransform: font.previewTransform === 'uppercase' ? 'uppercase' : 'uppercase',
       letterSpacing: font.previewLetterSpacing,
-      color: theme.dedicationTextColor,
+      color: messageTextColor ? withAlpha(messageTextColor, 0.88) : theme.dedicationTextColor,
     },
     senderPosition: engraving.senderPosition,
     senderPositionStyle: TEXT_POSITIONS[engraving.senderPosition],
     senderTextStyle: {
       fontFamily: font.previewFamily,
-      fontWeight: font.previewWeight,
+      fontWeight: messageBold ? '800' : font.previewWeight,
       fontStyle: font.previewFontStyle,
       textTransform: font.previewTransform === 'uppercase' ? 'uppercase' : 'uppercase',
       letterSpacing: font.previewLetterSpacing,
-      color: theme.signatureTextColor,
+      color: messageTextColor ? withAlpha(messageTextColor, 0.82) : theme.signatureTextColor,
     },
     tmPosition: engraving.tmPosition,
     tmPositionStyle: TEXT_POSITIONS[engraving.tmPosition],

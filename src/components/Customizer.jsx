@@ -592,6 +592,12 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
                   { hex: '#A8D8B0', label: t('customize_color_sage') },
                   { hex: '#C8AEE8', label: t('customize_color_lavender') },
                   { hex: '#F4C4A0', label: t('customize_color_peach') },
+                  { hex: '#1D1D1F', label: t('customize_color_charcoal') },
+                  { hex: '#1B2A4A', label: t('customize_color_navy') },
+                  { hex: '#4A5568', label: t('customize_color_slate') },
+                  { hex: '#5C1A2A', label: t('customize_color_burgundy') },
+                  { hex: '#1A3C2A', label: t('customize_color_forest') },
+                  { hex: '#8B7355', label: t('customize_color_bronze') },
                 ].map(({ hex, label }) => (
                   <button
                     key={hex}
@@ -601,9 +607,9 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
                     onClick={() => setMessageTextColor(hex)}
                     style={{
                       width: '32px', height: '32px', borderRadius: '50%',
-                      background: hex, border: 'none', cursor: 'pointer', flexShrink: 0,
+                      background: hex, border: '1.5px solid rgba(255,255,255,0.18)', cursor: 'pointer', flexShrink: 0,
                       boxShadow: messageTextColor === hex
-                        ? `0 0 0 2px #0D1B36, 0 0 0 4px ${hex}`
+                        ? `0 0 0 2px #0D1B36, 0 0 0 4px ${hex === '#1D1D1F' || hex === '#1B2A4A' || hex === '#1A3C2A' ? '#D4AF37' : hex}`
                         : '0 1px 4px rgba(0,0,0,0.3)',
                       transform: messageTextColor === hex ? 'scale(1.15)' : 'scale(1)',
                       transition: 'box-shadow 0.15s, transform 0.15s',
@@ -616,23 +622,44 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
             {/* Bold toggle */}
             <div className="customizer-field">
               <label className="customizer-label">{t('customize_text_style_label')}</label>
-              <button
-                type="button"
-                onClick={() => setMessageBold(!messageBold)}
-                style={{
-                  display: 'inline-flex', alignItems: 'center', gap: '8px',
-                  padding: '8px 18px', borderRadius: '20px', border: '1px solid',
-                  borderColor: messageBold ? '#D4AF37' : 'rgba(255,255,255,0.2)',
-                  background: messageBold ? 'rgba(212,175,55,0.15)' : 'rgba(255,255,255,0.06)',
-                  color: messageBold ? '#D4AF37' : 'rgba(255,255,255,0.75)',
-                  fontFamily: 'Outfit, sans-serif', fontSize: '0.82rem',
-                  fontWeight: messageBold ? '800' : '400',
-                  cursor: 'pointer', transition: 'all 0.18s',
-                }}
-              >
-                <span style={{ fontWeight: '800', fontSize: '1rem', lineHeight: 1 }}>B</span>
-                <span>{messageBold ? t('customize_bold_on') : t('customize_bold_off')}</span>
-              </button>
+              <div style={{ display: 'flex', gap: '10px' }}>
+                <button
+                  type="button"
+                  onClick={() => setMessageBold(false)}
+                  style={{
+                    display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
+                    padding: '10px 22px', borderRadius: '22px', border: '1.5px solid',
+                    borderColor: !messageBold ? '#D4AF37' : 'rgba(255,255,255,0.35)',
+                    background: !messageBold ? 'rgba(212,175,55,0.18)' : 'rgba(255,255,255,0.08)',
+                    color: !messageBold ? '#D4AF37' : 'rgba(255,255,255,0.8)',
+                    fontFamily: 'Outfit, sans-serif', fontSize: '0.92rem',
+                    fontWeight: '400',
+                    cursor: 'pointer', transition: 'all 0.18s',
+                    minWidth: '90px',
+                  }}
+                >
+                  <span style={{ fontSize: '1.05rem', lineHeight: 1 }}>A</span>
+                  <span>Normal</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setMessageBold(true)}
+                  style={{
+                    display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
+                    padding: '10px 22px', borderRadius: '22px', border: '1.5px solid',
+                    borderColor: messageBold ? '#D4AF37' : 'rgba(255,255,255,0.35)',
+                    background: messageBold ? 'rgba(212,175,55,0.18)' : 'rgba(255,255,255,0.08)',
+                    color: messageBold ? '#D4AF37' : 'rgba(255,255,255,0.8)',
+                    fontFamily: 'Outfit, sans-serif', fontSize: '0.92rem',
+                    fontWeight: '800',
+                    cursor: 'pointer', transition: 'all 0.18s',
+                    minWidth: '90px',
+                  }}
+                >
+                  <span style={{ fontWeight: '800', fontSize: '1.05rem', lineHeight: 1 }}>B</span>
+                  <span>Bold</span>
+                </button>
+              </div>
             </div>
 
             <div className="customizer-live-copy">
