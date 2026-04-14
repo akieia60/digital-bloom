@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Digital Bloom — Video Manager</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #0a0a0a; color: #e0e0e0; font-family: Georgia, serif; min-height: 100vh; }
+
+    header { background: #111; border-bottom: 2px solid #D4AF37; padding: 16px 24px; display: flex; align-items: center; gap: 16px; }
+    header h1 { color: #D4AF37; font-size: 1.3rem; letter-spacing: 0.1em; }
+    header p { font-size: 0.75rem; color: #555; margin-top: 3px; }
+    .stats { margin-left: auto; text-align: right; font-size: 0.8rem; color: #888; }
+    .stats strong { color: #D4AF37; font-size: 1.1rem; }
+
+    .filters { background: #111; padding: 12px 24px; display: flex; gap: 10px; flex-wrap: wrap; border-bottom: 1px solid #1e1e1e; }
+    .filter-btn { background: #1a1a1a; border: 1px solid #333; color: #888; padding: 6px 16px; border-radius: 20px; cursor: pointer; font-size: 0.8rem; letter-spacing: 0.05em; font-family: inherit; }
+    .filter-btn.active { background: #D4AF37; color: #000; border-color: #D4AF37; font-weight: bold; }
+
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 18px; padding: 20px 24px 120px; }
+    .section-label { grid-column: 1/-1; color: #D4AF37; font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; padding: 6px 0 4px; border-bottom: 1px solid #222; margin-top: 8px; }
+
+    .card { background: #111; border: 1px solid #222; border-radius: 8px; overflow: hidden; transition: border-color 0.2s; }
+    .card.assigned { border-color: #2d5a2d; }
+    .card.unassigned { border-color: #3a1a1a; }
+
+    .video-wrap { position: relative; aspect-ratio: 9/16; background: #000; cursor: pointer; overflow: hidden; }
+    .video-wrap video { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .play-overlay { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.35); transition: opacity 0.2s; }
+    .play-overlay.hidden { opacity: 0; pointer-events: none; }
+    .play-icon { width: 50px; height: 50px; border-radius: 50%; background: rgba(212,175,55,0.92); display: flex; align-items: center; justify-content: center; box-shadow: 0 0 20px rgba(212,175,55,0.4); }
+    .play-icon svg { fill: #000; margin-left: 4px; }
+    .bucket-tag { position: absolute; top: 8px; left: 8px; background: rgba(0,0,0,0.75); color: #888; font-size: 0.6rem; padding: 2px 7px; border-radius: 10px; letter-spacing: 0.05em; }
+
+    .card-body { padding: 14px; }
+    .old-name { font-size: 0.68rem; color: #444; font-family: monospace; word-break: break-all; line-height: 1.4; margin-bottom: 12px; border-left: 2px solid #2a2a2a; padding-left: 8px; }
+
+    label { display: block; font-size: 0.68rem; color: #D4AF37; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 4px; margin-top: 10px; }
+    select, input[type="text"], input[type="number"] {
+      width: 100%; background: #181818; border: 1px solid #2e2e2e; color: #e0e0e0;
+      padding: 8px 10px; border-radius: 4px; font-size: 0.82rem; font-family: inherit;
+    }
+    select:focus, input:focus { outline: none; border-color: #D4AF37; }
+    input[type="number"] { width: 70px; }
+
+    .new-name-preview { font-size: 0.68rem; font-family: monospace; margin-top: 10px; padding: 7px 10px; border-radius: 4px; word-break: break-all; line-height: 1.5; }
+    .new-name-preview.set { background: #0d1a0d; color: #5cba5c; border: 1px solid #1a3a1a; }
+    .new-name-preview.unset { background: #1a1a1a; color: #444; border: 1px solid #222; }
+
+    .card-footer { padding: 10px 14px; border-top: 1px solid #1a1a1a; display: flex; align-items: center; gap: 8px; }
+    .badge { font-size: 0.65rem; padding: 3px 9px; border-radius: 10px; letter-spacing: 0.04em; }
+    .badge.assigned { background: #1a3a1a; color: #5cba5c; }
+    .badge.unassigned { background: #2a1010; color: #884444; }
+
+    .action-bar { position: fixed; bottom: 0; left: 0; right: 0; background: #111; border-top: 2px solid #D4AF37; padding: 14px 24px; display: flex; align-items: center; gap: 20px; z-index: 50; }
+    .progress { font-size: 0.85rem; color: #888; }
+    .progress strong { color: #D4AF37; font-size: 1rem; }
+    .btn-plan { background: #D4AF37; color: #000; border: none; padding: 12px 28px; border-radius: 4px; font-size: 0.85rem; font-weight: bold; letter-spacing: 0.08em; cursor: pointer; text-transform: uppercase; font-family: inherit; }
+    .btn-plan:hover { background: #e8c84a; }
+
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.92); z-index: 200; overflow: auto; padding: 40px 20px; }
+    .modal-overlay.open { display: block; }
+    .modal { max-width: 760px; margin: 0 auto; background: #111; border: 1px solid #D4AF37; border-radius: 10px; padding: 30px; }
+    .modal h2 { color: #D4AF37; margin-bottom: 8px; }
+    .modal p { color: #777; font-size: 0.82rem; margin-bottom: 16px; }
+    .plan-box { background: #080808; border: 1px solid #2a2a2a; border-radius: 6px; padding: 16px; font-family: monospace; font-size: 0.72rem; color: #9aaa9a; white-space: pre-wrap; word-break: break-all; max-height: 55vh; overflow: auto; line-height: 1.6; }
+    .modal-actions { display: flex; gap: 10px; margin-top: 14px; flex-wrap: wrap; }
+    .btn-copy { background: #D4AF37; color: #000; border: none; padding: 10px 22px; border-radius: 4px; cursor: pointer; font-size: 0.82rem; font-weight: bold; font-family: inherit; }
+    .btn-close { background: transparent; border: 1px solid #444; color: #888; padding: 10px 22px; border-radius: 4px; cursor: pointer; font-size: 0.82rem; font-family: inherit; }
+    .instructions { background: #0d1a0d; border: 1px solid #1a3a1a; border-radius: 6px; padding: 14px; margin-top: 14px; font-size: 0.78rem; color: #6aa; line-height: 1.7; }
+    .instructions strong { color: #D4AF37; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>🌸 Digital Bloom — Video Manager</h1>
+    <p>Watch each video · assign its real category · give it a clean name · then click Generate Plan</p>
+  </div>
+  <div class="stats" id="statsBox">
+    <strong id="assignedCount">0</strong> / <strong id="totalCount">0</strong><br>
+    <span style="font-size:0.7rem">assigned</span>
+  </div>
+</header>
+
+<div class="filters">
+  <button class="filter-btn active" onclick="setFilter('all',this)">All Videos</button>
+  <button class="filter-btn" onclick="setFilter('unassigned',this)">⚠ Needs Review</button>
+  <button class="filter-btn" onclick="setFilter('assigned',this)">✓ Done</button>
+</div>
+
+<div class="grid" id="grid"></div>
+
+<div class="action-bar">
+  <div class="progress">
+    <strong id="aCount">0</strong> of <strong id="tCount">0</strong> videos assigned
+  </div>
+  <button class="btn-plan" onclick="openPlan()">Generate Rename Plan</button>
+</div>
+
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <h2>📋 Rename Plan</h2>
+    <p>Copy this and paste it into the chat with Michael. He'll execute all the moves in Supabase.</p>
+    <div class="plan-box" id="planBox"></div>
+    <div class="instructions">
+      <strong>What happens next:</strong> Michael reads this plan, moves each video to the correct folder in Supabase storage, renames the file using Digital Bloom's naming convention, and updates any product records in the database that point to the old URL. Nothing is deleted unless you marked it as SKIP/DELETE.
+    </div>
+    <div class="modal-actions">
+      <button class="btn-copy" onclick="copyPlan()">Copy to Clipboard</button>
+      <button class="btn-close" onclick="closeModal()">Close</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const BASE = 'https://yhdbeblowolfinxxhsnt.supabase.co/storage/v1/object/public';
+
+const CATS = [
+  {v:'',l:'— Watch video, then select category —'},
+  {v:'mothers-day',l:"Mother's Day"},
+  {v:'birthday',l:'Birthday'},
+  {v:'love',l:'Love & Romance'},
+  {v:'valentines',l:"Valentine's Day"},
+  {v:'celebration',l:'Celebration'},
+  {v:'congratulations',l:'Congratulations'},
+  {v:'fathers-day',l:"Father's Day"},
+  {v:'friendship',l:'Friendship'},
+  {v:'grief',l:'Grief / Sympathy'},
+  {v:'prayer',l:'Prayer & Blessing'},
+  {v:'luxury',l:'Luxury / Glass Stiletto'},
+  {v:'zodiac',l:'Zodiac / Celestial'},
+  {v:'general',l:'General'},
+  {v:'veterans',l:'Veterans Day'},
+  {v:'juneteenth',l:'Juneteenth'},
+  {v:'pride',l:'Pride'},
+  {v:'womens-day',l:"Women's Day"},
+  {v:'gaming',l:'Gaming'},
+  {v:'sports',l:'Sports / Basketball'},
+  {v:'SKIP',l:'🗑 Skip / Delete'},
+];
+
+const VIDEOS = [
+  // ── product-media / Mother's Day ──────────────────────────
+  {b:'product-media', p:"Mother's Day/$199 love orchids and roses.mp4",         sc:'love',         sd:'love-orchids-roses'},
+  {b:'product-media', p:"Mother's Day/1.99 love .mp4",                           sc:'love',         sd:'love-bloom'},
+  {b:'product-media', p:"Mother's Day/grok_1770456103322_GROK_Happy_Birthday.mp4",sc:'birthday',   sd:'happy-birthday-bloom'},
+  {b:'product-media', p:"Mother's Day/grok_1770456104149_GROK_Transition_2.mp4", sc:'',             sd:'bloom-transition'},
+  {b:'product-media', p:"Mother's Day/grok_1770456104672_GROK_transition_3.mp4", sc:'',             sd:'bloom-transition'},
+  {b:'product-media', p:"Mother's Day/grok_1770456106009_I_love_you,_GROK4.mp4", sc:'love',        sd:'i-love-you-bloom'},
+  {b:'product-media', p:"Mother's Day/grok_1770456107341_Mother's_Day,_GROK1.mp4",sc:'mothers-day',sd:'classic-bloom'},
+  {b:'product-media', p:"Mother's Day/grok_1770456107843_Valentine's_GROK_3.mp4",sc:'valentines',  sd:'balloon-bloom'},
+  {b:'product-media', p:"Mother's Day/grok_1770456108367_Valentine's_GROK4.mp4", sc:'valentines',  sd:'rose-bloom'},
+  {b:'product-media', p:"Mother's Day/grok_1770456108877_Valentine's_grok_too.mp4",sc:'valentines',sd:'bloom'},
+  {b:'product-media', p:"Mother's Day/grok_1770456109384_groak_happy_birthday_transition_2.mp4",sc:'birthday',sd:'birthday-transition'},
+  {b:'product-media', p:"Mother's Day/grok_1770456110516_groak_happy_birthday_transition_3.mp4",sc:'birthday',sd:'birthday-transition'},
+  {b:'product-media', p:"Mother's Day/grok_1770456111528_grok-video-002b8a95-9c9b-417c-b884-53a132b575e6_(1).mp4",sc:'',sd:'bloom'},
+  {b:'product-media', p:"Mother's Day/grok_1770456111973_grok-video-002b8a95-9c9b-417c-b884-53a132b575e6.mp4",sc:'',sd:'bloom'},
+  {b:'product-media', p:"Mother's Day/grok_1770456112663_grok-video-0373bbf8-9602-4f0c-a827-875266b63516_(1).mp4",sc:'',sd:'bloom'},
+  {b:'product-media', p:"Mother's Day/grok_1770456113591_grok-video-0373bbf8-9602-4f0c-a827-875266b63516.mp4",sc:'',sd:'bloom'},
+  {b:'product-media', p:"Mother's Day/grok_1770456114407_grok-video-0c7c9d41-3fea-46be-a5a7-eb888f165b06.mp4",sc:'',sd:'bloom'},
+  {b:'product-media', p:"Mother's Day/grok_1770456114799_grok-video-0f4e4682-aa13-422d-9fc5-42b57b129179.mp4",sc:'',sd:'bloom'},
+  {b:'product-media', p:"Mother's Day/grok_1770456116763_grok-video-4246961b-f726-427f-ab9b-df74f30bccbb_(1).mp4",sc:'',sd:'bloom'},
+  {b:'product-media', p:"Mother's Day/grok_1770456117184_grok-video-4246961b-f726-427f-ab9b-df74f30bccbb.mp4",sc:'',sd:'bloom'},
+  {b:'product-media', p:"Mother's Day/grok_1770456118501_grok-video-4cb70927-21ed-42a1-babc-e5daa168da11.mp4",sc:'',sd:'bloom'},
+  {b:'product-media', p:"Mother's Day/grok_1770456119110_grok-video-5e59b61a-92de-4cdf-9c58-491c207bc4bb.mp4",sc:'',sd:'bloom'},
+  {b:'product-media', p:"Mother's Day/grok_1770456119726_grok-video-8a2c425b-6d3b-43c5-af40-7ec140dee937.mp4",sc:'',sd:'bloom'},
+  {b:'product-media', p:"Mother's Day/grok_1770456120401_grok-video-985b946b-d306-48fb-af5f-7b4a0adfedc4.mp4",sc:'',sd:'bloom'},
+  {b:'product-media', p:"Mother's Day/grok_1770456121270_grok-video-a30d38d7-0534-43ee-92f1-2636e5617903_(1).mp4",sc:'',sd:'bloom'},
+  {b:'product-media', p:"Mother's Day/grok_1770456122375_grok-video-a30d38d7-0534-43ee-92f1-2636e5617903.mp4",sc:'',sd:'bloom'},
+  {b:'product-media', p:"Mother's Day/grok_1770456122983_grok-video-a76096a1-89d8-4e92-b5e6-c51633cfb721.mp4",sc:'',sd:'bloom'},
+  {b:'product-media', p:"Mother's Day/grok_1770456124546_grok-video-abe73ae7-14a7-43a5-bb1c-273fefc055a4.mp4",sc:'',sd:'bloom'},
+  {b:'product-media', p:"Mother's Day/grok_1770456125203_grok-video-bf0ff7dc-d6fc-4cb0-9632-aa5c386796c6.mp4",sc:'',sd:'bloom'},
+  {b:'product-media', p:"Mother's Day/grok_1770456125768_grok-video-c9117412-dc98-4142-bc67-8af7d00464e3_(1).mp4",sc:'',sd:'bloom'},
+  {b:'product-media', p:"Mother's Day/grok_1770456126167_grok-video-c9117412-dc98-4142-bc67-8af7d00464e3.mp4",sc:'',sd:'bloom'},
+  {b:'product-media', p:"Mother's Day/grok_1770456126686_grok-video-dc7e71de-cc24-48d1-8cbe-a2cf1192adb9_(1).mp4",sc:'',sd:'bloom'},
+  {b:'product-media', p:"Mother's Day/grok_1770456127415_grok-video-dc7e71de-cc24-48d1-8cbe-a2cf1192adb9.mp4",sc:'',sd:'bloom'},
+  {b:'product-media', p:"Mother's Day/grok_1770456128533_grok-video-e8c0c26b-344c-40e0-8e7e-f5d911685bc2_(1).mp4",sc:'',sd:'bloom'},
+  {b:'product-media', p:"Mother's Day/grok_1770456129150_grok-video-e8c0c26b-344c-40e0-8e7e-f5d911685bc2_(2).mp4",sc:'',sd:'bloom'},
+  {b:'product-media', p:"Mother's Day/grok_1770456129762_grok-video-e8c0c26b-344c-40e0-8e7e-f5d911685bc2.mp4",sc:'',sd:'bloom'},
+  {b:'product-media', p:"Mother's Day/grok_1770456130286_grok-video-eeb99322-c327-44cd-94a3-e7c39418cf43_(1).mp4",sc:'',sd:'bloom'},
+  {b:'product-media', p:"Mother's Day/grok_1770456130695_grok-video-eeb99322-c327-44cd-94a3-e7c39418cf43_(2).mp4",sc:'',sd:'bloom'},
+  {b:'product-media', p:"Mother's Day/grok_1770456131059_grok-video-eeb99322-c327-44cd-94a3-e7c39418cf43_(3).mp4",sc:'',sd:'bloom'},
+  {b:'product-media', p:"Mother's Day/grok_1770456131609_grok-video-eeb99322-c327-44cd-94a3-e7c39418cf43.mp4",sc:'',sd:'bloom'},
+  {b:'product-media', p:"Mother's Day/grok_1770456132113_grok-video-efd0ad0c-ea72-4d10-a1ac-311dd3ae90b7_(1).mp4",sc:'',sd:'bloom'},
+  {b:'product-media', p:"Mother's Day/grok_1770456132729_grok-video-efd0ad0c-ea72-4d10-a1ac-311dd3ae90b7.mp4",sc:'',sd:'bloom'},
+  {b:'product-media', p:"Mother's Day/grok_1770456133351_grokdigitalbloomingtransition..mp4",sc:'',sd:'bloom-transition'},
+  {b:'product-media', p:"Mother's Day/grok_1770456133861_grokt3_transition.mp4",sc:'',sd:'bloom-transition'},
+  {b:'product-media', p:"Mother's Day/grok_1770456134626_valentines_grok.mp4",sc:'valentines',sd:'bloom'},
+
+  // ── digital-bloom-sequences ───────────────────────────────
+  {b:'digital-bloom-sequences', p:'Birthday_Roses_Bloom_v1.mp4',       sc:'birthday', sd:'roses-bloom'},
+  {b:'digital-bloom-sequences', p:'Birthday_Roses_Bloom_v2.mp4',       sc:'birthday', sd:'roses-bloom'},
+  {b:'digital-bloom-sequences', p:'Birthday_Roses_Bloom_v3.mp4',       sc:'birthday', sd:'roses-bloom'},
+  {b:'digital-bloom-sequences', p:'Birthday_Roses_Bloom_v4.mp4',       sc:'birthday', sd:'roses-bloom'},
+  {b:'digital-bloom-sequences', p:'Birthday_Roses_Transition_v1.mp4',  sc:'birthday', sd:'roses-transition'},
+  {b:'digital-bloom-sequences', p:'Birthday_Roses_Transition_v2.mp4',  sc:'birthday', sd:'roses-transition'},
+
+  // ── digital-products / viral ──────────────────────────────
+  {b:'digital-products', p:'videos/viral/viral-1769431031801.mp4', sc:'', sd:'bloom'},
+  {b:'digital-products', p:'videos/viral/viral-1769431083966.mp4', sc:'', sd:'bloom'},
+  {b:'digital-products', p:'videos/viral/viral-1769431241781.mp4', sc:'', sd:'bloom'},
+  {b:'digital-products', p:'videos/viral/viral-1769431278543.mp4', sc:'', sd:'bloom'},
+  {b:'digital-products', p:'videos/viral/viral-1769431295003.mp4', sc:'', sd:'bloom'},
+  {b:'digital-products', p:'videos/viral/viral-1769433772533.mp4', sc:'', sd:'bloom'},
+  {b:'digital-products', p:'videos/viral/viral-1769433774191.mp4', sc:'', sd:'bloom'},
+  {b:'digital-products', p:'videos/viral/viral-1769433775266.mp4', sc:'', sd:'bloom'},
+  {b:'digital-products', p:'videos/viral/viral-1769435136413.mp4', sc:'', sd:'bloom'},
+  {b:'digital-products', p:'videos/viral/viral-1769436196969.mp4', sc:'', sd:'bloom'},
+  {b:'digital-products', p:'videos/viral/viral-1769436198006.mp4', sc:'', sd:'bloom'},
+  {b:'digital-products', p:'videos/viral/viral-1769436198943.mp4', sc:'', sd:'bloom'},
+  {b:'digital-products', p:'videos/viral/viral-1769436199890.mp4', sc:'', sd:'bloom'},
+  {b:'digital-products', p:'videos/viral/viral-1769436200763.mp4', sc:'', sd:'bloom'},
+  {b:'digital-products', p:'videos/viral/viral-1769436201813.mp4', sc:'', sd:'bloom'},
+];
+
+// Track version counters per category+desc combo to auto-increment
+const versionCounters = {};
+const state = {};
+
+// Pre-fill suggested assignments
+VIDEOS.forEach((v, i) => {
+  state[i] = { cat: v.sc, desc: v.sd, ver: 1 };
+});
+
+function vidUrl(v) {
+  const parts = v.p.split('/').map(s => encodeURIComponent(s)).join('/');
+  return `${BASE}/${v.b}/${parts}`;
+}
+
+function proposedPath(i) {
+  const s = state[i];
+  if (!s.cat || !s.desc) return null;
+  if (s.cat === 'SKIP') return 'SKIP / DELETE';
+  const clean = s.desc.toLowerCase().replace(/\s+/g,'-').replace(/[^a-z0-9-]/g,'');
+  return `${s.cat}/${s.cat}_${clean}_v${s.ver}.mp4`;
+}
+
+function isAssigned(i) {
+  return !!(state[i] && state[i].cat);
+}
+
+let currentFilter = 'all';
+function setFilter(f, btn) {
+  currentFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderGrid();
+}
+
+function renderGrid() {
+  const grid = document.getElementById('grid');
+  const bucketOrder = ['product-media','digital-bloom-sequences','digital-products'];
+  const bucketLabel = {
+    'product-media': '📁 product-media bucket — Mother\'s Day folder (main problem area)',
+    'digital-bloom-sequences': '📁 digital-bloom-sequences bucket',
+    'digital-products': '📁 digital-products bucket — viral folder',
+  };
+  let html = '';
+  bucketOrder.forEach(bucket => {
+    const items = VIDEOS.map((v,i) => ({v,i})).filter(({v,i}) => {
+      if (v.b !== bucket) return false;
+      if (currentFilter === 'assigned' && !isAssigned(i)) return false;
+      if (currentFilter === 'unassigned' && isAssigned(i)) return false;
+      return true;
+    });
+    if (!items.length) return;
+    html += `<div class="section-label">${bucketLabel[bucket]} — ${items.length} video${items.length!==1?'s':''}</div>`;
+    items.forEach(({v,i}) => { html += cardHTML(v, i); });
+  });
+  if (!html) html = `<div style="grid-column:1/-1;padding:60px;text-align:center;color:#444;font-size:0.9rem">No videos in this view</div>`;
+  grid.innerHTML = html;
+}
+
+function cardHTML(v, i) {
+  const s = state[i];
+  const url = vidUrl(v);
+  const fname = v.p.split('/').pop();
+  const proposed = proposedPath(i);
+  const assigned = isAssigned(i);
+
+  const catOpts = CATS.map(c =>
+    `<option value="${c.v}" ${s.cat===c.v?'selected':''}>${c.l}</option>`
+  ).join('');
+
+  return `<div class="card ${assigned?'assigned':'unassigned'}" id="card-${i}">
+    <div class="video-wrap" onclick="togglePlay(${i},this)">
+      <video id="vid-${i}" src="${url}" loop muted preload="none" playsinline></video>
+      <div class="play-overlay" id="ov-${i}">
+        <div class="play-icon"><svg width="18" height="18" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
+      </div>
+      <div class="bucket-tag">${v.b}</div>
+    </div>
+    <div class="card-body">
+      <div class="old-name">${v.p}</div>
+      <label>Category</label>
+      <select onchange="update(${i},'cat',this.value)">${catOpts}</select>
+      <label>Clean Name / Descriptor</label>
+      <input type="text" value="${s.desc||''}" placeholder="e.g. rose-garden-bloom"
+        oninput="update(${i},'desc',this.value)" />
+      <label>Version #</label>
+      <input type="number" value="${s.ver||1}" min="1" max="20" style="width:70px"
+        oninput="update(${i},'ver',parseInt(this.value)||1)" />
+      <div class="${proposed?'new-name-preview set':'new-name-preview unset'}">
+        ${proposed||'← watch the video, pick a category, give it a name'}
+      </div>
+    </div>
+    <div class="card-footer">
+      <span class="badge ${assigned?'assigned':'unassigned'}">${assigned?'✓ Assigned':'Needs Review'}</span>
+    </div>
+  </div>`;
+}
+
+function togglePlay(i, wrap) {
+  const vid = document.getElementById(`vid-${i}`);
+  const ov  = document.getElementById(`ov-${i}`);
+  document.querySelectorAll('video').forEach(v => { if(v!==vid){v.pause();v.currentTime=0;} });
+  document.querySelectorAll('.play-overlay').forEach(o => { if(o!==ov) o.classList.remove('hidden'); });
+  if (vid.paused) { vid.play(); ov.classList.add('hidden'); }
+  else            { vid.pause(); ov.classList.remove('hidden'); }
+}
+
+function update(i, field, val) {
+  state[i][field] = val;
+  refreshCard(i);
+  updateStats();
+}
+
+function refreshCard(i) {
+  const v = VIDEOS[i];
+  const s = state[i];
+  const proposed = proposedPath(i);
+  const assigned = isAssigned(i);
+  const card = document.getElementById(`card-${i}`);
+  card.className = `card ${assigned?'assigned':'unassigned'}`;
+  card.querySelector('.new-name-preview').className = `new-name-preview ${proposed?'set':'unset'}`;
+  card.querySelector('.new-name-preview').textContent = proposed || '← watch the video, pick a category, give it a name';
+  card.querySelector('.badge').className = `badge ${assigned?'assigned':'unassigned'}`;
+  card.querySelector('.badge').textContent = assigned ? '✓ Assigned' : 'Needs Review';
+}
+
+function updateStats() {
+  const total = VIDEOS.length;
+  const done = VIDEOS.filter((_,i) => isAssigned(i)).length;
+  document.getElementById('assignedCount').textContent = done;
+  document.getElementById('totalCount').textContent = total;
+  document.getElementById('aCount').textContent = done;
+  document.getElementById('tCount').textContent = total;
+}
+
+function openPlan() {
+  // Track version counters per proposed path to auto-increment duplicates
+  const seen = {};
+  const plan = VIDEOS.map((v, i) => {
+    const s = state[i];
+    if (!s.cat) return null;
+    if (s.cat === 'SKIP') return { action:'DELETE', bucket:v.b, from:v.p };
+
+    const clean = s.desc.toLowerCase().replace(/\s+/g,'-').replace(/[^a-z0-9-]/g,'');
+    const base = `${s.cat}/${s.cat}_${clean}`;
+    seen[base] = (seen[base]||0) + 1;
+    const ver = seen[base];
+    const newPath = `${base}_v${ver}.mp4`;
+    const oldUrl = `${BASE}/${v.b}/${v.p.split('/').map(s=>encodeURIComponent(s)).join('/')}`;
+    const newUrl = `${BASE}/product-media/${newPath}`;
+
+    return {
+      action: 'MOVE',
+      fromBucket: v.b,
+      fromPath: v.p,
+      toBucket: 'product-media',
+      toPath: newPath,
+      oldUrl,
+      newUrl,
+    };
+  }).filter(Boolean);
+
+  document.getElementById('planBox').textContent = JSON.stringify(plan, null, 2);
+  document.getElementById('modal').classList.add('open');
+}
+
+function copyPlan() {
+  navigator.clipboard.writeText(document.getElementById('planBox').textContent)
+    .then(() => {
+      const btn = document.querySelector('.btn-copy');
+      btn.textContent = '✓ Copied!';
+      setTimeout(() => btn.textContent = 'Copy to Clipboard', 2000);
+    });
+}
+
+function closeModal() {
+  document.getElementById('modal').classList.remove('open');
+}
+
+// Boot
+renderGrid();
+updateStats();
+</script>
+</body>
+</html>

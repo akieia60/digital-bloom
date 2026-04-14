@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🌸 Digital Bloom — Video Library</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #0a0a0f;
+    color: #fff;
+    font-family: 'Inter', -apple-system, sans-serif;
+    padding: 20px;
+  }
+  h1 {
+    text-align: center;
+    font-size: 28px;
+    color: #D4AF37;
+    margin-bottom: 8px;
+    letter-spacing: 0.05em;
+  }
+  .subtitle {
+    text-align: center;
+    color: #888;
+    font-size: 14px;
+    margin-bottom: 30px;
+  }
+  .section-title {
+    font-size: 18px;
+    color: #D4AF37;
+    border-bottom: 1px solid #333;
+    padding-bottom: 8px;
+    margin: 30px 0 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .section-title .count {
+    background: #D4AF3722;
+    color: #D4AF37;
+    font-size: 12px;
+    padding: 2px 8px;
+    border-radius: 12px;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+  }
+  .card {
+    background: #151520;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid #222;
+    transition: border-color 0.2s;
+  }
+  .card:hover { border-color: #D4AF37; }
+  .card video {
+    width: 100%;
+    aspect-ratio: 16/9;
+    object-fit: cover;
+    display: block;
+    background: #000;
+    cursor: pointer;
+  }
+  .card-info {
+    padding: 10px 14px;
+  }
+  .card-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #eee;
+    word-break: break-all;
+  }
+  .card-meta {
+    font-size: 11px;
+    color: #666;
+    margin-top: 4px;
+  }
+  .card-id {
+    font-size: 10px;
+    color: #444;
+    font-family: monospace;
+    margin-top: 2px;
+    word-break: break-all;
+  }
+  .badge {
+    display: inline-block;
+    font-size: 10px;
+    padding: 1px 6px;
+    border-radius: 4px;
+    margin-right: 4px;
+  }
+  .badge-supabase { background: #3ecf8e22; color: #3ecf8e; }
+  .badge-local { background: #6366f122; color: #818cf8; }
+  .badge-sequences { background: #D4AF3722; color: #D4AF37; }
+  .instructions {
+    background: #1a1a2e;
+    border: 1px solid #333;
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    font-size: 13px;
+    color: #aaa;
+    line-height: 1.6;
+  }
+  .instructions strong { color: #D4AF37; }
+  .filter-bar {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+    justify-content: center;
+  }
+  .filter-btn {
+    background: #1a1a2e;
+    border: 1px solid #333;
+    color: #aaa;
+    padding: 6px 14px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: all 0.2s;
+  }
+  .filter-btn:hover, .filter-btn.active {
+    border-color: #D4AF37;
+    color: #D4AF37;
+    background: #D4AF3715;
+  }
+</style>
+</head>
+<body>
+
+<h1>🌸 Digital Bloom — Video Library</h1>
+<p class="subtitle">Click any video to play/pause · All videos from Supabase storage + local files</p>
+
+<div class="instructions">
+  <strong>How to use:</strong> Browse all your videos below. Each card shows the video preview, 
+  filename, and source location. Click any video to play it. Once you've identified which videos 
+  belong to which category, tell Deuce the video number and the product/category you want it assigned to.
+</div>
+
+<div class="filter-bar">
+  <button class="filter-btn active" onclick="filterVideos('all')">All</button>
+  <button class="filter-btn" onclick="filterVideos('sequences')">📦 Sequences Bucket</button>
+  <button class="filter-btn" onclick="filterVideos('supabase')">☁️ Supabase Mother's Day</button>
+  <button class="filter-btn" onclick="filterVideos('local')">💾 Local /videos/shop</button>
+</div>
+
+<div id="gallery"></div>
+
+<script>
+const videos = [];
+let currentFilter = 'all';
+
+// ═══════════════════════════════════════════════════
+// SECTION 1: digital-bloom-sequences bucket (6 videos)
+// ═══════════════════════════════════════════════════
+const sequenceVideos = [
+  "Birthday_Roses_Bloom_v1.mp4",
+  "Birthday_Roses_Bloom_v2.mp4",
+  "Birthday_Roses_Bloom_v3.mp4",
+  "Birthday_Roses_Bloom_v4.mp4",
+  "Birthday_Roses_Transition_v1.mp4",
+  "Birthday_Roses_Transition_v2.mp4"
+];
+sequenceVideos.forEach((name, i) => {
+  videos.push({
+    id: `SEQ-${i+1}`,
+    name,
+    label: name.replace('.mp4', ''),
+    source: 'sequences',
+    sourceLabel: 'digital-bloom-sequences',
+    url: `https://yhdbeblowolfinxxhsnt.supabase.co/storage/v1/object/public/digital-bloom-sequences/${encodeURIComponent(name)}`
+  });
+});
+
+// ═══════════════════════════════════════════════════
+// SECTION 2: product-media / Mother's Day (50 videos)
+// ═══════════════════════════════════════════════════
+const mothersDayVideos = [
+  "$199 love orchids and roses.mp4",
+  "1.99 love .mp4",
+  "grok_1770456103322_GROK_Happy_Birthday.mp4",
+  "grok_1770456104149_GROK_Transition_2.mp4",
+  "grok_1770456104672_GROK_transition_3.mp4",
+  "grok_1770456106009_I_love_you,_GROK4.mp4",
+  "grok_1770456107341_Mother's_Day,_GROK1.mp4",
+  "grok_1770456107843_Valentine's_GROK_3.mp4",
+  "grok_1770456108367_Valentine's_GROK4.mp4",
+  "grok_1770456108877_Valentine's_grok_too.mp4",
+  "grok_1770456109384_groak_happy_birthday_transition_2.mp4",
+  "grok_1770456110516_groak_happy_birthday_transition_3.mp4",
+  "grok_1770456111528_grok-video-002b8a95-9c9b-417c-b884-53a132b575e6_(1).mp4",
+  "grok_1770456111973_grok-video-002b8a95-9c9b-417c-b884-53a132b575e6.mp4",
+  "grok_1770456112663_grok-video-0373bbf8-9602-4f0c-a827-875266b63516_(1).mp4",
+  "grok_1770456113591_grok-video-0373bbf8-9602-4f0c-a827-875266b63516.mp4",
+  "grok_1770456114407_grok-video-0c7c9d41-3fea-46be-a5a7-eb888f165b06.mp4",
+  "grok_1770456114799_grok-video-0f4e4682-aa13-422d-9fc5-42b57b129179.mp4",
+  "grok_1770456115309_grok-video-207e7eaa-def9-4a1c-b03c-59d751eecf9f.mp4",
+  "grok_1770456116168_grok-video-22b2297c-7068-4f69-bba0-13413067a0f4.mp4",
+  "grok_1770456116763_grok-video-4246961b-f726-427f-ab9b-df74f30bccbb_(1).mp4",
+  "grok_1770456117184_grok-video-4246961b-f726-427f-ab9b-df74f30bccbb.mp4",
+  "grok_1770456117562_grok-video-4a245cd6-f38a-4d98-8195-99e1c182ba44.mp4",
+  "grok_1770456118501_grok-video-4cb70927-21ed-42a1-babc-e5daa168da11.mp4",
+  "grok_1770456119110_grok-video-5e59b61a-92de-4cdf-9c58-491c207bc4bb.mp4",
+  "grok_1770456119726_grok-video-8a2c425b-6d3b-43c5-af40-7ec140dee937.mp4",
+  "grok_1770456120401_grok-video-985b946b-d306-48fb-af5f-7b4a0adfedc4.mp4",
+  "grok_1770456121270_grok-video-a30d38d7-0534-43ee-92f1-2636e5617903_(1).mp4",
+  "grok_1770456122375_grok-video-a30d38d7-0534-43ee-92f1-2636e5617903.mp4",
+  "grok_1770456122983_grok-video-a76096a1-89d8-4e92-b5e6-c51633cfb721.mp4",
+  "grok_1770456123927_grok-video-aa5745a6-76b5-4f26-861d-491e4f5971d3.mp4",
+  "grok_1770456124546_grok-video-abe73ae7-14a7-43a5-bb1c-273fefc055a4.mp4",
+  "grok_1770456125203_grok-video-bf0ff7dc-d6fc-4cb0-9632-aa5c386796c6.mp4",
+  "grok_1770456125768_grok-video-c9117412-dc98-4142-bc67-8af7d00464e3_(1).mp4",
+  "grok_1770456126167_grok-video-c9117412-dc98-4142-bc67-8af7d00464e3.mp4",
+  "grok_1770456126686_grok-video-dc7e71de-cc24-48d1-8cbe-a2cf1192adb9_(1).mp4",
+  "grok_1770456127415_grok-video-dc7e71de-cc24-48d1-8cbe-a2cf1192adb9.mp4",
+  "grok_1770456127919_grok-video-e0d2a060-dc46-440a-af56-a2e0894afcd5.mp4",
+  "grok_1770456128533_grok-video-e8c0c26b-344c-40e0-8e7e-f5d911685bc2_(1).mp4",
+  "grok_1770456129150_grok-video-e8c0c26b-344c-40e0-8e7e-f5d911685bc2_(2).mp4",
+  "grok_1770456129762_grok-video-e8c0c26b-344c-40e0-8e7e-f5d911685bc2.mp4",
+  "grok_1770456130286_grok-video-eeb99322-c327-44cd-94a3-e7c39418cf43_(1).mp4",
+  "grok_1770456130695_grok-video-eeb99322-c327-44cd-94a3-e7c39418cf43_(2).mp4",
+  "grok_1770456131059_grok-video-eeb99322-c327-44cd-94a3-e7c39418cf43_(3).mp4",
+  "grok_1770456131609_grok-video-eeb99322-c327-44cd-94a3-e7c39418cf43.mp4",
+  "grok_1770456132113_grok-video-efd0ad0c-ea72-4d10-a1ac-311dd3ae90b7_(1).mp4",
+  "grok_1770456132729_grok-video-efd0ad0c-ea72-4d10-a1ac-311dd3ae90b7.mp4",
+  "grok_1770456133351_grokdigitalbloomingtransition..mp4",
+  "grok_1770456133861_grokt3_transition.mp4",
+  "grok_1770456134626_valentines_grok.mp4"
+];
+mothersDayVideos.forEach((name, i) => {
+  const label = name.replace(/^grok_\d+_/, '').replace('.mp4', '');
+  videos.push({
+    id: `SB-${i+1}`,
+    name,
+    label,
+    source: 'supabase',
+    sourceLabel: "product-media / Mother's Day",
+    url: `https://yhdbeblowolfinxxhsnt.supabase.co/storage/v1/object/public/product-media/Mother's%20Day/${encodeURIComponent(name)}`
+  });
+});
+
+// ═══════════════════════════════════════════════════
+// SECTION 3: Local /videos/shop/ files (49 videos)
+// ═══════════════════════════════════════════════════
+const localVideos = [
+  "anniversary_champagne-gold_1775931280749.mp4",
+  "anniversary_classic-red-rose_1775931261045.mp4",
+  "anniversary_garden-morning_1775931320579.mp4",
+  "anniversary_midnight-velvet_1775931300194.mp4",
+  "anniversary_modern-minimalist_1775931347377.mp4",
+  "birthday_birthday_roses_bloom_v1.mp4",
+  "birthday_birthday_roses_bloom_v2.mp4",
+  "birthday_birthday_roses_transition_v1.mp4",
+  "congratulations_congratulations_roses_bloom_v1.mp4",
+  "congratulations_congratulations_roses_bloom_v2.mp4",
+  "faith_divine-dogwood_1775931514873.mp4",
+  "faith_heavenly-gold_1775931582132.mp4",
+  "faith_morning-prayer_1775931560950.mp4",
+  "faith_olive-peace_1775931539116.mp4",
+  "faith_sacred-white-lilies_1775931492088.mp4",
+  "family-reunion_classic-peony_1775931697777.mp4",
+  "family-reunion_hydrangea-garden_1775931640010.mp4",
+  "family-reunion_orange-harvest_1775931666875.mp4",
+  "family-reunion_sunshine-table_1775931616375.mp4",
+  "family-reunion_wildflower-joy_1775931600237.mp4",
+  "general_general_goldenroses_bloom_v1.mp4",
+  "general_general_lotus_bloom_v1.mp4",
+  "general_general_rainbowrose_bloom_v1.mp4",
+  "general_general_roses_bloom_v1.mp4",
+  "glassstiletto_glassstilettoseries_roses_artistic_v1.mp4",
+  "glassstiletto_glassstilettoseries_roses_artistic_v2.mp4",
+  "graduation_bold-celebration_1775931442986.mp4",
+  "graduation_bright-ambition_1775931426274.mp4",
+  "graduation_golden-hour-triumph_1775931376488.mp4",
+  "graduation_quiet-pride_1775931465944.mp4",
+  "graduation_royal-purple-honor_1775931406793.mp4",
+  "iloveyou_iloveyou_goldenroses_bloom_v1.mp4",
+  "iloveyou_iloveyou_roses_bloom_v1.mp4",
+  "iloveyou_iloveyou_roses_bloom_v2.mp4",
+  "memorial_memorial_roses_artistic_v1.mp4",
+  "mothers-day-balloon-celebration.mp4",
+  "mothersday_digitalbloom_mothersday_bloom_45s.mp4",
+  "mothersday_digitalbloom_mothersday_bloom_v2.mp4",
+  "mothersday_digitalbloom_mothersday_bloom_v3.mp4",
+  "mothersday_digitalbloom_mothersday_bloom_v4.mp4",
+  "mothersday_digitalbloom_mothersday_bloom_v6.mp4",
+  "thinking-of-you_blush-rose-note_1775931741855.mp4",
+  "thinking-of-you_forget-me-not_1775931766318.mp4",
+  "thinking-of-you_lavender-calm_1775931797934.mp4",
+  "thinking-of-you_pink-tulip-tenderness_1775931819508.mp4",
+  "thinking-of-you_sweet-pea-letter_1775931719369.mp4",
+  "thinkingofyou_thinkingofyou_roses_bloom_v1.mp4",
+  "valentine_valentine_roses_bloom_v1.mp4",
+  "valentine_valentine_roses_bloom_v2.mp4"
+];
+localVideos.forEach((name, i) => {
+  const label = name.replace('.mp4', '');
+  videos.push({
+    id: `LOC-${i+1}`,
+    name,
+    label,
+    source: 'local',
+    sourceLabel: 'public/videos/shop',
+    url: `/videos/shop/${name}`
+  });
+});
+
+function filterVideos(filter) {
+  currentFilter = filter;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+  renderGallery();
+}
+
+function renderGallery() {
+  const gallery = document.getElementById('gallery');
+  const sources = {
+    sequences: { title: '📦 Sequences Bucket (digital-bloom-sequences)', badge: 'badge-sequences' },
+    supabase: { title: "☁️ Supabase Storage (product-media / Mother's Day)", badge: 'badge-supabase' },
+    local: { title: '💾 Local Files (public/videos/shop)', badge: 'badge-local' }
+  };
+
+  let html = '';
+  const groups = currentFilter === 'all' 
+    ? ['sequences', 'supabase', 'local'] 
+    : [currentFilter];
+
+  for (const group of groups) {
+    const groupVideos = videos.filter(v => v.source === group);
+    const info = sources[group];
+    html += `<h2 class="section-title">${info.title} <span class="count">${groupVideos.length}</span></h2>`;
+    html += '<div class="grid">';
+    for (const v of groupVideos) {
+      html += `
+        <div class="card">
+          <video src="${v.url}" preload="metadata" loop muted playsinline
+            onclick="this.paused ? this.play() : this.pause()"
+            onmouseenter="this.play()" onmouseleave="this.pause(); this.currentTime=0;">
+          </video>
+          <div class="card-info">
+            <div class="card-label">
+              <span class="badge ${info.badge}">${v.id}</span>
+              ${v.label}
+            </div>
+            <div class="card-meta">${v.sourceLabel}</div>
+            <div class="card-id">${v.name}</div>
+          </div>
+        </div>`;
+    }
+    html += '</div>';
+  }
+  gallery.innerHTML = html;
+}
+
+renderGallery();
+</script>
+</body>
+</html>
