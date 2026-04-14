@@ -12,14 +12,14 @@ const CATEGORY_DISPLAY = [
   { slug: 'mothers-day',  previewVideo: '/videos/category-previews/preview_mothers-day_grok1.mp4' },
   { slug: 'birthday',     previewVideo: '/videos/shop/birthday_birthday_roses_bloom_v1.mp4' },
   { slug: 'love',         previewVideo: '/videos/shop/iloveyou_iloveyou_roses_bloom_v1.mp4' },
-  { slug: 'valentine',    previewVideo: '/videos/shop/valentine_valentine_roses_bloom_v1.mp4' },
+  { slug: 'valentine',    previewVideo: '/videos/shop/valentine_valentine_roses_bloom_v2.mp4' },
   { slug: 'celebration',  previewVideo: '/videos/shop/congratulations_congratulations_roses_bloom_v1.mp4' },
-  { slug: 'fathers-day',  previewVideo: 'https://yhdbeblowolfinxxhsnt.supabase.co/storage/v1/object/public/product-media/Mother%27s%20Day/grok_1770456116168_grok-video-22b2297c-7068-4f69-bba0-13413067a0f4.mp4' },
+  { slug: 'fathers-day',  previewVideo: 'https://yhdbeblowolfinxxhsnt.supabase.co/storage/v1/object/public/product-media/Mother\'s%20Day/grok_1770456116168_grok-video-22b2297c-7068-4f69-bba0-13413067a0f4.mp4' },
   { slug: 'friendship',   previewVideo: '/videos/shop/thinkingofyou_thinkingofyou_roses_bloom_v1.mp4' },
   { slug: 'grief',        previewVideo: '/videos/shop/memorial_memorial_roses_artistic_v1.mp4' },
   { slug: 'luxury',       previewVideo: '/videos/shop/glassstiletto_glassstilettoseries_roses_artistic_v1.mp4' },
   { slug: 'general',      previewVideo: '/videos/shop/general_general_goldenroses_bloom_v1.mp4' },
-  { slug: 'zodiac',       previewVideo: null },
+  { slug: 'zodiac',       previewVideo: '/videos/shop/valentine_valentine_roses_bloom_v1.mp4' },
 ];
 
 export default function CategoryGrid() {
