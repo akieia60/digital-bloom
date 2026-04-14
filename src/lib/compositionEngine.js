@@ -245,15 +245,27 @@ function clampBrightness(hex, multiplier = 1) {
   return `#${[adjust(rgb.r), adjust(rgb.g), adjust(rgb.b)].map((value) => value.toString(16).padStart(2, '0')).join('')}`;
 }
 
-function getMessageSize(messageText = '') {
+function getMessageSize(messageText = '', textSizeScale = 'md') {
   const length = String(messageText || '').trim().length;
-  if (length > 90) {
-    return 'clamp(16px, 3.6vw, 22px)';
-  }
-  if (length > 56) {
-    return 'clamp(17px, 4vw, 25px)';
-  }
-  return 'clamp(19px, 4.6vw, 29px)';
+  const sizes = {
+    sm: {
+      long:   'clamp(12px, 2.7vw, 16px)',
+      medium: 'clamp(13px, 3.0vw, 19px)',
+      short:  'clamp(14px, 3.4vw, 21px)',
+    },
+    md: {
+      long:   'clamp(16px, 3.6vw, 22px)',
+      medium: 'clamp(17px, 4vw, 25px)',
+      short:  'clamp(19px, 4.6vw, 29px)',
+    },
+    lg: {
+      long:   'clamp(21px, 4.8vw, 30px)',
+      medium: 'clamp(23px, 5.4vw, 34px)',
+      short:  'clamp(26px, 6.2vw, 39px)',
+    },
+  };
+  const bucket = length > 90 ? 'long' : length > 56 ? 'medium' : 'short';
+  return (sizes[textSizeScale] || sizes.md)[bucket];
 }
 
 export function getThemeSpec(themeId, overrides = {}) {
@@ -345,6 +357,7 @@ export function getCompositionLayers({
   fontChoice = 'playfair',
   messageTextColor = '#FFFFFF',
   messageBold = false,
+  messageTextSize = 'md',
 }) {
   const theme = getThemeSpec(colorTheme, { primaryColor, accentColor });
   const engraving = ENGRAVING_STYLES[engravingStyle] || ENGRAVING_STYLES.heirloom;
@@ -403,7 +416,7 @@ export function getCompositionLayers({
           fontStyle: font.previewFontStyle,
           textTransform: font.previewTransform,
           letterSpacing: font.previewLetterSpacing,
-          fontSize: getMessageSize(message.short),
+          fontSize: getMessageSize(message.short, messageTextSize),
           color: messageTextColor || '#FFFFFF',
           textShadow: messageBold ? '0 1px 3px rgba(0,0,0,0.35)' : undefined,
         },

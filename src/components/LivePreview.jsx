@@ -27,12 +27,13 @@ export default function LivePreview({
   fontChoice = 'playfair',
   messageTextColor = '#FFFFFF',
   messageBold = false,
+  messageTextSize = 'md',
   className = '',
 }) {
   const { t } = useLanguage();
   const composition = useMemo(
-    () => getCompositionLayers({ product, colorTheme, primaryColor, accentColor, extras, message, engravingStyle, fontChoice, messageTextColor, messageBold }),
-    [product, colorTheme, primaryColor, accentColor, extras, message, engravingStyle, fontChoice, messageTextColor, messageBold]
+    () => getCompositionLayers({ product, colorTheme, primaryColor, accentColor, extras, message, engravingStyle, fontChoice, messageTextColor, messageBold, messageTextSize }),
+    [product, colorTheme, primaryColor, accentColor, extras, message, engravingStyle, fontChoice, messageTextColor, messageBold, messageTextSize]
   );
 
   if (!composition?.baseMedia?.src && !composition?.baseMedia?.poster) {

@@ -87,6 +87,7 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
   const [fontChoice, setFontChoice] = useState(stateDefaults.fontChoice || 'playfair');
   const [messageTextColor, setMessageTextColor] = useState(stateDefaults.messageTextColor || '#FFFFFF');
   const [messageBold, setMessageBold] = useState(stateDefaults.messageBold || false);
+  const [messageTextSize, setMessageTextSize] = useState(stateDefaults.messageTextSize || 'md');
   const [playingTrack, setPlayingTrack] = useState(null);
   const [activeStep, setActiveStep] = useState(1);
 
@@ -362,6 +363,7 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
       fontChoice,
       messageTextColor,
       messageBold,
+      messageTextSize,
       locale: lang,
     });
     // Stop audio on complete
@@ -378,12 +380,13 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
       fontChoice,
       messageTextColor,
       messageBold,
+      messageTextSize,
       locale: lang,
       totalPrice,
       composition,
     });
     onClose();
-  }, [isProductValid, product, message, colorTheme, primaryColor, accentColor, extras, selectedSound, engravingStyle, fontChoice, messageTextColor, messageBold, lang, totalPrice, themeStyle, stopAllAudio, onComplete, onClose]);
+  }, [isProductValid, product, message, colorTheme, primaryColor, accentColor, extras, selectedSound, engravingStyle, fontChoice, messageTextColor, messageBold, messageTextSize, lang, totalPrice, themeStyle, stopAllAudio, onComplete, onClose]);
 
   const selectedExtras = useMemo(
     () => EXTRAS.filter((extra) => extras[extra.id]).map((extra) => t(extra.nameKey)),
@@ -461,6 +464,7 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
               fontChoice={fontChoice}
               messageTextColor={messageTextColor}
               messageBold={messageBold}
+              messageTextSize={messageTextSize}
               className="composition-preview--square"
             />
           </div>
@@ -659,6 +663,37 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
                   <span style={{ fontWeight: '800', fontSize: '1.05rem', lineHeight: 1 }}>B</span>
                   <span>{t('customize_style_bold')}</span>
                 </button>
+              </div>
+            </div>
+
+            {/* Text size picker */}
+            <div className="customizer-field">
+              <label className="customizer-label">{t('customize_text_size_label')}</label>
+              <div style={{ display: 'flex', gap: '10px' }}>
+                {[
+                  { id: 'sm', label: t('customize_size_small'),  preview: 'A', previewSize: '0.82rem' },
+                  { id: 'md', label: t('customize_size_medium'), preview: 'A', previewSize: '1.05rem' },
+                  { id: 'lg', label: t('customize_size_large'),  preview: 'A', previewSize: '1.35rem' },
+                ].map(({ id, label, preview, previewSize }) => (
+                  <button
+                    key={id}
+                    type="button"
+                    onClick={() => setMessageTextSize(id)}
+                    style={{
+                      display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '6px',
+                      padding: '10px 18px', borderRadius: '22px', border: '1.5px solid',
+                      borderColor: messageTextSize === id ? '#D4AF37' : 'rgba(255,255,255,0.35)',
+                      background: messageTextSize === id ? 'rgba(212,175,55,0.18)' : 'rgba(255,255,255,0.08)',
+                      color: messageTextSize === id ? '#D4AF37' : 'rgba(255,255,255,0.8)',
+                      fontFamily: 'Outfit, sans-serif', fontSize: '0.88rem',
+                      cursor: 'pointer', transition: 'all 0.18s',
+                      minWidth: '76px',
+                    }}
+                  >
+                    <span style={{ fontSize: previewSize, lineHeight: 1, fontFamily: 'Playfair Display, serif' }}>{preview}</span>
+                    <span>{label}</span>
+                  </button>
+                ))}
               </div>
             </div>
 
