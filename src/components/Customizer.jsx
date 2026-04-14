@@ -88,6 +88,7 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
   const [messageTextColor, setMessageTextColor] = useState(stateDefaults.messageTextColor || '#FFFFFF');
   const [messageBold, setMessageBold] = useState(stateDefaults.messageBold || false);
   const [messageTextSize, setMessageTextSize] = useState(stateDefaults.messageTextSize || 'md');
+  const [ribbonColor, setRibbonColor] = useState(stateDefaults.ribbonColor || null);
   const [playingTrack, setPlayingTrack] = useState(null);
   const [activeStep, setActiveStep] = useState(1);
 
@@ -130,6 +131,9 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
       }
       if (typeof editData.messageBold === 'boolean' || typeof editData.composition?.messageBold === 'boolean') {
         setMessageBold(editData.messageBold ?? editData.composition?.messageBold ?? false);
+      }
+      if (editData.ribbonColor || editData.composition?.ribbonColor) {
+        setRibbonColor(editData.ribbonColor || editData.composition?.ribbonColor || null);
       }
       if (editData.composition?.activeOverlays) {
         const newExtras = { ribbon: false, sparkle: false, goldDust: false, softGlow: false, rosePetals: false, balloon: false };
@@ -364,6 +368,7 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
       messageTextColor,
       messageBold,
       messageTextSize,
+      ribbonColor,
       locale: lang,
     });
     // Stop audio on complete
@@ -381,12 +386,13 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
       messageTextColor,
       messageBold,
       messageTextSize,
+      ribbonColor,
       locale: lang,
       totalPrice,
       composition,
     });
     onClose();
-  }, [isProductValid, product, message, colorTheme, primaryColor, accentColor, extras, selectedSound, engravingStyle, fontChoice, messageTextColor, messageBold, messageTextSize, lang, totalPrice, themeStyle, stopAllAudio, onComplete, onClose]);
+  }, [isProductValid, product, message, colorTheme, primaryColor, accentColor, extras, selectedSound, engravingStyle, fontChoice, messageTextColor, messageBold, messageTextSize, ribbonColor, lang, totalPrice, themeStyle, stopAllAudio, onComplete, onClose]);
 
   const selectedExtras = useMemo(
     () => EXTRAS.filter((extra) => extras[extra.id]).map((extra) => t(extra.nameKey)),
@@ -465,6 +471,7 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
               messageTextColor={messageTextColor}
               messageBold={messageBold}
               messageTextSize={messageTextSize}
+              ribbonColor={ribbonColor}
               className="composition-preview--square"
             />
           </div>
@@ -632,10 +639,10 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
                   onClick={() => setMessageBold(false)}
                   style={{
                     display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
-                    padding: '10px 22px', borderRadius: '22px', border: '1.5px solid',
-                    borderColor: !messageBold ? '#D4AF37' : 'rgba(255,255,255,0.35)',
-                    background: !messageBold ? 'rgba(212,175,55,0.18)' : 'rgba(255,255,255,0.08)',
-                    color: !messageBold ? '#D4AF37' : 'rgba(255,255,255,0.8)',
+                    padding: '10px 22px', borderRadius: '22px',
+                    border: `2px solid ${!messageBold ? '#D4AF37' : 'rgba(255,255,255,0.75)'}`,
+                    background: !messageBold ? 'rgba(212,175,55,0.22)' : 'rgba(255,255,255,0.16)',
+                    color: !messageBold ? '#D4AF37' : '#FFFFFF',
                     fontFamily: 'Outfit, sans-serif', fontSize: '0.92rem',
                     fontWeight: '400',
                     cursor: 'pointer', transition: 'all 0.18s',
@@ -650,10 +657,10 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
                   onClick={() => setMessageBold(true)}
                   style={{
                     display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
-                    padding: '10px 22px', borderRadius: '22px', border: '1.5px solid',
-                    borderColor: messageBold ? '#D4AF37' : 'rgba(255,255,255,0.35)',
-                    background: messageBold ? 'rgba(212,175,55,0.18)' : 'rgba(255,255,255,0.08)',
-                    color: messageBold ? '#D4AF37' : 'rgba(255,255,255,0.8)',
+                    padding: '10px 22px', borderRadius: '22px',
+                    border: `2px solid ${messageBold ? '#D4AF37' : 'rgba(255,255,255,0.75)'}`,
+                    background: messageBold ? 'rgba(212,175,55,0.22)' : 'rgba(255,255,255,0.16)',
+                    color: messageBold ? '#D4AF37' : '#FFFFFF',
                     fontFamily: 'Outfit, sans-serif', fontSize: '0.92rem',
                     fontWeight: '800',
                     cursor: 'pointer', transition: 'all 0.18s',
@@ -681,10 +688,10 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
                     onClick={() => setMessageTextSize(id)}
                     style={{
                       display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '6px',
-                      padding: '10px 18px', borderRadius: '22px', border: '1.5px solid',
-                      borderColor: messageTextSize === id ? '#D4AF37' : 'rgba(255,255,255,0.35)',
-                      background: messageTextSize === id ? 'rgba(212,175,55,0.18)' : 'rgba(255,255,255,0.08)',
-                      color: messageTextSize === id ? '#D4AF37' : 'rgba(255,255,255,0.8)',
+                      padding: '10px 18px', borderRadius: '22px',
+                      border: `2px solid ${messageTextSize === id ? '#D4AF37' : 'rgba(255,255,255,0.75)'}`,
+                      background: messageTextSize === id ? 'rgba(212,175,55,0.22)' : 'rgba(255,255,255,0.16)',
+                      color: messageTextSize === id ? '#D4AF37' : '#FFFFFF',
                       fontFamily: 'Outfit, sans-serif', fontSize: '0.88rem',
                       cursor: 'pointer', transition: 'all 0.18s',
                       minWidth: '76px',
@@ -889,6 +896,72 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
                 </button>
               ))}
             </div>
+
+            {/* Ribbon color picker — only shown when ribbon is toggled on */}
+            {extras.ribbon && (
+              <div className="customizer-field" style={{ marginTop: '20px' }}>
+                <label className="customizer-label">{t('customize_ribbon_color_label')}</label>
+                <div className="customizer-color-swatches">
+                  {[
+                    { hex: null, label: 'Theme default' },
+                    { hex: '#FFFFFF', label: t('customize_color_white') },
+                    { hex: '#F5E6CC', label: t('customize_color_cream') },
+                    { hex: '#D4AF37', label: t('customize_color_gold') },
+                    { hex: '#F2A8B8', label: t('customize_color_blush') },
+                    { hex: '#A8D0F0', label: t('customize_color_sky') },
+                    { hex: '#A8D8B0', label: t('customize_color_sage') },
+                    { hex: '#C8AEE8', label: t('customize_color_lavender') },
+                    { hex: '#F4C4A0', label: t('customize_color_peach') },
+                    { hex: '#1D1D1F', label: t('customize_color_charcoal') },
+                    { hex: '#1B2A4A', label: t('customize_color_navy') },
+                    { hex: '#4A5568', label: t('customize_color_slate') },
+                    { hex: '#5C1A2A', label: t('customize_color_burgundy') },
+                    { hex: '#1A3C2A', label: t('customize_color_forest') },
+                    { hex: '#8B7355', label: t('customize_color_bronze') },
+                    { hex: '#C8CDD6', label: t('customize_color_silver') },
+                  ].map(({ hex, label }) => (
+                    hex === null ? (
+                      /* "Theme default" swatch — shows the current accent color */
+                      <button
+                        key="theme-default"
+                        type="button"
+                        aria-label={label}
+                        title={label}
+                        onClick={() => setRibbonColor(null)}
+                        style={{
+                          width: '32px', height: '32px', borderRadius: '50%',
+                          background: `conic-gradient(#C53A5C, #D4AF37, #2D5B9F, #137A63, #C53A5C)`,
+                          border: '1.5px solid rgba(255,255,255,0.18)', cursor: 'pointer', flexShrink: 0,
+                          boxShadow: ribbonColor === null
+                            ? '0 0 0 2px #0D1B36, 0 0 0 4px #D4AF37'
+                            : '0 1px 4px rgba(0,0,0,0.3)',
+                          transform: ribbonColor === null ? 'scale(1.15)' : 'scale(1)',
+                          transition: 'box-shadow 0.15s, transform 0.15s',
+                        }}
+                      />
+                    ) : (
+                      <button
+                        key={hex}
+                        type="button"
+                        aria-label={label}
+                        title={label}
+                        onClick={() => setRibbonColor(hex)}
+                        style={{
+                          width: '32px', height: '32px', borderRadius: '50%',
+                          background: hex, border: '1.5px solid rgba(255,255,255,0.18)', cursor: 'pointer', flexShrink: 0,
+                          boxShadow: ribbonColor === hex
+                            ? `0 0 0 2px #0D1B36, 0 0 0 4px ${hex === '#1D1D1F' || hex === '#1B2A4A' || hex === '#1A3C2A' ? '#D4AF37' : hex}`
+                            : '0 1px 4px rgba(0,0,0,0.3)',
+                          transform: ribbonColor === hex ? 'scale(1.15)' : 'scale(1)',
+                          transition: 'box-shadow 0.15s, transform 0.15s',
+                        }}
+                      />
+                    )
+                  ))}
+                </div>
+              </div>
+            )}
+
             <div className="customizer-sound-summary">
               <span className="customizer-sound-summary__label">{t('customize_review_effects')}</span>
               <span className="customizer-sound-summary__value">

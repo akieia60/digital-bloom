@@ -399,6 +399,8 @@ export const en = {
   customize_size_small: "Small",
   customize_size_medium: "Medium",
   customize_size_large: "Large",
+  customize_ribbon_color_label: "Ribbon color",
+  customize_color_silver: "Silver",
   customize_bold_on: "Bold — on",
   customize_bold_off: "Bold — off",
   customize_live_card_label: "Live text placement",

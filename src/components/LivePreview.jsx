@@ -28,6 +28,7 @@ export default function LivePreview({
   messageTextColor = '#FFFFFF',
   messageBold = false,
   messageTextSize = 'md',
+  ribbonColor = null,
   className = '',
 }) {
   const { t } = useLanguage();
@@ -111,7 +112,7 @@ export default function LivePreview({
             />
           ) : (
             // CSS placeholder overlay
-            <CSSOverlay overlayId={overlay.id} themeVariant={overlay.themeVariant} />
+            <CSSOverlay overlayId={overlay.id} themeVariant={overlay.themeVariant} ribbonColor={ribbonColor} />
           )}
         </div>
       ))}
@@ -179,7 +180,7 @@ export default function LivePreview({
  * These render animated CSS effects. When real assets are loaded,
  * the parent renders a <video> instead of this component.
  */
-function CSSOverlay({ overlayId, themeVariant }) {
+function CSSOverlay({ overlayId, themeVariant, ribbonColor }) {
   switch (overlayId) {
     case 'balloon':
       return (
@@ -192,7 +193,10 @@ function CSSOverlay({ overlayId, themeVariant }) {
 
     case 'ribbon':
       return (
-        <div className={`overlay-ribbon overlay-ribbon--${themeVariant}`}>
+        <div
+          className={`overlay-ribbon overlay-ribbon--${themeVariant}`}
+          style={ribbonColor ? { '--ribbon-color': ribbonColor } : undefined}
+        >
           <div className="overlay-ribbon__border" />
         </div>
       );
