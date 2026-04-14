@@ -736,11 +736,23 @@
   z-index: 51;
 }
 
-/* Hero/product page — slightly more prominent */
+/* ── Periodic watermark flash ──
+   Stays subtle most of the time (0.25), then pulses to a strong,
+   clearly-legible 0.62 every 18 seconds. Any screen recording
+   longer than ~30 seconds will capture at least one prominent flash,
+   making unauthorised copies obviously watermarked. */
+@keyframes watermarkFlash {
+  0%, 79%   { opacity: 0.25; }
+  84%, 93%  { opacity: 0.62; }
+  100%      { opacity: 0.25; }
+}
+
+/* Hero/product page — slightly more prominent + periodic flash */
 .db-watermark--hero .db-watermark-row span {
   font-size: 16px;
   opacity: 0.25;
   padding: 0 36px;
+  animation: watermarkFlash 18s ease-in-out infinite;
 }
 
 .db-watermark--hero .db-watermark-corner {

@@ -9,7 +9,7 @@ export const en = {
   // ─── Hero (GradientHero — design-upgrade) ───
   hero_new_title_1: "Give Them Their Flowers",
   hero_new_title_2: "While They're Here",
-  hero_new_tagline: "Luxury motion art for every occasion — birthdays, love, celebrations & more",
+  hero_new_tagline: "No flowers? No problem. Send something cinematic in minutes — starting at $1.99.",
   hero_new_cta: "SEND A BLOOM",
   hero_new_from: "Gifts starting from",
   hero_new_no_app: "no app needed",
@@ -449,7 +449,7 @@ export const en = {
   hero_detail_engraved_value: "To + From burn into the final video",
   hero_detail_protected_label: "Protected finish",
   hero_detail_protected_value: "Digital Bloom signature strip on every delivery",
-  hero_from_suffix: "Personalized keepsakes with instant delivery",
+  hero_from_suffix: "Instant delivery · no app needed",
   hero_media_chip: "Hero Bloom",
   hero_media_dedication: "To Someone You Love",
   hero_media_signature: "From You",
@@ -538,6 +538,7 @@ export const en = {
   delivery_expired_title: "Bloom Link Expired",
   delivery_expired_message: "This protected bloom link has expired. Please contact the sender for a fresh delivery link.",
   delivery_protection_note: "Protected bloom links are view-only and can be revisited anytime.",
+  delivery_send_cta: "Send a Bloom of your own →",
   delivery_brand_tagline: "Give Them Their Flowers While They're Here",
 
 
