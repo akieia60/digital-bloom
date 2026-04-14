@@ -31,10 +31,12 @@ const CATEGORIES = [
   { name: 'Love & Romance', slug: 'love', nameKey: 'cat_love', taglineKey: 'cat_love_tagline', tagline: 'Express your deepest feelings' },
   { name: "Valentine's Day", slug: 'valentine', nameKey: 'cat_valentine', taglineKey: 'cat_valentine_tagline', tagline: 'For the one who has your heart' },
   { name: 'Congratulations', slug: 'celebration', nameKey: 'cat_celebration', taglineKey: 'cat_celebration_tagline', tagline: 'Celebrate their achievements in style' },
+  { name: "Father's Day", slug: 'fathers-day', nameKey: 'cat_fathers_day', taglineKey: 'cat_fathers_day_tagline', tagline: 'Honor the man who shaped your world' },
   { name: 'Memorial & Sympathy', slug: 'grief', nameKey: 'cat_grief', taglineKey: 'cat_grief_tagline', tagline: 'Honor those we hold dear' },
   { name: 'Thinking of You', slug: 'friendship', nameKey: 'cat_friendship', taglineKey: 'cat_friendship_tagline', tagline: 'Let them know they matter' },
   { name: 'Luxury Collection', slug: 'luxury', nameKey: 'cat_luxury', taglineKey: 'cat_luxury_tagline', tagline: 'Where fashion meets floral artistry' },
   { name: 'General Collection', slug: 'general', nameKey: 'cat_general', taglineKey: 'cat_general_tagline', tagline: 'Beautiful blooms for every moment' },
+  { name: 'Zodiac Collection', slug: 'zodiac', nameKey: 'cat_zodiac', taglineKey: 'cat_zodiac_tagline', tagline: 'Written in the stars, bloomed for you' },
 ];
 
 function CategorySection({ cat, products }) {

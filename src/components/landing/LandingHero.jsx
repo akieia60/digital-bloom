@@ -2,23 +2,19 @@ import { Link } from 'react-router-dom';
 import OCCASIONS from '../../data/occasions';
 
 // Priority categories shown as quick-tap pills in the hero strip
+// Only categories with active products are listed here
 const HERO_CATEGORIES = [
   'mothers-day',
   'birthday',
   'love',
-  'anniversary',
+  'valentine',
   'celebration',
-  'thank-you',
-  'graduation',
   'fathers-day',
   'friendship',
-  'encouragement',
   'grief',
-  'baby',
-  'milestones',
-  'promotions',
   'luxury',
-  'holidays',
+  'general',
+  'zodiac',
 ];
 
 export default function LandingHero() {

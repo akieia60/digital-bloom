@@ -5,25 +5,21 @@ import OCCASIONS from '../../data/occasions';
 
 // Ordered list of slugs to display in the grid + their video previews.
 // Edit this array to control which categories appear and in what order.
+// Only categories with active products in Supabase are listed here.
+// Hidden (no products): anniversary, graduation, thank-you, encouragement,
+//   gratitude, baby, milestones, promotions, holidays
 const CATEGORY_DISPLAY = [
   { slug: 'mothers-day',  previewVideo: '/videos/category-previews/preview_mothers-day_grok1.mp4' },
   { slug: 'birthday',     previewVideo: '/videos/shop/birthday_birthday_roses_bloom_v1.mp4' },
   { slug: 'love',         previewVideo: '/videos/shop/iloveyou_iloveyou_roses_bloom_v1.mp4' },
-  { slug: 'anniversary',  previewVideo: null },
+  { slug: 'valentine',    previewVideo: '/videos/shop/valentine_valentine_roses_bloom_v1.mp4' },
   { slug: 'celebration',  previewVideo: '/videos/shop/congratulations_congratulations_roses_bloom_v1.mp4' },
-  { slug: 'graduation',   previewVideo: null },
-  { slug: 'fathers-day',  previewVideo: null },
-  { slug: 'thank-you',    previewVideo: null },
-  { slug: 'encouragement',previewVideo: null },
+  { slug: 'fathers-day',  previewVideo: 'https://yhdbeblowolfinxxhsnt.supabase.co/storage/v1/object/public/product-media/Mother%27s%20Day/grok_1770456116168_grok-video-22b2297c-7068-4f69-bba0-13413067a0f4.mp4' },
   { slug: 'friendship',   previewVideo: '/videos/shop/thinkingofyou_thinkingofyou_roses_bloom_v1.mp4' },
-  { slug: 'gratitude',    previewVideo: null },
-  { slug: 'baby',         previewVideo: null },
-  { slug: 'milestones',   previewVideo: null },
-  { slug: 'promotions',   previewVideo: null },
   { slug: 'grief',        previewVideo: '/videos/shop/memorial_memorial_roses_artistic_v1.mp4' },
-  { slug: 'holidays',     previewVideo: null },
   { slug: 'luxury',       previewVideo: '/videos/shop/glassstiletto_glassstilettoseries_roses_artistic_v1.mp4' },
   { slug: 'general',      previewVideo: '/videos/shop/general_general_goldenroses_bloom_v1.mp4' },
+  { slug: 'zodiac',       previewVideo: null },
 ];
 
 export default function CategoryGrid() {
