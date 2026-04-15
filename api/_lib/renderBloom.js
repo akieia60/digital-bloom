@@ -475,13 +475,35 @@ async function createOverlayImage(destination, {
   ctx.fillStyle = rgba(accentColor, 0.98);
   ctx.fillText(stampText, stampBoxX + 13, height * 0.905);
 
+  // ── Full-frame repeating diagonal watermark grid ──
+  // Covers the entire frame at -35° so any crop still shows the mark.
   ctx.save();
-  ctx.translate(width * 0.5, height * 0.48);
-  ctx.rotate(-0.12);
-  ctx.font = `italic 700 ${Math.round(height * 0.04)}px Georgia`;
-  ctx.fillStyle = rgba(accentColor, 0.16);
+  ctx.font = `italic 600 ${Math.round(height * 0.026)}px Georgia`;
+  ctx.fillStyle = rgba(accentColor, 0.24);
   ctx.textAlign = 'center';
-  ctx.fillText('Digital Bloom', 0, 0);
+  ctx.textBaseline = 'middle';
+
+  // Rotate around the frame centre
+  ctx.translate(width * 0.5, height * 0.5);
+  ctx.rotate(-Math.PI * 35 / 180);
+
+  const gridText = '© Digital Bloom';
+  const colSpacing = width * 0.58;          // horizontal gap between columns
+  const rowSpacing = height * 0.10;         // vertical gap between rows
+
+  // Cover the full rotated diagonal so no corner is bare
+  const diagonal = Math.ceil(Math.sqrt(width * width + height * height));
+  const halfCols = Math.ceil(diagonal / colSpacing) + 1;
+  const halfRows = Math.ceil(diagonal / rowSpacing) + 1;
+
+  for (let row = -halfRows; row <= halfRows; row++) {
+    // Offset every other row by half a column-width (brick pattern)
+    const xOffset = (row % 2 === 0) ? 0 : colSpacing * 0.5;
+    for (let col = -halfCols; col <= halfCols; col++) {
+      ctx.fillText(gridText, col * colSpacing + xOffset, row * rowSpacing);
+    }
+  }
+
   ctx.restore();
 
   const cornerStamp = '© Digital Bloom';
