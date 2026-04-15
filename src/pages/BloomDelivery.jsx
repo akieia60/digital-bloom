@@ -247,24 +247,41 @@ export default function BloomDelivery() {
               </div>
             </div>
           ) : (
-            <LivePreview
-              key={previewReplayKey}
-              product={{
-                id: delivery.productId,
-                video_file_url: composition?.baseMedia?.src,
-                image_url: composition?.baseMedia?.poster,
-              }}
-              colorTheme={delivery.colorTheme}
-              primaryColor={delivery.primaryColor}
-              accentColor={delivery.accentColor}
-              extras={delivery.extras}
-              message={delivery.message}
-              engravingStyle={delivery.engravingStyle}
-              fontChoice={delivery.fontChoice}
-              messageTextColor={delivery.messageTextColor}
-              messageBold={delivery.messageBold}
-              className="bloom-delivery__preview"
-            />
+            <div className="db-watermark db-watermark--hero bloom-delivery__protected-frame">
+              <LivePreview
+                key={previewReplayKey}
+                product={{
+                  id: delivery.productId,
+                  video_file_url: composition?.baseMedia?.src,
+                  image_url: composition?.baseMedia?.poster,
+                }}
+                colorTheme={delivery.colorTheme}
+                primaryColor={delivery.primaryColor}
+                accentColor={delivery.accentColor}
+                extras={delivery.extras}
+                message={delivery.message}
+                engravingStyle={delivery.engravingStyle}
+                fontChoice={delivery.fontChoice}
+                messageTextColor={delivery.messageTextColor}
+                messageBold={delivery.messageBold}
+                className="bloom-delivery__preview"
+              />
+              {/* Diagonal repeating watermark grid — flashes every 18s so
+                  any screen recording captures at least one prominent frame */}
+              <div className="db-watermark-overlay" aria-hidden="true">
+                <div className="db-watermark-grid">
+                  {Array.from({ length: 12 }, (_, i) => (
+                    <div key={i} className="db-watermark-row">
+                      <span>© Digital Bloom</span>
+                      <span>© Digital Bloom</span>
+                      <span>© Digital Bloom</span>
+                      <span>© Digital Bloom</span>
+                    </div>
+                  ))}
+                </div>
+                <div className="db-watermark-corner">© Digital Bloom</div>
+              </div>
+            </div>
           )}
         </div>
 
