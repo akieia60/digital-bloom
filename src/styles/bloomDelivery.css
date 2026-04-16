@@ -512,3 +512,212 @@
     font-size: 0.78rem;
   }
 }
+
+/* ============================================
+   BLOOM MANAGE — Buyer's Send Controls
+   /bloom/:id/manage
+   ============================================ */
+
+.bloom-manage__controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 24px 24px 8px;
+  width: 100%;
+  max-width: 460px;
+}
+
+.bloom-manage__recipient-card {
+  text-align: center;
+  padding: 20px 24px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  width: 100%;
+}
+
+.bloom-manage__recipient-label {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.4);
+  margin: 0 0 8px;
+}
+
+.bloom-manage__recipient-name {
+  font-family: 'Cormorant Garamond', 'Georgia', serif;
+  font-size: 1.4rem;
+  font-weight: 500;
+  font-style: italic;
+  color: #D4AF37;
+  margin: 0 0 4px;
+}
+
+.bloom-manage__recipient-email {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.82rem;
+  color: rgba(255, 255, 255, 0.45);
+  margin: 0;
+}
+
+.bloom-manage__send-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 320px;
+  padding: 16px 24px;
+  border-radius: 980px;
+  border: none;
+  background: linear-gradient(135deg, #D4AF37 0%, #C49A28 100%);
+  color: #0A0A0A;
+  font-family: 'Outfit', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: transform 0.18s, box-shadow 0.18s;
+  box-shadow: 0 6px 28px rgba(212, 175, 55, 0.4);
+}
+
+.bloom-manage__send-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 36px rgba(212, 175, 55, 0.5);
+}
+
+.bloom-manage__send-btn:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.bloom-manage__send-note {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.35);
+  text-align: center;
+  letter-spacing: 0.04em;
+  margin: 0;
+  max-width: 320px;
+}
+
+.bloom-manage__error {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.82rem;
+  color: #e74c3c;
+  text-align: center;
+  margin: 0;
+}
+
+/* ── Delivered State ── */
+.bloom-manage__delivered {
+  text-align: center;
+  padding: 28px 24px;
+  background: rgba(212, 175, 55, 0.06);
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  border-radius: 16px;
+  width: 100%;
+}
+
+.bloom-manage__delivered-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #D4AF37 0%, #C49A28 100%);
+  color: #0A0A0A;
+  font-size: 1.4rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 14px;
+}
+
+.bloom-manage__delivered-title {
+  font-family: 'Cormorant Garamond', 'Georgia', serif;
+  font-size: 1.4rem;
+  font-weight: 500;
+  font-style: italic;
+  color: #D4AF37;
+  margin: 0 0 8px;
+}
+
+.bloom-manage__delivered-detail {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.88rem;
+  color: rgba(255, 255, 255, 0.6);
+  margin: 0 0 4px;
+}
+
+.bloom-manage__delivered-time {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.35);
+  margin: 0;
+}
+
+.bloom-manage__viewed {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.82rem;
+  color: rgba(212, 175, 55, 0.7);
+  margin: 12px 0 0;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* ============================================
+   SOCIAL SHARE BUTTONS — Recipient view
+   ============================================ */
+
+.bloom-delivery__social {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 24px 24px 10px;
+  width: 100%;
+  max-width: 460px;
+}
+
+.bloom-delivery__social-label {
+  width: 100%;
+  text-align: center;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.35);
+  margin: 0 0 4px;
+}
+
+.bloom-delivery__social-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 1.2rem;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.bloom-delivery__social-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(212, 175, 55, 0.3);
+  color: #FFFFFF;
+  transform: translateY(-1px);
+}
+
+.bloom-delivery__social-btn svg {
+  width: 22px;
+  height: 22px;
+}

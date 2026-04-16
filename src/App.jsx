@@ -21,6 +21,7 @@ const PromptBrowser = lazy(() => import('./components/PromptBrowser'));
 const Experience1 = lazy(() => import('./pages/Experience1'));
 const FounderDashboard = lazy(() => import('./pages/FounderDashboard'));
 const BloomDelivery = lazy(() => import('./pages/BloomDelivery'));
+const BloomManage = lazy(() => import('./pages/BloomManage'));
 const ComingSoon = lazy(() => import('./pages/ComingSoon'));
 const ShoppingCart = lazy(() => import('./components/ShoppingCart'));
 const FAQ = lazy(() => import('./components/landing/FAQ'));
@@ -110,6 +111,7 @@ function AppContent({ searchQuery, setSearchQuery }) {
           <Route path="/about" element={<ComingSoon />} />
           <Route path="/contact" element={<ComingSoon />} />
           <Route path="/checkout" element={<Checkout />} />
+          <Route path="/bloom/:id/manage" element={<BloomManage />} />
           <Route path="/bloom/:id" element={<BloomDelivery />} />
           <Route path="/gift/:id" element={<BloomDelivery />} />
           <Route path="*" element={

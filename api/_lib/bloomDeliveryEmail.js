@@ -234,8 +234,8 @@ export async function sendBloomBuyerConfirmationEmail({
   }
 
   const appBaseUrl = resolvePublicBaseUrl(req);
-  const giftUrl = purchase.bloom_slug
-    ? `${appBaseUrl}/gift/${encodeURIComponent(purchase.bloom_slug)}`
+  const manageUrl = purchase.bloom_slug
+    ? `${appBaseUrl}/bloom/${encodeURIComponent(purchase.bloom_slug)}/manage`
     : `${appBaseUrl}/shop`;
   const message = purchase.composition_manifest?.customization?.message || {};
   const productName = purchase.products?.name || 'Digital Bloom';
@@ -256,9 +256,9 @@ export async function sendBloomBuyerConfirmationEmail({
     : 'Your Digital Bloom order is confirmed';
   const bodyCopy = isScheduled
     ? `We’ve reserved your Digital Bloom and will email it to ${targetLabel} on the scheduled date.`
-    : (delivery.target === 'recipient'
-        ? `Your Digital Bloom purchase is confirmed. We’ll email it to ${targetLabel}${hasRenderReady ? ' right away.' : ' as soon as the protected bloom is ready.'}`
-        : `Your Digital Bloom purchase is confirmed. ${hasRenderReady ? 'It is ready for you now.' : 'We’re preparing your protected bloom now.'}`);
+    : (delivery.target === ‘recipient’
+        ? `Your Digital Bloom for ${targetLabel} is ready. Preview it and send it when you’re ready.`
+        : `Your Digital Bloom purchase is confirmed. ${hasRenderReady ? ‘It is ready for you now.’ : ‘We’re preparing your protected bloom now.’}`);
 
   const html = `
     <div style="background:#f7efe7;padding:32px 16px;font-family:Georgia,'Times New Roman',serif;color:#201b17;">
@@ -273,9 +273,9 @@ export async function sendBloomBuyerConfirmationEmail({
           <p style="font-size:15px;color:#5f554b;margin:0 0 24px;line-height:1.6;">
             From <strong>${safeSender}</strong>${isScheduled ? ` · Delivers ${escapeHtml(formatDeliveryDate(delivery.deliveryDate, delivery.buyerTimezone) || delivery.deliveryDate)}` : ''}
           </p>
-          <a href="${giftUrl}" style="display:inline-block;padding:16px 32px;border-radius:999px;background:#c9a14a;color:#0e0f12;text-decoration:none;font-weight:700;font-family:Arial,sans-serif;font-size:17px;letter-spacing:0.02em;">Open Your Bloom →</a>
+          <a href="${manageUrl}" style="display:inline-block;padding:16px 32px;border-radius:999px;background:#c9a14a;color:#0e0f12;text-decoration:none;font-weight:700;font-family:Arial,sans-serif;font-size:17px;letter-spacing:0.02em;">Preview &amp; Send Your Bloom →</a>
           <p style="font-size:13px;line-height:1.5;color:#9e8f83;margin:20px 0 0;">
-            Save this link — it's your personal bloom page on Digital Bloom.
+            Review your bloom, then send it to ${targetLabel} when you're ready.
           </p>
           ${isTest ? '<p style="font-size:12px;color:#8b6a1f;margin:12px 0 0;"><strong>Test mode</strong> — rehearsal email only.</p>' : ''}
         </div>
@@ -300,7 +300,7 @@ export async function sendBloomBuyerConfirmationEmail({
         `From: ${delivery.senderName || message.fromName || purchase.customer_name || 'Someone special'}`,
         isScheduled ? `Delivers: ${formatDeliveryDate(delivery.deliveryDate, delivery.buyerTimezone) || delivery.deliveryDate}` : null,
         safeMessage ? `"${message.short}"` : null,
-        `Open your bloom: ${giftUrl}`,
+        `Preview & send your bloom: ${manageUrl}`,
       ].filter(Boolean).join('\n'),
     }),
   });
@@ -415,6 +415,14 @@ export async function processBloomDeliveryEmails({
     }
 
     if (delivery.emailStatus === 'sent' && delivery.emailSentAt) {
+      processed.push(purchase);
+      continue;
+    }
+
+    // For immediate deliveries, don't auto-send the recipient email.
+    // The buyer sends it manually from the /bloom/:slug/manage page.
+    // Scheduled deliveries still auto-send when the date arrives.
+    if (delivery.deliveryMode !== 'scheduled') {
       processed.push(purchase);
       continue;
     }
