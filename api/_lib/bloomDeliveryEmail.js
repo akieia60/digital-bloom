@@ -255,10 +255,10 @@ export async function sendBloomBuyerConfirmationEmail({
     ? 'Your Digital Bloom is scheduled'
     : 'Your Digital Bloom order is confirmed';
   const bodyCopy = isScheduled
-    ? `We’ve reserved your Digital Bloom and will email it to ${targetLabel} on the scheduled date.`
-    : (delivery.target === ‘recipient’
-        ? `Your Digital Bloom for ${targetLabel} is ready. Preview it and send it when you’re ready.`
-        : `Your Digital Bloom purchase is confirmed. ${hasRenderReady ? ‘It is ready for you now.’ : ‘We’re preparing your protected bloom now.’}`);
+    ? `We've reserved your Digital Bloom and will email it to ${targetLabel} on the scheduled date.`
+    : (delivery.target === 'recipient'
+        ? `Your Digital Bloom for ${targetLabel} is ready. Preview it and send it when you're ready.`
+        : `Your Digital Bloom purchase is confirmed. ${hasRenderReady ? 'It is ready for you now.' : "We're preparing your protected bloom now."}`);
 
   const html = `
     <div style="background:#f7efe7;padding:32px 16px;font-family:Georgia,'Times New Roman',serif;color:#201b17;">
