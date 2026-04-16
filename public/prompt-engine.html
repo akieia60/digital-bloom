@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>🌸 Digital Bloom — Prompt Engine</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#0D1B36;--navy2:#0f2040;--navy3:#152240;
+  --gold:#D4AF37;--gold2:rgba(212,175,55,0.15);--gold3:rgba(212,175,55,0.35);
+  --white:#fff;--muted:rgba(255,255,255,0.45);--border:rgba(255,255,255,0.08);
+  --green:#22c55e;--red:#ef4444;--purple:#818cf8;
+  --card:rgba(255,255,255,0.04);
+}
+body{font-family:'Outfit',sans-serif;background:var(--navy);color:var(--white);min-height:100vh;-webkit-font-smoothing:antialiased}
+
+/* HEADER */
+.header{background:rgba(13,27,54,0.97);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:16px 20px;position:sticky;top:0;z-index:200;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.header h1{font-family:'Playfair Display',serif;font-size:1.25rem;color:var(--gold);letter-spacing:0.04em;white-space:nowrap}
+.header-stats{display:flex;gap:8px;flex-wrap:wrap;margin-left:auto}
+.pill{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:3px 10px;font-size:0.7rem;color:var(--muted);white-space:nowrap}
+.pill span{color:var(--white);font-weight:700}
+.pill.done span{color:var(--green)}
+
+/* SEARCH + FILTER BAR */
+.controls{padding:12px 20px;border-bottom:1px solid var(--border);background:rgba(13,27,54,0.85);position:sticky;top:61px;z-index:190;display:flex;flex-direction:column;gap:10px}
+.search-wrap{position:relative}
+.search{width:100%;padding:9px 36px 9px 14px;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:10px;color:var(--white);font-size:0.85rem;font-family:'Outfit',sans-serif;outline:none;transition:border 0.2s}
+.search:focus{border-color:var(--gold)}
+.search::placeholder{color:var(--muted)}
+.search-icon{position:absolute;right:12px;top:50%;transform:translateY(-50%);opacity:0.4;pointer-events:none;font-size:0.9rem}
+.cats{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
+.cats::-webkit-scrollbar{display:none}
+.cat-btn{padding:6px 14px;border-radius:20px;border:1px solid var(--border);background:var(--card);color:var(--muted);font-size:0.72rem;font-family:'Outfit',sans-serif;cursor:pointer;transition:all 0.2s;white-space:nowrap;flex-shrink:0}
+.cat-btn:hover{border-color:var(--gold);color:var(--white)}
+.cat-btn.active{background:var(--gold);color:#0D1B36;border-color:var(--gold);font-weight:700}
+
+/* MAIN GRID */
+.main{padding:16px 20px;max-width:1200px;margin:0 auto}
+.section-label{font-family:'Playfair Display',serif;color:var(--gold);font-size:1rem;margin:20px 0 12px;padding-bottom:8px;border-bottom:1px solid var(--border);letter-spacing:0.04em}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+
+/* PROMPT CARD */
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;transition:all 0.2s;display:flex;flex-direction:column}
+.card:hover{border-color:var(--gold3);box-shadow:0 8px 32px rgba(0,0,0,0.4)}
+.card.done{border-color:rgba(34,197,94,0.3);opacity:0.7}
+.card.done:hover{opacity:1}
+.card-header{padding:14px 16px 10px;display:flex;align-items:flex-start;gap:10px}
+.card-title{font-size:0.82rem;font-weight:600;color:var(--white);flex:1;line-height:1.4}
+.card-check{width:20px;height:20px;border-radius:6px;border:2px solid var(--border);background:transparent;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all 0.2s;font-size:0.7rem;margin-top:1px}
+.card-check.checked{background:var(--green);border-color:var(--green);color:#fff}
+.cat-badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:0.63rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;margin:0 16px 10px;align-self:flex-start}
+
+/* SCENES */
+.scenes{padding:0 12px 12px}
+.scene{margin-bottom:10px;background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:10px;overflow:hidden}
+.scene-label{padding:6px 12px;font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--gold);background:rgba(212,175,55,0.08);border-bottom:1px solid var(--border)}
+.scene-text{padding:10px 12px;font-size:0.75rem;color:rgba(255,255,255,0.75);line-height:1.65;max-height:100px;overflow:hidden;transition:max-height 0.3s}
+.scene-text.expanded{max-height:600px}
+.scene-actions{padding:6px 12px 10px;display:flex;gap:6px}
+.btn-copy{padding:5px 12px;background:rgba(212,175,55,0.15);border:1px solid var(--gold3);border-radius:7px;color:var(--gold);font-size:0.7rem;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:all 0.2s;white-space:nowrap}
+.btn-copy:hover{background:rgba(212,175,55,0.3)}
+.btn-copy.copied{background:rgba(34,197,94,0.2);border-color:rgba(34,197,94,0.4);color:var(--green)}
+.btn-expand{padding:5px 10px;background:transparent;border:1px solid var(--border);border-radius:7px;color:var(--muted);font-size:0.7rem;cursor:pointer;font-family:'Outfit',sans-serif;transition:all 0.2s}
+.btn-expand:hover{border-color:var(--gold);color:var(--white)}
+
+/* ITERATIONS (for mega-prompt format) */
+.iteration{margin-bottom:8px}
+.iter-label{font-size:0.63rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--purple);margin-bottom:4px;padding:0 4px}
+
+/* WORKFLOW NOTE */
+.workflow-note{margin:0 12px 12px;padding:8px 12px;background:rgba(99,102,241,0.08);border:1px solid rgba(99,102,241,0.2);border-radius:8px;font-size:0.7rem;color:rgba(99,102,241,0.9);line-height:1.5}
+
+/* EMPTY */
+.empty{grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--muted)}
+.empty-icon{font-size:2.5rem;margin-bottom:12px;display:block}
+
+/* TOAST */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--navy2);border:1px solid var(--gold);color:var(--white);padding:10px 20px;border-radius:10px;font-size:0.82rem;z-index:9999;animation:fadeIn 0.3s;pointer-events:none;white-space:nowrap}
+@keyframes fadeIn{from{opacity:0;transform:translateX(-50%) translateY(8px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1);border-radius:3px}
+
+/* RESPONSIVE */
+@media(max-width:600px){
+  .header h1{font-size:1.05rem}
+  .grid{grid-template-columns:1fr}
+  .controls{top:53px}
+}
+
+/* CATEGORY COLORS */
+.badge-mothers{background:rgba(255,182,193,0.2);color:#ffb6c1}
+.badge-birthday{background:rgba(255,200,100,0.2);color:#ffc864}
+.badge-love{background:rgba(220,80,80,0.2);color:#f87171}
+.badge-friendship{background:rgba(100,220,180,0.2);color:#6edcb4}
+.badge-thankyou{background:rgba(147,197,253,0.2);color:#93c5fd}
+.badge-anniversary{background:rgba(212,175,55,0.2);color:#D4AF37}
+.badge-encouragement{background:rgba(250,200,80,0.2);color:#fac850}
+.badge-sympathy{background:rgba(200,200,220,0.2);color:#c8c8dc}
+.badge-fathersday{background:rgba(100,150,220,0.2);color:#6496dc}
+.badge-holiday{background:rgba(180,120,255,0.2);color:#b478ff}
+.badge-zodiac{background:rgba(100,180,255,0.2);color:#64b4ff}
+.badge-inclusive{background:rgba(255,140,200,0.2);color:#ff8cc8}
+.badge-signature{background:rgba(212,175,55,0.2);color:#D4AF37}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>🌸 Prompt Engine</h1>
+  <div class="header-stats">
+    <div class="pill">Total: <span id="stat-total">—</span></div>
+    <div class="pill done">Done: <span id="stat-done">0</span></div>
+    <div class="pill">Showing: <span id="stat-showing">—</span></div>
+  </div>
+</div>
+
+<div class="controls">
+  <div class="search-wrap">
+    <input class="search" id="search" type="text" placeholder="Search prompts…">
+    <span class="search-icon">🔍</span>
+  </div>
+  <div class="cats" id="cats"></div>
+</div>
+
+<div class="main">
+  <div class="grid" id="grid"></div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════
+// ALL PROMPT DATA — DIGITAL BLOOM
+// ═══════════════════════════════════════════════════
+
+const PROMPTS = [
+
+// ─── SIGNATURE SERIES ───────────────────────────────
+{id:'sig-1',title:'The Golden Rose – Sacred Spotlight Bloom',cat:"Signature Series",badge:'badge-signature',
+ scenes:[
+  {label:'Main Prompt',text:`Create a hyper-realistic cinematic animation of a deep crimson rose against a pure black background. The rose is illuminated by a soft overhead spotlight. Fine golden dust particles drift slowly around it. Tiny water droplets rest on the petals, catching warm light. The camera slowly pushes in as the rose subtly rotates. Golden particles gather toward the center of the rose, glowing slightly brighter before dispersing gently. Lighting is dramatic and sculpted, with deep shadows and warm gold highlights. Shallow depth of field. Ultra-detailed velvet petal texture. Fine film grain. Mood: sacred, powerful, intimate luxury. No text. No logos.`},
+  {label:'Iteration 1',text:`Refine the previous generation. Push the camera movement to a slower, more deliberate pace — almost meditative. Increase the density of the golden dust particles in the mid-ground, creating visible swirling eddies around the rose. Make the water droplets on the petals larger and more reflective, catching individual light rays. Add a subtle warm amber rim light from behind the rose to separate it from the black void.`},
+  {label:'Iteration 2',text:`Further refinement. Intensify the overhead spotlight to create more dramatic Rembrandt-style lighting with brighter highlights on the upper petal edges and deeper, richer shadows in the petal folds. Push the velvet petal texture to an extreme — make each micro-fiber visible. Add a more pronounced film grain for a vintage, timeless quality. Let the golden particles leave faint trailing streaks as they drift, like slow-motion embers.`},
+ ]},
+
+{id:'sig-2',title:'Peony Cascade – Feminine Power Bloom',cat:"Signature Series",badge:'badge-signature',
+ scenes:[
+  {label:'Main Prompt',text:`Create a cinematic slow-motion animation of soft coral and peach peonies arranged in a dark antique bowl. Golden dust rises gently from behind the flowers like sacred smoke. Petals subtly tremble as if touched by invisible air. The camera circles slowly at low angle. Warm light catches the silky petal edges with a delicate sheen. Film grain. No text. No logos. Mood: feminine strength, softness with depth, quiet confidence.`},
+  {label:'Iteration 1',text:`Refine. Enhance the peony petals — show more layered depth and ruffled edges. Increase the golden dust rising effect, making it more volumetric. Add a subtle lens flare from the warm light source catching the bowl's rim.`},
+  {label:'Iteration 2',text:`Further refinement. Push petal texture to show silk-like micro-folds. Intensify the warm rim light. Make the golden dust form more defined plumes. Add deeper shadow in the bowl's interior for contrast.`},
+ ]},
+
+// ─── MOTHER'S DAY ────────────────────────────────────
+{id:'md-a1',title:"Marble Rose Luxury",cat:"Mother's Day",badge:'badge-mothers',
+ workflow:'Standard 5-scene — generate each scene separately',
+ scenes:[
+  {label:'Scene 1',text:`luxury white marble table with soft gold veins, elegant Mother's Day greeting card resting in the center, embossed floral design on the cover, beautiful lettering reading "Happy Mother's Day", soft cinematic lighting, flower petals gently drifting across the marble surface, luxury greeting card commercial style, ultra realistic`},
+  {label:'Scene 2',text:`the elegant Mother's Day card slowly opens revealing the message "Happy Mother's Day Mom", warm golden light glowing from inside the card, three soft pastel balloons floating upward behind the card, delicate butterflies gliding through the air, cinematic luxury lighting, ultra realistic`},
+  {label:'Scene 3',text:`behind the open card a luxurious gift box wrapped with a silk ribbon slowly appears on the marble table, glowing softly as petals swirl around it, three pastel balloons floating nearby, cinematic commercial lighting`},
+  {label:'Scene 4',text:`the luxury gift box slowly opens releasing glowing light, elegant bouquet of 48 red roses bloom upward and outward towards the viewer in slow motion, petals unfolding beautifully, drifting through the air, cinematic floral reveal, ultra realistic`},
+  {label:'Scene 5',text:`the blooming roses fill the frame surrounded by drifting petals and butterflies, soft golden sunlight glowing across the flowers, elegant text fading in reading "Happy Mother's Day", cinematic emotional finale`},
+ ]},
+
+{id:'md-a2',title:"Spring Garden Morning",cat:"Mother's Day",badge:'badge-mothers',
+ workflow:'Standard 5-scene — generate each scene separately',
+ scenes:[
+  {label:'Scene 1',text:`sunlit spring garden scene, wooden garden table surrounded by blooming flowers, a beautiful handmade Mother's Day card resting on the table, watercolor floral design on the cover, elegant lettering reading "Happy Mother's Day", gentle breeze moving petals across the table, cinematic natural lighting`},
+  {label:'Scene 2',text:`the Mother's Day card slowly opens revealing the message "Happy Mother's Day Mama", warm golden sunlight shining across the page, three pastel balloons floating upward behind the table, butterflies moving through the garden air`},
+  {label:'Scene 3',text:`behind the open card a pastel ribbon wrapped gift box appears on the table surrounded by flower petals, glowing softly in warm sunlight, dreamy spring garden environment`},
+  {label:'Scene 4',text:`the pastel gift box slowly opens revealing lush pink peonies blooming upward in slow motion, large soft petals unfolding beautifully, petals drifting through the air`},
+  {label:'Scene 5',text:`the blooming peonies fill the frame surrounded by sunlight, butterflies and drifting petals, elegant message fading in reading "Happy Mother's Day"`},
+ ]},
+
+{id:'md-a3',title:"Golden Sunset Bloom",cat:"Mother's Day",badge:'badge-mothers',
+ workflow:'Standard 5-scene — generate each scene separately',
+ scenes:[
+  {label:'Scene 1',text:`beautiful sunset sky overlooking a peaceful lake, golden light reflecting on the water, a luxurious Mother's Day card resting on a polished wooden dock, elegant gold foil lettering reading "Happy Mother's Day", warm cinematic sunset lighting`},
+  {label:'Scene 2',text:`the elegant Mother's Day card slowly opens revealing the message "Happy Mother's Day Mom", golden sunset light glowing across the page, three elegant balloons drifting upward beside the dock`},
+  {label:'Scene 3',text:`behind the open card a luxurious gift box wrapped with satin ribbon appears glowing softly in the warm sunset light`},
+  {label:'Scene 4',text:`the gift box slowly opens revealing elegant white orchids blooming upward in slow motion, petals unfolding gracefully in the sunset glow`},
+  {label:'Scene 5',text:`the blooming orchids fill the frame against a glowing sunset sky, petals drifting through warm light, elegant message fading in reading "Happy Mother's Day"`},
+ ]},
+
+{id:'md-a4',title:'⭐ A Love That Never Fades',cat:"Mother's Day",badge:'badge-mothers',
+ workflow:'USE EXTEND WORKFLOW: Generate Scene 1 → After rendering click Extend → Hit 3 dots → Click Extend → Paste next scene → Hit Start. Repeat.',
+ scenes:[
+  {label:'Scene 1',text:`Cinematic luxury greeting card opening in slow motion, black velvet background with gold foil accents, card slowly opens revealing cascading golden sparkles and diamond particles falling like waterfall, dramatic lighting with soft shadows, custom message text appears in elegant gold typography saying "Happy Mother's Day" followed by "I love you" in flowing script, premium aesthetic with crystal reflections and warm golden glow, 4K resolution, ultra-realistic rendering`},
+  {label:'Scene 2',text:`Ornate Victorian gift box center frame with intricate golden patterns and crystal details, "You are a true diamond" appears in elegant script below the box, box glows with warm golden light and diamond sparkle effects, black gold and green marble luxury background with subtle gold particle atmosphere, dramatic cinematic lighting creates depth and premium feel, box rotates to showcase detailed craftsmanship`},
+  {label:'Scene 3',text:`The ornate gift box slowly dissolves into light as the golden glow transforms into a soft, radiant bloom of roses emerging from within. A bouquet of blush pink, ivory, and champagne gold roses begins to bloom upward in slow motion, petals unfolding with delicate precision. Silk ribbons flow gently around the bouquet, while golden particles rise upward like memories. The environment shifts from dark luxury into a warm, glowing golden sunrise atmosphere. Cinematic lighting, ultra-realistic textures, emotional storytelling, premium aesthetic, no text, no humans.`},
+  {label:'Scene 4 — Final',text:`The fully bloomed bouquet gently lifts and settles into a calm, peaceful composition as the motion slows almost to stillness. Rose petals softly detach and float upward, dissolving into glowing light, creating a sense of release, gratitude, and lasting love. The golden light intensifies briefly, then softens into a gentle, warm glow. Subtle shimmering particles continue to drift upward. The camera slowly pushes in one final time, creating an intimate, emotional closing moment that feels complete and timeless. Soft depth of field, warm golden tones, ultra cinematic, deeply emotional, premium finish, no text, no humans.`},
+ ]},
+
+{id:'md-a5',title:'⭐ The Hands That Held Everything',cat:"Mother's Day",badge:'badge-mothers',
+ workflow:'USE EXTEND WORKFLOW: Generate Scene 1 → After rendering click Extend → Hit 3 dots → Click Extend → Paste next scene → Hit Start. Repeat.',
+ scenes:[
+  {label:'Scene 1 — The Beginning of Care',text:`A single delicate silk ribbon floats in darkness, softly illuminated by a faint warm golden light. The ribbon slowly begins to move as if guided by an invisible force, gently weaving and looping through the air in smooth, graceful motion. As it moves, faint glowing particles begin to appear around it, creating a sense of quiet presence and unseen effort. The environment is minimal, with a soft gradient of deep shadow fading into warm light, creating a calm and intimate atmosphere. Cinematic lighting, slow motion, soft depth of field, emotional, premium, no text, no humans.`},
+  {label:'Scene 2 — Holding It All Together',text:`The flowing ribbon begins to wrap around invisible points in space, forming delicate connections as if holding something together. Soft glowing threads of light begin to appear where the ribbon touches, creating a network of warmth and support. Subtle rose petals begin to materialize along the ribbon's path, gently forming and drifting in slow motion. The lighting becomes warmer and more radiant, suggesting quiet strength and constant care. Highly detailed, cinematic, emotional storytelling, no humans, no text.`},
+  {label:'Scene 3 — Love Takes Shape',text:`The ribbon and light threads begin to gather and slow, gradually forming into a soft, elegant arrangement of roses in blush pink and warm ivory tones. The transformation is seamless, as if all the invisible effort has finally taken visible form. Petals gently unfold as the bouquet becomes fuller, surrounded by softly rising golden particles. The background shifts into a warm golden glow. Ultra cinematic, soft lighting, premium aesthetic, no text, no humans.`},
+  {label:'Scene 4 — Seen at Last',text:`The completed bouquet rests in a calm, glowing environment as the ribbon gently settles around it. Soft petals lift and dissolve into light, creating a peaceful, emotional release. A subtle halo of golden light surrounds the arrangement. The camera slowly moves closer, creating an intimate final moment that feels still, complete, and deeply emotional. The light softens and holds, leaving a lasting impression of warmth and love. Cinematic, slow motion, premium finish, deeply emotional, no humans, no text.`},
+ ]},
+
+{id:'md-v1',title:"Mama's Rose (Vault)",cat:"Mother's Day",badge:'badge-mothers',
+ scenes:[
+  {label:'Main Prompt',text:`Shot on an ARRI Alexa with a 100mm macro lens, this is a cinematic close-up of a single, hyper-detailed pink rose against a deep black void. The camera executes a slow, reverent push-in. As the rose slowly blooms, its velvet-soft petals unfurl to reveal the words "Happy Mother's Day" crafted from elegant, glowing gold script at its heart. Warm 3200K tungsten light catches microscopic gold particle dust, making it cascade like embers from a dying star. Mood: intimate, sacred, deeply emotional. Color grade reminiscent of a Rembrandt painting.`},
+  {label:'Iteration 1',text:`Refine. Enhance the blooming motion — make each petal unfurl with more visible weight and grace. Increase gold particle dust around the text reveal. Add a subtle warm lens flare from the tungsten light. Push the Rembrandt color grade deeper.`},
+  {label:'Iteration 2',text:`Further refinement. Make the "Happy Mother's Day" script glow more intensely with a warm, pulsing light. Push macro petal texture to show individual cell structures and microscopic water droplets. Intensify the film grain. Add a subtle rack focus from text back to petal edge.`},
+ ]},
+
+{id:'md-v2',title:"Generational Bloom (Vault)",cat:"Mother's Day",badge:'badge-mothers',
+ scenes:[
+  {label:'Main Prompt',text:`A smooth orbital tracking shot reveals a large, hyper-detailed golden rose in full bloom with two smaller, unopened rosebuds beside it, representing a generational bond. The entire arrangement is bathed in volumetric light that creates god rays piercing through petal gaps. Gold particles swirl in a controlled vortex around the three roses, creating a sense of shared golden lineage. Mood: sacred, enduring love and connection.`},
+  {label:'Iteration 1',text:`Refine. Enhance the size contrast between the large golden rose and the two smaller buds. Increase the god rays. Add subtle movement to the rosebuds, as if slowly beginning to open.`},
+  {label:'Iteration 2',text:`Further refinement. Push the golden rose's metallic sheen to be more luminous. Intensify the vortex of gold particles with visible spiral patterns. Show the difference between the mature bloom and tight, smooth buds. Add warm vintage film grain.`},
+ ]},
+
+// ─── BIRTHDAY ─────────────────────────────────────────
+{id:'bday-1',title:'Balloon Celebration',cat:"Birthday",badge:'badge-birthday',
+ workflow:'Standard 5-scene',
+ scenes:[
+  {label:'Scene 1',text:`bright joyful birthday celebration scene, colorful balloons floating upward, elegant birthday card resting on a decorated table with confetti, beautiful lettering reading "Happy Birthday", warm festive lighting, cinematic greeting card commercial style, ultra realistic`},
+  {label:'Scene 2',text:`the birthday card slowly opens revealing the message "Happy Birthday", colorful balloons floating upward behind the card, confetti drifting through the air, joyful celebration atmosphere, cinematic lighting`},
+  {label:'Scene 3',text:`behind the open card a brightly wrapped birthday gift box appears on the table with ribbon and bow, glowing softly as confetti swirls around it`},
+  {label:'Scene 4',text:`the birthday gift box slowly opens releasing glowing light, vibrant mixed flowers bloom upward in slow motion, colorful petals drifting through the air`},
+  {label:'Scene 5',text:`the blooming flowers fill the frame surrounded by floating balloons and confetti, elegant message fading in reading "Happy Birthday"`},
+ ]},
+
+{id:'bday-v1',title:'Birthday Wish — The Dandelion Dream',cat:"Birthday",badge:'badge-birthday',
+ scenes:[
+  {label:'Main Prompt',text:`A hyper-detailed golden dandelion, captured with an 85mm portrait lens at f/1.4, stands against a stark black background. A gentle, invisible force causes the seeds to BURST outward in a slow-motion explosion. As they travel through the air, they transform into sparkling golden particles that coalesce and form the words "Happy Birthday" in an elegant, shimmering script. Magical and ethereal lighting.`},
+  {label:'Iteration 1',text:`Refine. Enhance the seed burst — make each seed's departure more individually defined. Increase the transformation effect as seeds become golden particles. Push the text formation to be more elegant with visible particle trails.`},
+  {label:'Iteration 2',text:`Further refinement. Push the dandelion detail to show every individual seed and filament. Make the "Happy Birthday" text shimmer more dynamically. Add warm dreamy film grain and bokeh.`},
+ ]},
+
+{id:'bday-v2',title:'The Scholar\'s Bloom — Graduation Ascent',cat:"Birthday",badge:'badge-birthday',
+ scenes:[
+  {label:'Main Prompt',text:`A hyper-detailed white rose, symbolizing a new beginning, blooms in a seamless, continuous shot. The camera starts low, looking up at the rose, and cranes upwards as the petals unfurl. At its heart, a black graduation cap with a golden tassel is revealed, the tassel swaying gently. Gold particle dust rains down, like academic honors being bestowed. Lighting is bright and optimistic.`},
+  {label:'Iteration 1',text:`Refine. Enhance the crane movement for greater sense of ascent. Increase the golden tassel detail and swaying motion. Push the gold particle rain to be more celebratory.`},
+  {label:'Iteration 2',text:`Further refinement. Push the white rose petals to be more luminous. Make the graduation cap texture hyper-detailed — show fabric weave and metallic gold tassel. Add clean, bright film grain.`},
+ ]},
+
+// ─── LOVE ─────────────────────────────────────────────
+{id:'love-1',title:'Romantic Roses',cat:"Love",badge:'badge-love',
+ workflow:'Standard 5-scene',
+ scenes:[
+  {label:'Scene 1',text:`romantic candlelit scene, soft glowing lights, elegant love card resting on a marble table surrounded by rose petals, beautiful lettering reading "For You", cinematic romantic lighting`},
+  {label:'Scene 2',text:`the romantic card slowly opens revealing the message "I Love You", soft candlelight glowing across the page, rose petals drifting through the air`},
+  {label:'Scene 3',text:`a luxurious ribbon wrapped gift box appears behind the open card glowing softly in warm romantic light`},
+  {label:'Scene 4',text:`the gift box slowly opens revealing elegant red roses blooming upward in slow motion, petals unfolding beautifully`},
+  {label:'Scene 5',text:`red roses fill the frame surrounded by drifting petals and warm candlelight, elegant message fading in reading "I Love You"`},
+ ]},
+
+{id:'love-v1',title:'Eternal Love — Vault',cat:"Love",badge:'badge-love',
+ scenes:[
+  {label:'Main Prompt',text:`A romantic bloom of deep red roses slowly opening under warm candlelight. Soft glowing particles floating around the petals. Intimate atmosphere, cinematic lighting, elegant luxury floral animation, emotional romantic tone, ultra realistic bloom sequence, premium visual storytelling.`},
+  {label:'Iteration 1',text:`Refine. Deepen the candlelight warmth, add visible flame flicker reflections on petals. Increase particle density around the bloom. Add rim lighting from a secondary candle behind the arrangement.`},
+  {label:'Iteration 2',text:`Further refinement. Push petal velvet texture to extreme detail. Make the candlelight more chiaroscuro. Add subtle red-to-gold color shift in the particles. Vintage film grain.`},
+ ]},
+
+// ─── FRIENDSHIP ──────────────────────────────────────
+{id:'friend-1',title:'Soft Tulips — Thinking of You',cat:"Friendship",badge:'badge-friendship',
+ workflow:'Standard 5-scene',
+ scenes:[
+  {label:'Scene 1',text:`peaceful morning sunlight through a window, elegant greeting card resting on a wooden table beside flowers, delicate lettering reading "Thinking Of You"`},
+  {label:'Scene 2',text:`the card slowly opens revealing the message "Just Thinking Of You", warm sunlight glowing across the page`},
+  {label:'Scene 3',text:`a soft pastel gift box appears behind the open card glowing gently in morning light`},
+  {label:'Scene 4',text:`the gift box opens revealing beautiful pink tulips blooming upward in slow motion`},
+  {label:'Scene 5',text:`tulips fill the frame surrounded by drifting petals and soft glowing sunlight creating a peaceful emotional moment`},
+ ]},
+
+// ─── THANK YOU ───────────────────────────────────────
+{id:'ty-1',title:'White Lilies — Thank You',cat:"Thank You",badge:'badge-thankyou',
+ workflow:'Standard 5-scene | NEW CATEGORY — set DB slug to: thank-you',
+ scenes:[
+  {label:'Scene 1',text:`beautiful elegant desk scene with natural sunlight, a thank you card resting on a polished table, delicate lettering reading "Thank You"`},
+  {label:'Scene 2',text:`the card slowly opens revealing the message "Thank You So Much", soft warm light illuminating the message`},
+  {label:'Scene 3',text:`a glowing gift box wrapped with ribbon appears behind the open card on the table`},
+  {label:'Scene 4',text:`the gift box opens revealing elegant white lilies blooming upward in slow motion`},
+  {label:'Scene 5',text:`white lilies fill the frame surrounded by soft glowing light as elegant text fades in reading "Thank You"`},
+ ]},
+
+// ─── ANNIVERSARY ─────────────────────────────────────
+{id:'ann-1',title:'Champagne Roses — Anniversary',cat:"Anniversary",badge:'badge-anniversary',
+ workflow:'Standard 5-scene | NEW CATEGORY — set DB slug to: anniversary',
+ scenes:[
+  {label:'Scene 1',text:`elegant candlelit anniversary dinner setting, soft warm golden light, anniversary card resting on crisp white linen, champagne glasses in the background, scattered rose petals across the table, beautiful gold lettering reading "Happy Anniversary", cinematic romantic atmosphere, ultra realistic`},
+  {label:'Scene 2',text:`the anniversary card slowly opens revealing the message "Happy Anniversary, My Love", warm candlelight glowing across the page, champagne bubbles rising gently in the background, rose petals drifting through soft golden light, cinematic and intimate`},
+  {label:'Scene 3',text:`behind the open card a luxurious gift box wrapped with champagne satin ribbon appears glowing softly on the table, rose petals and candlelight surrounding it beautifully`},
+  {label:'Scene 4',text:`the gift box slowly opens releasing warm golden light, elegant champagne roses mixed with deep red roses bloom upward in slow motion, petals unfolding in the warm candlelit glow`},
+  {label:'Scene 5',text:`champagne and red roses fill the frame surrounded by warm candlelight and drifting petals, elegant golden text fades in reading "Happy Anniversary"`},
+ ]},
+
+{id:'ann-v1',title:'The Infinity Rose — Anniversary Vow (Vault)',cat:"Anniversary",badge:'badge-anniversary',
+ scenes:[
+  {label:'Main Prompt',text:`A golden rose, its petals imbued with a metallic sheen, blooms in a mesmerizing time-lapse. The camera executes a smooth orbital tracking shot, circling the rose as it opens. At its center, a glowing golden infinity symbol materializes, pulsing with a soft, warm light. Gold particles swirl around the symbol, tracing its infinite path. Lighting is warm and romantic, speaking of eternal love.`},
+  {label:'Iteration 1',text:`Refine. Enhance the metallic sheen on the petals with dynamic light reflections shifting as the camera orbits. Increase the infinity symbol's glow and make its pulsing more hypnotic. Push particle trails to more clearly trace the figure-eight path.`},
+  {label:'Iteration 2',text:`Further refinement. Push the golden rose to be more luxurious with subtle rose-gold undertones. Intensify the warm, romantic lighting. Make petal texture hyper-detailed with metallic grain. Add soft, warm film grain and golden vignette.`},
+ ]},
+
+// ─── ENCOURAGEMENT ───────────────────────────────────
+{id:'enc-1',title:'Sunrise Sunflowers — You\'ve Got This',cat:"Encouragement",badge:'badge-encouragement',
+ workflow:'Standard 5-scene | NEW CATEGORY — set DB slug to: encouragement',
+ scenes:[
+  {label:'Scene 1',text:`inspiring mountain sunrise scene, warm golden light breaking dramatically over the horizon, elegant encouragement card resting on a smooth stone surface, bold uplifting lettering reading "You've Got This", cinematic motivational lighting, ultra realistic`},
+  {label:'Scene 2',text:`the card slowly opens revealing the message "I Believe In You", brilliant golden morning light floods across the page, warm uplifting energy in the air, sense of possibility and momentum`},
+  {label:'Scene 3',text:`behind the open card a vibrant gift box wrapped with a bold yellow and gold ribbon appears glowing in warm sunrise light, radiating warmth and energy`},
+  {label:'Scene 4',text:`the gift box slowly opens releasing a burst of golden light, vibrant yellow sunflowers bloom upward powerfully in slow motion, petals opening with full energy and warmth`},
+  {label:'Scene 5',text:`sunflowers fill the frame surrounded by golden sunrise light and drifting petals, bold uplifting text fades in reading "You've Got This"`},
+ ]},
+
+// ─── SYMPATHY / GRIEF ────────────────────────────────
+{id:'grif-1',title:'White Orchids — With Sympathy',cat:"Sympathy",badge:'badge-sympathy',
+ workflow:'Standard 5-scene | DB slug: grief',
+ scenes:[
+  {label:'Scene 1',text:`peaceful calm scene with soft diffused light, elegant sympathy card resting on a marble surface, delicate lettering reading "With Sympathy"`},
+  {label:'Scene 2',text:`the card slowly opens revealing the message "Thinking Of You During This Time"`},
+  {label:'Scene 3',text:`a gentle glowing gift box appears behind the card surrounded by soft drifting petals`},
+  {label:'Scene 4',text:`the gift box opens revealing elegant white orchids blooming upward slowly`},
+  {label:'Scene 5',text:`white orchids fill the frame in peaceful soft light creating a calm respectful floral moment`},
+ ]},
+
+// ─── FATHER'S DAY ─────────────────────────────────────
+{id:'fd-1',title:'Rich Warm Study — Father\'s Day',cat:"Father's Day",badge:'badge-fathersday',
+ workflow:'Standard 5-scene | DB slug: fathers-day | REPLACES wrong Mother\'s Day videos',
+ scenes:[
+  {label:'Scene 1',text:`warm leather study with rich wooden bookshelves, whiskey amber lighting, elegant Father's Day card resting on a polished mahogany desk, classic gold lettering reading "Happy Father's Day", refined masculine atmosphere, cinematic warm lighting, ultra realistic`},
+  {label:'Scene 2',text:`the Father's Day card slowly opens revealing the message "Happy Father's Day, Dad", warm amber light glowing richly across the page, depth and warmth, classic refined atmosphere`},
+  {label:'Scene 3',text:`behind the open card a refined gift box wrapped in navy and gold ribbon appears on the mahogany desk, glowing softly in warm amber light`},
+  {label:'Scene 4',text:`the gift box slowly opens releasing rich warm light, deep red roses mixed with dark burgundy dahlias bloom upward in slow motion, petals unfolding in warm amber tones`},
+  {label:'Scene 5',text:`deep red roses and burgundy dahlias fill the frame in warm amber light, bold classic text fades in reading "Happy Father's Day, Dad"`},
+ ]},
+
+{id:'fd-v1',title:'The Patriarch — Father\'s Day Strength (Vault)',cat:"Father's Day",badge:'badge-fathersday',
+ scenes:[
+  {label:'Main Prompt',text:`A strong, ancient oak tree, its leaves a brilliant gold, stands as a monument in a vast, black void. The camera starts with a wide shot, then slowly zooms in, revealing the gnarled, powerful roots that glow with a potent, golden light. Mood: history, stability, quiet strength. Dramatic lighting with a single powerful light source casting long, deep shadows.`},
+  {label:'Iteration 1',text:`Refine. Enhance the oak tree's ancient quality — add more gnarled bark detail, visible growth rings, and moss. Increase the golden glow in the roots, making it pulse with a slow, powerful rhythm. Push the dramatic lighting for more heroic shadows.`},
+  {label:'Iteration 2',text:`Further refinement. Push the golden leaves to be individually detailed. Intensify the chiaroscuro across the entire tree. Make bark texture hyper-detailed with centuries of weathering. Add strong, warm film grain and slight desaturation in shadows.`},
+ ]},
+
+// ─── HOLIDAY COLLECTION ───────────────────────────────
+{id:'hol-1',title:"Valentine's — Eternal Heart: A Valentine's Embrace",cat:"Holidays",badge:'badge-holiday',
+ scenes:[
+  {label:'Main Prompt',text:`Two hyper-detailed roses, one a passionate red and the other a pure, innocent white, are captured in a slow, intimate dance. Their stems, like lovers' arms, intertwine to form a perfect heart shape. The camera, on a smooth, romantic dolly shot, moves slowly around the intertwined roses. Gold particle accents drift like whispered secrets in the air. Soft and sensual lighting, warm inviting glow, mood of deep enduring love.`},
+  {label:'Iteration 1',text:`Refine. Enhance the intertwining stems — make the heart shape more defined and the twisting motion more organic. Increase gold particle accents and add subtle heart-shaped bokeh in the background.`},
+  {label:'Iteration 2',text:`Further refinement. Push petal textures to extreme detail — velvet quality of the red, porcelain smoothness of the white. Intensify the soft lighting with romantic shadows in the heart-shaped negative space. Add warm film grain and soft-focus halo.`},
+ ]},
+
+{id:'hol-2',title:"4th of July — Freedom Bloom",cat:"Holidays",badge:'badge-holiday',
+ scenes:[
+  {label:'Main Prompt',text:`A hyper-detailed rose blooms in a whirlwind of red, white, and blue. Fast, energetic camera cuts create excitement and celebration. In the background, subtle gold particle fireworks explode softly, their light reflecting off the rose's petals. Festive and dynamic lighting with bright flashes of color and a celebratory patriotic mood.`},
+  {label:'Iteration 1',text:`Refine. Enhance the patriotic color whirlwind — make red, white, and blue more vivid. Increase the background firework explosions with more variety in burst patterns. Push the energetic cuts with motion blur transitions.`},
+  {label:'Iteration 2',text:`Further refinement. Push the rose's petal texture to show patriotic colors blending naturally like watercolor. Make gold particle fireworks more detailed with visible spark trails. Add vibrant, slightly saturated film grain.`},
+ ]},
+
+{id:'hol-3',title:"Veterans Day — The Sentinel",cat:"Holidays",badge:'badge-holiday',
+ scenes:[
+  {label:'Main Prompt',text:`A single, stoic, metallic-looking silver rose stands in a stark, black void. The camera holds a long, still shot — quiet contemplation and respect. A single golden dog tag hangs from its stem, catching the light. Shallow depth of field. Somber and respectful lighting with a single, soft light source. Mood: quiet dignity.`},
+  {label:'Iteration 1',text:`Refine. Enhance the metallic silver quality of the rose — more reflective with visible surface imperfections. Increase the dog tag detail with embossed text and chain links. Push the still shot to feel more contemplative with the slightest camera drift.`},
+  {label:'Iteration 2',text:`Further refinement. Push the silver rose texture to look like forged metal — cold, strong, enduring. Intensify the somber lighting for deeper shadows. Make the dog tag catch the light dramatically. Add cool desaturated film grain.`},
+ ]},
+
+{id:'hol-4',title:"Juneteenth — The Freedom Star",cat:"Holidays",badge:'badge-holiday',
+ scenes:[
+  {label:'Main Prompt',text:`A hyper-detailed rose with petals of red, black, and green blooms with powerful, celebratory energy. The camera executes a joyful, swirling crane shot, moving up and around the rose as it opens. At its heart, the Juneteenth star, glowing with brilliant gold, is revealed. Bright and hopeful lighting, festive celebratory mood.`},
+  {label:'Iteration 1',text:`Refine. Enhance the red, black, and green color separation — make each color more vivid and defined. Increase the Juneteenth star's golden glow with radiating light rays. Push the swirling crane shot for greater upward joyful movement.`},
+  {label:'Iteration 2',text:`Further refinement. Push petal textures to show the three colors blending at boundaries in an organic, natural way. Intensify the bright, hopeful lighting. Make the star symbol more detailed and luminous. Add warm, vibrant film grain.`},
+ ]},
+
+{id:'hol-5',title:"Christmas — Winter's Rose",cat:"Holidays",badge:'badge-holiday',
+ scenes:[
+  {label:'Main Prompt',text:`A hyper-detailed white rose, its edges delicately tipped in gold, in a gentle, floating shot as if it's a snowflake itself. Gently falling golden snowflakes drift down, landing on the petals and sparkling in soft, warm light. Shallow depth of field creates a dreamy, enchanting mood.`},
+  {label:'Iteration 1',text:`Refine. Enhance the golden snowflakes — make them more crystalline with visible six-pointed structures. Increase the floating quality of camera movement. Push the gold-tipped edges of the rose to be more luminous.`},
+  {label:'Iteration 2',text:`Further refinement. Push the white rose texture to show frost-like crystalline detail on the petal surfaces. Make the golden snowflakes accumulate slightly on petals, creating a dusting effect. Add soft warm film grain with a slight blue-to-warm gradient.`},
+ ]},
+
+{id:'hol-6',title:"New Year's — Midnight Bloom",cat:"Holidays",badge:'badge-holiday',
+ scenes:[
+  {label:'Main Prompt',text:`A hyper-detailed black rose, its petals like midnight silk, blooms in a dramatic time-lapse. The camera focuses on the center of the rose where golden clock hands appear, counting down the final seconds to midnight. As the hands strike twelve, the rose ERUPTS in a shower of golden fireworks. Dramatic and celebratory lighting with anticipation and excitement.`},
+  {label:'Iteration 1',text:`Refine. Enhance the clock hands — make them more ornate and golden with mechanical detail. Increase the countdown tension with lighting gradually intensifying. Push the firework eruption to be more spectacular with multiple burst stages.`},
+  {label:'Iteration 2',text:`Further refinement. Push the midnight silk texture — show the sheen and depth of true black silk. Intensify the dramatic lighting transition from anticipation to celebration. Make golden fireworks more detailed with visible spark trails and fading embers.`},
+ ]},
+
+{id:'hol-7',title:"Easter — The Lily of Hope",cat:"Holidays",badge:'badge-holiday',
+ scenes:[
+  {label:'Main Prompt',text:`A hyper-detailed white lily, its petals catching the first light of dawn, blooms in a slow, graceful time-lapse with a gentle, rising crane shot. At the lily's heart, a golden cross, simple and elegant, glows with a warm, hopeful light. Gold particles rise upward, like prayers ascending. Soft and hopeful lighting with a warm, golden dawn glow.`},
+  {label:'Iteration 1',text:`Refine. Enhance the dawn light — more gradual and natural, with warm golden rays slowly illuminating the lily from one side. Increase the rising gold particles with a more defined upward trajectory. Push the crane shot to feel more reverent.`},
+  {label:'Iteration 2',text:`Further refinement. Push the white lily petals to show translucent quality where dawn light passes through. Intensify the golden cross glow to be warmer and more inviting. Add hyper-detailed pollen and stamen detail.`},
+ ]},
+
+{id:'hol-8',title:"Thanksgiving — The Harvest Bloom",cat:"Holidays",badge:'badge-holiday',
+ scenes:[
+  {label:'Main Prompt',text:`A hyper-detailed rose in the warm, rich colors of autumn — orange, gold, and deep red — is the centerpiece of a bountiful scene. Golden wheat stalks gently weave around it, their heads heavy with grain. The camera executes a slow, circular tracking shot. Warm and inviting lighting with a golden, late-afternoon glow.`},
+  {label:'Iteration 1',text:`Refine. Enhance the autumn colors — make orange, gold, and deep red more vivid and varied across petals. Increase the wheat stalk detail with individual grain kernels. Push the circular tracking to reveal more of the bountiful arrangement.`},
+  {label:'Iteration 2',text:`Further refinement. Push autumn rose texture to show the warm, slightly dry quality of fall petals. Intensify the late-afternoon golden glow with longer, warmer shadows. Make wheat stalks hyper-detailed. Add warm, harvest-toned film grain.`},
+ ]},
+
+{id:'hol-9',title:"Halloween — The Midnight Rose",cat:"Holidays",badge:'badge-holiday',
+ scenes:[
+  {label:'Main Prompt',text:`A hyper-detailed black rose with deep purple undertones is the subject of a spooky, atmospheric shot. Delicate silver spiderwebs, glistening with dew, are spun on its petals. The camera uses a slow, creeping dolly shot. Shallow depth of field and low-key mysterious lighting create unease and gothic romance.`},
+  {label:'Iteration 1',text:`Refine. Enhance the spiderwebs — more intricate with visible individual strands and dew droplets. Increase the creeping quality of the dolly shot, making it feel more predatory. Add subtle fog or mist in the background.`},
+  {label:'Iteration 2',text:`Further refinement. Push the black-purple rose texture to show velvety, otherworldly quality. Intensify the low-key lighting for deeper shadows. Make silver spiderwebs more luminous. Add cool desaturated film grain with slight purple color cast.`},
+ ]},
+
+// ─── ZODIAC — CELESTIAL SAGA ──────────────────────────
+{id:'zod-aries',title:'Aries — The Inferno Awakening',cat:"Zodiac / Celestial Saga",badge:'badge-zodiac',
+ workflow:'4-scene Extend workflow — generate Scene 1 in Grok, then Extend for each next scene.',
+ scenes:[
+  {label:'Clip 1 — Environment',text:`Cinematic dark volcanic landscape under a blood-red eclipse sky. Ash drifts through the air. The ground cracks open with molten light glowing beneath. Fiery particles spiral upward forming the Aries symbol made of living flame. Deep shadows, dramatic fire lighting, slow reverent push-in.`},
+  {label:'Clip 2 — Creature',text:`The fiery Aries symbol intensifies and transforms into a colossal molten ram formed of gold and ember-red flame. Smoke rolls off its body. Sparks scatter in slow motion. Slow cinematic orbit.`},
+  {label:'Clip 3 — Bloom',text:`The ram explodes into a vortex of fire petals forming a massive bloom of molten gold petals edged in ember red. Petals unfurl with weight and heat. Text appears: 'Aries' and below it 'The Inferno Awakening'.`},
+  {label:'Clip 4 — Final',text:`The bloom rises into the eclipse sky. The Aries constellation ignites above in gold stars. Final text: 'Digital Bloom' and below it 'Born of Flame'. Fade to black with drifting embers.`},
+ ]},
+
+{id:'zod-taurus',title:'Taurus — The Earth Dominion',cat:"Zodiac / Celestial Saga",badge:'badge-zodiac',
+ workflow:'4-scene Extend workflow',
+ scenes:[
+  {label:'Clip 1',text:`Cinematic mountain landscape under storm-heavy sky. Emerald light glows beneath cracked stone. Rising particles form the Taurus symbol in green light. Slow powerful push-in.`},
+  {label:'Clip 2',text:`The symbol erupts into a colossal stone bull with glowing emerald veins. Dust cascades. Camera circles the bull.`},
+  {label:'Clip 3',text:`The bull fractures into emerald and gold particles forming a heavy emerald bloom edged in gold. Text appears: 'Taurus' and 'The Earth Dominion'.`},
+  {label:'Clip 4',text:`Storm clouds part slightly. Taurus constellation ignites overhead. Final text: 'Digital Bloom' and 'Rooted in Strength'.`},
+ ]},
+
+{id:'zod-gemini',title:'Gemini — The Twin Tempest',cat:"Zodiac / Celestial Saga",badge:'badge-zodiac',
+ workflow:'4-scene Extend workflow',
+ scenes:[
+  {label:'Clip 1',text:`High-altitude storm clouds under violet sky. Silver lightning spirals carve the Gemini symbol in glowing light. Slow cinematic push-in.`},
+  {label:'Clip 2',text:`The symbol splits into two towering figures made of lightning and wind. Storm energy pulses around them.`},
+  {label:'Clip 3',text:`The twin figures collapse into a spiral forming a silver-white bloom edged in electric blue. Text: 'Gemini' and 'The Twin Tempest'.`},
+  {label:'Clip 4',text:`Storm clouds part. Gemini constellation ignites overhead. Final text: 'Digital Bloom' and 'Born of the Sky'.`},
+ ]},
+
+{id:'zod-cancer',title:'Cancer — The Lunar Tide',cat:"Zodiac / Celestial Saga",badge:'badge-zodiac',
+ workflow:'4-scene Extend workflow',
+ scenes:[
+  {label:'Clip 1',text:`Dark ocean under massive full moon. Silver light beneath waves forms the Cancer symbol. Slow reverent push-in.`},
+  {label:'Clip 2',text:`Symbol rises transforming into a massive moonlit crab of silver and teal. Water cascades off shell.`},
+  {label:'Clip 3',text:`Crab dissolves into water ribbons forming a pearlescent bloom edged in teal. Text: 'Cancer' and 'The Lunar Tide'.`},
+  {label:'Clip 4',text:`Bloom floats above moonlit water. Cancer constellation ignites overhead. Final text: 'Digital Bloom' and 'Born of the Moon'.`},
+ ]},
+
+{id:'zod-leo',title:'Leo — The Solar Sovereign',cat:"Zodiac / Celestial Saga",badge:'badge-zodiac',
+ workflow:'4-scene Extend workflow',
+ scenes:[
+  {label:'Clip 1',text:`Blazing horizon under massive golden sun. Radiant beams carve the Leo symbol in burning gold. Slow push-in.`},
+  {label:'Clip 2',text:`Symbol erupts into colossal lion made of molten gold and solar flame. Camera circles.`},
+  {label:'Clip 3',text:`Lion dissolves into radiant solar particles forming golden bloom edged in amber. Text: 'Leo' and 'The Solar Sovereign'.`},
+  {label:'Clip 4',text:`Leo constellation ignites overhead. Final text: 'Digital Bloom' and 'Crowned in Light'.`},
+ ]},
+
+{id:'zod-virgo',title:'Virgo — The Sacred Harvest',cat:"Zodiac / Celestial Saga",badge:'badge-zodiac',
+ workflow:'4-scene Extend workflow',
+ scenes:[
+  {label:'Clip 1',text:`Golden wheat field at twilight. Symmetrical golden particles form Virgo symbol above field.`},
+  {label:'Clip 2',text:`Symbol becomes luminous sculptural figure formed of woven golden light.`},
+  {label:'Clip 3',text:`Figure dissolves into grain forming ivory bloom edged in sage and gold. Text: 'Virgo' and 'The Sacred Harvest'.`},
+  {label:'Clip 4',text:`Virgo constellation forms overhead. Final text: 'Digital Bloom' and 'Perfected by Design'.`},
+ ]},
+
+{id:'zod-libra',title:'Libra — The Celestial Equilibrium',cat:"Zodiac / Celestial Saga",badge:'badge-zodiac',
+ workflow:'4-scene Extend workflow',
+ scenes:[
+  {label:'Clip 1',text:`Twilight sky split between rose-gold and indigo. Balanced scales form with Libra symbol glowing.`},
+  {label:'Clip 2',text:`Scales expand into massive celestial structure made of rose-gold and silver light.`},
+  {label:'Clip 3',text:`Scales dissolve into blush bloom edged in metallic rose-gold. Text: 'Libra' and 'The Celestial Equilibrium'.`},
+  {label:'Clip 4',text:`Libra constellation forms overhead. Final text: 'Digital Bloom' and 'Balanced in Beauty'.`},
+ ]},
+
+{id:'zod-scorpio',title:'Scorpio — The Shadow Rebirth',cat:"Zodiac / Celestial Saga",badge:'badge-zodiac',
+ workflow:'4-scene Extend workflow',
+ scenes:[
+  {label:'Clip 1',text:`Obsidian landscape under crimson sky. Cracks glow violet-red forming Scorpio symbol.`},
+  {label:'Clip 2',text:`Symbol transforms into massive obsidian scorpion with molten veins.`},
+  {label:'Clip 3',text:`Scorpion dissolves into crimson vortex forming deep red bloom edged in black. Text: 'Scorpio' and 'The Shadow Rebirth'.`},
+  {label:'Clip 4',text:`Scorpio constellation ignites. Final text: 'Digital Bloom' and 'Rise From the Dark'.`},
+ ]},
+
+{id:'zod-sagittarius',title:'Sagittarius — The Celestial Archer',cat:"Zodiac / Celestial Saga",badge:'badge-zodiac',
+ workflow:'4-scene Extend workflow',
+ scenes:[
+  {label:'Clip 1',text:`Night sky over desert horizon. Golden comet carves Sagittarius symbol in sky.`},
+  {label:'Clip 2',text:`Symbol becomes colossal centaur archer made of starlight.`},
+  {label:'Clip 3',text:`Arrow release explodes into sapphire bloom edged in gold. Text: 'Sagittarius' and 'The Celestial Archer'.`},
+  {label:'Clip 4',text:`Sagittarius constellation ignites. Final text: 'Digital Bloom' and 'Aim for the Infinite'.`},
+ ]},
+
+{id:'zod-capricorn',title:'Capricorn — The Mountain Ascendant',cat:"Zodiac / Celestial Saga",badge:'badge-zodiac',
+ workflow:'4-scene Extend workflow',
+ scenes:[
+  {label:'Clip 1',text:`Snow-covered mountain under pre-dawn sky. Capricorn symbol carved in icy silver light.`},
+  {label:'Clip 2',text:`Symbol transforms into massive sea-goat made of stone and frost.`},
+  {label:'Clip 3',text:`Sea-goat dissolves into slate-gray bloom edged in gold and silver. Text: 'Capricorn' and 'The Mountain Ascendant'.`},
+  {label:'Clip 4',text:`Capricorn constellation ignites at dawn. Final text: 'Digital Bloom' and 'Rise Beyond'.`},
+ ]},
+
+{id:'zod-aquarius',title:'Aquarius — The Celestial Current',cat:"Zodiac / Celestial Saga",badge:'badge-zodiac',
+ workflow:'4-scene Extend workflow',
+ scenes:[
+  {label:'Clip 1',text:`Electric storm sky glowing cyan. Lightning carves Aquarius symbol into clouds.`},
+  {label:'Clip 2',text:`Symbol becomes luminous figure pouring liquid lightning.`},
+  {label:'Clip 3',text:`Figure dissolves into cyan bloom edged in indigo and silver sparks. Text: 'Aquarius' and 'The Celestial Current'.`},
+  {label:'Clip 4',text:`Aquarius constellation ignites. Final text: 'Digital Bloom' and 'Born of the Current'.`},
+ ]},
+
+{id:'zod-pisces',title:'Pisces — The Eternal Dream',cat:"Zodiac / Celestial Saga",badge:'badge-zodiac',
+ workflow:'4-scene Extend workflow',
+ scenes:[
+  {label:'Clip 1',text:`Endless ocean under violet twilight sky. Luminous currents form Pisces symbol beneath waves.`},
+  {label:'Clip 2',text:`Symbol becomes two ethereal fish made of stardust and liquid silver.`},
+  {label:'Clip 3',text:`Fish dissolve into pearlescent bloom edged in teal and lavender. Text: 'Pisces' and 'The Eternal Dream'.`},
+  {label:'Clip 4',text:`Pisces constellation forms overhead. Final text: 'Digital Bloom' and 'Flow Beyond'.`},
+ ]},
+
+// ─── INCLUSIVE & SPECIAL ──────────────────────────────
+{id:'inc-1',title:"Women's Day — The Sisterhood Bloom",cat:"Inclusive & Special",badge:'badge-inclusive',
+ scenes:[
+  {label:'Main Prompt',text:`A stunning bouquet of different types of hyper-detailed purple flowers — roses, lilies, orchids — all bloom in perfect, powerful unison. The camera captures this moment of unity with a wide, sweeping crane shot that rises to reveal the full glory of the bouquet. Gold particle accents swirl around the flowers, a testament to their collective strength and beauty. Lighting is strong and vibrant, with a celebratory, empowering mood.`},
+  {label:'Iteration 1',text:`Refine. Enhance the variety of purple flowers — make each type more distinct and individually detailed while maintaining the unified purple palette. Increase the sweeping crane shot's dramatic range. Push gold particle accents to swirl more dynamically.`},
+  {label:'Iteration 2',text:`Further refinement. Push each flower type's texture to extreme detail — velvet of roses, waxy smoothness of lilies, delicate veining of orchids. Intensify the strong, vibrant lighting. Add warm film grain for a powerful, unified sisterhood atmosphere.`},
+ ]},
+
+{id:'inc-2',title:"The Phoenix — Rebirth in Fire",cat:"Inclusive & Special",badge:'badge-inclusive',
+ scenes:[
+  {label:'Main Prompt',text:`A flower made of golden fire burns with intense, beautiful light in a single, continuous shot, as the flower burns down to ash. Then, from the ashes, a new flower is reborn, more brilliant and vibrant than before. Lighting is dramatic and transformative with a powerful, cinematic feel.`},
+  {label:'Iteration 1',text:`Refine. Enhance the fire texture — more detailed with visible individual tongues of fire and glowing embers. Increase the drama of the burn-down with more visible ash particles and smoke. Push the rebirth to be more spectacular with a golden light burst.`},
+  {label:'Iteration 2',text:`Further refinement. Push the golden fire to be more complex — show different flame temperatures from white-hot core to golden edges. Make the ash texture detailed and the rebirth flower hyper-vivid. Add dynamic film grain that shifts from heavy during the burning to clean during the rebirth.`},
+ ]},
+
+];
+
+// ═══════════════════════════════════════════════════
+// APP LOGIC
+// ═══════════════════════════════════════════════════
+
+const DONE_KEY = 'db_prompt_done';
+function getDone(){try{return JSON.parse(localStorage.getItem(DONE_KEY)||'{}')}catch{return{}}}
+function saveDone(d){localStorage.setItem(DONE_KEY,JSON.stringify(d))}
+
+let done = getDone();
+let currentCat = 'All';
+let searchQ = '';
+
+const categories = ['All', ...new Set(PROMPTS.map(p=>p.cat))];
+
+function init(){
+  buildCats();
+  render();
+  document.getElementById('search').addEventListener('input', e=>{
+    searchQ = e.target.value.toLowerCase();
+    render();
+  });
+}
+
+function buildCats(){
+  const el = document.getElementById('cats');
+  el.innerHTML = categories.map(c=>`
+    <button class="cat-btn${c===currentCat?' active':''}" onclick="setcat('${c.replace(/'/g,"\\'")}')">
+      ${catEmoji(c)} ${c}
+    </button>`).join('');
+}
+
+function catEmoji(c){
+  const m = {'All':'✨',"Mother's Day":'🌸','Birthday':'🎂','Love':'❤️','Friendship':'🤝',
+    'Thank You':'🙏','Anniversary':'💍','Encouragement':'💪','Sympathy':'🕊️',
+    "Father's Day":'👔','Holidays':'🎉','Zodiac / Celestial Saga':'✨',
+    'Inclusive & Special':'🌈','Signature Series':'👑'};
+  return m[c]||'🌸';
+}
+
+function setcat(c){currentCat=c;buildCats();render()}
+
+function render(){
+  const filtered = PROMPTS.filter(p=>{
+    const catOk = currentCat==='All' || p.cat===currentCat;
+    const q = searchQ;
+    const searchOk = !q || p.title.toLowerCase().includes(q) || p.cat.toLowerCase().includes(q) ||
+      p.scenes.some(s=>s.text.toLowerCase().includes(q));
+    return catOk && searchOk;
+  });
+
+  const totalDone = Object.values(done).filter(Boolean).length;
+  document.getElementById('stat-total').textContent = PROMPTS.length;
+  document.getElementById('stat-done').textContent = totalDone;
+  document.getElementById('stat-showing').textContent = filtered.length;
+
+  if(!filtered.length){
+    document.getElementById('grid').innerHTML = `<div class="empty"><span class="empty-icon">🔍</span>No prompts found</div>`;
+    return;
+  }
+
+  // Group by category for section labels
+  const groups = {};
+  filtered.forEach(p=>{
+    if(!groups[p.cat]) groups[p.cat]=[];
+    groups[p.cat].push(p);
+  });
+
+  let html = '';
+  Object.entries(groups).forEach(([cat, prompts])=>{
+    if(currentCat==='All') html += `<div class="section-label" style="grid-column:1/-1">${catEmoji(cat)} ${cat}</div>`;
+    prompts.forEach(p=> html += cardHTML(p));
+  });
+
+  document.getElementById('grid').innerHTML = html;
+}
+
+function cardHTML(p){
+  const isDone = !!done[p.id];
+  return `
+  <div class="card${isDone?' done':''}" id="card-${p.id}">
+    <div class="card-header">
+      <div class="card-title">${p.title}</div>
+      <div class="card-check${isDone?' checked':''}" onclick="toggleDone('${p.id}')" title="Mark as generated">
+        ${isDone?'✓':''}
+      </div>
+    </div>
+    <span class="cat-badge ${p.badge}">${p.cat}</span>
+    ${p.workflow?`<div class="workflow-note">⚡ ${p.workflow}</div>`:''}
+    <div class="scenes">
+      ${p.scenes.map((s,i)=>sceneHTML(p.id,i,s)).join('')}
+    </div>
+  </div>`;
+}
+
+function sceneHTML(pid, idx, scene){
+  const sid = `${pid}-${idx}`;
+  return `
+  <div class="scene">
+    <div class="scene-label">${scene.label}</div>
+    <div class="scene-text" id="txt-${sid}">${escapeHtml(scene.text)}</div>
+    <div class="scene-actions">
+      <button class="btn-copy" id="btn-${sid}" onclick="copyScene('${pid}','${idx}')">Copy</button>
+      <button class="btn-expand" onclick="expand('${sid}')">Expand</button>
+    </div>
+  </div>`;
+}
+
+function escapeHtml(t){
+  return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function copyScene(pid, idx){
+  const p = PROMPTS.find(x=>x.id===pid);
+  if(!p) return;
+  const text = p.scenes[parseInt(idx)].text;
+  const sid = `${pid}-${idx}`;
+  const btn = document.getElementById(`btn-${sid}`);
+  navigator.clipboard.writeText(text).then(()=>{
+    if(btn){btn.classList.add('copied');btn.textContent='Copied!';setTimeout(()=>{btn.classList.remove('copied');btn.textContent='Copy'},2000)}
+    showToast('Copied to clipboard');
+  }).catch(()=>{
+    // Fallback
+    const ta = document.createElement('textarea');
+    ta.value = text; ta.style.position='fixed'; ta.style.top='-9999px';
+    document.body.appendChild(ta); ta.select();
+    document.execCommand('copy'); document.body.removeChild(ta);
+    if(btn){btn.classList.add('copied');btn.textContent='Copied!';setTimeout(()=>{btn.classList.remove('copied');btn.textContent='Copy'},2000)}
+    showToast('Copied to clipboard');
+  });
+}
+
+function expand(sid){
+  const el = document.getElementById(`txt-${sid}`);
+  if(el) el.classList.toggle('expanded');
+}
+
+function toggleDone(pid){
+  done[pid] = !done[pid];
+  saveDone(done);
+  render();
+}
+
+let toastTimer;
+function showToast(msg){
+  const existing = document.querySelector('.toast');
+  if(existing) existing.remove();
+  clearTimeout(toastTimer);
+  const t = document.createElement('div');
+  t.className = 'toast';
+  t.textContent = msg;
+  document.body.appendChild(t);
+  toastTimer = setTimeout(()=>t.remove(), 2000);
+}
+
+init();
+</script>
+</body>
+</html>
