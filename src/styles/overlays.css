@@ -115,6 +115,27 @@
   100% { transform: translateY(-600px) rotate(-8deg); opacity: 0; }
 }
 
+/* Balloon text caption — shows occasion text (e.g. "Happy Mother's Day") below the balloon emoji */
+.overlay-balloon__caption {
+  position: absolute;
+  top: 95%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: 'Outfit', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 7px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  color: #FFFFFF;
+  text-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.9),
+    0 0 8px rgba(0, 0, 0, 0.7);
+  white-space: nowrap;
+  pointer-events: none;
+  line-height: 1.2;
+  text-align: center;
+  z-index: 1;
+}
+
 /* Balloon colors per theme */
 .overlay-balloon--warm .overlay-balloon__item:nth-child(1) { color: #FF6B6B; }
 .overlay-balloon--warm .overlay-balloon__item:nth-child(2) { color: #FFA07A; }
@@ -446,7 +467,8 @@
 
 .composition-brand-lockup {
   position: absolute;
-  z-index: 46;
+  /* z-index 55: above vignette (42), watermark overlay (50), and all other layers */
+  z-index: 55;
   display: flex;
   align-items: flex-start;
   gap: 12px;
@@ -494,7 +516,7 @@
 }
 
 .composition-brand-lockup__sender {
-  max-width: min(46%, 260px);
+  max-width: min(58%, 280px);
   padding-top: 3px;
   font-family: 'Outfit', sans-serif;
   font-size: clamp(1rem, 2.9vw, 1.28rem);
@@ -851,9 +873,9 @@
 }
 
 .composition-brand-lockup__sender {
-  max-width: min(42%, 190px);
+  max-width: min(58%, 220px);
   padding-top: 2px;
-  font-size: clamp(1.02rem, 3vw, 1.3rem);
+  font-size: clamp(0.82rem, 2.4vw, 1.05rem);
   letter-spacing: 0.1em;
   color: rgba(255, 255, 255, 0.92);
 }

@@ -180,7 +180,11 @@ export default function BloomDelivery() {
 
   // ── READY STATE — Full bloom experience ──
   const { delivery, composition } = state;
-  const message = delivery?.message || {};
+  // Merge message with top-level senderName fallback so "From" always renders
+  const message = {
+    ...(delivery?.message || {}),
+    fromName: delivery?.message?.fromName || delivery?.senderName || '',
+  };
   const hasMessage = Boolean(message.short);
 
   const protectedVideoUrl = delivery?.downloadUrl && delivery?.downloadExpiresAt
@@ -218,12 +222,16 @@ export default function BloomDelivery() {
                 </div>
                 <div className="db-watermark-corner">© Digital Bloom</div>
               </div>
-              {/* Brand lockup — FROM slot + Digital Bloom™ chip */}
+              {/* Brand lockup — Digital Bloom™ chip + FROM slot */}
               <div className="composition-brand-rail" aria-hidden="true" />
-              <div className="composition-brand-lockup composition-brand-lockup--heirloom" aria-hidden="true">
+              <div
+                className="composition-brand-lockup composition-brand-lockup--heirloom"
+                style={{ position: 'absolute', bottom: '5.2%', left: '6.4%', right: '6.4%', zIndex: 55 }}
+                aria-hidden="true"
+              >
                 <div className="composition-brand-chip" style={{ color: '#D4AF37' }}>
                   <span className="composition-brand-chip__text">Digital Bloom</span>
-                  <sup className="composition-brand-chip__tm">™</sup>
+                  <span className="composition-brand-chip__tm">™</span>
                 </div>
                 {message.fromName && (
                   <div className="composition-brand-lockup__sender" style={{ color: 'rgba(255,255,255,0.92)' }}>
@@ -244,11 +252,12 @@ export default function BloomDelivery() {
                 primaryColor={delivery.primaryColor}
                 accentColor={delivery.accentColor}
                 extras={delivery.extras}
-                message={delivery.message}
+                message={message}
                 engravingStyle={delivery.engravingStyle}
                 fontChoice={delivery.fontChoice}
                 messageTextColor={delivery.messageTextColor}
                 messageBold={delivery.messageBold}
+                occasion={delivery.category || null}
                 className="bloom-delivery__preview"
               />
               {/* Diagonal repeating watermark grid — flashes every 18s so

@@ -26,7 +26,7 @@ const OCCASIONS = {
     customizerDefaults: {
       occasion: 'love',
       colorTheme: 'romantic',
-      balloonMessage: 'Thank You',
+      balloonMessage: "Happy Mother's Day",
       messagePlaceholder: "e.g., Happy Mother's Day, Mom!",
       toPlaceholder: 'Mom, Grandma, Auntie...',
     },

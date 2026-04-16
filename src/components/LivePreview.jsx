@@ -14,7 +14,25 @@ import '../styles/overlays.css';
  * { type: 'video' } for real assets and { type: 'css' } for placeholders.
  */
 
-const BALLOON_EMOJIS = ['🎈', '🎈', '🎈', '🎈', '🎈'];
+// Occasion-specific balloon text labels.
+// Mother's Day: "Happy Mother's Day" + "I Love You" (NOT just "I Love You" — that's romance).
+// Romance/Love/Valentine: "I Love You" only.
+const OCCASION_BALLOON_LABELS = {
+  'mothers-day':  ["Happy Mother's Day", "I Love You", "💐", "🌸", "💕"],
+  'love':         ["I Love You", "❤️", "Always", "💕", "Forever"],
+  'valentine':    ["I Love You", "💕", "Be Mine", "❤️", "💋"],
+  'anniversary':  ["Happy Anniversary", "❤️", "Forever", "💕", "Always"],
+  'birthday':     ["Happy Birthday", "Make A Wish", "🎉", "🎂", "🥳"],
+  'celebration':  ["Congrats", "You Did It", "🎉", "✨", "🌟"],
+  'graduation':   ["Congrats", "You Did It", "🎓", "🎉", "💫"],
+  'fathers-day':  ["Happy Father's Day", "I Love You", "👑", "💙", "🌟"],
+  'friendship':   ["You're Amazing", "💛", "BFF", "🌟", "Cheers"],
+  'thank-you':    ["Thank You", "💛", "So Much", "🙏", "Grateful"],
+};
+
+function getBalloonLabels(occasion) {
+  return OCCASION_BALLOON_LABELS[occasion] || ['🎈', '🎈', '🎈', '🎈', '🎈'];
+}
 
 export default function LivePreview({
   product,
@@ -29,6 +47,7 @@ export default function LivePreview({
   messageBold = false,
   messageTextSize = 'md',
   ribbonColor = null,
+  occasion = null,
   className = '',
 }) {
   const { t } = useLanguage();
@@ -112,7 +131,7 @@ export default function LivePreview({
             />
           ) : (
             // CSS placeholder overlay
-            <CSSOverlay overlayId={overlay.id} themeVariant={overlay.themeVariant} ribbonColor={ribbonColor} />
+            <CSSOverlay overlayId={overlay.id} themeVariant={overlay.themeVariant} ribbonColor={ribbonColor} occasion={occasion} />
           )}
         </div>
       ))}
@@ -166,9 +185,9 @@ export default function LivePreview({
         )}
       </div>
 
-      {/* Subtle vignette for depth */}
+      {/* Subtle vignette for depth — z-index 42 keeps it below brand chip (46) */}
       <div style={{
-        position: 'absolute', inset: 0, zIndex: 50, pointerEvents: 'none',
+        position: 'absolute', inset: 0, zIndex: 42, pointerEvents: 'none',
         background: 'radial-gradient(ellipse at center, transparent 60%, rgba(0,0,0,0.3) 100%)',
       }} />
     </div>
@@ -180,16 +199,24 @@ export default function LivePreview({
  * These render animated CSS effects. When real assets are loaded,
  * the parent renders a <video> instead of this component.
  */
-function CSSOverlay({ overlayId, themeVariant, ribbonColor }) {
+function CSSOverlay({ overlayId, themeVariant, ribbonColor, occasion }) {
   switch (overlayId) {
-    case 'balloon':
+    case 'balloon': {
+      const labels = getBalloonLabels(occasion);
       return (
         <div className={`overlay-balloon overlay-balloon--${themeVariant}`}>
-          {BALLOON_EMOJIS.map((emoji, i) => (
-            <span key={i} className="overlay-balloon__item">{emoji}</span>
-          ))}
+          {labels.map((label, i) => {
+            const isText = typeof label === 'string' && /[a-zA-Z]/.test(label);
+            return (
+              <span key={i} className="overlay-balloon__item">
+                🎈
+                {isText && <span className="overlay-balloon__caption">{label}</span>}
+              </span>
+            );
+          })}
         </div>
       );
+    }
 
     case 'ribbon':
       return (

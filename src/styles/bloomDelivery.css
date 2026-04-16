@@ -80,7 +80,8 @@
 
 /* Position the brand lockup inside the video frame (mirrors compositionEngine bottom-brand-lockup) */
 .bloom-delivery__protected-frame .composition-brand-lockup {
-  z-index: 30;
+  /* z-index 55: above watermark overlay (10), vignette (42), and db-watermark-overlay (50) */
+  z-index: 55;
   bottom: 5.2%;
   left: 6.4%;
   right: 6.4%;

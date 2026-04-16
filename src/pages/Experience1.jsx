@@ -19,12 +19,12 @@ const Experience1 = () => {
 
   // Customization (will be props later)
   const config = {
-    recipientName: "Sarah",
-    senderMessage: "Thank you for everything you do!",
-    occasion: "Thank You",
-    balloonMessages: ["Thank You", "You're Amazing", "💛"],
+    recipientName: "Mom",
+    senderMessage: "Thank you for every sacrifice, every hug, every everything. Raising me was a gift you gave the world.",
+    occasion: "Happy Mother's Day",
+    balloonMessages: ["Happy Mother's Day", "I Love You", "💐"],
     colorScheme: {
-      primary: "#047857", // emerald
+      primary: "#C53A5C", // bloom blush
       secondary: "#D4AF37", // gold
       accent: "#ffffff"
     }
