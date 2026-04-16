@@ -29,8 +29,7 @@ const FLOW_STEPS = [
   { id: 1, key: 'message', labelKey: 'customize_step_message', icon: '✉️' },
   { id: 2, key: 'frame', labelKey: 'customize_step_frame', icon: '🎨' },
   { id: 3, key: 'effect', labelKey: 'customize_step_effect', icon: '✨' },
-  { id: 4, key: 'sound', labelKey: 'customize_step_sound', icon: '🎵' },
-  { id: 5, key: 'review', labelKey: 'customize_step_review', icon: '✓' },
+  { id: 4, key: 'review', labelKey: 'customize_step_review', icon: '✓' },
 ];
 
 // Generic fallback starters used when no category is provided
@@ -974,44 +973,6 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
           )}
 
           {activeStep === 4 && (
-            <>
-          <div className="customizer-section customizer-section--sound">
-            <div className="customizer-section__header">
-              <span className="customizer-section__number">4</span>
-              <h3 className="customizer-section__title">{t('customize_sound')}</h3>
-            </div>
-            <div className="sound-grid">
-              {SOUND_TRACKS.map(track => (
-                <button key={track.id} type="button"
-                  className={`sound-card ${selectedSound === track.id ? 'sound-card--active' : ''} ${track.comingSoon ? 'sound-card--disabled' : ''}`}
-                  onClick={() => !track.comingSoon && handleSoundPreview(track)}
-                  disabled={track.comingSoon}
-                  aria-label={track.comingSoon ? `${t(track.nameKey)} — ${t('customize_coming_soon')}` : `Preview ${t(track.nameKey)}`}>
-                  <span className="sound-card__icon">{track.icon}</span>
-                  <span className="sound-card__name">{t(track.nameKey)}</span>
-                  {track.comingSoon ? (
-                    <span className="sound-card__badge">{t('customize_coming_soon')}</span>
-                  ) : (
-                    <span className="sound-card__play">
-                      {playingTrack === track.id ? '⏸' : '▶'}
-                    </span>
-                  )}
-                </button>
-              ))}
-            </div>
-            <div className="customizer-sound-summary">
-              <span className="customizer-sound-summary__label">{t('customize_sound_selected')}</span>
-              <span className="customizer-sound-summary__value">
-                {SOUND_TRACKS.find((track) => track.id === selectedSound)
-                  ? t(SOUND_TRACKS.find((track) => track.id === selectedSound).nameKey)
-                  : t('customize_sound_none')}
-              </span>
-            </div>
-          </div>
-            </>
-          )}
-
-          {activeStep === 5 && (
             <div className="customizer-section customizer-section--review">
               <div className="customizer-section__header">
                 <span className="customizer-section__number">5</span>

@@ -165,11 +165,9 @@
   50%      { opacity: 0.9; }
 }
 
-.overlay-ribbon--warm .overlay-ribbon__border,
-.overlay-ribbon--cool .overlay-ribbon__border,
-.overlay-ribbon--elegant .overlay-ribbon__border,
-.overlay-ribbon--romantic .overlay-ribbon__border,
-.overlay-ribbon--original .overlay-ribbon__border { border-color: var(--ribbon-color, var(--db-accent, #EED7B8)); }
+.overlay-ribbon .overlay-ribbon__border {
+  border-color: var(--ribbon-color, var(--db-accent, #EED7B8));
+}
 
 /* ── SPARKLE OVERLAY (CSS Placeholder) ── */
 .overlay-sparkle {

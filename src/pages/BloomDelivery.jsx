@@ -366,9 +366,6 @@ function BrandFooter() {
 
   return (
     <div className="bloom-delivery__brand">
-      <Link to="/shop" className="bloom-delivery__brand-cta">
-        {t('delivery_send_cta')}
-      </Link>
       <p className="bloom-delivery__brand-name">Digital Bloom™</p>
       <p className="bloom-delivery__brand-tagline">{t('delivery_brand_tagline')}</p>
     </div>
