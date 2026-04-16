@@ -41,9 +41,11 @@ function getUpcomingHoliday() {
 export default function VideoHero() {
   const heroRef = useRef(null);
   const videoRef = useRef(null);
+  const audioRef = useRef(null);
   const [videoLoaded, setVideoLoaded] = useState(false);
   const [videoFailed, setVideoFailed] = useState(false);
   const [contentVisible, setContentVisible] = useState(false);
+  const [musicPlaying, setMusicPlaying] = useState(false);
 
   const holiday = useMemo(() => getUpcomingHoliday(), []);
 
@@ -69,9 +71,47 @@ export default function VideoHero() {
     }
   }, []);
 
+  const toggleMusic = useCallback(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    if (musicPlaying) {
+      audio.pause();
+      setMusicPlaying(false);
+    } else {
+      audio.volume = 0.35;
+      audio.play().then(() => setMusicPlaying(true)).catch(() => {});
+    }
+  }, [musicPlaying]);
+
   return (
     <>
       <section ref={heroRef} className="video-hero">
+        {/* Background music — "Flowers" hook, muted by default */}
+        <audio ref={audioRef} src="/audio/flowers-hook.m4a" loop preload="auto" />
+
+        {/* Music toggle — top right of hero */}
+        <button
+          type="button"
+          className={`video-hero__music-toggle ${musicPlaying ? 'video-hero__music-toggle--playing' : ''}`}
+          onClick={toggleMusic}
+          aria-label={musicPlaying ? 'Mute music' : 'Play music'}
+          style={{ opacity: contentVisible ? 1 : 0, transition: 'opacity 0.5s ease 0.6s' }}
+        >
+          {musicPlaying ? (
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+              <path d="M15.54 8.46a5 5 0 010 7.07" />
+              <path d="M19.07 4.93a10 10 0 010 14.14" />
+            </svg>
+          ) : (
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+              <line x1="23" y1="9" x2="17" y2="15" />
+              <line x1="17" y1="9" x2="23" y2="15" />
+            </svg>
+          )}
+        </button>
+
         {/* Video Background — with graceful fallback */}
         <div className="video-hero__bg">
           <div className="video-hero__video-wrap">
