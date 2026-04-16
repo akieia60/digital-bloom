@@ -106,6 +106,53 @@
   background-size: 64px 64px;
 }
 
+/* ── Music Toggle (inside video card) ── */
+.gradient-hero__music-toggle {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 3;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(6, 13, 24, 0.5);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: rgba(255, 255, 255, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.gradient-hero__music-toggle:hover {
+  background: rgba(6, 13, 24, 0.7);
+  border-color: rgba(255, 255, 255, 0.4);
+  color: #fff;
+}
+
+.gradient-hero__music-toggle--playing {
+  border-color: rgba(201, 133, 122, 0.5);
+  color: #e8b4ad;
+  animation: ghMusicPulse 2s ease-in-out infinite;
+}
+
+@keyframes ghMusicPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(201, 133, 122, 0); }
+  50% { box-shadow: 0 0 0 6px rgba(201, 133, 122, 0.15); }
+}
+
+@media (max-width: 640px) {
+  .gradient-hero__music-toggle {
+    top: 12px;
+    right: 12px;
+    width: 38px;
+    height: 38px;
+  }
+}
+
 .gradient-hero__watermark {
   position: absolute;
   bottom: 18px;
