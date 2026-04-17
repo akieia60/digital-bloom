@@ -22,6 +22,7 @@ import {
   LAUNCH_PROMPTS,
   VAULT_EXPANSION_PHASE_1,
   ALL_PROMPTS,
+  V2_ALL_PROMPTS,
 } from '../data/promptVaultData';
 import { CELESTIAL_SAGA } from '../data/celestialSagaData';
 
@@ -36,6 +37,7 @@ const FILTER_TABS = [
   { key: 'original', label: 'Original Collection', count: ORIGINAL_PROMPTS.length },
   { key: 'launch', label: 'New — Launch Prompts', count: LAUNCH_PROMPTS.length },
   { key: 'expansion', label: 'Vault Expansion', count: VAULT_EXPANSION_PHASE_1.length },
+  { key: 'v2library', label: 'v2.0 Library', count: V2_ALL_PROMPTS.length },
 ];
 
 const CATEGORY_FILTERS = [
@@ -779,6 +781,10 @@ const PromptVault = () => {
     return activeTab === 'all' || activeTab === 'launch';
   }, [activeTab, activeCategory]);
 
+  const showV2Library = useMemo(() => {
+    return activeTab === 'all' || activeTab === 'v2library';
+  }, [activeTab]);
+
   const filteredNewSeries = useMemo(() => {
     if (!activeCategory) return NEW_SERIES;
     return NEW_SERIES.filter((s) => s.key === activeCategory);
@@ -801,6 +807,16 @@ const PromptVault = () => {
     if (!activeCategory) return EXPANSION_SERIES;
     return EXPANSION_SERIES.filter((s) => s.key === activeCategory);
   }, [activeCategory, EXPANSION_SERIES]);
+
+  const V2_SERIES = useMemo(() => {
+    const categories = [...new Set(V2_ALL_PROMPTS.map(p => p.category))];
+    return categories.map(cat => ({
+      key: cat.toLowerCase().replace(/[^a-z0-9]/g, ''),
+      title: cat,
+      subtitle: `v2.0 — ${V2_ALL_PROMPTS.filter(p => p.category === cat).length} prompts`,
+      prompts: V2_ALL_PROMPTS.filter(p => p.category === cat),
+    }));
+  }, []);
 
   const handleCategoryClick = (key) => {
     setActiveCategory((prev) => (prev === key ? null : key));
@@ -1148,6 +1164,36 @@ const PromptVault = () => {
             )}
 
             {filteredExpansionSeries.map((series) => (
+              <SeriesSection
+                key={series.key}
+                title={series.title}
+                subtitle={series.subtitle}
+                prompts={series.prompts}
+                completedMap={completedMap}
+                onToggleComplete={toggleComplete}
+                higgsEnabled={higgsEnabled}
+                onGenerateVideo={handleGenerateVideo}
+                onEnhance={handleEnhance}
+                onScore={handleScore}
+                onHistory={handleHistory}
+              />
+            ))}
+          </>
+        )}
+
+        {/* ━━━ v2.0 Master Prompt Library ━━━ */}
+        {showV2Library && (
+          <>
+            {(showOriginal || showLaunch || showExpansion) && (
+              <div className="flex items-center gap-4 my-8">
+                <div className="flex-1 h-px bg-gradient-to-r from-transparent via-[#D4AF37]/30 to-transparent" />
+                <span className="text-xs font-display font-semibold text-[#D4AF37]/60 uppercase tracking-widest">
+                  v2.0 Master Library — Feldt Framework
+                </span>
+                <div className="flex-1 h-px bg-gradient-to-r from-transparent via-[#D4AF37]/30 to-transparent" />
+              </div>
+            )}
+            {V2_SERIES.map((series) => (
               <SeriesSection
                 key={series.key}
                 title={series.title}

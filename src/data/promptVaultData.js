@@ -539,4 +539,6 @@ export const LAUNCH_PROMPTS = [
 
 export { VAULT_EXPANSION_PHASE_1 } from './newly_created_prompts';
 
-export const ALL_PROMPTS = [...ORIGINAL_PROMPTS, ...LAUNCH_PROMPTS, ...VAULT_EXPANSION_PHASE_1];
+export { V2_ALL_PROMPTS } from './v2LibraryData';
+
+export const ALL_PROMPTS = [...ORIGINAL_PROMPTS, ...LAUNCH_PROMPTS, ...VAULT_EXPANSION_PHASE_1, ...V2_ALL_PROMPTS];
