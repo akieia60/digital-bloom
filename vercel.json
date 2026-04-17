@@ -39,6 +39,10 @@
       ]
     }
   ],
+  "functions": {
+    "api/process-bloom.js": { "maxDuration": 60 },
+    "api/get-upload-url.js": { "maxDuration": 10 }
+  },
   "crons": [
     {
       "path": "/api/cron/process-bloom-deliveries",

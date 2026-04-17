@@ -82,6 +82,18 @@ body{font-family:'Outfit',sans-serif;background:var(--navy);color:var(--white);m
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--navy2);border:1px solid var(--gold);color:var(--white);padding:10px 20px;border-radius:10px;font-size:0.82rem;z-index:9999;animation:fadeIn 0.3s;pointer-events:none;white-space:nowrap}
 @keyframes fadeIn{from{opacity:0;transform:translateX(-50%) translateY(8px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
 
+/* UPLOAD ZONE */
+.upload-zone{padding:0 12px 14px;display:flex;flex-direction:column;gap:6px}
+.upload-live-badge{margin:0 12px 14px;padding:8px 14px;background:rgba(34,197,94,0.12);border:1px solid rgba(34,197,94,0.3);border-radius:10px;color:var(--green);font-size:0.75rem;font-weight:700;text-align:center}
+.btn-upload{width:100%;padding:10px 0;background:rgba(212,175,55,0.08);border:1px dashed var(--gold3);border-radius:10px;color:var(--gold);font-size:0.78rem;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:all 0.2s;text-align:center}
+.btn-upload:hover{background:rgba(212,175,55,0.18);border-color:var(--gold)}
+.btn-upload:disabled{opacity:0.45;cursor:not-allowed}
+.upload-status{font-size:0.71rem;text-align:center;color:var(--muted);min-height:18px;transition:color 0.3s}
+.upload-status.uploading{color:#93c5fd}
+.upload-status.processing{color:var(--gold)}
+.upload-status.live{color:var(--green);font-weight:700}
+.upload-status.error{color:var(--red)}
+
 /* SCROLLBAR */
 ::-webkit-scrollbar{width:6px;height:6px}
 ::-webkit-scrollbar-track{background:transparent}
@@ -536,10 +548,16 @@ const PROMPTS = [
 // ═══════════════════════════════════════════════════
 
 const DONE_KEY = 'db_prompt_done';
+const LIVE_KEY = 'db_bloom_live';
 function getDone(){try{return JSON.parse(localStorage.getItem(DONE_KEY)||'{}')}catch{return{}}}
 function saveDone(d){localStorage.setItem(DONE_KEY,JSON.stringify(d))}
+function getLive(){try{return JSON.parse(localStorage.getItem(LIVE_KEY)||'{}')}catch{return{}}}
+function saveLive(l){localStorage.setItem(LIVE_KEY,JSON.stringify(l))}
+
+const uploadStates = {}; // in-memory upload state so renders don't reset progress
 
 let done = getDone();
+let live = getLive();
 let currentCat = 'All';
 let searchQ = '';
 
@@ -609,6 +627,10 @@ function render(){
 
 function cardHTML(p){
   const isDone = !!done[p.id];
+  const isLive = !!live[p.id];
+  const st = uploadStates[p.id];
+  const safeTitle = p.title.replace(/'/g,"\\'").replace(/`/g,'\\`');
+  const safeCat = p.cat.replace(/'/g,"\\'").replace(/`/g,'\\`');
   return `
   <div class="card${isDone?' done':''}" id="card-${p.id}">
     <div class="card-header">
@@ -622,6 +644,18 @@ function cardHTML(p){
     <div class="scenes">
       ${p.scenes.map((s,i)=>sceneHTML(p.id,i,s)).join('')}
     </div>
+    ${isLive
+      ? `<div class="upload-live-badge">✅ Live on digitabloom.store</div>`
+      : `<div class="upload-zone">
+           <input type="file" accept="video/*,video/mp4" id="file-${p.id}" style="display:none" onchange="handleUpload('${p.id}','${safeTitle}','${safeCat}',this)">
+           <button class="btn-upload" id="uploadbtn-${p.id}" ${st&&st!=='error'?'disabled':''} onclick="document.getElementById('file-${p.id}').click()">
+             ${st==='uploading'?'⬆️ Uploading…':st==='processing'?'🔥 Processing…':'📤 Upload Bloom'}
+           </button>
+           <div class="upload-status ${st||''}" id="status-${p.id}">
+             ${st==='uploading'?'Sending to server…':st==='processing'?'Watermarking & publishing…':st==='error'?'Upload failed — tap to retry':''}
+           </div>
+         </div>`
+    }
   </div>`;
 }
 
@@ -683,6 +717,78 @@ function showToast(msg){
   t.textContent = msg;
   document.body.appendChild(t);
   toastTimer = setTimeout(()=>t.remove(), 2000);
+}
+
+// ─── UPLOAD SYSTEM ──────────────────────────────────
+const CATEGORY_SLUGS = {
+  "Mother's Day":'mothers-day',"Birthday":'birthday',"Love":'love',
+  "Friendship":'friendship',"Thank You":'thank-you',"Anniversary":'anniversary',
+  "Encouragement":'encouragement',"Sympathy":'sympathy',"Father's Day":'fathers-day',
+  "Holidays":'holiday',"Zodiac / Celestial Saga":'zodiac',
+  "Inclusive & Special":'womens-day',"Signature Series":'mothers-day',
+};
+
+function slugify(str){return str.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');}
+
+function setUploadState(pid, state, statusText){
+  uploadStates[pid] = state;
+  const btn = document.getElementById(`uploadbtn-${pid}`);
+  const status = document.getElementById(`status-${pid}`);
+  if(!btn||!status) return;
+  if(state==='uploading'){
+    btn.disabled=true; btn.textContent='⬆️ Uploading…';
+    status.className='upload-status uploading'; status.textContent='Sending to server…';
+  } else if(state==='processing'){
+    btn.disabled=true; btn.textContent='🔥 Processing…';
+    status.className='upload-status processing'; status.textContent='Watermarking & publishing…';
+  } else if(state==='error'){
+    btn.disabled=false; btn.textContent='📤 Upload Bloom';
+    status.className='upload-status error'; status.textContent='❌ '+(statusText||'Failed — tap to retry');
+  }
+}
+
+async function handleUpload(pid, title, cat, input){
+  const file = input.files[0];
+  if(!file) return;
+  input.value=''; // reset so same file can be re-selected on retry
+
+  const slug = slugify(title);
+  setUploadState(pid, 'uploading');
+
+  try {
+    // 1. Get pre-signed upload URL
+    const urlRes = await fetch('/api/get-upload-url',{
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({slug}),
+    });
+    if(!urlRes.ok) throw new Error(`Server error ${urlRes.status}`);
+    const {signedUrl, rawPath} = await urlRes.json();
+    if(!signedUrl) throw new Error('No signed URL returned');
+
+    // 2. Upload video directly to Supabase Storage
+    const upRes = await fetch(signedUrl,{method:'PUT', headers:{'Content-Type':'video/mp4'}, body:file});
+    if(!upRes.ok) throw new Error(`Upload failed (${upRes.status})`);
+
+    // 3. Trigger watermark + product creation
+    setUploadState(pid, 'processing');
+    const processRes = await fetch('/api/process-bloom',{
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({rawPath, title, slug, category:cat}),
+    });
+    const result = await processRes.json();
+    if(!processRes.ok || !result.success) throw new Error(result.error||'Processing failed');
+
+    // 4. Mark as live
+    live[pid]=true; saveLive(live);
+    done[pid]=true; saveDone(done);
+    delete uploadStates[pid];
+    showToast('🌸 Bloom is live on digitabloom.store!');
+    render();
+
+  } catch(err){
+    setUploadState(pid, 'error', err.message);
+    console.error('[upload]', err.message);
+  }
 }
 
 init();
