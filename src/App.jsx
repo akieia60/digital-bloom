@@ -20,7 +20,6 @@ const Admin = lazy(() => import('./pages/Admin'));
 const PromptBrowser = lazy(() => import('./components/PromptBrowser'));
 const Experience1 = lazy(() => import('./pages/Experience1'));
 const FounderDashboard = lazy(() => import('./pages/FounderDashboard'));
-const PromptVault = lazy(() => import('./pages/PromptVault'));
 const BloomDelivery = lazy(() => import('./pages/BloomDelivery'));
 const BloomManage = lazy(() => import('./pages/BloomManage'));
 const ComingSoon = lazy(() => import('./pages/ComingSoon'));
@@ -107,7 +106,6 @@ function AppContent({ searchQuery, setSearchQuery }) {
           <Route path="/admin/prompts" element={<PromptBrowser />} />
           <Route path="/experience/1" element={<Experience1 />} />
           <Route path="/founder" element={<FounderDashboard />} />
-          <Route path="/founder/vault" element={<PromptVault />} />
           <Route path="/balance" element={<CreditBalance />} />
           <Route path="/about" element={<ComingSoon />} />
           <Route path="/contact" element={<ComingSoon />} />
