@@ -57,6 +57,8 @@ const VideoPlayer = ({ videoUrl, posterUrl, alt }) => {
           ))}
         </div>
       </div>
+      {/* Corner badge — always-visible brand mark */}
+      <div className="db-watermark-corner" aria-hidden="true">Digital Bloom™</div>
     </div>
   );
 };

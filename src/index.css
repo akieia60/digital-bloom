@@ -570,6 +570,85 @@ img {
 }
 
 /* ============================================
+   BLOOM LIST CARD — Occasion label & badge
+   ============================================ */
+
+/* Occasion greeting text — elegant italic overlay on video */
+.bloom-list-card__occasion-label {
+  position: absolute;
+  bottom: 20px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-family: 'Playfair Display', Georgia, serif;
+  font-style: italic;
+  font-size: clamp(1rem, 2.8vw, 1.35rem);
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  color: rgba(255, 255, 255, 0.96);
+  text-shadow:
+    0 2px 12px rgba(0, 0, 0, 0.85),
+    0 0 24px rgba(0, 0, 0, 0.5);
+  z-index: 2;
+  pointer-events: none;
+  padding: 0 24px;
+  user-select: none;
+}
+
+/* Occasion name badge — gold pill above the tier/title */
+.bloom-list-card__occasion-badge {
+  display: inline-block;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.58rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent-gold);
+  border: 1px solid var(--accent-gold-border);
+  border-radius: 980px;
+  padding: 2px 10px;
+  margin-bottom: 5px;
+}
+
+/* ============================================
+   PRODUCT CARD — Occasion label & badge
+   ============================================ */
+
+/* Occasion greeting text — overlaid on the card video */
+.product-card__occasion-label {
+  position: absolute;
+  bottom: 48px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-family: 'Playfair Display', Georgia, serif;
+  font-style: italic;
+  font-size: clamp(0.85rem, 2vw, 1.05rem);
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  color: rgba(255, 255, 255, 0.96);
+  text-shadow:
+    0 2px 10px rgba(0, 0, 0, 0.85),
+    0 0 20px rgba(0, 0, 0, 0.5);
+  z-index: 2;
+  pointer-events: none;
+  padding: 0 16px;
+  user-select: none;
+}
+
+/* Occasion name badge — gold pill above the product title */
+.product-card__occasion-badge {
+  display: block;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.55rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent-gold);
+  margin-bottom: 3px;
+}
+
+/* ============================================
    DARK BACKGROUND UTILITY
    ============================================ */
 .bg-obsidian {

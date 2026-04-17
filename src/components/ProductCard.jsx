@@ -2,12 +2,16 @@ import { Link } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
 import VideoPlayer from './VideoPlayer';
 import { getPosterUrl } from '../lib/media';
+import OCCASIONS from '../data/occasions';
 
 const ProductCard = ({ product, compact = false }) => {
   const { t } = useLanguage();
   const displayPrice = Number(product?.price || 0).toFixed(2);
   const videoUrl = product.video_file_url || product.video_url;
   const posterUrl = getPosterUrl(videoUrl, product.image_url);
+  const occasion = OCCASIONS[product.category];
+  const occasionName = occasion?.name;
+  const balloonGreeting = occasion?.customizerDefaults?.balloonMessage;
 
   return (
     <div className="group">
@@ -25,6 +29,13 @@ const ProductCard = ({ product, compact = false }) => {
           {/* Gradient overlay */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-40 group-hover:opacity-30 transition-opacity duration-500" />
 
+          {/* Occasion greeting overlay */}
+          {!compact && balloonGreeting && (
+            <div className="product-card__occasion-label" aria-hidden="true">
+              {balloonGreeting}
+            </div>
+          )}
+
           {/* CTA — visible on mobile AND hover on desktop */}
           {!compact && (
             <div className="absolute inset-x-0 bottom-0 flex justify-center pb-5 sm:opacity-0 sm:group-hover:opacity-100 sm:translate-y-2 sm:group-hover:translate-y-0 transition-all duration-400">
@@ -37,6 +48,9 @@ const ProductCard = ({ product, compact = false }) => {
 
         {/* Product Info — White card surface */}
         <div className={`bg-[var(--surface-white,#FFFFFF)] rounded-xl border border-[#F0F0F0] ${compact ? 'p-3 mt-2' : 'p-4 mt-3'}`}>
+          {!compact && occasionName && (
+            <span className="product-card__occasion-badge">{occasionName}</span>
+          )}
           <h3 className={`font-semibold text-[#1D1D1F] group-hover:text-[var(--accent-gold)] transition-colors duration-300 tracking-tight truncate ${compact ? 'text-xs' : 'text-[15px]'}`}>
             {product.name}
           </h3>
