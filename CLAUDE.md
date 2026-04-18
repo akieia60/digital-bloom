@@ -19,7 +19,7 @@ static HTML file **inside** it:
 
 - **Main site code:** `src/` (React app served at digitabloom.com)
 - **Prompt engine:** `public/prompt-engine.html` → live at
-  `digitabloom.store/prompt-engine.html`
+  `digitalbloom.store/prompt-engine.html` (note: `.store` domain has the L, `.com` does not)
 
 Ak uses the prompt engine daily from her phone while on the road to generate
 and upload videos. **Never break its URL or its upload flow.**

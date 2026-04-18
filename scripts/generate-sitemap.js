@@ -37,7 +37,7 @@ const OUT_PATH = path.join(__dirname, '..', 'public', 'sitemap.xml');
 const BASE_URL = (
   process.env.APP_BASE_URL ||
   process.env.VITE_APP_BASE_URL ||
-  'https://digitabloom.store'
+  'https://digitalbloom.store'
 ).replace(/\/$/, '');
 
 const STATIC_PATHS = [

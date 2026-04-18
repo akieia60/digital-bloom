@@ -1062,7 +1062,7 @@ function cardHTML(p){
       ${p.scenes.map((s,i)=>sceneHTML(p.id,i,s)).join('')}
     </div>
     ${isLive
-      ? `<div class="upload-live-badge">✅ Live on digitabloom.store</div>`
+      ? `<div class="upload-live-badge">✅ Live on digitalbloom.store</div>`
       : `<div class="upload-zone">
            <input type="file" accept="video/*" id="file-${p.id}"
              style="position:fixed;top:-999px;left:-999px;width:1px;height:1px;opacity:0"
@@ -1206,7 +1206,7 @@ async function handleUpload(pid, encTitle, encCat, input){
     live[pid]=true; saveLive(live);
     done[pid]=true; saveDone(done);
     delete uploadStates[pid];
-    showToast('🌸 Bloom is live on digitabloom.store!');
+    showToast('🌸 Bloom is live on digitalbloom.store!');
     render();
 
   } catch(err){
