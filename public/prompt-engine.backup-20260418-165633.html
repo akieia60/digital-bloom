@@ -1139,10 +1139,22 @@ function showToast(msg){
 }
 
 // ─── UPLOAD SYSTEM ──────────────────────────────────
-// NOTE: Category → slug mapping lives server-side in
-// api/process-bloom.js (which imports from src/data/categories.js).
-// The client sends the raw `cat:` string; server maps it.
-// See scripts/validate-categories.js for drift protection.
+const CATEGORY_SLUGS = {
+  "Mother's Day":'mothers-day',"Birthday":'birthday',"Love":'love',
+  "Friendship":'friendship',"Thank You":'thank-you',"Anniversary":'anniversary',
+  "Encouragement":'encouragement',"Sympathy":'sympathy',"Father's Day":'fathers-day',
+  "Holidays":'holiday',"Zodiac / Celestial Saga":'zodiac',
+  "Inclusive & Special":'womens-day',"Signature Series":'mothers-day',
+  "Signature Stories":'signature-stories',
+  "Congratulations":'congratulations',"Grief":'grief',
+  "Luxury — Glass Stiletto":'luxury',"Christmas":'christmas',
+  "New Year's":'new-years',"Valentine's Day":'valentines-day',
+  "Easter":'easter',"Thanksgiving":'thanksgiving',"Halloween":'halloween',
+  "4th of July":'fourth-of-july',"Hanukkah":'hanukkah',"Kwanzaa":'kwanzaa',
+  "Veterans Day":'veterans-day',"Labor Day":'labor-day',"Celebration":'celebration',
+  // Signature Stories routes to mothers-day slug by default (multi-occasion)
+  // Individual upload will use the title slug for product creation
+};
 
 function slugify(str){return str.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');}
 
@@ -1193,14 +1205,8 @@ async function handleUpload(pid, encTitle, encCat, input){
       method:'POST', headers:{'Content-Type':'application/json'},
       body:JSON.stringify({rawPath, title, slug, category:cat, pid}),
     });
-    const result = await processRes.json().catch(()=>({}));
-    if(!processRes.ok || !result.success){
-      // Surface the exact server error (e.g. "Unknown category 'X'") so Ak
-      // can tell instantly whether the cat: string drifted out of sync.
-      const msg = result.error || `Server ${processRes.status}`;
-      console.error('[process-bloom]', msg);
-      throw new Error(msg);
-    }
+    const result = await processRes.json();
+    if(!processRes.ok || !result.success) throw new Error(result.error||'Processing failed');
 
     // 4. Mark as live
     live[pid]=true; saveLive(live);

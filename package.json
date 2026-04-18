@@ -8,7 +8,11 @@
   },
   "scripts": {
     "dev": "vite",
+    "prebuild": "node scripts/validate-categories.js && node scripts/generate-sitemap.js",
     "build": "vite build",
+    "vercel-build": "node scripts/validate-categories.js && node scripts/generate-sitemap.js && vite build",
+    "validate-categories": "node scripts/validate-categories.js",
+    "generate-sitemap": "node scripts/generate-sitemap.js",
     "lint": "eslint .",
     "preview": "vite preview",
     "upload-products": "node scripts/uploadProducts.js",

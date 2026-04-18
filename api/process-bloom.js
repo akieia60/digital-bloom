@@ -1,5 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 import { applyCors } from './_lib/cors.js';
+import { PROMPT_ENGINE_CATEGORY_MAP } from '../src/data/categories.js';
 import { writeFileSync, readFileSync, unlinkSync } from 'fs';
 import { spawn } from 'child_process';
 import { createRequire } from 'module';
@@ -19,22 +20,10 @@ const WATERMARK_B64 = `iVBORw0KGgoAAAANSUhEUgAAAZAAAAA8CAYAAABIFuztAAAUp0lEQVR4n
 const TIER1_PRICE_ID = 'price_1T3JsrAbAZNcYUize3HYyAvh';
 const TIER1_PRODUCT_ID = 'prod_U1McdDJX6Z5VSP';
 
-const CATEGORY_MAP = {
-  "Mother's Day": 'mothers-day',
-  "Birthday": 'birthday',
-  "Love": 'love',
-  "Friendship": 'friendship',
-  "Thank You": 'thank-you',
-  "Anniversary": 'anniversary',
-  "Encouragement": 'encouragement',
-  "Sympathy": 'sympathy',
-  "Father's Day": 'fathers-day',
-  "Holidays": 'holiday',
-  "Zodiac / Celestial Saga": 'zodiac',
-  "Inclusive & Special": 'womens-day',
-  "Signature Series": 'mothers-day',
-  "Signature Stories": 'signature-stories',
-};
+// CATEGORY_MAP is imported from src/data/categories.js — the single source of
+// truth shared with the frontend + prompt-engine. See that file to add or
+// rename categories; this endpoint will pick up the change automatically.
+const CATEGORY_MAP = PROMPT_ENGINE_CATEGORY_MAP;
 
 function runFfmpeg(args) {
   return new Promise((resolve, reject) => {
@@ -60,7 +49,15 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Missing required fields: rawPath, title, slug, category' });
   }
 
-  const categorySlug = CATEGORY_MAP[category] || 'mothers-day';
+  const categorySlug = CATEGORY_MAP[category];
+  if (!categorySlug) {
+    // Loud failure beats silent misrouting — previously unknown categories
+    // fell through to 'mothers-day', which hid the drift that caused uploads
+    // to vanish from their intended collection.
+    return res.status(400).json({
+      error: `Unknown category "${category}". Update src/data/categories.js or correct the cat: string in prompt-engine.html. Accepted labels: ${Object.keys(CATEGORY_MAP).join(', ')}`,
+    });
+  }
   // Use the prompt's stable ID (pid) as the storage filename and DB slug so that
   // re-uploads always overwrite the same record — no duplicate-key collisions.
   const fileKey = pid || slug;

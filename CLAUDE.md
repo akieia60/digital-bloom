@@ -12,18 +12,35 @@
 
 ---
 
-## THE TWO REPOS — NEVER CONFUSE THESE
+## WHERE THE PROMPT ENGINE LIVES
 
-This is the most important thing to understand. There are two separate projects:
+There is **one repo** — `🌐 web-store` (this one). The prompt engine is a single
+static HTML file **inside** it:
 
-| Repo | Purpose | Who uses it |
-|------|---------|-------------|
-| **digital-bloom** ← YOU ARE HERE | The main customer-facing website at digitabloom.com | Everyone — customers, Gamble, the public |
-| **digital-bloom-prompt-engine** | Ak's personal internal tool for creating prompts and generating videos | Only Ak, when on the road or creating content |
+- **Main site code:** `src/` (React app served at digitabloom.com)
+- **Prompt engine:** `public/prompt-engine.html` → live at
+  `digitabloom.store/prompt-engine.html`
 
-**RULE: Unless Ak specifically says "prompt engine," all work goes in this repo (`digital-bloom`).**
-**RULE: Never make changes to the prompt engine when you mean to change the main site.**
-**RULE: When in doubt, ask Ak which repo before touching anything.**
+Ak uses the prompt engine daily from her phone while on the road to generate
+and upload videos. **Never break its URL or its upload flow.**
+
+### Category taxonomy — single source of truth
+
+All category data (slugs, display names, taglines, emojis, accent colors,
+expected prompt counts) lives in **one place**:
+
+**`src/data/categories.js`** — edit here, everywhere else auto-derives.
+
+Consumers: `api/process-bloom.js`, `src/pages/Shop.jsx`,
+`src/pages/CategoryPage.jsx`, `src/components/ProductGrid.jsx`,
+`src/components/landing/CategoryGrid.jsx`, `src/pages/Admin.jsx`,
+`public/prompt-engine.html` (validated, not auto-derived),
+`scripts/generate-sitemap.js`.
+
+**Build guard:** `scripts/validate-categories.js` runs as a `prebuild` step
+and fails the Vercel deploy if any `cat:` string in `prompt-engine.html`
+doesn't map to a canonical slug, OR if per-category counts drift. Run it
+locally any time with `npm run validate-categories`.
 
 ---
 
@@ -146,7 +163,8 @@ digital-bloom/
 - ✅ Confirm your understanding of a request before executing if it's complex
 
 ### NEVER do these:
-- ❌ Never make changes to the **prompt engine** repo when working on the main site
+- ❌ Never break the prompt engine URL (`/prompt-engine.html`) or its upload flow — Ak uses it daily from her phone on the road
+- ❌ Never hardcode a category list anywhere outside `src/data/categories.js` — causes drift that silently misroutes uploads
 - ❌ Never access Ak's Messages, iMessage, or personal apps for information — ask Ak directly instead
 - ❌ Never make changes without explaining what you're doing and why
 - ❌ Never use pure black (`#0A0A0A`, `#000000`) for backgrounds — use navy `#0D1B36`

@@ -1,7 +1,86 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useFounderAuth } from '../hooks/useFounderAuth';
 import FounderLogin from '../components/FounderLogin';
 import VideoLibrary from '../components/tracker/VideoLibrary';
+import { CATEGORIES, TOTAL_EXPECTED_PROMPTS } from '../data/categories';
+
+// Reads the canonical taxonomy + currently-loaded products and shows a
+// compact "X/229 live" dashboard so Ak can see at a glance where the
+// content gaps are — sorted biggest-gap-first so the top row is always
+// "what to generate next".
+function ProgressDashboard({ products }) {
+  const stats = useMemo(() => {
+    const counts = {};
+    for (const p of products) counts[p.category] = (counts[p.category] || 0) + 1;
+    const rows = CATEGORIES.map((c) => {
+      const live = counts[c.slug] || 0;
+      const expected = c.expectedPrompts || 0;
+      const missing = Math.max(expected - live, 0);
+      return { ...c, live, expected, missing };
+    });
+    rows.sort((a, b) => b.missing - a.missing);
+    const totalLive = rows.reduce((s, r) => s + r.live, 0);
+    return { rows, totalLive };
+  }, [products]);
+
+  const pct = Math.round((stats.totalLive / TOTAL_EXPECTED_PROMPTS) * 100);
+
+  return (
+    <div className="bg-gray-800 rounded-xl p-6 mb-8 border border-gray-700 shadow-xl">
+      <div className="flex items-end justify-between mb-4">
+        <div>
+          <h2 className="text-2xl font-bold text-white">Catalog progress</h2>
+          <p className="text-gray-400 text-sm mt-1">
+            {stats.totalLive} of {TOTAL_EXPECTED_PROMPTS} blooms live ({pct}%)
+          </p>
+        </div>
+        <div className="text-right">
+          <div className="text-xs uppercase tracking-widest text-gray-500 mb-1">Next up</div>
+          <div className="text-rose-300 font-semibold">
+            {stats.rows[0]?.missing > 0
+              ? `${stats.rows[0].emoji} ${stats.rows[0].name} — ${stats.rows[0].missing} left`
+              : '🎉 All categories full'}
+          </div>
+        </div>
+      </div>
+
+      <div className="w-full h-2 bg-gray-700 rounded-full overflow-hidden mb-6">
+        <div
+          className="h-full bg-gradient-to-r from-rose-500 to-pink-500 transition-all"
+          style={{ width: `${pct}%` }}
+        />
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+        {stats.rows.map((r) => {
+          const catPct = r.expected > 0 ? Math.round((r.live / r.expected) * 100) : 0;
+          const full = r.missing === 0 && r.expected > 0;
+          return (
+            <div
+              key={r.slug}
+              className={`p-3 rounded-lg border ${full ? 'bg-green-900/20 border-green-700/40' : 'bg-gray-700/40 border-gray-600/50'}`}
+            >
+              <div className="flex items-center justify-between mb-1">
+                <span className="text-white text-sm font-medium truncate">
+                  <span className="mr-1">{r.emoji}</span>{r.name}
+                </span>
+                <span className={`text-xs font-mono ${full ? 'text-green-300' : 'text-gray-300'}`}>
+                  {r.live}/{r.expected}
+                </span>
+              </div>
+              <div className="w-full h-1 bg-gray-800 rounded overflow-hidden">
+                <div
+                  className={`h-full ${full ? 'bg-green-500' : 'bg-rose-500/70'}`}
+                  style={{ width: `${Math.min(catPct, 100)}%` }}
+                />
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
 
 /**
  * Admin emails allowed to access the admin panel.
@@ -333,6 +412,9 @@ const Admin = () => {
             {message.text}
           </div>
         )}
+
+        {/* Catalog progress */}
+        {!loading && <ProgressDashboard products={products} />}
 
         {/* Product Form */}
         {showForm && (

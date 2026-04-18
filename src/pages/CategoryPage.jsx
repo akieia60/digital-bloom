@@ -1,17 +1,44 @@
+import { useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import BloomListCard from '../components/BloomListCard';
 import { useProducts } from '../hooks/useProducts';
 import OCCASIONS from '../data/occasions';
-
-const COMING_SOON_SLUGS = new Set(['zodiac']);
+import { CATEGORY_BY_SLUG } from '../data/categories';
 
 export default function CategoryPage() {
   const { categorySlug } = useParams();
-  const occasion = OCCASIONS[categorySlug];
-  const isComingSoon = COMING_SOON_SLUGS.has(categorySlug);
+  // Prefer the canonical taxonomy; fall back to legacy OCCASIONS for slugs
+  // like 'gratitude' or 'baby' that exist only in the legacy customizer data.
+  const canonical = CATEGORY_BY_SLUG[categorySlug];
+  const occasion = OCCASIONS[categorySlug] || (canonical && {
+    name: canonical.name,
+    title: canonical.title,
+    tagline: canonical.tagline,
+    accent: canonical.accent,
+    emoji: canonical.emoji,
+  });
   const { products, loading } = useProducts();
 
   const categoryProducts = products.filter((p) => p.category === categorySlug);
+
+  // A category is "coming soon" when it's a real category but has no products
+  // yet — so Ak doesn't have to hand-maintain a hardcoded list anymore.
+  const isComingSoon = !loading && Boolean(canonical) && categoryProducts.length === 0;
+
+  // Lightweight per-category SEO: set <title> and meta description so each
+  // category page is individually indexable by Google.
+  useEffect(() => {
+    if (!occasion) return;
+    const previousTitle = document.title;
+    document.title = `${occasion.title} — Digital Bloom`;
+    const metaDesc = document.querySelector('meta[name="description"]');
+    const previousDesc = metaDesc?.getAttribute('content') ?? null;
+    if (metaDesc && occasion.tagline) metaDesc.setAttribute('content', occasion.tagline);
+    return () => {
+      document.title = previousTitle;
+      if (metaDesc && previousDesc !== null) metaDesc.setAttribute('content', previousDesc);
+    };
+  }, [occasion]);
 
   if (!occasion) {
     return (

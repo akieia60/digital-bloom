@@ -4,6 +4,7 @@ import ProductGrid from '../components/ProductGrid';
 import ProductCard from '../components/ProductCard';
 import { useProducts } from '../hooks/useProducts';
 import { useLanguage } from '../contexts/LanguageContext';
+import { CATEGORIES } from '../data/categories';
 import '../styles/gallery.css';
 
 function BackButton() {
@@ -25,28 +26,22 @@ function BackButton() {
   );
 }
 
-const CATEGORIES = [
-  { name: "Mother's Day", slug: 'mothers-day', nameKey: 'cat_mothers_day', taglineKey: 'cat_mothers_day_tagline', tagline: 'Celebrate the woman who gave you everything' },
-  { name: 'Birthday', slug: 'birthday', nameKey: 'cat_birthday', taglineKey: 'cat_birthday_tagline', tagline: 'Make their special day unforgettable' },
-  { name: 'Love & Romance', slug: 'love', nameKey: 'cat_love', taglineKey: 'cat_love_tagline', tagline: 'Express your deepest feelings' },
-  { name: "Valentine's Day", slug: 'valentine', nameKey: 'cat_valentine', taglineKey: 'cat_valentine_tagline', tagline: 'For the one who has your heart' },
-  { name: 'Congratulations', slug: 'celebration', nameKey: 'cat_celebration', taglineKey: 'cat_celebration_tagline', tagline: 'Celebrate their achievements in style' },
-  { name: "Father's Day", slug: 'fathers-day', nameKey: 'cat_fathers_day', taglineKey: 'cat_fathers_day_tagline', tagline: 'Honor the man who shaped your world' },
-  { name: 'Memorial & Sympathy', slug: 'grief', nameKey: 'cat_grief', taglineKey: 'cat_grief_tagline', tagline: 'Honor those we hold dear' },
-  { name: 'Thinking of You', slug: 'friendship', nameKey: 'cat_friendship', taglineKey: 'cat_friendship_tagline', tagline: 'Let them know they matter' },
-  { name: 'Luxury Collection', slug: 'luxury', nameKey: 'cat_luxury', taglineKey: 'cat_luxury_tagline', tagline: 'Where fashion meets floral artistry' },
-  { name: 'General Collection', slug: 'general', nameKey: 'cat_general', taglineKey: 'cat_general_tagline', tagline: 'Beautiful blooms for every moment' },
-  { name: 'Signature Stories', slug: 'signature-stories', nameKey: 'cat_signature_stories', taglineKey: 'cat_signature_stories_tagline', tagline: 'Premium motion experiences for the moments that matter most' },
-  { name: 'Zodiac Collection', slug: 'zodiac', nameKey: 'cat_zodiac', taglineKey: 'cat_zodiac_tagline', tagline: 'Written in the stars, bloomed for you' },
-];
-
+// Category list is sourced from the canonical taxonomy in
+// src/data/categories.js. Auto-hide logic below means empty categories never
+// render a header, so the site stays clean while Ak is still filling them in.
 function CategorySection({ cat, products }) {
   const { t } = useLanguage();
   const catProducts = products.filter((p) => p.category === cat.slug);
   if (catProducts.length === 0) return null;
 
-  const title = cat.nameKey ? t(cat.nameKey) : cat.name;
-  const tagline = cat.taglineKey ? t(cat.taglineKey) : cat.tagline;
+  // Preserve language keys if they exist in the i18n bundle; otherwise fall
+  // back to the canonical name/tagline from categories.js.
+  const nameKey = `cat_${cat.slug.replace(/-/g, '_')}`;
+  const taglineKey = `${nameKey}_tagline`;
+  const translatedName = t(nameKey);
+  const translatedTagline = t(taglineKey);
+  const title = translatedName && translatedName !== nameKey ? translatedName : cat.title;
+  const tagline = translatedTagline && translatedTagline !== taglineKey ? translatedTagline : cat.tagline;
 
   return (
     <section className="gallery-section">
@@ -132,6 +127,16 @@ export default function Shop({ searchQuery, setSearchQuery }) {
             {CATEGORIES.map((cat) => (
               <CategorySection key={cat.slug} cat={cat} products={products} />
             ))}
+            {/* Empty-state helper — shown only while the entire site has no
+                products yet (e.g. on first launch). Individual empty sections
+                already auto-hide via CategorySection's early return. */}
+            {products.length === 0 && (
+              <div className="gallery-empty">
+                <div className="gallery-empty__icon">🌸</div>
+                <h3 className="gallery-empty__title">Collections launching soon</h3>
+                <p className="gallery-empty__text">New experiences are being crafted daily.</p>
+              </div>
+            )}
           </div>
         )}
       </div>

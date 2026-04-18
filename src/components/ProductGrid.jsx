@@ -1,22 +1,19 @@
-import { useState, useMemo } from 'react';
+import { useMemo } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import ProductCard from './ProductCard';
 import { useProducts } from '../hooks/useProducts';
 import { PRICING_TIERS } from '../config/pricingTiers';
+import { CATEGORIES, CATEGORY_BY_SLUG } from '../data/categories';
 import '../styles/gallery.css';
 
-const CATEGORY_DISPLAY = {
-  'mothers-day': { label: "Mother's Day Collection", tagline: 'Celebrate the woman who gave you everything', emoji: '🌸' },
-  'birthday': { label: 'Birthday Collection', tagline: 'Make their special day unforgettable', emoji: '🎂' },
-  'love': { label: 'Love & Romance', tagline: 'Express your deepest feelings', emoji: '❤️' },
-  'valentine': { label: "Valentine's Day", tagline: 'For the one who has your heart', emoji: '💕' },
-  'celebration': { label: 'Congratulations', tagline: 'Celebrate their achievements in style', emoji: '🎉' },
-  'grief': { label: 'Memorial & Sympathy', tagline: 'Honor those we hold dear', emoji: '🕊️' },
-  'friendship': { label: 'Thinking of You', tagline: 'Let them know they matter', emoji: '💐' },
-  'luxury': { label: 'Glass Stiletto Series', tagline: 'Where fashion meets floral artistry', emoji: '👠' },
-  'zodiac': { label: 'Zodiac Collection', tagline: 'Written in the stars', emoji: '✨' },
-  'general': { label: 'General Collection', tagline: 'Beautiful blooms for every moment', emoji: '🌷' },
-};
+// Derived from the canonical taxonomy in src/data/categories.js so adding a
+// new category in one place propagates everywhere.
+const CATEGORY_DISPLAY = Object.fromEntries(
+  CATEGORIES.map((c) => [
+    c.slug,
+    { label: c.title, tagline: c.tagline, emoji: c.emoji },
+  ])
+);
 
 const ProductGrid = ({ searchQuery = '', category = null }) => {
   const { products, loading } = useProducts();
@@ -48,12 +45,13 @@ const ProductGrid = ({ searchQuery = '', category = null }) => {
     return groups;
   }, [filteredProducts]);
 
-  const categoryOrder = [
-    'mothers-day', 'birthday', 'love', 'valentine',
-    'celebration', 'grief', 'friendship', 'luxury', 'zodiac', 'general'
-  ];
-
-  const orderedCategories = categoryOrder.filter(cat => groupedProducts[cat]?.length > 0);
+  // Display order comes straight from categories.js. Empty categories are
+  // auto-hidden so the site never shows a "0 experiences" shelf while Ak is
+  // still generating content for that occasion.
+  const categoryOrder = CATEGORIES.map((c) => c.slug);
+  const orderedCategories = categoryOrder.filter(
+    (cat) => groupedProducts[cat]?.length > 0
+  );
 
   const activeTierLabel = tierFilter
     ? PRICING_TIERS.find((t) => t.tier === tierFilter)?.name
