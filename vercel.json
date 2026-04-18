@@ -40,7 +40,7 @@
     }
   ],
   "functions": {
-    "api/process-bloom.js": { "maxDuration": 60 },
+    "api/process-bloom.js": { "maxDuration": 60, "memory": 3008 },
     "api/get-upload-url.js": { "maxDuration": 10 }
   },
   "crons": [
