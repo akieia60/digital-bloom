@@ -1046,8 +1046,8 @@ function cardHTML(p){
   const st = uploadStates[p.id];
   // Encode title/cat as URI components so ANY character (quotes, dashes, emoji) is safe
   // inside the onclick/onchange HTML attributes.
-  const encTitle = encodeURIComponent(p.title);
-  const encCat   = encodeURIComponent(p.cat);
+  const encTitle = encodeURIComponent(p.title).replace(/'/g, "%27");
+  const encCat   = encodeURIComponent(p.cat).replace(/'/g, "%27");
   return `
   <div class="card${isDone?' done':''}" id="card-${p.id}">
     <div class="card-header">
