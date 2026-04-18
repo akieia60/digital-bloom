@@ -9,6 +9,7 @@ import OCCASIONS from '../../data/occasions';
 // Hidden (no products): anniversary, graduation, thank-you, encouragement,
 //   gratitude, baby, milestones, promotions, holidays
 const CATEGORY_DISPLAY = [
+  { slug: 'signature-stories', previewVideo: null },
   { slug: 'mothers-day',  previewVideo: '/videos/category-previews/preview_mothers-day_grok1.mp4' },
   { slug: 'birthday',     previewVideo: '/videos/shop/birthday_birthday_roses_bloom_v1.mp4' },
   { slug: 'love',         previewVideo: '/videos/shop/iloveyou_iloveyou_roses_bloom_v1.mp4' },

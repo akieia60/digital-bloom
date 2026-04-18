@@ -36,6 +36,7 @@ const CATEGORIES = [
   { name: 'Thinking of You', slug: 'friendship', nameKey: 'cat_friendship', taglineKey: 'cat_friendship_tagline', tagline: 'Let them know they matter' },
   { name: 'Luxury Collection', slug: 'luxury', nameKey: 'cat_luxury', taglineKey: 'cat_luxury_tagline', tagline: 'Where fashion meets floral artistry' },
   { name: 'General Collection', slug: 'general', nameKey: 'cat_general', taglineKey: 'cat_general_tagline', tagline: 'Beautiful blooms for every moment' },
+  { name: 'Signature Stories', slug: 'signature-stories', nameKey: 'cat_signature_stories', taglineKey: 'cat_signature_stories_tagline', tagline: 'Premium motion experiences for the moments that matter most' },
   { name: 'Zodiac Collection', slug: 'zodiac', nameKey: 'cat_zodiac', taglineKey: 'cat_zodiac_tagline', tagline: 'Written in the stars, bloomed for you' },
 ];
 
