@@ -429,6 +429,30 @@ const OCCASIONS = {
     },
   },
 
+  'signature-stories': {
+    name: 'Signature Stories',
+    title: 'Signature Stories',
+    tagline: 'Premium blooms crafted for the moments that matter most.',
+    salesPitch: "Signature Stories are Digital Bloom's most intentional creations — handcrafted motion experiences designed to speak directly to the heart. Each one tells a story that words alone could never capture.",
+    accent: '#D4AF37',
+    emoji: '📖',
+    sloganPresets: [
+      "Some moments deserve more than words — here are your flowers.",
+      "This one was made with you in mind.",
+      "A story told in bloom, just for you.",
+      "Not just a gift — an experience.",
+      "Crafted with intention. Sent with love.",
+      "You deserve something that truly says everything.",
+    ],
+    customizerDefaults: {
+      occasion: 'love',
+      colorTheme: 'elegant',
+      balloonMessage: 'With Love',
+      messagePlaceholder: 'e.g., This one is just for you',
+      toPlaceholder: 'Recipient name',
+    },
+  },
+
   'general': {
     name: 'General',
     title: 'General Collection',
