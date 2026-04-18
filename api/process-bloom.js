@@ -52,14 +52,16 @@ export default async function handler(req, res) {
   if (!applyCors(req, res)) return;
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
-  const { rawPath, title, slug, category } = req.body || {};
+  const { rawPath, title, slug, category, pid } = req.body || {};
   if (!rawPath || !title || !slug || !category) {
     return res.status(400).json({ error: 'Missing required fields: rawPath, title, slug, category' });
   }
 
   const categorySlug = CATEGORY_MAP[category] || 'mothers-day';
-  const watermarkedFilename = `${categorySlug}_${slug}_v1_watermarked.mp4`;
-  const watermarkedStoragePath = `${categorySlug}/${watermarkedFilename}`;
+  // Use the prompt's stable ID (pid) as the storage filename and DB slug so that
+  // re-uploads always overwrite the same record — no duplicate-key collisions.
+  const fileKey = pid || slug;
+  const watermarkedStoragePath = `${categorySlug}/${fileKey}_watermarked.mp4`;
 
   const ts = Date.now();
   const tmpRaw = `/tmp/raw_${ts}.mp4`;
@@ -96,17 +98,17 @@ export default async function handler(req, res) {
     // 5. Delete raw file to keep storage clean
     await supabase.storage.from('product-media').remove([rawPath]);
 
-    // 6. Create product record
+    // 6. Upsert product record (insert or update on slug conflict so re-uploads work)
     const supabaseUrl = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL;
     const videoUrl = `${supabaseUrl}/storage/v1/object/public/product-media/${watermarkedStoragePath}`;
-    const productSlug = `${categorySlug}-${slug}`;
+    const productSlug = pid || `${categorySlug}-${slug}`;
 
     const { data: product, error: dbErr } = await supabase
       .from('products')
-      .insert({
-        name: `${title} Bloom`,
+      .upsert({
+        name: title,
         slug: productSlug,
-        description: `A beautiful Digital Bloom — ${title}. Send it as a heartfelt digital gift.`,
+        description: `A beautiful Digital Bloom for every occasion.`,
         price: 1.99,
         image_url: videoUrl,
         video_url: videoUrl,
@@ -118,10 +120,10 @@ export default async function handler(req, res) {
         is_active: true,
         stock: 999,
         product_type: 'digital',
-      })
+      }, { onConflict: 'slug' })
       .select('id, name, slug')
       .single();
-    if (dbErr) throw new Error(`DB insert failed: ${dbErr.message}`);
+    if (dbErr) throw new Error(`DB upsert failed: ${dbErr.message}`);
 
     console.log(`[process-bloom] ✅ ${product.name} — ${videoUrl}`);
     return res.status(200).json({ success: true, product });

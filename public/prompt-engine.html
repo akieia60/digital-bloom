@@ -1203,7 +1203,7 @@ async function handleUpload(pid, encTitle, encCat, input){
     setUploadState(pid, 'processing');
     const processRes = await fetch('/api/process-bloom',{
       method:'POST', headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({rawPath, title, slug, category:cat}),
+      body:JSON.stringify({rawPath, title, slug, category:cat, pid}),
     });
     const result = await processRes.json();
     if(!processRes.ok || !result.success) throw new Error(result.error||'Processing failed');
