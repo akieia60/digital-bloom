@@ -1,32 +1,56 @@
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '../../contexts/LanguageContext';
+import { useProducts } from '../../hooks/useProducts';
+import { CATEGORIES } from '../../data/categories';
 import OCCASIONS from '../../data/occasions';
 
-// Ordered list of slugs to display in the grid + their video previews.
-// Edit this array to control which categories appear and in what order.
-// Only categories with active products in Supabase are listed here.
-// Hidden (no products): anniversary, graduation, thank-you, encouragement,
-//   gratitude, baby, milestones, promotions, holidays
-const CATEGORY_DISPLAY = [
-  { slug: 'signature-stories', previewVideo: null },
-  { slug: 'mothers-day',  previewVideo: '/videos/category-previews/preview_mothers-day_grok1.mp4' },
-  { slug: 'birthday',     previewVideo: '/videos/shop/birthday_birthday_roses_bloom_v1.mp4' },
-  { slug: 'love',         previewVideo: '/videos/shop/iloveyou_iloveyou_roses_bloom_v1.mp4' },
-  { slug: 'valentine',    previewVideo: '/videos/shop/valentine_valentine_roses_bloom_v2.mp4' },
-  { slug: 'celebration',  previewVideo: '/videos/shop/congratulations_congratulations_roses_bloom_v1.mp4' },
-  { slug: 'fathers-day',  previewVideo: 'https://yhdbeblowolfinxxhsnt.supabase.co/storage/v1/object/public/digital-bloom-sequences/Birthday_Roses_Bloom_v3.mp4' },
-  { slug: 'friendship',   previewVideo: '/videos/shop/thinkingofyou_thinkingofyou_roses_bloom_v1.mp4' },
-  { slug: 'grief',        previewVideo: '/videos/shop/memorial_memorial_roses_artistic_v1.mp4' },
-  { slug: 'luxury',       previewVideo: '/videos/shop/glassstiletto_glassstilettoseries_roses_artistic_v1.mp4' },
-  { slug: 'general',      previewVideo: '/videos/shop/general_general_goldenroses_bloom_v1.mp4' },
-  { slug: 'zodiac',       previewVideo: '/videos/shop/valentine_valentine_roses_bloom_v1.mp4' },
-];
+// Curated preview overrides — used when Ak wants a specific video to be the
+// face of a category regardless of upload order. Any category NOT listed
+// here falls back to "first live product in Supabase wins", so new
+// categories auto-populate the moment Ak uploads her first video.
+//
+// Key = canonical slug. Value = video URL (local path or full Supabase URL).
+// To re-curate, just add/edit an entry here and push. To remove a curation
+// and let auto-pick take over, delete the entry.
+const PREVIEW_OVERRIDES = {
+  'mothers-day': '/videos/category-previews/preview_mothers-day_grok1.mp4',
+};
 
 export default function CategoryGrid() {
   const { t } = useLanguage();
+  const { products } = useProducts();
   const sectionRef = useRef(null);
   const [visibleItems, setVisibleItems] = useState(new Set());
+
+  // Build the category list dynamically: canonical taxonomy × live products.
+  // Preview video = curated override if set, else first product's video_url.
+  // Categories with zero products are omitted so the landing page never shows
+  // an empty / emoji-only tile for an unlaunched category.
+  const categories = useMemo(() => {
+    const firstVideoBySlug = {};
+    for (const p of products) {
+      if (!p.video_url) continue;
+      if (!firstVideoBySlug[p.category]) firstVideoBySlug[p.category] = p.video_url;
+    }
+
+    return CATEGORIES
+      .map((cat) => {
+        const preview = PREVIEW_OVERRIDES[cat.slug] || firstVideoBySlug[cat.slug] || null;
+        if (!preview) return null; // auto-hide categories with no content yet
+        const occ = OCCASIONS[cat.slug];
+        return {
+          slug: cat.slug,
+          previewVideo: preview,
+          // Prefer the legacy OCCASIONS name if it exists (some have been
+          // hand-tuned for marketing), else fall back to canonical name.
+          name: occ?.name || cat.name,
+          accent: occ?.accent || cat.accent,
+          emoji: occ?.emoji || cat.emoji,
+        };
+      })
+      .filter(Boolean);
+  }, [products]);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -44,14 +68,7 @@ export default function CategoryGrid() {
     const items = sectionRef.current?.querySelectorAll('[data-idx]');
     items?.forEach((el) => observer.observe(el));
     return () => observer.disconnect();
-  }, []);
-
-  // Build the enriched category list from OCCASIONS so there's one source of truth
-  const categories = CATEGORY_DISPLAY.map(({ slug, previewVideo }) => {
-    const occ = OCCASIONS[slug];
-    if (!occ) return null;
-    return { slug, previewVideo, name: occ.name, accent: occ.accent, emoji: occ.emoji };
-  }).filter(Boolean);
+  }, [categories.length]);
 
   return (
     <section className="cat-stack-section" ref={sectionRef}>
@@ -90,30 +107,15 @@ export default function CategoryGrid() {
                 aria-label={`Browse ${cat.name}`}
               >
                 <div className="db-watermark cat-stack-bloom-square">
-                  {cat.previewVideo ? (
-                    <video
-                      src={cat.previewVideo}
-                      autoPlay
-                      loop
-                      muted
-                      playsInline
-                      preload="metadata"
-                      className="cat-stack-bloom-video"
-                    />
-                  ) : (
-                    <div
-                      className="cat-stack-bloom-placeholder"
-                      style={{
-                        background: `radial-gradient(ellipse at 50% 40%, ${cat.accent}33, #0a0a0a)`,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        fontSize: '3.5rem',
-                      }}
-                    >
-                      {cat.emoji}
-                    </div>
-                  )}
+                  <video
+                    src={cat.previewVideo}
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    preload="metadata"
+                    className="cat-stack-bloom-video"
+                  />
                   {/* Tap hint overlay */}
                   <div className="cat-stack-tap-hint">
                     <span className="cat-stack-tap-text">{t('cat_tap_explore')}</span>
