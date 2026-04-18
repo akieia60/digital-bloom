@@ -41,6 +41,7 @@ function runFfmpeg(args) {
     const proc = spawn(ffmpegPath, args);
     let stderr = '';
     proc.stderr.on('data', d => { stderr += d.toString(); });
+    proc.on('error', err => reject(new Error(`Spawn error: ${err.message}`)));
     proc.on('close', code => {
       if (code === 0) resolve();
       else reject(new Error(`ffmpeg failed (${code}): ${stderr.slice(-400)}`));
