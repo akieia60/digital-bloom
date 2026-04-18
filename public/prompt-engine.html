@@ -1044,8 +1044,10 @@ function cardHTML(p){
   const isDone = !!done[p.id];
   const isLive = !!live[p.id];
   const st = uploadStates[p.id];
-  const safeTitle = p.title.replace(/'/g,"\\'").replace(/`/g,'\\`');
-  const safeCat = p.cat.replace(/'/g,"\\'").replace(/`/g,'\\`');
+  // Encode title/cat as URI components so ANY character (quotes, dashes, emoji) is safe
+  // inside the onclick/onchange HTML attributes.
+  const encTitle = encodeURIComponent(p.title);
+  const encCat   = encodeURIComponent(p.cat);
   return `
   <div class="card${isDone?' done':''}" id="card-${p.id}">
     <div class="card-header">
@@ -1062,7 +1064,9 @@ function cardHTML(p){
     ${isLive
       ? `<div class="upload-live-badge">✅ Live on digitabloom.store</div>`
       : `<div class="upload-zone">
-           <input type="file" accept="video/*,video/mp4" id="file-${p.id}" style="display:none" onchange="handleUpload('${p.id}','${safeTitle}','${safeCat}',this)">
+           <input type="file" accept="video/*" id="file-${p.id}"
+             style="position:fixed;top:-999px;left:-999px;width:1px;height:1px;opacity:0"
+             onchange="handleUpload('${p.id}','${encTitle}','${encCat}',this)">
            <button class="btn-upload" id="uploadbtn-${p.id}" ${st&&st!=='error'?'disabled':''} onclick="document.getElementById('file-${p.id}').click()">
              ${st==='uploading'?'⬆️ Uploading…':st==='processing'?'🔥 Processing…':'📤 Upload Bloom'}
            </button>
@@ -1171,11 +1175,13 @@ function setUploadState(pid, state, statusText){
   }
 }
 
-async function handleUpload(pid, title, cat, input){
+async function handleUpload(pid, encTitle, encCat, input){
   const file = input.files[0];
   if(!file) return;
   input.value=''; // reset so same file can be re-selected on retry
 
+  const title = decodeURIComponent(encTitle);
+  const cat   = decodeURIComponent(encCat);
   const slug = slugify(title);
   setUploadState(pid, 'uploading');
 
