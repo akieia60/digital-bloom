@@ -33,6 +33,7 @@ const CATEGORY_MAP = {
   "Zodiac / Celestial Saga": 'zodiac',
   "Inclusive & Special": 'womens-day',
   "Signature Series": 'mothers-day',
+  "Signature Stories": 'signature-stories',
 };
 
 function runFfmpeg(args) {
@@ -77,10 +78,12 @@ export default async function handler(req, res) {
     writeFileSync(tmpWm, Buffer.from(WATERMARK_B64, 'base64'));
 
     // 3. Burn watermark in with ffmpeg overlay filter
+    // -an: drop audio — AI-generated bloom videos have no audio stream,
+    // and -c:a copy would fail on a missing stream.
     await runFfmpeg([
       '-i', tmpRaw, '-i', tmpWm,
       '-filter_complex', 'overlay=24:H-74',
-      '-c:a', 'copy', '-y', tmpOut,
+      '-an', '-y', tmpOut,
     ]);
 
     // 4. Upload watermarked video
