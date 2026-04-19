@@ -332,7 +332,7 @@ const Admin = () => {
     }
   };
 
-  const categories = ['roses', 'tulips', 'lilies', 'mixed', 'digital-art'];
+  const categories = CATEGORIES.map((c) => c.slug);
   const occasionOptions = ['anniversary', 'birthday', 'romance', 'valentine', 'wedding', 'sympathy', 'thank-you', 'just-because', 'get-well'];
 
   // ── Auth loading state ─────────────────────────────────────────────────────
