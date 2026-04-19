@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import BloomListCard from '../components/BloomListCard';
 import { useProducts } from '../hooks/useProducts';
 import OCCASIONS from '../data/occasions';
@@ -7,6 +7,7 @@ import { CATEGORY_BY_SLUG } from '../data/categories';
 
 export default function CategoryPage() {
   const { categorySlug } = useParams();
+  const navigate = useNavigate();
   // Prefer the canonical taxonomy; fall back to legacy OCCASIONS for slugs
   // like 'gratitude' or 'baby' that exist only in the legacy customizer data.
   const canonical = CATEGORY_BY_SLUG[categorySlug];
@@ -61,12 +62,22 @@ export default function CategoryPage() {
         <div className="absolute top-0 left-0 right-0 h-1" style={{ background: `linear-gradient(90deg, ${occasion.accent}, ${occasion.accent}66)` }} />
         <div className="absolute inset-0 opacity-[0.07] pointer-events-none" style={{ background: `radial-gradient(ellipse at 50% 0%, ${occasion.accent}, transparent 65%)` }} />
 
-        <Link to="/shop" className="relative inline-flex items-center text-[11px] uppercase tracking-[0.15em] hover:text-[var(--accent-gold)] transition-colors mb-10 font-medium" style={{ color: 'rgba(255,255,255,0.6)' }}>
-          <svg className="w-3 h-3 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-          </svg>
-          All Occasions
-        </Link>
+        <div className="relative flex items-center justify-center gap-4 mb-10">
+          <button
+            onClick={() => navigate(-1)}
+            type="button"
+            className="inline-flex items-center text-[11px] uppercase tracking-[0.15em] hover:text-[var(--accent-gold)] transition-colors font-medium"
+            style={{ color: 'rgba(255,255,255,0.75)', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.18)', borderRadius: '999px', padding: '8px 16px' }}
+          >
+            <svg className="w-3 h-3 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+            Back
+          </button>
+          <Link to="/shop" className="inline-flex items-center text-[11px] uppercase tracking-[0.15em] hover:text-[var(--accent-gold)] transition-colors font-medium" style={{ color: 'rgba(255,255,255,0.6)' }}>
+            All Occasions
+          </Link>
+        </div>
 
         <h1 className="relative text-4xl sm:text-5xl md:text-6xl font-display font-medium tracking-[0.06em] uppercase mb-4" style={{ color: '#FFFFFF' }}>
           {occasion.title}

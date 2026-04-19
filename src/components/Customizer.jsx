@@ -87,6 +87,7 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
   const [messageTextColor, setMessageTextColor] = useState(stateDefaults.messageTextColor || '#FFFFFF');
   const [messageBold, setMessageBold] = useState(stateDefaults.messageBold || false);
   const [messageTextSize, setMessageTextSize] = useState(stateDefaults.messageTextSize || 'md');
+  const [messageOffset, setMessageOffset] = useState(stateDefaults.messageOffset || { x: 0, y: 0 });
   const [ribbonColor, setRibbonColor] = useState(stateDefaults.ribbonColor || null);
   const [playingTrack, setPlayingTrack] = useState(null);
   const [activeStep, setActiveStep] = useState(1);
@@ -367,6 +368,7 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
       messageTextColor,
       messageBold,
       messageTextSize,
+      messageOffset,
       ribbonColor,
       locale: lang,
     });
@@ -385,13 +387,14 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
       messageTextColor,
       messageBold,
       messageTextSize,
+      messageOffset,
       ribbonColor,
       locale: lang,
       totalPrice,
       composition,
     });
     onClose();
-  }, [isProductValid, product, message, colorTheme, primaryColor, accentColor, extras, selectedSound, engravingStyle, fontChoice, messageTextColor, messageBold, messageTextSize, ribbonColor, lang, totalPrice, themeStyle, stopAllAudio, onComplete, onClose]);
+  }, [isProductValid, product, message, colorTheme, primaryColor, accentColor, extras, selectedSound, engravingStyle, fontChoice, messageTextColor, messageBold, messageTextSize, messageOffset, ribbonColor, lang, totalPrice, themeStyle, stopAllAudio, onComplete, onClose]);
 
   const selectedExtras = useMemo(
     () => EXTRAS.filter((extra) => extras[extra.id]).map((extra) => t(extra.nameKey)),
@@ -471,6 +474,8 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
               messageBold={messageBold}
               messageTextSize={messageTextSize}
               ribbonColor={ribbonColor}
+              messageOffset={messageOffset}
+              onMessageOffsetChange={setMessageOffset}
               className="composition-preview--square"
             />
           </div>
@@ -484,16 +489,16 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
             </div>
 
             <div className="customizer-field">
-              <input
+              <textarea
                 id="cust-msg"
-                type="text"
-                className="customizer-input"
+                className="customizer-input customizer-input--message"
                 placeholder={messagePlaceholder || t('customize_message_placeholder')}
                 maxLength="150"
+                rows={4}
                 value={message.short}
                 onChange={(e) => handleMessageChange('short', e.target.value)}
               />
-              <span className="customizer-hint">{message.short.length}/150</span>
+              <span className="customizer-hint">{message.short.length}/150 · drag on preview to position</span>
             </div>
 
             {/* Category-aware slogan selector — tap/select to ADD to message, not replace */}
@@ -542,32 +547,19 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
               <p style={{ fontSize: '11px', color: 'rgba(255,255,255,0.35)', margin: '4px 0 8px', letterSpacing: '0.02em' }}>
                 Each selection adds to your message — mix and match
               </p>
-              {/* Quick-tap chip row — first 4 presets */}
-              <div className="customizer-starters">
-                {sloganPresets.slice(0, 4).map((slogan, i) => (
-                  <button
-                    key={i}
-                    type="button"
-                    className={`customizer-starter-chip ${message.short.includes(slogan) ? 'customizer-starter-chip--active' : ''}`}
-                    onClick={() => appendSlogan(slogan)}
-                  >
-                    {slogan.length > 42 ? slogan.slice(0, 40) + '…' : slogan}
-                  </button>
-                ))}
-              </div>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+            <div className="customizer-tofrom-grid">
               <div className="customizer-field">
                 <label className="customizer-label" htmlFor="cust-to">{t('customize_to')}</label>
-                <input id="cust-to" type="text" className="customizer-input"
+                <input id="cust-to" type="text" className="customizer-input customizer-input--lg"
                   placeholder={toPlaceholder || t('customize_to_placeholder')}
                   value={message.toName}
                   onChange={(e) => handleMessageChange('toName', e.target.value)} />
               </div>
               <div className="customizer-field">
                 <label className="customizer-label" htmlFor="cust-from">{t('customize_from')}</label>
-                <input id="cust-from" type="text" className="customizer-input"
+                <input id="cust-from" type="text" className="customizer-input customizer-input--lg"
                   placeholder={t('customize_from_placeholder')}
                   value={message.fromName}
                   onChange={(e) => handleMessageChange('fromName', e.target.value)} />

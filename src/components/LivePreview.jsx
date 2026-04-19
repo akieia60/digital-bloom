@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useRef, useCallback } from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { getCompositionLayers } from '../lib/compositionEngine';
 import '../styles/overlays.css';
@@ -48,6 +48,8 @@ export default function LivePreview({
   messageTextSize = 'md',
   ribbonColor = null,
   occasion = null,
+  messageOffset = null,
+  onMessageOffsetChange = null,
   className = '',
 }) {
   const { t } = useLanguage();
@@ -55,6 +57,41 @@ export default function LivePreview({
     () => getCompositionLayers({ product, colorTheme, primaryColor, accentColor, extras, message, engravingStyle, fontChoice, messageTextColor, messageBold, messageTextSize }),
     [product, colorTheme, primaryColor, accentColor, extras, message, engravingStyle, fontChoice, messageTextColor, messageBold, messageTextSize]
   );
+
+  const containerRef = useRef(null);
+  const dragState = useRef(null);
+  const isDraggable = typeof onMessageOffsetChange === 'function';
+
+  const handlePointerDown = useCallback((e) => {
+    if (!isDraggable || !containerRef.current) return;
+    e.preventDefault();
+    const rect = containerRef.current.getBoundingClientRect();
+    dragState.current = {
+      startX: e.clientX,
+      startY: e.clientY,
+      baseOffset: messageOffset || { x: 0, y: 0 },
+      width: rect.width,
+      height: rect.height,
+    };
+    e.currentTarget.setPointerCapture?.(e.pointerId);
+  }, [isDraggable, messageOffset]);
+
+  const handlePointerMove = useCallback((e) => {
+    if (!dragState.current) return;
+    const { startX, startY, baseOffset, width, height } = dragState.current;
+    const dxPct = ((e.clientX - startX) / width) * 100;
+    const dyPct = ((e.clientY - startY) / height) * 100;
+    const next = {
+      x: Math.max(-40, Math.min(40, (baseOffset.x || 0) + dxPct)),
+      y: Math.max(-40, Math.min(40, (baseOffset.y || 0) + dyPct)),
+    };
+    onMessageOffsetChange(next);
+  }, [onMessageOffsetChange]);
+
+  const handlePointerUp = useCallback((e) => {
+    dragState.current = null;
+    e.currentTarget.releasePointerCapture?.(e.pointerId);
+  }, []);
 
   if (!composition?.baseMedia?.src && !composition?.baseMedia?.poster) {
     return (
@@ -68,6 +105,7 @@ export default function LivePreview({
 
   return (
     <div
+      ref={containerRef}
       className={`db-watermark composition-preview ${className}`}
       style={{
         '--db-primary': colorFilter?.primaryColor || '#C53A5C',
@@ -139,10 +177,24 @@ export default function LivePreview({
       {/* Layer N: Text Overlay */}
       {textLayer && (
         <div
-          className={`composition-layer--text composition-layer--text-${textLayer.variant || 'heirloom'}`}
-          style={textLayer.positionStyle}
+          className={`composition-layer--text composition-layer--text-${textLayer.variant || 'heirloom'}${isDraggable ? ' composition-layer--text-draggable' : ''}`}
+          style={{
+            ...textLayer.positionStyle,
+            transform: messageOffset
+              ? `${textLayer.positionStyle?.transform || ''} translate(${messageOffset.x}%, ${messageOffset.y}%)`
+              : textLayer.positionStyle?.transform,
+            touchAction: isDraggable ? 'none' : undefined,
+            cursor: isDraggable ? (dragState.current ? 'grabbing' : 'grab') : undefined,
+          }}
+          onPointerDown={isDraggable ? handlePointerDown : undefined}
+          onPointerMove={isDraggable ? handlePointerMove : undefined}
+          onPointerUp={isDraggable ? handlePointerUp : undefined}
+          onPointerCancel={isDraggable ? handlePointerUp : undefined}
         >
           <div className="composition-text__message" style={textLayer.textStyle}>{textLayer.text}</div>
+          {isDraggable && textLayer.text && (
+            <div className="composition-text__drag-hint">Drag to move</div>
+          )}
         </div>
       )}
 

@@ -411,9 +411,12 @@ async function createOverlayImage(destination, {
     const lineHeight = messageSize * 1.25;
     const textBlockHeight = lines.length * lineHeight;
 
+    const offsetX = (Math.max(-40, Math.min(40, messageOffset.x || 0)) / 100) * width;
+    const offsetY = (Math.max(-40, Math.min(40, messageOffset.y || 0)) / 100) * height;
+
     if (layout.messageBox) {
-      const boxX = resolveLayoutExpr(layout.messageBox.x, width, height);
-      const boxY = resolveLayoutExpr(layout.messageBox.y, width, height);
+      const boxX = resolveLayoutExpr(layout.messageBox.x, width, height) + offsetX;
+      const boxY = resolveLayoutExpr(layout.messageBox.y, width, height) + offsetY;
       const boxW = resolveLayoutExpr(layout.messageBox.w, width, height);
       const boxH = Math.max(resolveLayoutExpr(layout.messageBox.h, width, height), textBlockHeight + 28);
       roundRect(ctx, boxX, boxY, boxW, boxH, 24);
@@ -427,7 +430,7 @@ async function createOverlayImage(destination, {
       ctx.fillStyle = 'rgba(255,255,255,0.92)';
       ctx.textAlign = 'center';
       lines.forEach((line, index) => {
-        ctx.fillText(line, width / 2, height * 0.745 + (index * lineHeight));
+        ctx.fillText(line, width / 2 + offsetX, height * 0.745 + offsetY + (index * lineHeight));
       });
       ctx.textAlign = 'start';
     }
@@ -582,6 +585,7 @@ export async function renderBloomDelivery(purchaseId) {
   const senderName = message.fromName || '';
   const shortMessage = normalizeMessage(message.short || '');
   const messageBold = customization.messageBold || false;
+  const messageOffset = customization.messageOffset || { x: 0, y: 0 };
   const engravingStyle = customization.engravingStyle || purchase.composition_manifest?.composition?.engravingStyle || 'heirloom';
   const fontChoice = customization.fontChoice || purchase.composition_manifest?.composition?.fontChoice || 'playfair';
   const locale = customization.locale || purchase.composition_manifest?.composition?.locale || 'en';

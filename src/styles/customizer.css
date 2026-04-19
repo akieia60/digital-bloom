@@ -688,6 +688,52 @@
   font-family: 'Outfit', sans-serif;
 }
 
+/* ─── ENLARGED MESSAGE + TO/FROM FIELDS (Gamble feedback) ─── */
+.customizer-input--message {
+  min-height: 132px;
+  padding: 18px 20px;
+  font-size: 18px;
+  line-height: 1.45;
+  resize: vertical;
+  font-family: 'Playfair Display', 'Outfit', serif;
+}
+
+.customizer-input--lg {
+  min-height: 58px;
+  padding: 18px 20px;
+  font-size: 18px;
+  letter-spacing: 0.01em;
+}
+
+.customizer-tofrom-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 18px;
+}
+
+@media (max-width: 480px) {
+  .customizer-tofrom-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+}
+
+/* Enlarged slogan selector (the "Add to message" block) */
+.customizer-slogan-selector {
+  margin: 18px 0 20px;
+  padding: 18px 18px 16px;
+  border-radius: 16px;
+  background: rgba(201, 161, 74, 0.06);
+  border: 1px solid rgba(201, 161, 74, 0.18);
+}
+
+.customizer-slogan-selector .customizer-select {
+  min-height: 54px;
+  padding: 16px 44px 16px 18px;
+  font-size: 16px;
+}
+
 /* ─── TEXT COLOR SWATCHES ─── */
 .customizer-color-swatches {
   display: flex;
