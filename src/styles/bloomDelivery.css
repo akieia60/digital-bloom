@@ -78,6 +78,18 @@
   z-index: 20;
 }
 
+/* Make the Digital Bloom™ trademark clearly visible on delivered blooms */
+.bloom-delivery__protected-frame .db-watermark-corner {
+  z-index: 60;
+  font-size: 15px;
+  opacity: 1;
+  color: #D4AF37;
+  bottom: 14px;
+  right: 14px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+}
+
 /* Position the brand lockup inside the video frame (mirrors compositionEngine bottom-brand-lockup) */
 .bloom-delivery__protected-frame .composition-brand-lockup {
   /* z-index 55: above watermark overlay (10), vignette (42), and db-watermark-overlay (50) */

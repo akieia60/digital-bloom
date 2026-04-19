@@ -191,6 +191,8 @@ export function buildCartComposition(customization) {
     fontChoice = 'playfair',
     messageTextColor = '#FFFFFF',
     messageBold = false,
+    messageTextSize = 'md',
+    messageOffset = null,
     frameStyle = 'none',
     locale = 'en',
   } = customization;
@@ -211,6 +213,8 @@ export function buildCartComposition(customization) {
     fontChoice,
     messageTextColor,
     messageBold,
+    messageTextSize,
+    messageOffset,
     frameStyle,
     locale,
     extras: Object.fromEntries(
