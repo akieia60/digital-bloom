@@ -1,6 +1,7 @@
 import { useMemo, useRef, useCallback } from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { getCompositionLayers } from '../lib/compositionEngine';
+import CanvasEffect from './CanvasEffect';
 import '../styles/overlays.css';
 
 /**
@@ -47,6 +48,7 @@ export default function LivePreview({
   messageBold = false,
   messageTextSize = 'md',
   ribbonColor = null,
+  frameStyle = 'none',
   occasion = null,
   messageOffset = null,
   onMessageOffsetChange = null,
@@ -54,8 +56,8 @@ export default function LivePreview({
 }) {
   const { t } = useLanguage();
   const composition = useMemo(
-    () => getCompositionLayers({ product, colorTheme, primaryColor, accentColor, extras, message, engravingStyle, fontChoice, messageTextColor, messageBold, messageTextSize }),
-    [product, colorTheme, primaryColor, accentColor, extras, message, engravingStyle, fontChoice, messageTextColor, messageBold, messageTextSize]
+    () => getCompositionLayers({ product, colorTheme, primaryColor, accentColor, extras, message, engravingStyle, fontChoice, messageTextColor, messageBold, messageTextSize, frameStyle }),
+    [product, colorTheme, primaryColor, accentColor, extras, message, engravingStyle, fontChoice, messageTextColor, messageBold, messageTextSize, frameStyle]
   );
 
   const containerRef = useRef(null);
@@ -101,7 +103,7 @@ export default function LivePreview({
     );
   }
 
-  const { baseMedia, colorFilter, overlays, textLayer, protectionLayer } = composition;
+  const { baseMedia, colorFilter, overlays, canvasEffects = [], frameStyle: composedFrameStyle, textLayer, protectionLayer } = composition;
 
   return (
     <div
@@ -153,7 +155,7 @@ export default function LivePreview({
         />
       )}
 
-      {/* Layer 2+: Dynamic Overlays */}
+      {/* Layer 2+: CSS/Video Overlays (balloon only) */}
       {overlays.map((overlay) => (
         <div
           key={overlay.id}
@@ -161,18 +163,34 @@ export default function LivePreview({
           style={{ zIndex: overlay.zIndex }}
         >
           {overlay.type === 'video' && overlay.src ? (
-            // Real asset overlay (future)
             <video
               src={overlay.src}
               autoPlay muted loop playsInline
               style={{ width: '100%', height: '100%', objectFit: 'cover' }}
             />
           ) : (
-            // CSS placeholder overlay
-            <CSSOverlay overlayId={overlay.id} themeVariant={overlay.themeVariant} ribbonColor={ribbonColor} occasion={occasion} />
+            <CSSOverlay overlayId={overlay.id} themeVariant={overlay.themeVariant} occasion={occasion} />
           )}
         </div>
       ))}
+
+      {/* Layer 3+: Premium Canvas Effects */}
+      {canvasEffects.map((effect) => (
+        <div
+          key={effect.id}
+          className="composition-layer--overlay"
+          style={{ zIndex: effect.zIndex, position: 'absolute', inset: 0, pointerEvents: 'none' }}
+        >
+          <CanvasEffect
+            effectId={effect.id}
+            accentColor={colorFilter?.accentColor || accentColor}
+            primaryColor={colorFilter?.primaryColor || primaryColor}
+          />
+        </div>
+      ))}
+
+      {/* Frame Layer — decorative borders/corners */}
+      <FrameLayer frameStyle={composedFrameStyle} accentColor={colorFilter?.accentColor || accentColor} />
 
       {/* Layer N: Text Overlay */}
       {textLayer && (
@@ -246,72 +264,110 @@ export default function LivePreview({
   );
 }
 
-/**
- * CSS-only overlay placeholders.
- * These render animated CSS effects. When real assets are loaded,
- * the parent renders a <video> instead of this component.
- */
-function CSSOverlay({ overlayId, themeVariant, ribbonColor, occasion }) {
-  switch (overlayId) {
-    case 'balloon': {
-      const labels = getBalloonLabels(occasion);
+function CSSOverlay({ overlayId, themeVariant, occasion }) {
+  if (overlayId !== 'balloon') return null;
+  const labels = getBalloonLabels(occasion);
+  return (
+    <div className={`overlay-balloon overlay-balloon--${themeVariant}`}>
+      {labels.map((label, i) => {
+        const isText = typeof label === 'string' && /[a-zA-Z]/.test(label);
+        return (
+          <span key={i} className="overlay-balloon__item">
+            🎈
+            {isText && <span className="overlay-balloon__caption">{label}</span>}
+          </span>
+        );
+      })}
+    </div>
+  );
+}
+
+const GOLD = 'rgba(212,175,55,0.72)';
+const GOLD_LINE = 'rgba(212,175,55,0.6)';
+
+function FrameLayer({ frameStyle, accentColor }) {
+  if (!frameStyle || frameStyle === 'none') return null;
+
+  const accentRgba = (opacity) => {
+    if (!accentColor || !accentColor.startsWith('#') || accentColor.length !== 7) {
+      return `rgba(212,175,55,${opacity})`;
+    }
+    const r = parseInt(accentColor.slice(1, 3), 16);
+    const g = parseInt(accentColor.slice(3, 5), 16);
+    const b = parseInt(accentColor.slice(5, 7), 16);
+    return `rgba(${r},${g},${b},${opacity})`;
+  };
+
+  const cornerStyle = (pos) => ({
+    position: 'absolute',
+    width: 28,
+    height: 28,
+    ...pos,
+    borderTop: `1.5px solid ${GOLD}`,
+    borderLeft: `1.5px solid ${GOLD}`,
+  });
+
+  switch (frameStyle) {
+    case 'goldFloral':
       return (
-        <div className={`overlay-balloon overlay-balloon--${themeVariant}`}>
-          {labels.map((label, i) => {
-            const isText = typeof label === 'string' && /[a-zA-Z]/.test(label);
-            return (
-              <span key={i} className="overlay-balloon__item">
-                🎈
-                {isText && <span className="overlay-balloon__caption">{label}</span>}
-              </span>
-            );
-          })}
+        <div style={{ position: 'absolute', inset: 0, zIndex: 35, pointerEvents: 'none' }}>
+          {/* Corner L-brackets */}
+          <div style={cornerStyle({ top: 10, left: 10, transform: 'rotate(0deg)' })} />
+          <div style={cornerStyle({ top: 10, right: 10, transform: 'rotate(90deg)' })} />
+          <div style={cornerStyle({ bottom: 10, right: 10, transform: 'rotate(180deg)' })} />
+          <div style={cornerStyle({ bottom: 10, left: 10, transform: 'rotate(270deg)' })} />
+          {/* Thin gold rule top */}
+          <div style={{ position: 'absolute', top: 10, left: '22%', right: '22%', height: 1, background: `linear-gradient(90deg, transparent, ${GOLD_LINE}, transparent)` }} />
+          {/* Thin gold rule bottom */}
+          <div style={{ position: 'absolute', bottom: 10, left: '22%', right: '22%', height: 1, background: `linear-gradient(90deg, transparent, ${GOLD_LINE}, transparent)` }} />
+        </div>
+      );
+
+    case 'velvetEdge':
+      return (
+        <div style={{
+          position: 'absolute', inset: 0, zIndex: 35, pointerEvents: 'none',
+          borderRadius: 'inherit',
+          border: `2px solid ${accentRgba(0.55)}`,
+          boxShadow: `inset 0 0 28px ${accentRgba(0.1)}`,
+        }} />
+      );
+
+    case 'modernRule':
+      return (
+        <div style={{ position: 'absolute', inset: 0, zIndex: 35, pointerEvents: 'none' }}>
+          <div style={{ position: 'absolute', top: '7%', left: '8%', right: '8%', height: 1, background: `linear-gradient(90deg, transparent, ${GOLD} 18%, ${GOLD} 82%, transparent)` }} />
+          <div style={{ position: 'absolute', bottom: '7%', left: '8%', right: '8%', height: 1, background: `linear-gradient(90deg, transparent, ${GOLD} 18%, ${GOLD} 82%, transparent)` }} />
+        </div>
+      );
+
+    case 'artDeco': {
+      const bracketSize = 30;
+      const corners = [
+        { top: 8, left: 8, rotate: 0 },
+        { top: 8, right: 8, rotate: 90 },
+        { bottom: 8, right: 8, rotate: 180 },
+        { bottom: 8, left: 8, rotate: 270 },
+      ];
+      return (
+        <div style={{ position: 'absolute', inset: 0, zIndex: 35, pointerEvents: 'none' }}>
+          {corners.map((c, i) => (
+            <div key={i} style={{ position: 'absolute', width: bracketSize, height: bracketSize, ...c, transform: `rotate(${c.rotate}deg)` }}>
+              <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 1.5, background: GOLD }} />
+              <div style={{ position: 'absolute', top: 0, left: 0, bottom: 0, width: 1.5, background: GOLD }} />
+              {/* Diamond at corner */}
+              <div style={{ position: 'absolute', top: -3.5, left: -3.5, width: 8, height: 8, background: GOLD, transform: 'rotate(45deg)' }} />
+            </div>
+          ))}
         </div>
       );
     }
 
-    case 'ribbon':
+    case 'filmBorder':
       return (
-        <div
-          className={`overlay-ribbon overlay-ribbon--${themeVariant}`}
-          style={ribbonColor ? { '--ribbon-color': ribbonColor } : undefined}
-        >
-          <div className="overlay-ribbon__border" />
-        </div>
-      );
-
-    case 'sparkle':
-      return (
-        <div className="overlay-sparkle">
-          {Array.from({ length: 10 }, (_, i) => (
-            <span key={i} className="overlay-sparkle__particle" />
-          ))}
-        </div>
-      );
-
-    case 'goldDust':
-      return (
-        <div className="overlay-gold-dust">
-          {Array.from({ length: 15 }, (_, i) => (
-            <span key={i} className="overlay-gold-dust__particle" />
-          ))}
-        </div>
-      );
-
-    case 'softGlow':
-      return (
-        <div className="overlay-soft-glow">
-          <div className="overlay-soft-glow__halo" />
-          <div className="overlay-soft-glow__flare" />
-        </div>
-      );
-
-    case 'rosePetals':
-      return (
-        <div className="overlay-rose-petals">
-          {Array.from({ length: 12 }, (_, i) => (
-            <span key={i} className="overlay-rose-petals__petal">🌸</span>
-          ))}
+        <div style={{ position: 'absolute', inset: 0, zIndex: 35, pointerEvents: 'none' }}>
+          <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '9%', background: 'linear-gradient(180deg, rgba(0,0,0,0.82), rgba(0,0,0,0.55))', borderBottom: '1px solid rgba(212,175,55,0.28)' }} />
+          <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '9%', background: 'linear-gradient(0deg, rgba(0,0,0,0.82), rgba(0,0,0,0.55))', borderTop: '1px solid rgba(212,175,55,0.28)' }} />
         </div>
       );
 

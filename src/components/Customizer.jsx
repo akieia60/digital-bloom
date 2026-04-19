@@ -1,17 +1,28 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { buildCartComposition } from '../lib/fulfillmentMapper';
-import { COLOR_PALETTES, COLOR_SWATCHES, ENGRAVING_STYLES, MESSAGE_FONT_OPTIONS, getThemeSpec } from '../lib/compositionEngine';
+import { COLOR_PALETTES, COLOR_SWATCHES, ENGRAVING_STYLES, MESSAGE_FONT_OPTIONS, CANVAS_EFFECT_META, FRAME_STYLES, getThemeSpec } from '../lib/compositionEngine';
 import { useLanguage } from '../contexts/LanguageContext';
 import OCCASIONS from '../data/occasions';
 import LivePreview from './LivePreview';
 import '../styles/customizer.css';
 
-const EXTRAS = [
-  { id: 'goldDust', icon: '✨', nameKey: 'customize_extra_gold', descriptionKey: 'customize_extra_gold_desc' },
-  { id: 'sparkle', icon: '💎', nameKey: 'customize_extra_sparkle', descriptionKey: 'customize_extra_sparkle_desc' },
-  { id: 'ribbon', icon: '🎀', nameKey: 'customize_extra_ribbon', descriptionKey: 'customize_extra_ribbon_desc' },
-  { id: 'softGlow', icon: '🕯️', nameKey: 'customize_extra_glow', descriptionKey: 'customize_extra_glow_desc' },
-  { id: 'rosePetals', icon: '🌹', nameKey: 'customize_extra_petals', descriptionKey: 'customize_extra_petals_desc' },
+// Premium canvas-rendered effects — replaces old emoji/CSS extras
+const EFFECTS = [
+  { id: 'luminaraDrift',      icon: '✦', label: 'Luminous Gold',  description: 'Glowing gold particles that drift upward like suspended dust' },
+  { id: 'bokehBloom',         icon: '◉', label: 'Bokeh Bloom',    description: 'Soft out-of-focus light orbs, like a luxury film backdrop' },
+  { id: 'lightVeil',          icon: '╱', label: 'Light Veil',     description: 'Slow-sweeping god rays washing gently across the scene' },
+  { id: 'silkPetals',         icon: '◇', label: 'Silk Petals',    description: 'Translucent canvas-drawn petals drifting down' },
+  { id: 'constellationDrift', icon: '⬡', label: 'Constellation',  description: 'Star points connecting into a fine jewelry motif' },
+  { id: 'dewShimmer',         icon: '⬥', label: 'Dew Shimmer',    description: 'Light catching on invisible surfaces, fading in and out' },
+];
+
+const FRAME_OPTIONS = [
+  { id: 'none',       label: 'None',           description: 'Clean, unframed' },
+  { id: 'goldFloral', label: 'Gold Botanical', description: 'Delicate corner flourishes' },
+  { id: 'velvetEdge', label: 'Velvet Edge',    description: 'Glowing border in your accent color' },
+  { id: 'modernRule', label: 'Modern Rule',    description: 'Thin gold lines top and bottom' },
+  { id: 'artDeco',    label: 'Art Deco',       description: 'Geometric corner brackets' },
+  { id: 'filmBorder', label: 'Cinematic',      description: 'Letterbox editorial frame' },
 ];
 
 const SOUND_TRACKS = [
@@ -74,13 +85,15 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
   const [primaryColor, setPrimaryColor] = useState(initialPalette.primaryColor);
   const [accentColor, setAccentColor] = useState(initialPalette.accentColor);
   const [extras, setExtras] = useState({
-    ribbon: false,
-    sparkle: false,
-    goldDust: false,
-    softGlow: false,
-    rosePetals: false,
+    luminaraDrift: false,
+    bokehBloom: false,
+    lightVeil: false,
+    silkPetals: false,
+    constellationDrift: false,
+    dewShimmer: false,
     ...(stateDefaults.extras || {}),
   });
+  const [frameStyle, setFrameStyle] = useState(stateDefaults.frameStyle || 'none');
   const [selectedSound, setSelectedSound] = useState(stateDefaults.selectedSound || stateDefaults.sound || '');
   const [engravingStyle, setEngravingStyle] = useState(stateDefaults.engravingStyle || 'heirloom');
   const [fontChoice, setFontChoice] = useState(stateDefaults.fontChoice || 'playfair');
@@ -135,10 +148,17 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
       if (editData.ribbonColor || editData.composition?.ribbonColor) {
         setRibbonColor(editData.ribbonColor || editData.composition?.ribbonColor || null);
       }
-      if (editData.composition?.activeOverlays) {
-        const newExtras = { ribbon: false, sparkle: false, goldDust: false, softGlow: false, rosePetals: false, balloon: false };
-        editData.composition.activeOverlays.forEach(o => { if (o in newExtras) newExtras[o] = true; });
+      if (editData.composition?.activeOverlays || editData.extras) {
+        const newExtras = { luminaraDrift: false, bokehBloom: false, lightVeil: false, silkPetals: false, constellationDrift: false, dewShimmer: false };
+        const source = editData.extras || {};
+        Object.keys(newExtras).forEach(k => { if (source[k]) newExtras[k] = true; });
+        if (editData.composition?.activeOverlays) {
+          editData.composition.activeOverlays.forEach(o => { if (o in newExtras) newExtras[o] = true; });
+        }
         setExtras(newExtras);
+      }
+      if (editData.frameStyle || editData.composition?.frameStyle) {
+        setFrameStyle(editData.frameStyle || editData.composition?.frameStyle || 'none');
       }
     }
   }, [editData, initialPalette.accentColor, initialPalette.primaryColor, isOpen]);
@@ -369,7 +389,7 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
       messageBold,
       messageTextSize,
       messageOffset,
-      ribbonColor,
+      frameStyle,
       locale: lang,
     });
     // Stop audio on complete
@@ -388,17 +408,17 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
       messageBold,
       messageTextSize,
       messageOffset,
-      ribbonColor,
+      frameStyle,
       locale: lang,
       totalPrice,
       composition,
     });
     onClose();
-  }, [isProductValid, product, message, colorTheme, primaryColor, accentColor, extras, selectedSound, engravingStyle, fontChoice, messageTextColor, messageBold, messageTextSize, messageOffset, ribbonColor, lang, totalPrice, themeStyle, stopAllAudio, onComplete, onClose]);
+  }, [isProductValid, product, message, colorTheme, primaryColor, accentColor, extras, selectedSound, engravingStyle, fontChoice, messageTextColor, messageBold, messageTextSize, messageOffset, frameStyle, lang, totalPrice, themeStyle, stopAllAudio, onComplete, onClose]);
 
   const selectedExtras = useMemo(
-    () => EXTRAS.filter((extra) => extras[extra.id]).map((extra) => t(extra.nameKey)),
-    [extras, t]
+    () => EFFECTS.filter((effect) => extras[effect.id]).map((effect) => effect.label),
+    [extras]
   );
 
   const recommendedPalettes = useMemo(
@@ -473,7 +493,7 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
               messageTextColor={messageTextColor}
               messageBold={messageBold}
               messageTextSize={messageTextSize}
-              ribbonColor={ribbonColor}
+              frameStyle={frameStyle}
               messageOffset={messageOffset}
               onMessageOffsetChange={setMessageOffset}
               className="composition-preview--square"
@@ -830,6 +850,7 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
               <p className="customizer-palette-card__hint">{t('customize_color_accent_hint')}</p>
             </div>
 
+            {/* Engraving finish */}
             <div className="customizer-section__subgroup" style={{ marginTop: '18px' }}>
               <div className="customizer-label" style={{ marginBottom: '10px', display: 'block' }}>{t('customize_engraving_finish')}</div>
               <div className="extras-grid">
@@ -855,6 +876,41 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
                 ))}
               </div>
             </div>
+
+            {/* Frame / Border picker */}
+            <div className="customizer-section__subgroup" style={{ marginTop: '22px' }}>
+              <div className="customizer-label" style={{ marginBottom: '10px', display: 'block' }}>Video Frame</div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
+                {FRAME_OPTIONS.map((frame) => (
+                  <button
+                    key={frame.id}
+                    type="button"
+                    onClick={() => setFrameStyle(frame.id)}
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'flex-start',
+                      gap: '3px',
+                      padding: '10px 12px',
+                      borderRadius: '12px',
+                      border: `2px solid ${frameStyle === frame.id ? '#D4AF37' : 'rgba(255,255,255,0.1)'}`,
+                      background: frameStyle === frame.id ? 'rgba(212,175,55,0.1)' : 'rgba(255,255,255,0.04)',
+                      cursor: 'pointer',
+                      transition: 'all 0.18s',
+                      textAlign: 'left',
+                    }}
+                    aria-pressed={frameStyle === frame.id}
+                  >
+                    <span style={{ fontFamily: 'Outfit, sans-serif', fontSize: '0.85rem', fontWeight: '600', color: frameStyle === frame.id ? '#D4AF37' : '#FFFFFF', letterSpacing: '0.02em' }}>
+                      {frame.label}
+                    </span>
+                    <span style={{ fontFamily: 'Outfit, sans-serif', fontSize: '0.72rem', color: 'rgba(255,255,255,0.45)', lineHeight: 1.3 }}>
+                      {frame.description}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
             </>
           )}
@@ -864,96 +920,37 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
           <div className="customizer-section">
             <div className="customizer-section__header">
               <span className="customizer-section__number">3</span>
-              <h3 className="customizer-section__title">{t('customize_extras')}</h3>
+              <h3 className="customizer-section__title">Live Effects</h3>
             </div>
+            <p style={{ fontSize: '12px', color: 'rgba(255,255,255,0.4)', marginBottom: '14px', letterSpacing: '0.02em', fontFamily: 'Outfit, sans-serif' }}>
+              Canvas-rendered — watch them appear on your preview in real time. Mix and match.
+            </p>
             <div className="extras-grid">
-              {EXTRAS.map(extra => (
-                <button key={extra.id} type="button"
-                  className={`extra-toggle ${extras[extra.id] ? 'extra-toggle--active' : ''}`}
-                  onClick={() => toggleExtra(extra.id)}
-                  aria-pressed={extras[extra.id]}
-                  aria-label={t(extra.nameKey)}>
+              {EFFECTS.map(effect => (
+                <button
+                  key={effect.id}
+                  type="button"
+                  className={`extra-toggle ${extras[effect.id] ? 'extra-toggle--active' : ''}`}
+                  onClick={() => toggleExtra(effect.id)}
+                  aria-pressed={extras[effect.id]}
+                  aria-label={effect.label}
+                >
                   <div className="extra-toggle__info">
-                    <span className="extra-toggle__icon" aria-hidden="true">{extra.icon}</span>
+                    <span className="extra-toggle__icon" aria-hidden="true" style={{ fontStyle: 'normal', fontSize: '1rem', minWidth: '20px', textAlign: 'center' }}>{effect.icon}</span>
                     <div>
-                      <span className="extra-toggle__name">{t(extra.nameKey)}</span>
-                      <div className="extra-toggle__description">{t(extra.descriptionKey)}</div>
+                      <span className="extra-toggle__name">{effect.label}</span>
+                      <div className="extra-toggle__description">{effect.description}</div>
                     </div>
                   </div>
                   <span className="toggle-switch" aria-hidden="true">
-                    <input type="checkbox" tabIndex={-1} checked={extras[extra.id]} readOnly />
+                    <input type="checkbox" tabIndex={-1} checked={!!extras[effect.id]} readOnly />
                     <span className="toggle-switch__slider" />
                   </span>
                 </button>
               ))}
             </div>
 
-            {/* Ribbon color picker — only shown when ribbon is toggled on */}
-            {extras.ribbon && (
-              <div className="customizer-field" style={{ marginTop: '20px' }}>
-                <label className="customizer-label">{t('customize_ribbon_color_label')}</label>
-                <div className="customizer-color-swatches">
-                  {[
-                    { hex: null, label: 'Theme default' },
-                    { hex: '#FFFFFF', label: t('customize_color_white') },
-                    { hex: '#F5E6CC', label: t('customize_color_cream') },
-                    { hex: '#D4AF37', label: t('customize_color_gold') },
-                    { hex: '#F2A8B8', label: t('customize_color_blush') },
-                    { hex: '#A8D0F0', label: t('customize_color_sky') },
-                    { hex: '#A8D8B0', label: t('customize_color_sage') },
-                    { hex: '#C8AEE8', label: t('customize_color_lavender') },
-                    { hex: '#F4C4A0', label: t('customize_color_peach') },
-                    { hex: '#1D1D1F', label: t('customize_color_charcoal') },
-                    { hex: '#1B2A4A', label: t('customize_color_navy') },
-                    { hex: '#4A5568', label: t('customize_color_slate') },
-                    { hex: '#5C1A2A', label: t('customize_color_burgundy') },
-                    { hex: '#1A3C2A', label: t('customize_color_forest') },
-                    { hex: '#8B7355', label: t('customize_color_bronze') },
-                    { hex: '#C8CDD6', label: t('customize_color_silver') },
-                  ].map(({ hex, label }) => (
-                    hex === null ? (
-                      /* "Theme default" swatch — shows the current accent color */
-                      <button
-                        key="theme-default"
-                        type="button"
-                        aria-label={label}
-                        title={label}
-                        onClick={() => setRibbonColor(null)}
-                        style={{
-                          width: '32px', height: '32px', borderRadius: '50%',
-                          background: `conic-gradient(#C53A5C, #D4AF37, #2D5B9F, #137A63, #C53A5C)`,
-                          border: '1.5px solid rgba(255,255,255,0.18)', cursor: 'pointer', flexShrink: 0,
-                          boxShadow: ribbonColor === null
-                            ? '0 0 0 2px #0D1B36, 0 0 0 4px #D4AF37'
-                            : '0 1px 4px rgba(0,0,0,0.3)',
-                          transform: ribbonColor === null ? 'scale(1.15)' : 'scale(1)',
-                          transition: 'box-shadow 0.15s, transform 0.15s',
-                        }}
-                      />
-                    ) : (
-                      <button
-                        key={hex}
-                        type="button"
-                        aria-label={label}
-                        title={label}
-                        onClick={() => setRibbonColor(hex)}
-                        style={{
-                          width: '32px', height: '32px', borderRadius: '50%',
-                          background: hex, border: '1.5px solid rgba(255,255,255,0.18)', cursor: 'pointer', flexShrink: 0,
-                          boxShadow: ribbonColor === hex
-                            ? `0 0 0 2px #0D1B36, 0 0 0 4px ${hex === '#1D1D1F' || hex === '#1B2A4A' || hex === '#1A3C2A' ? '#D4AF37' : hex}`
-                            : '0 1px 4px rgba(0,0,0,0.3)',
-                          transform: ribbonColor === hex ? 'scale(1.15)' : 'scale(1)',
-                          transition: 'box-shadow 0.15s, transform 0.15s',
-                        }}
-                      />
-                    )
-                  ))}
-                </div>
-              </div>
-            )}
-
-            <div className="customizer-sound-summary">
+            <div className="customizer-sound-summary" style={{ marginTop: '18px' }}>
               <span className="customizer-sound-summary__label">{t('customize_review_effects')}</span>
               <span className="customizer-sound-summary__value">
                 {selectedExtras.length > 0 ? selectedExtras.join(', ') : t('customize_extras_selected_none')}
@@ -978,6 +975,7 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
                 <div className="review-row"><span className="review-label">{t('customize_review_palette')}</span><span className="review-value">{primaryColor} · {accentColor}</span></div>
                 <div className="review-row"><span className="review-label">{t('customize_review_engraving')}</span><span className="review-value">{t(`customize_engraving_${engravingStyle}`)}</span></div>
                 <div className="review-row"><span className="review-label">{t('customize_review_font')}</span><span className="review-value">{fontOptions.find((option) => option.id === fontChoice)?.label || t('customize_font_playfair')}</span></div>
+                <div className="review-row"><span className="review-label">Frame</span><span className="review-value">{FRAME_OPTIONS.find(f => f.id === frameStyle)?.label || 'None'}</span></div>
                 <div className="review-row"><span className="review-label">{t('customize_review_effects')}</span><span className="review-value">{selectedExtras.join(', ') || t('customize_extras_selected_none')}</span></div>
                 <div className="review-row"><span className="review-label">{t('customize_review_sound')}</span><span className="review-value">{SOUND_TRACKS.find((track) => track.id === selectedSound) ? t(SOUND_TRACKS.find((track) => track.id === selectedSound).nameKey) : t('customize_sound_none')}</span></div>
                 <div className="review-row"><span className="review-label">{t('customize_review_protection')}</span><span className="review-value">{t('customize_review_protection_value')}</span></div>
