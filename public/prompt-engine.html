@@ -981,10 +981,9 @@ async function syncLiveFromServer(){
     if(!Array.isArray(products)) return;
     serverLiveSlugs = {};
     products.forEach(p => { if(p.slug) serverLiveSlugs[p.slug] = p; });
-    // Also back-fill localStorage so it stays warm across page loads
+    // Product slugs are the prompt pid (e.g. 'bday-1', 'md-a1') — match directly
     PROMPTS.forEach(p => {
-      const slug = slugify(p.title);
-      if(serverLiveSlugs[slug]) { live[p.id] = true; }
+      if(serverLiveSlugs[p.id]) { live[p.id] = true; }
     });
     saveLive(live);
     serverLoaded = true;
@@ -996,8 +995,8 @@ async function syncLiveFromServer(){
 }
 
 function isLiveOnSite(p){
-  // Server check first (most accurate), fall back to localStorage
-  return !!serverLiveSlugs[slugify(p.title)] || !!live[p.id];
+  // Product slugs in Supabase are the prompt pid — match directly
+  return !!serverLiveSlugs[p.id] || !!live[p.id];
 }
 
 function init(){
@@ -1082,7 +1081,7 @@ function cardHTML(p){
 
   let bottomZone;
   if(liveOnSite){
-    const siteProduct = serverLiveSlugs[slugify(p.title)];
+    const siteProduct = serverLiveSlugs[p.id];
     const priceLabel = siteProduct ? ` · $${parseFloat(siteProduct.price||0).toFixed(2)}` : '';
     bottomZone = `
       <div class="upload-live-badge">
