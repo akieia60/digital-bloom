@@ -427,14 +427,8 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
   );
 
   const fontOptions = useMemo(
-    () => [
-      { id: 'playfair', label: t('customize_font_playfair') },
-      { id: 'outfit', label: t('customize_font_outfit') },
-      { id: 'arialBold', label: t('customize_font_arial') },
-      { id: 'greatVibes', label: t('customize_font_greatvibes') },
-      { id: 'dancingScript', label: t('customize_font_dancing') },
-    ],
-    [t]
+    () => Object.entries(MESSAGE_FONT_OPTIONS).map(([id, spec]) => ({ id, label: spec.label })),
+    []
   );
 
   const goNext = () => setActiveStep((prev) => Math.min(prev + 1, FLOW_STEPS.length));
@@ -879,7 +873,7 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
 
             {/* Frame / Border picker */}
             <div className="customizer-section__subgroup" style={{ marginTop: '22px' }}>
-              <div className="customizer-label" style={{ marginBottom: '10px', display: 'block' }}>Video Frame</div>
+              <div className="customizer-label" style={{ marginBottom: '10px', display: 'block', color: '#1D1D1F' }}>Video Frame</div>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
                 {FRAME_OPTIONS.map((frame) => (
                   <button
@@ -893,18 +887,18 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
                       gap: '3px',
                       padding: '10px 12px',
                       borderRadius: '12px',
-                      border: `2px solid ${frameStyle === frame.id ? '#D4AF37' : 'rgba(255,255,255,0.1)'}`,
-                      background: frameStyle === frame.id ? 'rgba(212,175,55,0.1)' : 'rgba(255,255,255,0.04)',
+                      border: `2px solid ${frameStyle === frame.id ? '#D4AF37' : 'rgba(13,27,54,0.18)'}`,
+                      background: frameStyle === frame.id ? 'rgba(212,175,55,0.1)' : 'rgba(13,27,54,0.04)',
                       cursor: 'pointer',
                       transition: 'all 0.18s',
                       textAlign: 'left',
                     }}
                     aria-pressed={frameStyle === frame.id}
                   >
-                    <span style={{ fontFamily: 'Outfit, sans-serif', fontSize: '0.85rem', fontWeight: '600', color: frameStyle === frame.id ? '#D4AF37' : '#FFFFFF', letterSpacing: '0.02em' }}>
+                    <span style={{ fontFamily: 'Outfit, sans-serif', fontSize: '0.85rem', fontWeight: '600', color: frameStyle === frame.id ? '#D4AF37' : '#1D1D1F', letterSpacing: '0.02em' }}>
                       {frame.label}
                     </span>
-                    <span style={{ fontFamily: 'Outfit, sans-serif', fontSize: '0.72rem', color: 'rgba(255,255,255,0.45)', lineHeight: 1.3 }}>
+                    <span style={{ fontFamily: 'Outfit, sans-serif', fontSize: '0.72rem', color: '#6E6E73', lineHeight: 1.3 }}>
                       {frame.description}
                     </span>
                   </button>
