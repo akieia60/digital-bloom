@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { buildCartComposition } from '../lib/fulfillmentMapper';
-import { COLOR_PALETTES, COLOR_SWATCHES, ENGRAVING_STYLES, MESSAGE_FONT_OPTIONS, CANVAS_EFFECT_META, FRAME_STYLES, getThemeSpec } from '../lib/compositionEngine';
+import { COLOR_PALETTES, ENGRAVING_STYLES, MESSAGE_FONT_OPTIONS, CANVAS_EFFECT_META, FRAME_STYLES, getThemeSpec } from '../lib/compositionEngine';
 import { useLanguage } from '../contexts/LanguageContext';
 import OCCASIONS from '../data/occasions';
 import LivePreview from './LivePreview';
@@ -225,15 +225,6 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
     setAccentColor(palette.accentColor);
   }, []);
 
-  const applyColorSwatch = useCallback((kind, hex) => {
-    setColorTheme('custom');
-    if (kind === 'primary') {
-      setPrimaryColor(hex);
-      return;
-    }
-    setAccentColor(hex);
-  }, []);
-
   // Web Audio API fallback — plays a pleasant chord when no MP3 file exists yet
   const webAudioCtxRef = useRef(null);
   const playWebAudioTone = useCallback((trackId) => {
@@ -421,8 +412,10 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
     [extras]
   );
 
-  const recommendedPalettes = useMemo(
-    () => ['original', 'warm', 'cool', 'elegant', 'romantic'].map((id) => ({ id, ...COLOR_PALETTES[id] })),
+  const allPalettes = useMemo(
+    () => Object.entries(COLOR_PALETTES)
+      .filter(([id]) => id !== 'custom')
+      .map(([id, spec]) => ({ id, ...spec })),
     []
   );
 
@@ -778,70 +771,36 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
               <span className="customizer-section__number">2</span>
               <h3 className="customizer-section__title">{t('customize_style')}</h3>
             </div>
-            <div className="customizer-label customizer-label--caps">{t('customize_palette_recommended')}</div>
-            <div className="theme-grid theme-grid--palette" role="radiogroup" aria-label="Recommended palettes">
-              {recommendedPalettes.map((theme) => (
+            <div className="customizer-label customizer-label--caps" style={{ marginBottom: '10px' }}>Color Mood</div>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
+              {allPalettes.map((palette) => (
                 <button
-                  key={theme.id}
+                  key={palette.id}
                   type="button"
-                  role="radio"
-                  aria-checked={colorTheme === theme.id}
-                  className={`theme-swatch ${colorTheme === theme.id ? 'active' : ''}`}
-                  onClick={() => applyPalette(theme.id)}
+                  onClick={() => applyPalette(palette.id)}
+                  aria-pressed={colorTheme === palette.id}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '10px',
+                    padding: '10px 12px',
+                    borderRadius: '12px',
+                    border: `2px solid ${colorTheme === palette.id ? '#D4AF37' : 'rgba(13,27,54,0.18)'}`,
+                    background: colorTheme === palette.id ? 'rgba(212,175,55,0.1)' : 'rgba(13,27,54,0.04)',
+                    cursor: 'pointer',
+                    transition: 'all 0.18s',
+                    textAlign: 'left',
+                  }}
                 >
-                  <div className="theme-colors">
-                    <span style={{ background: theme.primaryColor }} />
-                    <span style={{ background: theme.accentColor }} />
+                  <div style={{ display: 'flex', gap: '4px', flexShrink: 0 }}>
+                    <span style={{ width: '16px', height: '16px', borderRadius: '50%', background: palette.primaryColor, display: 'inline-block', border: '1px solid rgba(0,0,0,0.1)' }} />
+                    <span style={{ width: '16px', height: '16px', borderRadius: '50%', background: palette.accentColor, display: 'inline-block', border: '1px solid rgba(0,0,0,0.1)' }} />
                   </div>
-                  <span className="theme-name">{t(theme.nameKey)}</span>
+                  <span style={{ fontFamily: 'Outfit, sans-serif', fontSize: '0.82rem', fontWeight: '600', color: colorTheme === palette.id ? '#D4AF37' : '#1D1D1F', letterSpacing: '0.02em', lineHeight: 1.2 }}>
+                    {palette.label}
+                  </span>
                 </button>
               ))}
-            </div>
-
-            <div className="customizer-palette-card">
-              <div className="customizer-palette-card__header">
-                <span>{t('customize_color_primary')}</span>
-                <span>{primaryColor}</span>
-              </div>
-              <div className="color-swatch-row">
-                {COLOR_SWATCHES.map((swatch) => (
-                  <button
-                    key={`primary-${swatch.id}`}
-                    type="button"
-                    className={`color-chip ${primaryColor === swatch.hex ? 'color-chip--active' : ''}`}
-                    onClick={() => applyColorSwatch('primary', swatch.hex)}
-                    aria-label={`${t('customize_color_primary')}: ${t(swatch.nameKey)}`}
-                    title={t(swatch.nameKey)}
-                    style={{ '--chip-color': swatch.hex }}
-                  >
-                    <span className="sr-only">{t(swatch.nameKey)}</span>
-                  </button>
-                ))}
-              </div>
-              <p className="customizer-palette-card__hint">{t('customize_color_primary_hint')}</p>
-            </div>
-
-            <div className="customizer-palette-card">
-              <div className="customizer-palette-card__header">
-                <span>{t('customize_color_accent')}</span>
-                <span>{accentColor}</span>
-              </div>
-              <div className="color-swatch-row">
-                {COLOR_SWATCHES.map((swatch) => (
-                  <button
-                    key={`accent-${swatch.id}`}
-                    type="button"
-                    className={`color-chip ${accentColor === swatch.hex ? 'color-chip--active' : ''}`}
-                    onClick={() => applyColorSwatch('accent', swatch.hex)}
-                    aria-label={`${t('customize_color_accent')}: ${t(swatch.nameKey)}`}
-                    title={t(swatch.nameKey)}
-                    style={{ '--chip-color': swatch.hex }}
-                  >
-                    <span className="sr-only">{t(swatch.nameKey)}</span>
-                  </button>
-                ))}
-              </div>
-              <p className="customizer-palette-card__hint">{t('customize_color_accent_hint')}</p>
             </div>
 
             {/* Engraving finish */}
