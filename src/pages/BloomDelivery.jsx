@@ -225,6 +225,7 @@ export default function BloomDelivery() {
                     </div>
                   ))}
                 </div>
+                <div className="db-watermark-corner">Digital Bloom™</div>
               </div>
             </div>
           ) : (
@@ -260,7 +261,7 @@ export default function BloomDelivery() {
                     </div>
                   ))}
                 </div>
-                <div className="db-watermark-corner">© Digital Bloom</div>
+                <div className="db-watermark-corner">Digital Bloom™</div>
               </div>
             </div>
           )}
