@@ -84,7 +84,11 @@ body{font-family:'Outfit',sans-serif;background:var(--navy);color:var(--white);m
 
 /* UPLOAD ZONE */
 .upload-zone{padding:0 12px 14px;display:flex;flex-direction:column;gap:6px}
-.upload-live-badge{margin:0 12px 14px;padding:8px 14px;background:rgba(34,197,94,0.12);border:1px solid rgba(34,197,94,0.3);border-radius:10px;color:var(--green);font-size:0.75rem;font-weight:700;text-align:center}
+.upload-live-badge{margin:0 12px 8px;padding:8px 14px;background:rgba(34,197,94,0.12);border:1px solid rgba(34,197,94,0.3);border-radius:10px;color:var(--green);font-size:0.75rem;font-weight:700;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.upload-live-badge__label{display:flex;align-items:center;gap:6px}
+.btn-update-version{padding:5px 12px;background:rgba(212,175,55,0.12);border:1px solid var(--gold3);border-radius:7px;color:var(--gold);font-size:0.68rem;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:all 0.2s;white-space:nowrap;flex-shrink:0}
+.btn-update-version:hover{background:rgba(212,175,55,0.28)}
+.update-zone{padding:0 12px 10px;display:flex;flex-direction:column;gap:5px}
 .btn-upload{width:100%;padding:10px 0;background:rgba(212,175,55,0.08);border:1px dashed var(--gold3);border-radius:10px;color:var(--gold);font-size:0.78rem;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:all 0.2s;text-align:center}
 .btn-upload:hover{background:rgba(212,175,55,0.18);border-color:var(--gold)}
 .btn-upload:disabled{opacity:0.45;cursor:not-allowed}
@@ -961,14 +965,45 @@ const uploadStates = {}; // in-memory upload state so renders don't reset progre
 
 let done = getDone();
 let live = getLive();
+let serverLiveSlugs = {}; // keyed by slug → product data, loaded from Supabase
+let serverLoaded = false;
 let currentCat = 'All';
 let searchQ = '';
 
 const categories = ['All', ...new Set(PROMPTS.map(p=>p.cat))];
 
+// Load live products from the server and merge with localStorage
+async function syncLiveFromServer(){
+  try {
+    const res = await fetch('/api/list-products');
+    if(!res.ok) return;
+    const { products } = await res.json();
+    if(!Array.isArray(products)) return;
+    serverLiveSlugs = {};
+    products.forEach(p => { if(p.slug) serverLiveSlugs[p.slug] = p; });
+    // Also back-fill localStorage so it stays warm across page loads
+    PROMPTS.forEach(p => {
+      const slug = slugify(p.title);
+      if(serverLiveSlugs[slug]) { live[p.id] = true; }
+    });
+    saveLive(live);
+    serverLoaded = true;
+    render();
+  } catch(e) {
+    // Silently fall back to localStorage — server may be unreachable
+    serverLoaded = true;
+  }
+}
+
+function isLiveOnSite(p){
+  // Server check first (most accurate), fall back to localStorage
+  return !!serverLiveSlugs[slugify(p.title)] || !!live[p.id];
+}
+
 function init(){
   buildCats();
   render();
+  syncLiveFromServer();
   document.getElementById('search').addEventListener('input', e=>{
     searchQ = e.target.value.toLowerCase();
     render();
@@ -1035,12 +1070,44 @@ function render(){
 
 function cardHTML(p){
   const isDone = !!done[p.id];
-  const isLive = !!live[p.id];
+  const liveOnSite = isLiveOnSite(p);
   const st = uploadStates[p.id];
-  // Encode title/cat as URI components so ANY character (quotes, dashes, emoji) is safe
-  // inside the onclick/onchange HTML attributes.
   const encTitle = encodeURIComponent(p.title).replace(/'/g, "%27");
   const encCat   = encodeURIComponent(p.cat).replace(/'/g, "%27");
+
+  // Hidden file input — shared for both first upload and re-upload
+  const fileInput = `<input type="file" accept="video/*" id="file-${p.id}"
+    style="position:fixed;top:-999px;left:-999px;width:1px;height:1px;opacity:0"
+    onchange="handleUpload('${p.id}','${encTitle}','${encCat}',this)">`;
+
+  let bottomZone;
+  if(liveOnSite){
+    const siteProduct = serverLiveSlugs[slugify(p.title)];
+    const priceLabel = siteProduct ? ` · $${parseFloat(siteProduct.price||0).toFixed(2)}` : '';
+    bottomZone = `
+      <div class="upload-live-badge">
+        <span class="upload-live-badge__label">✅ Live on digitalbloom.store${priceLabel}</span>
+        <button class="btn-update-version" onclick="document.getElementById('file-${p.id}').click()" title="Replace the video with a new version">↑ New Version</button>
+      </div>
+      <div class="update-zone">
+        ${fileInput}
+        <div class="upload-status ${st||''}" id="status-${p.id}">
+          ${st==='uploading'?'⬆️ Uploading new version…':st==='processing'?'🔥 Processing…':st==='error'?'❌ Upload failed — tap to retry':''}
+        </div>
+      </div>`;
+  } else {
+    bottomZone = `
+      <div class="upload-zone">
+        ${fileInput}
+        <button class="btn-upload" id="uploadbtn-${p.id}" ${st&&st!=='error'?'disabled':''} onclick="document.getElementById('file-${p.id}').click()">
+          ${st==='uploading'?'⬆️ Uploading…':st==='processing'?'🔥 Processing…':'📤 Upload Bloom'}
+        </button>
+        <div class="upload-status ${st||''}" id="status-${p.id}">
+          ${st==='uploading'?'Sending to server…':st==='processing'?'Watermarking & publishing…':st==='error'?'❌ Upload failed — tap to retry':''}
+        </div>
+      </div>`;
+  }
+
   return `
   <div class="card${isDone?' done':''}" id="card-${p.id}">
     <div class="card-header">
@@ -1054,20 +1121,7 @@ function cardHTML(p){
     <div class="scenes">
       ${p.scenes.map((s,i)=>sceneHTML(p.id,i,s)).join('')}
     </div>
-    ${isLive
-      ? `<div class="upload-live-badge">✅ Live on digitalbloom.store</div>`
-      : `<div class="upload-zone">
-           <input type="file" accept="video/*" id="file-${p.id}"
-             style="position:fixed;top:-999px;left:-999px;width:1px;height:1px;opacity:0"
-             onchange="handleUpload('${p.id}','${encTitle}','${encCat}',this)">
-           <button class="btn-upload" id="uploadbtn-${p.id}" ${st&&st!=='error'?'disabled':''} onclick="document.getElementById('file-${p.id}').click()">
-             ${st==='uploading'?'⬆️ Uploading…':st==='processing'?'🔥 Processing…':'📤 Upload Bloom'}
-           </button>
-           <div class="upload-status ${st||''}" id="status-${p.id}">
-             ${st==='uploading'?'Sending to server…':st==='processing'?'Watermarking & publishing…':st==='error'?'Upload failed — tap to retry':''}
-           </div>
-         </div>`
-    }
+    ${bottomZone}
   </div>`;
 }
 
