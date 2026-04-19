@@ -245,6 +245,9 @@ export default function BloomDelivery() {
                 fontChoice={delivery.fontChoice}
                 messageTextColor={delivery.messageTextColor}
                 messageBold={delivery.messageBold}
+                messageTextSize={delivery.messageTextSize || 'md'}
+                frameStyle={delivery.frameStyle || 'none'}
+                messageOffset={delivery.messageOffset || null}
                 occasion={delivery.category || null}
                 className="bloom-delivery__preview"
               />
