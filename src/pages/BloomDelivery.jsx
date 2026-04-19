@@ -187,9 +187,9 @@ export default function BloomDelivery() {
   };
   const hasMessage = Boolean(message.short);
 
-  const protectedVideoUrl = delivery?.downloadUrl && delivery?.downloadExpiresAt
-    ? (new Date(delivery.downloadExpiresAt).getTime() > Date.now() ? delivery.downloadUrl : null)
-    : null;
+  // Expiration is already enforced by resolveBloomDelivery (returns EXPIRED
+  // status before we get here), so presence of downloadUrl is sufficient.
+  const protectedVideoUrl = delivery?.downloadUrl || null;
 
   return (
     <div className="bloom-delivery">
@@ -209,6 +209,11 @@ export default function BloomDelivery() {
                 controls={false}
                 preload="auto"
               />
+              {/* Server-rendered MP4 already has the Digital Bloom stamp, the
+                  "From {name}" label, and the diagonal © watermark baked in by
+                  renderBloom.js's createOverlayImage. We only add the CSS grid
+                  as a lightweight extra protection layer; do NOT re-draw the
+                  brand pill or sender — that causes visible duplication. */}
               <div className="db-watermark-overlay" aria-hidden="true">
                 <div className="db-watermark-grid">
                   {Array.from({ length: 12 }, (_, i) => (
@@ -220,24 +225,6 @@ export default function BloomDelivery() {
                     </div>
                   ))}
                 </div>
-                <div className="db-watermark-corner">© Digital Bloom</div>
-              </div>
-              {/* Brand lockup — Digital Bloom™ chip + FROM slot */}
-              <div className="composition-brand-rail" aria-hidden="true" />
-              <div
-                className="composition-brand-lockup composition-brand-lockup--heirloom"
-                style={{ position: 'absolute', bottom: '5.2%', left: '6.4%', right: '6.4%', zIndex: 55 }}
-                aria-hidden="true"
-              >
-                <div className="composition-brand-chip" style={{ color: '#D4AF37' }}>
-                  <span className="composition-brand-chip__text">Digital Bloom</span>
-                  <span className="composition-brand-chip__tm">™</span>
-                </div>
-                {message.fromName && (
-                  <div className="composition-brand-lockup__sender" style={{ color: 'rgba(255,255,255,0.92)' }}>
-                    From {message.fromName}
-                  </div>
-                )}
               </div>
             </div>
           ) : (
@@ -278,6 +265,20 @@ export default function BloomDelivery() {
             </div>
           )}
         </div>
+
+        {/* ── Bloom Identity — category + name ── */}
+        {(delivery?.category || delivery?.productName) && (
+          <div className="bloom-delivery__identity">
+            {delivery?.category && (
+              <span className="bloom-delivery__identity-category">
+                {String(delivery.category).replace(/-/g, ' ')}
+              </span>
+            )}
+            {delivery?.productName && (
+              <h1 className="bloom-delivery__identity-name">{delivery.productName}</h1>
+            )}
+          </div>
+        )}
 
         {/* ── Message Reveal ── */}
         {hasMessage && (

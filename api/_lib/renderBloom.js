@@ -466,20 +466,20 @@ async function createOverlayImage(destination, {
   const stampBoxH = height * 0.05;
 
   roundRect(ctx, stampBoxX, stampBoxY, stampBoxW, stampBoxH, 18);
-  ctx.fillStyle = rgba(primaryColor, 0.40);
+  ctx.fillStyle = 'rgba(6, 14, 26, 0.88)';
   ctx.fill();
-  ctx.strokeStyle = rgba(accentColor, 0.32);
-  ctx.lineWidth = 1;
+  ctx.strokeStyle = rgba(accentColor, 0.72);
+  ctx.lineWidth = 1.5;
   ctx.stroke();
 
-  ctx.fillStyle = rgba(accentColor, 0.98);
+  ctx.fillStyle = '#E8C45A';
   ctx.fillText(stampText, stampBoxX + 13, height * 0.905);
 
   // ── Full-frame repeating diagonal watermark grid ──
   // Covers the entire frame at -35° so any crop still shows the mark.
   ctx.save();
   ctx.font = `italic 600 ${Math.round(height * 0.026)}px Georgia`;
-  ctx.fillStyle = rgba(accentColor, 0.24);
+  ctx.fillStyle = rgba(accentColor, 0.34);
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
 
@@ -515,12 +515,12 @@ async function createOverlayImage(destination, {
   const cornerBoxY = height * 0.905;
 
   roundRect(ctx, cornerBoxX, cornerBoxY, cornerBoxW, cornerBoxH, 16);
-  ctx.fillStyle = rgba('090909', 0.36);
+  ctx.fillStyle = 'rgba(6, 14, 26, 0.78)';
   ctx.fill();
-  ctx.strokeStyle = rgba(accentColor, 0.24);
-  ctx.lineWidth = 1;
+  ctx.strokeStyle = rgba(accentColor, 0.58);
+  ctx.lineWidth = 1.2;
   ctx.stroke();
-  ctx.fillStyle = rgba(accentColor, 0.96);
+  ctx.fillStyle = '#E8C45A';
   ctx.fillText(cornerStamp, cornerBoxX + 10, cornerBoxY + (cornerBoxH * 0.7));
 
   const buffer = canvas.toBuffer('image/png');

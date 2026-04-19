@@ -727,10 +727,10 @@
   letter-spacing: 0.12em;
   white-space: nowrap;
   color: #D4AF37;
-  opacity: 0.22;
+  opacity: 0.32;
   text-shadow:
-    0 1px 3px rgba(0, 0, 0, 0.9),
-    0 0 6px rgba(0, 0, 0, 0.7);
+    0 1px 3px rgba(0, 0, 0, 0.92),
+    0 0 6px rgba(0, 0, 0, 0.75);
   padding: 0 28px;
   user-select: none;
   -webkit-font-smoothing: antialiased;
@@ -757,20 +757,20 @@
 }
 
 /* ── Periodic watermark flash ──
-   Stays subtle most of the time (0.25), then pulses to a strong,
-   clearly-legible 0.62 every 18 seconds. Any screen recording
+   Stays subtle most of the time, then pulses to a strong,
+   clearly-legible opacity every 18 seconds. Any screen recording
    longer than ~30 seconds will capture at least one prominent flash,
    making unauthorised copies obviously watermarked. */
 @keyframes watermarkFlash {
-  0%, 79%   { opacity: 0.25; }
-  84%, 93%  { opacity: 0.62; }
-  100%      { opacity: 0.25; }
+  0%, 79%   { opacity: 0.38; }
+  84%, 93%  { opacity: 0.75; }
+  100%      { opacity: 0.38; }
 }
 
 /* Hero/product page — slightly more prominent + periodic flash */
 .db-watermark--hero .db-watermark-row span {
   font-size: 16px;
-  opacity: 0.25;
+  opacity: 0.38;
   padding: 0 36px;
   animation: watermarkFlash 18s ease-in-out infinite;
 }
@@ -859,17 +859,27 @@
 }
 
 .composition-brand-chip {
-  padding: 8px 13px 7px;
+  padding: 9px 15px 8px;
+  background: linear-gradient(180deg, rgba(5, 12, 22, 0.88), rgba(6, 19, 31, 0.94));
+  border: 1px solid rgba(212, 175, 55, 0.55);
+  box-shadow:
+    0 14px 28px rgba(0, 0, 0, 0.48),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
 }
 
 .composition-brand-chip__text {
-  font-size: clamp(0.84rem, 2.2vw, 1.02rem);
-  letter-spacing: 0.11em;
+  font-size: clamp(0.92rem, 2.4vw, 1.12rem);
+  letter-spacing: 0.12em;
+  font-weight: 800;
+  color: #E8C45A;
+  -webkit-text-stroke: 0.6px rgba(0, 0, 0, 0.85);
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.9);
 }
 
 .composition-brand-chip__tm {
-  font-size: clamp(0.64rem, 1.75vw, 0.78rem);
-  color: rgba(255, 255, 255, 0.72);
+  font-size: clamp(0.68rem, 1.85vw, 0.82rem);
+  color: rgba(255, 255, 255, 0.92);
+  font-weight: 900;
 }
 
 .composition-brand-lockup__sender {
