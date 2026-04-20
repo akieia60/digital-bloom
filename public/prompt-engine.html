@@ -43,6 +43,14 @@ body{font-family:'Outfit',sans-serif;background:var(--navy);color:var(--white);m
 .cat-btn.cat-complete .cat-count{background:rgba(34,197,94,0.18);color:var(--green)}
 .cat-btn.cat-complete.active{background:var(--green);color:#0D1B36;border-color:var(--green)}
 .cat-btn.cat-complete.active .cat-count{background:rgba(13,27,54,0.22);color:#0D1B36}
+.enhancer-bar{display:flex;flex-direction:column;gap:10px;padding:12px;border:1px solid var(--border);border-radius:14px;background:linear-gradient(180deg,rgba(255,255,255,0.04),rgba(129,140,248,0.06))}
+.enhancer-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.enhancer-field{display:flex;flex-direction:column;gap:5px}
+.enhancer-label{font-size:0.66rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--gold)}
+.enhancer-select{width:100%;padding:10px 12px;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:10px;color:var(--white);font-size:0.78rem;font-family:'Outfit',sans-serif;outline:none}
+.enhancer-select:focus{border-color:var(--gold)}
+.enhancer-select option{background:var(--navy2);color:var(--white)}
+.enhancer-note{font-size:0.72rem;line-height:1.55;color:rgba(255,255,255,0.74)}
 
 /* MAIN GRID */
 .main{padding:16px 20px;max-width:1200px;margin:0 auto}
@@ -66,12 +74,28 @@ body{font-family:'Outfit',sans-serif;background:var(--navy);color:var(--white);m
 .scene-label{padding:6px 12px;font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--gold);background:rgba(212,175,55,0.08);border-bottom:1px solid var(--border)}
 .scene-text{padding:10px 12px;font-size:0.75rem;color:rgba(255,255,255,0.75);line-height:1.65;max-height:100px;overflow:hidden;transition:max-height 0.3s}
 .scene-text.expanded{max-height:600px}
-.scene-actions{padding:6px 12px 10px;display:flex;gap:6px}
+.scene-actions{padding:6px 12px 10px;display:flex;gap:6px;flex-wrap:wrap}
 .btn-copy{padding:5px 12px;background:rgba(212,175,55,0.15);border:1px solid var(--gold3);border-radius:7px;color:var(--gold);font-size:0.7rem;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:all 0.2s;white-space:nowrap}
 .btn-copy:hover{background:rgba(212,175,55,0.3)}
 .btn-copy.copied{background:rgba(34,197,94,0.2);border-color:rgba(34,197,94,0.4);color:var(--green)}
 .btn-expand{padding:5px 10px;background:transparent;border:1px solid var(--border);border-radius:7px;color:var(--muted);font-size:0.7rem;cursor:pointer;font-family:'Outfit',sans-serif;transition:all 0.2s}
 .btn-expand:hover{border-color:var(--gold);color:var(--white)}
+
+/* ENHANCER */
+.enhancer-shell{padding:0 12px 14px;display:flex;flex-direction:column;gap:10px}
+.enhancer-actions{display:flex;gap:8px;flex-wrap:wrap}
+.btn-enhance{background:rgba(129,140,248,0.16);border-color:rgba(129,140,248,0.35);color:#c7d2fe}
+.btn-enhance:hover{background:rgba(129,140,248,0.28)}
+.btn-save-enhanced{background:rgba(34,197,94,0.12);border:1px solid rgba(34,197,94,0.28);color:#86efac}
+.btn-save-enhanced:hover{background:rgba(34,197,94,0.22)}
+.enhanced-wrap{border:1px solid rgba(129,140,248,0.22);border-radius:12px;background:rgba(129,140,248,0.06);overflow:hidden}
+.enhanced-head{padding:10px 12px;border-bottom:1px solid rgba(129,140,248,0.16);display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.enhanced-title{font-size:0.72rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#c7d2fe}
+.enhanced-meta{font-size:0.68rem;color:rgba(199,210,254,0.82);line-height:1.5}
+.enhanced-empty{padding:12px;border:1px dashed rgba(129,140,248,0.2);border-radius:10px;background:rgba(255,255,255,0.02);font-size:0.72rem;line-height:1.55;color:rgba(255,255,255,0.62)}
+.scene.enhanced-scene{background:rgba(255,255,255,0.025);border-color:rgba(129,140,248,0.18)}
+.scene.enhanced-scene .scene-label{color:#c7d2fe;background:rgba(129,140,248,0.09)}
+.scene.enhanced-scene .scene-text{color:rgba(255,255,255,0.82)}
 
 /* ITERATIONS (for mega-prompt format) */
 .iteration{margin-bottom:8px}
@@ -114,6 +138,8 @@ body{font-family:'Outfit',sans-serif;background:var(--navy);color:var(--white);m
   .header h1{font-size:1.05rem}
   .grid{grid-template-columns:1fr}
   .controls{top:53px}
+  .enhancer-grid{grid-template-columns:1fr}
+  .enhanced-head{align-items:flex-start}
 }
 
 /* CATEGORY COLORS */
@@ -150,6 +176,36 @@ body{font-family:'Outfit',sans-serif;background:var(--navy);color:var(--white);m
     <span class="search-icon">🔍</span>
   </div>
   <div class="cats" id="cats"></div>
+  <div class="enhancer-bar">
+    <div class="enhancer-grid">
+      <label class="enhancer-field">
+        <span class="enhancer-label">Structure Mode</span>
+        <select class="enhancer-select" id="structure-mode">
+          <option value="3x10">3 scenes x 10 seconds</option>
+          <option value="5x6">5 scenes x 6 seconds</option>
+        </select>
+      </label>
+      <label class="enhancer-field">
+        <span class="enhancer-label">Intensity Mode</span>
+        <select class="enhancer-select" id="intensity-mode">
+          <option value="refined">Refined</option>
+          <option value="cinematic">Cinematic</option>
+          <option value="maximal">Maximal</option>
+        </select>
+      </label>
+      <label class="enhancer-field">
+        <span class="enhancer-label">Style Mode</span>
+        <select class="enhancer-select" id="style-mode">
+          <option value="signature-bloom">Preset 1: Signature Bloom</option>
+          <option value="soft-memorial">Preset 2: Soft Memorial</option>
+          <option value="romantic-reveal">Preset 3: Romantic Reveal</option>
+          <option value="celebration-finale">Preset 4: Celebration Finale</option>
+          <option value="moonshot-luxe">Preset 5: Moonshot Luxe</option>
+        </select>
+      </label>
+    </div>
+    <div class="enhancer-note">Enhancer sits on top of the existing prompt library. Originals stay untouched; Grok-ready versions use your selected structure, intensity, and preset to build stronger pacing, reveal, and payoff.</div>
+  </div>
 </div>
 
 <div class="main">
@@ -945,27 +1001,276 @@ V2_DATA.forEach(v => {
   });
 });
 
+const STRUCTURE_OPTIONS = {
+  '3x10': {
+    label:'3 scenes x 10 seconds',
+    scenes:[
+      {label:'Scene 1 — Curiosity Build (0–10s)',stage:'curiosity'},
+      {label:'Scene 2 — Reveal Escalation (10–20s)',stage:'escalation'},
+      {label:'Scene 3 — Emotional Payoff (20–30s)',stage:'payoff'},
+    ]
+  },
+  '5x6': {
+    label:'5 scenes x 6 seconds',
+    scenes:[
+      {label:'Scene 1 — Quiet Invitation (0–6s)',stage:'curiosity'},
+      {label:'Scene 2 — Anticipation Lift (6–12s)',stage:'anticipation'},
+      {label:'Scene 3 — Reveal Ignition (12–18s)',stage:'reveal'},
+      {label:'Scene 4 — Bloom Escalation (18–24s)',stage:'escalation'},
+      {label:'Scene 5 — Finale Payoff (24–30s)',stage:'payoff'},
+    ]
+  }
+};
+
+const INTENSITY_OPTIONS = {
+  refined:{
+    label:'Refined',
+    openCamera:'a slow macro dolly with restrained parallax',
+    anticipationCamera:'a measured push-in with disciplined focus pulls',
+    revealCamera:'a controlled rise with a gentle orbit',
+    payoffCamera:'a steady closing drift through the bloom',
+    cadence:'slow-burn pacing',
+    detail:'restrained particles, practical light shifts, and believable texture',
+    lift:'measured but unmistakable escalation',
+  },
+  cinematic:{
+    label:'Cinematic',
+    openCamera:'a slow dolly-in with subtle parallax and lens breathing',
+    anticipationCamera:'a push-in that migrates focus toward the reveal',
+    revealCamera:'a rising crane move with an intimate orbit',
+    payoffCamera:'a gliding push through petals into the emotional center',
+    cadence:'clear build, release, and emotional lift',
+    detail:'layered petals, dust, and light flecks moving at different depths',
+    lift:'layered escalation with a stronger reveal beat',
+  },
+  maximal:{
+    label:'Maximal',
+    openCamera:'a low creeping dolly with dramatic parallax',
+    anticipationCamera:'an accelerating push-in with tension-building focus shifts',
+    revealCamera:'a larger rise with orbit and widening scale',
+    payoffCamera:'a full gliding sweep through abundance before settling close',
+    cadence:'bold build with a strong final surge',
+    detail:'denser petals, particles, and stacked depth cues without losing realism',
+    lift:'high-impact escalation and a large-scale reveal payoff',
+  }
+};
+
+const STYLE_OPTIONS = {
+  'signature-bloom':{
+    label:'Preset 1: Signature Bloom',
+    opening:'Let the opening feel expensive, composed, and quietly sacred.',
+    texture:'Use premium texture detail: velvet shadows, marble or lacquer surfaces, rich floral material, and elegant gold spill.',
+    bridge:'Let the reveal feel polished and controlled before it opens wider.',
+    climax:'Finish with signature abundance, intimacy, and premium emotional payoff.',
+  },
+  'soft-memorial':{
+    label:'Preset 2: Soft Memorial',
+    opening:'Keep the first beat gentle, reverent, and unforced.',
+    texture:'Favor diffused daylight, soft edges, respectful stillness, and graceful physical detail over spectacle.',
+    bridge:'Let anticipation rise softly, like breath returning to the frame.',
+    climax:'Finish with peace, tenderness, and emotional release rather than loud spectacle.',
+  },
+  'romantic-reveal':{
+    label:'Preset 3: Romantic Reveal',
+    opening:'Start close, warm, and intimate, like a held breath before confession.',
+    texture:'Use candle warmth, soft falloff, tactile petals, and emotionally close camera language.',
+    bridge:'Let the reveal feel like longing turning into certainty.',
+    climax:'Finish in lush intimacy, with the camera surrendering to the bloom.',
+  },
+  'celebration-finale':{
+    label:'Preset 4: Celebration Finale',
+    opening:'Start playful but held back so the final celebration lands harder.',
+    texture:'Use brighter lift, cleaner motion, sparkling depth, and joyful realism instead of chaos.',
+    bridge:'Let each beat add color, momentum, and emotional lift.',
+    climax:'Finish with earned joy, abundance, and a clear celebratory spike.',
+  },
+  'moonshot-luxe':{
+    label:'Preset 5: Moonshot Luxe',
+    opening:'Start sleek and mysterious, with scale hinted instead of shown.',
+    texture:'Use glossy surfaces, bold light beams, premium macro detail, and aspirational scale.',
+    bridge:'Let the reveal keep getting bigger, brighter, and more impossible without losing physical believability.',
+    climax:'Finish with maximum payoff, luxury spectacle, and large-scale abundance.',
+  }
+};
+
 // ═══════════════════════════════════════════════════
 // APP LOGIC
 // ═══════════════════════════════════════════════════
 
 const DONE_KEY = 'db_prompt_done';
 const LIVE_KEY = 'db_bloom_live';
+const ENHANCED_KEY = 'db_prompt_enhanced_versions';
+const ENHANCER_SETTINGS_KEY = 'db_prompt_enhancer_settings';
+const DEFAULT_ENHANCER_SETTINGS = {structureMode:'3x10', intensityMode:'cinematic', styleMode:'signature-bloom'};
 function getDone(){try{return JSON.parse(localStorage.getItem(DONE_KEY)||'{}')}catch{return{}}}
 function saveDone(d){localStorage.setItem(DONE_KEY,JSON.stringify(d))}
 function getLive(){try{return JSON.parse(localStorage.getItem(LIVE_KEY)||'{}')}catch{return{}}}
 function saveLive(l){localStorage.setItem(LIVE_KEY,JSON.stringify(l))}
+function getEnhanced(){try{return JSON.parse(localStorage.getItem(ENHANCED_KEY)||'{}')}catch{return{}}}
+function saveEnhanced(v){localStorage.setItem(ENHANCED_KEY,JSON.stringify(v))}
+function getEnhancerSettings(){try{return JSON.parse(localStorage.getItem(ENHANCER_SETTINGS_KEY)||'{}')}catch{return{}}}
+function saveEnhancerSettings(v){localStorage.setItem(ENHANCER_SETTINGS_KEY,JSON.stringify(v))}
 
 const uploadStates = {}; // in-memory upload state so renders don't reset progress
+const enhancedDrafts = {};
 
 let done = getDone();
 let live = getLive();
+let enhancedSaved = getEnhanced();
 let serverLiveSlugs = {}; // keyed by slug → product data, loaded from Supabase
 let serverLoaded = false;
 let currentCat = 'All';
 let searchQ = '';
+let enhancerSettings = {...DEFAULT_ENHANCER_SETTINGS, ...getEnhancerSettings()};
 
 const categories = ['All', ...new Set(PROMPTS.map(p=>p.cat))];
+
+function cleanSourceText(text){
+  return String(text || '')
+    .replace(/\[\d+\-\d+s\]:/gi,' ')
+    .replace(/4K, Ultra HD, Rich details, Sharp clarity, Cinematic texture, Natural colors, Stable picture\.?/gi,' ')
+    .replace(/\bUltra realistic\b,?/gi,' ')
+    .replace(/\bno logos\b\.?/gi,' ')
+    .replace(/\s+/g,' ')
+    .trim();
+}
+
+function splitSentences(text){
+  return cleanSourceText(text)
+    .split(/(?<=[.!?])\s+/)
+    .map(s => s.trim())
+    .filter(Boolean);
+}
+
+function clipText(text, max){
+  const value = String(text || '').trim();
+  if(!value || value.length <= max) return value;
+  return `${value.slice(0, max - 1).trimEnd()}…`;
+}
+
+function pickAnchor(sentences, fallback){
+  return clipText((sentences || []).slice(0, 2).join(' '), 240) || fallback;
+}
+
+function getPromptById(pid){
+  return PROMPTS.find(p => p.id === pid);
+}
+
+function getPromptDNA(p){
+  const allSentences = p.scenes.flatMap(s => splitSentences(s.text));
+  const firstScene = splitSentences(p.scenes[0]?.text || '');
+  const middleScene = splitSentences(p.scenes[Math.min(1, p.scenes.length - 1)]?.text || '');
+  const lastScene = splitSentences(p.scenes[p.scenes.length - 1]?.text || '');
+  const removeBalloonLines = list => list.filter(line => !/balloon/i.test(line));
+
+  const setupLines = removeBalloonLines(firstScene);
+  const middleLines = removeBalloonLines(middleScene);
+  const payoffLines = removeBalloonLines(lastScene);
+
+  return {
+    title:p.title,
+    cat:p.cat,
+    setup:pickAnchor(setupLines, `${p.title} for ${p.cat}.`),
+    middle:pickAnchor(middleLines, clipText(cleanSourceText(p.scenes[Math.min(1, p.scenes.length - 1)]?.text || p.scenes[0]?.text || ''), 240)),
+    payoff:pickAnchor(payoffLines, clipText(cleanSourceText(p.scenes[p.scenes.length - 1]?.text || p.scenes[0]?.text || ''), 240)),
+    hasBalloons:/balloon/i.test(allSentences.join(' ')),
+  };
+}
+
+function composeEnhancedScene(stage, structureMode, p, dna, style, intensity){
+  const preserve = `Preserve the original theme of "${p.title}" in the ${p.cat} category.`;
+  const balloonRule = dna.hasBalloons
+    ? `Keep balloons subtle until late in the sequence; they should read as a secondary accent, not the star of the shot.`
+    : `Do not let any celebratory accent steal focus early; hold supporting elements back until the final stretch.`;
+
+  if(stage === 'curiosity'){
+    return `${preserve} ${dna.setup} ${style.opening} Camera: ${intensity.openCamera}. Build early curiosity through believable stillness, shallow depth of field, soft light movement, surface texture, ribbon tension, and tiny environmental motion. Flowers stay mostly hidden or only faintly implied. ${balloonRule} Keep the pace ${intensity.cadence} and make the scene feel physically real instead of adjective-heavy.`;
+  }
+
+  if(stage === 'anticipation'){
+    return `${preserve} ${dna.middle} Build the middle beat around anticipation rather than payoff. Camera: ${intensity.anticipationCamera}. Let the source of the reveal react in believable stages: lid weight, ribbon loosening, petals trembling, stems gathering lift, and light leaking out in pulses. Flowers can begin to expand and unfurl, but hold the full bloom back. ${style.bridge} ${balloonRule}`;
+  }
+
+  if(stage === 'reveal'){
+    return `${preserve} ${dna.middle} Trigger the reveal with stronger motion while keeping material behavior believable. Camera: ${intensity.revealCamera}. Flowers must expand, unfurl, rise, and burst with layered motion so outer petals, inner petals, stems, and drifting fragments react at slightly different timings. Increase scale, light, and depth without making the scene feel weightless or fake. Balloons may begin to enter the frame now, but only as a late supporting cue.`;
+  }
+
+  if(stage === 'escalation'){
+    const bridgeLine = structureMode === '3x10'
+      ? `This middle act has to carry anticipation into reveal, so let the image keep opening in believable waves instead of resolving too early.`
+      : `Keep escalating instead of resolving; the audience should feel the frame getting fuller, richer, and closer to release.`;
+    return `${preserve} ${dna.middle} ${bridgeLine} Camera: ${intensity.revealCamera}. Push reveal intensity through layered floral motion: one bloom opens, then another catches up, stems rise through the frame, petals unfurl in staggered timing, and secondary blooms add scale behind the hero flower. ${style.texture} ${balloonRule} Aim for ${intensity.lift}.`;
+  }
+
+  return `${preserve} ${dna.payoff} Deliver the final scene as payoff, abundance, and emotional climax. Camera: ${intensity.payoffCamera}. Let the flowers fully own the frame in layered depth so the bloom feels earned, expansive, and tactile. Balloons arrive only now if they belong, elegant and understated. Resolve the light into a final intimate or triumphant image with real texture, believable motion, and a strong emotional finish. ${style.climax}`;
+}
+
+function buildEnhancedVersion(p){
+  const structure = STRUCTURE_OPTIONS[enhancerSettings.structureMode] || STRUCTURE_OPTIONS['3x10'];
+  const intensity = INTENSITY_OPTIONS[enhancerSettings.intensityMode] || INTENSITY_OPTIONS.cinematic;
+  const style = STYLE_OPTIONS[enhancerSettings.styleMode] || STYLE_OPTIONS['signature-bloom'];
+  const dna = getPromptDNA(p);
+
+  return {
+    promptId:p.id,
+    title:p.title,
+    structureMode:enhancerSettings.structureMode,
+    intensityMode:enhancerSettings.intensityMode,
+    styleMode:enhancerSettings.styleMode,
+    generatedAt:new Date().toISOString(),
+    scenes:structure.scenes.map(scene => ({
+      label:scene.label,
+      text:composeEnhancedScene(scene.stage, enhancerSettings.structureMode, p, dna, style, intensity),
+    })),
+  };
+}
+
+function getDisplayedEnhancedVersion(pid){
+  return enhancedDrafts[pid] || enhancedSaved[pid] || null;
+}
+
+function ensureEnhancedVersion(pid){
+  if(enhancedDrafts[pid]) return enhancedDrafts[pid];
+  if(enhancedSaved[pid]) return enhancedSaved[pid];
+  const prompt = getPromptById(pid);
+  if(!prompt) return null;
+  enhancedDrafts[pid] = buildEnhancedVersion(prompt);
+  render();
+  return enhancedDrafts[pid];
+}
+
+function getEnhancementMeta(version, source){
+  if(!version) return '';
+  const structure = STRUCTURE_OPTIONS[version.structureMode]?.label || version.structureMode;
+  const intensity = INTENSITY_OPTIONS[version.intensityMode]?.label || version.intensityMode;
+  const style = STYLE_OPTIONS[version.styleMode]?.label || version.styleMode;
+  const state = source === 'draft' ? 'Draft' : 'Saved';
+  return `${structure} · ${intensity} · ${style} · ${state}`;
+}
+
+function bindEnhancerControls(){
+  const structure = document.getElementById('structure-mode');
+  const intensity = document.getElementById('intensity-mode');
+  const style = document.getElementById('style-mode');
+  if(!structure || !intensity || !style) return;
+
+  structure.value = enhancerSettings.structureMode;
+  intensity.value = enhancerSettings.intensityMode;
+  style.value = enhancerSettings.styleMode;
+
+  structure.addEventListener('change', e=>{
+    enhancerSettings.structureMode = e.target.value;
+    saveEnhancerSettings(enhancerSettings);
+  });
+  intensity.addEventListener('change', e=>{
+    enhancerSettings.intensityMode = e.target.value;
+    saveEnhancerSettings(enhancerSettings);
+  });
+  style.addEventListener('change', e=>{
+    enhancerSettings.styleMode = e.target.value;
+    saveEnhancerSettings(enhancerSettings);
+  });
+}
 
 // Load live products from the server and merge with localStorage
 async function syncLiveFromServer(){
@@ -996,6 +1301,7 @@ function isLiveOnSite(p){
 }
 
 function init(){
+  bindEnhancerControls();
   buildCats();
   render();
   syncLiveFromServer();
@@ -1128,7 +1434,37 @@ function cardHTML(p){
     <div class="scenes">
       ${p.scenes.map((s,i)=>sceneHTML(p.id,i,s)).join('')}
     </div>
+    ${enhancerHTML(p)}
     ${bottomZone}
+  </div>`;
+}
+
+function enhancerHTML(p){
+  const draft = enhancedDrafts[p.id];
+  const saved = enhancedSaved[p.id];
+  const version = draft || saved;
+  const meta = version ? getEnhancementMeta(version, draft ? 'draft' : 'saved') : '';
+
+  return `
+  <div class="enhancer-shell">
+    <div class="enhancer-actions">
+      <button class="btn-copy btn-enhance" onclick="enhancePrompt('${p.id}')">✨ Enhance for Grok</button>
+      <button class="btn-copy" onclick="copyEnhanced('${p.id}')">Copy Enhanced</button>
+      <button class="btn-save-enhanced" onclick="saveEnhancedVersion('${p.id}')">Save Enhanced Version</button>
+    </div>
+    ${version ? `
+      <div class="enhanced-wrap">
+        <div class="enhanced-head">
+          <div class="enhanced-title">Enhanced Grok Version</div>
+          <div class="enhanced-meta">${meta}</div>
+        </div>
+        <div class="scenes">
+          ${version.scenes.map((scene, idx)=>enhancedSceneHTML(p.id, idx, scene)).join('')}
+        </div>
+      </div>
+    ` : `
+      <div class="enhanced-empty">Generate a Grok-enhanced pass to keep the original prompt intact while adding stronger pacing, layered floral motion, better camera direction, and a more earned finale.</div>
+    `}
   </div>`;
 }
 
@@ -1145,28 +1481,111 @@ function sceneHTML(pid, idx, scene){
   </div>`;
 }
 
+function enhancedSceneHTML(pid, idx, scene){
+  const sid = `enh-${pid}-${idx}`;
+  return `
+  <div class="scene enhanced-scene">
+    <div class="scene-label">${scene.label}</div>
+    <div class="scene-text" id="txt-${sid}">${escapeHtml(scene.text)}</div>
+    <div class="scene-actions">
+      <button class="btn-copy" id="btn-${sid}" onclick="copyEnhancedScene('${pid}','${idx}')">Copy</button>
+      <button class="btn-expand" onclick="expand('${sid}')">Expand</button>
+    </div>
+  </div>`;
+}
+
 function escapeHtml(t){
-  return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function copyText(text, btnId, resetLabel, successMessage){
+  const copyFallback = () => {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position='fixed';
+    ta.style.top='-9999px';
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+  };
+  const flashButton = () => {
+    if(!btnId) return;
+    const btn = document.getElementById(btnId);
+    if(!btn) return;
+    const label = resetLabel || btn.textContent || 'Copy';
+    btn.classList.add('copied');
+    btn.textContent = 'Copied!';
+    setTimeout(()=>{
+      btn.classList.remove('copied');
+      btn.textContent = label;
+    }, 2000);
+  };
+
+  if(navigator.clipboard && typeof navigator.clipboard.writeText === 'function'){
+    navigator.clipboard.writeText(text).then(()=>{
+      flashButton();
+      showToast(successMessage || 'Copied to clipboard');
+    }).catch(()=>{
+      copyFallback();
+      flashButton();
+      showToast(successMessage || 'Copied to clipboard');
+    });
+    return;
+  }
+
+  try {
+    copyFallback();
+    flashButton();
+    showToast(successMessage || 'Copied to clipboard');
+  } catch(err) {
+    console.error('[copy]', err.message);
+  }
 }
 
 function copyScene(pid, idx){
-  const p = PROMPTS.find(x=>x.id===pid);
+  const p = getPromptById(pid);
   if(!p) return;
-  const text = p.scenes[parseInt(idx)].text;
+  const text = p.scenes[parseInt(idx,10)].text;
   const sid = `${pid}-${idx}`;
-  const btn = document.getElementById(`btn-${sid}`);
-  navigator.clipboard.writeText(text).then(()=>{
-    if(btn){btn.classList.add('copied');btn.textContent='Copied!';setTimeout(()=>{btn.classList.remove('copied');btn.textContent='Copy'},2000)}
-    showToast('Copied to clipboard');
-  }).catch(()=>{
-    // Fallback
-    const ta = document.createElement('textarea');
-    ta.value = text; ta.style.position='fixed'; ta.style.top='-9999px';
-    document.body.appendChild(ta); ta.select();
-    document.execCommand('copy'); document.body.removeChild(ta);
-    if(btn){btn.classList.add('copied');btn.textContent='Copied!';setTimeout(()=>{btn.classList.remove('copied');btn.textContent='Copy'},2000)}
-    showToast('Copied to clipboard');
-  });
+  copyText(text, `btn-${sid}`, 'Copy');
+}
+
+function enhancePrompt(pid){
+  const prompt = getPromptById(pid);
+  if(!prompt) return;
+  enhancedDrafts[pid] = buildEnhancedVersion(prompt);
+  render();
+  showToast('Grok-enhanced version ready');
+}
+
+function copyEnhancedScene(pid, idx){
+  const version = ensureEnhancedVersion(pid);
+  if(!version) return;
+  copyText(version.scenes[parseInt(idx,10)].text, `btn-enh-${pid}-${idx}`, 'Copy');
+}
+
+function copyEnhanced(pid){
+  const prompt = getPromptById(pid);
+  const version = ensureEnhancedVersion(pid);
+  if(!prompt || !version) return;
+  const header = getEnhancementMeta(version, enhancedDrafts[pid] ? 'draft' : 'saved');
+  const text = `${prompt.title}\n${header}\n\n${version.scenes.map(scene => `${scene.label}\n${scene.text}`).join('\n\n')}`;
+  copyText(text, null, null, 'Enhanced prompt copied');
+}
+
+function saveEnhancedVersion(pid){
+  const prompt = getPromptById(pid);
+  const version = enhancedDrafts[pid] || ensureEnhancedVersion(pid);
+  if(!prompt || !version) return;
+  enhancedSaved[pid] = {
+    ...version,
+    savedAt:new Date().toISOString(),
+  };
+  delete enhancedDrafts[pid];
+  saveEnhanced(enhancedSaved);
+  render();
+  showToast('Enhanced version saved');
 }
 
 function expand(sid){
