@@ -36,11 +36,25 @@
   width: 100%;
   max-width: 480px;
   aspect-ratio: 9 / 16;
-  max-height: 70vh;
+  /* Cap by width, not height, so the container always matches the 9:16 mp4.
+     max-height caps were distorting the container on mobile, which made
+     object-fit: cover on the inner <video> crop the top pill and bottom
+     From/corner-stamp out of view. */
+  max-height: min(88vh, calc(100vw * 16 / 9));
   border-radius: 16px;
   overflow: hidden;
   background: #111;
   box-shadow: 0 20px 80px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(212, 175, 55, 0.1);
+}
+
+/* Delivery page must NEVER crop the rendered mp4 — the pill, From lockup,
+   and corner trademark are baked into the frame edges. Override the default
+   composition base-layer cover behavior for this page only. */
+.bloom-delivery__protected-frame .composition-layer--base video,
+.bloom-delivery__protected-frame .composition-layer--base img {
+  object-fit: contain;
+  object-position: center;
+  background: #000;
 }
 
 .bloom-delivery__preview {
