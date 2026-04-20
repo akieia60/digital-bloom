@@ -51,10 +51,12 @@
 .bloom-delivery__rendered-video {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  /* contain (not cover) preserves the full mp4 frame so the Digital Bloom pill,
+     From name, and other baked-in elements at the edges are never clipped. */
+  object-fit: contain;
+  object-position: center;
   display: block;
   background: #000;
-  /* iOS Safari: force video into a low stacking position so CSS overlays render above it */
   position: relative;
   z-index: 1;
   -webkit-transform: translateZ(0);

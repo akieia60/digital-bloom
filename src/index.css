@@ -819,3 +819,55 @@ img {
   background: var(--deep-blue-soft);
   border-color: var(--deep-blue);
 }
+
+/* ============================================
+   STICKY FLOATING BACK BUTTON
+   Used on /shop and /shop/:category — always visible while scrolling
+   ============================================ */
+.db-sticky-back {
+  position: fixed;
+  top: calc(env(safe-area-inset-top, 0px) + 72px);
+  left: 14px;
+  z-index: 60;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 16px 9px 12px;
+  border-radius: 999px;
+  background: rgba(13, 27, 54, 0.78);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  color: #FFFFFF;
+  font-family: 'Outfit', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+  cursor: pointer;
+  transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+}
+
+.db-sticky-back:hover,
+.db-sticky-back:focus-visible {
+  background: rgba(13, 27, 54, 0.92);
+  border-color: rgba(212, 175, 55, 0.75);
+  transform: translateX(-2px);
+  outline: none;
+}
+
+.db-sticky-back svg {
+  width: 14px;
+  height: 14px;
+  color: #D4AF37;
+}
+
+@media (max-width: 520px) {
+  .db-sticky-back {
+    top: calc(env(safe-area-inset-top, 0px) + 64px);
+    left: 10px;
+    padding: 8px 14px 8px 10px;
+    font-size: 10px;
+  }
+}

@@ -13,15 +13,14 @@ function BackButton() {
   return (
     <button
       onClick={() => navigate(-1)}
-      className="group inline-flex items-center"
-      style={{ color: 'rgba(255,255,255,0.6)', marginBottom: '8px' }}
+      type="button"
+      aria-label={t('common_back') || 'Back'}
+      className="db-sticky-back"
     >
-      <div style={{ width: '32px', height: '32px', borderRadius: '50%', border: '1px solid rgba(255,255,255,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginRight: '12px', transition: 'border-color 0.2s' }}>
-        <svg style={{ width: '16px', height: '16px' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 19l-7-7 7-7" />
-        </svg>
-      </div>
-      <span style={{ fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.15em', fontWeight: '500' }}>{t('common_back') || 'Back'}</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+      </svg>
+      <span>{t('common_back') || 'Back'}</span>
     </button>
   );
 }

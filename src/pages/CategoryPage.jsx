@@ -57,23 +57,25 @@ export default function CategoryPage() {
 
   return (
     <div className="min-h-screen bg-[var(--bg-page)]">
+      {/* Sticky floating back button — stays visible as the user scrolls */}
+      <button
+        onClick={() => navigate(-1)}
+        type="button"
+        aria-label="Back"
+        className="db-sticky-back"
+      >
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+        </svg>
+        <span>Back</span>
+      </button>
+
       {/* Category Hero */}
       <section className="relative pt-32 pb-10 px-6 text-center overflow-hidden">
         <div className="absolute top-0 left-0 right-0 h-1" style={{ background: `linear-gradient(90deg, ${occasion.accent}, ${occasion.accent}66)` }} />
         <div className="absolute inset-0 opacity-[0.07] pointer-events-none" style={{ background: `radial-gradient(ellipse at 50% 0%, ${occasion.accent}, transparent 65%)` }} />
 
         <div className="relative flex items-center justify-center gap-4 mb-10">
-          <button
-            onClick={() => navigate(-1)}
-            type="button"
-            className="inline-flex items-center text-[11px] uppercase tracking-[0.15em] hover:text-[var(--accent-gold)] transition-colors font-medium"
-            style={{ color: 'rgba(255,255,255,0.75)', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.18)', borderRadius: '999px', padding: '8px 16px' }}
-          >
-            <svg className="w-3 h-3 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-            </svg>
-            Back
-          </button>
           <Link to="/shop" className="inline-flex items-center text-[11px] uppercase tracking-[0.15em] hover:text-[var(--accent-gold)] transition-colors font-medium" style={{ color: 'rgba(255,255,255,0.6)' }}>
             All Occasions
           </Link>
