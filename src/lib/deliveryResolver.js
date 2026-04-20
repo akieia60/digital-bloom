@@ -130,6 +130,10 @@ export async function resolveBloomDelivery(bloomSlug) {
       message: customization.message || {},
       engravingStyle: customization.engravingStyle || 'heirloom',
       fontChoice: customization.fontChoice || 'playfair',
+      messageTextColor: customization.messageTextColor || '#FFFFFF',
+      messageBold: customization.messageBold || false,
+      messageTextSize: customization.messageTextSize || 'md',
+      frameStyle: customization.frameStyle || 'none',
     });
 
     return {
@@ -154,6 +158,9 @@ export async function resolveBloomDelivery(bloomSlug) {
         fontChoice: customization.fontChoice || 'playfair',
         messageTextColor: customization.messageTextColor || '#FFFFFF',
         messageBold: customization.messageBold || false,
+        messageTextSize: customization.messageTextSize || 'md',
+        messageOffset: customization.messageOffset || null,
+        frameStyle: customization.frameStyle || 'none',
         // Delivery flow metadata (for manage page)
         deliveryTarget: manifest.delivery?.target || 'self',
         recipientEmail: manifest.delivery?.recipientEmail || '',

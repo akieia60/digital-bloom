@@ -19,6 +19,7 @@ export function buildFulfillmentManifest(product, customization) {
     selectedSound = '',
     engravingStyle = 'heirloom',
     fontChoice = 'playfair',
+    frameStyle = 'none',
     locale = 'en',
   } = customization;
 
@@ -47,60 +48,17 @@ export function buildFulfillmentManifest(product, customization) {
     });
   }
 
-  if (extras.ribbon) {
-    overlayInstructions.push({
-      type: 'ribbon',
-      variant: colorTheme,
-      asset: getOverlayAssetPath('ribbon', colorTheme),
-      timing: { start: 0, end: baseAsset.duration || 30 },
-      position: 'border',
-      opacity: 0.7,
-    });
-  }
-
-  if (extras.sparkle) {
-    overlayInstructions.push({
-      type: 'sparkle',
-      variant: 'default',
-      asset: getOverlayAssetPath('sparkle', 'default'),
-      timing: { start: 0, end: baseAsset.duration || 30 },
-      position: 'full',
-      opacity: 0.6,
-    });
-  }
-
-  if (extras.goldDust) {
-    overlayInstructions.push({
-      type: 'goldDust',
-      variant: 'default',
-      asset: null,
-      timing: { start: 0, end: baseAsset.duration || 30 },
-      position: 'full',
-      opacity: 0.7,
-    });
-  }
-
-  if (extras.softGlow) {
-    overlayInstructions.push({
-      type: 'softGlow',
-      variant: 'default',
-      asset: null,
-      timing: { start: 0, end: baseAsset.duration || 30 },
-      position: 'center',
-      opacity: 0.55,
-    });
-  }
-
-  if (extras.rosePetals) {
-    overlayInstructions.push({
-      type: 'rosePetals',
-      variant: 'default',
-      asset: null,
-      timing: { start: 0, end: baseAsset.duration || 30 },
-      position: 'full',
-      opacity: 0.7,
-    });
-  }
+  // Premium canvas effects — logged in manifest for future server-side rendering
+  ['luminaraDrift', 'bokehBloom', 'lightVeil', 'silkPetals', 'constellationDrift', 'dewShimmer'].forEach(id => {
+    if (extras[id]) {
+      overlayInstructions.push({
+        type: 'canvasEffect',
+        effectId: id,
+        timing: { start: 0, end: baseAsset.duration || 30 },
+        position: 'full',
+      });
+    }
+  });
 
   const colorTreatment = {
     themeId: colorTheme,
@@ -203,6 +161,7 @@ export function buildFulfillmentManifest(product, customization) {
       soundtrack: selectedSound || null,
       fontChoice,
       extras: Object.entries(extras).filter(([, value]) => value).map(([key]) => key),
+      frameStyle,
       hasMessage: Boolean(message.short),
       hasTo: Boolean(message.toName),
       hasFrom: Boolean(message.fromName),
@@ -232,6 +191,9 @@ export function buildCartComposition(customization) {
     fontChoice = 'playfair',
     messageTextColor = '#FFFFFF',
     messageBold = false,
+    messageTextSize = 'md',
+    messageOffset = null,
+    frameStyle = 'none',
     locale = 'en',
   } = customization;
 
@@ -251,6 +213,9 @@ export function buildCartComposition(customization) {
     fontChoice,
     messageTextColor,
     messageBold,
+    messageTextSize,
+    messageOffset,
+    frameStyle,
     locale,
     extras: Object.fromEntries(
       Object.entries(extras).map(([key, value]) => [key, Boolean(value)])

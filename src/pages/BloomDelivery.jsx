@@ -196,74 +196,47 @@ export default function BloomDelivery() {
       {/* ── Cinematic Bloom Hero ── */}
       <div className="bloom-delivery__hero">
         <div className="bloom-delivery__composition">
-          {protectedVideoUrl ? (
-            <div className="db-watermark db-watermark--hero bloom-delivery__protected-frame">
-              <video
-                className="bloom-delivery__rendered-video"
-                src={protectedVideoUrl}
-                poster={composition?.baseMedia?.poster}
-                autoPlay
-                muted
-                loop
-                playsInline
-                controls={false}
-                preload="auto"
-              />
-              {/* Server-rendered MP4 already has the Digital Bloom stamp, the
-                  "From {name}" label, and the diagonal © watermark baked in by
-                  renderBloom.js's createOverlayImage. We only add the CSS grid
-                  as a lightweight extra protection layer; do NOT re-draw the
-                  brand pill or sender — that causes visible duplication. */}
-              <div className="db-watermark-overlay" aria-hidden="true">
-                <div className="db-watermark-grid">
-                  {Array.from({ length: 12 }, (_, i) => (
-                    <div key={i} className="db-watermark-row">
-                      <span>© Digital Bloom</span>
-                      <span>© Digital Bloom</span>
-                      <span>© Digital Bloom</span>
-                      <span>© Digital Bloom</span>
-                    </div>
-                  ))}
-                </div>
+          <div className="db-watermark db-watermark--hero bloom-delivery__protected-frame">
+            {/* Always use LivePreview so canvas effects, frames, text, color
+                palette, and trademark all render consistently. If the server
+                baked a protected MP4, feed it in as the base video source. */}
+            <LivePreview
+              product={{
+                id: delivery.productId,
+                video_file_url: protectedVideoUrl || composition?.baseMedia?.src,
+                image_url: composition?.baseMedia?.poster,
+              }}
+              colorTheme={delivery.colorTheme}
+              primaryColor={delivery.primaryColor}
+              accentColor={delivery.accentColor}
+              extras={delivery.extras}
+              message={message}
+              engravingStyle={delivery.engravingStyle}
+              fontChoice={delivery.fontChoice}
+              messageTextColor={delivery.messageTextColor}
+              messageBold={delivery.messageBold}
+              messageTextSize={delivery.messageTextSize || 'md'}
+              frameStyle={delivery.frameStyle || 'none'}
+              messageOffset={delivery.messageOffset || null}
+              occasion={delivery.category || null}
+              className="bloom-delivery__preview"
+            />
+            {/* Diagonal repeating watermark grid — flashes every 18s so any
+                screen recording captures at least one prominent frame */}
+            <div className="db-watermark-overlay" aria-hidden="true">
+              <div className="db-watermark-grid">
+                {Array.from({ length: 12 }, (_, i) => (
+                  <div key={i} className="db-watermark-row">
+                    <span>© Digital Bloom</span>
+                    <span>© Digital Bloom</span>
+                    <span>© Digital Bloom</span>
+                    <span>© Digital Bloom</span>
+                  </div>
+                ))}
               </div>
+              <div className="db-watermark-corner">Digital Bloom™</div>
             </div>
-          ) : (
-            <div className="db-watermark db-watermark--hero bloom-delivery__protected-frame">
-              <LivePreview
-                product={{
-                  id: delivery.productId,
-                  video_file_url: composition?.baseMedia?.src,
-                  image_url: composition?.baseMedia?.poster,
-                }}
-                colorTheme={delivery.colorTheme}
-                primaryColor={delivery.primaryColor}
-                accentColor={delivery.accentColor}
-                extras={delivery.extras}
-                message={message}
-                engravingStyle={delivery.engravingStyle}
-                fontChoice={delivery.fontChoice}
-                messageTextColor={delivery.messageTextColor}
-                messageBold={delivery.messageBold}
-                occasion={delivery.category || null}
-                className="bloom-delivery__preview"
-              />
-              {/* Diagonal repeating watermark grid — flashes every 18s so
-                  any screen recording captures at least one prominent frame */}
-              <div className="db-watermark-overlay" aria-hidden="true">
-                <div className="db-watermark-grid">
-                  {Array.from({ length: 12 }, (_, i) => (
-                    <div key={i} className="db-watermark-row">
-                      <span>© Digital Bloom</span>
-                      <span>© Digital Bloom</span>
-                      <span>© Digital Bloom</span>
-                      <span>© Digital Bloom</span>
-                    </div>
-                  ))}
-                </div>
-                <div className="db-watermark-corner">© Digital Bloom</div>
-              </div>
-            </div>
-          )}
+          </div>
         </div>
 
         {/* ── Bloom Identity — category + name ── */}

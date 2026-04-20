@@ -16,25 +16,25 @@ const OVERLAY_ASSETS = {
     romantic: { src: null, css: true, label: 'Rose Balloons' },
     original: { src: null, css: true, label: 'Classic Balloons' },
   },
-  ribbon: {
-    warm: { src: null, css: true, label: 'Warm Ribbon' },
-    cool: { src: null, css: true, label: 'Cool Ribbon' },
-    elegant: { src: null, css: true, label: 'Gold Ribbon' },
-    romantic: { src: null, css: true, label: 'Rose Ribbon' },
-    original: { src: null, css: true, label: 'Classic Ribbon' },
-  },
-  sparkle: {
-    default: { src: null, css: true, label: 'Sparkle Effect' },
-  },
-  goldDust: {
-    default: { src: null, css: true, label: 'Gold Dust' },
-  },
-  softGlow: {
-    default: { src: null, css: true, label: 'Soft Glow' },
-  },
-  rosePetals: {
-    default: { src: null, css: true, label: 'Rose Petals' },
-  },
+};
+
+// Canvas-rendered premium effects — handled by CanvasEffect.jsx in LivePreview
+export const CANVAS_EFFECT_META = {
+  luminaraDrift:      { label: 'Luminous Gold',  description: 'Glowing gold particles that drift upward like suspended dust' },
+  bokehBloom:         { label: 'Bokeh Bloom',     description: 'Soft out-of-focus light orbs, like a luxury film backdrop' },
+  lightVeil:          { label: 'Light Veil',      description: 'Slow-sweeping god rays washing across the scene' },
+  silkPetals:         { label: 'Silk Petals',     description: 'Canvas-drawn translucent petals drifting down' },
+  constellationDrift: { label: 'Constellation',   description: 'Star points that connect like a fine jewelry motif' },
+  dewShimmer:         { label: 'Dew Shimmer',     description: 'Light catching on invisible surfaces, fading in and out' },
+};
+
+export const FRAME_STYLES = {
+  none:        { label: 'None',           description: 'Clean, unframed' },
+  goldFloral:  { label: 'Gold Botanical', description: 'Delicate corner flourishes in gold' },
+  velvetEdge:  { label: 'Velvet Edge',    description: 'Glowing border in your accent color' },
+  modernRule:  { label: 'Modern Rule',    description: 'Thin gold lines — top and bottom' },
+  artDeco:     { label: 'Art Deco',       description: 'Geometric corner brackets with diamond accent' },
+  filmBorder:  { label: 'Cinematic',      description: 'Letterbox-style editorial frame' },
 };
 
 export const COLOR_SWATCHES = [
@@ -110,6 +110,72 @@ export const COLOR_PALETTES = {
     brightness: 1.03,
     blendMode: 'screen',
   },
+  goldenHour: {
+    label: 'Golden Hour',
+    nameKey: 'customize_palette_golden_hour',
+    primaryColor: '#C87820',
+    accentColor: '#F5D070',
+    filter: 'sepia(0.28) saturate(1.62) hue-rotate(-10deg) brightness(1.14)',
+    hueRotate: -10,
+    saturate: 1.62,
+    brightness: 1.14,
+    blendMode: 'overlay',
+  },
+  roseGold: {
+    label: 'Rose Gold',
+    nameKey: 'customize_palette_rose_gold',
+    primaryColor: '#C97060',
+    accentColor: '#F2C8A0',
+    filter: 'sepia(0.12) saturate(1.45) hue-rotate(-24deg) brightness(1.06)',
+    hueRotate: -24,
+    saturate: 1.45,
+    brightness: 1.06,
+    blendMode: 'screen',
+  },
+  emerald: {
+    label: 'Emerald',
+    nameKey: 'customize_palette_emerald',
+    primaryColor: '#1C6B4A',
+    accentColor: '#7EC8A4',
+    filter: 'saturate(1.3) hue-rotate(118deg) brightness(0.97)',
+    hueRotate: 118,
+    saturate: 1.3,
+    brightness: 0.97,
+    blendMode: 'screen',
+  },
+  lavender: {
+    label: 'Lavender Dream',
+    nameKey: 'customize_palette_lavender',
+    primaryColor: '#7B5EA7',
+    accentColor: '#C8B8E8',
+    filter: 'saturate(1.18) hue-rotate(252deg) brightness(1.06)',
+    hueRotate: 252,
+    saturate: 1.18,
+    brightness: 1.06,
+    blendMode: 'screen',
+  },
+  crimson: {
+    label: 'Crimson',
+    nameKey: 'customize_palette_crimson',
+    primaryColor: '#8B1A28',
+    accentColor: '#E88070',
+    filter: 'saturate(1.72) hue-rotate(-36deg) brightness(0.9)',
+    hueRotate: -36,
+    saturate: 1.72,
+    brightness: 0.9,
+    blendMode: 'multiply',
+  },
+  midnight: {
+    label: 'Midnight',
+    nameKey: 'customize_palette_midnight',
+    primaryColor: '#1B2875',
+    accentColor: '#8BA0D8',
+    filter: 'saturate(0.6) hue-rotate(198deg) brightness(0.8)',
+    hueRotate: 198,
+    saturate: 0.6,
+    brightness: 0.8,
+    blendMode: 'multiply',
+  },
   custom: {
     label: 'Custom Palette',
     nameKey: 'customize_theme_custom',
@@ -133,6 +199,33 @@ export const MESSAGE_FONT_OPTIONS = {
     previewLetterSpacing: '0.02em',
     renderFont: 'Serif',
   },
+  cormorant: {
+    label: 'Luxury Italic',
+    previewFamily: "'Cormorant Garamond', Georgia, serif",
+    previewWeight: 500,
+    previewFontStyle: 'italic',
+    previewTransform: 'none',
+    previewLetterSpacing: '0.04em',
+    renderFont: 'Serif',
+  },
+  cinzel: {
+    label: 'Engraved',
+    previewFamily: "'Cinzel', Georgia, serif",
+    previewWeight: 600,
+    previewFontStyle: 'normal',
+    previewTransform: 'uppercase',
+    previewLetterSpacing: '0.12em',
+    renderFont: 'Serif',
+  },
+  lora: {
+    label: 'Classic Warmth',
+    previewFamily: "'Lora', Georgia, serif",
+    previewWeight: 400,
+    previewFontStyle: 'normal',
+    previewTransform: 'none',
+    previewLetterSpacing: '0.01em',
+    renderFont: 'Serif',
+  },
   outfit: {
     label: 'Modern Sans',
     previewFamily: "'Outfit', 'Helvetica Neue', Arial, sans-serif",
@@ -140,6 +233,15 @@ export const MESSAGE_FONT_OPTIONS = {
     previewFontStyle: 'normal',
     previewTransform: 'none',
     previewLetterSpacing: '0.03em',
+    renderFont: 'Sans',
+  },
+  josefinSans: {
+    label: 'Modern Geometric',
+    previewFamily: "'Josefin Sans', 'Helvetica Neue', sans-serif",
+    previewWeight: 600,
+    previewFontStyle: 'normal',
+    previewTransform: 'uppercase',
+    previewLetterSpacing: '0.14em',
     renderFont: 'Sans',
   },
   arialBold: {
@@ -324,12 +426,7 @@ function getOverlayDescriptor(overlayId, colorTheme) {
   if (overlayId === 'balloon') {
     return OVERLAY_ASSETS.balloon[colorTheme] || OVERLAY_ASSETS.balloon.original;
   }
-
-  if (overlayId === 'ribbon') {
-    return OVERLAY_ASSETS.ribbon[colorTheme] || OVERLAY_ASSETS.ribbon.original;
-  }
-
-  return OVERLAY_ASSETS[overlayId]?.default || null;
+  return null;
 }
 
 function addOverlay(overlays, overlayId, colorTheme, zIndex) {
@@ -340,7 +437,7 @@ function addOverlay(overlays, overlayId, colorTheme, zIndex) {
     id: overlayId,
     type: asset.src ? 'video' : 'css',
     src: asset.src,
-    themeVariant: overlayId === 'balloon' || overlayId === 'ribbon' ? colorTheme : 'default',
+    themeVariant: colorTheme,
     label: asset.label,
     zIndex,
   });
@@ -358,6 +455,7 @@ export function getCompositionLayers({
   messageTextColor = '#FFFFFF',
   messageBold = false,
   messageTextSize = 'md',
+  frameStyle = 'none',
 }) {
   const theme = getThemeSpec(colorTheme, { primaryColor, accentColor });
   const engraving = ENGRAVING_STYLES[engravingStyle] || ENGRAVING_STYLES.heirloom;
@@ -373,11 +471,15 @@ export function getCompositionLayers({
 
   const overlays = [];
   if (extras.balloon) addOverlay(overlays, 'balloon', colorTheme, 10);
-  if (extras.ribbon) addOverlay(overlays, 'ribbon', colorTheme, 20);
-  if (extras.sparkle) addOverlay(overlays, 'sparkle', colorTheme, 30);
-  if (extras.goldDust) addOverlay(overlays, 'goldDust', colorTheme, 25);
-  if (extras.softGlow) addOverlay(overlays, 'softGlow', colorTheme, 15);
-  if (extras.rosePetals) addOverlay(overlays, 'rosePetals', colorTheme, 22);
+
+  // Premium canvas effects
+  const canvasEffects = [];
+  if (extras.luminaraDrift)      canvasEffects.push({ id: 'luminaraDrift',      zIndex: 25 });
+  if (extras.bokehBloom)         canvasEffects.push({ id: 'bokehBloom',         zIndex: 18 });
+  if (extras.lightVeil)          canvasEffects.push({ id: 'lightVeil',          zIndex: 20 });
+  if (extras.silkPetals)         canvasEffects.push({ id: 'silkPetals',         zIndex: 22 });
+  if (extras.constellationDrift) canvasEffects.push({ id: 'constellationDrift', zIndex: 23 });
+  if (extras.dewShimmer)         canvasEffects.push({ id: 'dewShimmer',         zIndex: 26 });
 
   const colorFilter = {
     themeId: colorTheme,
@@ -465,6 +567,8 @@ export function getCompositionLayers({
     baseMedia,
     colorFilter,
     overlays,
+    canvasEffects,
+    frameStyle: frameStyle || 'none',
     textLayer,
     protectionLayer,
     activeExtras: overlays.map((overlay) => overlay.id),
@@ -483,7 +587,7 @@ export function getMessageFontSpec(fontChoice) {
 export function hasRealAsset(overlayType, themeVariant = 'default') {
   const registry = OVERLAY_ASSETS[overlayType];
   if (!registry) return false;
-  const asset = registry[themeVariant] || registry.default || Object.values(registry)[0];
+  const asset = registry[themeVariant] || Object.values(registry)[0];
   return asset?.src != null;
 }
 
