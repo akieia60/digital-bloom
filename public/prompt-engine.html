@@ -37,6 +37,12 @@ body{font-family:'Outfit',sans-serif;background:var(--navy);color:var(--white);m
 .cat-btn{padding:6px 14px;border-radius:20px;border:1px solid var(--border);background:var(--card);color:var(--muted);font-size:0.72rem;font-family:'Outfit',sans-serif;cursor:pointer;transition:all 0.2s;white-space:nowrap;flex-shrink:0}
 .cat-btn:hover{border-color:var(--gold);color:var(--white)}
 .cat-btn.active{background:var(--gold);color:#0D1B36;border-color:var(--gold);font-weight:700}
+.cat-btn .cat-count{margin-left:6px;padding:1px 6px;border-radius:10px;background:rgba(255,255,255,0.08);color:inherit;font-size:0.64rem;font-weight:700;letter-spacing:0.03em;opacity:0.85}
+.cat-btn.active .cat-count{background:rgba(13,27,54,0.22)}
+.cat-btn.cat-complete{border-color:var(--green);color:var(--green)}
+.cat-btn.cat-complete .cat-count{background:rgba(34,197,94,0.18);color:var(--green)}
+.cat-btn.cat-complete.active{background:var(--green);color:#0D1B36;border-color:var(--green)}
+.cat-btn.cat-complete.active .cat-count{background:rgba(13,27,54,0.22);color:#0D1B36}
 
 /* MAIN GRID */
 .main{padding:16px 20px;max-width:1200px;margin:0 auto}
@@ -132,8 +138,9 @@ body{font-family:'Outfit',sans-serif;background:var(--navy);color:var(--white);m
   <h1>🌸 Prompt Engine</h1>
   <div class="header-stats">
     <div class="pill">Total: <span id="stat-total">—</span></div>
-    <div class="pill done">Done: <span id="stat-done">0</span></div>
+    <div class="pill done">Live: <span id="stat-done">0</span></div>
     <div class="pill">Showing: <span id="stat-showing">—</span></div>
+    <div class="pill">Still to make: <span id="stat-todo">—</span></div>
   </div>
 </div>
 
@@ -975,6 +982,7 @@ async function syncLiveFromServer(){
     });
     saveLive(live);
     serverLoaded = true;
+    buildCats();
     render();
   } catch(e) {
     // Silently fall back to localStorage — server may be unreachable
@@ -997,12 +1005,23 @@ function init(){
   });
 }
 
+function catCounts(c){
+  // Returns { live, total } for a given category label ('All' returns totals across every prompt).
+  const list = c === 'All' ? PROMPTS : PROMPTS.filter(p => p.cat === c);
+  const live = list.filter(p => isLiveOnSite(p)).length;
+  return { live, total: list.length };
+}
+
 function buildCats(){
   const el = document.getElementById('cats');
-  el.innerHTML = categories.map(c=>`
-    <button class="cat-btn${c===currentCat?' active':''}" onclick="setcat('${c.replace(/'/g,"\\'")}')">
-      ${catEmoji(c)} ${c}
-    </button>`).join('');
+  el.innerHTML = categories.map(c=>{
+    const { live, total } = catCounts(c);
+    const complete = live === total && total > 0;
+    return `
+    <button class="cat-btn${c===currentCat?' active':''}${complete?' cat-complete':''}" onclick="setcat('${c.replace(/'/g,"\\'")}')">
+      ${catEmoji(c)} ${c} <span class="cat-count">${live}/${total}</span>
+    </button>`;
+  }).join('');
 }
 
 function catEmoji(c){
@@ -1029,10 +1048,11 @@ function render(){
     return catOk && searchOk;
   });
 
-  const totalDone = Object.values(done).filter(Boolean).length;
+  const totalLive = PROMPTS.filter(p => isLiveOnSite(p)).length;
   document.getElementById('stat-total').textContent = PROMPTS.length;
-  document.getElementById('stat-done').textContent = totalDone;
+  document.getElementById('stat-done').textContent = totalLive;
   document.getElementById('stat-showing').textContent = filtered.length;
+  document.getElementById('stat-todo').textContent = PROMPTS.length - totalLive;
 
   if(!filtered.length){
     document.getElementById('grid').innerHTML = `<div class="empty"><span class="empty-icon">🔍</span>No prompts found</div>`;
