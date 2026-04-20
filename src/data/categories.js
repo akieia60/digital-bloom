@@ -42,7 +42,7 @@ export const CATEGORIES = [
     emoji: '👑',
     accent: '#2980B9',
     promptEngineLabels: ["Father's Day"],
-    expectedPrompts: 12,
+    expectedPrompts: 14,
   },
   {
     slug: 'birthday',
@@ -52,7 +52,7 @@ export const CATEGORIES = [
     emoji: '🎂',
     accent: '#FFD23F',
     promptEngineLabels: ['Birthday'],
-    expectedPrompts: 13,
+    expectedPrompts: 14,
   },
   {
     slug: 'anniversary',
@@ -62,7 +62,7 @@ export const CATEGORIES = [
     emoji: '💍',
     accent: '#C0392B',
     promptEngineLabels: ['Anniversary'],
-    expectedPrompts: 12,
+    expectedPrompts: 10,
   },
   {
     slug: 'love',
@@ -72,7 +72,7 @@ export const CATEGORIES = [
     emoji: '❤️',
     accent: '#FF3B7F',
     promptEngineLabels: ['Love'],
-    expectedPrompts: 12,
+    expectedPrompts: 14,
   },
   {
     slug: 'valentine',
@@ -82,7 +82,7 @@ export const CATEGORIES = [
     emoji: '💕',
     accent: '#FF6B6B',
     promptEngineLabels: ["Valentine's Day"],
-    expectedPrompts: 3,
+    expectedPrompts: 4,
   },
   {
     slug: 'friendship',
@@ -92,7 +92,7 @@ export const CATEGORIES = [
     emoji: '💛',
     accent: '#FF8C42',
     promptEngineLabels: ['Friendship'],
-    expectedPrompts: 11,
+    expectedPrompts: 16,
   },
   {
     slug: 'thank-you',
@@ -102,7 +102,7 @@ export const CATEGORIES = [
     emoji: '🙏',
     accent: '#27AE60',
     promptEngineLabels: ['Thank You'],
-    expectedPrompts: 11,
+    expectedPrompts: 13,
   },
   {
     slug: 'encouragement',
@@ -112,7 +112,7 @@ export const CATEGORIES = [
     emoji: '💪',
     accent: '#F39C12',
     promptEngineLabels: ['Encouragement'],
-    expectedPrompts: 11,
+    expectedPrompts: 12,
   },
   {
     slug: 'celebration',
@@ -122,7 +122,7 @@ export const CATEGORIES = [
     emoji: '🎉',
     accent: '#B45FFF',
     promptEngineLabels: ['Celebration', 'Congratulations'],
-    expectedPrompts: 20,
+    expectedPrompts: 24,
   },
   {
     slug: 'sympathy',
@@ -132,7 +132,7 @@ export const CATEGORIES = [
     emoji: '🌿',
     accent: '#8DB4A5',
     promptEngineLabels: ['Sympathy'],
-    expectedPrompts: 11,
+    expectedPrompts: 10,
   },
   {
     slug: 'grief',
@@ -142,7 +142,7 @@ export const CATEGORIES = [
     emoji: '🕊️',
     accent: '#7B9FFF',
     promptEngineLabels: ['Grief'],
-    expectedPrompts: 10,
+    expectedPrompts: 14,
   },
   {
     slug: 'luxury',
@@ -162,7 +162,7 @@ export const CATEGORIES = [
     emoji: '✨',
     accent: '#9B59B6',
     promptEngineLabels: ['Zodiac / Celestial Saga'],
-    expectedPrompts: 24,
+    expectedPrompts: 21,
   },
   {
     slug: 'signature-stories',
@@ -172,7 +172,7 @@ export const CATEGORIES = [
     emoji: '📖',
     accent: '#D4AF37',
     promptEngineLabels: ['Signature Stories', 'Signature Series'],
-    expectedPrompts: 17,
+    expectedPrompts: 2,
   },
   {
     slug: 'christmas',
@@ -182,7 +182,7 @@ export const CATEGORIES = [
     emoji: '🎄',
     accent: '#C0392B',
     promptEngineLabels: ['Christmas'],
-    expectedPrompts: 5,
+    expectedPrompts: 7,
   },
   {
     slug: 'holidays',
@@ -204,7 +204,7 @@ export const CATEGORIES = [
       'Veterans Day',
       'Inclusive & Special',
     ],
-    expectedPrompts: 30,
+    expectedPrompts: 27,
   },
 ];
 
