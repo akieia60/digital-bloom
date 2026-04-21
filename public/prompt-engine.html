@@ -51,7 +51,12 @@ body{font-family:'Outfit',sans-serif;background:var(--navy);color:var(--white);m
 .enhancer-select:focus{border-color:var(--gold)}
 .enhancer-select option{background:var(--navy2);color:var(--white)}
 .enhancer-note{font-size:0.72rem;line-height:1.55;color:rgba(255,255,255,0.74)}
-.live-sync-bar{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:10px 12px;border:1px solid rgba(34,197,94,0.18);border-radius:14px;background:linear-gradient(180deg,rgba(34,197,94,0.08),rgba(255,255,255,0.03))}
+.sync-pill{padding:6px 12px;border-radius:20px;border:1px solid rgba(34,197,94,0.35);background:rgba(34,197,94,0.1);color:#86efac;font-size:0.72rem;font-family:'Outfit',sans-serif;cursor:pointer;transition:all 0.2s;white-space:nowrap;flex-shrink:0;font-weight:700}
+.sync-pill:hover{background:rgba(34,197,94,0.2)}
+.sync-pill.open{background:rgba(34,197,94,0.22);border-color:rgba(34,197,94,0.55)}
+.sync-panel-wrap{display:none;flex-direction:row;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:10px 12px;margin:0 20px 10px;border:1px solid rgba(34,197,94,0.18);border-radius:14px;background:linear-gradient(180deg,rgba(34,197,94,0.08),rgba(255,255,255,0.03))}
+.sync-panel-wrap.open{display:flex}
+.live-sync-bar{display:none}
 .live-sync-copy{display:flex;flex-direction:column;gap:4px}
 .live-sync-title{font-size:0.7rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#86efac}
 .live-sync-meta{font-size:0.72rem;line-height:1.55;color:rgba(255,255,255,0.76)}
@@ -170,7 +175,7 @@ body{font-family:'Outfit',sans-serif;background:var(--navy);color:var(--white);m
   .controls{top:53px}
   .enhancer-grid{grid-template-columns:1fr}
   .enhanced-head{align-items:flex-start}
-  .live-sync-bar{align-items:flex-start}
+  .sync-panel-wrap{align-items:flex-start}
   .upload-live-badge{align-items:flex-start;flex-direction:column}
 }
 
@@ -209,14 +214,15 @@ body{font-family:'Outfit',sans-serif;background:var(--navy);color:var(--white);m
   </div>
   <div class="cats" id="cats"></div>
   <div class="status-filters" id="status-filters"></div>
-  <div class="live-sync-bar">
-    <div class="live-sync-copy">
-      <div class="live-sync-title">Live Site Sync</div>
-      <div class="live-sync-meta" id="live-sync-meta">Checking digitalbloom.store for active blooms…</div>
-    </div>
-    <div class="live-sync-actions">
-      <button class="btn-sync" id="sync-live-btn" onclick="syncLiveFromServer()">Refresh Live Sync</button>
-    </div>
+</div>
+
+<div id="sync-panel" class="sync-panel-wrap">
+  <div class="live-sync-copy">
+    <div class="live-sync-title">Live Site Sync</div>
+    <div class="live-sync-meta" id="live-sync-meta">Checking digitalbloom.store for active blooms…</div>
+  </div>
+  <div class="live-sync-actions">
+    <button class="btn-sync" id="sync-live-btn" onclick="syncLiveFromServer()">Refresh Live Sync</button>
   </div>
 </div>
 
@@ -1205,6 +1211,7 @@ let currentStatus = 'all';
 let searchQ = '';
 let enhancerSettings = {...DEFAULT_ENHANCER_SETTINGS, ...getEnhancerSettings()};
 let syncState = {status:'idle', activeCount:0, matchedCount:0, unlinkedCount:0, lastSyncedAt:null, error:'', source:''};
+let syncPanelOpen = false;
 
 const categories = ['All', ...new Set(PROMPTS.map(p=>p.cat))];
 
@@ -1396,9 +1403,26 @@ function formatSyncTime(iso){
   }
 }
 
+function toggleSyncPanel(){
+  syncPanelOpen = !syncPanelOpen;
+  const panel = document.getElementById('sync-panel');
+  const pill = document.getElementById('sync-pill');
+  if(panel) panel.classList.toggle('open', syncPanelOpen);
+  if(pill) pill.classList.toggle('open', syncPanelOpen);
+}
+
+function getSyncPillLabel(){
+  if(syncState.status === 'syncing') return '⟳ Syncing…';
+  if(syncState.status === 'error') return '⚠️ Sync Error';
+  if(syncState.lastSyncedAt) return `🟢 Live Sync · ${syncState.matchedCount} matched`;
+  return '🟢 Live Sync';
+}
+
 function renderSyncMeta(){
   const meta = document.getElementById('live-sync-meta');
   const btn = document.getElementById('sync-live-btn');
+  const pill = document.getElementById('sync-pill');
+  if(pill) pill.textContent = getSyncPillLabel();
   if(!meta || !btn) return;
   if(syncState.status === 'syncing'){
     meta.textContent = 'Refreshing against the active Supabase products that power digitalbloom.store so live prompts stay accurate.';
@@ -1461,7 +1485,7 @@ function buildStatusFilters(){
     <button class="status-btn${currentStatus===option.id?' active':''}" onclick="setStatus('${option.id}')">
       ${option.label} <span class="cat-count">${counts[option.id]}</span>
     </button>
-  `).join('');
+  `).join('') + `<button class="sync-pill${syncPanelOpen?' open':''}" id="sync-pill" onclick="toggleSyncPanel()">${getSyncPillLabel()}</button>`;
 }
 
 function ensureEnhancedVersion(pid){
