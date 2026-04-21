@@ -51,6 +51,25 @@ body{font-family:'Outfit',sans-serif;background:var(--navy);color:var(--white);m
 .enhancer-select:focus{border-color:var(--gold)}
 .enhancer-select option{background:var(--navy2);color:var(--white)}
 .enhancer-note{font-size:0.72rem;line-height:1.55;color:rgba(255,255,255,0.74)}
+.live-sync-bar{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:10px 12px;border:1px solid rgba(34,197,94,0.18);border-radius:14px;background:linear-gradient(180deg,rgba(34,197,94,0.08),rgba(255,255,255,0.03))}
+.live-sync-copy{display:flex;flex-direction:column;gap:4px}
+.live-sync-title{font-size:0.7rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#86efac}
+.live-sync-meta{font-size:0.72rem;line-height:1.55;color:rgba(255,255,255,0.76)}
+.live-sync-actions{display:flex;gap:8px;flex-wrap:wrap}
+.btn-sync{padding:7px 12px;background:rgba(34,197,94,0.12);border:1px solid rgba(34,197,94,0.28);border-radius:8px;color:#86efac;font-size:0.72rem;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:all 0.2s;white-space:nowrap}
+.btn-sync:hover{background:rgba(34,197,94,0.22)}
+.btn-sync:disabled{opacity:0.5;cursor:not-allowed}
+.unlinked-live-panel{display:flex;flex-direction:column;gap:8px;padding:10px 12px;border:1px solid rgba(245,158,11,0.22);border-radius:14px;background:linear-gradient(180deg,rgba(245,158,11,0.08),rgba(255,255,255,0.03))}
+.unlinked-live-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.unlinked-live-title{font-size:0.7rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#fbbf24}
+.unlinked-live-copy{font-size:0.72rem;line-height:1.55;color:rgba(255,255,255,0.76)}
+.unlinked-live-list{display:flex;flex-wrap:wrap;gap:6px}
+.unlinked-pill{padding:5px 10px;border-radius:999px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);font-size:0.68rem;color:rgba(255,255,255,0.82);white-space:nowrap}
+.status-filters{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
+.status-filters::-webkit-scrollbar{display:none}
+.status-btn{padding:6px 12px;border-radius:20px;border:1px solid var(--border);background:rgba(255,255,255,0.03);color:rgba(255,255,255,0.68);font-size:0.72rem;font-family:'Outfit',sans-serif;cursor:pointer;transition:all 0.2s;white-space:nowrap;flex-shrink:0}
+.status-btn:hover{border-color:var(--green);color:var(--white)}
+.status-btn.active{background:rgba(34,197,94,0.16);border-color:rgba(34,197,94,0.34);color:#86efac;font-weight:700}
 
 /* MAIN GRID */
 .main{padding:16px 20px;max-width:1200px;margin:0 auto}
@@ -116,8 +135,14 @@ body{font-family:'Outfit',sans-serif;background:var(--navy);color:var(--white);m
 .upload-zone{padding:0 12px 14px;display:flex;flex-direction:column;gap:6px}
 .upload-live-badge{margin:0 12px 8px;padding:8px 14px;background:rgba(34,197,94,0.12);border:1px solid rgba(34,197,94,0.3);border-radius:10px;color:var(--green);font-size:0.75rem;font-weight:700;display:flex;align-items:center;justify-content:space-between;gap:8px}
 .upload-live-badge__label{display:flex;align-items:center;gap:6px}
+.site-meta{margin:0 12px 10px;padding:10px 12px;border:1px solid rgba(255,255,255,0.08);border-radius:10px;background:rgba(255,255,255,0.03);display:flex;flex-direction:column;gap:6px}
+.site-meta-title{font-size:0.69rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#86efac}
+.site-meta-copy{font-size:0.72rem;line-height:1.55;color:rgba(255,255,255,0.76)}
+.site-meta-actions{display:flex;gap:8px;flex-wrap:wrap}
 .btn-update-version{padding:5px 12px;background:rgba(212,175,55,0.12);border:1px solid var(--gold3);border-radius:7px;color:var(--gold);font-size:0.68rem;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:all 0.2s;white-space:nowrap;flex-shrink:0}
 .btn-update-version:hover{background:rgba(212,175,55,0.28)}
+.btn-site-link{padding:5px 12px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:7px;color:var(--white);font-size:0.68rem;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:all 0.2s;text-decoration:none;white-space:nowrap}
+.btn-site-link:hover{border-color:rgba(34,197,94,0.34);color:#86efac}
 .update-zone{padding:0 12px 10px;display:flex;flex-direction:column;gap:5px}
 .btn-upload{width:100%;padding:10px 0;background:rgba(212,175,55,0.08);border:1px dashed var(--gold3);border-radius:10px;color:var(--gold);font-size:0.78rem;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:all 0.2s;text-align:center}
 .btn-upload:hover{background:rgba(212,175,55,0.18);border-color:var(--gold)}
@@ -140,6 +165,8 @@ body{font-family:'Outfit',sans-serif;background:var(--navy);color:var(--white);m
   .controls{top:53px}
   .enhancer-grid{grid-template-columns:1fr}
   .enhanced-head{align-items:flex-start}
+  .live-sync-bar{align-items:flex-start}
+  .upload-live-badge{align-items:flex-start;flex-direction:column}
 }
 
 /* CATEGORY COLORS */
@@ -176,6 +203,7 @@ body{font-family:'Outfit',sans-serif;background:var(--navy);color:var(--white);m
     <span class="search-icon">🔍</span>
   </div>
   <div class="cats" id="cats"></div>
+  <div class="status-filters" id="status-filters"></div>
   <div class="enhancer-bar">
     <div class="enhancer-grid">
       <label class="enhancer-field">
@@ -206,6 +234,16 @@ body{font-family:'Outfit',sans-serif;background:var(--navy);color:var(--white);m
     </div>
     <div class="enhancer-note">Enhancer sits on top of the existing prompt library. Originals stay untouched; Grok-ready versions use your selected structure, intensity, and preset to build stronger pacing, reveal, and payoff.</div>
   </div>
+  <div class="live-sync-bar">
+    <div class="live-sync-copy">
+      <div class="live-sync-title">Live Site Sync</div>
+      <div class="live-sync-meta" id="live-sync-meta">Checking digitalbloom.store for active blooms…</div>
+    </div>
+    <div class="live-sync-actions">
+      <button class="btn-sync" id="sync-live-btn" onclick="syncLiveFromServer()">Refresh Live Sync</button>
+    </div>
+  </div>
+  <div id="unlinked-live-wrap"></div>
 </div>
 
 <div class="main">
@@ -1110,6 +1148,20 @@ const DONE_KEY = 'db_prompt_done';
 const LIVE_KEY = 'db_bloom_live';
 const ENHANCED_KEY = 'db_prompt_enhanced_versions';
 const ENHANCER_SETTINGS_KEY = 'db_prompt_enhancer_settings';
+const SUPABASE_URL = 'https://yhdbeblowolfinxxhsnt.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InloZGJlYmxvd29sZmlueHhoc250Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjkyNjA0NjMsImV4cCI6MjA4NDgzNjQ2M30.DGIJ5FSr2M4wBi3eQ5rjC0jx3CVS4pEcJe1PMOSR0yM';
+const LEGACY_PRODUCT_ALIASES = {
+  'ss-bd-01':'v2-210',
+  'ss-bd-02':'v2-211',
+  'birthday-happy-birthday-v1':'bday-1',
+  'encouragement-sunrise-sunflowers-you-ve-got-this':'enc-1',
+  'friendship-thinking-of-you-orchids-and-roses-v1':'friend-4',
+  'friendship-thinking-of-you-white-orchids-white-roses-v1':'friend-4',
+  'congratulations-bouquet-v67':'cel-1',
+  'congratulations-rose-bloom-v86':'cel-1',
+  'i-love-you-rose-bloom':'love-1',
+  'i-love-you-rose-bloom-2':'love-1',
+};
 const DEFAULT_ENHANCER_SETTINGS = {structureMode:'3x10', intensityMode:'cinematic', styleMode:'signature-bloom'};
 function getDone(){try{return JSON.parse(localStorage.getItem(DONE_KEY)||'{}')}catch{return{}}}
 function saveDone(d){localStorage.setItem(DONE_KEY,JSON.stringify(d))}
@@ -1122,15 +1174,23 @@ function saveEnhancerSettings(v){localStorage.setItem(ENHANCER_SETTINGS_KEY,JSON
 
 const uploadStates = {}; // in-memory upload state so renders don't reset progress
 const enhancedDrafts = {};
+const LIVE_STATUS_OPTIONS = [
+  {id:'all',label:'All Prompts'},
+  {id:'todo',label:'Needs Creation'},
+  {id:'live',label:'Live On Site'},
+];
 
 let done = getDone();
 let live = getLive();
 let enhancedSaved = getEnhanced();
 let serverLiveSlugs = {}; // keyed by slug → product data, loaded from Supabase
 let serverLoaded = false;
+let unlinkedLiveProducts = [];
 let currentCat = 'All';
+let currentStatus = 'all';
 let searchQ = '';
 let enhancerSettings = {...DEFAULT_ENHANCER_SETTINGS, ...getEnhancerSettings()};
+let syncState = {status:'idle', activeCount:0, matchedCount:0, unlinkedCount:0, lastSyncedAt:null, error:'', source:''};
 
 const categories = ['All', ...new Set(PROMPTS.map(p=>p.cat))];
 
@@ -1262,6 +1322,83 @@ function getDisplayedEnhancedVersion(pid){
   return null;
 }
 
+function formatSyncTime(iso){
+  if(!iso) return 'Not synced yet.';
+  try {
+    return new Date(iso).toLocaleString([], { month:'short', day:'numeric', hour:'numeric', minute:'2-digit' });
+  } catch {
+    return iso;
+  }
+}
+
+function renderSyncMeta(){
+  const meta = document.getElementById('live-sync-meta');
+  const btn = document.getElementById('sync-live-btn');
+  if(!meta || !btn) return;
+  if(syncState.status === 'syncing'){
+    meta.textContent = 'Refreshing against the active Supabase products that power digitalbloom.store so live prompts stay accurate.';
+    btn.disabled = true;
+    return;
+  }
+  btn.disabled = false;
+  if(syncState.status === 'error'){
+    meta.textContent = `Live sync could not reach the site data. Using the last local state for now. ${syncState.error || ''}`.trim();
+    return;
+  }
+  if(syncState.lastSyncedAt){
+    const sourceLabel = syncState.source === 'supabase'
+      ? 'Synced directly from Supabase.'
+      : syncState.source === 'api'
+        ? 'Synced through the site API fallback.'
+        : '';
+    const unlinkedLabel = syncState.unlinkedCount ? `${syncState.unlinkedCount} live product${syncState.unlinkedCount===1?' is':'s are'} still unlinked to this prompt file.` : 'All live products that map to this prompt file are linked.';
+    meta.textContent = `Matched ${syncState.matchedCount} prompt${syncState.matchedCount===1?'':'s'} to ${syncState.activeCount} active site bloom${syncState.activeCount===1?'':'s'}. ${unlinkedLabel} Last sync ${formatSyncTime(syncState.lastSyncedAt)}. ${sourceLabel} Live cards are safe to skip unless you want to replace them.`.trim();
+    return;
+  }
+  meta.textContent = 'Checking Supabase for the active blooms that are powering digitalbloom.store…';
+}
+
+function renderUnlinkedLivePanel(){
+  const wrap = document.getElementById('unlinked-live-wrap');
+  if(!wrap) return;
+  if(!unlinkedLiveProducts.length){
+    wrap.innerHTML = '';
+    return;
+  }
+  const preview = unlinkedLiveProducts.slice(0, 12);
+  const moreCount = Math.max(0, unlinkedLiveProducts.length - preview.length);
+  wrap.innerHTML = `
+    <div class="unlinked-live-panel">
+      <div class="unlinked-live-head">
+        <div>
+          <div class="unlinked-live-title">Unlinked Live Products</div>
+          <div class="unlinked-live-copy">These blooms are active in Supabase and on the site, but this prompt engine cannot yet tie them to a prompt ID. They likely need a legacy alias or a missing prompt entry restored into this file.</div>
+        </div>
+        <button class="btn-sync" onclick="copyUnlinkedLiveProducts()">Copy Unlinked List</button>
+      </div>
+      <div class="unlinked-live-list">
+        ${preview.map(item => `<span class="unlinked-pill">${escapeHtml(item.slug)} — ${escapeHtml(item.name)}</span>`).join('')}
+        ${moreCount ? `<span class="unlinked-pill">+${moreCount} more</span>` : ''}
+      </div>
+    </div>
+  `;
+}
+
+function buildStatusFilters(){
+  const el = document.getElementById('status-filters');
+  if(!el) return;
+  const counts = {
+    live:PROMPTS.filter(p => isLiveOnSite(p)).length,
+    todo:PROMPTS.filter(p => !isLiveOnSite(p)).length,
+    all:PROMPTS.length,
+  };
+  el.innerHTML = LIVE_STATUS_OPTIONS.map(option => `
+    <button class="status-btn${currentStatus===option.id?' active':''}" onclick="setStatus('${option.id}')">
+      ${option.label} <span class="cat-count">${counts[option.id]}</span>
+    </button>
+  `).join('');
+}
+
 function ensureEnhancedVersion(pid){
   if(isCurrentEnhancedVersion(enhancedDrafts[pid])) return enhancedDrafts[pid];
   if(isCurrentEnhancedVersion(enhancedSaved[pid])) return enhancedSaved[pid];
@@ -1305,37 +1442,138 @@ function bindEnhancerControls(){
   });
 }
 
-// Load live products from the server and merge with localStorage
-async function syncLiveFromServer(){
+function getSupabaseProductsUrl(){
+  return `${SUPABASE_URL}/rest/v1/products?select=id,name,slug,category,price,is_active,video_url,updated_at&is_active=eq.true&order=updated_at.desc&limit=1000`;
+}
+
+async function fetchJsonWithTimeout(url, options={}, timeoutMs=12000){
+  const controller = new AbortController();
+  const timeout = setTimeout(()=>controller.abort(), timeoutMs);
   try {
-    const res = await fetch('/api/list-products');
-    if(!res.ok) return;
-    const { products } = await res.json();
-    if(!Array.isArray(products)) return;
-    serverLiveSlugs = {};
-    products.forEach(p => { if(p.slug) serverLiveSlugs[p.slug] = p; });
-    // Product slugs are the prompt pid (e.g. 'bday-1', 'md-a1') — match directly
-    PROMPTS.forEach(p => {
-      if(serverLiveSlugs[p.id]) { live[p.id] = true; }
-    });
-    saveLive(live);
-    serverLoaded = true;
+    const res = await fetch(url, {...options, signal:controller.signal});
+    return res;
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
+async function fetchLiveProductsFromSupabase(){
+  const res = await fetchJsonWithTimeout(getSupabaseProductsUrl(), {
+    headers:{
+      apikey:SUPABASE_ANON_KEY,
+      Authorization:`Bearer ${SUPABASE_ANON_KEY}`,
+    },
+  });
+  if(!res.ok) throw new Error(`Supabase ${res.status}`);
+  const products = await res.json();
+  if(!Array.isArray(products)) throw new Error('Invalid Supabase live payload');
+  return {products, source:'supabase'};
+}
+
+async function fetchLiveProductsFromApiFallback(){
+  const res = await fetchJsonWithTimeout('/api/list-products');
+  if(!res.ok) throw new Error(`Server ${res.status}`);
+  const { products } = await res.json();
+  if(!Array.isArray(products)) throw new Error('Invalid live payload');
+  return {products, source:'api'};
+}
+
+function resolvePromptIdForLiveProduct(product){
+  if(!product?.slug) return null;
+  if(getPromptById(product.slug)) return {promptId:product.slug, linkType:'direct'};
+  const aliasId = LEGACY_PRODUCT_ALIASES[product.slug];
+  if(aliasId && getPromptById(aliasId)) return {promptId:aliasId, linkType:'alias'};
+  return null;
+}
+
+function applyLiveProducts(products, source){
+  serverLiveSlugs = {};
+  unlinkedLiveProducts = [];
+  products.forEach(product => {
+    if(!product.slug || product.is_active === false) return;
+    const resolved = resolvePromptIdForLiveProduct(product);
+    if(!resolved){
+      unlinkedLiveProducts.push(product);
+      return;
+    }
+    serverLiveSlugs[resolved.promptId] = {
+      ...product,
+      originalSlug:product.slug,
+      matchedPromptId:resolved.promptId,
+      linkType:resolved.linkType,
+    };
+  });
+  const nextLive = {};
+  PROMPTS.forEach(p => {
+    if(serverLiveSlugs[p.id]) nextLive[p.id] = true;
+  });
+  live = nextLive;
+  saveLive(live);
+  serverLoaded = true;
+  syncState = {
+    status:'ready',
+    activeCount:products.length,
+    matchedCount:Object.keys(nextLive).length,
+    unlinkedCount:unlinkedLiveProducts.length,
+    lastSyncedAt:new Date().toISOString(),
+    error:'',
+    source,
+  };
+}
+
+// Load live products from Supabase first so the prompt engine does not depend on the helper API.
+async function syncLiveFromServer(){
+  syncState = {...syncState, status:'syncing', error:''};
+  renderSyncMeta();
+  try {
+    const { products, source } = await fetchLiveProductsFromSupabase();
+    applyLiveProducts(products, source);
     buildCats();
+    buildStatusFilters();
+    renderSyncMeta();
+    renderUnlinkedLivePanel();
     render();
   } catch(e) {
-    // Silently fall back to localStorage — server may be unreachable
-    serverLoaded = true;
+    try {
+      const { products, source } = await fetchLiveProductsFromApiFallback();
+      applyLiveProducts(products, source);
+      buildCats();
+      buildStatusFilters();
+      renderSyncMeta();
+      renderUnlinkedLivePanel();
+      render();
+    } catch(fallbackError) {
+      serverLoaded = true;
+      unlinkedLiveProducts = [];
+      syncState = {
+        ...syncState,
+        status:'error',
+        source:'',
+        unlinkedCount:0,
+        error:`Supabase sync failed (${e.message || 'unknown error'}). API fallback failed (${fallbackError.message || 'unknown error'}).`,
+      };
+      buildCats();
+      buildStatusFilters();
+      renderSyncMeta();
+      renderUnlinkedLivePanel();
+      render();
+    }
   }
 }
 
 function isLiveOnSite(p){
-  // Product slugs in Supabase are the prompt pid — match directly
-  return !!serverLiveSlugs[p.id] || !!live[p.id];
+  // Once the server has synced successfully, trust active site records as source of truth.
+  // If sync is unavailable, fall back to the last known local live state.
+  if(serverLoaded && syncState.status === 'ready') return !!serverLiveSlugs[p.id];
+  return !!live[p.id];
 }
 
 function init(){
   bindEnhancerControls();
   buildCats();
+  buildStatusFilters();
+  renderSyncMeta();
+  renderUnlinkedLivePanel();
   render();
   syncLiveFromServer();
   document.getElementById('search').addEventListener('input', e=>{
@@ -1377,14 +1615,20 @@ function catEmoji(c){
 }
 
 function setcat(c){currentCat=c;buildCats();render()}
+function setStatus(status){currentStatus=status;buildStatusFilters();render()}
 
 function render(){
   const filtered = PROMPTS.filter(p=>{
     const catOk = currentCat==='All' || p.cat===currentCat;
+    const statusOk = currentStatus === 'all'
+      ? true
+      : currentStatus === 'live'
+        ? isLiveOnSite(p)
+        : !isLiveOnSite(p);
     const q = searchQ;
     const searchOk = !q || p.title.toLowerCase().includes(q) || p.cat.toLowerCase().includes(q) ||
       p.scenes.some(s=>s.text.toLowerCase().includes(q));
-    return catOk && searchOk;
+    return catOk && statusOk && searchOk;
   });
 
   const totalLive = PROMPTS.filter(p => isLiveOnSite(p)).length;
@@ -1398,6 +1642,7 @@ function render(){
     return;
   }
 
+  buildStatusFilters();
   // Group by category for section labels
   const groups = {};
   filtered.forEach(p=>{
@@ -1430,10 +1675,21 @@ function cardHTML(p){
   if(liveOnSite){
     const siteProduct = serverLiveSlugs[p.id];
     const priceLabel = siteProduct ? ` · $${parseFloat(siteProduct.price||0).toFixed(2)}` : '';
+    const updatedLabel = siteProduct?.updated_at ? `Synced ${formatSyncTime(siteProduct.updated_at)}` : 'Synced from active site data';
+    const livePageUrl = siteProduct?.id ? `https://digitalbloom.store/product/${siteProduct.id}` : 'https://digitalbloom.store';
+    const videoUrl = siteProduct?.video_url || '';
     bottomZone = `
       <div class="upload-live-badge">
         <span class="upload-live-badge__label">✅ Live on digitalbloom.store${priceLabel}</span>
-        <button class="btn-update-version" onclick="document.getElementById('file-${p.id}').click()" title="Replace the video with a new version">↑ New Version</button>
+        <button class="btn-update-version" onclick="document.getElementById('file-${p.id}').click()" title="Replace the video with a new version">↑ Replace Live Version</button>
+      </div>
+      <div class="site-meta">
+        <div class="site-meta-title">Already Published</div>
+        <div class="site-meta-copy">This bloom is already active on the site, so you do not need to remake it unless you want to upgrade or replace the published version. ${updatedLabel}.</div>
+        <div class="site-meta-actions">
+          <a class="btn-site-link" href="${livePageUrl}" target="_blank" rel="noopener noreferrer">View Live Page</a>
+          ${videoUrl ? `<a class="btn-site-link" href="${videoUrl}" target="_blank" rel="noopener noreferrer">Open Site Video</a>` : ''}
+        </div>
       </div>
       <div class="update-zone">
         ${fileInput}
@@ -1576,6 +1832,15 @@ function copyText(text, btnId, resetLabel, successMessage){
   }
 }
 
+function copyUnlinkedLiveProducts(){
+  if(!unlinkedLiveProducts.length){
+    showToast('No unlinked live products right now');
+    return;
+  }
+  const text = unlinkedLiveProducts.map(item => `${item.slug}\t${item.name}\t${item.category || ''}`).join('\n');
+  copyText(text, null, null, 'Unlinked live products copied');
+}
+
 function copyScene(pid, idx){
   const p = getPromptById(pid);
   if(!p) return;
@@ -1712,6 +1977,7 @@ async function handleUpload(pid, encTitle, encCat, input){
     live[pid]=true; saveLive(live);
     done[pid]=true; saveDone(done);
     delete uploadStates[pid];
+    await syncLiveFromServer();
     showToast('🌸 Bloom is live on digitalbloom.store!');
     render();
 
