@@ -16,6 +16,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "upload-products": "node scripts/uploadProducts.js",
+    "backfill-prompt-ids": "node scripts/backfill-product-prompt-ids.js",
     "setup-stripe": "node scripts/setup-stripe-products.js",
     "seed-pricing": "node scripts/seed-pricing-tiers.js"
   },

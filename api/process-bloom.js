@@ -104,26 +104,40 @@ export default async function handler(req, res) {
     const videoUrl = `${supabaseUrl}/storage/v1/object/public/product-media/${watermarkedStoragePath}`;
     const productSlug = pid || `${categorySlug}-${slug}`;
 
-    const { data: product, error: dbErr } = await supabase
+    const baseProductPayload = {
+      name: title,
+      slug: productSlug,
+      description: `A beautiful Digital Bloom for every occasion.`,
+      price: 1.99,
+      image_url: videoUrl,
+      video_url: videoUrl,
+      category: categorySlug,
+      occasions: [categorySlug],
+      tier: 1,
+      stripe_price_id: TIER1_PRICE_ID,
+      stripe_product_id: TIER1_PRODUCT_ID,
+      is_active: true,
+      stock: 999,
+      product_type: 'digital',
+    };
+
+    let { data: product, error: dbErr } = await supabase
       .from('products')
       .upsert({
-        name: title,
-        slug: productSlug,
-        description: `A beautiful Digital Bloom for every occasion.`,
-        price: 1.99,
-        image_url: videoUrl,
-        video_url: videoUrl,
-        category: categorySlug,
-        occasions: [categorySlug],
-        tier: 1,
-        stripe_price_id: TIER1_PRICE_ID,
-        stripe_product_id: TIER1_PRODUCT_ID,
-        is_active: true,
-        stock: 999,
-        product_type: 'digital',
+        ...baseProductPayload,
+        prompt_id: pid || null,
       }, { onConflict: 'slug' })
-      .select('id, name, slug')
+      .select('id, name, slug, prompt_id')
       .single();
+
+    if (dbErr?.code === '42703') {
+      ({ data: product, error: dbErr } = await supabase
+        .from('products')
+        .upsert(baseProductPayload, { onConflict: 'slug' })
+        .select('id, name, slug')
+        .single());
+    }
+
     if (dbErr) throw new Error(`DB upsert failed: ${dbErr.message}`);
 
     console.log(`[process-bloom] ✅ ${product.name} — ${videoUrl}`);

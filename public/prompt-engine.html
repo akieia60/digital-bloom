@@ -1443,7 +1443,7 @@ function bindEnhancerControls(){
 }
 
 function getSupabaseProductsUrl(){
-  return `${SUPABASE_URL}/rest/v1/products?select=id,name,slug,category,price,is_active,video_url,updated_at&is_active=eq.true&order=updated_at.desc&limit=1000`;
+  return `${SUPABASE_URL}/rest/v1/products?select=*&is_active=eq.true&order=updated_at.desc&limit=1000`;
 }
 
 async function fetchJsonWithTimeout(url, options={}, timeoutMs=12000){
@@ -1464,8 +1464,8 @@ async function fetchLiveProductsFromSupabase(){
       Authorization:`Bearer ${SUPABASE_ANON_KEY}`,
     },
   });
-  if(!res.ok) throw new Error(`Supabase ${res.status}`);
   const products = await res.json();
+  if(!res.ok) throw new Error(`Supabase ${res.status}`);
   if(!Array.isArray(products)) throw new Error('Invalid Supabase live payload');
   return {products, source:'supabase'};
 }
@@ -1479,6 +1479,7 @@ async function fetchLiveProductsFromApiFallback(){
 }
 
 function resolvePromptIdForLiveProduct(product){
+  if(product?.prompt_id && getPromptById(product.prompt_id)) return {promptId:product.prompt_id, linkType:'prompt_id'};
   if(!product?.slug) return null;
   if(getPromptById(product.slug)) return {promptId:product.slug, linkType:'direct'};
   const aliasId = LEGACY_PRODUCT_ALIASES[product.slug];

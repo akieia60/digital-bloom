@@ -50,6 +50,10 @@ ADD COLUMN IF NOT EXISTS video_file_url TEXT;
 -- For digital products: the downloadable video file
 
 ALTER TABLE products
+ADD COLUMN IF NOT EXISTS prompt_id TEXT;
+-- Stable link back to prompt-engine prompt ID
+
+ALTER TABLE products
 ADD COLUMN IF NOT EXISTS prompt_used TEXT;
 -- Store which AI prompt was used to create this
 

@@ -21,6 +21,7 @@ CREATE TABLE IF NOT EXISTS products (
 
   -- Categorization
   category VARCHAR(50) NOT NULL,
+  prompt_id TEXT,
   occasions TEXT[] DEFAULT '{}', -- Array of occasion tags
 
   -- Stripe Integration
@@ -39,6 +40,7 @@ CREATE TABLE IF NOT EXISTS products (
 -- Index for faster queries
 CREATE INDEX IF NOT EXISTS idx_products_category ON products(category);
 CREATE INDEX IF NOT EXISTS idx_products_slug ON products(slug);
+CREATE INDEX IF NOT EXISTS idx_products_prompt_id ON products(prompt_id);
 CREATE INDEX IF NOT EXISTS idx_products_is_active ON products(is_active);
 CREATE INDEX IF NOT EXISTS idx_products_stripe_product_id ON products(stripe_product_id);
 

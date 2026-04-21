@@ -1,0 +1,748 @@
+{
+  "generatedAt": "2026-04-21T00:08:50.527Z",
+  "writeMode": false,
+  "promptCount": 229,
+  "activeProductCount": 89,
+  "alreadyBackfilledCount": 0,
+  "directMatchCount": 13,
+  "aliasMatchCount": 10,
+  "toWriteCount": 23,
+  "ambiguousCount": 5,
+  "unmatchedCount": 61,
+  "directMatches": [
+    {
+      "id": "89573d99-702e-481c-af63-22311830323b",
+      "name": "It's Your Day",
+      "slug": "v2-210",
+      "category": "birthday",
+      "is_active": true,
+      "resolved_prompt_id": "v2-210"
+    },
+    {
+      "id": "c1400863-e682-4818-aec8-f106d4cd8032",
+      "name": "Big 50",
+      "slug": "bday-3",
+      "category": "birthday",
+      "is_active": true,
+      "resolved_prompt_id": "bday-3"
+    },
+    {
+      "id": "c9da3e1c-2662-4c69-8da9-15cef15c8523",
+      "name": "Birthday Queen",
+      "slug": "bday-2",
+      "category": "birthday",
+      "is_active": true,
+      "resolved_prompt_id": "bday-2"
+    },
+    {
+      "id": "a30b8be9-cc49-4a4f-9d81-9e21ce77db34",
+      "name": "Happy Mother's Day",
+      "slug": "md-1",
+      "category": "mothers-day",
+      "is_active": true,
+      "resolved_prompt_id": "md-1"
+    },
+    {
+      "id": "34ebca22-2a90-40b6-9165-85bdcb97d7cd",
+      "name": "I Love You Mom",
+      "slug": "md-2",
+      "category": "mothers-day",
+      "is_active": true,
+      "resolved_prompt_id": "md-2"
+    },
+    {
+      "id": "67b4988a-2762-4324-bc75-8d7f47781a0c",
+      "name": "You Taught Me Everything",
+      "slug": "v2-296",
+      "category": "fathers-day",
+      "is_active": true,
+      "resolved_prompt_id": "v2-296"
+    },
+    {
+      "id": "5a76ae40-a18e-4192-be2d-4e3c0fce2f60",
+      "name": "Grandpa aka Pops",
+      "slug": "v2-295",
+      "category": "fathers-day",
+      "is_active": true,
+      "resolved_prompt_id": "v2-295"
+    },
+    {
+      "id": "1c6323d6-8942-4455-89ca-90df8e1ae1eb",
+      "name": "Happy Father's Day",
+      "slug": "v2-294",
+      "category": "fathers-day",
+      "is_active": true,
+      "resolved_prompt_id": "v2-294"
+    },
+    {
+      "id": "ab4934d0-4eeb-4a3b-acf4-9b5f03d0b816",
+      "name": "You're My Hero",
+      "slug": "v2-293",
+      "category": "fathers-day",
+      "is_active": true,
+      "resolved_prompt_id": "v2-293"
+    },
+    {
+      "id": "969219d5-3962-48c2-bfc3-81b229f5e187",
+      "name": "Pops I Love You",
+      "slug": "v2-292",
+      "category": "fathers-day",
+      "is_active": true,
+      "resolved_prompt_id": "v2-292"
+    },
+    {
+      "id": "aa974bce-d617-4a68-923c-d81c56db2396",
+      "name": "The GOAT Dad",
+      "slug": "v2-291",
+      "category": "fathers-day",
+      "is_active": true,
+      "resolved_prompt_id": "v2-291"
+    },
+    {
+      "id": "a3b293db-0373-4a7f-8347-6885ba80e63c",
+      "name": "Rich Warm Study — Father's Day",
+      "slug": "fd-1",
+      "category": "fathers-day",
+      "is_active": true,
+      "resolved_prompt_id": "fd-1"
+    },
+    {
+      "id": "d3058a00-3b1e-49aa-af4e-538d5f03eff9",
+      "name": "My First Love",
+      "slug": "v2-289",
+      "category": "mothers-day",
+      "is_active": true,
+      "resolved_prompt_id": "v2-289"
+    }
+  ],
+  "aliasMatches": [
+    {
+      "id": "3a562cb8-f651-4344-be56-3e45130b32b7",
+      "name": "BD-02 — \"Another Year of Greatness\"",
+      "slug": "ss-bd-02",
+      "category": "signature-stories",
+      "is_active": true,
+      "resolved_prompt_id": "v2-211"
+    },
+    {
+      "id": "38bcc793-9659-4201-9b83-b7aa05ecb57c",
+      "name": "BD-01 — \"It's Your Day\"",
+      "slug": "ss-bd-01",
+      "category": "signature-stories",
+      "is_active": true,
+      "resolved_prompt_id": "v2-210"
+    },
+    {
+      "id": "f0dd2efd-2066-4925-acf1-628cc4d8df60",
+      "name": "Sunrise Sunflowers — You've Got This Bloom",
+      "slug": "encouragement-sunrise-sunflowers-you-ve-got-this",
+      "category": "encouragement",
+      "is_active": true,
+      "resolved_prompt_id": "enc-1"
+    },
+    {
+      "id": "32456c69-f873-40c8-a556-a6d8bb8a76b7",
+      "name": "Friendship Thinking Of You White Orchids White Roses",
+      "slug": "friendship-thinking-of-you-white-orchids-white-roses-v1",
+      "category": "friendship",
+      "is_active": true,
+      "resolved_prompt_id": "friend-4"
+    },
+    {
+      "id": "0c2b54e2-08dc-400b-b644-2e2ff26a270e",
+      "name": "Friendship Thinking Of You Orchids And Roses",
+      "slug": "friendship-thinking-of-you-orchids-and-roses-v1",
+      "category": "friendship",
+      "is_active": true,
+      "resolved_prompt_id": "friend-4"
+    },
+    {
+      "id": "7c2fcbae-5c41-4ef2-91c3-5479d385872c",
+      "name": "Birthday Happy Birthday",
+      "slug": "birthday-happy-birthday-v1",
+      "category": "birthday",
+      "is_active": true,
+      "resolved_prompt_id": "bday-1"
+    },
+    {
+      "id": "e847aaf1-2712-4174-870f-da4083dcaee1",
+      "name": "Congratulations Bouquet",
+      "slug": "congratulations-bouquet-v67",
+      "category": "celebration",
+      "is_active": true,
+      "resolved_prompt_id": "cel-1"
+    },
+    {
+      "id": "a33dc41a-5109-44c2-8b43-cea11cb5d1c8",
+      "name": "Congratulations Rose Bloom",
+      "slug": "congratulations-rose-bloom-v86",
+      "category": "celebration",
+      "is_active": true,
+      "resolved_prompt_id": "cel-1"
+    },
+    {
+      "id": "ab193767-b016-4099-afeb-f75926b7d221",
+      "name": "I Love You Rose Bloom",
+      "slug": "i-love-you-rose-bloom",
+      "category": "love",
+      "is_active": true,
+      "resolved_prompt_id": "love-1"
+    },
+    {
+      "id": "bcd54ee9-9907-41c0-9c55-4fd7fcbe739a",
+      "name": "I Love You Rose Bloom II",
+      "slug": "i-love-you-rose-bloom-2",
+      "category": "love",
+      "is_active": true,
+      "resolved_prompt_id": "love-1"
+    }
+  ],
+  "ambiguous": [
+    {
+      "id": "ac21d823-1bc5-4b82-9f3b-4aa85894e3db",
+      "name": "MD-04 — \"First Love\"",
+      "slug": "ss-md-04",
+      "category": "signature-stories",
+      "is_active": true,
+      "suggestions": [
+        {
+          "promptId": "md-7",
+          "promptTitle": "My First Love",
+          "promptCategory": "Mother's Day",
+          "reason": "candidate-title"
+        },
+        {
+          "promptId": "v2-289",
+          "promptTitle": "My First Love",
+          "promptCategory": "Mother's Day",
+          "reason": "candidate-title"
+        }
+      ]
+    },
+    {
+      "id": "1a1638f9-defc-436c-a83f-f50d726b68f0",
+      "name": "MD-03 — \"Thinking of You Mom\"",
+      "slug": "ss-md-03",
+      "category": "signature-stories",
+      "is_active": true,
+      "suggestions": [
+        {
+          "promptId": "friend-4",
+          "promptTitle": "Thinking of You",
+          "promptCategory": "Friendship",
+          "reason": "candidate-title"
+        }
+      ]
+    },
+    {
+      "id": "2aa94d26-857f-43b6-a330-360934442e06",
+      "name": "The Scholar's Bloom — Graduation Ascent",
+      "slug": "graduation-the-scholar-s-bloom-graduation-ascent",
+      "category": "celebration",
+      "is_active": true,
+      "suggestions": [
+        {
+          "promptId": "v2-354",
+          "promptTitle": "Graduation",
+          "promptCategory": "Celebration",
+          "reason": "candidate-title"
+        }
+      ]
+    },
+    {
+      "id": "c03e892e-4d92-409e-b0ca-0098ba5e326d",
+      "name": "Luxury Bloom",
+      "slug": "luxury-bloom-v1",
+      "category": "luxury",
+      "is_active": true,
+      "suggestions": [
+        {
+          "promptId": "xmas-2",
+          "promptTitle": "Christmas Luxury",
+          "promptCategory": "Christmas",
+          "reason": "candidate-title"
+        },
+        {
+          "promptId": "vday-1",
+          "promptTitle": "Valentine Luxury — 100 Roses",
+          "promptCategory": "Valentine's Day",
+          "reason": "candidate-title"
+        },
+        {
+          "promptId": "v2-311",
+          "promptTitle": "Black Marble Luxury",
+          "promptCategory": "Luxury — Glass Stiletto",
+          "reason": "candidate-title"
+        },
+        {
+          "promptId": "v2-313",
+          "promptTitle": "Glass Dome Luxury",
+          "promptCategory": "Luxury — Glass Stiletto",
+          "reason": "candidate-title"
+        },
+        {
+          "promptId": "v2-322",
+          "promptTitle": "Holiday Luxury",
+          "promptCategory": "Christmas",
+          "reason": "candidate-title"
+        },
+        {
+          "promptId": "v2-329",
+          "promptTitle": "Valentine Luxury",
+          "promptCategory": "Valentine's Day",
+          "reason": "candidate-title"
+        }
+      ]
+    },
+    {
+      "id": "a58016b0-6217-402e-ade6-15385b4a2f4e",
+      "name": "Thinking of You Bloom",
+      "slug": "thinking-of-you-bloom-v24",
+      "category": "friendship",
+      "is_active": true,
+      "suggestions": [
+        {
+          "promptId": "friend-4",
+          "promptTitle": "Thinking of You",
+          "promptCategory": "Friendship",
+          "reason": "candidate-title"
+        },
+        {
+          "promptId": "v2-324",
+          "promptTitle": "Thinking of You This Holiday",
+          "promptCategory": "Christmas",
+          "reason": "candidate-title"
+        }
+      ]
+    }
+  ],
+  "unmatched": [
+    {
+      "id": "de6dde34-6602-42db-a0d3-5f0abb2a28b3",
+      "name": "The Patriarch — Father's Day Strength (Vault)",
+      "slug": "fd-v1",
+      "category": "fathers-day",
+      "is_active": true
+    },
+    {
+      "id": "19e8462a-25ae-45e9-bcda-4a430bb6e5a4",
+      "name": "MD-05 — \"Grandma You Are Loved\"",
+      "slug": "ss-md-05",
+      "category": "signature-stories",
+      "is_active": true
+    },
+    {
+      "id": "d8d46154-e572-41fb-8bdb-d58da04d7000",
+      "name": "MD-02 — \"She Deserves Everything\"",
+      "slug": "ss-md-02",
+      "category": "signature-stories",
+      "is_active": true
+    },
+    {
+      "id": "ce841d0b-1618-4758-a05b-bd8ed7934e0e",
+      "name": "Everything I Am",
+      "slug": "signature-stories-md-01-everything-i-am",
+      "category": "signature-stories",
+      "is_active": true
+    },
+    {
+      "id": "e2397101-c58c-4736-8ec3-df7b8ca96877",
+      "name": "White Orchids — With Sympathy Bloom",
+      "slug": "sympathy-white-orchids-with-sympathy",
+      "category": "sympathy",
+      "is_active": true
+    },
+    {
+      "id": "87bf03fb-87e9-45ef-824b-f198c7c41d49",
+      "name": "The Infinity Rose — Anniversary Vow (Vault) Bloom",
+      "slug": "anniversary-the-infinity-rose-anniversary-vow-vault",
+      "category": "anniversary",
+      "is_active": true
+    },
+    {
+      "id": "8d777a37-f969-4b86-bc26-97748d0e69be",
+      "name": "Champagne Roses — Anniversary Bloom",
+      "slug": "anniversary-champagne-roses-anniversary",
+      "category": "anniversary",
+      "is_active": true
+    },
+    {
+      "id": "2d215892-be93-4ab0-b715-5b929cac99aa",
+      "name": "Eternal Love — Vault Bloom",
+      "slug": "love-eternal-love-vault",
+      "category": "love",
+      "is_active": true
+    },
+    {
+      "id": "10ea6f40-82fe-4c5d-8bed-7d5abf4ed1c0",
+      "name": "Romantic Roses Bloom",
+      "slug": "love-romantic-roses",
+      "category": "love",
+      "is_active": true
+    },
+    {
+      "id": "889a4fca-2111-4fcd-9fe3-6cadccb30394",
+      "name": "Birthday Wish — The Dandelion Dream Bloom",
+      "slug": "birthday-birthday-wish-the-dandelion-dream",
+      "category": "birthday",
+      "is_active": true
+    },
+    {
+      "id": "2665bedc-edc2-4285-9b55-3943df93eab7",
+      "name": "Balloon Celebration Bloom",
+      "slug": "birthday-balloon-celebration",
+      "category": "birthday",
+      "is_active": true
+    },
+    {
+      "id": "ee1d203b-db58-4ef5-b38e-7b6c0fd16b0e",
+      "name": "Generational Bloom (Vault)",
+      "slug": "mothers-day-generational-bloom-vault",
+      "category": "mothers-day",
+      "is_active": true
+    },
+    {
+      "id": "d3528ad0-3836-4c42-817c-6325431df1c3",
+      "name": "Mama's Rose (Vault)",
+      "slug": "mothers-day-mama-s-rose-vault",
+      "category": "mothers-day",
+      "is_active": true
+    },
+    {
+      "id": "b5822aba-becb-4402-b757-aac110f57f00",
+      "name": "A Love That Never Fades",
+      "slug": "mothers-day-a-love-that-never-fades",
+      "category": "mothers-day",
+      "is_active": true
+    },
+    {
+      "id": "5f270c5a-58cc-4689-b3a4-0f958722b850",
+      "name": "Golden Sunset Bloom",
+      "slug": "mothers-day-golden-sunset-bloom",
+      "category": "mothers-day",
+      "is_active": true
+    },
+    {
+      "id": "701e6c28-6fe4-408d-8f74-25be31dc352d",
+      "name": "Spring Garden Morning Bloom",
+      "slug": "mothers-day-spring-garden-morning",
+      "category": "mothers-day",
+      "is_active": true
+    },
+    {
+      "id": "31e76c14-9ce8-496a-93c7-7d9bb81c290c",
+      "name": "Marble Rose Luxury Bloom",
+      "slug": "mothers-day-marble-rose-luxury",
+      "category": "mothers-day",
+      "is_active": true
+    },
+    {
+      "id": "039da37a-b1d9-4cb0-a37e-01db2efd41e0",
+      "name": "General Single White Flower Blooming Into Colorful",
+      "slug": "general-single-white-flower-blooming-into-colorful-v1",
+      "category": "general",
+      "is_active": true
+    },
+    {
+      "id": "5908dbd2-af2f-4ea2-8d41-980d9df05786",
+      "name": "Womens Day Purple Box Beautiful Bouquet Bloom",
+      "slug": "womens-day-purple-box-beautiful-bouquet-bloom-v1",
+      "category": "womens-day",
+      "is_active": true
+    },
+    {
+      "id": "a4d8e050-e40c-4015-9bfe-e21397ee5f9c",
+      "name": "Luxury Red Roses And Jewelry",
+      "slug": "luxury-red-roses-and-jewelry-v1",
+      "category": "luxury",
+      "is_active": true
+    },
+    {
+      "id": "638c6eee-83e5-4f75-9176-2ff0b606a489",
+      "name": "Luxury Pink Roses White Orchids Stiletto",
+      "slug": "luxury-pink-roses-white-orchids-stiletto-v1",
+      "category": "luxury",
+      "is_active": true
+    },
+    {
+      "id": "814c6630-5e2e-448d-87c8-dd5e06592c78",
+      "name": "Sports Basketball Into A Heart",
+      "slug": "sports-basketball-into-a-heart-v1",
+      "category": "sports",
+      "is_active": true
+    },
+    {
+      "id": "9b55a7d4-3b1d-4973-af58-1bd0f0a9ebf3",
+      "name": "Sports Basketball Boom",
+      "slug": "sports-basketball-boom-v1",
+      "category": "sports",
+      "is_active": true
+    },
+    {
+      "id": "a8d41b07-eb88-4cd4-b101-3cdf70df77e5",
+      "name": "Sports Basketball Boom Into Heart",
+      "slug": "sports-basketball-boom-into-heart-v1",
+      "category": "sports",
+      "is_active": true
+    },
+    {
+      "id": "0c0e9f6c-936a-4a88-86b0-78719ebaee10",
+      "name": "Sports Basketball Bloom",
+      "slug": "sports-basketball-bloom-v1",
+      "category": "sports",
+      "is_active": true
+    },
+    {
+      "id": "17d55cdb-1e9b-43b0-85ee-d2f1b999dccc",
+      "name": "Friendship Handshake Red Rose On Fire",
+      "slug": "friendship-handshake-red-rose-on-fire-v1",
+      "category": "friendship",
+      "is_active": true
+    },
+    {
+      "id": "d0f0d68d-a9e7-448b-a6a8-298942d2c5ab",
+      "name": "Friendship Handshake Black Rose On Fire",
+      "slug": "friendship-handshake-black-rose-on-fire-v1",
+      "category": "friendship",
+      "is_active": true
+    },
+    {
+      "id": "36ba954a-74d0-45d9-991f-8ebb17066d35",
+      "name": "Valentines Red And Pink With Balloons",
+      "slug": "valentines-red-and-pink-with-balloons-v1",
+      "category": "valentine",
+      "is_active": true
+    },
+    {
+      "id": "dd08f702-03f1-4996-874a-1743b5bd1a70",
+      "name": "Love Pink Roses And Balloons",
+      "slug": "love-pink-roses-and-balloons-v1",
+      "category": "love",
+      "is_active": true
+    },
+    {
+      "id": "2c1b85aa-1f54-4c13-9924-eeb304529146",
+      "name": "Love Pink Balloons Pink Roses",
+      "slug": "love-pink-balloons-pink-roses-v1",
+      "category": "love",
+      "is_active": true
+    },
+    {
+      "id": "ff1788c3-24da-4afc-b1d4-b1e7bec95a6e",
+      "name": "Love Digital Bloom Red Roses",
+      "slug": "love-digital-bloom-red-roses-v1",
+      "category": "love",
+      "is_active": true
+    },
+    {
+      "id": "0a30240f-ab21-4023-ad7b-4367511e87c9",
+      "name": "Birthday Roses Transition",
+      "slug": "birthday-roses-transition-v2",
+      "category": "birthday",
+      "is_active": true
+    },
+    {
+      "id": "c4b038e6-a759-49a4-9a55-01ca77829d1f",
+      "name": "Birthday Birthday Card Roses Balloons",
+      "slug": "birthday-birthday-card-roses-balloons-v1",
+      "category": "birthday",
+      "is_active": true
+    },
+    {
+      "id": "6e867311-5115-482e-8eee-30e6e4b32b5d",
+      "name": "Birthday Birthday Card Rolls As Balloons",
+      "slug": "birthday-birthday-card-rolls-as-balloons-v1",
+      "category": "birthday",
+      "is_active": true
+    },
+    {
+      "id": "d0575d86-a602-4d41-9788-69efdadf0760",
+      "name": "Mothers Day Purple Box Beautiful Bouquet",
+      "slug": "mothers-day-purple-box-beautiful-bouquet-v1",
+      "category": "mothers-day",
+      "is_active": true
+    },
+    {
+      "id": "00f05a08-0c17-4fa7-9745-7cbeb14457f3",
+      "name": "Mothers Day Pink Roses",
+      "slug": "mothers-day-pink-roses-v1",
+      "category": "mothers-day",
+      "is_active": true
+    },
+    {
+      "id": "92357508-17ab-49d5-8e74-49cbd66250b0",
+      "name": "Mothers Day Pink Balloons Pink Roses",
+      "slug": "mothers-day-pink-balloons-pink-roses-v1",
+      "category": "mothers-day",
+      "is_active": true
+    },
+    {
+      "id": "22d173d1-43d3-46ad-ab07-cd9463be29f2",
+      "name": "Mothers Day Nine Rose Bouquets Changing Colors",
+      "slug": "mothers-day-nine-rose-bouquets-changing-colors-v1",
+      "category": "mothers-day",
+      "is_active": true
+    },
+    {
+      "id": "44dd4a3f-a5f6-4a30-8b21-a9ce10f6d51d",
+      "name": "Mothers Day Gray Box Pink Roses",
+      "slug": "mothers-day-gray-box-pink-roses-v1",
+      "category": "mothers-day",
+      "is_active": true
+    },
+    {
+      "id": "96a33ec2-d46f-4e90-871e-1fef17238a84",
+      "name": "Mothers Day Digital Bloom Mothers Day",
+      "slug": "mothers-day-digital-bloom-mothers-day-v1",
+      "category": "mothers-day",
+      "is_active": true
+    },
+    {
+      "id": "99f23ff3-00de-4ab8-b422-178a566fabaf",
+      "name": "Mothers Day Signature Bloom",
+      "slug": "mothers-day-signature-bloom",
+      "category": "mothers-day",
+      "is_active": true
+    },
+    {
+      "id": "3404fc1e-4219-4b4d-b682-a40e7a97deb3",
+      "name": "Fathers Day Rose Garden",
+      "slug": "fathers-day-rose-garden",
+      "category": "fathers-day",
+      "is_active": true
+    },
+    {
+      "id": "5ef1c7cb-3ece-4904-b5ae-331c4c147fd8",
+      "name": "Fathers Day Golden Tribute",
+      "slug": "fathers-day-golden-tribute",
+      "category": "fathers-day",
+      "is_active": true
+    },
+    {
+      "id": "fe89dfa6-067f-4094-bf19-e4a1eda4498c",
+      "name": "Birthday Rose Transition",
+      "slug": "birthday-rose-transition-v76",
+      "category": "birthday",
+      "is_active": true
+    },
+    {
+      "id": "7d0ad631-66c0-4449-a1d6-66a794d87d28",
+      "name": "Glass Stiletto Rose II",
+      "slug": "glass-stiletto-rose-ii-v82",
+      "category": "luxury",
+      "is_active": true
+    },
+    {
+      "id": "7283ff70-2a55-42a8-8d04-634c868d55e1",
+      "name": "Valentines Rose Bloom",
+      "slug": "valentines-rose-bloom-v15",
+      "category": "valentine",
+      "is_active": true
+    },
+    {
+      "id": "4d67a487-3bc9-4e90-b26b-b723e6a7485b",
+      "name": "Rainbow Rose Dream",
+      "slug": "rainbow-rose-dream-v34",
+      "category": "general",
+      "is_active": true
+    },
+    {
+      "id": "158e7052-7a66-409b-b288-83e716c353d8",
+      "name": "Glass Stiletto Rose I",
+      "slug": "glass-stiletto-rose-i-v38",
+      "category": "luxury",
+      "is_active": true
+    },
+    {
+      "id": "4055c260-22fa-48e2-be77-53ed299c2a24",
+      "name": "Mothers Day Classic Bloom",
+      "slug": "mothers-day-classic-bloom-v98",
+      "category": "mothers-day",
+      "is_active": true
+    },
+    {
+      "id": "3f6a052e-f7c6-409f-b9d8-b05d39b3c48d",
+      "name": "Birthday Roses Bloom",
+      "slug": "birthday-roses-bloom-v44",
+      "category": "birthday",
+      "is_active": true
+    },
+    {
+      "id": "98f74752-a000-47e4-8991-39d5d1c4f7d5",
+      "name": "Valentines Red Rose",
+      "slug": "valentines-red-rose-v40",
+      "category": "valentine",
+      "is_active": true
+    },
+    {
+      "id": "c3a09403-75f4-4b53-ab1b-45e8e95e31ac",
+      "name": "Birthday Rose Garden",
+      "slug": "birthday-rose-garden-v46",
+      "category": "birthday",
+      "is_active": true
+    },
+    {
+      "id": "89a7191b-4762-481e-af57-d597a0a05ff0",
+      "name": "Golden Roses Eternal",
+      "slug": "golden-roses-eternal-v47",
+      "category": "general",
+      "is_active": true
+    },
+    {
+      "id": "20892e5d-35ca-4d94-91ce-b43fefa432a0",
+      "name": "Classic Rose Experience",
+      "slug": "classic-rose-experience-v63",
+      "category": "general",
+      "is_active": true
+    },
+    {
+      "id": "f4c2fedc-fdf0-4c23-a07d-2e5076407e9b",
+      "name": "Mother's Day Balloon Celebration Bloom",
+      "slug": "mothers-day-balloon-celebration",
+      "category": "mothers-day",
+      "is_active": true
+    },
+    {
+      "id": "e5deb6e1-a540-4388-b46f-928139730ef4",
+      "name": "Memorial Rose Tribute",
+      "slug": "memorial-rose-tribute",
+      "category": "grief",
+      "is_active": true
+    },
+    {
+      "id": "94df1d11-868f-417c-ad13-1ca1bec35240",
+      "name": "Mother's Day Premium Bloom",
+      "slug": "mothers-day-premium-bloom",
+      "category": "mothers-day",
+      "is_active": true
+    },
+    {
+      "id": "21fb68dd-1ec5-4956-9210-96dd5348fd95",
+      "name": "Rainbow Rose Bloom",
+      "slug": "rainbow-rose-bloom",
+      "category": "zodiac",
+      "is_active": true
+    },
+    {
+      "id": "0eca8972-de95-48ea-aa6c-e3baae69b9c5",
+      "name": "Lotus Bloom",
+      "slug": "lotus-bloom",
+      "category": "love",
+      "is_active": true
+    },
+    {
+      "id": "d298b599-c09a-41d1-8204-6a29db5bd15f",
+      "name": "Eternal Love",
+      "slug": "mothers-day-eternal-love",
+      "category": "love",
+      "is_active": true
+    },
+    {
+      "id": "d965b3d3-c689-4fef-b7dc-f3dbf17a2a7c",
+      "name": "Golden Roses Experience",
+      "slug": "golden-roses-experience",
+      "category": "love",
+      "is_active": true
+    }
+  ]
+}

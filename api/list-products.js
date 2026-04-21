@@ -10,11 +10,21 @@ export default async function handler(req, res) {
   if (applyCors(req, res)) return;
   if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed' });
 
-  const { data, error } = await supabase
+  let query = supabase
     .from('products')
-    .select('id, name, slug, category, price, is_active, video_url, updated_at')
+    .select('id, name, slug, prompt_id, category, price, is_active, video_url, updated_at')
     .eq('is_active', true)
     .order('updated_at', { ascending: false });
+
+  let { data, error } = await query;
+
+  if (error?.code === '42703') {
+    ({ data, error } = await supabase
+      .from('products')
+      .select('id, name, slug, category, price, is_active, video_url, updated_at')
+      .eq('is_active', true)
+      .order('updated_at', { ascending: false }));
+  }
 
   if (error) return res.status(500).json({ error: error.message });
 
