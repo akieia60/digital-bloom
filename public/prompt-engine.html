@@ -1133,7 +1133,7 @@ const STYLE_OPTIONS = {
   }
 };
 
-const ENHANCER_VERSION = 2;
+const ENHANCER_VERSION = 3;
 const FINALE_SURREAL_VARIATIONS = [
   'Petals briefly freeze mid-air, then explode outward in a sudden luxurious release.',
   'Light bends through the flowers like glass, refracting across the frame before the image settles.',
@@ -1265,36 +1265,83 @@ function isCurrentEnhancedVersion(version){
 }
 
 function composeEnhancedScene(stage, structureMode, p, dna, style, intensity){
-  const preserve = `Preserve the original theme of "${p.title}" in the ${p.cat} category.`;
   const balloonText = getBalloonText(p);
-  const luxuryTone = `Maintain a premium luxury tone with believable material behavior, refined light response, and tactile detail at every beat.`;
-  const boxLine = `The box must feel hinged, premium, detailed, and perfectly matched to the card's design language in palette, finish, trim, embossing, and structure.`;
-  const noEarlyBalloons = `Do not show balloons early; hold every balloon element until the final scene.`;
-  const immersiveFlowers = `Flowers must burst outward, expand toward the lens, fill the frame, and feel immersive rather than decorative.`;
-  const pauseBeforeCard = `Stage a pause moment before the card opens so the stillness creates anticipation.`;
-  const pauseBeforeBox = `Stage another pause moment before the box opens so the hinge movement feels deliberate and expensive.`;
   const finaleVariation = pickFinaleVariation();
+  const q = '4K, Ultra HD, rich material detail, sharp clarity, cinematic texture, natural color grading, stable frame.';
+  const iMode = enhancerSettings.intensityMode;
+  const sMode = enhancerSettings.styleMode;
+
+  // Camera language — descriptive prose, not instructions
+  const cameraOpen = {
+    refined:   'The camera holds in a slow macro drift, parallax restrained, surface detail filling the shallow field',
+    cinematic: 'The camera eases inward in a slow dolly with natural lens breathing against shallow focus',
+    maximal:   'The camera creeps forward from a low angle with dramatic parallax shifting across layered depth'
+  }[iMode] || 'The camera eases inward in a slow dolly';
+
+  const cameraBuild = {
+    refined:   'The camera advances in a measured push, focus drawing gently toward the reveal point',
+    cinematic: 'The camera pushes forward as focus migrates deliberately toward the opening',
+    maximal:   'The camera accelerates into a tension-building push, depth of field collapsing hard toward the opening'
+  }[iMode] || 'The camera pushes forward';
+
+  const cameraRise = {
+    refined:   'The camera lifts with controlled restraint and a quiet slow orbit',
+    cinematic: 'The camera rises and curves into a closer orbit around the emerging form',
+    maximal:   'The camera cranes upward into a sweeping wide orbit as scale expands outward'
+  }[iMode] || 'The camera rises';
+
+  const cameraSweep = {
+    refined:   'The camera drifts through the arrangement in a steady measured closing move',
+    cinematic: 'The camera glides through the petals on a closing push into the emotional center',
+    maximal:   'The camera sweeps through the full abundance in a wide arc before settling close on the bloom'
+  }[iMode] || 'The camera moves through the scene';
+
+  // Atmosphere — descriptive prose, not instructions
+  const atmoOpen = {
+    'signature-bloom':    'The mood is expensive, composed, and quietly sacred',
+    'soft-memorial':      'The mood is gentle, reverent, and unhurried',
+    'romantic-reveal':    'The mood is close, warm, and intimately held',
+    'celebration-finale': 'The mood is charged with anticipation, playful and building toward release',
+    'moonshot-luxe':      'The mood is sleek, mysterious, and quietly monumental'
+  }[sMode] || 'The mood is cinematic and premium';
+
+  const textureDesc = {
+    'signature-bloom':    'velvet shadow, lacquered surfaces, rich floral material, and spilling gold light',
+    'soft-memorial':      'diffused natural light, soft focus edges, and graceful unhurried stillness',
+    'romantic-reveal':    'warm candlelight, soft falloff, tactile petal surfaces, and intimate close framing',
+    'celebration-finale': 'bright lift, sparkling depth cues, clean motion, and joyful realism',
+    'moonshot-luxe':      'glossy reflective surfaces, bold light columns, premium macro detail, and aspirational scale'
+  }[sMode] || 'cinematic texture and rich material detail';
+
+  const finaleDesc = {
+    'signature-bloom':    'signature floral abundance, intimate closeness, and premium emotional warmth',
+    'soft-memorial':      'peaceful tenderness and quiet emotional resolution',
+    'romantic-reveal':    'lush floral intimacy as the frame fully surrenders to the bloom',
+    'celebration-finale': 'earned joy, layered abundance, and a clear celebratory emotional lift',
+    'moonshot-luxe':      'maximum luxury spectacle and large-scale floral abundance'
+  }[sMode] || 'abundance and cinematic payoff';
 
   if(stage === 'card-intro'){
-    return `${preserve} Start on the card introduction only. ${dna.setup} ${style.opening} Camera: ${intensity.openCamera}. Present the premium greeting card as an object of desire with tactile paper grain, foil glints, embossed depth, ribbon tension, and elegant shadow falloff. Energy stays still, poised, and luxurious. ${pauseBeforeCard} ${noEarlyBalloons} Flowers remain hidden inside the design language, only hinted through faint dimensional detail and restrained light breathing. ${luxuryTone}`;
+    return `${dna.setup}. ${cameraOpen}, holding on the greeting card as a physical object. Embossed paper grain, foil surface glints, ribbon tension, and deep shadow falloff accumulate across the card face. ${atmoOpen}. The arrangement waits inside, present only in faint dimensional relief and restrained inner light. ${textureDesc}. ${q}`;
   }
 
   if(stage === 'card-reveal'){
-    const revealBridge = structureMode === '3x10'
-      ? `Begin with the same premium card introduction, let the held pause land, then transition into the opening reveal without rushing the beat.`
-      : `Use this beat for the first reveal only; the card opens, but the bigger transformation is still ahead.`;
-    return `${preserve} ${dna.setup} ${revealBridge} Camera: ${intensity.anticipationCamera}. Let the card open with controlled hinge resistance, a subtle release of pressure, and a clean interior reveal that catches light across layered materials. Keep the reveal elegant and physically grounded: the opening motion should feel engineered, not magical. Show a first glimpse of dimensional floral form and internal glow, but hold the major bloom back. ${noEarlyBalloons} Energy moves from stillness into reveal while the luxury tone stays intact.`;
+    const beat = structureMode === '3x10'
+      ? 'The card rests still, then opens with controlled hinge resistance and a clean interior reveal that catches light across layered material.'
+      : 'The card opens with hinge resistance, the interior brightening as it catches light across layered surfaces.';
+    return `${dna.setup}. ${cameraBuild}. ${beat} The first dimensional floral form becomes visible through inner glow, the opening motion engineered and grounded. ${atmoOpen}. ${textureDesc}. The major bloom stays held — the reveal belongs to the card alone. ${q}`;
   }
 
   if(stage === 'box-transform'){
-    return `${preserve} ${dna.middle} Transition the opened card into a hinged keepsake box that inherits the card's exact design language as it thickens, articulates, and locks into premium form. ${boxLine} Camera: ${intensity.revealCamera}. Panels fold with believable mechanics, corners seat into place, the hinge gains visible weight, and interior depth builds as stems gather tension from within. ${pauseBeforeBox} Flowers push softly against the opening seams, but the true burst is still being withheld. ${style.bridge} ${noEarlyBalloons} Energy advances from reveal into transformation with controlled anticipation.`;
+    return `${dna.middle}. ${cameraRise} as the opened card thickens and folds into a hinged keepsake box, inheriting the card's palette, embossing, finish, and trim exactly. Panels articulate with visible mechanical weight, corners seat into place, and the hinge gains physical presence. Interior depth builds as stems gather tension beneath the closed lid. ${atmoOpen}. ${textureDesc}. The box is fully formed before it opens — the transformation is complete. ${q}`;
   }
 
   if(stage === 'box-bloom'){
-    return `${preserve} ${dna.middle} After the held pause, the hinged premium box opens toward camera and releases the bloom in escalating layers. ${boxLine} Camera: ${intensity.payoffCamera}. Let the lid lift with hinge weight and material resistance, then send the flowers outward in staggered waves: stems rise, petals unfurl, inner blossoms surge past outer petals, and the arrangement expands straight toward the lens. ${immersiveFlowers} Keep the motion rich, tactile, and physically believable rather than abstract. ${style.texture} ${noEarlyBalloons} Energy should feel like transformation becoming explosion.`;
+    return `${dna.middle}. ${cameraBuild} as the hinged box lid rises with full hinge weight and material resistance. Flowers release outward in staggered waves — stems rising, petals unfurling, inner blossoms surging past outer ones, the full arrangement expanding directly toward the lens with believable physical momentum. Each petal layer carries individual mass and texture. ${atmoOpen}. ${textureDesc}. ${q}`;
   }
 
-  return `${preserve} ${dna.payoff} Deliver the finale as the emotional climax: the fully opened bloom fills the frame, then balloons arrive only now with clearly readable themed text that says "${balloonText}". Camera: ${intensity.payoffCamera}. ${immersiveFlowers} Add surreal elegance through dreamlike motion, glowing particles, and light flares while keeping the materials believable. Random finale accent: ${finaleVariation} Let the balloons thread through the floral depth as a late celebratory layer, never overpowering the flowers. Resolve on abundance, payoff, and an unmistakably premium finish. ${style.climax} ${luxuryTone}`;
+  // finale
+  return `${dna.payoff}. ${cameraSweep} as the fully opened bloom fills the frame from edge to edge. Balloons carrying the text "${balloonText}" rise through the floral depth as a late celebratory layer, threading between stems and petals without overpowering the flowers. ${finaleVariation} The frame resolves on ${finaleDesc}. ${q}`;
 }
 
 function buildEnhancedVersion(p){
