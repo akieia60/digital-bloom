@@ -204,36 +204,6 @@ body{font-family:'Outfit',sans-serif;background:var(--navy);color:var(--white);m
   </div>
   <div class="cats" id="cats"></div>
   <div class="status-filters" id="status-filters"></div>
-  <div class="enhancer-bar">
-    <div class="enhancer-grid">
-      <label class="enhancer-field">
-        <span class="enhancer-label">Structure Mode</span>
-        <select class="enhancer-select" id="structure-mode">
-          <option value="3x10">3 scenes x 10 seconds</option>
-          <option value="5x6">5 scenes x 6 seconds</option>
-        </select>
-      </label>
-      <label class="enhancer-field">
-        <span class="enhancer-label">Intensity Mode</span>
-        <select class="enhancer-select" id="intensity-mode">
-          <option value="refined">Refined</option>
-          <option value="cinematic">Cinematic</option>
-          <option value="maximal">Maximal</option>
-        </select>
-      </label>
-      <label class="enhancer-field">
-        <span class="enhancer-label">Style Mode</span>
-        <select class="enhancer-select" id="style-mode">
-          <option value="signature-bloom">Preset 1: Signature Bloom</option>
-          <option value="soft-memorial">Preset 2: Soft Memorial</option>
-          <option value="romantic-reveal">Preset 3: Romantic Reveal</option>
-          <option value="celebration-finale">Preset 4: Celebration Finale</option>
-          <option value="moonshot-luxe">Preset 5: Moonshot Luxe</option>
-        </select>
-      </label>
-    </div>
-    <div class="enhancer-note">Enhancer sits on top of the existing prompt library. Originals stay untouched; Grok-ready versions use your selected structure, intensity, and preset to build stronger pacing, reveal, and payoff.</div>
-  </div>
   <div class="live-sync-bar">
     <div class="live-sync-copy">
       <div class="live-sync-title">Live Site Sync</div>
@@ -244,6 +214,37 @@ body{font-family:'Outfit',sans-serif;background:var(--navy);color:var(--white);m
     </div>
   </div>
   <div id="unlinked-live-wrap"></div>
+</div>
+
+<div class="enhancer-bar">
+  <div class="enhancer-grid">
+    <label class="enhancer-field">
+      <span class="enhancer-label">Structure Mode</span>
+      <select class="enhancer-select" id="structure-mode">
+        <option value="3x10">3 scenes x 10 seconds</option>
+        <option value="5x6">5 scenes x 6 seconds</option>
+      </select>
+    </label>
+    <label class="enhancer-field">
+      <span class="enhancer-label">Intensity Mode</span>
+      <select class="enhancer-select" id="intensity-mode">
+        <option value="refined">Refined</option>
+        <option value="cinematic">Cinematic</option>
+        <option value="maximal">Maximal</option>
+      </select>
+    </label>
+    <label class="enhancer-field">
+      <span class="enhancer-label">Style Mode</span>
+      <select class="enhancer-select" id="style-mode">
+        <option value="signature-bloom">Preset 1: Signature Bloom</option>
+        <option value="soft-memorial">Preset 2: Soft Memorial</option>
+        <option value="romantic-reveal">Preset 3: Romantic Reveal</option>
+        <option value="celebration-finale">Preset 4: Celebration Finale</option>
+        <option value="moonshot-luxe">Preset 5: Moonshot Luxe</option>
+      </select>
+    </label>
+  </div>
+  <div class="enhancer-note">Enhancer sits on top of the existing prompt library. Originals stay untouched; Grok-ready versions use your selected structure, intensity, and preset to build stronger pacing, reveal, and payoff.</div>
 </div>
 
 <div class="main">
