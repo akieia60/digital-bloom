@@ -103,6 +103,11 @@ body{font-family:'Outfit',sans-serif;background:var(--navy);color:var(--white);m
 /* ENHANCER */
 .enhancer-shell{padding:0 12px 14px;display:flex;flex-direction:column;gap:10px}
 .enhancer-actions{display:flex;gap:8px;flex-wrap:wrap}
+.iteration-field{display:flex;flex-direction:column;gap:4px}
+.iteration-label{font-size:0.66rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--gold)}
+.iteration-notes{width:100%;padding:10px 12px;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:10px;color:var(--white);font-size:0.78rem;font-family:'Outfit',sans-serif;outline:none;resize:vertical;min-height:58px;line-height:1.55;box-sizing:border-box}
+.iteration-notes:focus{border-color:var(--gold)}
+.iteration-notes::placeholder{color:rgba(255,255,255,0.28)}
 .btn-enhance{background:rgba(129,140,248,0.16);border-color:rgba(129,140,248,0.35);color:#c7d2fe}
 .btn-enhance:hover{background:rgba(129,140,248,0.28)}
 .btn-save-enhanced{background:rgba(34,197,94,0.12);border:1px solid rgba(34,197,94,0.28);color:#86efac}
@@ -1140,6 +1145,12 @@ const FINALE_SURREAL_VARIATIONS = [
   'Small butterflies emerge from the petals and drift through the bloom before dissolving back into motion.',
   'Glowing dust trails follow the balloons as they rise through the floral canopy.',
   'The flowers ripple like waves for a breath before settling into a full-frame finale.',
+  'A cascade of gold confetti spirals down through the bloom, each flake catching the light as it falls.',
+  'Fine glitter particles drift outward from the floral center, shimmering against the dark background like suspended stars.',
+  'Tiny sparkle bursts ignite at petal tips and travel upward through the arrangement in layered rhythmic pulses.',
+  'A slow spiral of loose petals peels away from the main bloom and orbits the frame before dissolving.',
+  'Soft firefly-like orbs drift upward through the floral depth, blinking gently as the frame resolves.',
+  'A light mist of iridescent pollen releases from the blooms and floats forward toward the lens.',
 ];
 
 // ═══════════════════════════════════════════════════
@@ -1176,6 +1187,7 @@ function saveEnhancerSettings(v){localStorage.setItem(ENHANCER_SETTINGS_KEY,JSON
 
 const uploadStates = {}; // in-memory upload state so renders don't reset progress
 const enhancedDrafts = {};
+const iterationNotes = {}; // director's notes per prompt id — cleared only on page reload
 const LIVE_STATUS_OPTIONS = [
   {id:'all',label:'All Prompts'},
   {id:'todo',label:'Needs Creation'},
@@ -1264,7 +1276,7 @@ function isCurrentEnhancedVersion(version){
   return !!version && version.enhancerVersion === ENHANCER_VERSION;
 }
 
-function composeEnhancedScene(stage, structureMode, p, dna, style, intensity){
+function composeEnhancedScene(stage, structureMode, p, dna, style, intensity, notes){
   const balloonText = getBalloonText(p);
   const finaleVariation = pickFinaleVariation();
   const q = '4K, Ultra HD, rich material detail, sharp clarity, cinematic texture, natural color grading, stable frame.';
@@ -1321,8 +1333,11 @@ function composeEnhancedScene(stage, structureMode, p, dna, style, intensity){
     'moonshot-luxe':      'maximum luxury spectacle and large-scale floral abundance'
   }[sMode] || 'abundance and cinematic payoff';
 
+  // Director's notes — appended as a cinematic intent line when present
+  const notesSuffix = (notes && notes.trim()) ? ` Director's intent: ${notes.trim()}` : '';
+
   if(stage === 'card-intro'){
-    return `${dna.setup}. ${cameraOpen}, holding on the greeting card as a physical object. Embossed paper grain, foil surface glints, ribbon tension, and deep shadow falloff accumulate across the card face. ${atmoOpen}. The arrangement waits inside, present only in faint dimensional relief and restrained inner light. ${textureDesc}. ${q}`;
+    return `${dna.setup}. ${cameraOpen}, holding on the greeting card as a physical object. Embossed paper grain, foil surface glints, ribbon tension, and deep shadow falloff accumulate across the card face. ${atmoOpen}. The arrangement waits inside, present only in faint dimensional relief and restrained inner light. ${textureDesc}.${notesSuffix} ${q}`;
   }
 
   if(stage === 'card-reveal'){
@@ -1341,10 +1356,10 @@ function composeEnhancedScene(stage, structureMode, p, dna, style, intensity){
   }
 
   // finale
-  return `${dna.payoff}. ${cameraSweep} as the fully opened bloom fills the frame from edge to edge. Balloons carrying the text "${balloonText}" rise through the floral depth as a late celebratory layer, threading between stems and petals without overpowering the flowers. ${finaleVariation} The frame resolves on ${finaleDesc}. ${q}`;
+  return `${dna.payoff}. ${cameraSweep} as the fully opened bloom fills the frame from edge to edge. Balloons carrying the text "${balloonText}" rise through the floral depth as a late celebratory layer, threading between stems and petals without overpowering the flowers. ${finaleVariation} The frame resolves on ${finaleDesc}.${notesSuffix} ${q}`;
 }
 
-function buildEnhancedVersion(p){
+function buildEnhancedVersion(p, notes=''){
   const structure = STRUCTURE_OPTIONS[enhancerSettings.structureMode] || STRUCTURE_OPTIONS['3x10'];
   const intensity = INTENSITY_OPTIONS[enhancerSettings.intensityMode] || INTENSITY_OPTIONS.cinematic;
   const style = STYLE_OPTIONS[enhancerSettings.styleMode] || STYLE_OPTIONS['signature-bloom'];
@@ -1357,10 +1372,11 @@ function buildEnhancedVersion(p){
     structureMode:enhancerSettings.structureMode,
     intensityMode:enhancerSettings.intensityMode,
     styleMode:enhancerSettings.styleMode,
+    directorNotes:notes || '',
     generatedAt:new Date().toISOString(),
     scenes:structure.scenes.map(scene => ({
       label:scene.label,
-      text:composeEnhancedScene(scene.stage, enhancerSettings.structureMode, p, dna, style, intensity),
+      text:composeEnhancedScene(scene.stage, enhancerSettings.structureMode, p, dna, style, intensity, notes),
     })),
   };
 }
@@ -1453,7 +1469,7 @@ function ensureEnhancedVersion(pid){
   if(isCurrentEnhancedVersion(enhancedSaved[pid])) return enhancedSaved[pid];
   const prompt = getPromptById(pid);
   if(!prompt) return null;
-  enhancedDrafts[pid] = buildEnhancedVersion(prompt);
+  enhancedDrafts[pid] = buildEnhancedVersion(prompt, iterationNotes[pid] || '');
   render();
   return enhancedDrafts[pid];
 }
@@ -1784,8 +1800,17 @@ function enhancerHTML(p){
   const version = draft || saved;
   const meta = version ? getEnhancementMeta(version, draft ? 'draft' : 'saved') : '';
 
+  const savedNotes = iterationNotes[p.id] || '';
   return `
   <div class="enhancer-shell">
+    <div class="iteration-field">
+      <div class="iteration-label">🎬 Director's Notes</div>
+      <textarea
+        class="iteration-notes"
+        placeholder="Add specific intent for this video — card style, color palette, emotional tone, special effects, occasion details… These notes shape the enhanced output."
+        oninput="iterationNotes['${p.id}']=this.value"
+      >${escapeHtml(savedNotes)}</textarea>
+    </div>
     <div class="enhancer-actions">
       <button class="btn-copy btn-enhance" onclick="enhancePrompt('${p.id}')">✨ Enhance for Grok</button>
       <button class="btn-copy" onclick="copyEnhanced('${p.id}')">Copy Enhanced</button>
@@ -1902,7 +1927,8 @@ function copyScene(pid, idx){
 function enhancePrompt(pid){
   const prompt = getPromptById(pid);
   if(!prompt) return;
-  enhancedDrafts[pid] = buildEnhancedVersion(prompt);
+  const notes = iterationNotes[pid] || '';
+  enhancedDrafts[pid] = buildEnhancedVersion(prompt, notes);
   render();
   showToast('Grok-enhanced version ready');
 }
