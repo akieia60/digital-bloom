@@ -75,6 +75,15 @@ body{font-family:'Outfit',sans-serif;background:var(--navy);color:var(--white);m
 .btn-builder:hover{background:rgba(34,197,94,0.24)}
 .btn-builder.secondary{background:rgba(255,255,255,0.04);border-color:var(--border);color:rgba(255,255,255,0.82)}
 .btn-builder.secondary:hover{border-color:#86efac;color:var(--white)}
+.builder-cloud{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:12px;border:1px solid rgba(134,239,172,0.16);border-radius:12px;background:rgba(255,255,255,0.03)}
+.builder-cloud-copy{display:flex;flex-direction:column;gap:4px;max-width:520px}
+.builder-cloud-title{font-size:0.68rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#86efac}
+.builder-cloud-meta{font-size:0.72rem;line-height:1.55;color:rgba(255,255,255,0.74)}
+.builder-cloud-controls{display:flex;align-items:flex-end;gap:8px;flex-wrap:wrap}
+.builder-inline-field{display:flex;flex-direction:column;gap:5px;min-width:180px}
+.builder-inline-label{font-size:0.62rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#86efac}
+.builder-inline-input{min-width:180px}
+.custom-meta-note{margin:0 12px 12px;padding:8px 12px;background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.18);border-radius:8px;font-size:0.7rem;color:rgba(187,247,208,0.95);line-height:1.5}
 .custom-chip{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:999px;background:rgba(34,197,94,0.12);border:1px solid rgba(34,197,94,0.24);font-size:0.64rem;color:#86efac;margin:0 16px 10px;align-self:flex-start;text-transform:uppercase;letter-spacing:0.08em;font-weight:700}
 .card-tools{display:flex;gap:8px;flex-wrap:wrap;padding:0 12px 12px}
 .btn-card-tool{padding:6px 10px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:8px;color:rgba(255,255,255,0.78);font-size:0.68rem;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:all 0.2s}
@@ -201,6 +210,9 @@ body{font-family:'Outfit',sans-serif;background:var(--navy);color:var(--white);m
   .transformer-grid{grid-template-columns:1fr}
   .transformer-actions{justify-content:flex-start}
   .builder-grid{grid-template-columns:1fr}
+  .builder-cloud{align-items:stretch}
+  .builder-cloud-controls{align-items:stretch}
+  .builder-inline-field,.builder-inline-input{min-width:100%}
   .sync-panel-wrap{align-items:flex-start}
   .upload-live-badge{align-items:flex-start;flex-direction:column}
 }
@@ -300,11 +312,25 @@ body{font-family:'Outfit',sans-serif;background:var(--navy);color:var(--white);m
       <textarea class="builder-textarea" id="builder-prompt" placeholder="Paste the rough prompt, the message, flower ideas, palette, emotional intent, or scene notes. The Bloom Transformer will reshape it into your house style."></textarea>
     </label>
   </div>
+  <div class="builder-cloud">
+    <div class="builder-cloud-copy">
+      <div class="builder-cloud-title">Shared Prompt Sync</div>
+      <div class="builder-cloud-meta" id="builder-cloud-meta">Connecting the custom prompt library to shared Supabase storage…</div>
+    </div>
+    <div class="builder-cloud-controls">
+      <label class="builder-inline-field">
+        <span class="builder-inline-label">Your Name</span>
+        <input class="builder-input builder-inline-input" id="builder-author" type="text" placeholder="Ak or Gamb" onblur="saveCollaboratorNameFromInput()">
+      </label>
+      <button class="btn-builder secondary" onclick="refreshSharedPromptLibrary()">Refresh Shared Library</button>
+      <button class="btn-builder secondary" onclick="syncLocalCustomPromptsToCloud()">Push Local Backup</button>
+    </div>
+  </div>
   <div class="builder-foot">
-    <div class="builder-meta" id="builder-meta">Custom prompts stay in this browser until you export/import them. New categories work immediately in the engine; storefront uploads for brand-new categories still depend on your site category mapping.</div>
+    <div class="builder-meta" id="builder-meta">Custom prompts fall back to this browser locally, and sync to Supabase when the shared prompt table is available. New categories work immediately in the engine; storefront uploads for brand-new categories still depend on your site category mapping.</div>
     <div class="builder-actions">
-      <button class="btn-builder secondary" onclick="clearPromptBuilder()">Clear Form</button>
-      <button class="btn-builder" onclick="addCustomPrompt()">Add Prompt To Engine</button>
+      <button class="btn-builder secondary" id="builder-clear-btn" onclick="clearPromptBuilder()">Clear Form</button>
+      <button class="btn-builder" id="builder-submit-btn" onclick="addCustomPrompt()">Add Prompt To Engine</button>
     </div>
   </div>
 </div>
@@ -313,6 +339,7 @@ body{font-family:'Outfit',sans-serif;background:var(--navy);color:var(--white);m
   <div class="grid" id="grid"></div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
 // ═══════════════════════════════════════════════════
 // ALL PROMPT DATA — DIGITAL BLOOM
@@ -1152,8 +1179,11 @@ const DONE_KEY = 'db_prompt_done';
 const LIVE_KEY = 'db_bloom_live';
 const TRANSFORMED_KEY = 'db_prompt_transformed_versions';
 const CUSTOM_PROMPTS_KEY = 'db_prompt_custom_library';
+const CUSTOM_PROMPTS_AUTHOR_KEY = 'db_prompt_custom_library_author';
 const SUPABASE_URL = 'https://yhdbeblowolfinxxhsnt.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InloZGJlYmxvd29sZmlueHhoc250Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjkyNjA0NjMsImV4cCI6MjA4NDgzNjQ2M30.DGIJ5FSr2M4wBi3eQ5rjC0jx3CVS4pEcJe1PMOSR0yM';
+const SHARED_PROMPT_TABLE = 'prompt_engine_custom_prompts';
+const SHARED_PROMPT_WORKSPACE = 'digital-bloom-shared';
 const LEGACY_PRODUCT_ALIASES = {
   'ss-bd-01':'v2-210',
   'ss-bd-02':'v2-211',
@@ -1174,6 +1204,8 @@ function getTransformed(){try{return JSON.parse(localStorage.getItem(TRANSFORMED
 function saveTransformed(v){localStorage.setItem(TRANSFORMED_KEY,JSON.stringify(v))}
 function getCustomPrompts(){try{return JSON.parse(localStorage.getItem(CUSTOM_PROMPTS_KEY)||'[]')}catch{return[]}}
 function saveCustomPrompts(v){localStorage.setItem(CUSTOM_PROMPTS_KEY,JSON.stringify(v))}
+function getCollaboratorName(){return (localStorage.getItem(CUSTOM_PROMPTS_AUTHOR_KEY)||'').trim()}
+function saveCollaboratorName(value){localStorage.setItem(CUSTOM_PROMPTS_AUTHOR_KEY,String(value||'').trim())}
 
 const uploadStates = {}; // in-memory upload state so renders don't reset progress
 const transformedDrafts = {};
@@ -1187,6 +1219,7 @@ let done = getDone();
 let live = getLive();
 let transformedSaved = getTransformed();
 let customPrompts = getCustomPrompts();
+const initialLocalCustomPrompts = getCustomPrompts();
 let serverLiveSlugs = {}; // keyed by slug → product data, loaded from Supabase
 let serverLoaded = false;
 let unlinkedLiveProducts = [];
@@ -1195,6 +1228,13 @@ let currentStatus = 'all';
 let searchQ = '';
 let syncState = {status:'idle', activeCount:0, matchedCount:0, unlinkedCount:0, lastSyncedAt:null, error:'', source:''};
 let syncPanelOpen = false;
+let builderEditingId = null;
+let sharedPromptClient = null;
+let sharedPromptChannel = null;
+let sharedPromptRefreshTimer = null;
+let sharedPromptBootstrapped = false;
+let collaboratorName = getCollaboratorName();
+let sharedPromptState = {status:'connecting', count:customPrompts.length, lastSyncedAt:null, error:'', mode:'local'};
 
 const BUILDER_SELECT_DEFAULT = '__existing__';
 
@@ -1284,18 +1324,128 @@ function normalizeCustomPromptRecord(record){
     scenes,
     isCustom:true,
     createdAt:record.createdAt || new Date().toISOString(),
+    updatedAt:record.updatedAt || record.cloudUpdatedAt || record.createdAt || new Date().toISOString(),
+    cloudCreatedBy:record.cloudCreatedBy || record.createdBy || '',
+    cloudUpdatedBy:record.cloudUpdatedBy || record.updatedBy || '',
+    storageOrigin:record.storageOrigin || 'local',
   };
 }
 
 function upsertCustomPrompt(record){
-  const normalized = normalizeCustomPromptRecord(record);
+  const previous = customPrompts.find(item => item.id === record?.id);
+  const normalized = normalizeCustomPromptRecord({
+    ...previous,
+    ...record,
+    createdAt:record?.createdAt || previous?.createdAt,
+    cloudCreatedBy:record?.cloudCreatedBy || previous?.cloudCreatedBy,
+    cloudUpdatedBy:record?.cloudUpdatedBy || previous?.cloudUpdatedBy,
+    storageOrigin:record?.storageOrigin || previous?.storageOrigin || 'local',
+  });
   if(!normalized) return null;
-  customPrompts = [...customPrompts.filter(item => item.id !== normalized.id), normalized];
+  customPrompts = sortCustomPrompts([...customPrompts.filter(item => item.id !== normalized.id), normalized]);
   saveCustomPrompts(customPrompts);
   return normalized;
 }
 
-function removeCustomPrompt(pid){
+function sortCustomPrompts(prompts){
+  return [...prompts].sort((a, b) => {
+    const aTime = new Date(a.updatedAt || a.createdAt || 0).getTime();
+    const bTime = new Date(b.updatedAt || b.createdAt || 0).getTime();
+    if(aTime !== bTime) return bTime - aTime;
+    return String(a.title || '').localeCompare(String(b.title || ''));
+  });
+}
+
+function getCollaboratorLabel(){
+  return collaboratorName || 'Digital Bloom';
+}
+
+function parseJsonArray(value, fallback=[]){
+  if(Array.isArray(value)) return value;
+  if(typeof value === 'string'){
+    try {
+      const parsed = JSON.parse(value);
+      return Array.isArray(parsed) ? parsed : fallback;
+    } catch {
+      return fallback;
+    }
+  }
+  return fallback;
+}
+
+function normalizeCloudPromptRow(row){
+  if(!row || row.is_deleted) return null;
+  return normalizeCustomPromptRecord({
+    id:row.id,
+    title:row.title,
+    cat:row.cat,
+    badge:row.badge,
+    workflow:row.workflow,
+    scenes:parseJsonArray(row.scenes),
+    createdAt:row.created_at,
+    updatedAt:row.updated_at,
+    cloudCreatedBy:row.created_by,
+    cloudUpdatedBy:row.updated_by,
+    storageOrigin:'cloud',
+  });
+}
+
+function getCloudTransformVersion(row){
+  if(!row?.transform_version || !row?.transformed_scene_1 || !row?.transformed_scene_2 || !row?.transformed_scene_3) return null;
+  return {
+    promptId:row.id,
+    title:row.title,
+    original_prompt:row.original_prompt || '',
+    transformed_scene_1:row.transformed_scene_1,
+    transformed_scene_2:row.transformed_scene_2,
+    transformed_scene_3:row.transformed_scene_3,
+    transform_status:row.transform_status || 'completed',
+    transform_version:row.transform_version,
+    quality_flags:parseJsonArray(row.quality_flags),
+    generatedAt:row.updated_at || row.created_at || new Date().toISOString(),
+    savedAt:row.updated_at || row.created_at || new Date().toISOString(),
+  };
+}
+
+function hydrateSharedCustomPrompts(rows){
+  const normalized = sortCustomPrompts(rows.map(normalizeCloudPromptRow).filter(Boolean));
+  const customIds = new Set(normalized.map(prompt => prompt.id));
+  customPrompts = normalized;
+  saveCustomPrompts(customPrompts);
+  Object.keys(transformedSaved).forEach(pid => {
+    if(customIds.has(pid)) delete transformedSaved[pid];
+  });
+  rows.forEach(row => {
+    const version = getCloudTransformVersion(row);
+    if(version) transformedSaved[row.id] = version;
+  });
+  saveTransformed(transformedSaved);
+}
+
+function buildCloudPromptPayload(prompt, transformVersion){
+  const existing = customPrompts.find(item => item.id === prompt.id) || {};
+  return {
+    id:prompt.id,
+    workspace:SHARED_PROMPT_WORKSPACE,
+    title:prompt.title,
+    cat:prompt.cat,
+    badge:prompt.badge || inferBadgeForCategory(prompt.cat),
+    workflow:prompt.workflow || 'Custom prompt · Added in Prompt Builder',
+    scenes:prompt.scenes,
+    original_prompt:flattenOriginalPrompt(prompt),
+    transformed_scene_1:transformVersion?.transformed_scene_1 || null,
+    transformed_scene_2:transformVersion?.transformed_scene_2 || null,
+    transformed_scene_3:transformVersion?.transformed_scene_3 || null,
+    transform_status:transformVersion?.transform_status || null,
+    transform_version:transformVersion?.transform_version || null,
+    quality_flags:transformVersion?.quality_flags || [],
+    created_by:existing.cloudCreatedBy || getCollaboratorLabel(),
+    updated_by:getCollaboratorLabel(),
+    is_deleted:false,
+  };
+}
+
+async function removeCustomPrompt(pid){
   const before = customPrompts.length;
   customPrompts = customPrompts.filter(prompt => prompt.id !== pid);
   if(before === customPrompts.length) return;
@@ -1308,11 +1458,17 @@ function removeCustomPrompt(pid){
   saveDone(done);
   saveLive(live);
   if(currentCat !== 'All' && !getAllPrompts().some(prompt => prompt.cat === currentCat)) currentCat = 'All';
+  if(builderEditingId === pid) clearPromptBuilder();
   buildCats();
   buildStatusFilters();
   bindBuilderCategorySelect();
   render();
-  showToast('Custom prompt removed');
+  try {
+    await softDeleteCustomPromptInCloud(pid);
+    showToast('Custom prompt removed');
+  } catch(err){
+    showToast('Removed locally. Cloud delete will retry when sync is available.');
+  }
 }
 
 function createCustomPromptId(title, category){
@@ -1334,6 +1490,212 @@ function createCustomPromptRecord({title, category, promptText}){
     workflow:'Custom prompt · Added in Prompt Builder',
     createdAt:new Date().toISOString(),
   });
+}
+
+function queueSharedPromptRefresh(delay=500){
+  clearTimeout(sharedPromptRefreshTimer);
+  sharedPromptRefreshTimer = setTimeout(() => {
+    refreshSharedPromptLibrary({silent:true});
+  }, delay);
+}
+
+function syncBuilderUi(){
+  const submit = document.getElementById('builder-submit-btn');
+  const clear = document.getElementById('builder-clear-btn');
+  if(submit) submit.textContent = builderEditingId ? 'Save Prompt Changes' : 'Add Prompt To Engine';
+  if(clear) clear.textContent = builderEditingId ? 'Cancel Edit' : 'Clear Form';
+}
+
+function fillBuilderAuthor(){
+  const input = document.getElementById('builder-author');
+  if(input) input.value = collaboratorName;
+}
+
+function saveCollaboratorNameFromInput(){
+  const input = document.getElementById('builder-author');
+  collaboratorName = (input?.value || '').trim();
+  saveCollaboratorName(collaboratorName);
+  renderSharedPromptMeta();
+}
+
+function getSharedPromptMetaText(){
+  if(sharedPromptState.status === 'syncing') return 'Syncing the shared custom prompt library through Supabase…';
+  if(sharedPromptState.status === 'ready'){
+    const label = sharedPromptState.mode === 'realtime'
+      ? 'Realtime sync is live.'
+      : 'Shared sync is online.';
+    return `${label} ${sharedPromptState.count} shared prompt${sharedPromptState.count===1?'':'s'} available. Last sync ${formatSyncTime(sharedPromptState.lastSyncedAt)}.`;
+  }
+  if(sharedPromptState.status === 'error'){
+    return `Shared sync is offline right now, so custom prompts are staying in this browser until Supabase responds again. ${sharedPromptState.error || ''}`.trim();
+  }
+  return 'Preparing the shared custom prompt library…';
+}
+
+function renderSharedPromptMeta(){
+  const meta = document.getElementById('builder-cloud-meta');
+  const builderMeta = document.getElementById('builder-meta');
+  if(meta) meta.textContent = getSharedPromptMetaText();
+  if(builderMeta){
+    builderMeta.textContent = sharedPromptState.status === 'ready'
+      ? 'Custom prompts now sync through Supabase for both collaborators, while local browser storage remains a backup. New categories work immediately in the engine; storefront uploads for brand-new categories still depend on your site category mapping.'
+      : 'Custom prompts fall back to this browser locally, and sync to Supabase when the shared prompt table is available. New categories work immediately in the engine; storefront uploads for brand-new categories still depend on your site category mapping.';
+  }
+}
+
+async function ensureSharedPromptClient(){
+  if(sharedPromptClient) return sharedPromptClient;
+  if(!window.supabase?.createClient) throw new Error('Supabase browser client not loaded');
+  sharedPromptClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+    auth:{persistSession:false, autoRefreshToken:false, detectSessionInUrl:false},
+  });
+  return sharedPromptClient;
+}
+
+async function fetchSharedPromptRows(){
+  const client = await ensureSharedPromptClient();
+  const { data, error } = await client
+    .from(SHARED_PROMPT_TABLE)
+    .select('*')
+    .eq('workspace', SHARED_PROMPT_WORKSPACE)
+    .eq('is_deleted', false)
+    .order('updated_at', { ascending:false });
+  if(error) throw error;
+  return Array.isArray(data) ? data : [];
+}
+
+async function refreshSharedPromptLibrary({silent=false}={}){
+  try {
+    sharedPromptState = {...sharedPromptState, status:'syncing'};
+    renderSharedPromptMeta();
+    const rows = await fetchSharedPromptRows();
+    hydrateSharedCustomPrompts(rows);
+    sharedPromptState = {
+      status:'ready',
+      count:rows.length,
+      lastSyncedAt:new Date().toISOString(),
+      error:'',
+      mode:sharedPromptChannel ? 'realtime' : 'cloud',
+    };
+    bindBuilderCategorySelect();
+    buildCats();
+    buildStatusFilters();
+    renderSharedPromptMeta();
+    render();
+    if(!sharedPromptBootstrapped){
+      sharedPromptBootstrapped = true;
+      await bootstrapLocalCustomPromptsToCloud(rows);
+    }
+    if(!silent) showToast('Shared prompt library refreshed');
+  } catch(err){
+    sharedPromptState = {
+      ...sharedPromptState,
+      status:'error',
+      error:err?.message || 'Unknown Supabase error',
+    };
+    renderSharedPromptMeta();
+    if(!silent) showToast('Shared prompt sync is offline right now');
+  }
+}
+
+async function upsertCustomPromptToCloud(prompt){
+  const client = await ensureSharedPromptClient();
+  const version = isCurrentTransformVersion(transformedSaved[prompt.id]) ? transformedSaved[prompt.id] : null;
+  const payload = buildCloudPromptPayload(prompt, version);
+  const { data, error } = await client
+    .from(SHARED_PROMPT_TABLE)
+    .upsert(payload, { onConflict:'id' })
+    .select('*')
+    .single();
+  if(error) throw error;
+  return data;
+}
+
+async function softDeleteCustomPromptInCloud(pid){
+  if(!sharedPromptClient) return;
+  const { error } = await sharedPromptClient
+    .from(SHARED_PROMPT_TABLE)
+    .update({
+      is_deleted:true,
+      updated_by:getCollaboratorLabel(),
+    })
+    .eq('id', pid)
+    .eq('workspace', SHARED_PROMPT_WORKSPACE);
+  if(error) throw error;
+}
+
+async function syncLocalCustomPromptsToCloud(){
+  try {
+    saveCollaboratorNameFromInput();
+    const client = await ensureSharedPromptClient();
+    sharedPromptState = {...sharedPromptState, status:'syncing'};
+    renderSharedPromptMeta();
+    for(const prompt of customPrompts){
+      const version = isCurrentTransformVersion(transformedSaved[prompt.id]) ? transformedSaved[prompt.id] : null;
+      const payload = buildCloudPromptPayload(prompt, version);
+      const { error } = await client.from(SHARED_PROMPT_TABLE).upsert(payload, { onConflict:'id' });
+      if(error) throw error;
+    }
+    await refreshSharedPromptLibrary({silent:true});
+    showToast('Local custom prompts pushed to shared library');
+  } catch(err){
+    sharedPromptState = {...sharedPromptState, status:'error', error:err?.message || 'Unknown Supabase error'};
+    renderSharedPromptMeta();
+    showToast('Could not push local prompts to Supabase');
+  }
+}
+
+async function bootstrapLocalCustomPromptsToCloud(existingRows=[]){
+  const cloudIds = new Set(existingRows.map(row => row.id));
+  const pending = initialLocalCustomPrompts.filter(prompt => prompt?.id && !cloudIds.has(prompt.id));
+  if(!pending.length) return;
+  for(const prompt of pending){
+    const normalized = normalizeCustomPromptRecord(prompt);
+    if(!normalized) continue;
+    try {
+      await upsertCustomPromptToCloud(normalized);
+    } catch(err){
+      sharedPromptState = {...sharedPromptState, status:'error', error:err?.message || 'Unknown Supabase error'};
+      renderSharedPromptMeta();
+      return;
+    }
+  }
+  await refreshSharedPromptLibrary({silent:true});
+}
+
+async function initSharedPromptSync(){
+  fillBuilderAuthor();
+  syncBuilderUi();
+  renderSharedPromptMeta();
+  try {
+    await ensureSharedPromptClient();
+    await refreshSharedPromptLibrary({silent:true});
+    sharedPromptChannel = sharedPromptClient
+      .channel('prompt-engine-custom-prompts')
+      .on('postgres_changes', {
+        event:'*',
+        schema:'public',
+        table:SHARED_PROMPT_TABLE,
+        filter:`workspace=eq.${SHARED_PROMPT_WORKSPACE}`,
+      }, () => {
+        sharedPromptState = {...sharedPromptState, mode:'realtime'};
+        renderSharedPromptMeta();
+        queueSharedPromptRefresh();
+      })
+      .subscribe((status) => {
+        if(status === 'SUBSCRIBED'){
+          sharedPromptState = {...sharedPromptState, mode:'realtime'};
+          renderSharedPromptMeta();
+        }
+      });
+  } catch(err){
+    sharedPromptState = {
+      ...sharedPromptState,
+      status:'error',
+      error:err?.message || 'Supabase browser client unavailable',
+    };
+    renderSharedPromptMeta();
+  }
 }
 
 function pickByHash(seed, list){
@@ -1835,10 +2197,14 @@ function init(){
   buildCats();
   buildStatusFilters();
   bindBuilderCategorySelect();
+  fillBuilderAuthor();
+  syncBuilderUi();
   renderSyncMeta();
+  renderSharedPromptMeta();
   renderUnlinkedLivePanel();
   render();
   syncLiveFromServer();
+  initSharedPromptSync();
   document.getElementById('search').addEventListener('input', e=>{
     searchQ = e.target.value.toLowerCase();
     render();
@@ -1874,7 +2240,7 @@ function catEmoji(c){
     'Christmas':'🎄',"New Year's":'🥂',"Valentine's Day":'❤️',
     'Easter':'🌷','Thanksgiving':'🍂','Halloween':'🎃','4th of July':'🎆',
     'Hanukkah':'🕎','Kwanzaa':'✊','Veterans Day':'🎖️','Labor Day':'💪',
-    'Celebration':'🎊','Zodiac':'⭐'};
+    'Celebration':'🎊','Zodiac':'⭐','Acknowledgement':'👏'};
   return m[c]||'🌸';
 }
 
@@ -1900,6 +2266,8 @@ function clearPromptBuilder(){
   if(categorySelect) categorySelect.value = BUILDER_SELECT_DEFAULT;
   if(categoryNew) categoryNew.value = '';
   if(prompt) prompt.value = '';
+  builderEditingId = null;
+  syncBuilderUi();
 }
 
 function readPromptBuilderValues(){
@@ -1911,13 +2279,48 @@ function readPromptBuilderValues(){
   return {title, category, promptText};
 }
 
-function addCustomPrompt(){
+function loadCustomPromptIntoBuilder(pid){
+  const prompt = customPrompts.find(item => item.id === pid);
+  if(!prompt) return;
+  const title = document.getElementById('builder-title');
+  const categorySelect = document.getElementById('builder-category-select');
+  const categoryNew = document.getElementById('builder-category-new');
+  const promptField = document.getElementById('builder-prompt');
+  if(title) title.value = prompt.title;
+  if(categorySelect) categorySelect.value = BUILDER_SELECT_DEFAULT;
+  if(categoryNew) categoryNew.value = prompt.cat;
+  if(promptField) promptField.value = prompt.scenes.map(scene => scene.text).join('\n\n');
+  builderEditingId = pid;
+  syncBuilderUi();
+  document.querySelector('.builder-shell')?.scrollIntoView({behavior:'smooth', block:'start'});
+  showToast('Custom prompt loaded into the builder');
+}
+
+async function addCustomPrompt(){
+  saveCollaboratorNameFromInput();
   const {title, category, promptText} = readPromptBuilderValues();
   if(!title || !category || !promptText){
     showToast('Add a title, category, and prompt text first');
     return;
   }
-  const record = createCustomPromptRecord({title, category, promptText});
+  const editingId = builderEditingId;
+  const wasEditing = !!editingId;
+  const existing = builderEditingId ? customPrompts.find(item => item.id === builderEditingId) : null;
+  const record = builderEditingId
+    ? normalizeCustomPromptRecord({
+        ...existing,
+        id:editingId,
+        title,
+        cat:category,
+        scenes:[{label:'Original Prompt', text:promptText}],
+        workflow:existing?.workflow || 'Custom prompt · Added in Prompt Builder',
+        createdAt:existing?.createdAt || new Date().toISOString(),
+        updatedAt:new Date().toISOString(),
+        cloudCreatedBy:existing?.cloudCreatedBy,
+        cloudUpdatedBy:getCollaboratorLabel(),
+        storageOrigin:existing?.storageOrigin || 'local',
+      })
+    : createCustomPromptRecord({title, category, promptText});
   const savedRecord = upsertCustomPrompt(record);
   if(!savedRecord){
     showToast('That prompt could not be saved');
@@ -1930,14 +2333,22 @@ function addCustomPrompt(){
   bindBuilderCategorySelect();
   clearPromptBuilder();
   render();
-  showToast('Custom prompt added and transformed');
+  try {
+    await upsertCustomPromptToCloud(savedRecord);
+    await refreshSharedPromptLibrary({silent:true});
+    showToast(wasEditing ? 'Shared prompt updated' : 'Shared prompt added and transformed');
+  } catch(err){
+    sharedPromptState = {...sharedPromptState, status:'error', error:err?.message || 'Unknown Supabase error'};
+    renderSharedPromptMeta();
+    showToast(wasEditing ? 'Saved locally. Shared update will sync when Supabase responds.' : 'Saved locally. Shared sync will retry when Supabase responds.');
+  }
 }
 
 function titleFromPromptText(text){
   return clipText(String(text || '').replace(/\s+/g, ' ').trim(), 44);
 }
 
-function seedAcknowledgementPack(){
+async function seedAcknowledgementPack(){
   let created = 0;
   ACKNOWLEDGEMENT_PACK.forEach(line => {
     const seedId = `ack-${sanitizeIdFragment(line)}`;
@@ -1961,7 +2372,15 @@ function seedAcknowledgementPack(){
   buildStatusFilters();
   bindBuilderCategorySelect();
   render();
-  showToast(created ? `Loaded ${created} acknowledgement prompts` : 'Acknowledgement prompts were already loaded');
+  if(created && sharedPromptState.status !== 'error'){
+    try {
+      await syncLocalCustomPromptsToCloud();
+    } catch(err) {
+      // no-op: syncLocalCustomPromptsToCloud already handles UI state
+    }
+  } else {
+    showToast(created ? `Loaded ${created} acknowledgement prompts` : 'Acknowledgement prompts were already loaded');
+  }
 }
 
 function exportCustomPromptLibrary(){
@@ -1989,7 +2408,7 @@ function importCustomPromptLibrary(input){
   const file = input?.files?.[0];
   if(!file) return;
   const reader = new FileReader();
-  reader.onload = () => {
+  reader.onload = async () => {
     try {
       const payload = JSON.parse(reader.result);
       const incoming = Array.isArray(payload) ? payload : payload.customPrompts;
@@ -2003,6 +2422,7 @@ function importCustomPromptLibrary(input){
       buildCats();
       buildStatusFilters();
       render();
+      if(importedCount) await syncLocalCustomPromptsToCloud();
       showToast(importedCount ? `Imported ${importedCount} custom prompts` : 'No valid custom prompts found');
     } catch(err){
       showToast('Could not import that library file');
@@ -2062,6 +2482,9 @@ function cardHTML(p){
   const st = uploadStates[p.id];
   const encTitle = encodeURIComponent(p.title).replace(/'/g, "%27");
   const encCat   = encodeURIComponent(p.cat).replace(/'/g, "%27");
+  const customMeta = p.isCustom
+    ? `<div class="custom-meta-note">☁️ ${p.storageOrigin === 'cloud' ? 'Shared via Supabase' : 'Local browser backup'}${p.cloudUpdatedBy ? ` · ${escapeHtml(p.cloudUpdatedBy)}` : ''}${p.updatedAt ? ` · ${formatSyncTime(p.updatedAt)}` : ''}</div>`
+    : '';
 
   // Hidden file input — shared for both first upload and re-upload
   const fileInput = `<input type="file" accept="video/*" id="file-${p.id}"
@@ -2118,11 +2541,12 @@ function cardHTML(p){
     <span class="cat-badge ${p.badge}">${p.cat}</span>
     ${p.isCustom ? `<span class="custom-chip">Custom Library</span>` : ''}
     ${p.workflow?`<div class="workflow-note">⚡ ${p.workflow}</div>`:''}
+    ${customMeta}
     <div class="scenes">
       ${p.scenes.map((s,i)=>sceneHTML(p.id,i,s)).join('')}
     </div>
     ${transformerHTML(p)}
-    ${p.isCustom ? `<div class="card-tools"><button class="btn-card-tool" onclick="removeCustomPrompt('${p.id}')">Delete Custom Prompt</button></div>` : ''}
+    ${p.isCustom ? `<div class="card-tools"><button class="btn-card-tool" onclick="loadCustomPromptIntoBuilder('${p.id}')">Edit In Builder</button><button class="btn-card-tool" onclick="removeCustomPrompt('${p.id}')">Delete Custom Prompt</button></div>` : ''}
     ${bottomZone}
   </div>`;
 }
@@ -2295,7 +2719,8 @@ function copyTransformed(pid){
   copyText(text, null, null, 'Transformed prompt copied');
 }
 
-function saveTransformedVersion(pid){
+async function saveTransformedVersion(pid){
+  saveCollaboratorNameFromInput();
   const prompt = getPromptById(pid);
   const version = transformedDrafts[pid] || ensureTransformVersion(pid);
   if(!prompt || !version) return;
@@ -2306,6 +2731,19 @@ function saveTransformedVersion(pid){
   delete transformedDrafts[pid];
   saveTransformed(transformedSaved);
   render();
+  if(prompt.isCustom){
+    try {
+      await upsertCustomPromptToCloud(prompt);
+      await refreshSharedPromptLibrary({silent:true});
+      showToast('Transformed version saved to shared library');
+      return;
+    } catch(err){
+      sharedPromptState = {...sharedPromptState, status:'error', error:err?.message || 'Unknown Supabase error'};
+      renderSharedPromptMeta();
+      showToast('Transformed version saved locally');
+      return;
+    }
+  }
   showToast('Transformed version saved');
 }
 
