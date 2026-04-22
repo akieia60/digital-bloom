@@ -18,7 +18,7 @@ export default async function handler(req, res) {
 
   let { data, error } = await query;
 
-  if (error?.code === '42703') {
+  if (error?.code === '42703' || error?.code === 'PGRST204') {
     ({ data, error } = await supabase
       .from('products')
       .select('id, name, slug, category, price, is_active, video_url, updated_at')

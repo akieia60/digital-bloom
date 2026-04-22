@@ -130,7 +130,7 @@ export default async function handler(req, res) {
       .select('id, name, slug, prompt_id')
       .single();
 
-    if (dbErr?.code === '42703') {
+    if (dbErr?.code === '42703' || dbErr?.code === 'PGRST204') {
       ({ data: product, error: dbErr } = await supabase
         .from('products')
         .upsert(baseProductPayload, { onConflict: 'slug' })
