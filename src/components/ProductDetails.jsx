@@ -12,7 +12,7 @@ const ProductDetails = () => {
   const [quantity, setQuantity] = useState(1);
   const [showSuccess, setShowSuccess] = useState(false);
 
-  const { product, loading } = useProduct(id);
+  const { product, loading, error, usingMockData } = useProduct(id);
   const { products } = useProducts();
 
   const relatedProducts = useMemo(() => {
@@ -80,6 +80,18 @@ const ProductDetails = () => {
       </button>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
+        {error && (
+          <div className="lg:col-span-2 mb-2 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+            Could not load live product data from Supabase. {error}
+          </div>
+        )}
+
+        {usingMockData && (
+          <div className="lg:col-span-2 mb-2 rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm text-amber-700">
+            You are viewing demo product data because Supabase is not configured.
+          </div>
+        )}
+
         <div className="aspect-square rounded-lg overflow-hidden bg-gray-100">
           {product.video_url ? (
             <VideoPlayer
@@ -124,16 +136,20 @@ const ProductDetails = () => {
 
           <div className="mb-6">
             <h3 className="text-sm font-semibold text-gray-900 mb-2">Perfect for:</h3>
-            <div className="flex flex-wrap gap-2">
-              {product.occasions.map(occasion => (
-                <span
-                  key={occasion}
-                  className="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm capitalize"
-                >
-                  {occasion.replace('-', ' ')}
-                </span>
-              ))}
-            </div>
+            {product.occasions?.length > 0 ? (
+              <div className="flex flex-wrap gap-2">
+                {product.occasions.map(occasion => (
+                  <span
+                    key={occasion}
+                    className="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm capitalize"
+                  >
+                    {occasion.replace('-', ' ')}
+                  </span>
+                ))}
+              </div>
+            ) : (
+              <p className="text-sm text-gray-500">No occasion tags added.</p>
+            )}
           </div>
 
           <div className="mb-6">

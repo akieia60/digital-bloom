@@ -15,8 +15,10 @@ const ProductCard = ({ product }) => {
     setTimeout(() => setShowSuccess(false), 2000);
   };
 
+  const productLink = `/product/${product.slug || product.id}`;
+
   return (
-    <Link to={`/product/${product.id}`} className="group">
+    <Link to={productLink} className="group">
       <div className="glass rounded-2xl overflow-hidden transition-all duration-400 hover:-translate-y-3 hover:shadow-2xl hover:shadow-gold/20 hover:border-gold/40 relative">
         <div className="relative aspect-square overflow-hidden bg-gradient-to-br from-dark-bg to-dark-secondary group/video">
           {product.video_file_url || product.video_url ? (
