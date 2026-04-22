@@ -54,6 +54,31 @@ body{font-family:'Outfit',sans-serif;background:var(--navy);color:var(--white);m
 .btn-transformer:hover{background:rgba(212,175,55,0.24)}
 .btn-transformer.secondary{background:rgba(255,255,255,0.04);border-color:var(--border);color:rgba(255,255,255,0.82)}
 .btn-transformer.secondary:hover{border-color:var(--gold);color:var(--white)}
+.builder-shell{display:flex;flex-direction:column;gap:10px;padding:12px;margin:0 20px 16px;border:1px solid var(--border);border-radius:14px;background:linear-gradient(180deg,rgba(255,255,255,0.03),rgba(34,197,94,0.06))}
+.builder-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.builder-copy{display:flex;flex-direction:column;gap:4px}
+.builder-kicker{font-size:0.66rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#86efac}
+.builder-title{font-size:0.92rem;font-weight:600;color:var(--white)}
+.builder-note{font-size:0.72rem;line-height:1.55;color:rgba(255,255,255,0.74)}
+.builder-actions{display:flex;gap:8px;flex-wrap:wrap}
+.builder-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.builder-field{display:flex;flex-direction:column;gap:5px}
+.builder-field.full{grid-column:1/-1}
+.builder-label{font-size:0.66rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#86efac}
+.builder-input,.builder-select,.builder-textarea{width:100%;padding:10px 12px;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:10px;color:var(--white);font-size:0.78rem;font-family:'Outfit',sans-serif;outline:none}
+.builder-input:focus,.builder-select:focus,.builder-textarea:focus{border-color:#86efac}
+.builder-select option{background:var(--navy2);color:var(--white)}
+.builder-textarea{min-height:108px;resize:vertical;line-height:1.55}
+.builder-foot{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.builder-meta{font-size:0.72rem;line-height:1.55;color:rgba(255,255,255,0.68)}
+.btn-builder{padding:9px 14px;background:rgba(34,197,94,0.14);border:1px solid rgba(34,197,94,0.26);border-radius:10px;color:#86efac;font-size:0.74rem;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:all 0.2s;white-space:nowrap}
+.btn-builder:hover{background:rgba(34,197,94,0.24)}
+.btn-builder.secondary{background:rgba(255,255,255,0.04);border-color:var(--border);color:rgba(255,255,255,0.82)}
+.btn-builder.secondary:hover{border-color:#86efac;color:var(--white)}
+.custom-chip{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:999px;background:rgba(34,197,94,0.12);border:1px solid rgba(34,197,94,0.24);font-size:0.64rem;color:#86efac;margin:0 16px 10px;align-self:flex-start;text-transform:uppercase;letter-spacing:0.08em;font-weight:700}
+.card-tools{display:flex;gap:8px;flex-wrap:wrap;padding:0 12px 12px}
+.btn-card-tool{padding:6px 10px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:8px;color:rgba(255,255,255,0.78);font-size:0.68rem;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:all 0.2s}
+.btn-card-tool:hover{border-color:var(--red);color:#fecaca}
 .sync-pill{padding:6px 12px;border-radius:20px;border:1px solid rgba(34,197,94,0.35);background:rgba(34,197,94,0.1);color:#86efac;font-size:0.72rem;font-family:'Outfit',sans-serif;cursor:pointer;transition:all 0.2s;white-space:nowrap;flex-shrink:0;font-weight:700}
 .sync-pill:hover{background:rgba(34,197,94,0.2)}
 .sync-pill.open{background:rgba(34,197,94,0.22);border-color:rgba(34,197,94,0.55)}
@@ -175,6 +200,7 @@ body{font-family:'Outfit',sans-serif;background:var(--navy);color:var(--white);m
   .controls{top:53px}
   .transformer-grid{grid-template-columns:1fr}
   .transformer-actions{justify-content:flex-start}
+  .builder-grid{grid-template-columns:1fr}
   .sync-panel-wrap{align-items:flex-start}
   .upload-live-badge{align-items:flex-start;flex-direction:column}
 }
@@ -238,6 +264,47 @@ body{font-family:'Outfit',sans-serif;background:var(--navy);color:var(--white);m
     <div class="transformer-actions">
       <button class="btn-transformer" onclick="transformAllPrompts()">Transform All Prompts</button>
       <button class="btn-transformer secondary" onclick="clearTransformDrafts()">Clear Draft Previews</button>
+    </div>
+  </div>
+</div>
+
+<div class="builder-shell">
+  <div class="builder-head">
+    <div class="builder-copy">
+      <div class="builder-kicker">Prompt Builder</div>
+      <div class="builder-title">Add Categories And Prompt Drafts</div>
+      <div class="builder-note">Create new categories or add prompt ideas here, then transform them into the same Bloom style already running across the engine.</div>
+    </div>
+    <div class="builder-actions">
+      <button class="btn-builder secondary" onclick="seedAcknowledgementPack()">Load Acknowledgement Pack</button>
+      <button class="btn-builder secondary" onclick="exportCustomPromptLibrary()">Export Custom Library</button>
+      <button class="btn-builder secondary" onclick="document.getElementById('import-custom-library').click()">Import Library</button>
+      <input type="file" accept="application/json" id="import-custom-library" style="display:none" onchange="importCustomPromptLibrary(this)">
+    </div>
+  </div>
+  <div class="builder-grid">
+    <label class="builder-field">
+      <span class="builder-label">Prompt Title</span>
+      <input class="builder-input" id="builder-title" type="text" placeholder="Happy Retirement Bloom">
+    </label>
+    <label class="builder-field">
+      <span class="builder-label">Existing Category</span>
+      <select class="builder-select" id="builder-category-select"></select>
+    </label>
+    <label class="builder-field full">
+      <span class="builder-label">New Category</span>
+      <input class="builder-input" id="builder-category-new" type="text" placeholder="Create a new category only when you need one">
+    </label>
+    <label class="builder-field full">
+      <span class="builder-label">Original Prompt / Notes</span>
+      <textarea class="builder-textarea" id="builder-prompt" placeholder="Paste the rough prompt, the message, flower ideas, palette, emotional intent, or scene notes. The Bloom Transformer will reshape it into your house style."></textarea>
+    </label>
+  </div>
+  <div class="builder-foot">
+    <div class="builder-meta" id="builder-meta">Custom prompts stay in this browser until you export/import them. New categories work immediately in the engine; storefront uploads for brand-new categories still depend on your site category mapping.</div>
+    <div class="builder-actions">
+      <button class="btn-builder secondary" onclick="clearPromptBuilder()">Clear Form</button>
+      <button class="btn-builder" onclick="addCustomPrompt()">Add Prompt To Engine</button>
     </div>
   </div>
 </div>
@@ -1059,6 +1126,23 @@ const FINALE_SURREAL_ELEMENTS = [
   'glowing dust trails follow balloons',
   'flowers ripple like waves before settling'
 ];
+const ACKNOWLEDGEMENT_PACK = [
+  'I see you',
+  'You’ve been solid from day one',
+  'Real recognize real',
+  'Man, you deserve your flowers',
+  'Girl, you deserve your flowers',
+  'You’ve done a great job. I just want to let you know.',
+  'I’m not going to act like I don’t see the hard work you’ve put in. Great job.',
+  'You’ve been relentless on making this work. Great job.',
+  'Excellent work. No one doesn’t like you.',
+  'I have to give you your credit where credit is due.',
+  'Hands down, you deserve to be acknowledged',
+  'No one can do it better. You’re the goat.',
+  'I just want to congratulate you. You deserve it.',
+  'You deserve all the love you get for everything you’ve done.',
+  'If don’t no one see you I see you.'
+];
 
 // ═══════════════════════════════════════════════════
 // APP LOGIC
@@ -1067,6 +1151,7 @@ const FINALE_SURREAL_ELEMENTS = [
 const DONE_KEY = 'db_prompt_done';
 const LIVE_KEY = 'db_bloom_live';
 const TRANSFORMED_KEY = 'db_prompt_transformed_versions';
+const CUSTOM_PROMPTS_KEY = 'db_prompt_custom_library';
 const SUPABASE_URL = 'https://yhdbeblowolfinxxhsnt.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InloZGJlYmxvd29sZmlueHhoc250Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjkyNjA0NjMsImV4cCI6MjA4NDgzNjQ2M30.DGIJ5FSr2M4wBi3eQ5rjC0jx3CVS4pEcJe1PMOSR0yM';
 const LEGACY_PRODUCT_ALIASES = {
@@ -1087,6 +1172,8 @@ function getLive(){try{return JSON.parse(localStorage.getItem(LIVE_KEY)||'{}')}c
 function saveLive(l){localStorage.setItem(LIVE_KEY,JSON.stringify(l))}
 function getTransformed(){try{return JSON.parse(localStorage.getItem(TRANSFORMED_KEY)||'{}')}catch{return{}}}
 function saveTransformed(v){localStorage.setItem(TRANSFORMED_KEY,JSON.stringify(v))}
+function getCustomPrompts(){try{return JSON.parse(localStorage.getItem(CUSTOM_PROMPTS_KEY)||'[]')}catch{return[]}}
+function saveCustomPrompts(v){localStorage.setItem(CUSTOM_PROMPTS_KEY,JSON.stringify(v))}
 
 const uploadStates = {}; // in-memory upload state so renders don't reset progress
 const transformedDrafts = {};
@@ -1099,6 +1186,7 @@ const LIVE_STATUS_OPTIONS = [
 let done = getDone();
 let live = getLive();
 let transformedSaved = getTransformed();
+let customPrompts = getCustomPrompts();
 let serverLiveSlugs = {}; // keyed by slug → product data, loaded from Supabase
 let serverLoaded = false;
 let unlinkedLiveProducts = [];
@@ -1108,7 +1196,15 @@ let searchQ = '';
 let syncState = {status:'idle', activeCount:0, matchedCount:0, unlinkedCount:0, lastSyncedAt:null, error:'', source:''};
 let syncPanelOpen = false;
 
-const categories = ['All', ...new Set(PROMPTS.map(p=>p.cat))];
+const BUILDER_SELECT_DEFAULT = '__existing__';
+
+function getAllPrompts(){
+  return [...PROMPTS, ...customPrompts];
+}
+
+function getAllCategories(){
+  return ['All', ...new Set(getAllPrompts().map(p => p.cat))];
+}
 
 function cleanSourceText(text){
   return String(text || '')
@@ -1144,7 +1240,100 @@ function hashString(value){
 }
 
 function getPromptById(pid){
-  return PROMPTS.find(p => p.id === pid);
+  return getAllPrompts().find(p => p.id === pid);
+}
+
+function sanitizeIdFragment(value){
+  return String(value || '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g,'-')
+    .replace(/^-|-$/g,'')
+    .slice(0, 36);
+}
+
+function inferBadgeForCategory(category){
+  const key = String(category || '').toLowerCase();
+  if(key.includes('mother')) return 'badge-mothers';
+  if(key.includes('birthday')) return 'badge-birthday';
+  if(key.includes('love') || key.includes('valentine')) return 'badge-love';
+  if(key.includes('friend')) return 'badge-friendship';
+  if(key.includes('thank')) return 'badge-thankyou';
+  if(key.includes('anniversary')) return 'badge-anniversary';
+  if(key.includes('encouragement') || key.includes('celebration') || key.includes('congrat')) return 'badge-encouragement';
+  if(key.includes('sympathy') || key.includes('memorial') || key.includes('grief')) return 'badge-sympathy';
+  if(key.includes('father')) return 'badge-fathersday';
+  if(key.includes('holiday') || key.includes('christmas') || key.includes('new year') || key.includes('halloween')) return 'badge-holiday';
+  if(key.includes('zodiac') || key.includes('celestial')) return 'badge-zodiac';
+  if(key.includes('inclusive')) return 'badge-inclusive';
+  if(key.includes('signature') || key.includes('luxury')) return 'badge-signature';
+  return 'badge-encouragement';
+}
+
+function normalizeCustomPromptRecord(record){
+  if(!record || !record.id || !record.title || !record.cat || !Array.isArray(record.scenes)) return null;
+  const scenes = record.scenes
+    .map(scene => ({label:String(scene?.label || 'Original Prompt'), text:String(scene?.text || '').trim()}))
+    .filter(scene => scene.text);
+  if(!scenes.length) return null;
+  return {
+    id:String(record.id),
+    title:String(record.title),
+    cat:String(record.cat),
+    badge:record.badge || inferBadgeForCategory(record.cat),
+    workflow:record.workflow || 'Custom prompt · Added in Prompt Builder',
+    scenes,
+    isCustom:true,
+    createdAt:record.createdAt || new Date().toISOString(),
+  };
+}
+
+function upsertCustomPrompt(record){
+  const normalized = normalizeCustomPromptRecord(record);
+  if(!normalized) return null;
+  customPrompts = [...customPrompts.filter(item => item.id !== normalized.id), normalized];
+  saveCustomPrompts(customPrompts);
+  return normalized;
+}
+
+function removeCustomPrompt(pid){
+  const before = customPrompts.length;
+  customPrompts = customPrompts.filter(prompt => prompt.id !== pid);
+  if(before === customPrompts.length) return;
+  saveCustomPrompts(customPrompts);
+  delete transformedDrafts[pid];
+  delete transformedSaved[pid];
+  delete done[pid];
+  delete live[pid];
+  saveTransformed(transformedSaved);
+  saveDone(done);
+  saveLive(live);
+  if(currentCat !== 'All' && !getAllPrompts().some(prompt => prompt.cat === currentCat)) currentCat = 'All';
+  buildCats();
+  buildStatusFilters();
+  bindBuilderCategorySelect();
+  render();
+  showToast('Custom prompt removed');
+}
+
+function createCustomPromptId(title, category){
+  const titlePart = sanitizeIdFragment(title) || 'prompt';
+  const catPart = sanitizeIdFragment(category) || 'custom';
+  const stamp = Date.now().toString(36);
+  return `custom-${catPart}-${titlePart}-${stamp}`;
+}
+
+function createCustomPromptRecord({title, category, promptText}){
+  const cleanTitle = String(title || '').trim();
+  const cleanCategory = String(category || '').trim();
+  const cleanPrompt = String(promptText || '').trim();
+  return normalizeCustomPromptRecord({
+    id:createCustomPromptId(cleanTitle, cleanCategory),
+    title:cleanTitle,
+    cat:cleanCategory,
+    scenes:[{label:'Original Prompt', text:cleanPrompt}],
+    workflow:'Custom prompt · Added in Prompt Builder',
+    createdAt:new Date().toISOString(),
+  });
 }
 
 function pickByHash(seed, list){
@@ -1502,10 +1691,11 @@ function renderUnlinkedLivePanel(){
 function buildStatusFilters(){
   const el = document.getElementById('status-filters');
   if(!el) return;
+  const prompts = getAllPrompts();
   const counts = {
-    live:PROMPTS.filter(p => isLiveOnSite(p)).length,
-    todo:PROMPTS.filter(p => !isLiveOnSite(p)).length,
-    all:PROMPTS.length,
+    live:prompts.filter(p => isLiveOnSite(p)).length,
+    todo:prompts.filter(p => !isLiveOnSite(p)).length,
+    all:prompts.length,
   };
   el.innerHTML = LIVE_STATUS_OPTIONS.map(option => `
     <button class="status-btn${currentStatus===option.id?' active':''}" onclick="setStatus('${option.id}')">
@@ -1577,7 +1767,7 @@ function applyLiveProducts(products, source){
     };
   });
   const nextLive = {};
-  PROMPTS.forEach(p => {
+  getAllPrompts().forEach(p => {
     if(serverLiveSlugs[p.id]) nextLive[p.id] = true;
   });
   live = nextLive;
@@ -1644,6 +1834,7 @@ function isLiveOnSite(p){
 function init(){
   buildCats();
   buildStatusFilters();
+  bindBuilderCategorySelect();
   renderSyncMeta();
   renderUnlinkedLivePanel();
   render();
@@ -1656,14 +1847,15 @@ function init(){
 
 function catCounts(c){
   // Returns { live, total } for a given category label ('All' returns totals across every prompt).
-  const list = c === 'All' ? PROMPTS : PROMPTS.filter(p => p.cat === c);
+  const prompts = getAllPrompts();
+  const list = c === 'All' ? prompts : prompts.filter(p => p.cat === c);
   const live = list.filter(p => isLiveOnSite(p)).length;
   return { live, total: list.length };
 }
 
 function buildCats(){
   const el = document.getElementById('cats');
-  el.innerHTML = categories.map(c=>{
+  el.innerHTML = getAllCategories().map(c=>{
     const { live, total } = catCounts(c);
     const complete = live === total && total > 0;
     return `
@@ -1689,8 +1881,141 @@ function catEmoji(c){
 function setcat(c){currentCat=c;buildCats();render()}
 function setStatus(status){currentStatus=status;buildStatusFilters();render()}
 
+function bindBuilderCategorySelect(){
+  const select = document.getElementById('builder-category-select');
+  if(!select) return;
+  const categories = getAllCategories().filter(cat => cat !== 'All');
+  select.innerHTML = [`<option value="${BUILDER_SELECT_DEFAULT}">Select an existing category</option>`]
+    .concat(categories.map(cat => `<option value="${escapeHtml(cat)}">${escapeHtml(cat)}</option>`))
+    .join('');
+  if(!categories.length) select.value = BUILDER_SELECT_DEFAULT;
+}
+
+function clearPromptBuilder(){
+  const title = document.getElementById('builder-title');
+  const categorySelect = document.getElementById('builder-category-select');
+  const categoryNew = document.getElementById('builder-category-new');
+  const prompt = document.getElementById('builder-prompt');
+  if(title) title.value = '';
+  if(categorySelect) categorySelect.value = BUILDER_SELECT_DEFAULT;
+  if(categoryNew) categoryNew.value = '';
+  if(prompt) prompt.value = '';
+}
+
+function readPromptBuilderValues(){
+  const title = document.getElementById('builder-title')?.value.trim() || '';
+  const existingCategory = document.getElementById('builder-category-select')?.value || BUILDER_SELECT_DEFAULT;
+  const newCategory = document.getElementById('builder-category-new')?.value.trim() || '';
+  const promptText = document.getElementById('builder-prompt')?.value.trim() || '';
+  const category = newCategory || (existingCategory === BUILDER_SELECT_DEFAULT ? '' : existingCategory);
+  return {title, category, promptText};
+}
+
+function addCustomPrompt(){
+  const {title, category, promptText} = readPromptBuilderValues();
+  if(!title || !category || !promptText){
+    showToast('Add a title, category, and prompt text first');
+    return;
+  }
+  const record = createCustomPromptRecord({title, category, promptText});
+  const savedRecord = upsertCustomPrompt(record);
+  if(!savedRecord){
+    showToast('That prompt could not be saved');
+    return;
+  }
+  transformedDrafts[savedRecord.id] = buildTransformRecord(savedRecord);
+  currentCat = savedRecord.cat;
+  buildCats();
+  buildStatusFilters();
+  bindBuilderCategorySelect();
+  clearPromptBuilder();
+  render();
+  showToast('Custom prompt added and transformed');
+}
+
+function titleFromPromptText(text){
+  return clipText(String(text || '').replace(/\s+/g, ' ').trim(), 44);
+}
+
+function seedAcknowledgementPack(){
+  let created = 0;
+  ACKNOWLEDGEMENT_PACK.forEach(line => {
+    const seedId = `ack-${sanitizeIdFragment(line)}`;
+    const existed = customPrompts.some(prompt => prompt.id === seedId);
+    const record = normalizeCustomPromptRecord({
+      id:seedId,
+      title:titleFromPromptText(line),
+      cat:'Acknowledgement',
+      scenes:[{label:'Original Prompt', text:line}],
+      workflow:'Custom prompt · Acknowledgement pack',
+      createdAt:new Date().toISOString(),
+    });
+    const saved = upsertCustomPrompt(record);
+    if(saved){
+      transformedDrafts[saved.id] = buildTransformRecord(saved);
+      if(!existed) created += 1;
+    }
+  });
+  currentCat = 'Acknowledgement';
+  buildCats();
+  buildStatusFilters();
+  bindBuilderCategorySelect();
+  render();
+  showToast(created ? `Loaded ${created} acknowledgement prompts` : 'Acknowledgement prompts were already loaded');
+}
+
+function exportCustomPromptLibrary(){
+  if(!customPrompts.length){
+    showToast('No custom prompts to export yet');
+    return;
+  }
+  const payload = {
+    exportedAt:new Date().toISOString(),
+    customPrompts,
+  };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = `digital-bloom-custom-prompts-${new Date().toISOString().slice(0,10)}.json`;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+  showToast('Custom prompt library exported');
+}
+
+function importCustomPromptLibrary(input){
+  const file = input?.files?.[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    try {
+      const payload = JSON.parse(reader.result);
+      const incoming = Array.isArray(payload) ? payload : payload.customPrompts;
+      if(!Array.isArray(incoming)) throw new Error('Invalid file');
+      let importedCount = 0;
+      incoming.forEach(item => {
+        const saved = upsertCustomPrompt(item);
+        if(saved) importedCount += 1;
+      });
+      bindBuilderCategorySelect();
+      buildCats();
+      buildStatusFilters();
+      render();
+      showToast(importedCount ? `Imported ${importedCount} custom prompts` : 'No valid custom prompts found');
+    } catch(err){
+      showToast('Could not import that library file');
+    } finally {
+      input.value = '';
+    }
+  };
+  reader.readAsText(file);
+}
+
 function render(){
-  const filtered = PROMPTS.filter(p=>{
+  const prompts = getAllPrompts();
+  const filtered = prompts.filter(p=>{
     const catOk = currentCat==='All' || p.cat===currentCat;
     const statusOk = currentStatus === 'all'
       ? true
@@ -1703,11 +2028,11 @@ function render(){
     return catOk && statusOk && searchOk;
   });
 
-  const totalLive = PROMPTS.filter(p => isLiveOnSite(p)).length;
-  document.getElementById('stat-total').textContent = PROMPTS.length;
+  const totalLive = prompts.filter(p => isLiveOnSite(p)).length;
+  document.getElementById('stat-total').textContent = prompts.length;
   document.getElementById('stat-done').textContent = totalLive;
   document.getElementById('stat-showing').textContent = filtered.length;
-  document.getElementById('stat-todo').textContent = PROMPTS.length - totalLive;
+  document.getElementById('stat-todo').textContent = prompts.length - totalLive;
 
   if(!filtered.length){
     document.getElementById('grid').innerHTML = `<div class="empty"><span class="empty-icon">🔍</span>No prompts found</div>`;
@@ -1791,11 +2116,13 @@ function cardHTML(p){
       </div>
     </div>
     <span class="cat-badge ${p.badge}">${p.cat}</span>
+    ${p.isCustom ? `<span class="custom-chip">Custom Library</span>` : ''}
     ${p.workflow?`<div class="workflow-note">⚡ ${p.workflow}</div>`:''}
     <div class="scenes">
       ${p.scenes.map((s,i)=>sceneHTML(p.id,i,s)).join('')}
     </div>
     ${transformerHTML(p)}
+    ${p.isCustom ? `<div class="card-tools"><button class="btn-card-tool" onclick="removeCustomPrompt('${p.id}')">Delete Custom Prompt</button></div>` : ''}
     ${bottomZone}
   </div>`;
 }
@@ -1934,11 +2261,12 @@ function transformPrompt(pid){
 }
 
 function transformAllPrompts(){
-  PROMPTS.forEach(prompt => {
+  const prompts = getAllPrompts();
+  prompts.forEach(prompt => {
     transformedDrafts[prompt.id] = buildTransformRecord(prompt);
   });
   render();
-  showToast(`Previewed ${PROMPTS.length} transformed prompts`);
+  showToast(`Previewed ${prompts.length} transformed prompts`);
 }
 
 function clearTransformDrafts(){
