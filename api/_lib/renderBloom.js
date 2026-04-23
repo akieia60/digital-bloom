@@ -463,23 +463,23 @@ async function createOverlayImage(destination, {
     ctx.fillText(label, boxX + 12, boxY + 27);
   }
 
+  // ── TOP LEFT stamp — same clean style as bottom-right corner ──
   const stampText = 'Digital Bloom™';
-  ctx.font = `italic 700 ${Math.round(height * 0.023)}px Georgia`;
+  ctx.font = `italic 700 ${Math.round(height * 0.02)}px Georgia`;
   const stampWidth = ctx.measureText(stampText).width;
-  const stampBoxX = width * 0.055;
-  const stampBoxY = height * 0.872;
-  const stampBoxW = stampWidth + 26;
-  const stampBoxH = height * 0.05;
+  const stampBoxW = stampWidth + 20;
+  const stampBoxH = height * 0.042;
+  const stampBoxX = width * 0.04;
+  const stampBoxY = height * 0.025;
 
-  roundRect(ctx, stampBoxX, stampBoxY, stampBoxW, stampBoxH, 18);
-  ctx.fillStyle = 'rgba(6, 14, 26, 0.88)';
+  roundRect(ctx, stampBoxX, stampBoxY, stampBoxW, stampBoxH, 16);
+  ctx.fillStyle = 'rgba(6, 14, 26, 0.78)';
   ctx.fill();
-  ctx.strokeStyle = rgba(accentColor, 0.72);
-  ctx.lineWidth = 1.5;
+  ctx.strokeStyle = rgba(accentColor, 0.58);
+  ctx.lineWidth = 1.2;
   ctx.stroke();
-
   ctx.fillStyle = '#E8C45A';
-  ctx.fillText(stampText, stampBoxX + 13, height * 0.905);
+  ctx.fillText(stampText, stampBoxX + 10, stampBoxY + (stampBoxH * 0.7));
 
   // ── Full-frame repeating diagonal watermark grid ──
   // Covers the entire frame at -35° so any crop still shows the mark.
@@ -512,7 +512,8 @@ async function createOverlayImage(destination, {
 
   ctx.restore();
 
-  const cornerStamp = '© Digital Bloom';
+  // ── BOTTOM RIGHT stamp — same clean style as top-left ──
+  const cornerStamp = 'Digital Bloom™';
   ctx.font = `italic 700 ${Math.round(height * 0.02)}px Georgia`;
   const cornerWidth = ctx.measureText(cornerStamp).width;
   const cornerBoxW = cornerWidth + 20;
