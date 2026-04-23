@@ -31,6 +31,8 @@ import {
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const HTML_PATH = path.join(__dirname, '..', 'public', 'prompt-engine.html');
+const VALIDATION_SCOPE_START = 'const PROMPTS = [';
+const VALIDATION_SCOPE_END = 'const ACKNOWLEDGEMENT_PACK = [';
 
 // ── Read the prompt engine ────────────────────────────────────────────
 if (!fs.existsSync(HTML_PATH)) {
@@ -38,13 +40,27 @@ if (!fs.existsSync(HTML_PATH)) {
   process.exit(1);
 }
 const html = fs.readFileSync(HTML_PATH, 'utf8');
+const scopeStart = html.indexOf(VALIDATION_SCOPE_START);
+const scopeEnd = html.indexOf(VALIDATION_SCOPE_END);
+
+if (scopeStart === -1 || scopeEnd === -1 || scopeEnd <= scopeStart) {
+  console.error(
+    '❌ Could not isolate the built-in prompt library in prompt-engine.html.'
+  );
+  process.exit(1);
+}
+
+// Validate only the built-in prompt catalog.
+// Custom-library tooling can define ad hoc categories that are not yet
+// storefront-mapped, and those should not block production deploys.
+const validationHtml = html.slice(scopeStart, scopeEnd);
 
 // ── Extract every cat:'...' or cat:"..." value ────────────────────────
 // Matches cat:'Mother\'s Day' and cat:"Thanksgiving" — handles escaped quotes.
 const catRegex = /\bcat:\s*(['"])((?:\\\1|(?!\1).)*)\1/g;
 const catStrings = [];
 let m;
-while ((m = catRegex.exec(html)) !== null) {
+while ((m = catRegex.exec(validationHtml)) !== null) {
   catStrings.push(m[2].replace(/\\'/g, "'").replace(/\\"/g, '"'));
 }
 

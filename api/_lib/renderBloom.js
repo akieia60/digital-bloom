@@ -213,9 +213,9 @@ function buildDrawText(text, config) {
     `fontsize=${config.fontsize}`,
     `x=${config.x}`,
     `y=${config.y}`,
-    `shadowcolor=black@0.75`,
-    'shadowx=2',
-    'shadowy=2',
+    `shadowcolor=black@0.90`,
+    'shadowx=3',
+    'shadowy=3',
   ];
 
   if (config.font) {
@@ -394,9 +394,10 @@ async function createOverlayImage(destination, {
     const label = `${labels.to} ${recipientName}`;
     const textWidth = ctx.measureText(label).width;
     roundRect(ctx, x - 14, y - 32, textWidth + 28, 46, 18);
-    ctx.fillStyle = rgba(accentColor, 0.12);
+    // Dark navy base ensures "To Name" is readable over any video background
+    ctx.fillStyle = 'rgba(6, 14, 26, 0.72)';
     ctx.fill();
-    ctx.fillStyle = 'rgba(255,255,255,0.78)';
+    ctx.fillStyle = 'rgba(255,255,255,0.97)';
     ctx.textBaseline = 'middle';
     ctx.fillText(label, x, y - 10);
   }
@@ -420,9 +421,10 @@ async function createOverlayImage(destination, {
       const boxW = resolveLayoutExpr(layout.messageBox.w, width, height);
       const boxH = Math.max(resolveLayoutExpr(layout.messageBox.h, width, height), textBlockHeight + 28);
       roundRect(ctx, boxX, boxY, boxW, boxH, 24);
-      ctx.fillStyle = rgba(primaryColor, 0.24);
+      // Dark navy box so message text is always legible over video
+      ctx.fillStyle = 'rgba(6, 14, 26, 0.70)';
       ctx.fill();
-      ctx.fillStyle = 'rgba(255,255,255,0.9)';
+      ctx.fillStyle = 'rgba(255,255,255,0.97)';
       lines.forEach((line, index) => {
         ctx.fillText(line, boxX + 18, boxY + 26 + (index * lineHeight));
       });
@@ -454,9 +456,10 @@ async function createOverlayImage(destination, {
     const boxX = width - boxW - (width * 0.085);
     const boxY = height * 0.758;
     roundRect(ctx, boxX, boxY, boxW, boxH, 18);
-    ctx.fillStyle = rgba(accentColor, 0.10);
+    // Dark navy base so "From Name" is always readable
+    ctx.fillStyle = 'rgba(6, 14, 26, 0.72)';
     ctx.fill();
-    ctx.fillStyle = 'rgba(255,255,255,0.74)';
+    ctx.fillStyle = 'rgba(255,255,255,0.97)';
     ctx.fillText(label, boxX + 12, boxY + 27);
   }
 

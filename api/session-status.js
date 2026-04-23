@@ -191,6 +191,40 @@ export default async function handler(req, res) {
       const resolvedPurchase = deliveryProcessedPurchase || purchase;
       const delivery = normalizeBloomDeliverySettings(resolvedPurchase);
 
+      // ── View-count enforcement ──
+      // Only count opens for completed blooms (not processing/scheduled).
+      // Increment first, then check — so the Nth open is the last valid one.
+      if (resolvedPurchase.status === 'completed') {
+        const currentCount = Number(resolvedPurchase.download_count || 0);
+        if (currentCount >= MAX_BLOOM_OPENS) {
+          // Bloom has been opened too many times — treat as expired
+          return res.status(200).json({
+            ok: true,
+            kind: 'bloom',
+            purchase: {
+              id: resolvedPurchase.id,
+              bloom_slug: resolvedPurchase.bloom_slug,
+              status: 'expired',
+              download_url: null,
+              download_expires_at: resolvedPurchase.download_expires_at,
+              composition_manifest: {},
+              delivery: buildDeliverySummary(delivery),
+            },
+            product: resolvedPurchase.products ? {
+              id: resolvedPurchase.products.id,
+              name: resolvedPurchase.products.name,
+            } : null,
+          });
+        }
+        // Increment — fire-and-forget so it never slows down the response
+        supabase
+          .from('purchases')
+          .update({ download_count: currentCount + 1 })
+          .eq('id', resolvedPurchase.id)
+          .then(() => {})
+          .catch((err) => console.warn('[bloom-views] count update failed:', err));
+      }
+
       if (delivery && isScheduledBloomLocked(delivery)) {
         return res.status(200).json({
           ok: true,
