@@ -20,6 +20,7 @@ const supabase = createClient(
 );
 
 const STALE_PURCHASE_RENDER_MS = 8 * 1000; // 8 seconds — give webhook a head start, then self-heal
+const MAX_BLOOM_OPENS = Number(process.env.MAX_BLOOM_OPENS || 30); // how many times a bloom link can be opened
 
 function hasCustomizedBloomWithoutRender(purchase) {
   return Boolean(purchase?.composition_manifest?.customization) && !String(purchase?.download_url || '').trim();
