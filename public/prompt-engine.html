@@ -54,7 +54,7 @@ body{font-family:'Outfit',sans-serif;background:var(--navy);color:var(--white);m
 .btn-transformer:hover{background:rgba(212,175,55,0.24)}
 .btn-transformer.secondary{background:rgba(255,255,255,0.04);border-color:var(--border);color:rgba(255,255,255,0.82)}
 .btn-transformer.secondary:hover{border-color:var(--gold);color:var(--white)}
-.builder-shell{display:flex;flex-direction:column;gap:10px;padding:12px;margin:0 20px 16px;border:1px solid var(--border);border-radius:14px;background:linear-gradient(180deg,rgba(255,255,255,0.03),rgba(34,197,94,0.06))}
+.builder-shell{display:flex;flex-direction:column;gap:10px;padding:12px;margin:0 20px 16px;border:1px solid var(--border);border-radius:14px;background:linear-gradient(180deg,rgba(255,255,255,0.03),rgba(34,197,94,0.06))}.builder-body{display:none;flex-direction:column;gap:10px}.builder-shell.open .builder-body{display:flex}.builder-toggle-row{display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none}.builder-chevron{font-size:0.8rem;color:var(--muted);transition:transform 0.2s}.builder-shell.open .builder-chevron{transform:rotate(180deg)}
 .builder-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap}
 .builder-copy{display:flex;flex-direction:column;gap:4px}
 .builder-kicker{font-size:0.66rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#86efac}
@@ -406,11 +406,17 @@ body{font-family:'Outfit',sans-serif;background:var(--navy);color:var(--white);m
   <div id="pending-ideas-list"></div>
 </div>
 
-<div class="builder-shell">
-  <div class="builder-head">
+<div class="builder-shell" id="builder-shell">
+  <div class="builder-toggle-row" onclick="toggleBuilder()">
     <div class="builder-copy">
       <div class="builder-kicker">Prompt Builder</div>
       <div class="builder-title">Add Categories And Prompt Drafts</div>
+    </div>
+    <span class="builder-chevron">▼</span>
+  </div>
+  <div class="builder-body">
+  <div class="builder-head">
+    <div class="builder-copy">
       <div class="builder-note">Create new categories or add prompt ideas here, then transform them into the same Bloom style already running across the engine.</div>
     </div>
     <div class="builder-actions">
@@ -459,7 +465,8 @@ body{font-family:'Outfit',sans-serif;background:var(--navy);color:var(--white);m
       <button class="btn-builder" id="builder-submit-btn" onclick="addCustomPrompt()">Add Prompt To Engine</button>
     </div>
   </div>
-</div>
+  </div><!-- /.builder-body -->
+</div><!-- /.builder-shell -->
 <div class="main">
   <div class="grid" id="grid"></div>
 </div>
@@ -3201,6 +3208,11 @@ function setVariation(n, btn) {
   currentVariation = n;
   document.querySelectorAll('.btn-variation').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
+}
+
+function toggleBuilder() {
+  const shell = document.getElementById('builder-shell');
+  shell.classList.toggle('open');
 }
 
 function toggleRefiner() {
