@@ -175,6 +175,16 @@ export const CATEGORIES = [
     expectedPrompts: 2,
   },
   {
+    slug: 'acknowledgement',
+    name: 'Acknowledgement',
+    title: 'Acknowledgement Blooms',
+    tagline: 'Give them their flowers — because real recognizes real.',
+    emoji: '🤜',
+    accent: '#D4AF37',
+    promptEngineLabels: ['Acknowledgement'],
+    expectedPrompts: 20,
+  },
+  {
     slug: 'christmas',
     name: 'Christmas',
     title: 'Christmas Blooms',
@@ -227,7 +237,7 @@ export const CATEGORY_BY_SLUG = Object.fromEntries(
   CATEGORIES.map((c) => [c.slug, c])
 );
 
-/** Total expected prompts across all categories — should equal 229. */
+/** Total expected prompts across all categories — should equal 249. */
 export const TOTAL_EXPECTED_PROMPTS = CATEGORIES.reduce(
   (sum, c) => sum + (c.expectedPrompts || 0),
   0

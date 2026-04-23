@@ -193,6 +193,84 @@ body{font-family:'Outfit',sans-serif;background:var(--navy);color:var(--white);m
 .badge-zodiac{background:rgba(100,180,255,0.2);color:#64b4ff}
 .badge-inclusive{background:rgba(255,140,200,0.2);color:#ff8cc8}
 .badge-signature{background:rgba(212,175,55,0.2);color:#D4AF37}
+.badge-acknowledgement{background:rgba(200,140,40,0.22);color:#e8c060}
+
+/* ── RAW IDEA REFINER ── */
+.refiner-bar{padding:0 20px 14px;display:flex;flex-direction:column;gap:0}
+.refiner-toggle{display:flex;align-items:center;gap:10px;padding:10px 14px;border:1px solid var(--border);border-radius:12px;background:rgba(129,140,248,0.06);cursor:pointer;transition:all 0.2s;user-select:none}
+.refiner-toggle:hover{border-color:rgba(129,140,248,0.4)}
+.refiner-toggle.open{border-radius:12px 12px 0 0;border-bottom-color:transparent}
+.refiner-toggle-kicker{font-size:0.66rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--purple);flex:1}
+.refiner-toggle-arrow{font-size:0.8rem;color:var(--muted);transition:transform 0.2s}
+.refiner-toggle.open .refiner-toggle-arrow{transform:rotate(180deg)}
+.refiner-body{display:none;flex-direction:column;gap:10px;padding:14px;border:1px solid var(--border);border-top:none;border-radius:0 0 12px 12px;background:rgba(129,140,248,0.04)}
+.refiner-body.open{display:flex}
+.refiner-row{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap}
+.refiner-textarea{width:100%;padding:10px 14px;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:10px;color:var(--white);font-size:0.82rem;font-family:'Outfit',sans-serif;outline:none;resize:vertical;min-height:80px;line-height:1.55;transition:border 0.2s}
+.refiner-textarea:focus{border-color:rgba(129,140,248,0.5)}
+.refiner-textarea::placeholder{color:var(--muted)}
+.refiner-select{padding:9px 14px;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:10px;color:var(--white);font-size:0.8rem;font-family:'Outfit',sans-serif;outline:none;cursor:pointer;flex-shrink:0}
+.refiner-select option{background:#0D1B36;color:#fff}
+.btn-refine{padding:9px 18px;background:rgba(129,140,248,0.14);border:1px solid rgba(129,140,248,0.35);border-radius:10px;color:var(--purple);font-size:0.78rem;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;white-space:nowrap;flex-shrink:0;transition:all 0.2s}
+.btn-refine:hover{background:rgba(129,140,248,0.28)}
+.btn-refine:disabled{opacity:0.5;cursor:not-allowed}
+.refiner-hint{font-size:0.7rem;color:rgba(255,255,255,0.45);line-height:1.5}
+.refiner-result{border:1px solid rgba(212,175,55,0.22);border-radius:12px;background:rgba(212,175,55,0.04);overflow:hidden}
+.refiner-result-head{padding:10px 14px;border-bottom:1px solid rgba(212,175,55,0.14);display:flex;align-items:center;justify-content:space-between;gap:8px}
+.refiner-result-label{font-size:0.68rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--gold)}
+.refiner-result-meta{font-size:0.68rem;color:var(--muted)}
+.refiner-scenes{padding:12px 14px;display:flex;flex-direction:column;gap:10px}
+.refiner-scene{background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:8px;overflow:hidden}
+.refiner-scene-label{padding:5px 12px;font-size:0.63rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--gold);background:rgba(212,175,55,0.06);border-bottom:1px solid var(--border)}
+.refiner-scene-text{padding:10px 12px;font-size:0.75rem;color:rgba(255,255,255,0.82);line-height:1.65}
+.refiner-scene-copy{padding:6px 12px 10px;display:flex;gap:6px}
+.refiner-loading{padding:20px 14px;text-align:center;font-size:0.82rem;color:var(--muted);font-style:italic}
+.refiner-error{padding:12px 14px;font-size:0.78rem;color:#fca5a5;background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.2);border-radius:8px}
+.refiner-variation-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.variation-label{font-size:0.68rem;color:var(--muted)}
+.btn-variation{padding:5px 12px;background:rgba(129,140,248,0.08);border:1px solid rgba(129,140,248,0.2);border-radius:20px;color:rgba(129,140,248,0.8);font-size:0.7rem;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:all 0.2s}
+.btn-variation:hover{background:rgba(129,140,248,0.2)}
+.btn-variation.active{background:rgba(129,140,248,0.25);border-color:rgba(129,140,248,0.5);color:var(--purple)}
+
+/* ── GAMBLE SUBMIT MODE ── */
+.submit-overlay{display:none;position:fixed;inset:0;background:var(--navy);z-index:500;overflow-y:auto;padding:20px}
+.submit-overlay.active{display:block}
+.submit-wrap{max-width:520px;margin:0 auto;padding-top:20px}
+.submit-header{text-align:center;margin-bottom:24px}
+.submit-header-kicker{font-size:0.66rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);margin-bottom:6px}
+.submit-header-title{font-family:'Playfair Display',serif;font-size:1.5rem;color:var(--white)}
+.submit-header-sub{font-size:0.8rem;color:rgba(255,255,255,0.55);margin-top:6px;line-height:1.5}
+.submit-card{background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:18px;overflow:hidden}
+.submit-card-body{padding:20px 24px;display:flex;flex-direction:column;gap:14px}
+.submit-field label{font-size:0.7rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:rgba(255,255,255,0.65);display:block;margin-bottom:6px}
+.submit-input,.submit-textarea,.submit-select{width:100%;padding:10px 14px;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:10px;color:var(--white);font-size:0.85rem;font-family:'Outfit',sans-serif;outline:none;transition:border 0.2s}
+.submit-input:focus,.submit-textarea:focus,.submit-select:focus{border-color:var(--gold)}
+.submit-input::placeholder,.submit-textarea::placeholder{color:var(--muted)}
+.submit-textarea{resize:vertical;min-height:130px;line-height:1.6}
+.submit-select{cursor:pointer}
+.submit-select option{background:#0D1B36;color:#fff}
+.btn-submit-idea{width:100%;padding:13px 0;background:var(--gold);color:#0D1B36;font-size:0.9rem;font-weight:800;font-family:'Outfit',sans-serif;border:none;border-radius:10px;cursor:pointer;letter-spacing:0.04em;transition:all 0.2s}
+.btn-submit-idea:hover{background:#e8c040}
+.btn-submit-idea:disabled{opacity:0.5;cursor:not-allowed}
+.submit-success{padding:32px 24px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:12px}
+.submit-success-icon{font-size:3rem}
+.submit-success-title{font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--gold)}
+.submit-success-sub{font-size:0.8rem;color:rgba(255,255,255,0.6);line-height:1.6;max-width:320px}
+.btn-submit-another{padding:10px 24px;background:rgba(212,175,55,0.12);border:1px solid var(--gold3);border-radius:8px;color:var(--gold);font-size:0.8rem;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;margin-top:4px}
+
+/* ── PENDING IDEAS PANEL ── */
+.pending-panel{margin:0 20px 14px;padding:14px;border:1px solid rgba(129,140,248,0.25);border-radius:14px;background:rgba(129,140,248,0.06);display:none}
+.pending-panel.has-ideas{display:block}
+.pending-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
+.pending-title{font-size:0.7rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--purple)}
+.pending-count{padding:2px 8px;border-radius:10px;background:rgba(129,140,248,0.18);color:var(--purple);font-size:0.65rem;font-weight:700}
+.pending-idea{padding:10px 12px;background:rgba(255,255,255,0.03);border:1px solid rgba(129,140,248,0.15);border-radius:10px;margin-bottom:8px}
+.pending-idea:last-child{margin-bottom:0}
+.pending-idea-meta{font-size:0.65rem;color:var(--muted);margin-bottom:5px}
+.pending-idea-text{font-size:0.78rem;color:rgba(255,255,255,0.82);line-height:1.55;margin-bottom:8px}
+.pending-idea-actions{display:flex;gap:6px;flex-wrap:wrap}
+.btn-refine-idea{padding:5px 12px;background:rgba(212,175,55,0.12);border:1px solid var(--gold3);border-radius:7px;color:var(--gold);font-size:0.7rem;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif}
+.btn-dismiss-idea{padding:5px 10px;background:transparent;border:1px solid var(--border);border-radius:7px;color:var(--muted);font-size:0.7rem;cursor:pointer;font-family:'Outfit',sans-serif}
 </style>
 </head>
 <body>
@@ -228,7 +306,7 @@ body{font-family:'Outfit',sans-serif;background:var(--navy);color:var(--white);m
 
 <div id="unlinked-live-wrap"></div>
 
-<div class="transformer-bar">
+<div class="transformer-bar" style="display:none">
   <div class="transformer-grid">
     <div class="transformer-copy">
       <div class="transformer-kicker">Bloom Transformer</div>
@@ -242,8 +320,107 @@ body{font-family:'Outfit',sans-serif;background:var(--navy);color:var(--white);m
   </div>
 </div>
 
+<!-- RAW IDEA REFINER PANEL -->
+<div class="refiner-bar" id="refiner-bar">
+  <div class="refiner-toggle" id="refiner-toggle" onclick="toggleRefiner()">
+    <span class="refiner-toggle-kicker">✨ Raw Idea Refiner — Paste Gamble's ideas & let AI turn them into full prompts</span>
+    <span class="refiner-toggle-arrow">▼</span>
+  </div>
+  <div class="refiner-body" id="refiner-body">
+    <p class="refiner-hint">Paste any raw idea — a phrase, a vibe, a whole description — and choose a category. AI will write a complete 3-scene Digital Bloom video prompt ready to use.</p>
+    <textarea class="refiner-textarea" id="refiner-input" placeholder="e.g. "Real recognize real" or paste Gamble's full description here…" rows="4"></textarea>
+    <div class="refiner-row">
+      <select class="refiner-select" id="refiner-cat">
+        <option value="">Choose category…</option>
+        <option value="Acknowledgement">Acknowledgement</option>
+        <option value="Birthday">Birthday</option>
+        <option value="Mother's Day">Mother's Day</option>
+        <option value="Father's Day">Father's Day</option>
+        <option value="Love">Love</option>
+        <option value="Anniversary">Anniversary</option>
+        <option value="Friendship">Friendship</option>
+        <option value="Thank You">Thank You</option>
+        <option value="Encouragement">Encouragement</option>
+        <option value="Celebration">Celebration</option>
+        <option value="Sympathy">Sympathy</option>
+        <option value="Grief">Memorial</option>
+        <option value="Zodiac / Celestial Saga">Zodiac</option>
+        <option value="Holiday">Holiday</option>
+      </select>
+      <div class="refiner-variation-row">
+        <span class="variation-label">Variation:</span>
+        <button class="btn-variation active" onclick="setVariation(1,this)">1</button>
+        <button class="btn-variation" onclick="setVariation(2,this)">2</button>
+        <button class="btn-variation" onclick="setVariation(3,this)">3</button>
+      </div>
+      <button class="btn-refine" id="refine-btn" onclick="refineRawIdea()">✨ Refine with AI</button>
+    </div>
+    <div id="refiner-result-wrap"></div>
+  </div>
+</div>
+
+<!-- PENDING IDEAS FROM GAMBLE -->
+<div class="pending-panel" id="pending-panel">
+  <div class="pending-head">
+    <span class="pending-title">💡 Pending Ideas from Gamble</span>
+    <span class="pending-count" id="pending-count">0</span>
+  </div>
+  <div id="pending-ideas-list"></div>
+</div>
+
 <div class="main">
   <div class="grid" id="grid"></div>
+</div>
+
+<!-- GAMBLE SUBMIT MODE OVERLAY -->
+<div class="submit-overlay" id="submit-overlay">
+  <div class="submit-wrap">
+    <div class="submit-header">
+      <div class="submit-header-kicker">🌸 Digital Bloom™</div>
+      <div class="submit-header-title">Submit a New Idea</div>
+      <div class="submit-header-sub">Drop your idea below — Ak will see it and refine it into a full video prompt.</div>
+    </div>
+    <div class="submit-card">
+      <div class="submit-card-body" id="submit-form-body">
+        <div class="submit-field">
+          <label>Your Name</label>
+          <input class="submit-input" id="submit-name" type="text" placeholder="e.g. Gamble" />
+        </div>
+        <div class="submit-field">
+          <label>Category</label>
+          <select class="submit-select" id="submit-cat">
+            <option value="">Choose a category…</option>
+            <option value="Acknowledgement">Acknowledgement</option>
+            <option value="Birthday">Birthday</option>
+            <option value="Mother's Day">Mother's Day</option>
+            <option value="Father's Day">Father's Day</option>
+            <option value="Love">Love</option>
+            <option value="Anniversary">Anniversary</option>
+            <option value="Friendship">Friendship</option>
+            <option value="Thank You">Thank You</option>
+            <option value="Encouragement">Encouragement</option>
+            <option value="Celebration">Celebration</option>
+            <option value="Sympathy">Sympathy</option>
+            <option value="Memorial">Memorial</option>
+            <option value="Zodiac">Zodiac</option>
+            <option value="Holiday">Holiday</option>
+            <option value="New Category Idea">New Category Idea ✨</option>
+          </select>
+        </div>
+        <div class="submit-field">
+          <label>Your Idea</label>
+          <textarea class="submit-textarea" id="submit-idea-text" placeholder="Describe the vibe, the message, the visuals — whatever's in your head. Raw is fine. The more detail the better."></textarea>
+        </div>
+        <button class="btn-submit-idea" id="submit-btn" onclick="submitIdea()">Submit Idea to Ak 🌸</button>
+      </div>
+      <div class="submit-success" id="submit-success" style="display:none">
+        <div class="submit-success-icon">🌸</div>
+        <div class="submit-success-title">Idea Submitted!</div>
+        <div class="submit-success-sub">Ak will see your idea in the prompt engine and turn it into a full Digital Bloom video prompt. Thank you!</div>
+        <button class="btn-submit-another" onclick="resetSubmitForm()">Submit Another Idea</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -817,9 +994,175 @@ const PROMPTS = [
   {label:'Scene 3 — Finale (20–30s)',text:`Coral and blush peonies fill the entire frame in overwhelming feminine beauty. The three balloons float into full view, reading "You Are Enough and More" in warm gold script. Camera holds in this moment of feminine power and grace before closing in. This is who she is. Ultra realistic, no logos.`},
  ]},
 
+
+// ─────────────────────────────────────────────────────────────────
+// ACKNOWLEDGEMENT
+// ─────────────────────────────────────────────────────────────────
+
+{id:'ack-1',title:"I See You",cat:"Acknowledgement",badge:'badge-acknowledgement',
+ workflow:"3-scene arc · 10s each · 30s total · Grok",
+ scenes:[
+  {label:'Scene 1 — Card & Reveal (0–10s)',text:`A sleek matte black card rests on a polished dark surface under focused gold lighting. The card opens slowly and deliberately, and "I See You" appears inside in warm bold gold script. Two black and one gold balloon rise with quiet confidence behind the card. Cinematic focused light, understated luxury, ultra realistic.`},
+  {label:'Scene 2 — The Gift & Bloom (10–20s)',text:`A black gift box with a satin gold ribbon materializes beside the open card. The lid lifts and warm golden light pours out. Deep burgundy roses and ivory blooms surge upward in slow motion, rich and abundant, petals unfurling with intentional beauty. Cinematic reveal, gold-lit, ultra realistic.`},
+  {label:'Scene 3 — Finale (20–30s)',text:`Burgundy roses and ivory blooms fill the entire frame, warm and intentional. The three balloons float into full view, one reading "I See You" in gold lettering. The camera holds in this quiet powerful moment before slowly closing in. Seen. Acknowledged. Cinematic. Ultra realistic, no logos.`},
+ ]},
+
+{id:'ack-2',title:"You've Been Solid from Day One",cat:"Acknowledgement",badge:'badge-acknowledgement',
+ workflow:"3-scene arc · 10s each · 30s total · Grok",
+ scenes:[
+  {label:'Scene 1 — Card & Reveal (0–10s)',text:`A strong, bold card in navy and gold rests on a dark wood surface under dramatic side lighting. The card opens with quiet authority, and "You've Been Solid From Day One" appears inside in clean, confident gold lettering. Three black and gold balloons rise steadily. Bold directional light, cinematic strength. Ultra realistic.`},
+  {label:'Scene 2 — The Gift & Bloom (10–20s)',text:`A deep navy gift box with a thick gold ribbon appears. The lid opens and warm golden light surges upward. Long-stem black-tipped gold roses and deep red blooms rise in slow motion — steady, strong, and beautiful. Cinematic loyalty reveal. Ultra realistic.`},
+  {label:'Scene 3 — Finale (20–30s)',text:`Gold roses and deep red blooms fill the frame with unwavering energy. The three balloons float into view, one reading "Solid From Day One." Camera holds in this tribute to loyalty before closing in. Steady. Real. Cinematic. Ultra realistic, no logos.`},
+ ]},
+
+{id:'ack-3',title:"Real Recognize Real",cat:"Acknowledgement",badge:'badge-acknowledgement',
+ workflow:"3-scene arc · 10s each · 30s total · Grok",
+ scenes:[
+  {label:'Scene 1 — Card & Reveal (0–10s)',text:`A bold card in black with gold foil edges rests on a dark marble surface in dramatic studio lighting. The card opens powerfully, and "Real Recognize Real" appears inside in bold gold lettering. Three gold and black balloons rise with matching energy. Dramatic black and gold lighting, cinematic. Ultra realistic.`},
+  {label:'Scene 2 — The Gift & Bloom (10–20s)',text:`A black gift box with a heavy gold ribbon appears on the marble. The lid opens with a burst of warm golden light. Rich black-centered anemones and deep gold spray roses bloom upward together in slow motion — real and stunning. Cinematic reveal. Ultra realistic.`},
+  {label:'Scene 3 — Finale (20–30s)',text:`Black anemones and gold roses fill the frame in mutual recognition. The three balloons float into full view, one reading "Real Recognize Real." Camera holds in this powerful mutual moment. Bold. Honest. Cinematic. Ultra realistic, no logos.`},
+ ]},
+
+{id:'ack-4',title:"Man, You Deserve Your Flowers",cat:"Acknowledgement",badge:'badge-acknowledgement',
+ workflow:"3-scene arc · 10s each · 30s total · Grok",
+ scenes:[
+  {label:'Scene 1 — Card & Reveal (0–10s)',text:`A bold masculine card in black and gold rests on dark leather in warm directional light. The card opens and "Man, You Deserve Your Flowers" appears inside in strong gold lettering. Two black and one gold balloon rise with masculine energy. Strong warm light, cinematic. Ultra realistic.`},
+  {label:'Scene 2 — The Gift & Bloom (10–20s)',text:`A dark leather-wrapped gift box with a gold rope ribbon appears. The lid opens and golden light floods out. Bold sunflowers, deep red roses, and gold accent blooms rise upward together in slow motion — unapologetically full and beautiful. Cinematic masculine floral reveal. Ultra realistic.`},
+  {label:'Scene 3 — Finale (20–30s)',text:`Sunflowers and deep red roses fill the entire frame in abundant masculine beauty. The three balloons float into view, one reading "You Deserve Your Flowers." Camera holds in this overdue celebration before closing in. Bold. Deserved. Real. Ultra realistic, no logos.`},
+ ]},
+
+{id:'ack-5',title:"Girl, You Deserve Your Flowers",cat:"Acknowledgement",badge:'badge-acknowledgement',
+ workflow:"3-scene arc · 10s each · 30s total · Grok",
+ scenes:[
+  {label:'Scene 1 — Card & Reveal (0–10s)',text:`An elegant card in deep rose and gold sits on a marble vanity in warm glamorous light. The card opens and "Girl, You Deserve Your Flowers" appears inside in rose-gold lettering. Two deep rose and one gold balloon float upward with feminine power. Warm glamorous light, cinematic. Ultra realistic.`},
+  {label:'Scene 2 — The Gift & Bloom (10–20s)',text:`A rose-gold gift box wrapped in satin appears on the vanity. The lid opens and warm blush light blooms from within. Deep fuchsia peonies, blush roses, and champagne spray roses surge upward together in slow motion — lush, feminine, and fully deserved. Cinematic floral reveal. Ultra realistic.`},
+  {label:'Scene 3 — Finale (20–30s)',text:`Fuchsia peonies and blush roses fill the frame in feminine power. The three balloons float into view, one reading "You Deserve Your Flowers." Camera holds in this triumphant feminine moment before closing in. Powerful. Beautiful. Earned. Ultra realistic, no logos.`},
+ ]},
+
+{id:'ack-6',title:"You've Done a Great Job",cat:"Acknowledgement",badge:'badge-acknowledgement',
+ workflow:"3-scene arc · 10s each · 30s total · Grok",
+ scenes:[
+  {label:'Scene 1 — Card & Reveal (0–10s)',text:`A clean, sharp card in white and gold sits on a bright polished table under warm studio light. The card opens and "You've Done a Great Job" appears inside in strong warm gold lettering. Three gold and white balloons float upward with celebratory confidence. Bright warm light, cinematic. Ultra realistic.`},
+  {label:'Scene 2 — The Gift & Bloom (10–20s)',text:`A bright white gift box with a gold bow appears. The lid opens and warm golden light rises. Yellow ranunculus, white garden roses, and gold accent blooms burst upward in slow motion, clean and celebratory. Cinematic achievement reveal. Ultra realistic.`},
+  {label:'Scene 3 — Finale (20–30s)',text:`Yellow ranunculus and white roses fill the frame in bright, clean celebration. The three balloons drift into view, reading "Great Job" in bold gold. Camera holds in this moment of clear, deserved recognition before closing in. Clean. Honest. Cinematic. Ultra realistic, no logos.`},
+ ]},
+
+{id:'ack-7',title:"I See The Hard Work You've Put In",cat:"Acknowledgement",badge:'badge-acknowledgement',
+ workflow:"3-scene arc · 10s each · 30s total · Grok",
+ scenes:[
+  {label:'Scene 1 — Card & Reveal (0–10s)',text:`A substantial card in navy and burnt orange rests on a strong wooden table in warm afternoon light. The card opens and "I See The Hard Work You've Put In" appears in warm honest lettering. Three navy and burnt orange balloons rise with earned energy. Warm cinematic light. Ultra realistic.`},
+  {label:'Scene 2 — The Gift & Bloom (10–20s)',text:`A navy gift box with a warm orange ribbon appears. The lid opens and golden afternoon light pours out. Burnt orange dahlias and deep gold sunflowers bloom upward in slow motion — the flowers of hard work, earned and beautiful. Cinematic working reveal. Ultra realistic.`},
+  {label:'Scene 3 — Finale (20–30s)',text:`Orange dahlias and gold sunflowers fill the frame in the warm colors of earned achievement. The three balloons float into view, reading "I See Your Hard Work." Camera holds in this honest tribute before closing in. Earned. Real. Cinematic. Ultra realistic, no logos.`},
+ ]},
+
+{id:'ack-8',title:"You've Been Relentless — Great Job",cat:"Acknowledgement",badge:'badge-acknowledgement',
+ workflow:"3-scene arc · 10s each · 30s total · Grok",
+ scenes:[
+  {label:'Scene 1 — Card & Reveal (0–10s)',text:`A powerful card in black and electric gold rests on a dark polished surface under dramatic spotlight. The card opens with force, and "You've Been Relentless — Great Job" appears in bold electric gold lettering. Three black and gold balloons shoot upward with fierce energy. High contrast dramatic light, cinematic. Ultra realistic.`},
+  {label:'Scene 2 — The Gift & Bloom (10–20s)',text:`A matte black gift box with a thick gold chain ribbon appears. The lid opens and an explosion of warm golden light bursts out. Electric gold roses, bold deep red dahlias, and black anemones bloom upward in a powerful surge — relentless and beautiful. Cinematic power reveal. Ultra realistic.`},
+  {label:'Scene 3 — Finale (20–30s)',text:`Gold roses and deep red dahlias fill the entire frame with relentless energy. The three balloons float into full view, one reading "Relentless — Great Job." Camera holds in this high-octane tribute before closing in with cinematic force. Relentless. Earned. Cinematic. Ultra realistic, no logos.`},
+ ]},
+
+{id:'ack-9',title:"Excellent Work — No One Does It Like You",cat:"Acknowledgement",badge:'badge-acknowledgement',
+ workflow:"3-scene arc · 10s each · 30s total · Grok",
+ scenes:[
+  {label:'Scene 1 — Card & Reveal (0–10s)',text:`An exceptional card in deep purple and gold sits on black marble in dramatic luxury light. The card opens and "Excellent Work — No One Does It Like You" appears in rich purple-gold lettering. Three deep purple and gold balloons rise with elite energy. Luxury light, cinematic. Ultra realistic.`},
+  {label:'Scene 2 — The Gift & Bloom (10–20s)',text:`A deep purple velvet gift box with a gold bow appears. The lid opens and warm purple-gold light surges out. Deep purple roses, gold ranunculus, and champagne orchids bloom upward in slow motion — rare and excellent. Cinematic elite reveal. Ultra realistic.`},
+  {label:'Scene 3 — Finale (20–30s)',text:`Purple roses and gold orchids fill the frame in exceptional abundance. The three balloons drift into view, one reading "No One Does It Like You." Camera holds in this elite recognition before closing in. Excellent. Rare. Cinematic. Ultra realistic, no logos.`},
+ ]},
+
+{id:'ack-10',title:"Credit Where Credit Is Due",cat:"Acknowledgement",badge:'badge-acknowledgement',
+ workflow:"3-scene arc · 10s each · 30s total · Grok",
+ scenes:[
+  {label:'Scene 1 — Card & Reveal (0–10s)',text:`A classic card in cream and deep gold sits on a polished surface under warm authoritative light. The card opens deliberately and "Credit Where Credit Is Due" appears in strong warm gold script. Three cream and gold balloons rise with earned authority. Warm classic light, cinematic. Ultra realistic.`},
+  {label:'Scene 2 — The Gift & Bloom (10–20s)',text:`A cream gift box with a heavy gold ribbon appears. The lid opens and warm golden light rises. Classic cream roses and deep gold blooms surge upward in slow motion — timeless and deserved. Cinematic classic reveal. Ultra realistic.`},
+  {label:'Scene 3 — Finale (20–30s)',text:`Cream roses and deep gold blooms fill the frame in classic, warranted abundance. The three balloons float into view, reading "Credit Is Due." Camera holds in this long-deserved moment before closing in. Just. Honest. Cinematic. Ultra realistic, no logos.`},
+ ]},
+
+{id:'ack-11',title:"Hands Down — You're Acknowledged",cat:"Acknowledgement",badge:'badge-acknowledgement',
+ workflow:"3-scene arc · 10s each · 30s total · Grok",
+ scenes:[
+  {label:'Scene 1 — Card & Reveal (0–10s)',text:`A bold card in deep teal and gold rests on a dark surface in confident cinematic light. The card opens and "Hands Down — You're Acknowledged" appears in bold teal-gold lettering. Three teal and gold balloons rise with decisive energy. Bold confident light, cinematic. Ultra realistic.`},
+  {label:'Scene 2 — The Gift & Bloom (10–20s)',text:`A deep teal gift box with a gold clasp ribbon appears. The lid opens and warm golden light floods out. Teal orchids, gold roses, and ivory blooms surge upward in slow motion — bold and deliberate. Cinematic decisive reveal. Ultra realistic.`},
+  {label:'Scene 3 — Finale (20–30s)',text:`Teal orchids and gold roses fill the frame in bold, decided beauty. The three balloons float into view, one reading "You're Acknowledged." Camera holds in this decisive, final tribute before closing in. Decided. Bold. Cinematic. Ultra realistic, no logos.`},
+ ]},
+
+{id:'ack-12',title:"You're the GOAT",cat:"Acknowledgement",badge:'badge-acknowledgement',
+ workflow:"3-scene arc · 10s each · 30s total · Grok",
+ scenes:[
+  {label:'Scene 1 — Card & Reveal (0–10s)',text:`A championship card in matte black with thick gold foil lettering rests on a dark luxury surface under dramatic stadium-style lighting. The card opens with ceremony and "You're the GOAT" appears inside in championship gold. Three black and gold balloons rise like a championship moment. Dramatic gold-lit, cinematic champion energy. Ultra realistic.`},
+  {label:'Scene 2 — The Gift & Bloom (10–20s)',text:`A black championship gift box with a gold crown ribbon appears. The lid opens and brilliant golden light surges out. Black-tipped gold roses and deep red roses bloom upward in a championship bouquet — GOAT level, every petal perfect. Cinematic champion reveal. Ultra realistic.`},
+  {label:'Scene 3 — Finale (20–30s)',text:`Black and gold roses fill the frame in championship glory. The three balloons float into full view, one reading "You're the GOAT" in gleaming gold lettering. Camera holds in this legendary moment before closing in with full cinematic weight. Greatest. Of. All. Time. Ultra realistic, no logos.`},
+ ]},
+
+{id:'ack-13',title:"I Just Want to Congratulate You",cat:"Acknowledgement",badge:'badge-acknowledgement',
+ workflow:"3-scene arc · 10s each · 30s total · Grok",
+ scenes:[
+  {label:'Scene 1 — Card & Reveal (0–10s)',text:`A warm, genuine congratulations card in gold and white sits on a bright warm surface in natural celebratory light. The card opens and "I Just Want to Congratulate You — You Deserve It" appears in warm gold lettering. Three gold, white, and champagne balloons float upward joyfully. Warm celebratory light, cinematic. Ultra realistic.`},
+  {label:'Scene 2 — The Gift & Bloom (10–20s)',text:`A champagne gift box with white satin ribbon appears. The lid opens and golden celebratory light rises. Champagne roses, white ranunculus, and gold accent blooms burst upward in slow motion — pure celebration. Cinematic congratulations reveal. Ultra realistic.`},
+  {label:'Scene 3 — Finale (20–30s)',text:`Champagne roses and white ranunculus fill the frame in warm celebration. The three balloons drift into view, reading "Congratulations — You Deserve It." Camera holds in this moment of genuine, overdue congratulations before closing in. Warm. Real. Cinematic. Ultra realistic, no logos.`},
+ ]},
+
+{id:'ack-14',title:"You Deserve All the Love",cat:"Acknowledgement",badge:'badge-acknowledgement',
+ workflow:"3-scene arc · 10s each · 30s total · Grok",
+ scenes:[
+  {label:'Scene 1 — Card & Reveal (0–10s)',text:`A lush, loving card in deep rose and warm gold rests on a surface strewn with petals in golden warm light. The card opens and "You Deserve All the Love You Get" appears in warm rose-gold script. Three rose, gold, and ivory balloons float upward tenderly. Loving warm light, cinematic. Ultra realistic.`},
+  {label:'Scene 2 — The Gift & Bloom (10–20s)',text:`A deep rose gift box with a warm gold ribbon appears. The lid opens and rose-gold light blooms from within. Deep pink peonies, blush roses, and champagne accent blooms surge upward in slow motion — full of deserved love. Cinematic love reveal. Ultra realistic.`},
+  {label:'Scene 3 — Finale (20–30s)',text:`Pink peonies and blush roses fill the frame in abundant, deserved love. The three balloons float into full view, reading "You Deserve All the Love." Camera holds in this full, generous moment before closing in. Full. Deserved. Cinematic. Ultra realistic, no logos.`},
+ ]},
+
+{id:'ack-15',title:"GOAT Card — Musical Edition",cat:"Acknowledgement",badge:'badge-acknowledgement',
+ workflow:"3-scene arc · 10s each · 30s total · Grok — Gamble Concept",
+ scenes:[
+  {label:'Scene 1 — Card & Reveal (0–10s)',text:`A sleek black card covered in gold musical notes and a chrome microphone graphic floats in the air against a deep navy background. The card rotates gracefully, revealing the front in full. It rises to center frame and begins to open slowly, warm golden light spilling from the crease as it parts. Cinematic slow rotation, luxury product reveal, ultra realistic.`},
+  {label:'Scene 2 — Card Opens & Balloons Rise (10–20s)',text:`The card opens fully and the inside reveals "You Are the Goat in This Game" in bold glowing gold script. The card elevates upward slowly. From behind it, multicolored balloons bearing musical notes and microphone graphics float upward in slow motion — coral, gold, electric blue, lavender, and white. Rose petals drift down through the ascending balloons in rich colors, creating a stunning contrast of upward balloons and falling petals. Cinematic and surreal, ultra realistic.`},
+  {label:'Scene 3 — 424 Roses Finale (20–30s)',text:`A massive bouquet of 424 roses slams into the bottom of the screen with gentle vibrating force, filling the lower frame in a surge of multicolor blooms. More balloons float up close to the camera, each reading "You're the Goat" in bold lettering in different colors. Rose petals cascade from above through the balloons. The scene settles into a breathtaking wide shot — ascending balloons, falling petals, and the card glowing above. Luxurious, celebratory, cinematic. Ultra realistic, no logos.`},
+ ]},
+
+{id:'ack-16',title:"Gold GOAT — Balloon Tribute",cat:"Acknowledgement",badge:'badge-acknowledgement',
+ workflow:"3-scene arc · 10s each · 30s total · Grok — Gamble Concept",
+ scenes:[
+  {label:'Scene 1 — 30 Balloons Rising (0–10s)',text:`Over 30 colorful balloons begin floating upward from the bottom of a deep navy frame — each balloon reads "You're the Goat" in bold lettering in a different bright color: coral, gold, electric blue, lime green, lavender, hot pink, and champagne. The balloons fill the frame steadily, rising in layers, some close to the camera and some deeper, creating rich depth and movement. Cinematic balloon reveal, vibrant and celebratory. Ultra realistic.`},
+  {label:'Scene 2 — Rose Petals Cascade (10–20s)',text:`Hundreds of rose petals begin falling from above in multiple colors — deep red, blush, white, and gold — drifting down through the ascending balloons. The balloons keep rising as petals cascade around them, filling the air with layered motion. The contrast of petals falling and balloons rising creates a stunning, surreal beauty. Cinematic mixed motion, deeply luxurious. Ultra realistic.`},
+  {label:'Scene 3 — Gold Goat Materializes (20–30s)',text:`The screen splits from the center with a burst of golden sparkles that swirl outward. The sparkles spin into a glowing gold tornado, and within it a majestic gold goat silhouette materializes — proud and luminous. Shimmering text forms around it: "MAAAAAM — You Are the Goat." The gold goat holds center frame as sparkles and remaining rose petals settle. Grand, surreal, cinematic finale. Ultra realistic, no logos.`},
+ ]},
+
+{id:'ack-17',title:"Trophy Rising — You Deserve This",cat:"Acknowledgement",badge:'badge-acknowledgement',
+ workflow:"3-scene arc · 10s each · 30s total · Grok — Gamble Concept",
+ scenes:[
+  {label:'Scene 1 — Trophy Rises (0–10s)',text:`Against a deep navy background, a gleaming gold trophy slowly rises from the bottom of the screen to center frame. As it rises, soft light glints off every engraved surface. Text emerges on the trophy's face in glowing gold lettering: "You Are the Best." The trophy settles center frame, rotating slowly with quiet ceremony. Cinematic product reveal, warm gold lighting. Ultra realistic.`},
+  {label:'Scene 2 — Card Unfolds & Balloons Hover (10–20s)',text:`An ornate gold-trimmed card begins to unfold in front of the trophy, layer by layer, like a standing display. As the card fully opens, "You Deserve This" appears on the front in elegant lettering. Behind the trophy, a bouquet of balloons drifts into frame and hovers — gold, champagne, and black — rising gently in the background. Cinematic reveal, layered depth. Ultra realistic.`},
+  {label:'Scene 3 — Flowers Burst from Trophy (20–30s)',text:`Flowers begin bursting from inside the open trophy in slow motion — roses, peonies, and orchids in lush abundance, erupting upward and outward like a spongy organic explosion. Petals fly in all directions, filling the frame. The card stands in the foreground, the trophy blazes with floral energy behind it, and the balloons drift above it all. A breathtaking cinematic explosion of flowers, petals, and ceremony. Ultra realistic, no logos.`},
+ ]},
+
+{id:'ack-18',title:"Fist Bump — Gold Dust Explosion",cat:"Acknowledgement",badge:'badge-acknowledgement',
+ workflow:"3-scene arc · 10s each · 30s total · Grok — Gamble Concept",
+ scenes:[
+  {label:'Scene 1 — The Fist Bump (0–10s)',text:`Against a deep black background, a left fist appears from the left side of the frame, and a right fist from the right. Both move toward the center with slow, deliberate cinematic energy — as if this moment has been building for a long time. The two fists meet at center with force in a powerful fist bump. Cinematic slow motion, dramatic backlighting, ultra realistic.`},
+  {label:'Scene 2 — Gold Dust Tornado (10–20s)',text:`The collision of the fists triggers a massive explosion of gold dust that erupts from the impact point and fans across the entire screen. The gold dust catches light and begins to spin, accelerating into a swirling gold tornado that fills the frame from edge to edge. Gold particles scatter in all directions, catching the light with cinematic brilliance. Cinematic gold explosion and swirl. Ultra realistic.`},
+  {label:'Scene 3 — Card Opens — "You're My Boy Forever" (20–30s)',text:`Rose petals in deep red and blush begin swirling within the gold as the tornado calms. A gigantic card slowly floats up from behind, bearing two gold fists on the front cover with the words "I Am Proud of You" above them in bold lettering. The card opens smoothly to reveal: "Thank You for Being Solid. You're My Boy Forever." A burst of roses explodes from the card's edges — in every color — filling the background with lush abundant blooms. Cinematic finale, emotional and powerful. Ultra realistic, no logos.`},
+ ]},
+
+{id:'ack-19',title:"Basketball Bloom",cat:"Acknowledgement",badge:'badge-acknowledgement',
+ workflow:"3-scene arc · 10s each · 30s total · Grok — Gamble Concept",
+ scenes:[
+  {label:'Scene 1 — Ball Bounces, Flowers Appear (0–10s)',text:`A basketball drops into frame from above against a deep black background. It bounces on an invisible surface in cinematic slow motion, and every time it makes contact, a fresh bouquet of mixed flowers erupts from the impact point — roses, sunflowers, daisies, and peonies in vibrant color. The ball keeps bouncing, each bounce spawning more flowers, accumulating across the lower frame until the screen fills with blooms. Cinematic sports-meets-floral reveal. Ultra realistic.`},
+  {label:'Scene 2 — Petals Spell "Great Job" (10–20s)',text:`The basketball makes one final powerful bounce, and the impact sends thousands of rose petals flying upward in all directions. The petals spin and slow in the air, gradually settling into formation — arranging themselves into the glowing words "Great Job. You Deserve This." written in floating rose petals against the dark background. Cinematic petal typography, surreal and stunning. Ultra realistic.`},
+  {label:'Scene 3 — Giant Card Rises (20–30s)',text:`A giant card rises slowly from behind the floating petal words, majestic and grand. The glowing petal letters begin to lift off the air and absorb into the surface of the card, embedding themselves into its face. The card slowly closes, and on the front, in warm elegant script, it reads: "I Am Glad For You. Good Job." The card rests center frame as remaining petals drift down gently around it. Cinematic close. Ultra realistic, no logos.`},
+ ]},
+
+{id:'ack-20',title:"Football Rising — The Hard Worker's Card",cat:"Acknowledgement",badge:'badge-acknowledgement',
+ workflow:"3-scene arc · 10s each · 30s total · Grok — Gamble Concept",
+ scenes:[
+  {label:'Scene 1 — Football Rises & Spins (0–10s)',text:`A football rises slowly from the bottom of the frame in the center, spinning end-over-end with cinematic grace against a deep navy background. It rises to the center of the screen and stops, hanging in mid-air, spinning slowly in place. Soft dramatic lighting catches every seam and texture of the football in close-up. The spin slows to a deliberate rotation. Cinematic sports product reveal. Ultra realistic.`},
+  {label:'Scene 2 — Football Embeds in Card (10–20s)',text:`An expansive card materializes in the background, warm and grand. The spinning football begins to be pulled toward the card as if magnetized, accelerating and then embedding itself into the card's face with a satisfying impact. Over the embedded football, glowing text appears: "No One Worked as Hard as You. Great Job." The text settles with warm golden glow. Cinematic and powerful. Ultra realistic.`},
+  {label:'Scene 3 — Card Opens, Roses Sway (20–30s)',text:`The card opens wide to reveal the inside: "I Am Proud of You. You Deserve to Know This." Long-stem roses rise along both sides of the open card — tall, elegant, and full. The roses then split apart horizontally, parting like curtains to reveal the full interior message. Once fully parted, the roses slow and begin to sway gently back and forth in hypnotic beauty, the card standing firm behind them. Cinematic, emotional. Ultra realistic, no logos.`},
+ ]},
+
 ]; // end PROMPTS array
 // ═══════════════════════════════════════════════════════════════════
-// Total: 70 prompts across 20+ categories
+// Total: 90 prompts across 21 categories (20 Acknowledgement added)
+
 // All follow Gamble's standard arc: Card → Open → Message → Box → Bloom → Balloons
 // 3 scenes × 10 seconds = 30 seconds per video (Grok compatible)
 // ═══════════════════════════════════════════════════════════════════
@@ -2082,7 +2425,213 @@ async function handleUpload(pid, encTitle, encCat, input){
   }
 }
 
+
+// ═══════════════════════════════════════════════════
+// RAW IDEA REFINER
+// ═══════════════════════════════════════════════════
+
+let currentVariation = 1;
+
+function setVariation(n, btn) {
+  currentVariation = n;
+  document.querySelectorAll('.btn-variation').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function toggleRefiner() {
+  const toggle = document.getElementById('refiner-toggle');
+  const body = document.getElementById('refiner-body');
+  toggle.classList.toggle('open');
+  body.classList.toggle('open');
+}
+
+async function refineRawIdea() {
+  const raw = document.getElementById('refiner-input').value.trim();
+  const cat = document.getElementById('refiner-cat').value;
+  const btn = document.getElementById('refine-btn');
+  const wrap = document.getElementById('refiner-result-wrap');
+
+  if (!raw) { showToast('Paste a raw idea first'); return; }
+  if (!cat) { showToast('Choose a category'); return; }
+
+  btn.disabled = true;
+  btn.textContent = 'Refining…';
+  wrap.innerHTML = '<div class="refiner-loading">✨ AI is writing your Digital Bloom prompt…</div>';
+
+  try {
+    const res = await fetch('/api/refine-prompt', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ rawIdea: raw, category: cat, variation: currentVariation })
+    });
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.error || `Server error ${res.status}`);
+    }
+
+    const data = await res.json();
+    const scenes = data.scenes || [];
+
+    if (!scenes.length) throw new Error('No scenes returned');
+
+    wrap.innerHTML = `
+      <div class="refiner-result">
+        <div class="refiner-result-head">
+          <span class="refiner-result-label">✨ Refined Prompt — Variation ${currentVariation}</span>
+          <span class="refiner-result-meta">${cat} · 3-scene · 30s</span>
+        </div>
+        <div class="refiner-scenes">
+          ${scenes.map((s,i) => `
+            <div class="refiner-scene">
+              <div class="refiner-scene-label">${s.label || `Scene ${i+1}`}</div>
+              <div class="refiner-scene-text" id="rs-text-${i}">${s.text}</div>
+              <div class="refiner-scene-copy">
+                <button class="btn-copy" onclick="copyRefinerScene(${i})">Copy Scene ${i+1}</button>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>`;
+  } catch(e) {
+    wrap.innerHTML = `<div class="refiner-error">⚠️ ${e.message}. Make sure the ANTHROPIC_API_KEY is set in Vercel.</div>`;
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '✨ Refine with AI';
+  }
+}
+
+function copyRefinerScene(i) {
+  const el = document.getElementById(`rs-text-${i}`);
+  if (!el) return;
+  navigator.clipboard.writeText(el.textContent).then(() => showToast('Copied!'));
+}
+
+// ═══════════════════════════════════════════════════
+// GAMBLE SUBMIT MODE
+// ═══════════════════════════════════════════════════
+
+function initSubmitMode() {
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('submit') === '1') {
+    document.getElementById('submit-overlay').classList.add('active');
+    // Hide the main engine UI elements when in submit mode
+    document.querySelector('.header').style.display = 'none';
+    document.querySelector('.controls').style.display = 'none';
+  }
+}
+
+async function submitIdea() {
+  const name = document.getElementById('submit-name').value.trim() || 'Gamble';
+  const cat  = document.getElementById('submit-cat').value;
+  const text = document.getElementById('submit-idea-text').value.trim();
+  const btn  = document.getElementById('submit-btn');
+
+  if (!text) { alert('Please describe your idea first.'); return; }
+  if (!cat)  { alert('Please choose a category.'); return; }
+
+  btn.disabled = true;
+  btn.textContent = 'Submitting…';
+
+  try {
+    const res = await fetch('/api/submit-idea', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ submitter: name, category: cat, idea: text, submitted_at: new Date().toISOString() })
+    });
+
+    if (!res.ok) throw new Error('Submit failed');
+
+    document.getElementById('submit-form-body').style.display = 'none';
+    document.getElementById('submit-success').style.display = 'flex';
+  } catch(e) {
+    // Fallback: save locally so idea isn't lost
+    saveIdeaLocally({ submitter: name, category: cat, idea: text, submitted_at: new Date().toISOString(), id: Date.now() });
+    document.getElementById('submit-form-body').style.display = 'none';
+    document.getElementById('submit-success').style.display = 'flex';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Submit Idea to Ak 🌸';
+  }
+}
+
+function resetSubmitForm() {
+  document.getElementById('submit-form-body').style.display = 'flex';
+  document.getElementById('submit-success').style.display = 'none';
+  document.getElementById('submit-idea-text').value = '';
+  document.getElementById('submit-cat').value = '';
+}
+
+// ═══════════════════════════════════════════════════
+// PENDING IDEAS (Ak's view)
+// ═══════════════════════════════════════════════════
+
+const IDEAS_KEY = 'db_pending_ideas';
+
+function saveIdeaLocally(idea) {
+  const ideas = getPendingIdeas();
+  ideas.push(idea);
+  try { localStorage.setItem(IDEAS_KEY, JSON.stringify(ideas)); } catch(e){}
+}
+
+function getPendingIdeas() {
+  try { return JSON.parse(localStorage.getItem(IDEAS_KEY) || '[]'); } catch(e){ return []; }
+}
+
+function dismissIdea(id) {
+  const ideas = getPendingIdeas().filter(i => i.id !== id);
+  try { localStorage.setItem(IDEAS_KEY, JSON.stringify(ideas)); } catch(e){}
+  renderPendingIdeas();
+}
+
+function refineIdea(idea) {
+  // Pre-fill the refiner and open it
+  document.getElementById('refiner-input').value = idea.idea;
+  const catSelect = document.getElementById('refiner-cat');
+  // Try to match the category
+  for (let opt of catSelect.options) {
+    if (opt.value === idea.category) { catSelect.value = idea.category; break; }
+  }
+  document.getElementById('refiner-toggle').classList.add('open');
+  document.getElementById('refiner-body').classList.add('open');
+  document.getElementById('refiner-toggle').scrollIntoView({ behavior: 'smooth' });
+  showToast('Idea loaded into refiner ✨');
+}
+
+async function renderPendingIdeas() {
+  // Try server first, fall back to local
+  let ideas = [];
+  try {
+    const res = await fetch('/api/get-ideas');
+    if (res.ok) { const d = await res.json(); ideas = d.ideas || []; }
+  } catch(e){}
+  // Merge with local ideas
+  const local = getPendingIdeas();
+  const serverIds = new Set(ideas.map(i => String(i.id)));
+  local.forEach(i => { if (!serverIds.has(String(i.id))) ideas.push(i); });
+
+  const panel = document.getElementById('pending-panel');
+  const list  = document.getElementById('pending-ideas-list');
+  const count = document.getElementById('pending-count');
+
+  if (!ideas.length) { panel.classList.remove('has-ideas'); return; }
+  panel.classList.add('has-ideas');
+  count.textContent = ideas.length;
+  list.innerHTML = ideas.map(idea => `
+    <div class="pending-idea">
+      <div class="pending-idea-meta">From ${idea.submitter || 'Gamble'} · ${idea.category} · ${idea.submitted_at ? new Date(idea.submitted_at).toLocaleDateString() : 'recently'}</div>
+      <div class="pending-idea-text">${idea.idea}</div>
+      <div class="pending-idea-actions">
+        <button class="btn-refine-idea" onclick='refineIdea(${JSON.stringify(idea).replace(/'/g,"&#39;")})'>✨ Refine with AI</button>
+        <button class="btn-dismiss-idea" onclick="dismissIdea(${idea.id || 0})">Dismiss</button>
+      </div>
+    </div>
+  `).join('');
+}
+
 init();
+initSubmitMode();
+renderPendingIdeas();
 </script>
 </body>
 </html>
