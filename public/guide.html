@@ -2,379 +2,296 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Digital Bloom — Driver's Audio Guide</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0D1B36">
+<title>Digital Bloom — Audio Guide</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Outfit:wght@300;400;500;600&display=swap');
-  :root{--navy:#0D1B36;--navy-dark:#081428;--navy-mid:#142040;--gold:#D4AF37;--gold-light:#E8C84A;--white:#F8F6F0;--gray:#8A8A9A;--green:#2ECC71;--red:#E74C3C;}
-  *{margin:0;padding:0;box-sizing:border-box;}
-  body{background:var(--navy-dark);color:var(--white);font-family:'Outfit',sans-serif;min-height:100vh;}
-  body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at 20% 20%,rgba(212,175,55,0.06) 0%,transparent 50%);pointer-events:none;z-index:0;}
-  .container{position:relative;z-index:1;max-width:780px;margin:0 auto;padding:24px 20px 60px;}
-  .header{text-align:center;padding:32px 0 24px;border-bottom:1px solid rgba(212,175,55,0.2);margin-bottom:28px;}
-  .bloom{font-size:40px;display:block;margin-bottom:12px;animation:float 3s ease-in-out infinite;}
-  @keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-6px);}}
-  .header h1{font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:300;letter-spacing:.1em;color:var(--gold);margin-bottom:6px;}
-  .header p{font-size:12px;color:var(--gray);letter-spacing:.08em;text-transform:uppercase;}
-  .api-box{background:rgba(212,175,55,0.06);border:1px solid rgba(212,175,55,0.2);border-radius:12px;padding:18px;margin-bottom:20px;}
-  .api-box h3{font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:var(--gold);margin-bottom:10px;}
-  .api-row{display:flex;gap:10px;}
-  .api-input{flex:1;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:10px 14px;color:var(--white);font-family:'Outfit',sans-serif;font-size:13px;outline:none;transition:border-color .2s;}
-  .api-input:focus{border-color:var(--gold);}
-  .api-input::placeholder{color:var(--gray);}
-  .save-btn{background:var(--gold);color:var(--navy-dark);border:none;border-radius:8px;padding:10px 16px;font-family:'Outfit',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;white-space:nowrap;}
-  .save-btn:hover{background:var(--gold-light);}
-  .api-note{font-size:11px;color:var(--gray);margin-top:8px;}
-  .status-bar{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:12px 16px;font-size:13px;color:var(--gray);margin-bottom:20px;display:flex;align-items:center;gap:10px;min-height:44px;}
-  .dot{width:8px;height:8px;border-radius:50%;background:var(--gray);flex-shrink:0;}
-  .dot.on{background:var(--green);animation:blink 1s ease-in-out infinite;}
-  .dot.loading{background:var(--gold);animation:blink .5s ease-in-out infinite;}
-  .dot.err{background:var(--red);}
-  @keyframes blink{0%,100%{opacity:1;}50%{opacity:.3;}}
-  .player{background:var(--navy-mid);border:1px solid rgba(212,175,55,0.2);border-radius:16px;padding:22px;margin-bottom:20px;}
-  .np-label{font-size:10px;text-transform:uppercase;letter-spacing:.2em;color:var(--gold);margin-bottom:8px;}
-  .np-title{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:400;margin-bottom:18px;min-height:28px;}
-  .waveform{display:flex;align-items:center;gap:3px;height:40px;margin-bottom:18px;}
-  .wbar{flex:1;background:rgba(212,175,55,0.2);border-radius:2px;transition:height .1s;min-height:3px;}
-  .wbar.active{background:var(--gold);}
-  .wbar:nth-child(2n).active{opacity:.85;}.wbar:nth-child(3n).active{opacity:.7;}.wbar:nth-child(4n).active{opacity:.9;}
-  @keyframes wave{0%,100%{height:6px;}50%{height:32px;}}
-  .controls{display:flex;align-items:center;gap:14px;}
-  .ctrl-btn{background:none;border:none;color:var(--gray);cursor:pointer;font-size:20px;padding:8px;border-radius:8px;transition:all .2s;line-height:1;}
-  .ctrl-btn:hover{color:var(--white);background:rgba(255,255,255,0.05);}
-  .play-btn{width:54px;height:54px;border-radius:50%;background:var(--gold);border:none;color:var(--navy-dark);font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0;}
-  .play-btn:hover{background:var(--gold-light);transform:scale(1.05);}
-  .play-btn:disabled{opacity:.5;cursor:not-allowed;transform:none;}
-  .speed-btn{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:var(--white);border-radius:6px;padding:6px 10px;font-size:12px;cursor:pointer;font-family:'Outfit',sans-serif;transition:all .2s;margin-left:auto;}
-  .speed-btn:hover{border-color:var(--gold);color:var(--gold);}
-  .big-btn{width:100%;border:none;border-radius:12px;padding:15px;font-family:'Outfit',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s;margin-bottom:10px;}
-  .big-btn.gold{background:linear-gradient(135deg,var(--gold) 0%,#B8960C 100%);color:var(--navy-dark);}
-  .big-btn.gold:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(212,175,55,0.3);}
-  .big-btn.outline{background:rgba(212,175,55,0.08);border:1px solid rgba(212,175,55,0.3);color:var(--gold);}
-  .big-btn.outline:hover{background:rgba(212,175,55,0.15);}
-  .big-btn:disabled{opacity:.5;cursor:not-allowed;transform:none;}
-  .ch-label{font-size:11px;text-transform:uppercase;letter-spacing:.15em;color:var(--gray);margin-bottom:12px;}
-  .ch-list{display:flex;flex-direction:column;gap:8px;margin-bottom:32px;}
-  .ch-card{background:var(--navy-mid);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:14px 16px;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:14px;}
-  .ch-card:hover{border-color:rgba(212,175,55,0.3);background:rgba(212,175,55,0.04);transform:translateX(4px);}
-  .ch-card.active{border-color:var(--gold);}
-  .ch-card.playing{border-color:var(--gold);background:rgba(212,175,55,0.08);}
-  .ch-num{width:34px;height:34px;border-radius:50%;background:rgba(212,175,55,0.1);border:1px solid rgba(212,175,55,0.3);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:var(--gold);flex-shrink:0;}
-  .ch-card.playing .ch-num{background:var(--gold);color:var(--navy-dark);animation:pulse 1.5s ease-in-out infinite;}
-  @keyframes pulse{0%,100%{transform:scale(1);}50%{transform:scale(1.08);}}
-  .ch-info{flex:1;}
-  .ch-title{font-size:14px;font-weight:500;margin-bottom:2px;}
-  .ch-desc{font-size:11px;color:var(--gray);}
-  .ch-tag{font-size:10px;padding:3px 8px;border-radius:20px;background:rgba(46,204,113,0.1);color:var(--green);flex-shrink:0;}
-  .ch-tag.playing{background:rgba(212,175,55,0.15);color:var(--gold);}
-  .footer{text-align:center;padding-top:20px;border-top:1px solid rgba(255,255,255,0.05);font-size:10px;color:rgba(255,255,255,0.15);letter-spacing:.05em;}
+  @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+  :root{--navy:#0D1B36;--navy2:#101d38;--navy3:#162448;--gold:#D4AF37;--gold2:#E8C84A;--white:#F8F6F0;--gray:#8A8A9A;--green:#2ECC71;--red:#E74C3C;--bar-h:90px;}
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html{font-size:18px;}
+  body{background:var(--navy);color:var(--white);font-family:'Outfit',sans-serif;min-height:100vh;padding-bottom:calc(var(--bar-h) + 20px);}
+
+  /* ===== HEADER ===== */
+  .hdr{text-align:center;padding:28px 20px 20px;border-bottom:1px solid rgba(212,175,55,0.15);}
+  .hdr-bloom{font-size:36px;display:block;margin-bottom:8px;}
+  .hdr h1{font-size:1.5rem;font-weight:600;letter-spacing:.06em;color:var(--gold);margin-bottom:4px;}
+  .hdr p{font-size:.7rem;color:var(--gray);letter-spacing:.1em;text-transform:uppercase;}
+
+  /* ===== MODE BUTTONS ===== */
+  .modes{display:flex;gap:10px;padding:16px 16px 8px;}
+  .mode-btn{flex:1;border:none;border-radius:14px;padding:14px 10px;font-family:'Outfit',sans-serif;font-size:.85rem;font-weight:600;cursor:pointer;transition:all .2s;}
+  .mode-btn.gold{background:linear-gradient(135deg,var(--gold),#B8960C);color:var(--navy);}
+  .mode-btn.outline{background:rgba(212,175,55,0.08);border:1.5px solid rgba(212,175,55,0.3);color:var(--gold);}
+  .mode-btn:active{transform:scale(.97);}
+
+  /* ===== CHAPTER LIST ===== */
+  .ch-label{font-size:.65rem;text-transform:uppercase;letter-spacing:.15em;color:var(--gray);padding:16px 16px 10px;}
+  .ch-list{display:flex;flex-direction:column;gap:6px;padding:0 12px 20px;}
+
+  .ch{display:flex;align-items:center;gap:14px;padding:16px 14px;border-radius:14px;cursor:pointer;transition:all .15s;background:var(--navy2);border:1.5px solid transparent;position:relative;}
+  .ch:active{transform:scale(.98);}
+  .ch.active{border-color:var(--gold);background:rgba(212,175,55,0.06);}
+  .ch.playing{border-color:var(--gold);background:rgba(212,175,55,0.1);}
+
+  .ch-num{width:44px;height:44px;border-radius:50%;background:rgba(212,175,55,0.1);border:1.5px solid rgba(212,175,55,0.25);display:flex;align-items:center;justify-content:center;font-size:.9rem;font-weight:700;color:var(--gold);flex-shrink:0;}
+  .ch.playing .ch-num{background:var(--gold);color:var(--navy);animation:pulse 1.5s ease-in-out infinite;}
+  @keyframes pulse{0%,100%{transform:scale(1);}50%{transform:scale(1.1);}}
+
+  .ch-info{flex:1;min-width:0;}
+  .ch-title{font-size:1rem;font-weight:600;margin-bottom:3px;line-height:1.2;}
+  .ch-desc{font-size:.72rem;color:var(--gray);line-height:1.3;}
+
+  .ch-status{font-size:.6rem;padding:4px 10px;border-radius:20px;flex-shrink:0;font-weight:600;}
+  .ch-status.ready{background:rgba(255,255,255,0.05);color:var(--gray);}
+  .ch-status.loading{background:rgba(212,175,55,0.15);color:var(--gold);}
+  .ch-status.playing{background:rgba(212,175,55,0.2);color:var(--gold);}
+  .ch-status.done{background:rgba(46,204,113,0.12);color:var(--green);}
+
+  /* ===== STICKY BOTTOM PLAYER (Apple Music style) ===== */
+  .bar{position:fixed;bottom:0;left:0;right:0;z-index:100;background:rgba(16,29,56,0.97);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid rgba(212,175,55,0.2);padding:0 16px;height:var(--bar-h);display:flex;align-items:center;gap:14px;transition:height .3s;}
+  .bar-info{flex:1;min-width:0;}
+  .bar-title{font-size:.85rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .bar-sub{font-size:.6rem;color:var(--gray);margin-top:2px;}
+
+  .bar-btn{width:50px;height:50px;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;flex-shrink:0;}
+  .bar-btn:active{transform:scale(.92);}
+  .bar-play{background:var(--gold);color:var(--navy);font-size:1.2rem;}
+  .bar-play:hover{background:var(--gold2);}
+  .bar-skip{background:rgba(255,255,255,0.08);color:var(--white);font-size:1rem;}
+  .bar-skip:hover{background:rgba(255,255,255,0.12);}
+  .bar-speed{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:var(--white);border-radius:8px;width:auto;height:auto;padding:6px 12px;font-size:.7rem;font-family:'Outfit',sans-serif;font-weight:600;}
+
+  /* ===== DRIVER MODE ===== */
+  body.driver .hdr{display:none;}
+  body.driver .modes{display:none;}
+  body.driver .ch-label{font-size:.85rem;padding-top:12px;}
+  body.driver .ch{padding:20px 18px;}
+  body.driver .ch-num{width:60px;height:60px;font-size:1.3rem;}
+  body.driver .ch-title{font-size:1.5rem;}
+  body.driver .ch-desc{font-size:1rem;}
+  body.driver .ch-status{font-size:.8rem;padding:6px 14px;}
+  body.driver .bar{height:110px;}
+  body.driver .bar-title{font-size:1.2rem;}
+  body.driver .bar-sub{font-size:.8rem;}
+  body.driver .bar-play{width:66px;height:66px;font-size:1.6rem;}
+  body.driver .bar-skip{width:48px;height:48px;font-size:1.2rem;}
+  body.driver .bar-speed{font-size:.85rem;padding:8px 14px;}
+
+  /* ===== TOAST ===== */
+  .toast{position:fixed;top:20px;left:50%;transform:translateX(-50%);background:rgba(212,175,55,0.95);color:var(--navy);padding:10px 24px;border-radius:30px;font-size:.8rem;font-weight:600;z-index:200;opacity:0;transition:opacity .3s;pointer-events:none;}
+  .toast.show{opacity:1;}
+
+  .footer{text-align:center;padding:16px 16px 24px;font-size:.55rem;color:rgba(255,255,255,0.12);letter-spacing:.05em;}
   audio{display:none;}
 </style>
 </head>
 <body>
-<div class="container">
 
-  <div class="header">
-    <span class="bloom">🌸</span>
-    <h1>Digital Bloom</h1>
-    <p>Driver's Audio Guide — AK & Gamble</p>
-  </div>
-
-  <div class="status-bar">
-    <div class="dot on" id="dot"></div>
-    <span id="statusTxt">Ready — tap a chapter or press Play All</span>
-  </div>
-
-  <div class="player">
-    <div class="np-label">NOW PLAYING</div>
-    <div class="np-title" id="npTitle">Select a chapter below</div>
-    <div class="waveform" id="waveform"></div>
-    <div class="controls">
-      <button class="ctrl-btn" onclick="prev()">⏮</button>
-      <button class="play-btn" id="playBtn" onclick="togglePlay()">▶</button>
-      <button class="ctrl-btn" onclick="next()">⏭</button>
-      <button class="speed-btn" id="speedBtn" onclick="cycleSpeed()">1x</button>
-    </div>
-  </div>
-
-  <button class="big-btn gold" id="playAllBtn" onclick="playAll()">▶ Play Complete Guide From Start</button>
-  <button class="big-btn outline" onclick="driverMode()">🚛 Driver Mode — Large Text + Auto-Continue</button>
-
-  <div class="ch-label">11 CHAPTERS — TAP ANY TO PLAY</div>
-  <div class="ch-list" id="chList"></div>
-
-  <audio id="audio"></audio>
-
-  <div class="footer">CREATIVE VISION LLC — DIGITAL BLOOM — CONFIDENTIAL — APRIL 2026</div>
+<div class="hdr">
+  <span class="hdr-bloom">🌸</span>
+  <h1>Digital Bloom</h1>
+  <p>Driver's Audio Guide — AK & Gamble</p>
 </div>
 
+<div class="modes">
+  <button class="mode-btn gold" onclick="playAllChapters()">▶ Play All</button>
+  <button class="mode-btn outline" onclick="toggleDriverMode()">🚛 Driver Mode</button>
+</div>
+
+<div class="ch-label" id="chLabel">11 CHAPTERS — TAP TO PLAY</div>
+<div class="ch-list" id="chList"></div>
+
+<div class="footer">CREATIVE VISION LLC — DIGITAL BLOOM — CONFIDENTIAL — APRIL 2026</div>
+
+<!-- STICKY BOTTOM PLAYER BAR -->
+<div class="bar">
+  <div class="bar-info">
+    <div class="bar-title" id="barTitle">Tap a chapter to begin</div>
+    <div class="bar-sub" id="barSub">11 chapters ready</div>
+  </div>
+  <button class="bar-btn bar-skip" onclick="prev()">⏮</button>
+  <button class="bar-btn bar-play" id="barPlay" onclick="togglePlay()">▶</button>
+  <button class="bar-btn bar-skip" onclick="next()">⏭</button>
+  <button class="bar-btn bar-speed" id="barSpeed" onclick="cycleSpeed()">1×</button>
+</div>
+
+<div class="toast" id="toast"></div>
+<audio id="audio"></audio>
+
 <script>
+'use strict';
 const TTS_API = '/api/tts';
 
 const chapters = [
-  {t:"Who We Are",d:"Creative Vision LLC & Digital Bloom",s:`Good morning. This is your Digital Bloom business audio guide. Let's start with who we are.
+  {t:"Who We Are",d:"Creative Vision LLC & Digital Bloom",s:`Good morning. This is your Digital Bloom business audio guide. Let's start with who we are.\n\nWe are Creative Vision LLC, doing business as Digital Bloom. We are the world's first digital flower gifting platform. Instead of sending someone physical flowers that die in a week, we send them a cinematic video experience. A card that opens. Flowers that bloom out of a luxury box. Balloons. Confetti. All delivered instantly to their phone for two to five dollars. Zero shipping. Zero geographic limits. Instant delivery anywhere in the world.\n\nThe business is officially registered. Our LLC was filed in North Carolina on April 14th 2026. Our EIN is 42 dash 1904211. Our Digital Bloom DBA was filed April 23rd 2026. Our trademark application is pending with serial number 99626843.\n\nAkieia Davis is Senior Vice President. Derric Williams, also known as Gamble, is President.\n\nThis is real. This is happening. Let's keep building.`},
 
-We are Creative Vision LLC, doing business as Digital Bloom. We are the world's first digital flower gifting platform. Instead of sending someone physical flowers that die in a week, we send them a cinematic video experience. A card that opens. Flowers that bloom out of a luxury box. Balloons. Confetti. All delivered instantly to their phone for two to five dollars. Zero shipping. Zero geographic limits. Instant delivery anywhere in the world.
+  {t:"The Market Opportunity",d:"Why Digital Bloom will win",s:`Chapter 2. The Market Opportunity.\n\nThe US floral gifting market is worth almost 17 billion dollars right now. It's growing to over 26 billion by 2034. That is the ocean we are swimming in.\n\nEvery competitor — 1-800-Flowers, FTD, all of them — is still shipping physical flowers. They have logistics costs, delivery delays, and flowers that die. We have none of that.\n\nWe are the only company in the world doing purely digital cinematic flower gifting. First mover advantage. Whoever figures this out first wins the market. We figured it out first.\n\nThe entry price is one dollar and ninety-nine cents. Anyone can afford to send love. That is how you build a mass market product.`},
 
-The business is officially registered. Our LLC was filed in North Carolina on April 14th 2026. Our EIN is 42 dash 1904211. Our Digital Bloom DBA was filed April 23rd 2026. Our trademark application is pending with serial number 99626843.
+  {t:"The Proper Business Structure",d:"How to protect everything we build",s:`Chapter 3. The Proper Business Structure.\n\nWe are building the protection structure first. That way when the money comes in, it flows into a protected private tax-advantaged system.\n\nHere is the structure we are building.\n\nAt the top: The Trust. We are forming a Revocable Living Trust. The trust owns everything below it. Our names are hidden inside it. Anyone who looks up who owns Digital Bloom sees the trust name, not our personal names.\n\nIn the middle: Creative Vision LLC. That is our holding company. The umbrella. It owns all our businesses. If one business ever gets sued, the others are completely protected.\n\nAt the bottom: Operating businesses. Digital Bloom. Web design services. AI consulting. Graphic design. Each one is its own LLC underneath the umbrella.\n\nDigital Bloom is a faceless brand. Nobody will know it is ours unless we choose to tell them. That is by design.`},
 
-Akieia Davis is Senior Vice President. Derric Williams, also known as Gamble, is President.
+  {t:"Privacy Protection",d:"Keeping our names off public records",s:`Chapter 4. Privacy Protection.\n\nWe are a faceless brand. Here is how we protect our privacy at every level.\n\nStep one: Opus Virtual Offices at opus virtual offices dot com. For 99 dollars per month, we get a real commercial street address, a live receptionist who answers calls as Digital Bloom, a dedicated business phone number, and mail handling. Opus also reports our monthly payments to business credit bureaus. We build business credit just by paying rent.\n\nStep two: Northwest Registered Agent for 49 dollars per year. This replaces Gamble's personal address on public state records. Their address shows up on public records instead of his.\n\nStep three: The Trust. Once we form our trust we transfer our LLC membership into it. The trust becomes the visible owner. Our names disappear from the ownership record.\n\nStep four: Every future contract and agreement gets signed as Creative Vision LLC. Never our personal names.`},
 
-This is real. This is happening. Let's keep building.`},
+  {t:"Banking Action Plan",d:"Opening accounts in the right order",s:`Chapter 5. The Banking Action Plan.\n\nHere is the exact order. Do not skip steps.\n\nStep one: Sign up for Opus Virtual Offices. Get the Charlotte North Carolina address to match our existing filings. Do this first.\n\nStep two: Open a Mercury business bank account at mercury dot com. Use the Opus address. Free. No monthly fees. Instant virtual debit card. Connects directly to Stripe. Once open, add the card to Apple Pay and Stripe switches from test mode to live mode. Real money starts flowing.\n\nStep three: Open a BlueVine account at bluevine dot com for the future line of credit up to 250 thousand dollars. Tboo recommended this one. Open the account now and apply for the credit line once revenue flows.\n\nStep four: Navy Federal Credit Union for long-term banking. Tboo has an account and can refer us. Gamble's mom is retired military so Gamble also qualifies. Clarify Gamble's past account situation before opening a new one.`},
 
-  {t:"The Market Opportunity",d:"Why Digital Bloom will win",s:`Chapter 2. The Market Opportunity.
+  {t:"Building Business Credit",d:"The Net 30 strategy",s:`Chapter 6. Building Business Credit.\n\nBusiness credit belongs to Creative Vision LLC, not to us personally. This is how we access capital without touching our personal credit.\n\nFirst, register for a DUNS number at D and B dot com. Free. Takes 30 days to activate.\n\nThen open these three Net 30 accounts in the same week after Mercury is open.\n\nNumber one: Uline. That is U-L-I-N-E dot com. The gold standard. Reports to Dun and Bradstreet, Experian Business, and Equifax Business. Three bureaus at once. Order something small. Pay immediately.\n\nNumber two: Quill. That is Q-U-I-L-L dot com. Owned by Staples. Reports to D and B and Experian. Order something small. Pay immediately.\n\nNumber three: Crown Office Supplies. Designed specifically for new businesses with zero credit history. Reports to all four major business credit bureaus. Easiest approval.\n\nThe rule is simple. Order something small every month. Pay immediately. Within 60 to 90 days your business credit profile is established. And remember, Opus reports to credit bureaus every month. So just paying for our virtual office builds our credit automatically.`},
 
-The US floral gifting market is worth almost 17 billion dollars right now. It's growing to over 26 billion by 2034. That is the ocean we are swimming in.
+  {t:"Grants & Free Money",d:"Money you don't have to pay back",s:`Chapter 7. Grants and Free Money.\n\nAs a minority-owned and women-owned digital media business, we qualify for grants most people never apply for because they don't know they exist.\n\nApply for these immediately.\n\nThe Amber Grant at amber grant dot com. Ten thousand dollars given monthly to women in business. Apply every single month.\n\nHello Alice at hello alice dot com. Grants specifically for minority and women entrepreneurs. Apply now.\n\nThe Minority Business Development Agency at M-B-D-A dot gov. Federal agency for minority-owned businesses. Free consulting and funding connections.\n\nGet certified as a Minority Business Enterprise through NMSDC. And as a Women's Business Enterprise through WBENC. These certifications open doors to corporate contracts. Some Fortune 500 companies are required to spend a percentage of their budget with certified minority-owned businesses.\n\nFree money. No equity given up. No loans to pay back. Apply for all of them.`},
 
-Every competitor — 1-800-Flowers, FTD, all of them — is still shipping physical flowers. They have logistics costs, delivery delays, and flowers that die. We have none of that.
+  {t:"Life Insurance Strategy",d:"Protecting the business and building wealth",s:`Chapter 8. Life Insurance Strategy.\n\nThis is the chapter most business owners skip. Do not skip it.\n\nFirst, term life insurance with a buy-sell agreement between us and Gamble. We each take out a life insurance policy on each other. If something happens to Gamble, the payout gives Akieia enough to buy out his share from his family. His family gets paid. The business continues. Without this, his family could legally claim half of everything we built. This costs about 30 to 50 dollars a month each.\n\nSecond, an Indexed Universal Life policy. Also called an IUL. This is the wealth-building tool. It is life insurance that also builds cash value over time. That cash value grows based on the stock market going up but is protected from the market going down. The cash value grows tax free. You can borrow against it tax free. Think of it as building your own private bank.\n\nIn 10 to 15 years, wealthy business owners use the IUL cash value to fund their own business opportunities instead of borrowing from banks. The earlier you start, the more powerful it becomes.`},
 
-We are the only company in the world doing purely digital cinematic flower gifting. First mover advantage. Whoever figures this out first wins the market. We figured it out first.
+  {t:"Video Production Workflow",d:"How to generate videos efficiently",s:`Chapter 9. The Video Production Workflow.\n\nOpen the Prompt Engine at digitalbloom dot store forward slash prompt dash engine dot html. We have 229 prompts ready across 25 categories.\n\nSelect a Signature Story prompt. Open Grok Imagine. Paste the prompt. Generate.\n\nEvery prompt follows the GOAT Dad formula. Three clips. Ten seconds each. Clip one starts with: Motion begins immediately from frame one. Clip two continues with continuous movement. Clip three ends with: In the final three seconds motion gradually slows. Scene breathes and fades gently to warm golden light. Never abrupt.\n\nDownload all three clips. Hit Upload Bloom in the Prompt Engine. The watermark burns in automatically. The video goes live on the site. Log it in the Video Inventory Tracker in Notion.\n\nPriority order: Mother's Day first, it is weeks away. Then Graduation, the season is right now. Then Father's Day in June. Then Juneteenth on June 19th. Then Weddings for summer. Then Birthdays, which are evergreen every day of the year.\n\nNo people. No faces. Pure cinematic gifting experience. That is the Digital Bloom brand.`},
 
-The entry price is one dollar and ninety-nine cents. Anyone can afford to send love. That is how you build a mass market product.`},
+  {t:"The Network & Launch Plan",d:"How we go from website to movement",s:`Chapter 10. The Network and Launch Plan.\n\nWe are not just a website. We are a movement waiting to launch.\n\nTboo, also known as Bump J, Terrence Boykin, is our brother. He is a Chicago rapper who appeared alongside Lil Durk on Kanye West's Vultures. The play is a Bump J times Digital Bloom collaboration. His own category on the platform. His fans send blooms using his music.\n\nSean, our oldest brother, works at Sal Xco and manages major artists including The Weeknd. One post from The Weeknd changes everything.\n\nWe have a custom original song cleared on April 14th 2026. We are holding the release for launch day.\n\nThe launch plan is one coordinated drop. The site goes live. The bank account is open. Stripe is live. The song releases. The social media challenge launches. All on the same day.\n\nThe challenge mechanic: Send a bloom to someone you appreciate. Post it publicly. Tag the person. Challenge three more people. The song plays in every post. Emotion spreads. Digital Bloom becomes a cultural moment.\n\nThat is how we go from a website to a movement.`},
 
-  {t:"The Proper Business Structure",d:"How to protect everything we build",s:`Chapter 3. The Proper Business Structure.
-
-We are building the protection structure first. That way when the money comes in, it flows into a protected private tax-advantaged system.
-
-Here is the structure we are building.
-
-At the top: The Trust. We are forming a Revocable Living Trust. The trust owns everything below it. Our names are hidden inside it. Anyone who looks up who owns Digital Bloom sees the trust name, not our personal names.
-
-In the middle: Creative Vision LLC. That is our holding company. The umbrella. It owns all our businesses. If one business ever gets sued, the others are completely protected.
-
-At the bottom: Operating businesses. Digital Bloom. Web design services. AI consulting. Graphic design. Each one is its own LLC underneath the umbrella.
-
-Digital Bloom is a faceless brand. Nobody will know it is ours unless we choose to tell them. That is by design.`},
-
-  {t:"Privacy Protection",d:"Keeping our names off public records",s:`Chapter 4. Privacy Protection.
-
-We are a faceless brand. Here is how we protect our privacy at every level.
-
-Step one: Opus Virtual Offices at opus virtual offices dot com. For 99 dollars per month, we get a real commercial street address, a live receptionist who answers calls as Digital Bloom, a dedicated business phone number, and mail handling. Opus also reports our monthly payments to business credit bureaus. We build business credit just by paying rent.
-
-Step two: Northwest Registered Agent for 49 dollars per year. This replaces Gamble's personal address on public state records. Their address shows up on public records instead of his.
-
-Step three: The Trust. Once we form our trust we transfer our LLC membership into it. The trust becomes the visible owner. Our names disappear from the ownership record.
-
-Step four: Every future contract and agreement gets signed as Creative Vision LLC. Never our personal names.`},
-
-  {t:"Banking Action Plan",d:"Opening accounts in the right order",s:`Chapter 5. The Banking Action Plan.
-
-Here is the exact order. Do not skip steps.
-
-Step one: Sign up for Opus Virtual Offices. Get the Charlotte North Carolina address to match our existing filings. Do this first.
-
-Step two: Open a Mercury business bank account at mercury dot com. Use the Opus address. Free. No monthly fees. Instant virtual debit card. Connects directly to Stripe. Once open, add the card to Apple Pay and Stripe switches from test mode to live mode. Real money starts flowing.
-
-Step three: Open a BlueVine account at bluevine dot com for the future line of credit up to 250 thousand dollars. Tboo recommended this one. Open the account now and apply for the credit line once revenue flows.
-
-Step four: Navy Federal Credit Union for long-term banking. Tboo has an account and can refer us. Gamble's mom is retired military so Gamble also qualifies. Clarify Gamble's past account situation before opening a new one.`},
-
-  {t:"Building Business Credit",d:"The Net 30 strategy",s:`Chapter 6. Building Business Credit.
-
-Business credit belongs to Creative Vision LLC, not to us personally. This is how we access capital without touching our personal credit.
-
-First, register for a DUNS number at D and B dot com. Free. Takes 30 days to activate.
-
-Then open these three Net 30 accounts in the same week after Mercury is open.
-
-Number one: Uline. That is U-L-I-N-E dot com. The gold standard. Reports to Dun and Bradstreet, Experian Business, and Equifax Business. Three bureaus at once. Order something small. Pay immediately.
-
-Number two: Quill. That is Q-U-I-L-L dot com. Owned by Staples. Reports to D and B and Experian. Order something small. Pay immediately.
-
-Number three: Crown Office Supplies. Designed specifically for new businesses with zero credit history. Reports to all four major business credit bureaus. Easiest approval.
-
-The rule is simple. Order something small every month. Pay immediately. Within 60 to 90 days your business credit profile is established. And remember, Opus reports to credit bureaus every month. So just paying for our virtual office builds our credit automatically.`},
-
-  {t:"Grants & Free Money",d:"Money you don't have to pay back",s:`Chapter 7. Grants and Free Money.
-
-As a minority-owned and women-owned digital media business, we qualify for grants most people never apply for because they don't know they exist.
-
-Apply for these immediately.
-
-The Amber Grant at amber grant dot com. Ten thousand dollars given monthly to women in business. Apply every single month.
-
-Hello Alice at hello alice dot com. Grants specifically for minority and women entrepreneurs. Apply now.
-
-The Minority Business Development Agency at M-B-D-A dot gov. Federal agency for minority-owned businesses. Free consulting and funding connections.
-
-Get certified as a Minority Business Enterprise through NMSDC. And as a Women's Business Enterprise through WBENC. These certifications open doors to corporate contracts. Some Fortune 500 companies are required to spend a percentage of their budget with certified minority-owned businesses.
-
-Free money. No equity given up. No loans to pay back. Apply for all of them.`},
-
-  {t:"Life Insurance Strategy",d:"Protecting the business and building wealth",s:`Chapter 8. Life Insurance Strategy.
-
-This is the chapter most business owners skip. Do not skip it.
-
-First, term life insurance with a buy-sell agreement between us and Gamble. We each take out a life insurance policy on each other. If something happens to Gamble, the payout gives Akieia enough to buy out his share from his family. His family gets paid. The business continues. Without this, his family could legally claim half of everything we built. This costs about 30 to 50 dollars a month each.
-
-Second, an Indexed Universal Life policy. Also called an IUL. This is the wealth-building tool. It is life insurance that also builds cash value over time. That cash value grows based on the stock market going up but is protected from the market going down. The cash value grows tax free. You can borrow against it tax free. Think of it as building your own private bank.
-
-In 10 to 15 years, wealthy business owners use the IUL cash value to fund their own business opportunities instead of borrowing from banks. The earlier you start, the more powerful it becomes.`},
-
-  {t:"Video Production Workflow",d:"How to generate videos efficiently",s:`Chapter 9. The Video Production Workflow.
-
-Open the Prompt Engine at digitalbloom dot store forward slash prompt dash engine dot html. We have 229 prompts ready across 25 categories.
-
-Select a Signature Story prompt. Open Grok Imagine. Paste the prompt. Generate.
-
-Every prompt follows the GOAT Dad formula. Three clips. Ten seconds each. Clip one starts with: Motion begins immediately from frame one. Clip two continues with continuous movement. Clip three ends with: In the final three seconds motion gradually slows. Scene breathes and fades gently to warm golden light. Never abrupt.
-
-Download all three clips. Hit Upload Bloom in the Prompt Engine. The watermark burns in automatically. The video goes live on the site. Log it in the Video Inventory Tracker in Notion.
-
-Priority order: Mother's Day first, it is weeks away. Then Graduation, the season is right now. Then Father's Day in June. Then Juneteenth on June 19th. Then Weddings for summer. Then Birthdays, which are evergreen every day of the year.
-
-No people. No faces. Pure cinematic gifting experience. That is the Digital Bloom brand.`},
-
-  {t:"The Network & Launch Plan",d:"How we go from website to movement",s:`Chapter 10. The Network and Launch Plan.
-
-We are not just a website. We are a movement waiting to launch.
-
-Tboo, also known as Bump J, Terrence Boykin, is our brother. He is a Chicago rapper who appeared alongside Lil Durk on Kanye West's Vultures. The play is a Bump J times Digital Bloom collaboration. His own category on the platform. His fans send blooms using his music.
-
-Sean, our oldest brother, works at Sal Xco and manages major artists including The Weeknd. One post from The Weeknd changes everything.
-
-We have a custom original song cleared on April 14th 2026. We are holding the release for launch day.
-
-The launch plan is one coordinated drop. The site goes live. The bank account is open. Stripe is live. The song releases. The social media challenge launches. All on the same day.
-
-The challenge mechanic: Send a bloom to someone you appreciate. Post it publicly. Tag the person. Challenge three more people. The song plays in every post. Emotion spreads. Digital Bloom becomes a cultural moment.
-
-That is how we go from a website to a movement.`},
-
-  {t:"The Goal — Getting Out",d:"The number that changes everything",s:`Chapter 11. The Goal. Getting Out.
-
-This is the most important chapter. This is why we are doing all of this.
-
-The goal is freedom. Not rich in the flashy sense. Comfortable. Able to live without being under someone else's thumb. Without clocking in at 4:45 in the morning. Without the truck. Without the schedule someone else controls.
-
-Here is the number. When Digital Bloom generates 3,000 dollars a month consistently for 90 days, we put in our notice. Three thousand dollars covers the rent. Everything above that is freedom beginning.
-
-At an average sale of three dollars per bloom, that is 1,000 sales per month. 33 sales per day. That is the target.
-
-Every video we generate and upload is another product that can be sold. Every category we complete is another reason for someone to come to the site. Every holiday we have inventory for is a revenue window.
-
-Mother's Day is weeks away. That is the first real window. Every video uploaded before May 1st is a potential sale.
-
-The truck is funding the dream right now. Respect it for what it is. But set the date. Tell Gamble the number. Make it real.
-
-We are building something that lasts. Something that our kids will inherit. Something that runs without us eventually.
-
-That is the vision. Now let's get back to work.`}
+  {t:"The Goal — Getting Out",d:"The number that changes everything",s:`Chapter 11. The Goal. Getting Out.\n\nThis is the most important chapter. This is why we are doing all of this.\n\nThe goal is freedom. Not rich in the flashy sense. Comfortable. Able to live without being under someone else's thumb. Without clocking in at 4:45 in the morning. Without the truck. Without the schedule someone else controls.\n\nHere is the number. When Digital Bloom generates 3,000 dollars a month consistently for 90 days, we put in our notice. Three thousand dollars covers the rent. Everything above that is freedom beginning.\n\nAt an average sale of three dollars per bloom, that is 1,000 sales per month. 33 sales per day. That is the target.\n\nEvery video we generate and upload is another product that can be sold. Every category we complete is another reason for someone to come to the site. Every holiday we have inventory for is a revenue window.\n\nMother's Day is weeks away. That is the first real window. Every video uploaded before May 1st is a potential sale.\n\nThe truck is funding the dream right now. Respect it for what it is. But set the date. Tell Gamble the number. Make it real.\n\nWe are building something that lasts. Something that our kids will inherit. Something that runs without us eventually.\n\nThat is the vision. Now let's get back to work.`}
 ];
 
-let cur = -1, blobs = {}, playing = false, playAll = false, speed = 1;
+let cur = -1, blobs = {}, isPlaying = false, autoPlay = false, speed = 1;
 const audio = document.getElementById('audio');
-const playBtn = document.getElementById('playBtn');
 
-// Build waveform
-const wf = document.getElementById('waveform');
-for(let i=0;i<30;i++){const b=document.createElement('div');b.className='wbar';b.style.height=(Math.random()*18+4)+'px';wf.appendChild(b);}
-
-// Build chapters
+// Build chapter list
 const cl = document.getElementById('chList');
-chapters.forEach((ch,i)=>{
-  const c=document.createElement('div');
-  c.className='ch-card';c.id='ch-'+i;c.onclick=()=>sel(i);
-  c.innerHTML=`<div class="ch-num">${i+1}</div><div class="ch-info"><div class="ch-title">${ch.t}</div><div class="ch-desc">${ch.d}</div></div><div class="ch-tag" id="tag-${i}">Ready</div>`;
-  cl.appendChild(c);
+chapters.forEach((ch, i) => {
+  const div = document.createElement('div');
+  div.className = 'ch';
+  div.id = 'ch-' + i;
+  div.onclick = () => tapChapter(i);
+  div.innerHTML = `
+    <div class="ch-num">${i + 1}</div>
+    <div class="ch-info">
+      <div class="ch-title">${ch.t}</div>
+      <div class="ch-desc">${ch.d}</div>
+    </div>
+    <div class="ch-status ready" id="tag-${i}">Ready</div>`;
+  cl.appendChild(div);
 });
 
-function setS(m,t=''){document.getElementById('statusTxt').textContent=m;document.getElementById('dot').className='dot'+(t?' '+t:'');}
-function waveOn(on){document.querySelectorAll('.wbar').forEach(b=>{b.classList.toggle('active',on);if(!on)b.style.height=(Math.random()*18+4)+'px';});}
+// ===== CORE: Tap chapter = select + play =====
+async function tapChapter(i) {
+  // Highlight immediately
+  document.querySelectorAll('.ch').forEach(c => c.classList.remove('active', 'playing'));
+  document.getElementById('ch-' + i).classList.add('active');
+  cur = i;
+  updateBar(chapters[i].t, `Chapter ${i + 1} of ${chapters.length}`);
 
-async function fetchAudio(i){
-  if(blobs[i])return blobs[i];
-  setS(`Loading chapter ${i+1}...`,'loading');
-  document.getElementById('tag-'+i).textContent='Loading...';
-  const r=await fetch(TTS_API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:chapters[i].s})});
-  if(!r.ok)throw new Error('API error '+r.status);
-  const blob=await r.blob();
-  const url=URL.createObjectURL(blob);
-  blobs[i]=url;
-  document.getElementById('tag-'+i).textContent='✓ Ready';
+  // Fetch and play
+  try {
+    const url = await fetchAudio(i);
+    audio.src = url;
+    audio.playbackRate = speed;
+    await audio.play();
+    setPlaying(true);
+    document.getElementById('ch-' + i).classList.add('playing');
+    setTag(i, 'Playing', 'playing');
+    // Prefetch next
+    if (i < chapters.length - 1 && !blobs[i + 1]) fetchAudio(i + 1).catch(() => {});
+  } catch (e) {
+    showToast('Error loading audio');
+  }
+}
+
+async function fetchAudio(i) {
+  if (blobs[i]) return blobs[i];
+  setTag(i, 'Loading…', 'loading');
+  const r = await fetch(TTS_API, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ text: chapters[i].s }),
+  });
+  if (!r.ok) throw new Error('API error ' + r.status);
+  const blob = await r.blob();
+  const url = URL.createObjectURL(blob);
+  blobs[i] = url;
+  setTag(i, '✓ Ready', 'done');
   return url;
 }
 
-async function sel(i){
-
-  document.querySelectorAll('.ch-card').forEach(c=>c.classList.remove('active','playing'));
-  document.getElementById('ch-'+i).classList.add('active');
-  cur=i;
-  document.getElementById('npTitle').textContent=`${i+1}. ${chapters[i].t}`;
-  audio.pause();playing=false;waveOn(false);playBtn.textContent='▶';
-  try{const url=await fetchAudio(i);audio.src=url;audio.playbackRate=speed;setS(`Chapter ${i+1} ready — tap play`,'on');}
-  catch(e){setS('Error loading audio. Check your API key.','err');}
+function togglePlay() {
+  if (cur === -1) { tapChapter(0); return; }
+  if (isPlaying) {
+    audio.pause();
+    setPlaying(false);
+  } else {
+    audio.playbackRate = speed;
+    audio.play();
+    setPlaying(true);
+  }
 }
 
-async function doPlay(){
-  try{
-    if(!audio.src||audio.src===window.location.href){const url=await fetchAudio(cur);audio.src=url;}
-    audio.playbackRate=speed;await audio.play();
-    playing=true;playBtn.textContent='⏸';waveOn(true);
-    document.querySelectorAll('.ch-card').forEach(c=>c.classList.remove('playing'));
-    document.getElementById('ch-'+cur).classList.add('playing');
-    const tag=document.getElementById('tag-'+cur);tag.textContent='Playing';tag.className='ch-tag playing';
-    setS(`Playing: ${chapters[cur].t}`,'on');
-    // Pre-fetch next chapter while this one plays
-    if(cur<chapters.length-1 && !blobs[cur+1]) fetchAudio(cur+1).catch(()=>{});
-  }catch(e){setS('Playback error. Try again.','err');}
+function setPlaying(on) {
+  isPlaying = on;
+  document.getElementById('barPlay').textContent = on ? '⏸' : '▶';
+  if (cur >= 0) {
+    if (on) {
+      setTag(cur, 'Playing', 'playing');
+      document.getElementById('ch-' + cur).classList.add('playing');
+    } else {
+      setTag(cur, 'Paused', 'ready');
+      document.getElementById('ch-' + cur).classList.remove('playing');
+    }
+  }
 }
 
-async function togglePlay(){
-
-  if(cur===-1){await sel(0);await doPlay();return;}
-  if(playing){audio.pause();playing=false;playBtn.textContent='▶';waveOn(false);setS('Paused','');}
-  else{await doPlay();}
-}
-
-audio.addEventListener('ended',async()=>{
-  playing=false;playBtn.textContent='▶';waveOn(false);
-  if(cur>=0){const tag=document.getElementById('tag-'+cur);tag.textContent='✓ Done';tag.className='ch-tag';}
-  document.querySelectorAll('.ch-card').forEach(c=>c.classList.remove('playing'));
-  if(playAll&&cur<chapters.length-1){await sel(cur+1);await doPlay();}
-  else if(playAll){playAll=false;setS('Guide complete! Great session.','on');}
+// When chapter ends
+audio.addEventListener('ended', async () => {
+  setPlaying(false);
+  if (cur >= 0) { setTag(cur, '✓ Done', 'done'); document.getElementById('ch-' + cur).classList.remove('playing'); }
+  if (autoPlay && cur < chapters.length - 1) {
+    await tapChapter(cur + 1);
+  } else if (autoPlay) {
+    autoPlay = false;
+    showToast('Guide complete!');
+  }
 });
 
-async function togglePlayAll(){
+async function prev() { if (cur > 0) await tapChapter(cur - 1); }
+async function next() { if (cur < chapters.length - 1) await tapChapter(cur + 1); }
 
-  playAll=true;await sel(0);await doPlay();
+function cycleSpeed() {
+  const speeds = [1, 1.25, 1.5, 1.75, 2];
+  speed = speeds[(speeds.indexOf(speed) + 1) % speeds.length];
+  audio.playbackRate = speed;
+  document.getElementById('barSpeed').textContent = speed + '×';
 }
 
-async function prev(){if(cur>0){await sel(cur-1);if(playing)await doPlay();}}
-async function next(){if(cur<chapters.length-1){await sel(cur+1);if(playing)await doPlay();}}
-
-function cycleSpeed(){
-  const s=[1,1.25,1.5,1.75,2];
-  speed=s[(s.indexOf(speed)+1)%s.length];
-  audio.playbackRate=speed;
-  document.getElementById('speedBtn').textContent=speed+'x';
+function playAllChapters() {
+  autoPlay = true;
+  tapChapter(0);
 }
 
-function driverMode(){
-  document.body.style.fontSize='24px';
-  document.querySelector('.header h1').style.fontSize='52px';
-  document.querySelectorAll('.ch-title').forEach(e=>e.style.fontSize='28px');
-  document.querySelectorAll('.ch-desc').forEach(e=>e.style.fontSize='20px');
-  document.querySelectorAll('.ch-num').forEach(e=>{e.style.width='52px';e.style.height='52px';e.style.fontSize='20px';});
-  document.getElementById('npTitle').style.fontSize='44px';
-  document.querySelector('.np-label').style.fontSize='14px';
-  document.querySelector('.play-btn').style.width='72px';
-  document.querySelector('.play-btn').style.height='72px';
-  document.querySelector('.play-btn').style.fontSize='28px';
-  document.querySelectorAll('.big-btn').forEach(e=>e.style.fontSize='20px');
-  document.querySelectorAll('.ch-tag').forEach(e=>e.style.fontSize='14px');
-  playAll=true;
-  if(cur===-1)togglePlay();
-  setS('🚛 Driver Mode — large text, auto-continue','on');
+function toggleDriverMode() {
+  document.body.classList.toggle('driver');
+  // Update bottom bar padding
+  const isDriver = document.body.classList.contains('driver');
+  document.body.style.paddingBottom = isDriver ? '130px' : '';
+  showToast(isDriver ? '🚛 Driver Mode ON' : 'Driver Mode OFF');
 }
 
-document.getElementById('playAllBtn').onclick=togglePlayAll;
+// ===== HELPERS =====
+function updateBar(title, sub) {
+  document.getElementById('barTitle').textContent = title;
+  document.getElementById('barSub').textContent = sub;
+}
 
-// Pre-fetch first 3 chapters immediately on page load
-(async function prefetchInit(){
-  for(let i=0;i<Math.min(3,chapters.length);i++){
-    fetchAudio(i).catch(()=>{});
+function setTag(i, text, cls) {
+  const el = document.getElementById('tag-' + i);
+  if (el) { el.textContent = text; el.className = 'ch-status ' + cls; }
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+// Pre-fetch first 3 chapters on load
+(async () => {
+  for (let i = 0; i < Math.min(3, chapters.length); i++) {
+    fetchAudio(i).catch(() => {});
   }
 })();
 </script>
