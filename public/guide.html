@@ -80,18 +80,9 @@
     <p>Driver's Audio Guide — AK & Gamble</p>
   </div>
 
-  <div class="api-box">
-    <h3>🔑 ElevenLabs Setup — Your Cloned Voice</h3>
-    <div class="api-row">
-      <input type="password" class="api-input" id="apiKey" placeholder="Paste your ElevenLabs API key here..."/>
-      <button class="save-btn" onclick="saveKey()">Save Key</button>
-    </div>
-    <p class="api-note">Voice ID: mOBAekTJFm2VaK96eghn — your cloned voice. Key saved locally, never shared.</p>
-  </div>
-
   <div class="status-bar">
-    <div class="dot" id="dot"></div>
-    <span id="statusTxt">Enter your ElevenLabs API key above to activate audio</span>
+    <div class="dot on" id="dot"></div>
+    <span id="statusTxt">Ready — tap a chapter or press Play All</span>
   </div>
 
   <div class="player">
@@ -100,13 +91,13 @@
     <div class="waveform" id="waveform"></div>
     <div class="controls">
       <button class="ctrl-btn" onclick="prev()">⏮</button>
-      <button class="play-btn" id="playBtn" onclick="togglePlay()" disabled>▶</button>
+      <button class="play-btn" id="playBtn" onclick="togglePlay()">▶</button>
       <button class="ctrl-btn" onclick="next()">⏭</button>
       <button class="speed-btn" id="speedBtn" onclick="cycleSpeed()">1x</button>
     </div>
   </div>
 
-  <button class="big-btn gold" id="playAllBtn" onclick="playAll()" disabled>▶ Play Complete Guide From Start</button>
+  <button class="big-btn gold" id="playAllBtn" onclick="playAll()">▶ Play Complete Guide From Start</button>
   <button class="big-btn outline" onclick="driverMode()">🚛 Driver Mode — Large Text + Auto-Continue</button>
 
   <div class="ch-label">11 CHAPTERS — TAP ANY TO PLAY</div>
@@ -118,8 +109,7 @@
 </div>
 
 <script>
-const VOICE = 'mOBAekTJFm2VaK96eghn';
-const API = 'https://api.elevenlabs.io/v1/text-to-speech/';
+const TTS_API = '/api/tts';
 
 const chapters = [
   {t:"Who We Are",d:"Creative Vision LLC & Digital Bloom",s:`Good morning. This is your Digital Bloom business audio guide. Let's start with who we are.
@@ -274,7 +264,6 @@ That is the vision. Now let's get back to work.`}
 ];
 
 let cur = -1, blobs = {}, playing = false, playAll = false, speed = 1;
-let elKey = localStorage.getItem('el_key') || '';
 const audio = document.getElementById('audio');
 const playBtn = document.getElementById('playBtn');
 
@@ -291,24 +280,14 @@ chapters.forEach((ch,i)=>{
   cl.appendChild(c);
 });
 
-if(elKey){document.getElementById('apiKey').value='••••••••••••••';playBtn.disabled=false;document.getElementById('playAllBtn').disabled=false;setS('Ready — tap a chapter or press Play All','on');}
-
 function setS(m,t=''){document.getElementById('statusTxt').textContent=m;document.getElementById('dot').className='dot'+(t?' '+t:'');}
 function waveOn(on){document.querySelectorAll('.wbar').forEach(b=>{b.classList.toggle('active',on);if(!on)b.style.height=(Math.random()*18+4)+'px';});}
-
-function saveKey(){
-  const k=document.getElementById('apiKey').value.trim();
-  if(!k){setS('Please enter your ElevenLabs API key','err');return;}
-  elKey=k;localStorage.setItem('el_key',k);
-  playBtn.disabled=false;document.getElementById('playAllBtn').disabled=false;
-  setS('API key saved. Ready to play!','on');
-}
 
 async function fetchAudio(i){
   if(blobs[i])return blobs[i];
   setS(`Loading chapter ${i+1}...`,'loading');
   document.getElementById('tag-'+i).textContent='Loading...';
-  const r=await fetch(API+VOICE,{method:'POST',headers:{'xi-api-key':elKey,'Content-Type':'application/json'},body:JSON.stringify({text:chapters[i].s,model_id:'eleven_multilingual_v2',voice_settings:{stability:.35,similarity_boost:.92,style:.45,use_speaker_boost:true}})});
+  const r=await fetch(TTS_API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:chapters[i].s})});
   if(!r.ok)throw new Error('API error '+r.status);
   const blob=await r.blob();
   const url=URL.createObjectURL(blob);
@@ -318,7 +297,7 @@ async function fetchAudio(i){
 }
 
 async function sel(i){
-  if(!elKey){setS('Enter your ElevenLabs API key first','err');return;}
+
   document.querySelectorAll('.ch-card').forEach(c=>c.classList.remove('active','playing'));
   document.getElementById('ch-'+i).classList.add('active');
   cur=i;
@@ -341,7 +320,7 @@ async function doPlay(){
 }
 
 async function togglePlay(){
-  if(!elKey){setS('Enter your ElevenLabs API key first','err');return;}
+
   if(cur===-1){await sel(0);await doPlay();return;}
   if(playing){audio.pause();playing=false;playBtn.textContent='▶';waveOn(false);setS('Paused','');}
   else{await doPlay();}
@@ -356,7 +335,7 @@ audio.addEventListener('ended',async()=>{
 });
 
 async function togglePlayAll(){
-  if(!elKey){setS('Enter your ElevenLabs API key first','err');return;}
+
   playAll=true;await sel(0);await doPlay();
 }
 
