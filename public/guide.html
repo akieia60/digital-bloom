@@ -316,6 +316,8 @@ async function doPlay(){
     document.getElementById('ch-'+cur).classList.add('playing');
     const tag=document.getElementById('tag-'+cur);tag.textContent='Playing';tag.className='ch-tag playing';
     setS(`Playing: ${chapters[cur].t}`,'on');
+    // Pre-fetch next chapter while this one plays
+    if(cur<chapters.length-1 && !blobs[cur+1]) fetchAudio(cur+1).catch(()=>{});
   }catch(e){setS('Playback error. Try again.','err');}
 }
 
@@ -350,17 +352,31 @@ function cycleSpeed(){
 }
 
 function driverMode(){
-  document.body.style.fontSize='18px';
-  document.querySelector('.header h1').style.fontSize='36px';
-  document.querySelectorAll('.ch-title').forEach(e=>e.style.fontSize='17px');
-  document.querySelectorAll('.ch-desc').forEach(e=>e.style.fontSize='14px');
-  document.getElementById('npTitle').style.fontSize='26px';
+  document.body.style.fontSize='24px';
+  document.querySelector('.header h1').style.fontSize='52px';
+  document.querySelectorAll('.ch-title').forEach(e=>e.style.fontSize='28px');
+  document.querySelectorAll('.ch-desc').forEach(e=>e.style.fontSize='20px');
+  document.querySelectorAll('.ch-num').forEach(e=>{e.style.width='52px';e.style.height='52px';e.style.fontSize='20px';});
+  document.getElementById('npTitle').style.fontSize='44px';
+  document.querySelector('.np-label').style.fontSize='14px';
+  document.querySelector('.play-btn').style.width='72px';
+  document.querySelector('.play-btn').style.height='72px';
+  document.querySelector('.play-btn').style.fontSize='28px';
+  document.querySelectorAll('.big-btn').forEach(e=>e.style.fontSize='20px');
+  document.querySelectorAll('.ch-tag').forEach(e=>e.style.fontSize='14px');
   playAll=true;
   if(cur===-1)togglePlay();
-  setS('Driver Mode — large text, auto-continue between chapters','on');
+  setS('🚛 Driver Mode — large text, auto-continue','on');
 }
 
 document.getElementById('playAllBtn').onclick=togglePlayAll;
+
+// Pre-fetch first 3 chapters immediately on page load
+(async function prefetchInit(){
+  for(let i=0;i<Math.min(3,chapters.length);i++){
+    fetchAudio(i).catch(()=>{});
+  }
+})();
 </script>
 </body>
 </html>
