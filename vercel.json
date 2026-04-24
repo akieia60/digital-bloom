@@ -51,6 +51,10 @@
   ],
   "rewrites": [
     {
+      "source": "/guide",
+      "destination": "/guide.html"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }
