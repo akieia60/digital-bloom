@@ -36,8 +36,8 @@
   .np-title{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:400;margin-bottom:18px;min-height:28px;}
   .waveform{display:flex;align-items:center;gap:3px;height:40px;margin-bottom:18px;}
   .wbar{flex:1;background:rgba(212,175,55,0.2);border-radius:2px;transition:height .1s;min-height:3px;}
-  .wbar.active{background:var(--gold);animation:wave .8s ease-in-out infinite;}
-  .wbar:nth-child(2n).active{animation-delay:.1s;}.wbar:nth-child(3n).active{animation-delay:.2s;}.wbar:nth-child(4n).active{animation-delay:.15s;}
+  .wbar.active{background:var(--gold);}
+  .wbar:nth-child(2n).active{opacity:.85;}.wbar:nth-child(3n).active{opacity:.7;}.wbar:nth-child(4n).active{opacity:.9;}
   @keyframes wave{0%,100%{height:6px;}50%{height:32px;}}
   .controls{display:flex;align-items:center;gap:14px;}
   .ctrl-btn{background:none;border:none;color:var(--gray);cursor:pointer;font-size:20px;padding:8px;border-radius:8px;transition:all .2s;line-height:1;}
@@ -308,7 +308,7 @@ async function fetchAudio(i){
   if(blobs[i])return blobs[i];
   setS(`Loading chapter ${i+1}...`,'loading');
   document.getElementById('tag-'+i).textContent='Loading...';
-  const r=await fetch(API+VOICE,{method:'POST',headers:{'xi-api-key':elKey,'Content-Type':'application/json'},body:JSON.stringify({text:chapters[i].s,model_id:'eleven_turbo_v2',voice_settings:{stability:.5,similarity_boost:.85,style:.2,use_speaker_boost:true}})});
+  const r=await fetch(API+VOICE,{method:'POST',headers:{'xi-api-key':elKey,'Content-Type':'application/json'},body:JSON.stringify({text:chapters[i].s,model_id:'eleven_multilingual_v2',voice_settings:{stability:.35,similarity_boost:.92,style:.45,use_speaker_boost:true}})});
   if(!r.ok)throw new Error('API error '+r.status);
   const blob=await r.blob();
   const url=URL.createObjectURL(blob);
