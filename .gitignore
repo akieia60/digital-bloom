@@ -48,3 +48,4 @@ service-account*.json
 # Stripe setup output (contains product/price IDs — add to .env instead)
 stripe-product-ids.json
 .env*.local
+.api-keys
