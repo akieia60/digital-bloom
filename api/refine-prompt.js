@@ -109,7 +109,12 @@ Transform this raw idea into a polished Digital Bloom 3-scene video prompt. The 
     if (!anthropicRes.ok) {
       const errBody = await anthropicRes.text();
       console.error('[refine-prompt] Anthropic error:', errBody);
-      return res.status(502).json({ error: 'AI service error. Check your API key and try again.' });
+      let userMsg = 'AI service error. Check your API key and try again.';
+      try {
+        const errJson = JSON.parse(errBody);
+        if (errJson?.error?.message) userMsg = errJson.error.message;
+      } catch (_) {}
+      return res.status(502).json({ error: userMsg });
     }
 
     const data = await anthropicRes.json();
