@@ -611,11 +611,49 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
               <span className="customizer-hint">{t('customize_font_hint')}</span>
             </div>
 
-            {/* Text color swatches removed per Gamble's 2026-04-26 note: the
-                color picker clashed with the bloom palette and was redirecting
-                customer attention away from font/size/effects (which are the
-                real differentiators). The brand stays readable in white;
-                keep the customizer focused on what actually matters. */}
+            {/* Text color swatches — customer picks the color of their
+                message text. (Restored after a clarification from Gamble on
+                2026-04-26: the color block we should remove is the Color Mood
+                grid in the Frame step, NOT this one. Customers DO want to
+                pick the color of their writing.) */}
+            <div className="customizer-field">
+              <label className="customizer-label">{t('customize_text_color_label')}</label>
+              <div className="customizer-color-swatches">
+                {[
+                  { hex: '#FFFFFF', label: t('customize_color_white') },
+                  { hex: '#F5E6CC', label: t('customize_color_cream') },
+                  { hex: '#D4AF37', label: t('customize_color_gold') },
+                  { hex: '#F2A8B8', label: t('customize_color_blush') },
+                  { hex: '#A8D0F0', label: t('customize_color_sky') },
+                  { hex: '#A8D8B0', label: t('customize_color_sage') },
+                  { hex: '#C8AEE8', label: t('customize_color_lavender') },
+                  { hex: '#F4C4A0', label: t('customize_color_peach') },
+                  { hex: '#1D1D1F', label: t('customize_color_charcoal') },
+                  { hex: '#1B2A4A', label: t('customize_color_navy') },
+                  { hex: '#4A5568', label: t('customize_color_slate') },
+                  { hex: '#5C1A2A', label: t('customize_color_burgundy') },
+                  { hex: '#1A3C2A', label: t('customize_color_forest') },
+                  { hex: '#8B7355', label: t('customize_color_bronze') },
+                ].map(({ hex, label }) => (
+                  <button
+                    key={hex}
+                    type="button"
+                    aria-label={label}
+                    title={label}
+                    onClick={() => setMessageTextColor(hex)}
+                    style={{
+                      width: '32px', height: '32px', borderRadius: '50%',
+                      background: hex, border: '1.5px solid rgba(255,255,255,0.18)', cursor: 'pointer', flexShrink: 0,
+                      boxShadow: messageTextColor === hex
+                        ? `0 0 0 2px #0D1B36, 0 0 0 4px ${hex === '#1D1D1F' || hex === '#1B2A4A' || hex === '#1A3C2A' ? '#D4AF37' : hex}`
+                        : '0 1px 4px rgba(0,0,0,0.3)',
+                      transform: messageTextColor === hex ? 'scale(1.15)' : 'scale(1)',
+                      transition: 'box-shadow 0.15s, transform 0.15s',
+                    }}
+                  />
+                ))}
+              </div>
+            </div>
 
             {/* Bold toggle */}
             <div className="customizer-field">
@@ -760,37 +798,11 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
               <span className="customizer-section__number">2</span>
               <h3 className="customizer-section__title">{t('customize_style')}</h3>
             </div>
-            <div className="customizer-label customizer-label--caps" style={{ marginBottom: '10px' }}>Color Mood</div>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
-              {allPalettes.map((palette) => (
-                <button
-                  key={palette.id}
-                  type="button"
-                  onClick={() => applyPalette(palette.id)}
-                  aria-pressed={colorTheme === palette.id}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '10px',
-                    padding: '10px 12px',
-                    borderRadius: '12px',
-                    border: `2px solid ${colorTheme === palette.id ? '#D4AF37' : 'rgba(13,27,54,0.18)'}`,
-                    background: colorTheme === palette.id ? 'rgba(212,175,55,0.1)' : 'rgba(13,27,54,0.04)',
-                    cursor: 'pointer',
-                    transition: 'all 0.18s',
-                    textAlign: 'left',
-                  }}
-                >
-                  <div style={{ display: 'flex', gap: '4px', flexShrink: 0 }}>
-                    <span style={{ width: '16px', height: '16px', borderRadius: '50%', background: palette.primaryColor, display: 'inline-block', border: '1px solid rgba(0,0,0,0.1)' }} />
-                    <span style={{ width: '16px', height: '16px', borderRadius: '50%', background: palette.accentColor, display: 'inline-block', border: '1px solid rgba(0,0,0,0.1)' }} />
-                  </div>
-                  <span style={{ fontFamily: 'Outfit, sans-serif', fontSize: '0.82rem', fontWeight: '600', color: colorTheme === palette.id ? '#D4AF37' : '#1D1D1F', letterSpacing: '0.02em', lineHeight: 1.2 }}>
-                    {palette.label}
-                  </span>
-                </button>
-              ))}
-            </div>
+            {/* Color Mood palette grid removed per Gamble's clarification on
+                2026-04-26: it didn't change the bloom in a way customers
+                noticed and competed for screen real estate with the things
+                that DO matter (engraving finish, frame, font, effects).
+                The default palette stays beautiful as-is. */}
 
             {/* Engraving finish */}
             <div className="customizer-section__subgroup" style={{ marginTop: '18px' }}>
