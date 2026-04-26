@@ -271,6 +271,53 @@ export const MESSAGE_FONT_OPTIONS = {
     previewLetterSpacing: '0.02em',
     renderFont: 'Script',
   },
+  // Added 2026-04-26 per Gamble — popular options people gravitate toward
+  // for invitations, memorials, and Mother's-Day-style cards.
+  sacramento: {
+    label: 'Elegant Cursive',
+    previewFamily: "'Sacramento', cursive",
+    previewWeight: 400,
+    previewFontStyle: 'normal',
+    previewTransform: 'none',
+    previewLetterSpacing: '0.02em',
+    renderFont: 'Script',
+  },
+  allura: {
+    label: 'Luxe Calligraphy',
+    previewFamily: "'Allura', cursive",
+    previewWeight: 400,
+    previewFontStyle: 'normal',
+    previewTransform: 'none',
+    previewLetterSpacing: '0.03em',
+    renderFont: 'Script',
+  },
+  italianno: {
+    label: 'Formal Calligraphy',
+    previewFamily: "'Italianno', cursive",
+    previewWeight: 400,
+    previewFontStyle: 'normal',
+    previewTransform: 'none',
+    previewLetterSpacing: '0.04em',
+    renderFont: 'Script',
+  },
+  caveat: {
+    label: 'Handwritten',
+    previewFamily: "'Caveat', cursive",
+    previewWeight: 500,
+    previewFontStyle: 'normal',
+    previewTransform: 'none',
+    previewLetterSpacing: '0.01em',
+    renderFont: 'Script',
+  },
+  marcellus: {
+    label: 'Roman Serif',
+    previewFamily: "'Marcellus', Georgia, serif",
+    previewWeight: 400,
+    previewFontStyle: 'normal',
+    previewTransform: 'none',
+    previewLetterSpacing: '0.03em',
+    renderFont: 'Serif',
+  },
 };
 
 const TEXT_POSITIONS = {
