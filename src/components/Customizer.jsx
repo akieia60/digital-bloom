@@ -508,51 +508,43 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
               <span className="customizer-hint">{message.short.length}/150 · drag on preview to position</span>
             </div>
 
-            {/* Category-aware slogan selector — tap/select to ADD to message, not replace */}
+            {/* Quick-phrase chips — tap any chip to append it to the message above.
+                Customers can stack as many as they want; chips never replace the
+                typed message, they only add to it. Replaces an earlier dropdown
+                that hid the multi-select capability behind a "pick one" affordance. */}
             <div className="customizer-slogan-selector">
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '6px' }}>
-                <label className="customizer-label" htmlFor="cust-slogan-select" style={{ margin: 0 }}>
+              <div className="customizer-chip-header">
+                <label className="customizer-label customizer-chip-label">
                   {OCCASIONS[category || product?.category]
-                    ? `${OCCASIONS[category || product?.category].emoji || '🌸'} Add to message`
-                    : 'Add to message'}
+                    ? `${OCCASIONS[category || product?.category].emoji || '🌸'} Quick phrases — tap to add`
+                    : '🌸 Quick phrases — tap to add'}
                 </label>
                 {message.short.length > 0 && (
                   <button
                     type="button"
+                    className="customizer-chip-clear"
                     onClick={() => handleMessageChange('short', '')}
-                    style={{
-                      background: 'none',
-                      border: 'none',
-                      color: 'rgba(255,255,255,0.4)',
-                      fontSize: '11px',
-                      cursor: 'pointer',
-                      letterSpacing: '0.05em',
-                      textDecoration: 'underline',
-                      padding: '0',
-                    }}
                   >
-                    Clear
+                    Clear message
                   </button>
                 )}
               </div>
-              <select
-                id="cust-slogan-select"
-                className="customizer-select"
-                value=""
-                onChange={(e) => {
-                  if (e.target.value) {
-                    appendSlogan(e.target.value);
-                    e.target.value = '';
-                  }
-                }}
-              >
-                <option value="">Pick a phrase to add…</option>
+              <div className="customizer-chip-grid" role="list">
                 {sloganPresets.map((slogan, i) => (
-                  <option key={i} value={slogan}>{slogan}</option>
+                  <button
+                    key={i}
+                    type="button"
+                    role="listitem"
+                    className="customizer-chip"
+                    onClick={() => appendSlogan(slogan)}
+                    aria-label={`Add "${slogan}" to your message`}
+                  >
+                    {slogan}
+                  </button>
                 ))}
-              </select>
-              <p style={{ fontSize: '11px', color: 'rgba(255,255,255,0.35)', margin: '4px 0 8px', letterSpacing: '0.02em' }}>
-                Each selection adds to your message — mix and match
+              </div>
+              <p className="customizer-chip-hint">
+                Tap any phrase to add it to your message above. Stack as many as you like — or skip and write your own.
               </p>
             </div>
 
