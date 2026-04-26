@@ -200,7 +200,7 @@ body{font-family:'Outfit',sans-serif;background:var(--navy);color:var(--white);m
 .upload-status.live{color:var(--green);font-weight:700}
 .upload-status.error{color:var(--red)}
 .bloom-preview-zone{display:none;padding:0 12px 12px;flex-direction:column;gap:8px}
-.bloom-preview-zone[data-loaded="true"]{display:flex}
+.bloom-preview-zone--ready{display:flex}
 .bloom-preview-zone__label{font-size:0.74rem;color:var(--gold);font-weight:700;text-align:center;letter-spacing:0.04em;text-transform:uppercase}
 .bloom-preview-video{width:100%;max-height:280px;border-radius:10px;background:#000;outline:1px solid var(--gold3);outline-offset:-1px}
 .btn-use-render{width:100%;padding:11px 0;background:linear-gradient(135deg,var(--gold) 0%,#b89320 100%);border:none;border-radius:10px;color:#1a1a1a;font-weight:700;font-size:0.86rem;cursor:pointer;font-family:'Outfit',sans-serif;transition:transform 0.1s}
@@ -1695,6 +1695,7 @@ function normalizeCustomPromptRecord(record){
     cloudCreatedBy:record.cloudCreatedBy || record.createdBy || '',
     cloudUpdatedBy:record.cloudUpdatedBy || record.updatedBy || '',
     storageOrigin:record.storageOrigin || 'local',
+    generationStatus:record.generationStatus || null,
   };
 }
 
@@ -1754,6 +1755,7 @@ function normalizeCloudPromptRow(row){
     cloudCreatedBy:row.created_by,
     cloudUpdatedBy:row.updated_by,
     storageOrigin:'cloud',
+    generationStatus:row.generation_status || null,
   });
 }
 
@@ -2919,20 +2921,24 @@ function cardHTML(p){
   </div>`;
 }
 
-// Renders the "Monique already rendered this" preview zone. The video tag
-// fires onloadedmetadata only when full.mp4 actually exists in storage; if
-// the file is 404 the zone stays hidden via the [data-loaded] attribute.
+// Renders the "Monique already rendered this" preview zone, but only for
+// prompts whose video-generator daemon row reports generation_status =
+// 'completed'. Earlier this zone tried to autodetect the file by firing
+// preload="metadata" on every card — at 40 Mother's Day cards × 1
+// background fetch each, iOS Safari would tile-render and go blank as
+// Ak scrolled. Gating up front means at most 8 video tags exist on a
+// typical Mother's Day session. preload="none" defers the network
+// further until she taps play.
 function bloomPreviewHTML(p, encTitle, encCat){
+  if(p.generationStatus !== 'completed') return '';
   const renderedUrl = `${SUPABASE_URL}/storage/v1/object/public/monique-videos/${p.id}/full.mp4`;
   return `
-    <div class="bloom-preview-zone" data-loaded="false" id="preview-${p.id}">
+    <div class="bloom-preview-zone bloom-preview-zone--ready" id="preview-${p.id}">
       <div class="bloom-preview-zone__label">🎬 Monique already rendered this — preview &amp; one-tap upload</div>
       <video class="bloom-preview-video"
         src="${renderedUrl}"
-        preload="metadata"
-        muted playsinline controls
-        onloadedmetadata="this.closest('.bloom-preview-zone').dataset.loaded='true'"
-        onerror="this.closest('.bloom-preview-zone').style.display='none'"></video>
+        preload="none"
+        muted playsinline controls></video>
       <button class="btn-use-render" onclick="useRenderedVideo('${p.id}','${encTitle}','${encCat}')">↑ Use This Render — Watermark &amp; Publish</button>
     </div>`;
 }
