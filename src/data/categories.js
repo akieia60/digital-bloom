@@ -45,6 +45,23 @@ export const CATEGORIES = [
     expectedPrompts: 14,
   },
   {
+    // Added 2026-04-26 — Monique started generating Graduation blooms
+    // (Gamble's "first gen college grad" + "single mom worked night
+    // school" seeds). expectedPrompts is 0 because Graduation prompts
+    // live in the database (Monique-generated), NOT as hardcoded entries
+    // in prompt-engine.html — so the validate-categories build guard
+    // isn't counting them. The publish flow needs this entry so cards
+    // with cat='Graduation' can route through process-bloom.js.
+    slug: 'graduation',
+    name: 'Graduation',
+    title: 'Graduation Blooms',
+    tagline: 'For every diploma earned the long way home.',
+    emoji: '🎓',
+    accent: '#D4AF37',
+    promptEngineLabels: ['Graduation'],
+    expectedPrompts: 0,
+  },
+  {
     slug: 'birthday',
     name: 'Birthday',
     title: 'Birthday Blooms',
