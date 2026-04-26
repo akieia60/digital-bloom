@@ -3,10 +3,36 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+<!-- Identity / iOS home-screen install -->
+<title>Bloom Briefing — Digital Bloom Audio Guide</title>
+<meta name="description" content="The Digital Bloom audio guide. Twelve plain-prose chapters of business briefings, session logs, and decisions read aloud by Web Speech — built for AK and Gamble to listen while driving.">
+<meta name="theme-color" content="#0D1B36">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="theme-color" content="#0D1B36">
-<title>Digital Bloom — Audio Guide</title>
+<meta name="apple-mobile-web-app-title" content="Bloom Briefing">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="application-name" content="Bloom Briefing">
+
+<!-- Icons — distinct from the main store so AK can tell them apart on her home screen.
+     Navy background + bloom mark + audio wave glyph rendered as a PNG for iOS plus an
+     SVG fallback for browsers that prefer it. -->
+<link rel="apple-touch-icon" sizes="180x180" href="/guide-icon-180.png">
+<link rel="icon" type="image/png" sizes="180x180" href="/guide-icon-180.png">
+<link rel="icon" type="image/svg+xml" href="/guide-icon.svg">
+
+<!-- Open Graph / share previews — when AK or Gamble shares the link in a text message,
+     iMessage / Telegram show the audio guide preview, not the main store preview. -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Digital Bloom">
+<meta property="og:title" content="Bloom Briefing — Digital Bloom Audio Guide">
+<meta property="og:description" content="Plain-prose chapters of Digital Bloom business briefings, read aloud. Driver Mode for hands-free listening.">
+<meta property="og:url" content="https://digitalbloom.store/guide">
+<meta property="og:image" content="https://digitalbloom.store/guide-icon-180.png">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Bloom Briefing — Digital Bloom Audio Guide">
+<meta name="twitter:description" content="Plain-prose chapters of Digital Bloom business briefings, read aloud. Driver Mode for hands-free listening.">
+<meta name="twitter:image" content="https://digitalbloom.store/guide-icon-180.png">
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
   :root{--navy:#0D1B36;--navy2:#101d38;--navy3:#162448;--gold:#D4AF37;--gold2:#E8C84A;--white:#F8F6F0;--gray:#8A8A9A;--green:#2ECC71;--red:#E74C3C;--bar-h:90px;}

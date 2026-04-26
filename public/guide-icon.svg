@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180">
+  <!-- Brand-aligned navy background (matches the guide page theme) -->
+  <rect width="180" height="180" rx="36" fill="#0D1B36"/>
+
+  <!-- Subtle gold gradient halo behind the bloom mark -->
+  <defs>
+    <radialGradient id="halo" cx="0.5" cy="0.45" r="0.6">
+      <stop offset="0" stop-color="#D4AF37" stop-opacity="0.18"/>
+      <stop offset="1" stop-color="#D4AF37" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <circle cx="90" cy="78" r="56" fill="url(#halo)"/>
+
+  <!-- Bloom mark — same lineage as the main store icon, scaled up -->
+  <g transform="translate(28, 8)" stroke="#D4AF37" fill="none" stroke-linecap="round">
+    <circle cx="62" cy="56" r="13" stroke-width="3.5"/>
+    <path d="M62 41C56 30 48 25 48 25C48 25 38 30 38 41C38 51 48 56 62 56" stroke-width="2.6"/>
+    <path d="M62 41C68 30 76 25 76 25C76 25 86 30 86 41C86 51 76 56 62 56" stroke-width="2.6"/>
+    <path d="M62 56C53 51 44 56 44 56C44 56 44 65 53 71C58 73 62 71 62 71" stroke-width="2.6"/>
+    <path d="M62 56C71 51 80 56 80 56C80 56 80 65 71 71C66 73 62 71 62 71" stroke-width="2.6"/>
+    <path d="M62 71V94" stroke-width="3.5"/>
+  </g>
+
+  <!-- Audio wave indicator — three arcs cascading below, signal that this is the audio briefing app -->
+  <g stroke="#D4AF37" fill="none" stroke-linecap="round">
+    <path d="M62 132 Q90 116 118 132" stroke-width="3" opacity="0.95"/>
+    <path d="M50 146 Q90 122 130 146" stroke-width="3" opacity="0.65"/>
+    <path d="M38 160 Q90 130 142 160" stroke-width="3" opacity="0.35"/>
+  </g>
+</svg>
