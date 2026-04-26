@@ -202,6 +202,8 @@ body{font-family:'Outfit',sans-serif;background:var(--navy);color:var(--white);m
 .bloom-preview-zone{display:none;padding:0 12px 12px;flex-direction:column;gap:8px}
 .bloom-preview-zone--ready{display:flex}
 .bloom-preview-zone__label{font-size:0.74rem;color:var(--gold);font-weight:700;text-align:center;letter-spacing:0.04em;text-transform:uppercase}
+.bloom-preview-zone__label--live{color:var(--green)}
+.bloom-preview-zone--live .bloom-preview-video{outline-color:rgba(34,197,94,0.35)}
 .bloom-preview-video{width:100%;max-height:280px;border-radius:10px;background:#000;outline:1px solid var(--gold3);outline-offset:-1px}
 .btn-use-render{width:100%;padding:11px 0;background:linear-gradient(135deg,var(--gold) 0%,#b89320 100%);border:none;border-radius:10px;color:#1a1a1a;font-weight:700;font-size:0.86rem;cursor:pointer;font-family:'Outfit',sans-serif;transition:transform 0.1s}
 .btn-use-render:active{transform:scale(0.98)}
@@ -2921,18 +2923,38 @@ function cardHTML(p){
   </div>`;
 }
 
-// Renders the "Monique already rendered this" preview zone, but only for
-// prompts whose video-generator daemon row reports generation_status =
-// 'completed'. Earlier this zone tried to autodetect the file by firing
-// preload="metadata" on every card — at 40 Mother's Day cards × 1
-// background fetch each, iOS Safari would tile-render and go blank as
-// Ak scrolled. Gating up front means at most 8 video tags exist on a
-// typical Mother's Day session. preload="none" defers the network
-// further until she taps play.
+// Inline video preview on each card — so Ak can scan the engine and
+// instantly see what's a finished bloom vs. what still needs work,
+// without leaving the page. Three states:
+//
+//   liveOnSite       → green strip showing the watermarked production
+//                      video (what customers actually see)
+//   monique render   → gold strip with the auto-generated stitched
+//                      video + the one-tap "watermark & publish" button
+//   neither          → no preview zone at all (card stays compact)
+//
+// When both exist, live wins — that's the truth of what's published.
+// preload="none" on every video so the engine doesn't fan out cell
+// network fetches just from rendering the page.
 function bloomPreviewHTML(p, encTitle, encCat){
-  if(p.generationStatus !== 'completed') return '';
-  const renderedUrl = `${SUPABASE_URL}/storage/v1/object/public/monique-videos/${p.id}/full.mp4`;
-  return `
+  const liveOnSite = isLiveOnSite(p);
+  const siteProduct = liveOnSite ? serverLiveSlugs[p.id] : null;
+  const liveVideoUrl = siteProduct?.video_url;
+
+  if(liveVideoUrl){
+    return `
+    <div class="bloom-preview-zone bloom-preview-zone--ready bloom-preview-zone--live" id="preview-${p.id}">
+      <div class="bloom-preview-zone__label bloom-preview-zone__label--live">✅ Live on site — watermarked version</div>
+      <video class="bloom-preview-video"
+        src="${liveVideoUrl}"
+        preload="none"
+        muted playsinline controls></video>
+    </div>`;
+  }
+
+  if(p.generationStatus === 'completed'){
+    const renderedUrl = `${SUPABASE_URL}/storage/v1/object/public/monique-videos/${p.id}/full.mp4`;
+    return `
     <div class="bloom-preview-zone bloom-preview-zone--ready" id="preview-${p.id}">
       <div class="bloom-preview-zone__label">🎬 Monique already rendered this — preview &amp; one-tap upload</div>
       <video class="bloom-preview-video"
@@ -2941,6 +2963,9 @@ function bloomPreviewHTML(p, encTitle, encCat){
         muted playsinline controls></video>
       <button class="btn-use-render" onclick="useRenderedVideo('${p.id}','${encTitle}','${encCat}')">↑ Use This Render — Watermark &amp; Publish</button>
     </div>`;
+  }
+
+  return '';
 }
 
 function transformerHTML(p){
