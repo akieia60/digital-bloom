@@ -2,7 +2,10 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>🌸 Digital Bloom — Prompt Engine</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -1667,8 +1670,16 @@ function inferBadgeForCategory(category){
 
 function normalizeCustomPromptRecord(record){
   if(!record || !record.id || !record.title || !record.cat || !Array.isArray(record.scenes)) return null;
+  // Monique's video-generator daemon writes scene bodies under the key
+  // `prompt`, while older prompts in this engine used `text`. Accept
+  // either so cloud rows from the daemon don't get silently dropped at
+  // normalization (which is what made all 23 of Monique's Mother's Day
+  // prompts disappear from the engine's view).
   const scenes = record.scenes
-    .map(scene => ({label:String(scene?.label || 'Original Prompt'), text:String(scene?.text || '').trim()}))
+    .map(scene => ({
+      label: String(scene?.label || 'Original Prompt'),
+      text: String(scene?.text || scene?.prompt || '').trim(),
+    }))
     .filter(scene => scene.text);
   if(!scenes.length) return null;
   return {
