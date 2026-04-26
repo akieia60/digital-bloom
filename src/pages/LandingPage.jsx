@@ -1,6 +1,7 @@
 import { lazy, Suspense } from 'react';
 import LandingNav from '../components/landing/LandingNav';
 import GradientHero from '../components/landing/GradientHero';
+import MothersDayCountdown from '../components/landing/MothersDayCountdown';
 import LazySection from '../components/LazySection';
 import '../styles/landing.css';
 import '../styles/landing-nav.css';
@@ -11,6 +12,9 @@ const LandingBelowFold = lazy(() => import('../components/landing/LandingBelowFo
 export default function LandingPage({ onOpenFaq }) {
   return (
     <div className="landing-page" style={{ background: '#0c1f3f' }}>
+      {/* Time-bounded urgency banner — auto-removes itself the day after
+          Mother's Day so the page doesn't go stale. */}
+      <MothersDayCountdown />
       <LandingNav onOpenFaq={onOpenFaq} />
       <GradientHero />
       <LazySection

@@ -1,0 +1,13 @@
+# Digital Bloom™ — robots.txt
+# Allow all well-behaved crawlers; point them at the sitemap.
+
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /admin
+Disallow: /founder-dashboard
+Disallow: /bloom/
+Disallow: /gift/
+
+# Sitemap (canonical domain)
+Sitemap: https://digitalbloom.store/sitemap.xml
