@@ -545,17 +545,19 @@
   transform: translateZ(0);
 }
 
+/* Per Gamble (2026-04-26): the brand watermark should be plain white
+   text, not a pill. The dark gradient pill background was clashing with
+   bloom colors and the duplicate watermark on screen. Strip the chrome
+   so the trademark reads as clean white type with a subtle drop shadow
+   for legibility against any background. */
 .composition-brand-chip {
   display: inline-flex;
   align-items: flex-start;
   gap: 4px;
-  padding: 10px 16px 9px;
-  border-radius: 999px;
-  background: linear-gradient(180deg, rgba(5, 12, 22, 0.48), rgba(6, 19, 31, 0.86));
-  border: 1px solid rgba(212, 175, 55, 0.22);
-  box-shadow:
-    0 12px 24px rgba(0, 0, 0, 0.34),
-    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  padding: 0;
+  background: transparent;
+  border: none;
+  box-shadow: none;
   white-space: nowrap;
 }
 
@@ -930,20 +932,20 @@
   gap: 10px;
 }
 
+/* Recipient-view brand chip — flattened per Gamble's 2026-04-26 note.
+   No pill, no border, no gradient background. White text only. */
 .composition-brand-chip {
-  padding: 9px 15px 8px;
-  background: linear-gradient(180deg, rgba(5, 12, 22, 0.88), rgba(6, 19, 31, 0.94));
-  border: 1px solid rgba(212, 175, 55, 0.55);
-  box-shadow:
-    0 14px 28px rgba(0, 0, 0, 0.48),
-    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  padding: 0;
+  background: transparent;
+  border: none;
+  box-shadow: none;
 }
 
 .composition-brand-chip__text {
   font-size: clamp(0.92rem, 2.4vw, 1.12rem);
   letter-spacing: 0.12em;
   font-weight: 800;
-  color: #E8C45A;
+  color: #FFFFFF;
   -webkit-text-stroke: 0.6px rgba(0, 0, 0, 0.85);
   text-shadow: 0 2px 6px rgba(0, 0, 0, 0.9);
 }

@@ -98,6 +98,8 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
   const [engravingStyle, setEngravingStyle] = useState(stateDefaults.engravingStyle || 'heirloom');
   const [fontChoice, setFontChoice] = useState(stateDefaults.fontChoice || 'playfair');
   const [messageTextColor, setMessageTextColor] = useState(stateDefaults.messageTextColor || '#FFFFFF');
+  // Validation surface for the To/From mandatory check (Gamble 2026-04-26)
+  const [validationError, setValidationError] = useState('');
   const [messageBold, setMessageBold] = useState(stateDefaults.messageBold || false);
   const [messageTextSize, setMessageTextSize] = useState(stateDefaults.messageTextSize || 'md');
   const [messageOffset, setMessageOffset] = useState(stateDefaults.messageOffset || { x: 0, y: 0 });
@@ -351,6 +353,20 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
   // Non-blocking Add to Cart
   const handleComplete = useCallback(() => {
     if (!isProductValid) return;
+    // To and From are mandatory — per Gamble's 2026-04-26 note, requiring both
+    // makes every bloom uniquely customized to the buyer/recipient pair, which
+    // disincentivizes anyone from screen-recording a generic bloom and reusing
+    // it. Block submission and surface an inline error before proceeding.
+    const toName = (message.toName || '').trim();
+    const fromName = (message.fromName || '').trim();
+    if (!toName || !fromName) {
+      setValidationError('To and From are required — both fields make this bloom uniquely yours.');
+      const firstEmpty = !toName ? document.getElementById('cust-to') : document.getElementById('cust-from');
+      firstEmpty?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      firstEmpty?.focus();
+      return;
+    }
+    setValidationError('');
     // Fire-and-forget theme save
     (async () => {
       try {
@@ -495,70 +511,85 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
               <h3 className="customizer-section__title">{t('customize_your_message')}</h3>
             </div>
 
+            {/* CHOOSE A PHRASE — dropdown that appends to the message below.
+                Per Gamble's 2026-04-26 review: phrase chips laid out in a grid
+                ate too much screen space. The dropdown saves vertical room and
+                still supports stacking phrases (each pick appends to the message). */}
             <div className="customizer-field">
-              <textarea
-                id="cust-msg"
-                className="customizer-input customizer-input--message"
-                placeholder={messagePlaceholder || t('customize_message_placeholder')}
-                maxLength="150"
-                rows={4}
-                value={message.short}
-                onChange={(e) => handleMessageChange('short', e.target.value)}
-              />
-              <span className="customizer-hint">{message.short.length}/150 · drag on preview to position</span>
+              <label className="customizer-label" htmlFor="cust-slogan-select">
+                {OCCASIONS[category || product?.category]
+                  ? `${OCCASIONS[category || product?.category].emoji || '🌸'} Choose a phrase`
+                  : '🌸 Choose a phrase'}
+              </label>
+              <select
+                id="cust-slogan-select"
+                className="customizer-select"
+                value=""
+                onChange={(e) => {
+                  if (e.target.value) {
+                    appendSlogan(e.target.value);
+                    e.target.value = '';
+                  }
+                }}
+              >
+                <option value="">Pick a phrase to add to your message…</option>
+                {sloganPresets.map((slogan, i) => (
+                  <option key={i} value={slogan}>{slogan}</option>
+                ))}
+              </select>
+              <span className="customizer-hint">Pick more than one to stack — or skip and write your own below.</span>
             </div>
 
-            {/* Quick-phrase chips — tap any chip to append it to the message above.
-                Customers can stack as many as they want; chips never replace the
-                typed message, they only add to it. Replaces an earlier dropdown
-                that hid the multi-select capability behind a "pick one" affordance. */}
-            <div className="customizer-slogan-selector">
-              <div className="customizer-chip-header">
-                <label className="customizer-label customizer-chip-label">
-                  {OCCASIONS[category || product?.category]
-                    ? `${OCCASIONS[category || product?.category].emoji || '🌸'} Quick phrases — tap to add`
-                    : '🌸 Quick phrases — tap to add'}
-                </label>
+            {/* YOUR MESSAGE — auto-grows as the customer types or appends phrases.
+                Starts compact (2 rows) so the customer can see To/From + the rest
+                of the form without scrolling, and grows to fit content. */}
+            <div className="customizer-field">
+              <label className="customizer-label" htmlFor="cust-msg">{t('customize_your_message')}</label>
+              <textarea
+                id="cust-msg"
+                className="customizer-input customizer-input--message-grow"
+                placeholder={messagePlaceholder || t('customize_message_placeholder')}
+                maxLength="150"
+                rows={2}
+                value={message.short}
+                onChange={(e) => handleMessageChange('short', e.target.value)}
+                onInput={(e) => {
+                  e.target.style.height = 'auto';
+                  e.target.style.height = (e.target.scrollHeight) + 'px';
+                }}
+              />
+              <div className="customizer-message-meta">
+                <span className="customizer-hint">{message.short.length}/150 · drag on preview to position</span>
                 {message.short.length > 0 && (
                   <button
                     type="button"
-                    className="customizer-chip-clear"
+                    className="customizer-clear-link"
                     onClick={() => handleMessageChange('short', '')}
                   >
-                    Clear message
+                    Clear
                   </button>
                 )}
               </div>
-              <div className="customizer-chip-grid" role="list">
-                {sloganPresets.map((slogan, i) => (
-                  <button
-                    key={i}
-                    type="button"
-                    role="listitem"
-                    className="customizer-chip"
-                    onClick={() => appendSlogan(slogan)}
-                    aria-label={`Add "${slogan}" to your message`}
-                  >
-                    {slogan}
-                  </button>
-                ))}
-              </div>
-              <p className="customizer-chip-hint">
-                Tap any phrase to add it to your message above. Stack as many as you like — or skip and write your own.
-              </p>
             </div>
 
+            {/* TO / FROM — both required per Gamble's 2026-04-26 note. Mandatory
+                customization disincentives anyone trying to screen-record a
+                generic bloom and reuse it elsewhere. */}
             <div className="customizer-tofrom-grid">
               <div className="customizer-field">
-                <label className="customizer-label" htmlFor="cust-to">{t('customize_to')}</label>
-                <input id="cust-to" type="text" className="customizer-input customizer-input--lg"
+                <label className="customizer-label" htmlFor="cust-to">
+                  {t('customize_to')} <span className="customizer-required" aria-hidden="true">*</span>
+                </label>
+                <input id="cust-to" type="text" required aria-required="true" className="customizer-input customizer-input--lg"
                   placeholder={toPlaceholder || t('customize_to_placeholder')}
                   value={message.toName}
                   onChange={(e) => handleMessageChange('toName', e.target.value)} />
               </div>
               <div className="customizer-field">
-                <label className="customizer-label" htmlFor="cust-from">{t('customize_from')}</label>
-                <input id="cust-from" type="text" className="customizer-input customizer-input--lg"
+                <label className="customizer-label" htmlFor="cust-from">
+                  {t('customize_from')} <span className="customizer-required" aria-hidden="true">*</span>
+                </label>
+                <input id="cust-from" type="text" required aria-required="true" className="customizer-input customizer-input--lg"
                   placeholder={t('customize_from_placeholder')}
                   value={message.fromName}
                   onChange={(e) => handleMessageChange('fromName', e.target.value)} />
@@ -580,45 +611,11 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
               <span className="customizer-hint">{t('customize_font_hint')}</span>
             </div>
 
-            {/* Text color swatches */}
-            <div className="customizer-field">
-              <label className="customizer-label">{t('customize_text_color_label')}</label>
-              <div className="customizer-color-swatches">
-                {[
-                  { hex: '#FFFFFF', label: t('customize_color_white') },
-                  { hex: '#F5E6CC', label: t('customize_color_cream') },
-                  { hex: '#D4AF37', label: t('customize_color_gold') },
-                  { hex: '#F2A8B8', label: t('customize_color_blush') },
-                  { hex: '#A8D0F0', label: t('customize_color_sky') },
-                  { hex: '#A8D8B0', label: t('customize_color_sage') },
-                  { hex: '#C8AEE8', label: t('customize_color_lavender') },
-                  { hex: '#F4C4A0', label: t('customize_color_peach') },
-                  { hex: '#1D1D1F', label: t('customize_color_charcoal') },
-                  { hex: '#1B2A4A', label: t('customize_color_navy') },
-                  { hex: '#4A5568', label: t('customize_color_slate') },
-                  { hex: '#5C1A2A', label: t('customize_color_burgundy') },
-                  { hex: '#1A3C2A', label: t('customize_color_forest') },
-                  { hex: '#8B7355', label: t('customize_color_bronze') },
-                ].map(({ hex, label }) => (
-                  <button
-                    key={hex}
-                    type="button"
-                    aria-label={label}
-                    title={label}
-                    onClick={() => setMessageTextColor(hex)}
-                    style={{
-                      width: '32px', height: '32px', borderRadius: '50%',
-                      background: hex, border: '1.5px solid rgba(255,255,255,0.18)', cursor: 'pointer', flexShrink: 0,
-                      boxShadow: messageTextColor === hex
-                        ? `0 0 0 2px #0D1B36, 0 0 0 4px ${hex === '#1D1D1F' || hex === '#1B2A4A' || hex === '#1A3C2A' ? '#D4AF37' : hex}`
-                        : '0 1px 4px rgba(0,0,0,0.3)',
-                      transform: messageTextColor === hex ? 'scale(1.15)' : 'scale(1)',
-                      transition: 'box-shadow 0.15s, transform 0.15s',
-                    }}
-                  />
-                ))}
-              </div>
-            </div>
+            {/* Text color swatches removed per Gamble's 2026-04-26 note: the
+                color picker clashed with the bloom palette and was redirecting
+                customer attention away from font/size/effects (which are the
+                real differentiators). The brand stays readable in white;
+                keep the customizer focused on what actually matters. */}
 
             {/* Bold toggle */}
             <div className="customizer-field">
@@ -928,6 +925,13 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
             </div>
           )}
         </div>
+
+        {/* Validation error surface — shown when To/From are empty on submit */}
+        {validationError && (
+          <div className="customizer-validation-error" role="alert">
+            <span aria-hidden="true">⚠️</span> {validationError}
+          </div>
+        )}
 
         {/* ── UNIFIED BOTTOM BAR — Back / Next or Add to Cart ── */}
         <div className="customizer-sticky-cta">

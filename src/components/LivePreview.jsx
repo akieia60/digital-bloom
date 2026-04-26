@@ -239,7 +239,11 @@ export default function LivePreview({
       >
         <div
           className="composition-brand-chip"
-          style={{ color: protectionLayer?.brandColor || 'var(--db-brand)' }}
+          /* Per Gamble (2026-04-26): the brand watermark must always read in
+             white, regardless of the customer's color choices. The chip used
+             to inherit a brandColor that could clash with the bloom and made
+             the trademark hard to read. Locked to #FFFFFF here. */
+          style={{ color: '#FFFFFF' }}
         >
           <span className="composition-brand-chip__text">{protectionLayer?.brandText || 'Digital Bloom'}</span>
           <span className="composition-brand-chip__tm">{protectionLayer?.tmText || 'TM'}</span>
