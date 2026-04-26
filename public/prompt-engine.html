@@ -204,6 +204,27 @@ body{font-family:'Outfit',sans-serif;background:var(--navy);color:var(--white);m
 .bloom-preview-zone__label{font-size:0.74rem;color:var(--gold);font-weight:700;text-align:center;letter-spacing:0.04em;text-transform:uppercase}
 .bloom-preview-zone__label--live{color:var(--green)}
 .bloom-preview-zone--live .bloom-preview-video{outline-color:rgba(34,197,94,0.35)}
+
+/* Collapsible cards — default to closed so the engine reads as a scannable list */
+.card-header{cursor:pointer;display:flex;align-items:center;gap:10px}
+.card-header .card-title{flex:1;min-width:0}
+.card-chevron{margin-left:auto;color:var(--muted);font-size:0.7rem;transition:transform 0.25s;flex-shrink:0;padding:2px 6px}
+.card.expanded .card-chevron{transform:rotate(180deg)}
+.card-body{max-height:0;overflow:hidden;transition:max-height 0.3s ease-in-out}
+.card.expanded .card-body{max-height:9999px;overflow:visible}
+
+/* Quick-jump dropdown — tap a title to scroll-and-expand that card */
+.quick-jump{margin:0 0 14px;border:1px solid var(--border);border-radius:12px;background:rgba(255,255,255,0.025);grid-column:1/-1}
+.quick-jump-summary{padding:11px 14px;cursor:pointer;color:var(--gold);font-weight:700;font-size:0.78rem;font-family:'Outfit',sans-serif;list-style:none;display:flex;align-items:center;gap:10px;user-select:none;letter-spacing:0.02em}
+.quick-jump-summary::-webkit-details-marker{display:none}
+.quick-jump-summary::before{content:'▶';font-size:0.6rem;color:var(--muted);transition:transform 0.2s}
+.quick-jump[open] .quick-jump-summary::before{transform:rotate(90deg)}
+.quick-jump-list{list-style:none;margin:0;padding:0 8px 10px;display:flex;flex-direction:column;gap:2px;max-height:50vh;overflow-y:auto}
+.quick-jump-item{display:flex;align-items:center;gap:10px;padding:10px 10px;border-radius:8px;color:var(--white);text-decoration:none;font-size:0.85rem;font-family:'Outfit',sans-serif;transition:background 0.15s}
+.quick-jump-item:hover,.quick-jump-item:active{background:rgba(255,255,255,0.05)}
+.quick-jump-item--live{color:var(--green)}
+.quick-jump-item--ready{color:var(--gold)}
+.quick-jump-item--needed{color:rgba(255,255,255,0.6)}
 .bloom-preview-video{width:100%;max-height:280px;border-radius:10px;background:#000;outline:1px solid var(--gold3);outline-offset:-1px}
 .btn-use-render{width:100%;padding:11px 0;background:linear-gradient(135deg,var(--gold) 0%,#b89320 100%);border:none;border-radius:10px;color:#1a1a1a;font-weight:700;font-size:0.86rem;cursor:pointer;font-family:'Outfit',sans-serif;transition:transform 0.1s}
 .btn-use-render:active{transform:scale(0.98)}
@@ -218,7 +239,9 @@ body{font-family:'Outfit',sans-serif;background:var(--navy);color:var(--white);m
 @media(max-width:600px){
   .header h1{font-size:1.05rem}
   .grid{grid-template-columns:1fr}
-  .controls{top:53px}
+  .controls{top:53px;padding:10px 12px}
+  .main{padding:12px 12px}
+  .card{padding:14px}
   .transformer-grid{grid-template-columns:1fr}
   .transformer-actions{justify-content:flex-start}
   .builder-grid{grid-template-columns:1fr}
@@ -2841,10 +2864,30 @@ function render(){
   let html = '';
   Object.entries(groups).forEach(([cat, prompts])=>{
     if(currentCat==='All') html += `<div class="section-label" style="grid-column:1/-1">${catEmoji(cat)} ${cat}</div>`;
+    html += quickJumpHTML(cat, prompts);
     prompts.forEach(p=> html += cardHTML(p));
   });
 
   document.getElementById('grid').innerHTML = html;
+}
+
+// Tap-to-jump nav above each category section. Reading the title list
+// is way faster than scrolling 40 cards on a phone, especially on the
+// road. Status icon at the start of each row tells Ak in one glance
+// which prompts are live, which are auto-rendered and ready to publish,
+// and which still need work.
+function quickJumpHTML(cat, prompts){
+  if(prompts.length < 4) return '';
+  const liveCount   = prompts.filter(p => isLiveOnSite(p)).length;
+  const readyCount  = prompts.filter(p => !isLiveOnSite(p) && p.generationStatus === 'completed').length;
+  const todoCount   = prompts.length - liveCount - readyCount;
+  const items = prompts.map(p => {
+    const status = isLiveOnSite(p) ? 'live'
+                  : (p.generationStatus === 'completed' ? 'ready' : 'needed');
+    const icon = status === 'live' ? '✅' : status === 'ready' ? '🎬' : '○';
+    return `<li><a class="quick-jump-item quick-jump-item--${status}" href="#card-${p.id}" onclick="ensureCardExpanded('${p.id}')">${icon}<span>${escapeHtml(p.title)}</span></a></li>`;
+  }).join('');
+  return `<details class="quick-jump"><summary class="quick-jump-summary">📋 Jump to a prompt — ${escapeHtml(cat)} · ${liveCount} live · ${readyCount} ready · ${todoCount} to make</summary><ul class="quick-jump-list">${items}</ul></details>`;
 }
 
 function cardHTML(p){
@@ -2903,9 +2946,10 @@ function cardHTML(p){
 
   return `
   <div class="card${isDone?' done':''}" id="card-${p.id}">
-    <div class="card-header">
+    <div class="card-header" onclick="toggleCard('${p.id}')">
       <div class="card-title">${p.title}</div>
-      <div class="card-check${isDone?' checked':''}" onclick="toggleDone('${p.id}')" title="Mark as generated">
+      <div class="card-chevron">▼</div>
+      <div class="card-check${isDone?' checked':''}" onclick="event.stopPropagation();toggleDone('${p.id}')" title="Mark as generated">
         ${isDone?'✓':''}
       </div>
     </div>
@@ -2913,14 +2957,30 @@ function cardHTML(p){
     ${p.isCustom ? `<span class="custom-chip">Custom Library</span>` : ''}
     ${p.workflow?`<div class="workflow-note">⚡ ${p.workflow}</div>`:''}
     ${customMeta}
-    <div class="scenes">
-      ${p.scenes.map((s,i)=>sceneHTML(p.id,i,s)).join('')}
+    <div class="card-body">
+      <div class="scenes">
+        ${p.scenes.map((s,i)=>sceneHTML(p.id,i,s)).join('')}
+      </div>
+      ${transformerHTML(p)}
+      ${p.isCustom ? `<div class="card-tools"><button class="btn-card-tool" onclick="loadCustomPromptIntoBuilder('${p.id}')">Edit In Builder</button><button class="btn-card-tool" onclick="removeCustomPrompt('${p.id}')">Delete Custom Prompt</button></div>` : ''}
     </div>
-    ${transformerHTML(p)}
-    ${p.isCustom ? `<div class="card-tools"><button class="btn-card-tool" onclick="loadCustomPromptIntoBuilder('${p.id}')">Edit In Builder</button><button class="btn-card-tool" onclick="removeCustomPrompt('${p.id}')">Delete Custom Prompt</button></div>` : ''}
     ${bloomPreviewHTML(p, encTitle, encCat)}
     ${bottomZone}
   </div>`;
+}
+
+// Cards default to closed. Tap the header to expand/collapse the
+// scenes + transform + custom-prompt-tools section. Preview zone and
+// bottomZone (live badge / upload button) stay outside the body so
+// status is always visible — collapsing is purely about hiding the
+// long prompt text and copy buttons.
+function toggleCard(pid){
+  document.getElementById(`card-${pid}`)?.classList.toggle('expanded');
+}
+// When the quick-jump nav scrolls to a card, force-expand it so Ak
+// lands on a useful view, not a closed sliver of header.
+function ensureCardExpanded(pid){
+  document.getElementById(`card-${pid}`)?.classList.add('expanded');
 }
 
 // Inline video preview on each card — so Ak can scan the engine and
