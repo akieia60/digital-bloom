@@ -196,6 +196,13 @@ body{font-family:'Outfit',sans-serif;background:var(--navy);color:var(--white);m
 .upload-status.processing{color:var(--gold)}
 .upload-status.live{color:var(--green);font-weight:700}
 .upload-status.error{color:var(--red)}
+.bloom-preview-zone{display:none;padding:0 12px 12px;flex-direction:column;gap:8px}
+.bloom-preview-zone[data-loaded="true"]{display:flex}
+.bloom-preview-zone__label{font-size:0.74rem;color:var(--gold);font-weight:700;text-align:center;letter-spacing:0.04em;text-transform:uppercase}
+.bloom-preview-video{width:100%;max-height:280px;border-radius:10px;background:#000;outline:1px solid var(--gold3);outline-offset:-1px}
+.btn-use-render{width:100%;padding:11px 0;background:linear-gradient(135deg,var(--gold) 0%,#b89320 100%);border:none;border-radius:10px;color:#1a1a1a;font-weight:700;font-size:0.86rem;cursor:pointer;font-family:'Outfit',sans-serif;transition:transform 0.1s}
+.btn-use-render:active{transform:scale(0.98)}
+.btn-use-render:disabled{opacity:0.5;cursor:not-allowed}
 
 /* SCROLLBAR */
 ::-webkit-scrollbar{width:6px;height:6px}
@@ -2896,8 +2903,27 @@ function cardHTML(p){
     </div>
     ${transformerHTML(p)}
     ${p.isCustom ? `<div class="card-tools"><button class="btn-card-tool" onclick="loadCustomPromptIntoBuilder('${p.id}')">Edit In Builder</button><button class="btn-card-tool" onclick="removeCustomPrompt('${p.id}')">Delete Custom Prompt</button></div>` : ''}
+    ${bloomPreviewHTML(p, encTitle, encCat)}
     ${bottomZone}
   </div>`;
+}
+
+// Renders the "Monique already rendered this" preview zone. The video tag
+// fires onloadedmetadata only when full.mp4 actually exists in storage; if
+// the file is 404 the zone stays hidden via the [data-loaded] attribute.
+function bloomPreviewHTML(p, encTitle, encCat){
+  const renderedUrl = `${SUPABASE_URL}/storage/v1/object/public/monique-videos/${p.id}/full.mp4`;
+  return `
+    <div class="bloom-preview-zone" data-loaded="false" id="preview-${p.id}">
+      <div class="bloom-preview-zone__label">🎬 Monique already rendered this — preview &amp; one-tap upload</div>
+      <video class="bloom-preview-video"
+        src="${renderedUrl}"
+        preload="metadata"
+        muted playsinline controls
+        onloadedmetadata="this.closest('.bloom-preview-zone').dataset.loaded='true'"
+        onerror="this.closest('.bloom-preview-zone').style.display='none'"></video>
+      <button class="btn-use-render" onclick="useRenderedVideo('${p.id}','${encTitle}','${encCat}')">↑ Use This Render — Watermark &amp; Publish</button>
+    </div>`;
 }
 
 function transformerHTML(p){
@@ -3194,6 +3220,30 @@ async function handleUpload(pid, encTitle, encCat, input){
   } catch(err){
     setUploadState(pid, 'error', err.message);
     console.error('[upload]', err.message);
+  }
+}
+
+// Pulls the auto-stitched render from Supabase storage, wraps it as a File,
+// and runs it through the same upload+watermark+publish flow as a phone
+// camera-roll upload. Means Ak doesn't have to download from Telegram and
+// re-upload — one tap inside the engine instead.
+async function useRenderedVideo(pid, encTitle, encCat){
+  const url = `${SUPABASE_URL}/storage/v1/object/public/monique-videos/${pid}/full.mp4`;
+  setUploadState(pid, 'uploading');
+  try {
+    const r = await fetch(url);
+    if(!r.ok) throw new Error(`Could not fetch rendered video (${r.status})`);
+    const blob = await r.blob();
+    const file = new File([blob], 'full.mp4', { type:'video/mp4' });
+    const input = document.getElementById(`file-${pid}`);
+    if(!input) throw new Error('Upload input missing');
+    const dt = new DataTransfer();
+    dt.items.add(file);
+    input.files = dt.files;
+    await handleUpload(pid, encTitle, encCat, input);
+  } catch(e) {
+    setUploadState(pid, 'error', e.message);
+    console.error('[useRenderedVideo]', e.message);
   }
 }
 
