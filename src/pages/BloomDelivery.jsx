@@ -221,21 +221,14 @@ export default function BloomDelivery() {
               occasion={delivery.category || null}
               className="bloom-delivery__preview"
             />
-            {/* Diagonal repeating watermark grid — flashes every 18s so any
-                screen recording captures at least one prominent frame */}
-            <div className="db-watermark-overlay" aria-hidden="true">
-              <div className="db-watermark-grid">
-                {Array.from({ length: 12 }, (_, i) => (
-                  <div key={i} className="db-watermark-row">
-                    <span>© Digital Bloom</span>
-                    <span>© Digital Bloom</span>
-                    <span>© Digital Bloom</span>
-                    <span>© Digital Bloom</span>
-                  </div>
-                ))}
-              </div>
-              <div className="db-watermark-corner">Digital Bloom™</div>
-            </div>
+            {/* Watermark protection now lives entirely in the rendered MP4
+                (baked in by the publish/process-bloom pipeline). The DOM
+                overlay that used to flash a "© Digital Bloom" grid + a
+                corner "Digital Bloom™" pill on top of the video has been
+                removed — the recipient paid for this experience and was
+                seeing redundant brand chrome on top of their gift. The
+                in-video watermarks stay; the legible footer attribution
+                stays. */}
           </div>
         </div>
 
