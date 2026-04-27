@@ -354,6 +354,28 @@ async function load() {
 }
 
 tabs(); load();
+
+// Auto-refresh every 20s so Ak and Gamble see each other's changes
+// without manually reloading. Skips when the tab is hidden (saves
+// battery / bandwidth) and when a card video is currently open
+// (preserves playback — load() rebuilds the grid HTML, which would
+// destroy a playing <video> element).
+let autoRefreshTimer = null;
+function startAutoRefresh() {
+  if (autoRefreshTimer) return;
+  autoRefreshTimer = setInterval(() => {
+    if (document.hidden) return;
+    if (document.querySelector('.video-wrap video')) return;
+    load();
+  }, 20000);
+}
+function stopAutoRefresh() {
+  if (autoRefreshTimer) { clearInterval(autoRefreshTimer); autoRefreshTimer = null; }
+}
+document.addEventListener('visibilitychange', () => {
+  document.hidden ? stopAutoRefresh() : startAutoRefresh();
+});
+startAutoRefresh();
 </script>
 </body>
 </html>
