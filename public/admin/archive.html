@@ -175,7 +175,12 @@ function escape(s) {
 
 function fmtDate(s) {
   if (!s) return '';
-  try { return new Date(s).toLocaleDateString(); } catch { return ''; }
+  try {
+    const d = new Date(s);
+    const date = d.toLocaleDateString();
+    const time = d.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+    return `${date} · ${time}`;
+  } catch { return ''; }
 }
 
 async function publishRender(promptId, productId, btn, refresh) {
