@@ -19,6 +19,28 @@ function unauthorized(res) {
   return res.status(401).json({ error: 'unauthorized' });
 }
 
+// Map every recognized admin token to a display name. Adding a new team
+// member = add a new ADMIN_TOKEN_<NAME> env var on Vercel and a new line
+// here. Single source of truth for "who did what" attribution on every
+// archive/restore/publish action.
+function actorFromToken(token) {
+  if (!token) return null;
+  const map = {
+    [process.env.ADMIN_TOKEN || '_disabled1_']: 'Ak',
+    [process.env.ADMIN_TOKEN_GAMBLE || '_disabled2_']: 'Gamble',
+  };
+  return map[token] || null;
+}
+
+async function stampAudit(supabase, matcher, actor) {
+  const at = new Date().toISOString();
+  await supabase.from('products').update({
+    last_action_by: actor,
+    last_action_at: at,
+  }).match(matcher);
+  return { last_action_by: actor, last_action_at: at };
+}
+
 function buildOrigin(req) {
   const proto = req.headers['x-forwarded-proto'] || 'https';
   const host = req.headers['x-forwarded-host'] || req.headers.host;
@@ -81,14 +103,14 @@ async function findMatchingPrompt(supabase, productSlug) {
 export default async function handler(req, res) {
   res.setHeader('Cache-Control', 'no-store');
 
-  const adminToken = process.env.ADMIN_TOKEN;
-  if (!adminToken) return res.status(500).json({ error: 'ADMIN_TOKEN not configured' });
+  if (!process.env.ADMIN_TOKEN) return res.status(500).json({ error: 'ADMIN_TOKEN not configured' });
 
   const supabase = createClient(supabaseUrl, serviceKey, { auth: { persistSession: false } });
 
   // ── GET ───────────────────────────────────────────────────────────────
   if (req.method === 'GET') {
-    if (req.query.token !== adminToken) return unauthorized(res);
+    const actor = actorFromToken(req.query.token);
+    if (!actor) return unauthorized(res);
 
     const status = (req.query.status || 'inactive').toString();
     const categorySlug = (req.query.category || 'mothers-day').toString();
@@ -111,7 +133,7 @@ export default async function handler(req, res) {
       if (ids.length) {
         const { data: prods, error: prErr } = await supabase
           .from('products')
-          .select('id, slug, is_active, updated_at, video_url, video_file_url, thumbnail_url')
+          .select('id, slug, is_active, updated_at, video_url, video_file_url, thumbnail_url, last_action_by, last_action_at')
           .in('slug', ids);
         if (prErr) return res.status(500).json({ error: prErr.message });
         products = prods || [];
@@ -137,6 +159,8 @@ export default async function handler(req, res) {
           render_url: `${monique}/${p.id}/full.mp4`,
           is_live: isLive,
           product_id: product?.id || null,
+          last_action_by: product?.last_action_by || null,
+          last_action_at: product?.last_action_at || null,
         };
       });
       return res.status(200).json({ renders });
@@ -146,7 +170,7 @@ export default async function handler(req, res) {
     const isActive = status === 'active';
     const { data, error } = await supabase
       .from('products')
-      .select('id, name, slug, category, video_file_url, video_url, thumbnail_url, image_url, is_active, created_at, updated_at, price_cents')
+      .select('id, name, slug, category, video_file_url, video_url, thumbnail_url, image_url, is_active, created_at, updated_at, price_cents, last_action_by, last_action_at')
       .eq('category', categorySlug)
       .eq('is_active', isActive)
       .order('updated_at', { ascending: false });
@@ -185,7 +209,8 @@ export default async function handler(req, res) {
   // ── POST ──────────────────────────────────────────────────────────────
   if (req.method === 'POST') {
     const body = req.body || {};
-    if (body.token !== adminToken) return unauthorized(res);
+    const actor = actorFromToken(body.token);
+    if (!actor) return unauthorized(res);
 
     const { action, productId, promptId } = body;
 
@@ -219,7 +244,8 @@ export default async function handler(req, res) {
 
       try {
         const result = await publishPrompt(req, supabase, prompt);
-        return res.status(200).json({ ...result, action: 'publish' });
+        const audit = await stampAudit(supabase, { slug: prompt.id }, actor);
+        return res.status(200).json({ ...result, action: 'publish', ...audit });
       } catch (err) {
         return res.status(500).json({ error: err.message });
       }
@@ -231,11 +257,12 @@ export default async function handler(req, res) {
 
     // ── Archive: simple is_active=false flip
     if (action === 'archive') {
+      const now = new Date().toISOString();
       const { data, error } = await supabase
         .from('products')
-        .update({ is_active: false, updated_at: new Date().toISOString() })
+        .update({ is_active: false, updated_at: now, last_action_by: actor, last_action_at: now })
         .eq('id', productId)
-        .select('id, name, is_active')
+        .select('id, name, is_active, last_action_by, last_action_at')
         .single();
       if (error) return res.status(500).json({ error: error.message });
       return res.status(200).json({ product: data });
@@ -257,9 +284,9 @@ export default async function handler(req, res) {
     if (hasFresher) {
       try {
         await publishPrompt(req, supabase, prompt);
-        // process-bloom upserts is_active=true; nothing else to do.
+        const audit = await stampAudit(supabase, { id: product.id }, actor);
         return res.status(200).json({
-          product: { id: product.id, name: product.name, is_active: true },
+          product: { id: product.id, name: product.name, is_active: true, ...audit },
           freshlyRepublished: true,
         });
       } catch (err) {
@@ -267,11 +294,12 @@ export default async function handler(req, res) {
       }
     }
 
+    const now = new Date().toISOString();
     const { data, error } = await supabase
       .from('products')
-      .update({ is_active: true, updated_at: new Date().toISOString() })
+      .update({ is_active: true, updated_at: now, last_action_by: actor, last_action_at: now })
       .eq('id', productId)
-      .select('id, name, is_active')
+      .select('id, name, is_active, last_action_by, last_action_at')
       .single();
     if (error) return res.status(500).json({ error: error.message });
     return res.status(200).json({ product: data, freshlyRepublished: false });

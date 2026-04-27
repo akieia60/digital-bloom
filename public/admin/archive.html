@@ -63,7 +63,10 @@
   .body { padding:10px 12px 12px; }
   .name { font-size:0.85rem; color:#f4ebd0; line-height:1.3; margin-bottom:4px; min-height:2.4em; font-family:Georgia,serif; }
   .cat-line { font-size:0.65rem; color:#8da4c5; letter-spacing:0.05em; text-transform:uppercase; margin-bottom:4px; }
-  .date { font-size:0.7rem; color:#7a8fad; margin-bottom:10px; }
+  .date { font-size:0.7rem; color:#7a8fad; margin-bottom:4px; }
+  .audit { font-size:0.65rem; color:#8da4c5; margin-bottom:10px; font-style:italic; }
+  .audit::before { content:'by '; opacity:0.6; font-style:normal; }
+  .audit:empty { display:none; }
 
   button.action { width:100%; border:none; padding:10px; border-radius:6px; font-weight:700; font-size:0.78rem; letter-spacing:0.06em; text-transform:uppercase; cursor:pointer; font-family:inherit; }
   button.action.publish { background:#D4AF37; color:#0D1B36; }
@@ -183,6 +186,17 @@ function fmtDate(s) {
   } catch { return ''; }
 }
 
+function fmtAudit(by, at) {
+  if (!by || !at) return '';
+  try {
+    const d = new Date(at);
+    const time = d.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+    const today = new Date();
+    const sameDay = d.toDateString() === today.toDateString();
+    return sameDay ? `${by} · ${time}` : `${by} · ${d.toLocaleDateString()} ${time}`;
+  } catch { return by; }
+}
+
 async function publishRender(promptId, productId, btn, refresh) {
   const orig = btn.textContent;
   btn.disabled = true;
@@ -264,6 +278,7 @@ function rendersGrid(items) {
     const btnLabel = isLive ? 'Refresh on Site' : 'Publish to Site';
     const btnClass = isLive ? 'refresh' : 'publish';
     const safeProductId = p.product_id ? `'${p.product_id}'` : 'null';
+    const audit = isLive ? escape(fmtAudit(p.last_action_by, p.last_action_at)) : '';
     const media = p.render_url
       ? `<div class="placeholder" data-src="${p.render_url}" onclick="loadVideo(this)"><div class="play-circle">▶</div><div class="label">Tap to play</div></div>`
       : `<div class="placeholder"><div class="label" style="opacity:0.5">no preview</div></div>`;
@@ -274,6 +289,7 @@ function rendersGrid(items) {
         <div class="name">${name}</div>
         <div class="cat-line">${cat}</div>
         <div class="date">${date}</div>
+        <div class="audit">${audit}</div>
         <button class="action ${btnClass}" onclick="publishRender('${p.id}', ${safeProductId}, this, ${isLive})">${btnLabel}</button>
       </div>
     </div>`;
@@ -299,12 +315,14 @@ function productsGrid(items, mode) {
     const btnLabel = isActive ? 'Archive' : (freshVid ? 'Restore (Smart)' : 'Restore');
     const btnClass = isActive ? 'archive' : 'restore';
     const cardClass = isActive ? 'archive-mode' : '';
+    const audit = escape(fmtAudit(p.last_action_by, p.last_action_at));
     return `<div class="card ${cardClass}">
       ${ribbon}
       <div class="video-wrap">${media}</div>
       <div class="body">
         <div class="name">${name}</div>
         <div class="date">${date}</div>
+        <div class="audit">${audit}</div>
         <button class="action ${btnClass}" onclick="${btnHandler}">${btnLabel}</button>
       </div>
     </div>`;
