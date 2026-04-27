@@ -77,7 +77,12 @@
 
 <script>
 const params = new URLSearchParams(location.search);
-const TOKEN = params.get('token') || '';
+const TOKEN_KEY = 'db_admin_token';
+const URL_TOKEN = params.get('token') || '';
+if (URL_TOKEN) {
+  try { localStorage.setItem(TOKEN_KEY, URL_TOKEN); } catch (e) {}
+}
+const TOKEN = URL_TOKEN || (() => { try { return localStorage.getItem(TOKEN_KEY) || ''; } catch (e) { return ''; } })();
 const CATEGORIES = [
   ['mothers-day', "Mother's Day"],
   ['birthday', 'Birthday'],
