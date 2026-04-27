@@ -1,4 +1,4 @@
-import { useMemo, useRef, useCallback } from 'react';
+import { useMemo, useRef, useCallback, useState, useEffect } from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { getCompositionLayers } from '../lib/compositionEngine';
 import CanvasEffect from './CanvasEffect';
@@ -52,6 +52,7 @@ export default function LivePreview({
   occasion = null,
   messageOffset = null,
   onMessageOffsetChange = null,
+  previewStamp = null,
   className = '',
 }) {
   const { t } = useLanguage();
@@ -61,8 +62,32 @@ export default function LivePreview({
   );
 
   const containerRef = useRef(null);
+  const videoRef = useRef(null);
   const dragState = useRef(null);
   const isDraggable = typeof onMessageOffsetChange === 'function';
+  const [isPaused, setIsPaused] = useState(false);
+  const [iconPulse, setIconPulse] = useState(0);
+
+  const togglePlayback = useCallback((e) => {
+    const video = videoRef.current;
+    if (!video) return;
+    if (e) e.stopPropagation();
+    if (video.paused) {
+      const result = video.play();
+      if (result && typeof result.catch === 'function') result.catch(() => {});
+      setIsPaused(false);
+    } else {
+      video.pause();
+      setIsPaused(true);
+    }
+    setIconPulse((n) => n + 1);
+  }, []);
+
+  useEffect(() => {
+    if (!iconPulse) return undefined;
+    const t = setTimeout(() => setIconPulse(0), 700);
+    return () => clearTimeout(t);
+  }, [iconPulse]);
 
   const handlePointerDown = useCallback((e) => {
     if (!isDraggable || !containerRef.current) return;
@@ -119,9 +144,19 @@ export default function LivePreview({
       }}
     >
       {/* Layer 0: Base Media */}
-      <div className="composition-layer--base">
+      <div
+        className="composition-layer--base composition-layer--base-tappable"
+        onClick={baseMedia.type === 'video' ? togglePlayback : undefined}
+        role={baseMedia.type === 'video' ? 'button' : undefined}
+        tabIndex={baseMedia.type === 'video' ? 0 : undefined}
+        aria-label={baseMedia.type === 'video' ? (isPaused ? 'Play bloom' : 'Pause bloom') : undefined}
+        onKeyDown={baseMedia.type === 'video' ? (e) => {
+          if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); togglePlayback(); }
+        } : undefined}
+      >
         {baseMedia.type === 'video' ? (
           <video
+            ref={videoRef}
             src={baseMedia.src}
             poster={baseMedia.poster}
             autoPlay muted loop playsInline
@@ -264,6 +299,24 @@ export default function LivePreview({
         position: 'absolute', inset: 0, zIndex: 42, pointerEvents: 'none',
         background: 'radial-gradient(ellipse at center, transparent 60%, rgba(0,0,0,0.3) 100%)',
       }} />
+
+      {/* Tap-to-pause feedback flash */}
+      {iconPulse > 0 && baseMedia.type === 'video' && (
+        <div className="composition-tap-icon" key={iconPulse} aria-hidden="true">
+          {isPaused ? (
+            <svg viewBox="0 0 24 24" width="44" height="44" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
+          ) : (
+            <svg viewBox="0 0 24 24" width="44" height="44" fill="currentColor"><path d="M6 5h4v14H6zM14 5h4v14h-4z" /></svg>
+          )}
+        </div>
+      )}
+
+      {/* Buyer-preview stamp — recipient view never gets this */}
+      {previewStamp && (
+        <div className="composition-preview-stamp" aria-hidden="true">
+          <span>{previewStamp}</span>
+        </div>
+      )}
     </div>
   );
 }
