@@ -2,44 +2,70 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Digital Bloom — Archive</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Digital Bloom — Video Archive</title>
+<link rel="icon" type="image/svg+xml" href="/admin/archive-icon.svg">
+<link rel="apple-touch-icon" href="/admin/archive-icon.svg">
+<link rel="manifest" href="/admin/archive.webmanifest">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Video Archive">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0D1B36">
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background:#0a0a0a; color:#e8e8e8; font-family:-apple-system,BlinkMacSystemFont,'Inter',sans-serif; min-height:100vh; padding-bottom:80px; }
-  header { background:#111; border-bottom:2px solid #D4AF37; padding:18px 18px 14px; position:sticky; top:0; z-index:5; }
-  header h1 { color:#D4AF37; font-size:1.05rem; letter-spacing:0.1em; text-transform:uppercase; }
-  header p { color:#888; font-size:0.78rem; margin-top:4px; }
-  .cat-tabs { display:flex; gap:8px; padding:12px 14px; overflow-x:auto; background:#0e0e0e; border-bottom:1px solid #1a1a1a; }
-  .cat-tab { background:#181818; border:1px solid #2a2a2a; color:#9a9a9a; padding:8px 16px; border-radius:18px; font-size:0.78rem; white-space:nowrap; cursor:pointer; font-family:inherit; }
-  .cat-tab.active { background:#D4AF37; color:#000; border-color:#D4AF37; font-weight:600; }
-  .stats { padding:14px 18px 6px; color:#888; font-size:0.85rem; }
+  body { background:#0D1B36; color:#f4ebd0; font-family:-apple-system,BlinkMacSystemFont,'Inter',sans-serif; min-height:100vh; padding-bottom:40px; }
+  header { background:#0a142a; border-bottom:2px solid #D4AF37; padding:18px 18px 14px; position:sticky; top:0; z-index:5; }
+  header h1 { color:#D4AF37; font-size:1.05rem; letter-spacing:0.1em; text-transform:uppercase; font-family:Georgia,serif; }
+  header p { color:#8da4c5; font-size:0.78rem; margin-top:4px; }
+
+  .mode-toggle { display:flex; gap:0; padding:12px 14px 6px; background:#0D1B36; border-bottom:1px solid #1a2a4a; }
+  .mode-btn { flex:1; background:transparent; border:1px solid #2a3e5e; color:#8da4c5; padding:10px; font-size:0.8rem; letter-spacing:0.08em; text-transform:uppercase; font-family:inherit; cursor:pointer; }
+  .mode-btn:first-child { border-radius:6px 0 0 6px; border-right:none; }
+  .mode-btn:last-child { border-radius:0 6px 6px 0; }
+  .mode-btn.active { background:#D4AF37; color:#0D1B36; border-color:#D4AF37; font-weight:700; }
+
+  .cat-tabs { display:flex; gap:8px; padding:10px 14px 14px; overflow-x:auto; background:#0D1B36; border-bottom:1px solid #1a2a4a; }
+  .cat-tab { background:#152544; border:1px solid #2a3e5e; color:#a8c0e0; padding:8px 16px; border-radius:18px; font-size:0.78rem; white-space:nowrap; cursor:pointer; font-family:inherit; }
+  .cat-tab.active { background:#D4AF37; color:#0D1B36; border-color:#D4AF37; font-weight:600; }
+
+  .stats { padding:14px 18px 6px; color:#8da4c5; font-size:0.85rem; }
   .stats strong { color:#D4AF37; }
+
   .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(170px,1fr)); gap:12px; padding:10px 14px 24px; }
-  .card { background:#111; border:1px solid #2a1a1a; border-radius:10px; overflow:hidden; }
-  .card.restored { border-color:#1f3a1f; }
+  .card { background:#152544; border:1px solid #2a3e5e; border-radius:10px; overflow:hidden; }
+  .card.archive-mode { border-color:#3a2a14; }
+  .card.toggled { border-color:#1f3a1f; }
   .video-wrap { position:relative; aspect-ratio:9/16; background:#000; cursor:pointer; }
-  .video-wrap video { width:100%; height:100%; object-fit:cover; display:block; }
-  .video-wrap img { width:100%; height:100%; object-fit:cover; display:block; }
-  .play-tag { position:absolute; bottom:8px; left:8px; background:rgba(0,0,0,0.7); color:#D4AF37; font-size:0.65rem; padding:3px 8px; border-radius:10px; letter-spacing:0.05em; }
+  .video-wrap video, .video-wrap img { width:100%; height:100%; object-fit:cover; display:block; }
+  .play-tag { position:absolute; bottom:8px; left:8px; background:rgba(13,27,54,0.85); color:#D4AF37; font-size:0.65rem; padding:3px 8px; border-radius:10px; letter-spacing:0.05em; }
+
   .body { padding:10px 12px 12px; }
-  .name { font-size:0.85rem; color:#e8e8e8; line-height:1.3; margin-bottom:6px; min-height:2.4em; }
-  .date { font-size:0.7rem; color:#666; margin-bottom:10px; }
-  button.restore { width:100%; background:#D4AF37; color:#000; border:none; padding:10px; border-radius:6px; font-weight:700; font-size:0.78rem; letter-spacing:0.06em; text-transform:uppercase; cursor:pointer; font-family:inherit; }
-  button.restore:disabled { background:#3a3a3a; color:#888; cursor:default; }
-  button.restore.done { background:#1f3a1f; color:#5cba5c; }
-  .empty { text-align:center; padding:60px 20px; color:#666; font-size:0.95rem; }
+  .name { font-size:0.85rem; color:#f4ebd0; line-height:1.3; margin-bottom:6px; min-height:2.4em; font-family:Georgia,serif; }
+  .date { font-size:0.7rem; color:#7a8fad; margin-bottom:10px; }
+
+  button.action { width:100%; border:none; padding:10px; border-radius:6px; font-weight:700; font-size:0.78rem; letter-spacing:0.06em; text-transform:uppercase; cursor:pointer; font-family:inherit; }
+  button.action.restore { background:#D4AF37; color:#0D1B36; }
+  button.action.archive { background:#1a2c4d; color:#D4AF37; border:1px solid #D4AF37; }
+  button.action:disabled { background:#2a3e5e; color:#7a8fad; border-color:#2a3e5e; cursor:default; }
+  button.action.done { background:#1f3a1f; color:#5cba5c; border:1px solid #1f3a1f; }
+
+  .empty { text-align:center; padding:60px 20px; color:#7a8fad; font-size:0.95rem; }
   .err { background:#3a1010; border:1px solid #6a2222; color:#ff8888; padding:12px 16px; margin:14px; border-radius:6px; font-size:0.85rem; }
-  .toast { position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:#1f3a1f; color:#5cba5c; padding:12px 22px; border-radius:8px; font-size:0.85rem; z-index:30; opacity:0; transition:opacity 0.25s; pointer-events:none; }
+  .toast { position:fixed; bottom:20px; left:50%; transform:translateX(-50%); padding:12px 22px; border-radius:8px; font-size:0.85rem; z-index:30; opacity:0; transition:opacity 0.25s; pointer-events:none; }
   .toast.show { opacity:1; }
 </style>
 </head>
 <body>
 
 <header>
-  <h1>🌸 Archive</h1>
-  <p>Deactivated videos by category. Tap Restore to put one back on the site.</p>
+  <h1>🌸 Video Archive</h1>
+  <p>Toggle videos on and off the site by category.</p>
 </header>
+
+<div class="mode-toggle" id="mode-toggle">
+  <button class="mode-btn" data-mode="active">On Site</button>
+  <button class="mode-btn active" data-mode="inactive">Archive</button>
+</div>
 
 <div class="cat-tabs" id="cat-tabs"></div>
 <div class="stats" id="stats">Loading…</div>
@@ -65,6 +91,14 @@ const CATEGORIES = [
   ['general', 'General'],
 ];
 let currentCat = params.get('category') || 'mothers-day';
+let currentMode = params.get('mode') || 'inactive';
+
+function syncUrl() {
+  const u = new URL(location.href);
+  u.searchParams.set('category', currentCat);
+  u.searchParams.set('mode', currentMode);
+  history.replaceState(null, '', u);
+}
 
 function tabs() {
   const el = document.getElementById('cat-tabs');
@@ -72,9 +106,11 @@ function tabs() {
     `<button class="cat-tab ${slug===currentCat?'active':''}" data-cat="${slug}">${label}</button>`
   ).join('');
   el.querySelectorAll('.cat-tab').forEach(b => b.onclick = () => {
-    currentCat = b.dataset.cat;
-    history.replaceState(null, '', `?category=${currentCat}&token=${TOKEN}`);
-    tabs(); load();
+    currentCat = b.dataset.cat; syncUrl(); tabs(); load();
+  });
+  document.querySelectorAll('.mode-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.mode === currentMode);
+    b.onclick = () => { currentMode = b.dataset.mode; syncUrl(); tabs(); load(); };
   });
 }
 
@@ -87,21 +123,23 @@ function toast(msg, ok=true) {
   setTimeout(() => t.classList.remove('show'), 2200);
 }
 
-async function restore(id, btn) {
-  btn.disabled = true; btn.textContent = 'Restoring…';
+async function toggleProduct(id, btn, action) {
+  btn.disabled = true; btn.textContent = action === 'restore' ? 'Putting back…' : 'Archiving…';
   try {
     const r = await fetch('/api/admin/archive', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ token: TOKEN, productId: id, action: 'restore' }),
+      body: JSON.stringify({ token: TOKEN, productId: id, action }),
     });
     const j = await r.json();
     if (!r.ok) throw new Error(j.error || 'failed');
-    btn.classList.add('done'); btn.textContent = '✓ On Site';
-    btn.closest('.card').classList.add('restored');
-    toast('Put back on site');
+    btn.classList.add('done');
+    btn.textContent = action === 'restore' ? '✓ On Site' : '✓ Archived';
+    btn.closest('.card').classList.add('toggled');
+    toast(action === 'restore' ? 'Put back on site' : 'Moved to archive');
   } catch (e) {
-    btn.disabled = false; btn.textContent = 'Restore';
+    btn.disabled = false;
+    btn.textContent = action === 'restore' ? 'Restore' : 'Archive';
     toast(e.message, false);
   }
 }
@@ -115,13 +153,16 @@ async function load() {
     return;
   }
   try {
-    const r = await fetch(`/api/admin/archive?token=${encodeURIComponent(TOKEN)}&category=${currentCat}`);
+    const r = await fetch(`/api/admin/archive?token=${encodeURIComponent(TOKEN)}&category=${currentCat}&status=${currentMode}`);
     const j = await r.json();
     if (!r.ok) throw new Error(j.error || 'failed');
     const items = j.products || [];
-    document.getElementById('stats').innerHTML = `<strong>${items.length}</strong> deactivated · ${CATEGORIES.find(c=>c[0]===currentCat)?.[1] || currentCat}`;
+    const label = CATEGORIES.find(c=>c[0]===currentCat)?.[1] || currentCat;
+    const modeLabel = currentMode === 'active' ? 'on the site' : 'in the archive';
+    document.getElementById('stats').innerHTML = `<strong>${items.length}</strong> ${modeLabel} · ${label}`;
     if (!items.length) {
-      document.getElementById('content').innerHTML = '<div class="empty">Nothing in the archive for this category.</div>';
+      const empty = currentMode === 'active' ? 'Nothing live on the site for this category.' : 'Nothing in the archive for this category.';
+      document.getElementById('content').innerHTML = `<div class="empty">${empty}</div>`;
       return;
     }
     document.getElementById('content').innerHTML = `<div class="grid">${items.map(p => {
@@ -131,13 +172,17 @@ async function load() {
       const name = (p.name || 'Untitled').replace(/[<>&]/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;'}[c]));
       const media = vid
         ? `<video src="${vid}" preload="metadata" playsinline muted ${poster?`poster="${poster}"`:''} onclick="this.paused?this.play():this.pause()"></video><div class="play-tag">▶ Tap to play</div>`
-        : poster ? `<img src="${poster}" alt="">` : `<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#444;font-size:0.7rem;">no preview</div>`;
-      return `<div class="card">
+        : poster ? `<img src="${poster}" alt="">` : `<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#7a8fad;font-size:0.7rem;">no preview</div>`;
+      const isActive = currentMode === 'active';
+      const btnAction = isActive ? 'archive' : 'restore';
+      const btnLabel = isActive ? 'Archive' : 'Restore';
+      const cardClass = isActive ? 'archive-mode' : '';
+      return `<div class="card ${cardClass}">
         <div class="video-wrap">${media}</div>
         <div class="body">
           <div class="name">${name}</div>
           <div class="date">${date}</div>
-          <button class="restore" onclick="restore('${p.id}', this)">Restore</button>
+          <button class="action ${btnAction}" onclick="toggleProduct('${p.id}', this, '${btnAction}')">${btnLabel}</button>
         </div>
       </div>`;
     }).join('')}</div>`;

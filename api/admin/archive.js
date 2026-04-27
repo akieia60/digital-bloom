@@ -19,11 +19,13 @@ export default async function handler(req, res) {
     const token = req.query.token;
     if (token !== adminToken) return unauthorized(res);
     const category = (req.query.category || 'mothers-day').toString();
+    const status = (req.query.status || 'inactive').toString();
+    const isActive = status === 'active';
     const { data, error } = await supabase
       .from('products')
       .select('id, name, slug, category, video_file_url, video_url, thumbnail_url, image_url, is_active, created_at, price_cents')
       .eq('category', category)
-      .eq('is_active', false)
+      .eq('is_active', isActive)
       .order('created_at', { ascending: false });
     if (error) return res.status(500).json({ error: error.message });
     return res.status(200).json({ products: data || [] });
