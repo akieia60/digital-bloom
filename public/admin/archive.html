@@ -22,8 +22,9 @@
   header p { color:#8da4c5; font-size:0.78rem; margin-top:4px; }
 
   .mode-toggle { display:flex; gap:0; padding:12px 14px 6px; background:#0D1B36; border-bottom:1px solid #1a2a4a; }
-  .mode-btn { flex:1; background:transparent; border:1px solid #2a3e5e; color:#8da4c5; padding:10px; font-size:0.8rem; letter-spacing:0.08em; text-transform:uppercase; font-family:inherit; cursor:pointer; }
+  .mode-btn { flex:1; background:transparent; border:1px solid #2a3e5e; color:#8da4c5; padding:10px 4px; font-size:0.78rem; letter-spacing:0.08em; text-transform:uppercase; font-family:inherit; cursor:pointer; }
   .mode-btn:first-child { border-radius:6px 0 0 6px; border-right:none; }
+  .mode-btn:not(:first-child):not(:last-child) { border-right:none; }
   .mode-btn:last-child { border-radius:0 6px 6px 0; }
   .mode-btn.active { background:#D4AF37; color:#0D1B36; border-color:#D4AF37; font-weight:700; }
 
@@ -35,7 +36,7 @@
   .stats strong { color:#D4AF37; }
 
   .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(170px,1fr)); gap:12px; padding:10px 14px 24px; }
-  .card { background:#152544; border:1px solid #2a3e5e; border-radius:10px; overflow:hidden; }
+  .card { background:#152544; border:1px solid #2a3e5e; border-radius:10px; overflow:hidden; position:relative; }
   .card.archive-mode { border-color:#3a2a14; }
   .card.toggled { border-color:#1f3a1f; }
   .video-wrap { position:relative; aspect-ratio:9/16; background:linear-gradient(160deg,#0a142a 0%,#0d1b36 50%,#152544 100%); cursor:pointer; overflow:hidden; }
@@ -43,13 +44,30 @@
   .video-wrap .placeholder { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px; color:#D4AF37; padding:18px; text-align:center; }
   .video-wrap .placeholder .play-circle { width:54px; height:54px; border-radius:50%; background:rgba(212,175,55,0.18); border:2px solid #D4AF37; display:flex; align-items:center; justify-content:center; font-size:1.6rem; padding-left:5px; }
   .video-wrap .placeholder .label { font-size:0.7rem; letter-spacing:0.12em; text-transform:uppercase; opacity:0.85; font-family:Georgia,serif; }
-  .play-tag { position:absolute; bottom:8px; left:8px; background:rgba(13,27,54,0.85); color:#D4AF37; font-size:0.65rem; padding:3px 8px; border-radius:10px; letter-spacing:0.05em; }
+
+  /* Status pill on Renders cards */
+  .pill { display:inline-block; font-size:0.6rem; letter-spacing:0.1em; text-transform:uppercase; padding:3px 8px; border-radius:10px; font-weight:700; margin-bottom:6px; font-family:inherit; }
+  .pill.live { background:#1f3a1f; color:#9be39b; border:1px solid #2c5a2c; }
+  .pill.new  { background:#0a142a; color:#D4AF37; border:1px solid #D4AF37; }
+
+  /* "NEW RENDER AVAILABLE" diagonal ribbon on Archive cards */
+  .ribbon {
+    position:absolute; top:14px; right:-32px;
+    background:linear-gradient(90deg,#D4AF37,#a8842a);
+    color:#0D1B36; font-size:0.55rem; font-weight:800; letter-spacing:0.12em;
+    padding:4px 36px; transform:rotate(35deg); text-transform:uppercase;
+    box-shadow:0 2px 6px rgba(0,0,0,0.4); z-index:2; pointer-events:none;
+    font-family:inherit;
+  }
 
   .body { padding:10px 12px 12px; }
-  .name { font-size:0.85rem; color:#f4ebd0; line-height:1.3; margin-bottom:6px; min-height:2.4em; font-family:Georgia,serif; }
+  .name { font-size:0.85rem; color:#f4ebd0; line-height:1.3; margin-bottom:4px; min-height:2.4em; font-family:Georgia,serif; }
+  .cat-line { font-size:0.65rem; color:#8da4c5; letter-spacing:0.05em; text-transform:uppercase; margin-bottom:4px; }
   .date { font-size:0.7rem; color:#7a8fad; margin-bottom:10px; }
 
   button.action { width:100%; border:none; padding:10px; border-radius:6px; font-weight:700; font-size:0.78rem; letter-spacing:0.06em; text-transform:uppercase; cursor:pointer; font-family:inherit; }
+  button.action.publish { background:#D4AF37; color:#0D1B36; }
+  button.action.refresh { background:#1a2c4d; color:#D4AF37; border:1px solid #D4AF37; }
   button.action.restore { background:#D4AF37; color:#0D1B36; }
   button.action.archive { background:#1a2c4d; color:#D4AF37; border:1px solid #D4AF37; }
   button.action:disabled { background:#2a3e5e; color:#7a8fad; border-color:#2a3e5e; cursor:default; }
@@ -57,7 +75,7 @@
 
   .empty { text-align:center; padding:60px 20px; color:#7a8fad; font-size:0.95rem; }
   .err { background:#3a1010; border:1px solid #6a2222; color:#ff8888; padding:12px 16px; margin:14px; border-radius:6px; font-size:0.85rem; }
-  .toast { position:fixed; bottom:20px; left:50%; transform:translateX(-50%); padding:12px 22px; border-radius:8px; font-size:0.85rem; z-index:30; opacity:0; transition:opacity 0.25s; pointer-events:none; }
+  .toast { position:fixed; bottom:20px; left:50%; transform:translateX(-50%); padding:12px 22px; border-radius:8px; font-size:0.85rem; z-index:30; opacity:0; transition:opacity 0.25s; pointer-events:none; max-width:88vw; text-align:center; }
   .toast.show { opacity:1; }
 </style>
 </head>
@@ -65,12 +83,13 @@
 
 <header>
   <h1>🌸 Video Archive</h1>
-  <p>Toggle videos on and off the site by category.</p>
+  <p>Renders, On Site, Archive — one tap to publish or restore.</p>
 </header>
 
 <div class="mode-toggle" id="mode-toggle">
+  <button class="mode-btn" data-mode="renders">Renders</button>
   <button class="mode-btn" data-mode="active">On Site</button>
-  <button class="mode-btn active" data-mode="inactive">Archive</button>
+  <button class="mode-btn" data-mode="inactive">Archive</button>
 </div>
 
 <div class="cat-tabs" id="cat-tabs"></div>
@@ -102,7 +121,9 @@ const CATEGORIES = [
   ['general', 'General'],
 ];
 let currentCat = params.get('category') || 'mothers-day';
-let currentMode = params.get('mode') || 'inactive';
+let currentMode = params.get('mode') || 'renders';
+const VALID_MODES = new Set(['renders', 'active', 'inactive']);
+if (!VALID_MODES.has(currentMode)) currentMode = 'renders';
 
 function syncUrl() {
   const u = new URL(location.href);
@@ -131,7 +152,7 @@ function toast(msg, ok=true) {
   t.style.background = ok ? '#1f3a1f' : '#3a1010';
   t.style.color = ok ? '#5cba5c' : '#ff8888';
   t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2200);
+  setTimeout(() => t.classList.remove('show'), 2600);
 }
 
 function loadVideo(el) {
@@ -148,25 +169,141 @@ function loadVideo(el) {
   wrap.appendChild(v);
 }
 
-async function toggleProduct(id, btn, action) {
-  btn.disabled = true; btn.textContent = action === 'restore' ? 'Putting back…' : 'Archiving…';
+function escape(s) {
+  return String(s ?? '').replace(/[<>&"]/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c]));
+}
+
+function fmtDate(s) {
+  if (!s) return '';
+  try { return new Date(s).toLocaleDateString(); } catch { return ''; }
+}
+
+async function publishRender(promptId, productId, btn, refresh) {
+  const orig = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = refresh ? 'Refreshing…' : 'Publishing…';
   try {
     const r = await fetch('/api/admin/archive', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ token: TOKEN, productId: id, action }),
+      body: JSON.stringify({ token: TOKEN, action: 'publish', promptId, productId }),
     });
     const j = await r.json();
     if (!r.ok) throw new Error(j.error || 'failed');
     btn.classList.add('done');
-    btn.textContent = action === 'restore' ? '✓ On Site' : '✓ Archived';
+    btn.textContent = '✓ Live on site';
     btn.closest('.card').classList.add('toggled');
-    toast(action === 'restore' ? 'Put back on site' : 'Moved to archive');
+    toast(refresh ? 'Refreshed on site.' : 'Published to site.');
   } catch (e) {
     btn.disabled = false;
-    btn.textContent = action === 'restore' ? 'Restore' : 'Archive';
+    btn.textContent = orig;
     toast(e.message, false);
   }
+}
+
+async function smartRestore(productId, btn) {
+  const orig = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = 'Restoring…';
+  try {
+    const r = await fetch('/api/admin/archive', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token: TOKEN, action: 'restore', productId }),
+    });
+    const j = await r.json();
+    if (!r.ok) throw new Error(j.error || 'failed');
+    btn.classList.add('done');
+    btn.textContent = j.freshlyRepublished ? '✓ Restored (new render)' : '✓ On Site';
+    btn.closest('.card').classList.add('toggled');
+    toast(j.freshlyRepublished ? 'Restored with new Grok render.' : 'Restored.');
+  } catch (e) {
+    btn.disabled = false;
+    btn.textContent = orig;
+    toast(e.message, false);
+  }
+}
+
+async function archiveProduct(productId, btn) {
+  const orig = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = 'Archiving…';
+  try {
+    const r = await fetch('/api/admin/archive', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token: TOKEN, action: 'archive', productId }),
+    });
+    const j = await r.json();
+    if (!r.ok) throw new Error(j.error || 'failed');
+    btn.classList.add('done');
+    btn.textContent = '✓ Archived';
+    btn.closest('.card').classList.add('toggled');
+    toast('Moved to archive.');
+  } catch (e) {
+    btn.disabled = false;
+    btn.textContent = orig;
+    toast(e.message, false);
+  }
+}
+
+function rendersGrid(items) {
+  return items.map(p => {
+    const name = escape(p.title || 'Untitled');
+    const cat = escape(p.cat || '');
+    const date = fmtDate(p.completed_at);
+    const isLive = p.is_live;
+    const pill = isLive
+      ? `<span class="pill live">Live on site</span>`
+      : `<span class="pill new">New render</span>`;
+    const btnLabel = isLive ? 'Refresh on Site' : 'Publish to Site';
+    const btnClass = isLive ? 'refresh' : 'publish';
+    const safeProductId = p.product_id ? `'${p.product_id}'` : 'null';
+    const media = p.render_url
+      ? `<div class="placeholder" data-src="${p.render_url}" onclick="loadVideo(this)"><div class="play-circle">▶</div><div class="label">Tap to play</div></div>`
+      : `<div class="placeholder"><div class="label" style="opacity:0.5">no preview</div></div>`;
+    return `<div class="card">
+      <div class="video-wrap">${media}</div>
+      <div class="body">
+        ${pill}
+        <div class="name">${name}</div>
+        <div class="cat-line">${cat}</div>
+        <div class="date">${date}</div>
+        <button class="action ${btnClass}" onclick="publishRender('${p.id}', ${safeProductId}, this, ${isLive})">${btnLabel}</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function productsGrid(items, mode) {
+  return items.map(p => {
+    const name = escape(p.name || 'Untitled');
+    const date = fmtDate(p.created_at);
+    const stockVid = p.video_file_url || p.video_url || '';
+    const freshVid = p.fresh_render_url || '';
+    const vid = freshVid || stockVid;
+    const poster = p.thumbnail_url || p.image_url || '';
+    const isActive = mode === 'active';
+    const ribbon = (!isActive && freshVid) ? `<div class="ribbon">New render available</div>` : '';
+    const media = vid
+      ? `<div class="placeholder" data-src="${vid}" ${poster?`data-poster="${poster}"`:''} onclick="loadVideo(this)"><div class="play-circle">▶</div><div class="label">Tap to play</div></div>`
+      : poster ? `<img src="${poster}" alt="">` : `<div class="placeholder"><div class="label" style="opacity:0.5">no preview</div></div>`;
+    const btnHandler = isActive
+      ? `archiveProduct('${p.id}', this)`
+      : `smartRestore('${p.id}', this)`;
+    const btnLabel = isActive ? 'Archive' : (freshVid ? 'Restore (Smart)' : 'Restore');
+    const btnClass = isActive ? 'archive' : 'restore';
+    const cardClass = isActive ? 'archive-mode' : '';
+    return `<div class="card ${cardClass}">
+      ${ribbon}
+      <div class="video-wrap">${media}</div>
+      <div class="body">
+        <div class="name">${name}</div>
+        <div class="date">${date}</div>
+        <button class="action ${btnClass}" onclick="${btnHandler}">${btnLabel}</button>
+      </div>
+    </div>`;
+  }).join('');
 }
 
 async function load() {
@@ -181,36 +318,30 @@ async function load() {
     const r = await fetch(`/api/admin/archive?token=${encodeURIComponent(TOKEN)}&category=${currentCat}&status=${currentMode}`);
     const j = await r.json();
     if (!r.ok) throw new Error(j.error || 'failed');
-    const items = j.products || [];
+
     const label = CATEGORIES.find(c=>c[0]===currentCat)?.[1] || currentCat;
-    const modeLabel = currentMode === 'active' ? 'on the site' : 'in the archive';
-    document.getElementById('stats').innerHTML = `<strong>${items.length}</strong> ${modeLabel} · ${label}`;
-    if (!items.length) {
-      const empty = currentMode === 'active' ? 'Nothing live on the site for this category.' : 'Nothing in the archive for this category.';
-      document.getElementById('content').innerHTML = `<div class="empty">${empty}</div>`;
-      return;
+
+    if (currentMode === 'renders') {
+      const items = j.renders || [];
+      const liveCount = items.filter(x => x.is_live).length;
+      const newCount = items.length - liveCount;
+      document.getElementById('stats').innerHTML = `<strong>${items.length}</strong> renders · ${label} · <strong>${newCount}</strong> new, ${liveCount} live`;
+      if (!items.length) {
+        document.getElementById('content').innerHTML = `<div class="empty">No completed renders for this category.</div>`;
+        return;
+      }
+      document.getElementById('content').innerHTML = `<div class="grid">${rendersGrid(items)}</div>`;
+    } else {
+      const items = j.products || [];
+      const modeLabel = currentMode === 'active' ? 'on the site' : 'in the archive';
+      document.getElementById('stats').innerHTML = `<strong>${items.length}</strong> ${modeLabel} · ${label}`;
+      if (!items.length) {
+        const empty = currentMode === 'active' ? 'Nothing live on the site for this category.' : 'Nothing in the archive for this category.';
+        document.getElementById('content').innerHTML = `<div class="empty">${empty}</div>`;
+        return;
+      }
+      document.getElementById('content').innerHTML = `<div class="grid">${productsGrid(items, currentMode)}</div>`;
     }
-    document.getElementById('content').innerHTML = `<div class="grid">${items.map(p => {
-      const vid = p.video_file_url || p.video_url || '';
-      const poster = p.thumbnail_url || p.image_url || '';
-      const date = p.created_at ? new Date(p.created_at).toLocaleDateString() : '';
-      const name = (p.name || 'Untitled').replace(/[<>&]/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;'}[c]));
-      const media = vid
-        ? `<div class="placeholder" data-src="${vid}" ${poster?`data-poster="${poster}"`:''} onclick="loadVideo(this)"><div class="play-circle">▶</div><div class="label">Tap to play</div></div>`
-        : poster ? `<img src="${poster}" alt="">` : `<div class="placeholder"><div class="label" style="opacity:0.5">no preview</div></div>`;
-      const isActive = currentMode === 'active';
-      const btnAction = isActive ? 'archive' : 'restore';
-      const btnLabel = isActive ? 'Archive' : 'Restore';
-      const cardClass = isActive ? 'archive-mode' : '';
-      return `<div class="card ${cardClass}">
-        <div class="video-wrap">${media}</div>
-        <div class="body">
-          <div class="name">${name}</div>
-          <div class="date">${date}</div>
-          <button class="action ${btnAction}" onclick="toggleProduct('${p.id}', this, '${btnAction}')">${btnLabel}</button>
-        </div>
-      </div>`;
-    }).join('')}</div>`;
   } catch (e) {
     document.getElementById('content').innerHTML = `<div class="err">${e.message}</div>`;
     document.getElementById('stats').textContent = '';
