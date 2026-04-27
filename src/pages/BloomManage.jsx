@@ -153,6 +153,7 @@ export default function BloomManage() {
               fontChoice={delivery.fontChoice}
               messageTextColor={delivery.messageTextColor}
               messageBold={delivery.messageBold}
+              previewStamp={delivered ? null : 'Delivery on the way'}
               className="bloom-delivery__preview"
             />
           </div>
