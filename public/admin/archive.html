@@ -35,8 +35,11 @@
   .card { background:#152544; border:1px solid #2a3e5e; border-radius:10px; overflow:hidden; }
   .card.archive-mode { border-color:#3a2a14; }
   .card.toggled { border-color:#1f3a1f; }
-  .video-wrap { position:relative; aspect-ratio:9/16; background:#000; cursor:pointer; }
+  .video-wrap { position:relative; aspect-ratio:9/16; background:linear-gradient(160deg,#0a142a 0%,#0d1b36 50%,#152544 100%); cursor:pointer; overflow:hidden; }
   .video-wrap video, .video-wrap img { width:100%; height:100%; object-fit:cover; display:block; }
+  .video-wrap .placeholder { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px; color:#D4AF37; padding:18px; text-align:center; }
+  .video-wrap .placeholder .play-circle { width:54px; height:54px; border-radius:50%; background:rgba(212,175,55,0.18); border:2px solid #D4AF37; display:flex; align-items:center; justify-content:center; font-size:1.6rem; padding-left:5px; }
+  .video-wrap .placeholder .label { font-size:0.7rem; letter-spacing:0.12em; text-transform:uppercase; opacity:0.85; font-family:Georgia,serif; }
   .play-tag { position:absolute; bottom:8px; left:8px; background:rgba(13,27,54,0.85); color:#D4AF37; font-size:0.65rem; padding:3px 8px; border-radius:10px; letter-spacing:0.05em; }
 
   .body { padding:10px 12px 12px; }
@@ -123,6 +126,20 @@ function toast(msg, ok=true) {
   setTimeout(() => t.classList.remove('show'), 2200);
 }
 
+function loadVideo(el) {
+  const src = el.dataset.src;
+  if (!src) return;
+  const poster = el.dataset.poster || '';
+  const wrap = el.parentElement;
+  const v = document.createElement('video');
+  v.src = src; v.controls = true; v.playsInline = true; v.autoplay = true;
+  v.preload = 'auto'; v.muted = true;
+  if (poster) v.poster = poster;
+  v.style.cssText = 'width:100%;height:100%;object-fit:cover;display:block';
+  el.remove();
+  wrap.appendChild(v);
+}
+
 async function toggleProduct(id, btn, action) {
   btn.disabled = true; btn.textContent = action === 'restore' ? 'Putting back…' : 'Archiving…';
   try {
@@ -171,8 +188,8 @@ async function load() {
       const date = p.created_at ? new Date(p.created_at).toLocaleDateString() : '';
       const name = (p.name || 'Untitled').replace(/[<>&]/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;'}[c]));
       const media = vid
-        ? `<video src="${vid}" preload="metadata" playsinline muted ${poster?`poster="${poster}"`:''} onclick="this.paused?this.play():this.pause()"></video><div class="play-tag">▶ Tap to play</div>`
-        : poster ? `<img src="${poster}" alt="">` : `<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#7a8fad;font-size:0.7rem;">no preview</div>`;
+        ? `<div class="placeholder" data-src="${vid}" ${poster?`data-poster="${poster}"`:''} onclick="loadVideo(this)"><div class="play-circle">▶</div><div class="label">Tap to play</div></div>`
+        : poster ? `<img src="${poster}" alt="">` : `<div class="placeholder"><div class="label" style="opacity:0.5">no preview</div></div>`;
       const isActive = currentMode === 'active';
       const btnAction = isActive ? 'archive' : 'restore';
       const btnLabel = isActive ? 'Archive' : 'Restore';
