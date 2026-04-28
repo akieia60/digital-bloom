@@ -1,14 +1,14 @@
 export const es = {
   // ─── Hero (original) ───
   hero_prelude: "El Futuro de los Regalos",
-  hero_title_1: "Dale sus flores",
-  hero_title_2: "mientras aún pueden verlas",
+  hero_title_1: "Brilla tu amor",
+  hero_title_2: "en el mundo",
   hero_subtitle: "Digital Bloom fue creado para expresar amor y aprecio con intención. Creemos en dar a las personas sus flores mientras todavía están aquí para experimentar el gesto.",
   hero_cta: "Comienza Tu Historia",
 
   // ─── Hero (GradientHero — design-upgrade) ───
-  hero_new_title_1: "Dale Sus Flores",
-  hero_new_title_2: "Mientras Estén Aquí",
+  hero_new_title_1: "Brilla Tu Amor",
+  hero_new_title_2: "en el Mundo",
   hero_new_tagline: "Arte en movimiento de lujo para cada ocasión — cumpleaños, amor, celebraciones y más",
   hero_new_cta: "ENVIAR UN BLOOM",
   hero_new_from: "Regalos desde",
@@ -526,7 +526,7 @@ export const es = {
   delivery_expired_title: "El enlace del Bloom venció",
   delivery_expired_message: "Este enlace protegido del bloom ya venció. Pídele al remitente un enlace nuevo.",
   delivery_protection_note: "Los enlaces protegidos del bloom son solo de visualización y se pueden volver a ver en cualquier momento.",
-  delivery_brand_tagline: "Dales sus flores mientras están aquí",
+  delivery_brand_tagline: "Brilla Tu Amor en el Mundo",
 
 
   // ─── Common ───

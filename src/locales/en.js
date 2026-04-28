@@ -1,14 +1,14 @@
 export const en = {
   // ─── Hero (original) ───
   hero_prelude: "The Future of Gifting",
-  hero_title_1: "Give them their flowers",
-  hero_title_2: "while they can still see them",
+  hero_title_1: "Shine your love",
+  hero_title_2: "in the world",
   hero_subtitle: "Digital Bloom was created to express love and appreciation with intention. We believe in giving people their flowers while they are still here to experience the gesture.",
   hero_cta: "Begin Your Story",
 
   // ─── Hero (GradientHero — design-upgrade) ───
-  hero_new_title_1: "Give Them Their Flowers",
-  hero_new_title_2: "While They're Here",
+  hero_new_title_1: "Shine Your Love",
+  hero_new_title_2: "In the World",
   hero_new_tagline: "No flowers? No problem. Send something cinematic in minutes — starting at $1.99.",
   hero_new_cta: "SEND A BLOOM",
   hero_new_from: "Gifts starting from",
@@ -539,7 +539,7 @@ export const en = {
   delivery_expired_message: "This protected bloom link has expired. Please contact the sender for a fresh delivery link.",
   delivery_protection_note: "Protected bloom links are view-only and can be revisited anytime.",
   delivery_send_cta: "Send a Bloom of your own →",
-  delivery_brand_tagline: "Give Them Their Flowers While They're Here",
+  delivery_brand_tagline: "Shine Your Love in the World",
 
 
   // ─── Common ───

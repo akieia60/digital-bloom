@@ -1,14 +1,14 @@
 export const ht = {
   // ─── Hero (original) ───
   hero_prelude: "Avni Yo Dwe Demen",
-  hero_title_1: "Bay yo flè yo",
-  hero_title_2: "pandan yo kapab wè yo",
+  hero_title_1: "Klere lanmou ou",
+  hero_title_2: "nan mond la",
   hero_subtitle: "Digital Bloom te kreye pou w eksprime renmen ak apresyasyon avèk entansyon. Nou kwè nan bay moun flè yo pandan yo tou la pou experyanse jès sa a.",
   hero_cta: "Kòmanse Istwa Ou",
 
   // ─── Hero (GradientHero — design-upgrade) ───
-  hero_new_title_1: "Bay Yo Flè Yo",
-  hero_new_title_2: "Pandan Yo la",
+  hero_new_title_1: "Klere Lanmou Ou",
+  hero_new_title_2: "nan Mond la",
   hero_new_tagline: "Atizay mouvman di liks pou chak okasyon — anivèsè, renmen, fèt ak ankò",
   hero_new_cta: "VOYE YON BLOOM",
   hero_new_from: "Kado a komanse nan",
@@ -526,7 +526,7 @@ export const ht = {
   delivery_expired_title: "Lyen Bloom nan ekspire",
   delivery_expired_message: "Lyen bloom ki pwoteje sa a ekspire. Tanpri kontakte moun ki voye li a pou yon nouvo lyen.",
   delivery_protection_note: "Lyen Bloom ki pwoteje yo se pou gade sèlman epi ou ka retounen gade yo nenpòt ki lè.",
-  delivery_brand_tagline: "Ba yo flè yo pandan yo la toujou",
+  delivery_brand_tagline: "Klere Lanmou Ou nan Mond la",
 
 
   // ─── Common ───
