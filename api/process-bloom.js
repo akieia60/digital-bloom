@@ -82,9 +82,25 @@ export default async function handler(req, res) {
     // 3. Burn watermark in with ffmpeg overlay filter
     // -an: drop audio — AI-generated bloom videos have no audio stream,
     // and -c:a copy would fail on a missing stream.
+    //
+    // Bouncing watermark (Sora 2 / Reels-style piracy lift): the gold
+    // "Digital Bloom™" lockup cycles through all four corners every 5
+    // seconds, snapping (not sliding) on each transition. Pirates can't
+    // crop a single corner — they'd lose the watermark on the next jump.
+    //
+    // Cycle timeline (mod 20s):
+    //   0-5s  → bottom-left   (x=24,         y=H-h-14)
+    //   5-10s → bottom-right  (x=W-w-24,     y=H-h-14)
+    //   10-15s → top-right    (x=W-w-24,     y=14)
+    //   15-20s → top-left     (x=24,         y=14)
+    //
+    // eval=frame is required so x/y re-evaluate every frame instead of
+    // freezing at filter init.
+    const wmX = "if(lt(mod(t,20),5),24,if(lt(mod(t,20),15),W-w-24,24))";
+    const wmY = "if(lt(mod(t,20),10),H-h-14,14)";
     await runFfmpeg([
       '-i', tmpRaw, '-i', tmpWm,
-      '-filter_complex', 'overlay=24:H-74',
+      '-filter_complex', `overlay=x='${wmX}':y='${wmY}':eval=frame`,
       '-c:v', 'libx264', '-preset', 'ultrafast',
       '-an', '-y', tmpOut,
     ]);
