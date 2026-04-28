@@ -108,11 +108,18 @@ if (URL_TOKEN) {
   try { localStorage.setItem(TOKEN_KEY, URL_TOKEN); } catch (e) {}
 }
 const TOKEN = URL_TOKEN || (() => { try { return localStorage.getItem(TOKEN_KEY) || ''; } catch (e) { return ''; } })();
+// IMPORTANT: every slug here must exist in src/data/categories.js. The API
+// silently returns empty when a slug has no canonical mapping, so a phantom
+// chip would just look broken (better than the old behavior which leaked
+// every category's renders). Order is: Mother's-Day-first while she's the
+// top priority through May 10, then evergreen + occasion buckets. New
+// categories must be added BOTH here and in src/data/categories.js.
 const CATEGORIES = [
   ['mothers-day', "Mother's Day"],
   ['birthday', 'Birthday'],
   ['fathers-day', "Father's Day"],
   ['graduation', 'Graduation'],
+  ['acknowledgement', 'Acknowledgement'],
   ['anniversary', 'Anniversary'],
   ['love', 'Love'],
   ['luxury', 'Luxury'],
@@ -120,8 +127,13 @@ const CATEGORIES = [
   ['signature-stories', 'Signature Stories'],
   ['friendship', 'Friendship'],
   ['valentine', 'Valentine'],
-  ['sports', 'Sports'],
-  ['general', 'General'],
+  ['christmas', 'Christmas'],
+  ['holidays', 'Holidays'],
+  ['encouragement', 'Encouragement'],
+  ['thank-you', 'Thank You'],
+  ['sympathy', 'Sympathy'],
+  ['grief', 'Grief'],
+  ['zodiac', 'Zodiac'],
 ];
 let currentCat = params.get('category') || 'mothers-day';
 let currentMode = params.get('mode') || 'renders';

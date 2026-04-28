@@ -118,13 +118,20 @@ export default async function handler(req, res) {
     // ── Renders tab: completed prompts joined to their products by slug=pid
     if (status === 'renders') {
       const labels = SLUG_TO_LABELS[categorySlug] || [];
+      // Defensive: if the slug has no canonical labels (phantom chip from
+      // a stale archive.html), return empty instead of skipping the filter
+      // and leaking every other category's renders. Caught 2026-04-28 when
+      // 'sports' chip surfaced 82 cross-category renders.
+      if (!labels.length) {
+        return res.status(200).json({ renders: [] });
+      }
       let q = supabase
         .from(PROMPTS_TABLE)
         .select('id, title, cat, generation_completed_at, generation_status')
         .eq('generation_status', 'completed')
         .order('generation_completed_at', { ascending: false })
-        .limit(200);
-      if (labels.length) q = q.in('cat', labels);
+        .limit(200)
+        .in('cat', labels);
       const { data: prompts, error: pErr } = await q;
       if (pErr) return res.status(500).json({ error: pErr.message });
 
