@@ -3,7 +3,13 @@
    ============================================ */
 
 .landing-nav {
-  position: fixed;
+  /* Sticky (not fixed) so the Mother's Day countdown banner above it
+     stays visible at scroll=0. Fixed positioning collided with the
+     banner's z-index 110 — banner won and covered the hamburger +
+     language switcher. With sticky, the nav sits naturally below the
+     banner in flow at scroll=0, then sticks to top:0 once you scroll
+     past the banner. */
+  position: sticky;
   top: 0;
   left: 0;
   right: 0;
