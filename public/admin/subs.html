@@ -104,6 +104,7 @@
   }
   .billed.apple { background: rgba(250,250,250,0.12); color: #fff; }
   .billed.direct { background: rgba(56,189,248,0.18); color: var(--blue); }
+  .billed.yearly { background: rgba(16,185,129,0.18); color: var(--green); }
   .section-title {
     font-family: 'DM Mono', monospace;
     font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
@@ -144,28 +145,35 @@
 <script>
 'use strict';
 // EDIT THIS LIST — one entry per recurring charge.
-// `next` = "May 14" or "2026-05-14" — month/day-only auto-assumes the next future occurrence.
-// `billed` = 'apple' (Apple in-app purchase) | 'direct' (web/credit-card on vendor)
+// `next`   = "May 14" or "2026-05-14" — month/day-only assumes the next future occurrence
+// `billed` = 'apple' (App-Store IAP) | 'direct' (web/card on vendor)
+// `cycle`  = 'monthly' (default) | 'yearly'
+// `tbd`    = true if you don't know the price yet — shows the row with a ? badge
 const SUBS = [
-  // Apple-billed (from account.apple.com/account/manage/section/subscriptions)
-  { name: 'Google AI Pro (2 TB)',   plan: 'Gmail / Drive storage',  price: 19.99, next: 'May 2',  billed: 'apple' },
-  { name: 'ElevenLabs',              plan: 'AI Voice Generator',     price: 22.00, next: 'May 13', billed: 'apple' },
-  { name: 'AppleCare One',           plan: 'Multi-device coverage',  price: 19.99, next: 'May 14', billed: 'apple' },
-  { name: 'GitHub Pro',              plan: 'Private repos / actions', price: 3.99, next: 'May 16', billed: 'apple' },
-  { name: 'GitHub Copilot',          plan: 'AI code completions',    price: 10.00, next: 'May 17', billed: 'apple' },
-  { name: 'Apple One',               plan: 'Family bundle',          price: 25.95, next: 'May 19', billed: 'apple' },
-  { name: 'ChatGPT Plus',            plan: 'OpenAI consumer',        price: 19.99, next: 'May 21', billed: 'apple' },
-  { name: 'SuperGrok',               plan: 'Grok AI Chat & Video',   price: 30.00, next: 'May 24', billed: 'apple' },
+  // Apple-billed (account.apple.com/account/manage/section/subscriptions)
+  { name: 'Google AI Pro (2 TB)',   plan: 'Gmail / Drive storage',  price: 19.99, next: 'May 2',           billed: 'apple' },
+  { name: 'iCloud+',                 plan: '2 TB storage',           price: 9.99,  next: 'May 11',          billed: 'apple' },
+  { name: 'ElevenLabs',              plan: 'AI Voice Generator',     price: 22.00, next: 'May 13',          billed: 'apple' },
+  { name: 'AppleCare One',           plan: 'Multi-device coverage',  price: 19.99, next: 'May 14',          billed: 'apple' },
+  { name: 'GitHub Pro',              plan: 'Private repos / actions', price: 3.99, next: 'May 16',          billed: 'apple' },
+  { name: 'GitHub Copilot',          plan: 'AI code completions',    price: 10.00, next: 'May 17',          billed: 'apple' },
+  { name: 'Apple One',               plan: 'Family bundle',          price: 25.95, next: 'May 19',          billed: 'apple' },
+  { name: 'ChatGPT Plus',            plan: 'OpenAI consumer',        price: 19.99, next: 'May 21',          billed: 'apple' },
+  { name: 'SuperGrok',               plan: 'Grok AI Chat & Video',   price: 30.00, next: 'May 24',          billed: 'apple' },
+  { name: 'MindNode',                plan: 'Mind map & outline',     price: 24.99, next: 'September 4 2026', billed: 'apple', cycle: 'yearly' },
 
-  // Direct-billed (web subs not through Apple — fill these in as you remember them)
-  { name: 'Higgsfield Plus',         plan: '1000 cred/mo · marketing video', price: 49.00, next: 'May 28', billed: 'direct' },
-  // { name: 'Buffer Essentials',     plan: '6 channels',           price: 6.00,  next: 'May ??', billed: 'direct' },
-  // { name: 'Vercel',                plan: 'Hobby (free) or Pro',  price: 0.00,  next: '—',       billed: 'direct' },
-  // { name: 'Tailscale',             plan: 'Personal',             price: 0.00,  next: '—',       billed: 'direct' },
+  // Direct-billed (web subs not through Apple)
+  { name: 'Higgsfield Plus',         plan: '1000 cred/mo · marketing video',     price: 49.00, next: 'May 28', billed: 'direct' },
+  { name: 'Vercel Pro',              plan: 'akieias-projects team',              price: 20.00, next: 'monthly', billed: 'direct' },
+  { name: 'Tailscale',               plan: 'Personal — 100 device free tier',    price: 0.00,  next: '—',       billed: 'direct' },
+  { name: 'Buffer',                  plan: 'Just signed up — plan TBD',          price: 0,     next: '—',       billed: 'direct', tbd: true },
+  { name: 'Notion',                  plan: 'Plan + cost TBD',                    price: 0,     next: '—',       billed: 'direct', tbd: true },
 ];
 
 function parseNext(s) {
-  // Accept "May 2", "2026-05-14", or "May 13 2026"
+  // Returns Date | 'monthly' | null
+  if (!s || s === '—') return null;
+  if (s === 'monthly') return 'monthly';
   if (/^\d{4}-\d{2}-\d{2}$/.test(s)) return new Date(s + 'T00:00:00');
   const months = ['jan','feb','mar','apr','may','jun','jul','aug','sep','oct','nov','dec'];
   const m = s.toLowerCase().match(/^([a-z]+)\s+(\d{1,2})(?:\s+(\d{4}))?$/);
@@ -181,14 +189,15 @@ function parseNext(s) {
 }
 
 function daysFromNow(date) {
-  if (!date) return 999;
+  if (!(date instanceof Date)) return 9999;
   const ms = date - new Date();
   return Math.ceil(ms / 86400000);
 }
 
-function fmtDate(date) {
-  if (!date) return '—';
-  return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+function fmtDate(d) {
+  if (d === 'monthly') return 'Renews monthly';
+  if (!(d instanceof Date)) return '—';
+  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 }
 
 function urgencyClass(days) {
@@ -198,32 +207,57 @@ function urgencyClass(days) {
 }
 
 const enriched = SUBS.map(s => {
-  const dt = parseNext(s.next);
-  return { ...s, _date: dt, _days: daysFromNow(dt) };
+  const parsed = parseNext(s.next);
+  // _days for sorting:
+  //   - actual Date → real days
+  //   - 'monthly'   → 30 (treat as upcoming-ish)
+  //   - null/tbd    → 9999 (sink to bottom)
+  let _days;
+  if (parsed instanceof Date) _days = daysFromNow(parsed);
+  else if (parsed === 'monthly') _days = 30;
+  else _days = 9999;
+  return { ...s, _date: parsed, _days };
 }).sort((a, b) => a._days - b._days);
 
 const rows = document.getElementById('rows');
 enriched.forEach(s => {
-  const cls = urgencyClass(s._days);
+  const cls = s.tbd ? 'calm' : urgencyClass(s._days);
   const div = document.createElement('div');
   div.className = 'row ' + cls;
-  const dayLabel = s._days <= 0 ? 'Today' : s._days === 1 ? 'Tomorrow' : 'in ' + s._days + ' days';
+  let dayLabel;
+  if (s.tbd) dayLabel = 'amount unknown';
+  else if (s._date === 'monthly') dayLabel = 'recurring';
+  else if (s._days >= 9999) dayLabel = 'no date';
+  else if (s._days <= 0) dayLabel = 'today';
+  else if (s._days === 1) dayLabel = 'tomorrow';
+  else dayLabel = 'in ' + s._days + ' days';
+
+  const cycle = s.cycle === 'yearly' ? '<span class="billed yearly">/yr</span>' : '';
+  const priceLabel = s.tbd ? '<span style="color:var(--ink-soft)">$ ?</span>' : '$' + s.price.toFixed(2);
+
   div.innerHTML = `
     <div>
-      <div class="name">${s.name}<span class="billed ${s.billed}">${s.billed}</span></div>
+      <div class="name">${s.name}<span class="billed ${s.billed}">${s.billed}</span>${cycle}</div>
       <div class="meta">${s.plan}</div>
     </div>
     <div class="right">
-      <div class="price">$${s.price.toFixed(2)}</div>
+      <div class="price">${priceLabel}</div>
       <div class="when ${cls}">${fmtDate(s._date)} · ${dayLabel}</div>
     </div>
   `;
   rows.appendChild(div);
 });
 
-const monthly = enriched.reduce((sum, s) => sum + s.price, 0);
+// Monthly total: yearly subs divided by 12, TBD rows skipped
+const monthly = enriched.reduce((sum, s) => {
+  if (s.tbd) return sum;
+  if (s.cycle === 'yearly') return sum + (s.price / 12);
+  return sum + s.price;
+}, 0);
+const tbdCount = enriched.filter(s => s.tbd).length;
+const tbdNote = tbdCount > 0 ? '<div style="color:var(--ink-soft); font-size:11px; margin-top:2px;">' + tbdCount + ' tbd not counted</div>' : '';
 document.getElementById('total').innerHTML =
-  '<strong>$' + monthly.toFixed(2) + '</strong>per month';
+  '<strong>$' + monthly.toFixed(2) + '</strong>per month' + tbdNote;
 </script>
 </body>
 </html>
