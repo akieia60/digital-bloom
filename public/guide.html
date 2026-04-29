@@ -6,7 +6,7 @@
 
 <!-- Identity / iOS home-screen install -->
 <title>Bloom Briefing — Digital Bloom Audio Guide</title>
-<meta name="description" content="The Digital Bloom audio guide. Twelve plain-prose chapters of business briefings, session logs, and decisions read aloud by Web Speech — built for AK and Gamble to listen while driving.">
+<meta name="description" content="The Digital Bloom audio guide. Plain-prose chapters of business briefings, session logs, and decisions — read aloud in Akieia's voice for AK and Gamble to listen while driving.">
 <meta name="theme-color" content="#0D1B36">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -149,9 +149,12 @@
 
 <script>
 'use strict';
-const TTS_API = '/api/tts';
+// Chapters are pre-rendered to static MP3s in Akieia's Personal Voice
+// (rendered via macOS `say -v "Akieia's Personal Voice 1"`). No TTS API
+// call at runtime — just GET the static file. Plays instantly on first tap.
+const STATIC_AUDIO = '/audio/chapters/chapter-';
 // 1-frame silent MP3 used to "unlock" the audio element during a user gesture
-// so iOS Safari allows programmatic .play() after the async TTS fetch resolves.
+// so iOS Safari allows programmatic .play() after any async wait resolves.
 const SILENT_MP3 = 'data:audio/mp3;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4Ljc2LjEwMAAAAAAAAAAAAAAA//tQAAAAAAAAAAAAAAAAAAAAAABJbmZvAAAADwAAAAIAAAEgABc2Njg5OUtLZ2drcHd6foOQkpibm5+goaSlqamqqqqsra6vsLOzubu8vL3CxMTL2N7e6Pj7+/8AAAAATGF2YzU4LjEzAAAAAAAAAAAAAAAAJAQAAAAAAAAAASAk5lLLAAAAAAD/+xAAAAACABMAAACQAAAVwAAAAAA0AAAcwAAACAA';
 let audioUnlocked = false;
 
@@ -247,16 +250,8 @@ async function tapChapter(i) {
 }
 
 async function fetchAudio(i) {
-  if (blobs[i]) return blobs[i];
-  setTag(i, 'Loading…', 'loading');
-  const r = await fetch(TTS_API, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ text: chapters[i].s }),
-  });
-  if (!r.ok) throw new Error('API error ' + r.status);
-  const blob = await r.blob();
-  const url = URL.createObjectURL(blob);
+  // Pre-rendered static MP3 in Akieia's Personal Voice
+  const url = STATIC_AUDIO + String(i + 1).padStart(2, '0') + '.mp3';
   blobs[i] = url;
   setTag(i, '✓ Ready', 'done');
   return url;
