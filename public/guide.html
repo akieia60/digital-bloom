@@ -145,11 +145,15 @@
 </div>
 
 <div class="toast" id="toast"></div>
-<audio id="audio"></audio>
+<audio id="audio" playsinline preload="auto" webkit-playsinline="true"></audio>
 
 <script>
 'use strict';
 const TTS_API = '/api/tts';
+// 1-frame silent MP3 used to "unlock" the audio element during a user gesture
+// so iOS Safari allows programmatic .play() after the async TTS fetch resolves.
+const SILENT_MP3 = 'data:audio/mp3;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4Ljc2LjEwMAAAAAAAAAAAAAAA//tQAAAAAAAAAAAAAAAAAAAAAABJbmZvAAAADwAAAAIAAAEgABc2Njg5OUtLZ2drcHd6foOQkpibm5+goaSlqamqqqqsra6vsLOzubu8vL3CxMTL2N7e6Pj7+/8AAAAATGF2YzU4LjEzAAAAAAAAAAAAAAAAJAQAAAAAAAAAASAk5lLLAAAAAAD/+xAAAAACABMAAACQAAAVwAAAAAA0AAAcwAAACAA';
+let audioUnlocked = false;
 
 const chapters = [
   {t:"Who We Are",d:"Creative Vision LLC & Digital Bloom",s:`Good morning. This is your Digital Bloom business audio guide. Let's start with who we are.\n\nWe are Creative Vision LLC, doing business as Digital Bloom. We are the world's first digital flower gifting platform. Instead of sending someone physical flowers that die in a week, we send them a cinematic video experience. A card that opens. Flowers that bloom out of a luxury box. Balloons. Confetti. All delivered instantly to their phone for two to five dollars. Zero shipping. Zero geographic limits. Instant delivery anywhere in the world.\n\nThe business is officially registered. Our LLC was filed in North Carolina on April 14th 2026. Our EIN is 42 dash 1904211. Our Digital Bloom DBA was filed April 23rd 2026. Our trademark application is pending with serial number 99626843.\n\nAkieia Davis is Senior Vice President. Derric Williams, also known as Gamble, is President.\n\nThis is real. This is happening. Let's keep building.`},
@@ -205,6 +209,20 @@ chapters.forEach((ch, i) => {
 
 // ===== CORE: Tap chapter = select + play =====
 async function tapChapter(i) {
+  // iOS Safari: must call .play() inside a user gesture to "unlock" the audio
+  // element. We do it once with a silent MP3, then later programmatic .play()
+  // calls (after async TTS fetch) succeed.
+  if (!audioUnlocked) {
+    try {
+      audio.src = SILENT_MP3;
+      audio.load();
+      await audio.play();
+      audio.pause();
+      audio.currentTime = 0;
+      audioUnlocked = true;
+    } catch (e) { /* ignore — most browsers don't need this */ }
+  }
+
   // Highlight immediately
   document.querySelectorAll('.ch').forEach(c => c.classList.remove('active', 'playing'));
   document.getElementById('ch-' + i).classList.add('active');
@@ -223,7 +241,8 @@ async function tapChapter(i) {
     // Prefetch next
     if (i < chapters.length - 1 && !blobs[i + 1]) fetchAudio(i + 1).catch(() => {});
   } catch (e) {
-    showToast('Error loading audio');
+    setTag(i, 'Tap to retry', 'ready');
+    showToast('Audio failed: ' + (e && e.message ? e.message : 'unknown'));
   }
 }
 
