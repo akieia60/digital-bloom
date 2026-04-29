@@ -93,6 +93,7 @@
   <button class="mode-btn" data-mode="renders">Renders</button>
   <button class="mode-btn" data-mode="active">On Site</button>
   <button class="mode-btn" data-mode="inactive">Archive</button>
+  <button class="mode-btn" data-mode="marketing">Marketing</button>
 </div>
 
 <div class="cat-tabs" id="cat-tabs"></div>
@@ -137,7 +138,7 @@ const CATEGORIES = [
 ];
 let currentCat = params.get('category') || 'mothers-day';
 let currentMode = params.get('mode') || 'renders';
-const VALID_MODES = new Set(['renders', 'active', 'inactive']);
+const VALID_MODES = new Set(['renders', 'active', 'inactive', 'marketing']);
 if (!VALID_MODES.has(currentMode)) currentMode = 'renders';
 
 function syncUrl() {
@@ -149,12 +150,20 @@ function syncUrl() {
 
 function tabs() {
   const el = document.getElementById('cat-tabs');
-  el.innerHTML = CATEGORIES.map(([slug, label]) =>
-    `<button class="cat-tab ${slug===currentCat?'active':''}" data-cat="${slug}">${label}</button>`
-  ).join('');
-  el.querySelectorAll('.cat-tab').forEach(b => b.onclick = () => {
-    currentCat = b.dataset.cat; syncUrl(); tabs(); load();
-  });
+  // Marketing mode isn't keyed off prompt-engine cat — files in
+  // monique-videos/commercial_drafts/ aren't bucketed by category.
+  // Hide the category strip when in marketing mode.
+  if (currentMode === 'marketing') {
+    el.style.display = 'none';
+  } else {
+    el.style.display = '';
+    el.innerHTML = CATEGORIES.map(([slug, label]) =>
+      `<button class="cat-tab ${slug===currentCat?'active':''}" data-cat="${slug}">${label}</button>`
+    ).join('');
+    el.querySelectorAll('.cat-tab').forEach(b => b.onclick = () => {
+      currentCat = b.dataset.cat; syncUrl(); tabs(); load();
+    });
+  }
   document.querySelectorAll('.mode-btn').forEach(b => {
     b.classList.toggle('active', b.dataset.mode === currentMode);
     b.onclick = () => { currentMode = b.dataset.mode; syncUrl(); tabs(); load(); };
@@ -341,6 +350,49 @@ function productsGrid(items, mode) {
   }).join('');
 }
 
+// Pretty-print a marketing draft filename like
+// "2026-04-28-mothers-day-v3-kling-pro.mp4" → "Apr 28 · Mothers Day · v3 (Kling Pro)"
+function prettyMarketingName(filename) {
+  const stem = filename.replace(/\.mp4$/, '');
+  const m = stem.match(/^(\d{4}-\d{2}-\d{2})-(.+?)-(v\d+)(?:-(.+))?$/);
+  if (!m) return stem;
+  const [, dateStr, occasion, version, model] = m;
+  const occLabel = occasion.split('-').map(w => w[0].toUpperCase() + w.slice(1)).join(' ');
+  const modelLabel = model ? ' (' + model.split('-').map(w => w[0].toUpperCase() + w.slice(1)).join(' ') + ')' : '';
+  let when = dateStr;
+  try {
+    const d = new Date(dateStr + 'T00:00:00');
+    when = d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+  } catch {}
+  return `${when} · ${occLabel} · ${version}${modelLabel}`;
+}
+
+function marketingGrid(items) {
+  return items.map(p => {
+    const pretty = escape(prettyMarketingName(p.name));
+    const date = fmtDate(p.created_at);
+    const sizeKb = p.size ? Math.round(p.size / 1024) : null;
+    const ageMs = p.created_at ? (Date.now() - new Date(p.created_at).getTime()) : Infinity;
+    const isNew = ageMs < 24 * 60 * 60 * 1000;
+    const newPill = isNew ? `<span class="pill new">New</span>` : '';
+    const sizeLine = sizeKb ? `<div class="cat-line">${sizeKb} KB · ${escape(p.name)}</div>` : `<div class="cat-line">${escape(p.name)}</div>`;
+    // Inline <video controls> so Ak can tap to play. Audio ON for marketing
+    // (commercials have dialogue / music) — different from bloom previews.
+    return `<div class="card">
+      <div class="video-wrap">
+        <video src="${escape(p.url)}" controls preload="metadata" playsinline style="width:100%;height:100%;object-fit:cover;display:block"></video>
+      </div>
+      <div class="body">
+        ${newPill}
+        <div class="name">${pretty}</div>
+        ${sizeLine}
+        <div class="date">${date}</div>
+        <button class="action archive" onclick="navigator.clipboard.writeText('${escape(p.url)}'); this.textContent='✓ URL copied'; setTimeout(()=>this.textContent='Copy URL', 1800)">Copy URL</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
 async function load() {
   document.getElementById('stats').textContent = 'Loading…';
   document.getElementById('content').innerHTML = '';
@@ -356,7 +408,15 @@ async function load() {
 
     const label = CATEGORIES.find(c=>c[0]===currentCat)?.[1] || currentCat;
 
-    if (currentMode === 'renders') {
+    if (currentMode === 'marketing') {
+      const items = j.marketing || [];
+      document.getElementById('stats').innerHTML = `<strong>${items.length}</strong> commercials in the marketing folder`;
+      if (!items.length) {
+        document.getElementById('content').innerHTML = `<div class="empty">No marketing drafts yet. Files in monique-videos/commercial_drafts/ will surface here.</div>`;
+        return;
+      }
+      document.getElementById('content').innerHTML = `<div class="grid">${marketingGrid(items)}</div>`;
+    } else if (currentMode === 'renders') {
       const items = j.renders || [];
       const liveCount = items.filter(x => x.is_live).length;
       const newCount = items.length - liveCount;

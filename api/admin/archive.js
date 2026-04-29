@@ -115,6 +115,31 @@ export default async function handler(req, res) {
     const status = (req.query.status || 'inactive').toString();
     const categorySlug = (req.query.category || 'mothers-day').toString();
 
+    // ── Marketing tab: lists commercial drafts written to
+    // `monique-videos/commercial_drafts/`. Different shape from the other
+    // tabs — no products, no prompts, just files in storage. Filename
+    // convention (set by Monique): YYYY-MM-DD-<occasion>-<version>-<model>.mp4
+    if (status === 'marketing') {
+      const { data: files, error } = await supabase
+        .storage
+        .from('monique-videos')
+        .list('commercial_drafts', {
+          limit: 200,
+          sortBy: { column: 'created_at', order: 'desc' },
+        });
+      if (error) return res.status(500).json({ error: error.message });
+      const monique = `${supabaseUrl}/storage/v1/object/public/monique-videos`;
+      const items = (files || [])
+        .filter((f) => f.name.endsWith('.mp4'))
+        .map((f) => ({
+          name: f.name,
+          url: `${monique}/commercial_drafts/${f.name}`,
+          created_at: f.created_at,
+          size: f.metadata?.size || 0,
+        }));
+      return res.status(200).json({ marketing: items });
+    }
+
     // ── Renders tab: completed prompts joined to their products by slug=pid
     if (status === 'renders') {
       const labels = SLUG_TO_LABELS[categorySlug] || [];
