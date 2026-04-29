@@ -244,6 +244,9 @@ async function tapChapter(i) {
     // Prefetch next
     if (i < chapters.length - 1 && !blobs[i + 1]) fetchAudio(i + 1).catch(() => {});
   } catch (e) {
+    // AbortError fires harmlessly when a new chapter tap interrupts the
+    // prior audio.play() promise. Skip the toast for that case.
+    if (e && e.name === 'AbortError') return;
     setTag(i, 'Tap to retry', 'ready');
     showToast('Audio failed: ' + (e && e.message ? e.message : 'unknown'));
   }

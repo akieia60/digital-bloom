@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Subscriptions — Ak</title>
+<meta name="theme-color" content="#0F172A" />
+<meta name="apple-mobile-web-app-title" content="Subs" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono&family=Fraunces:ital,wght@0,500;1,500&family=Inter:wght@400;500;600;700&display=swap" />
+<style>
+  :root {
+    --bg: #0F172A;
+    --card: #1E293B;
+    --line: rgba(255,255,255,0.08);
+    --ink: #F1F5F9;
+    --ink-soft: rgba(241,245,249,0.6);
+    --gold: #F2B233;
+    --red: #EF4444;
+    --green: #10B981;
+    --blue: #38BDF8;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; min-height: 100dvh; }
+  body {
+    font-family: 'Inter', -apple-system, system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+    padding: env(safe-area-inset-top) 16px 32px 16px;
+  }
+  .wrap { max-width: 600px; margin: 0 auto; }
+  header {
+    display: flex; align-items: baseline; justify-content: space-between;
+    margin: 24px 0 6px; gap: 12px; flex-wrap: wrap;
+  }
+  h1 {
+    font-family: Fraunces, Georgia, serif;
+    font-style: italic; font-weight: 500;
+    font-size: 32px; line-height: 1; letter-spacing: -0.02em;
+    margin: 0;
+  }
+  .total {
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    color: var(--ink-soft);
+    text-align: right;
+  }
+  .total strong { color: var(--ink); display: block; font-size: 22px; }
+  .eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--ink-soft);
+    margin-bottom: 8px;
+  }
+  .row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 12px; align-items: center;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+  }
+  .row.urgent { border-left: 3px solid var(--red); }
+  .row.warn { border-left: 3px solid var(--gold); }
+  .row.calm { border-left: 3px solid var(--green); }
+  .name {
+    font-weight: 600; font-size: 15px;
+  }
+  .meta {
+    font-size: 12px; color: var(--ink-soft);
+    margin-top: 2px;
+    font-family: 'DM Mono', monospace;
+  }
+  .right {
+    text-align: right;
+  }
+  .price {
+    font-family: 'DM Mono', monospace;
+    font-size: 14px; color: var(--ink);
+  }
+  .when {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px; letter-spacing: 0.06em;
+    color: var(--ink-soft);
+    margin-top: 2px;
+  }
+  .when.urgent { color: var(--red); }
+  .when.warn { color: var(--gold); }
+  .billed {
+    display: inline-block;
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    padding: 2px 6px;
+    border-radius: 99px;
+    margin-left: 6px;
+    vertical-align: middle;
+    font-family: 'DM Mono', monospace;
+  }
+  .billed.apple { background: rgba(250,250,250,0.12); color: #fff; }
+  .billed.direct { background: rgba(56,189,248,0.18); color: var(--blue); }
+  .section-title {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--ink-soft);
+    margin: 22px 0 8px;
+  }
+  .footer {
+    margin-top: 28px;
+    font-size: 12px; color: var(--ink-soft);
+    text-align: center;
+    line-height: 1.6;
+  }
+  .footer a { color: var(--blue); text-decoration: none; }
+  .footer code {
+    background: rgba(255,255,255,0.06);
+    padding: 1px 6px; border-radius: 4px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="eyebrow">recurring charges · sorted by next renewal</div>
+  <header>
+    <h1>Subscriptions</h1>
+    <div class="total" id="total"><strong>—</strong>per month</div>
+  </header>
+
+  <div id="rows"></div>
+
+  <div class="footer">
+    <p>Edit the list at <code>public/admin/subs.html</code> — the data array is at the top of the script tag below. After editing, push to GitHub and the page redeploys automatically.</p>
+    <p>Apple-billed subs cancel/manage at <a href="https://account.apple.com/account/manage/section/subscriptions">apple.com/account</a>. Direct-billed cancel inside the vendor dashboard.</p>
+  </div>
+</div>
+
+<script>
+'use strict';
+// EDIT THIS LIST — one entry per recurring charge.
+// `next` = "May 14" or "2026-05-14" — month/day-only auto-assumes the next future occurrence.
+// `billed` = 'apple' (Apple in-app purchase) | 'direct' (web/credit-card on vendor)
+const SUBS = [
+  // Apple-billed (from account.apple.com/account/manage/section/subscriptions)
+  { name: 'Google AI Pro (2 TB)',   plan: 'Gmail / Drive storage',  price: 19.99, next: 'May 2',  billed: 'apple' },
+  { name: 'ElevenLabs',              plan: 'AI Voice Generator',     price: 22.00, next: 'May 13', billed: 'apple' },
+  { name: 'AppleCare One',           plan: 'Multi-device coverage',  price: 19.99, next: 'May 14', billed: 'apple' },
+  { name: 'GitHub Pro',              plan: 'Private repos / actions', price: 3.99, next: 'May 16', billed: 'apple' },
+  { name: 'GitHub Copilot',          plan: 'AI code completions',    price: 10.00, next: 'May 17', billed: 'apple' },
+  { name: 'Apple One',               plan: 'Family bundle',          price: 25.95, next: 'May 19', billed: 'apple' },
+  { name: 'ChatGPT Plus',            plan: 'OpenAI consumer',        price: 19.99, next: 'May 21', billed: 'apple' },
+  { name: 'SuperGrok',               plan: 'Grok AI Chat & Video',   price: 30.00, next: 'May 24', billed: 'apple' },
+
+  // Direct-billed (web subs not through Apple — fill these in as you remember them)
+  { name: 'Higgsfield Plus',         plan: '1000 cred/mo · marketing video', price: 49.00, next: 'May 28', billed: 'direct' },
+  // { name: 'Buffer Essentials',     plan: '6 channels',           price: 6.00,  next: 'May ??', billed: 'direct' },
+  // { name: 'Vercel',                plan: 'Hobby (free) or Pro',  price: 0.00,  next: '—',       billed: 'direct' },
+  // { name: 'Tailscale',             plan: 'Personal',             price: 0.00,  next: '—',       billed: 'direct' },
+];
+
+function parseNext(s) {
+  // Accept "May 2", "2026-05-14", or "May 13 2026"
+  if (/^\d{4}-\d{2}-\d{2}$/.test(s)) return new Date(s + 'T00:00:00');
+  const months = ['jan','feb','mar','apr','may','jun','jul','aug','sep','oct','nov','dec'];
+  const m = s.toLowerCase().match(/^([a-z]+)\s+(\d{1,2})(?:\s+(\d{4}))?$/);
+  if (!m) return null;
+  const monIdx = months.findIndex(x => m[1].startsWith(x));
+  if (monIdx < 0) return null;
+  const day = parseInt(m[2], 10);
+  let year = m[3] ? parseInt(m[3], 10) : new Date().getFullYear();
+  let dt = new Date(year, monIdx, day);
+  // If date already passed this year, roll to next
+  if (!m[3] && dt < new Date()) dt = new Date(year + 1, monIdx, day);
+  return dt;
+}
+
+function daysFromNow(date) {
+  if (!date) return 999;
+  const ms = date - new Date();
+  return Math.ceil(ms / 86400000);
+}
+
+function fmtDate(date) {
+  if (!date) return '—';
+  return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+}
+
+function urgencyClass(days) {
+  if (days <= 7) return 'urgent';
+  if (days <= 14) return 'warn';
+  return 'calm';
+}
+
+const enriched = SUBS.map(s => {
+  const dt = parseNext(s.next);
+  return { ...s, _date: dt, _days: daysFromNow(dt) };
+}).sort((a, b) => a._days - b._days);
+
+const rows = document.getElementById('rows');
+enriched.forEach(s => {
+  const cls = urgencyClass(s._days);
+  const div = document.createElement('div');
+  div.className = 'row ' + cls;
+  const dayLabel = s._days <= 0 ? 'Today' : s._days === 1 ? 'Tomorrow' : 'in ' + s._days + ' days';
+  div.innerHTML = `
+    <div>
+      <div class="name">${s.name}<span class="billed ${s.billed}">${s.billed}</span></div>
+      <div class="meta">${s.plan}</div>
+    </div>
+    <div class="right">
+      <div class="price">$${s.price.toFixed(2)}</div>
+      <div class="when ${cls}">${fmtDate(s._date)} · ${dayLabel}</div>
+    </div>
+  `;
+  rows.appendChild(div);
+});
+
+const monthly = enriched.reduce((sum, s) => sum + s.price, 0);
+document.getElementById('total').innerHTML =
+  '<strong>$' + monthly.toFixed(2) + '</strong>per month';
+</script>
+</body>
+</html>
