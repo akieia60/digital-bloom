@@ -59,6 +59,19 @@ export const es = {
   cat_family: "Reunión Familiar",
   cat_religion: "Fe y Religión",
   cat_valentine: "Día de San Valentín",
+  cat_fathers_day: "Día del Padre",
+  cat_graduation: "Graduación",
+  cat_anniversary: "Aniversario de Bodas",
+  cat_thank_you: "Gracias",
+  cat_encouragement: "Aliento",
+  cat_sympathy: "Pésames",
+  cat_zodiac: "Zodiaco",
+  cat_signature_stories: "Historias Originales",
+  cat_acknowledgement: "Reconocimiento",
+  cat_christmas: "Navidad",
+  cat_holidays: "Días Festivos",
+  cat_womens_day: "Día Internacional de la Mujer",
+  cat_sports: "Deportes",
   cat_tap_explore: "Toca para explorar",
 
   // ─── Category Taglines ───
@@ -528,6 +541,12 @@ export const es = {
   delivery_protection_note: "Los enlaces protegidos del bloom son solo de visualización y se pueden volver a ver en cualquier momento.",
   delivery_brand_tagline: "Brilla Tu Amor en el Mundo",
 
+  // ─── Mother's Day countdown banner ───
+  md_countdown_today: "Hoy es el Día de las Madres — envía la suya ahora mismo",
+  md_countdown_tomorrow: "El Día de las Madres es mañana — pide antes de medianoche para entrega garantizada",
+  md_countdown_days: "Día de las Madres en {days} días — pide antes del viernes para entrega garantizada",
+  md_countdown_aria: "Cuenta regresiva del Día de las Madres",
+  md_countdown_dismiss: "Cerrar el banner del Día de las Madres",
 
   // ─── Common ───
   common_back: "Atrás",

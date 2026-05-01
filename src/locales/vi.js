@@ -59,6 +59,19 @@ export const vi = {
   cat_family: "Sum họp gia đình",
   cat_religion: "Đức tin & Tôn giáo",
   cat_valentine: "Lễ Tình Nhân",
+  cat_fathers_day: "Ngày Của Cha",
+  cat_graduation: "Tốt nghiệp",
+  cat_anniversary: "Kỷ niệm Ngày cưới",
+  cat_thank_you: "Cảm ơn",
+  cat_encouragement: "Khích lệ",
+  cat_sympathy: "Chia buồn",
+  cat_zodiac: "Cung hoàng đạo",
+  cat_signature_stories: "Câu chuyện Signature",
+  cat_acknowledgement: "Ghi nhận",
+  cat_christmas: "Giáng Sinh",
+  cat_holidays: "Ngày lễ",
+  cat_womens_day: "Ngày Quốc tế Phụ nữ",
+  cat_sports: "Thể thao",
   cat_tap_explore: "Chạm để khám phá",
 
   // ─── Category Taglines ───
@@ -531,6 +544,13 @@ export const vi = {
   delivery_protection_note: "Liên kết bloom được bảo vệ chỉ để xem và có thể xem lại bất cứ lúc nào.",
   delivery_send_cta: "Gửi một Bloom của riêng bạn →",
   delivery_brand_tagline: "Hãy để tình yêu của bạn tỏa sáng trong thế giới",
+
+  // ─── Mother's Day countdown banner ───
+  md_countdown_today: "Hôm nay là Ngày Của Mẹ — gửi ngay bây giờ",
+  md_countdown_tomorrow: "Ngày Của Mẹ là ngày mai — đặt trước nửa đêm để giao hàng đảm bảo",
+  md_countdown_days: "Ngày Của Mẹ còn {days} ngày — đặt trước Thứ Sáu để giao hàng đảm bảo",
+  md_countdown_aria: "Đếm ngược Ngày Của Mẹ",
+  md_countdown_dismiss: "Đóng banner Ngày Của Mẹ",
 
   // ─── Common ───
   common_back: "Quay lại",

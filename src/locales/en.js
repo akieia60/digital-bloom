@@ -59,6 +59,19 @@ export const en = {
   cat_family: "Family Reunion",
   cat_religion: "Faith & Religion",
   cat_valentine: "Valentine's Day",
+  cat_fathers_day: "Happy Father's Day",
+  cat_graduation: "Graduation",
+  cat_anniversary: "Anniversary",
+  cat_thank_you: "Thank You",
+  cat_encouragement: "Encouragement",
+  cat_sympathy: "Sympathy",
+  cat_zodiac: "Zodiac",
+  cat_signature_stories: "Signature Stories",
+  cat_acknowledgement: "Acknowledgement",
+  cat_christmas: "Christmas",
+  cat_holidays: "Holidays",
+  cat_womens_day: "International Women's Day",
+  cat_sports: "Sports",
   cat_tap_explore: "Tap to explore",
 
   // ─── Category Taglines ───
@@ -541,6 +554,13 @@ export const en = {
   delivery_send_cta: "Send a Bloom of your own →",
   delivery_brand_tagline: "Shine Your Love in the World",
 
+
+  // ─── Mother's Day countdown banner ───
+  md_countdown_today: "It's Mother's Day — send hers right now",
+  md_countdown_tomorrow: "Mother's Day is tomorrow — order before midnight for guaranteed delivery",
+  md_countdown_days: "Mother's Day in {days} days — order by Friday for guaranteed delivery",
+  md_countdown_aria: "Mother's Day countdown",
+  md_countdown_dismiss: "Dismiss Mother's Day banner",
 
   // ─── Common ───
   common_back: "Back",

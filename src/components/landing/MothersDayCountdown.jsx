@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useLanguage } from '../../contexts/LanguageContext';
 import '../../styles/mothers-day-countdown.css';
 
 // Show until the deadline passes; auto-removes itself the next day.
@@ -15,6 +16,7 @@ function daysUntil(target) {
 }
 
 export default function MothersDayCountdown() {
+  const { t } = useLanguage();
   const [days, setDays] = useState(() => daysUntil(MOTHERS_DAY));
   const [dismissed, setDismissed] = useState(() => {
     if (typeof window === 'undefined') return false;
@@ -39,15 +41,15 @@ export default function MothersDayCountdown() {
 
   let headline;
   if (days === 0) {
-    headline = "💐 It's Mother's Day — send hers right now";
+    headline = `💐 ${t('md_countdown_today')}`;
   } else if (days === 1) {
-    headline = "💐 Mother's Day is tomorrow — order before midnight for guaranteed delivery";
+    headline = `💐 ${t('md_countdown_tomorrow')}`;
   } else {
-    headline = `💐 Mother's Day in ${days} days — order by Friday for guaranteed delivery`;
+    headline = `💐 ${t('md_countdown_days').replace('{days}', days)}`;
   }
 
   return (
-    <div className="md-countdown-banner" role="region" aria-label="Mother's Day countdown">
+    <div className="md-countdown-banner" role="region" aria-label={t('md_countdown_aria')}>
       <div className="md-countdown-banner__inner">
         <Link to="/shop/mothers-day" className="md-countdown-banner__cta">
           <span className="md-countdown-banner__headline">{headline}</span>
@@ -57,7 +59,7 @@ export default function MothersDayCountdown() {
           type="button"
           className="md-countdown-banner__dismiss"
           onClick={handleDismiss}
-          aria-label="Dismiss Mother's Day banner"
+          aria-label={t('md_countdown_dismiss')}
         >
           ×
         </button>

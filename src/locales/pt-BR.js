@@ -59,6 +59,19 @@ export const ptBR = {
   cat_family: "Reunião de Família",
   cat_religion: "Fé & Religião",
   cat_valentine: "Dia dos Namorados",
+  cat_fathers_day: "Dia dos Pais",
+  cat_graduation: "Formatura",
+  cat_anniversary: "Aniversário de Casamento",
+  cat_thank_you: "Obrigado",
+  cat_encouragement: "Encorajamento",
+  cat_sympathy: "Pêsames",
+  cat_zodiac: "Zodíaco",
+  cat_signature_stories: "Histórias Signature",
+  cat_acknowledgement: "Reconhecimento",
+  cat_christmas: "Natal",
+  cat_holidays: "Feriados",
+  cat_womens_day: "Dia Internacional da Mulher",
+  cat_sports: "Esportes",
   cat_tap_explore: "Toque para explorar",
 
   // ─── Category Taglines ───
@@ -531,6 +544,13 @@ export const ptBR = {
   delivery_protection_note: "Links protegidos do bloom são apenas para visualização e podem ser revisitados a qualquer momento.",
   delivery_send_cta: "Envie seu próprio Bloom →",
   delivery_brand_tagline: "Faça Seu Amor Brilhar no Mundo",
+
+  // ─── Mother's Day countdown banner ───
+  md_countdown_today: "Hoje é Dia das Mães — envie o dela agora",
+  md_countdown_tomorrow: "Dia das Mães é amanhã — peça antes da meia-noite para entrega garantida",
+  md_countdown_days: "Dia das Mães em {days} dias — peça até sexta para entrega garantida",
+  md_countdown_aria: "Contagem regressiva do Dia das Mães",
+  md_countdown_dismiss: "Fechar banner do Dia das Mães",
 
   // ─── Common ───
   common_back: "Voltar",

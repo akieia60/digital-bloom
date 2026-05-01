@@ -59,6 +59,19 @@ export const ht = {
   cat_family: "Reyinyon Fanmi",
   cat_religion: "Fwa & Relijyon",
   cat_valentine: "Jou San Valan",
+  cat_fathers_day: "Fèt Papa",
+  cat_graduation: "Gradyasyon",
+  cat_anniversary: "Anivèsè Maryaj",
+  cat_thank_you: "Mèsi",
+  cat_encouragement: "Ankourajman",
+  cat_sympathy: "Senpati",
+  cat_zodiac: "Zodyak",
+  cat_signature_stories: "Istwa Siyati",
+  cat_acknowledgement: "Rekonèsans",
+  cat_christmas: "Nwèl",
+  cat_holidays: "Fèt",
+  cat_womens_day: "Jou Entènasyonal Fanm",
+  cat_sports: "Espò",
   cat_tap_explore: "Toucé pou eksplore",
 
   // ─── Category Taglines ───
@@ -528,6 +541,12 @@ export const ht = {
   delivery_protection_note: "Lyen Bloom ki pwoteje yo se pou gade sèlman epi ou ka retounen gade yo nenpòt ki lè.",
   delivery_brand_tagline: "Klere Lanmou Ou nan Mond la",
 
+  // ─── Mother's Day countdown banner ───
+  md_countdown_today: "Jodi a se Fèt Manman — voye pa li kounye a",
+  md_countdown_tomorrow: "Fèt Manman se demen — kòmande anvan minui pou livrezon garanti",
+  md_countdown_days: "Fèt Manman nan {days} jou — kòmande anvan vandredi pou livrezon garanti",
+  md_countdown_aria: "Kont alebò Fèt Manman",
+  md_countdown_dismiss: "Fèmen banyè Fèt Manman",
 
   // ─── Common ───
   common_back: "Retou",

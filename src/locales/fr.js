@@ -59,6 +59,19 @@ export const fr = {
   cat_family: "Réunion Familiale",
   cat_religion: "Foi & Religion",
   cat_valentine: "Saint-Valentin",
+  cat_fathers_day: "Fête des Pères",
+  cat_graduation: "Diplôme",
+  cat_anniversary: "Anniversaire de Mariage",
+  cat_thank_you: "Merci",
+  cat_encouragement: "Encouragement",
+  cat_sympathy: "Condoléances",
+  cat_zodiac: "Zodiaque",
+  cat_signature_stories: "Histoires Signature",
+  cat_acknowledgement: "Reconnaissance",
+  cat_christmas: "Noël",
+  cat_holidays: "Fêtes",
+  cat_womens_day: "Journée Internationale de la Femme",
+  cat_sports: "Sports",
   cat_tap_explore: "Appuyez pour explorer",
 
   // ─── Category Taglines ───
@@ -528,6 +541,12 @@ export const fr = {
   delivery_protection_note: "Les liens protégés du bloom sont en lecture seule et peuvent être revisités à tout moment.",
   delivery_brand_tagline: "Fais Briller Ton Amour dans le Monde",
 
+  // ─── Mother's Day countdown banner ───
+  md_countdown_today: "C'est la Fête des Mères — envoie le sien maintenant",
+  md_countdown_tomorrow: "La Fête des Mères, c'est demain — commande avant minuit pour une livraison garantie",
+  md_countdown_days: "Fête des Mères dans {days} jours — commande avant vendredi pour une livraison garantie",
+  md_countdown_aria: "Compte à rebours de la Fête des Mères",
+  md_countdown_dismiss: "Fermer la bannière de la Fête des Mères",
 
   // ─── Common ───
   common_back: "Retour",

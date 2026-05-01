@@ -59,6 +59,19 @@ export const ja = {
   cat_family: "家族の集い",
   cat_religion: "信仰と宗教",
   cat_valentine: "バレンタインデー",
+  cat_fathers_day: "父の日",
+  cat_graduation: "卒業",
+  cat_anniversary: "結婚記念日",
+  cat_thank_you: "ありがとう",
+  cat_encouragement: "励まし",
+  cat_sympathy: "お悔やみ",
+  cat_zodiac: "星座",
+  cat_signature_stories: "シグネチャーストーリー",
+  cat_acknowledgement: "感謝",
+  cat_christmas: "クリスマス",
+  cat_holidays: "祝日",
+  cat_womens_day: "国際女性デー",
+  cat_sports: "スポーツ",
   cat_tap_explore: "タップして見る",
 
   // ─── Category Taglines ───
@@ -531,6 +544,13 @@ export const ja = {
   delivery_protection_note: "保護されたブルームリンクは閲覧専用で、いつでも見直すことができます。",
   delivery_send_cta: "あなたもブルームを贈る →",
   delivery_brand_tagline: "あなたの愛を世界に咲かせて",
+
+  // ─── Mother's Day countdown banner ───
+  md_countdown_today: "今日は母の日です — 今すぐ贈りましょう",
+  md_countdown_tomorrow: "母の日は明日です — 配達確実のため深夜前にご注文を",
+  md_countdown_days: "母の日まで{days}日 — 配達確実のため金曜までにご注文を",
+  md_countdown_aria: "母の日カウントダウン",
+  md_countdown_dismiss: "母の日バナーを閉じる",
 
   // ─── Common ───
   common_back: "戻る",

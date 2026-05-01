@@ -59,6 +59,19 @@ export const de = {
   cat_family: "Familientreffen",
   cat_religion: "Glaube & Religion",
   cat_valentine: "Valentinstag",
+  cat_fathers_day: "Vatertag",
+  cat_graduation: "Abschluss",
+  cat_anniversary: "Hochzeitstag",
+  cat_thank_you: "Danke",
+  cat_encouragement: "Ermutigung",
+  cat_sympathy: "Beileid",
+  cat_zodiac: "Sternzeichen",
+  cat_signature_stories: "Signature Stories",
+  cat_acknowledgement: "Anerkennung",
+  cat_christmas: "Weihnachten",
+  cat_holidays: "Feiertage",
+  cat_womens_day: "Internationaler Frauentag",
+  cat_sports: "Sport",
   cat_tap_explore: "Antippen zum Erkunden",
 
   // ─── Category Taglines ───
@@ -531,6 +544,13 @@ export const de = {
   delivery_protection_note: "Geschützte Bloom-Links sind nur zur Ansicht und können jederzeit erneut besucht werden.",
   delivery_send_cta: "Sende einen eigenen Bloom →",
   delivery_brand_tagline: "Lass deine Liebe in der Welt erstrahlen",
+
+  // ─── Mother's Day countdown banner ───
+  md_countdown_today: "Heute ist Muttertag — verschicke ihren jetzt",
+  md_countdown_tomorrow: "Muttertag ist morgen — bestelle vor Mitternacht für garantierte Lieferung",
+  md_countdown_days: "Muttertag in {days} Tagen — bestelle bis Freitag für garantierte Lieferung",
+  md_countdown_aria: "Muttertags-Countdown",
+  md_countdown_dismiss: "Muttertags-Banner schließen",
 
   // ─── Common ───
   common_back: "Zurück",

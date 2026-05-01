@@ -39,18 +39,20 @@ export default function CategoryGrid() {
         const preview = PREVIEW_OVERRIDES[cat.slug] || firstVideoBySlug[cat.slug] || null;
         if (!preview) return null; // auto-hide categories with no content yet
         const occ = OCCASIONS[cat.slug];
+        const fallbackName = occ?.name || cat.name;
+        const i18nKey = `cat_${cat.slug.replace(/-/g, '_')}`;
+        const translated = t(i18nKey);
         return {
           slug: cat.slug,
           previewVideo: preview,
-          // Prefer the legacy OCCASIONS name if it exists (some have been
-          // hand-tuned for marketing), else fall back to canonical name.
-          name: occ?.name || cat.name,
+          // Translation order: dictionary key → curated OCCASIONS name → canonical
+          name: translated && translated !== i18nKey ? translated : fallbackName,
           accent: occ?.accent || cat.accent,
           emoji: occ?.emoji || cat.emoji,
         };
       })
       .filter(Boolean);
-  }, [products]);
+  }, [products, t]);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -104,7 +106,7 @@ export default function CategoryGrid() {
               <Link
                 to={`/shop/${cat.slug}`}
                 className="cat-stack-bloom-link"
-                aria-label={`Browse ${cat.name}`}
+                aria-label={`${t('shop_search_button')} ${cat.name}`}
               >
                 <div className="db-watermark cat-stack-bloom-square">
                   <video

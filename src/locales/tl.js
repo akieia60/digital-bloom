@@ -59,6 +59,19 @@ export const tl = {
   cat_family: "Pagsasama-sama ng Pamilya",
   cat_religion: "Pananampalataya at Relihiyon",
   cat_valentine: "Araw ng mga Puso",
+  cat_fathers_day: "Araw ng mga Ama",
+  cat_graduation: "Pagtatapos",
+  cat_anniversary: "Anibersaryo ng Kasal",
+  cat_thank_you: "Salamat",
+  cat_encouragement: "Pampasigla",
+  cat_sympathy: "Pakikiramay",
+  cat_zodiac: "Zodiak",
+  cat_signature_stories: "Mga Signature Story",
+  cat_acknowledgement: "Pagkilala",
+  cat_christmas: "Pasko",
+  cat_holidays: "Mga Pista Opisyal",
+  cat_womens_day: "Pandaigdigang Araw ng Kababaihan",
+  cat_sports: "Isports",
   cat_tap_explore: "I-tap upang tuklasin",
 
   // ─── Category Taglines ───
@@ -531,6 +544,13 @@ export const tl = {
   delivery_protection_note: "Ang protected bloom links ay view-only at maaaring balikan anumang oras.",
   delivery_send_cta: "Magpadala ng sariling Bloom →",
   delivery_brand_tagline: "Pagningningin ang Iyong Pagmamahal sa Mundo",
+
+  // ─── Mother's Day countdown banner ───
+  md_countdown_today: "Ngayon ang Araw ng mga Ina — ipadala ang sa kanya ngayon",
+  md_countdown_tomorrow: "Bukas na ang Araw ng mga Ina — mag-order bago hatinggabi para sa garantisadong paghahatid",
+  md_countdown_days: "Araw ng mga Ina sa loob ng {days} araw — mag-order bago Biyernes para sa garantisadong paghahatid",
+  md_countdown_aria: "Countdown ng Araw ng mga Ina",
+  md_countdown_dismiss: "Isara ang banner ng Araw ng mga Ina",
 
   // ─── Common ───
   common_back: "Bumalik",

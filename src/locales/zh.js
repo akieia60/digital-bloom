@@ -59,6 +59,19 @@ export const zh = {
   cat_family: "家庭团聚",
   cat_religion: "信仰与宗教",
   cat_valentine: "情人节",
+  cat_fathers_day: "父亲节",
+  cat_graduation: "毕业",
+  cat_anniversary: "结婚纪念日",
+  cat_thank_you: "感谢",
+  cat_encouragement: "鼓励",
+  cat_sympathy: "慰问",
+  cat_zodiac: "星座",
+  cat_signature_stories: "招牌故事",
+  cat_acknowledgement: "致敬",
+  cat_christmas: "圣诞节",
+  cat_holidays: "节日",
+  cat_womens_day: "国际妇女节",
+  cat_sports: "运动",
   cat_tap_explore: "点击探索",
 
   // ─── Category Taglines ───
@@ -528,6 +541,12 @@ export const zh = {
   delivery_protection_note: "受保护的 bloom 链接仅供查看，可随时重新访问。",
   delivery_brand_tagline: "让你的爱照亮这个世界",
 
+  // ─── 母亲节倒计时横幅 ───
+  md_countdown_today: "今天是母亲节 — 现在就送给她",
+  md_countdown_tomorrow: "明天就是母亲节 — 午夜前下单确保送达",
+  md_countdown_days: "距母亲节还有 {days} 天 — 周五前下单确保送达",
+  md_countdown_aria: "母亲节倒计时",
+  md_countdown_dismiss: "关闭母亲节横幅",
 
   // ─── Common ───
   common_back: "返回",
