@@ -3,6 +3,7 @@ import { useParams, useNavigate, useLocation, Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useProduct, useProducts } from '../hooks/useProducts';
+import { useLocalizedProduct } from '../hooks/useLocalizedProduct';
 import ProductCard from './ProductCard';
 import Customizer from './Customizer';
 import OCCASIONS from '../data/occasions';
@@ -18,7 +19,8 @@ const ProductDetails = () => {
   const [showSuccess, setShowSuccess] = useState(false);
   const [heroVideoReady, setHeroVideoReady] = useState(false);
 
-  const { product, loading } = useProduct(id);
+  const { product: rawProduct, loading } = useProduct(id);
+  const product = useLocalizedProduct(rawProduct);
 
   // Auto-open customizer when coming from "Edit Customization" in cart
   useEffect(() => {

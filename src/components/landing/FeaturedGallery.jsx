@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
+import { useLanguage } from '../../contexts/LanguageContext';
 
 /**
  * FeaturedGallery — Landing Page
@@ -8,6 +9,7 @@ import { supabase } from '../../lib/supabase';
  * Prices come from the database (product.price), never hardcoded.
  */
 export default function FeaturedGallery() {
+  const { lang } = useLanguage();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -16,7 +18,7 @@ export default function FeaturedGallery() {
       try {
         const { data, error } = await supabase
           .from('products')
-          .select('id, name, price, video_url, video_file_url, image_url, tier, category')
+          .select('id, name, price, video_url, video_file_url, image_url, tier, category, i18n')
           .eq('is_active', true)
           .limit(8);
 
@@ -86,7 +88,7 @@ export default function FeaturedGallery() {
                 </div>
               </div>
               <div className="gallery-info">
-                <h3 className="gallery-title">{product.name}</h3>
+                <h3 className="gallery-title">{product.i18n?.[lang]?.name || product.name}</h3>
                 {/* Price always comes from the database — never hardcoded */}
                 <p className="gallery-price">
                   ${parseFloat(product.price).toFixed(2)}

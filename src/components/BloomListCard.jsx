@@ -3,13 +3,15 @@ import VideoPlayer from './VideoPlayer';
 import { getTierByNumber } from '../config/pricingTiers';
 import { getPosterUrl } from '../lib/media';
 import OCCASIONS from '../data/occasions';
+import { useLocalizedProduct } from '../hooks/useLocalizedProduct';
 
 /**
  * Full-width stacked card for the category page list view.
  * Matches the hand-drawn sketch: large rectangular card with bloom
  * image/video as the focal point.
  */
-export default function BloomListCard({ product }) {
+export default function BloomListCard({ product: rawProduct }) {
+  const product = useLocalizedProduct(rawProduct);
   const tierInfo = product.tier ? getTierByNumber(product.tier) : null;
   const videoUrl = product.video_file_url || product.video_url;
   const posterUrl = getPosterUrl(videoUrl, product.image_url);

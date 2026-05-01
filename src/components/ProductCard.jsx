@@ -1,11 +1,13 @@
 import { Link } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
+import { useLocalizedProduct } from '../hooks/useLocalizedProduct';
 import VideoPlayer from './VideoPlayer';
 import { getPosterUrl } from '../lib/media';
 import OCCASIONS from '../data/occasions';
 
-const ProductCard = ({ product, compact = false }) => {
+const ProductCard = ({ product: rawProduct, compact = false }) => {
   const { t } = useLanguage();
+  const product = useLocalizedProduct(rawProduct);
   const displayPrice = Number(product?.price || 0).toFixed(2);
   const videoUrl = product.video_file_url || product.video_url;
   const posterUrl = getPosterUrl(videoUrl, product.image_url);
