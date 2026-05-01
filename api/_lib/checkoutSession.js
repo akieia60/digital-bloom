@@ -12,31 +12,13 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
   apiVersion: '2023-10-16',
 });
 
-const TIER_PRICE_IDS = {
-  1: process.env.VITE_STRIPE_PRICE_TIER1 || process.env.STRIPE_PRICE_TIER1 || null,
-  2: process.env.VITE_STRIPE_PRICE_TIER2 || process.env.STRIPE_PRICE_TIER2 || null,
-  3: process.env.VITE_STRIPE_PRICE_TIER3 || process.env.STRIPE_PRICE_TIER3 || null,
-  4: process.env.VITE_STRIPE_PRICE_TIER4 || process.env.STRIPE_PRICE_TIER4 || null,
-};
+// NOTE: Pre-baked price IDs (TIER_PRICE_IDS) intentionally removed.
+// Test-mode price IDs don't exist in live mode, so we ALWAYS use dynamic
+// price_data built from product metadata. This is mode-agnostic and safer.
 
 function buildLineItems(cartItems) {
   return cartItems.map((item) => {
     const product = item.product || {};
-
-    if (product.stripe_price_id && !product.stripe_price_id.startsWith('REPLACE_WITH')) {
-      return {
-        price: product.stripe_price_id,
-        quantity: item.quantity || 1,
-      };
-    }
-
-    const tierPriceId = product.tier ? TIER_PRICE_IDS[product.tier] : null;
-    if (tierPriceId) {
-      return {
-        price: tierPriceId,
-        quantity: item.quantity || 1,
-      };
-    }
 
     const priceInCents = Math.round((Number(product.price) || 1.99) * 100);
     let imageUrl = product.image_url || '';
@@ -66,6 +48,7 @@ function buildLineItems(cartItems) {
     };
   });
 }
+
 
 async function captureFullCreditReservation(reservationId) {
   await captureReservedCredit(reservationId, `free_${reservationId}`);
