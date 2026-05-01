@@ -41,6 +41,8 @@ export default function GradientHero() {
   const [videoReady, setVideoReady] = useState(false);
   const [videoFailed, setVideoFailed] = useState(false);
   const [musicPlaying, setMusicPlaying] = useState(false);
+  const [musicHinted, setMusicHinted] = useState(false);
+  const [hasInteracted, setHasInteracted] = useState(false);
   const videoRef = useRef(null);
   const audioRef = useRef(null);
   const { t } = useLanguage();
@@ -52,6 +54,13 @@ export default function GradientHero() {
   }, []);
 
   useEffect(() => {
+    if (hasInteracted) return;
+    const showT = setTimeout(() => setMusicHinted(true), 2200);
+    const hideT = setTimeout(() => setMusicHinted(false), 8500);
+    return () => { clearTimeout(showT); clearTimeout(hideT); };
+  }, [hasInteracted]);
+
+  useEffect(() => {
     const video = videoRef.current;
     if (video) {
       video.play().catch(() => {});
@@ -59,6 +68,8 @@ export default function GradientHero() {
   }, []);
 
   const toggleMusic = useCallback(() => {
+    setHasInteracted(true);
+    setMusicHinted(false);
     const audio = audioRef.current;
     if (!audio) return;
     if (musicPlaying) {
@@ -73,8 +84,8 @@ export default function GradientHero() {
   return (
     <>
       <section className="gradient-hero">
-        {/* Background music — "Flowers" hook, muted by default */}
-        <audio ref={audioRef} src="/audio/flowers-hook.m4a" loop preload="auto" />
+        {/* Background music — "Flowers" hook (28s loop), muted by default */}
+        <audio ref={audioRef} src="/audio/flowers-hook-trimmed.m4a" loop preload="auto" />
 
         <div className="gradient-hero__bg" aria-hidden="true">
           <div className="gradient-hero__glow gradient-hero__glow--1" />
@@ -160,21 +171,26 @@ export default function GradientHero() {
               <div className="gradient-hero__media-brandmark">Digital Bloom™</div>
 
               {/* Music toggle — on video card */}
+              {musicHinted && (
+                <div className="gradient-hero__music-hint" aria-hidden="true">
+                  Tap for music 🎵
+                </div>
+              )}
               <button
                 type="button"
-                className={`gradient-hero__music-toggle ${musicPlaying ? 'gradient-hero__music-toggle--playing' : ''}`}
+                className={`gradient-hero__music-toggle ${musicPlaying ? 'gradient-hero__music-toggle--playing' : ''} ${!hasInteracted && !musicPlaying ? 'gradient-hero__music-toggle--attention' : ''}`}
                 onClick={toggleMusic}
                 aria-label={musicPlaying ? 'Mute music' : 'Play music'}
                 style={{ opacity: contentVisible ? 1 : 0, transition: 'opacity 0.5s ease 0.6s' }}
               >
                 {musicPlaying ? (
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                     <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
                     <path d="M15.54 8.46a5 5 0 010 7.07" />
                     <path d="M19.07 4.93a10 10 0 010 14.14" />
                   </svg>
                 ) : (
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                     <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
                     <line x1="23" y1="9" x2="17" y2="15" />
                     <line x1="17" y1="9" x2="23" y2="15" />
