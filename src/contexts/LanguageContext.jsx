@@ -5,8 +5,13 @@ export const AVAILABLE_LANGUAGES = [
   { code: 'en', label: 'English', short: 'EN' },
   { code: 'es', label: 'Español', short: 'ES' },
   { code: 'fr', label: 'Français', short: 'FR' },
+  { code: 'de', label: 'Deutsch', short: 'DE' },
+  { code: 'pt-BR', label: 'Português', short: 'PT' },
   { code: 'ht', label: 'Kreyòl', short: 'HT' },
+  { code: 'vi', label: 'Tiếng Việt', short: 'VI' },
+  { code: 'tl', label: 'Tagalog', short: 'TL' },
   { code: 'zh', label: '中文', short: 'ZH' },
+  { code: 'ja', label: '日本語', short: 'JA' },
 ];
 
 const LanguageContext = createContext();
@@ -17,19 +22,45 @@ async function loadDictionary(code) {
       return (await import('../locales/es')).es;
     case 'fr':
       return (await import('../locales/fr')).fr;
+    case 'de':
+      return (await import('../locales/de')).de;
+    case 'pt-BR':
+      return (await import('../locales/pt-BR')).ptBR;
     case 'ht':
       return (await import('../locales/ht')).ht;
+    case 'vi':
+      return (await import('../locales/vi')).vi;
+    case 'tl':
+      return (await import('../locales/tl')).tl;
     case 'zh':
       return (await import('../locales/zh')).zh;
+    case 'ja':
+      return (await import('../locales/ja')).ja;
     case 'en':
     default:
       return en;
   }
 }
 
+function detectBrowserLanguage() {
+  if (typeof navigator === 'undefined') return 'en';
+  const supported = AVAILABLE_LANGUAGES.map(l => l.code);
+  const langs = navigator.languages || [navigator.language || 'en'];
+  for (const raw of langs) {
+    if (!raw) continue;
+    if (supported.includes(raw)) return raw;
+    const base = raw.split('-')[0];
+    if (supported.includes(base)) return base;
+    if (base === 'pt') return 'pt-BR';
+  }
+  return 'en';
+}
+
 export const LanguageProvider = ({ children }) => {
   const [lang, setLang] = useState(() => {
-    return localStorage.getItem('digital_bloom_lang') || 'en';
+    const stored = localStorage.getItem('digital_bloom_lang');
+    if (stored && AVAILABLE_LANGUAGES.some(l => l.code === stored)) return stored;
+    return detectBrowserLanguage();
   });
   const [dictionary, setDictionary] = useState(en);
 
