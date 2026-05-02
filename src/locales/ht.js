@@ -519,6 +519,8 @@ export const ht = {
   success_step_files: "📦 Fichye dijital nòmal yo ap prepare",
   success_share_title: "Pataje Digital Bloom",
   success_send_protected_link: "Voye lyen Bloom ki pwoteje a",
+  success_send_via_text: "Voye pa Mesaj Tèks",
+  success_send_via_whatsapp: "Voye pa WhatsApp",
   success_protected_link_note: "Bloom sa a louvri ak yon lyen pwoteje epi nou pa bay li isit kòm yon fichye brit pou telechaje.",
   success_copy_link: "🔗 Kopye lyen an",
   success_copied: "✓ Kopye!",

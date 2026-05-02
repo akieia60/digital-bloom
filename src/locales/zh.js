@@ -519,6 +519,8 @@ export const zh = {
   success_step_files: "📦 标准数字文件正在准备中",
   success_share_title: "分享 Digital Bloom",
   success_send_protected_link: "发送受保护的 Bloom 链接",
+  success_send_via_text: "通过短信发送",
+  success_send_via_whatsapp: "通过 WhatsApp 发送",
   success_protected_link_note: "这个 bloom 通过受保护的链接打开，这里不会提供可直接传播的原始下载文件。",
   success_copy_link: "🔗 复制链接",
   success_copied: "✓ 已复制！",

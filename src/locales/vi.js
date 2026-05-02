@@ -517,6 +517,8 @@ export const vi = {
   success_step_files: "📦 Tệp số tiêu chuẩn đang được chuẩn bị",
   success_share_title: "Chia sẻ Digital Bloom",
   success_send_protected_link: "Gửi liên kết Bloom được bảo vệ",
+  success_send_via_text: "Gửi qua tin nhắn văn bản",
+  success_send_via_whatsapp: "Gửi qua WhatsApp",
   success_protected_link_note: "Bloom này mở qua liên kết xem được bảo vệ và không được cung cấp ở đây dưới dạng tệp tải về thô.",
   success_copy_link: "🔗 Sao chép liên kết",
   success_copied: "✓ Đã sao chép!",

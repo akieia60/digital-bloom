@@ -517,6 +517,8 @@ export const tl = {
   success_step_files: "📦 Inihahanda ang standard digital files",
   success_share_title: "Ibahagi ang Digital Bloom",
   success_send_protected_link: "Magpadala ng Protected Bloom Link",
+  success_send_via_text: "Ipadala sa pamamagitan ng Text Message",
+  success_send_via_whatsapp: "Ipadala sa pamamagitan ng WhatsApp",
   success_protected_link_note: "Bumubukas ang bloom na ito sa pamamagitan ng protected viewing link at hindi inaalok dito bilang raw downloadable file.",
   success_copy_link: "🔗 Kopyahin ang Link",
   success_copied: "✓ Nakopya!",

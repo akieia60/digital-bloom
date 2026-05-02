@@ -519,6 +519,8 @@ export const fr = {
   success_step_files: "📦 Les fichiers numériques standards sont en préparation",
   success_share_title: "Partager Digital Bloom",
   success_send_protected_link: "Envoyer le lien protégé du Bloom",
+  success_send_via_text: "Envoyer par SMS",
+  success_send_via_whatsapp: "Envoyer par WhatsApp",
   success_protected_link_note: "Ce bloom s’ouvre via un lien protégé et n’est pas proposé ici comme fichier brut téléchargeable.",
   success_copy_link: "🔗 Copier le lien",
   success_copied: "✓ Copié !",

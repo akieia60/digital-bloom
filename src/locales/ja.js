@@ -517,6 +517,8 @@ export const ja = {
   success_step_files: "📦 標準デジタルファイルを準備中",
   success_share_title: "Digital Bloomを共有",
   success_send_protected_link: "保護されたブルームリンクを送る",
+  success_send_via_text: "SMSで送る",
+  success_send_via_whatsapp: "WhatsAppで送る",
   success_protected_link_note: "このブルームは保護された閲覧リンクで開きます。生のダウンロードファイルとしては提供されません。",
   success_copy_link: "🔗 リンクをコピー",
   success_copied: "✓ コピーしました!",

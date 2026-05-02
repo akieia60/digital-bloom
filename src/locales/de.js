@@ -517,6 +517,8 @@ export const de = {
   success_step_files: "📦 Standard-digitale Dateien werden vorbereitet",
   success_share_title: "Digital Bloom teilen",
   success_send_protected_link: "Geschützten Bloom-Link senden",
+  success_send_via_text: "Per SMS senden",
+  success_send_via_whatsapp: "Per WhatsApp senden",
   success_protected_link_note: "Dieser Bloom öffnet sich über einen geschützten Anzeigelink und wird hier nicht als Rohdatei zum Download angeboten.",
   success_copy_link: "🔗 Link kopieren",
   success_copied: "✓ Kopiert!",

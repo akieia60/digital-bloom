@@ -517,6 +517,8 @@ export const ptBR = {
   success_step_files: "📦 Arquivos digitais padrão estão sendo preparados",
   success_share_title: "Compartilhar Digital Bloom",
   success_send_protected_link: "Enviar Link Protegido do Bloom",
+  success_send_via_text: "Enviar por mensagem de texto",
+  success_send_via_whatsapp: "Enviar por WhatsApp",
   success_protected_link_note: "Este bloom abre através de um link de visualização protegido e não é oferecido aqui como arquivo bruto para download.",
   success_copy_link: "🔗 Copiar Link",
   success_copied: "✓ Copiado!",
