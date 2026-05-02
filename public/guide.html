@@ -250,6 +250,7 @@ async function tapChapter(i) {
   try {
     const url = await fetchAudio(i);
     audio.src = url;
+    audio.load();
     audio.playbackRate = speed;
     await audio.play();
     setPlaying(true);
