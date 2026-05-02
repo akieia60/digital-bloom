@@ -1,0 +1,195 @@
+/* ── Wrapped-gift reveal — the "pill" the recipient peels open ── */
+.wrapped-gift {
+  position: relative;
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at 50% 50%, #1a1208 0%, #0a0604 60%, #000 100%);
+  cursor: pointer;
+  overflow: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.wrapped-gift:focus-visible {
+  outline: 2px solid #d4af37;
+  outline-offset: -8px;
+}
+
+.wrapped-gift__pill {
+  position: relative;
+  width: min(82vw, 360px);
+  aspect-ratio: 5 / 7;
+  border-radius: 30px;
+  overflow: hidden;
+  box-shadow:
+    0 0 0 1px rgba(212, 175, 55, 0.18),
+    0 24px 80px rgba(0, 0, 0, 0.6),
+    0 0 60px rgba(212, 175, 55, 0.18);
+  transition: transform 0.45s cubic-bezier(0.2, 0.85, 0.3, 1), box-shadow 0.6s ease;
+}
+
+/* Wrapped phase — gentle invite pulse */
+.wrapped-gift__pill--wrapped {
+  animation: wgPulse 2.6s ease-in-out infinite;
+}
+
+/* Branded phase — golden glow once revealed */
+.wrapped-gift__pill--branded {
+  box-shadow:
+    0 0 0 1px rgba(212, 175, 55, 0.6),
+    0 24px 80px rgba(0, 0, 0, 0.6),
+    0 0 90px rgba(212, 175, 55, 0.45);
+  transform: scale(1.02);
+}
+
+@keyframes wgPulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow:
+      0 0 0 1px rgba(212, 175, 55, 0.18),
+      0 24px 80px rgba(0, 0, 0, 0.6),
+      0 0 60px rgba(212, 175, 55, 0.18);
+  }
+  50% {
+    transform: scale(1.025);
+    box-shadow:
+      0 0 0 1px rgba(212, 175, 55, 0.28),
+      0 28px 90px rgba(0, 0, 0, 0.65),
+      0 0 80px rgba(212, 175, 55, 0.32);
+  }
+}
+
+.wrapped-gift__peel {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 24px;
+  transition:
+    transform 0.7s cubic-bezier(0.55, 0.05, 0.2, 1),
+    opacity 0.4s ease;
+}
+
+/* Outer black peel — covers the inner brand layer until tapped */
+.wrapped-gift__peel--outer {
+  background: linear-gradient(180deg, #050402 0%, #0e0805 100%);
+  z-index: 2;
+  /* default visible */
+}
+
+/* When the user taps to advance to 'branded', the outer peel slides up
+   and rotates back to look like it's lifting off the present */
+.wrapped-gift__pill--branded .wrapped-gift__peel--outer,
+.wrapped-gift__pill--played .wrapped-gift__peel--outer {
+  transform: translateY(-110%) rotateX(-30deg);
+  transform-origin: top center;
+  opacity: 0;
+}
+
+/* Inner brand peel */
+.wrapped-gift__peel--inner {
+  background: linear-gradient(180deg, #1a1208 0%, #0d1b36 100%);
+  z-index: 1;
+  opacity: 0;
+}
+
+.wrapped-gift__pill--branded .wrapped-gift__peel--inner {
+  opacity: 1;
+}
+
+.wrapped-gift__peel-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+
+.wrapped-gift__from-label {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: clamp(1.4rem, 5.5vw, 1.9rem);
+  font-style: italic;
+  color: #fff;
+  letter-spacing: 0.02em;
+  line-height: 1.25;
+  max-width: 280px;
+}
+
+.wrapped-gift__tap-hint {
+  margin-top: 6px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: rgba(212, 175, 55, 0.85);
+  animation: wgHintBlink 1.6s ease-in-out infinite;
+}
+
+@keyframes wgHintBlink {
+  0%, 100% { opacity: 0.55; }
+  50%      { opacity: 1; }
+}
+
+.wrapped-gift__brand {
+  font-family: 'Playfair Display', 'Cormorant Garamond', Georgia, serif;
+  font-size: clamp(1.6rem, 6vw, 2.2rem);
+  font-weight: 600;
+  font-style: italic;
+  background: linear-gradient(180deg, #f7d97a 0%, #d4af37 60%, #b8902a 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: 0.01em;
+}
+
+.wrapped-gift__brand-tagline {
+  margin-top: 6px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* Ambient gold particles drifting in the background */
+.wrapped-gift__particles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.wrapped-gift__particle {
+  position: absolute;
+  bottom: -10px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #d4af37 0%, transparent 70%);
+  opacity: 0.55;
+  animation: wgParticleFloat linear infinite;
+}
+
+@keyframes wgParticleFloat {
+  0%   { transform: translateY(0) translateX(0); opacity: 0; }
+  10%  { opacity: 0.6; }
+  90%  { opacity: 0.2; }
+  100% { transform: translateY(-105vh) translateX(20px); opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wrapped-gift__pill,
+  .wrapped-gift__pill--wrapped,
+  .wrapped-gift__peel,
+  .wrapped-gift__tap-hint,
+  .wrapped-gift__particle {
+    animation: none !important;
+    transition: opacity 0.2s ease !important;
+  }
+}

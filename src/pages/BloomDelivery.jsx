@@ -1,9 +1,11 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
 import { resolveBloomDelivery, DELIVERY_STATUS } from '../lib/deliveryResolver';
 import LivePreview from '../components/LivePreview';
+import WrappedGiftReveal from '../components/delivery/WrappedGiftReveal';
 import '../styles/bloomDelivery.css';
+import '../styles/wrapped-gift.css';
 
 /**
  * BloomDelivery — Recipient's bloom viewing experience
@@ -29,7 +31,10 @@ export default function BloomDelivery() {
   });
   const [messageRevealed, setMessageRevealed] = useState(false);
   const [processingTick, setProcessingTick] = useState(0);
+  const [bloomUnwrapped, setBloomUnwrapped] = useState(false);
   const revealTimerRef = useRef(null);
+
+  const handleUnwrapped = useCallback(() => setBloomUnwrapped(true), []);
 
   // Fetch delivery data
   useEffect(() => {
@@ -42,14 +47,19 @@ export default function BloomDelivery() {
     return () => { cancelled = true; };
   }, [bloomSlug, processingTick]);
 
-  // Delayed message reveal — bloom loads first, then message fades in
+  // Delayed message reveal — bloom unwraps first, then 2.2s after the
+  // recipient finishes the wrapped-gift reveal, the message fades in.
   useEffect(() => {
     if (revealTimerRef.current) {
       clearTimeout(revealTimerRef.current);
       revealTimerRef.current = null;
     }
 
-    if (state.status === DELIVERY_STATUS.READY && state.delivery?.message?.short) {
+    if (
+      state.status === DELIVERY_STATUS.READY &&
+      state.delivery?.message?.short &&
+      bloomUnwrapped
+    ) {
       revealTimerRef.current = setTimeout(() => setMessageRevealed(true), 2200);
     }
 
@@ -59,7 +69,7 @@ export default function BloomDelivery() {
         revealTimerRef.current = null;
       }
     };
-  }, [state.status, state.delivery]);
+  }, [state.status, state.delivery, bloomUnwrapped]);
 
   // Processing bloom pages quietly re-check in the background.
   useEffect(() => {
@@ -192,6 +202,7 @@ export default function BloomDelivery() {
   const protectedVideoUrl = delivery?.downloadUrl || null;
 
   return (
+    <WrappedGiftReveal senderName={message.fromName} onPlayed={handleUnwrapped}>
     <div className="bloom-delivery">
       {/* ── Cinematic Bloom Hero ── */}
       <div className="bloom-delivery__hero">
@@ -267,6 +278,7 @@ export default function BloomDelivery() {
       {/* ── Brand Footer ── */}
       <BrandFooter />
     </div>
+    </WrappedGiftReveal>
   );
 }
 
