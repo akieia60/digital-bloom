@@ -62,6 +62,8 @@ export const createCartCheckoutSession = async (cartItems, creditMetadata = null
           ...(creditMetadata?.reservation_id && { reservation_id: creditMetadata.reservation_id }),
           ...(customerInfo.delivery?.target && { delivery_target: customerInfo.delivery.target }),
           ...(customerInfo.delivery?.recipientEmail && { recipient_email: customerInfo.delivery.recipientEmail }),
+          ...(customerInfo.delivery?.recipientPhone && { recipient_phone: customerInfo.delivery.recipientPhone }),
+          ...(customerInfo.delivery?.deliveryChannel && { delivery_channel: customerInfo.delivery.deliveryChannel }),
           ...(customerInfo.delivery?.deliveryMode && { delivery_mode: customerInfo.delivery.deliveryMode }),
           ...(customerInfo.delivery?.deliveryDate && { delivery_date: customerInfo.delivery.deliveryDate }),
           ...(customerInfo.delivery?.buyerTimezone && { buyer_timezone: customerInfo.delivery.buyerTimezone }),

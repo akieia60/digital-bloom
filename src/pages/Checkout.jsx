@@ -31,6 +31,10 @@ export default function Checkout() {
   });
   const [deliveryTarget, setDeliveryTarget] = useState('recipient');
   const [recipientEmail, setRecipientEmail] = useState('');
+  const [recipientPhone, setRecipientPhone] = useState('');
+  // 'email' is fully wired today; 'phone' captures the number into Stripe
+  // metadata but SMS sending is gated until Twilio is provisioned (Ak).
+  const [deliveryChannel, setDeliveryChannel] = useState('email');
   const [deliveryMode, setDeliveryMode] = useState('now');
   const [deliveryDate, setDeliveryDate] = useState('');
 
@@ -140,6 +144,7 @@ export default function Checkout() {
     setError(null);
     const trimmedBuyerEmail = buyerEmail.trim();
     const trimmedRecipientEmail = recipientEmail.trim();
+    const trimmedRecipientPhone = recipientPhone.replace(/[^\d+]/g, '');
 
     if (hasPersonalizedBloom) {
       if (!isValidEmail(trimmedBuyerEmail)) {
@@ -148,8 +153,14 @@ export default function Checkout() {
         return;
       }
 
-      if (deliveryTarget === 'recipient' && !isValidEmail(trimmedRecipientEmail)) {
+      if (deliveryTarget === 'recipient' && deliveryChannel === 'email' && !isValidEmail(trimmedRecipientEmail)) {
         setError('Please enter the recipient email for delivery.');
+        setIsProcessing(false);
+        return;
+      }
+
+      if (deliveryTarget === 'recipient' && deliveryChannel === 'phone' && trimmedRecipientPhone.length < 10) {
+        setError('Please enter the recipient phone number for SMS delivery.');
         setIsProcessing(false);
         return;
       }
@@ -174,7 +185,16 @@ export default function Checkout() {
     const deliveryConfig = hasPersonalizedBloom
       ? {
           target: deliveryTarget,
-          recipientEmail: deliveryTarget === 'recipient' ? trimmedRecipientEmail : trimmedBuyerEmail,
+          // For now, the email channel is the only one that auto-sends.
+          // recipientEmail is always populated so the bloom-delivery email can
+          // still ship to the buyer if Phone-channel SMS isn't wired yet.
+          recipientEmail: deliveryTarget === 'recipient' && deliveryChannel === 'email'
+            ? trimmedRecipientEmail
+            : trimmedBuyerEmail,
+          recipientPhone: deliveryTarget === 'recipient' && deliveryChannel === 'phone'
+            ? trimmedRecipientPhone
+            : '',
+          deliveryChannel,
           purchaserEmail: trimmedBuyerEmail,
           deliveryMode,
           deliveryDate: deliveryMode === 'scheduled' ? deliveryDate : '',
@@ -290,7 +310,7 @@ export default function Checkout() {
               <div>
                 <h3 className="cart-credits-wallet__title">Who should receive this bloom?</h3>
                 <p className="cart-credits-wallet__copy">
-                  We will email the protected bloom link automatically. Text delivery can be added later.
+                  Pick how the gift link reaches them — email is delivered automatically today, SMS is launching soon.
                 </p>
               </div>
               <span className="cart-credits-wallet__icon" aria-hidden="true">📬</span>
@@ -328,18 +348,63 @@ export default function Checkout() {
               </div>
 
               {deliveryTarget === 'recipient' && (
-                <label className="cart-credit-entry-label">
-                  Recipient email
-                  <input
-                    type="email"
-                    value={recipientEmail}
-                    onChange={(event) => setRecipientEmail(event.target.value)}
-                    placeholder="their@email.com"
-                    className="cart-credit-entry-input"
-                    autoComplete="email"
-                    inputMode="email"
-                  />
-                </label>
+                <>
+                  <div className="cart-credit-entry-label" style={{ marginBottom: '-4px' }}>
+                    Delivery preference
+                  </div>
+                  <div className="cart-credit-choice-row" role="radiogroup" aria-label="Delivery preference">
+                    <button
+                      type="button"
+                      role="radio"
+                      aria-checked={deliveryChannel === 'email'}
+                      onClick={() => setDeliveryChannel('email')}
+                      className={`cart-credit-choice ${deliveryChannel === 'email' ? 'is-active' : ''}`}
+                    >
+                      Email
+                    </button>
+                    <button
+                      type="button"
+                      role="radio"
+                      aria-checked={deliveryChannel === 'phone'}
+                      onClick={() => setDeliveryChannel('phone')}
+                      className={`cart-credit-choice ${deliveryChannel === 'phone' ? 'is-active' : ''}`}
+                    >
+                      Phone <span style={{ opacity: 0.7, fontSize: '0.75em', fontWeight: 500 }}>(SMS — coming soon)</span>
+                    </button>
+                  </div>
+
+                  {deliveryChannel === 'email' ? (
+                    <label className="cart-credit-entry-label">
+                      Recipient email
+                      <input
+                        type="email"
+                        value={recipientEmail}
+                        onChange={(event) => setRecipientEmail(event.target.value)}
+                        placeholder="their@email.com"
+                        className="cart-credit-entry-input"
+                        autoComplete="email"
+                        inputMode="email"
+                      />
+                    </label>
+                  ) : (
+                    <label className="cart-credit-entry-label">
+                      Recipient phone
+                      <input
+                        type="tel"
+                        value={recipientPhone}
+                        onChange={(event) => setRecipientPhone(event.target.value)}
+                        placeholder="(555) 123-4567"
+                        className="cart-credit-entry-input"
+                        autoComplete="tel"
+                        inputMode="tel"
+                      />
+                      <span className="cart-credit-entry-hint">
+                        We'll save the number now and text the gift link as soon as SMS goes live —
+                        in the meantime your bloom email-delivers to you so the gift still lands today.
+                      </span>
+                    </label>
+                  )}
+                </>
               )}
 
               <div className="cart-credit-choice-row">
