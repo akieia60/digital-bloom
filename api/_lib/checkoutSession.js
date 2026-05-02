@@ -111,6 +111,7 @@ export async function createCheckoutSessionResult({
   const lineItems = buildLineItems(cartItems);
   const sessionConfig = {
     automatic_payment_methods: { enabled: true },
+    phone_number_collection: { enabled: true },
     line_items: lineItems,
     mode: 'payment',
     success_url: successUrl,
