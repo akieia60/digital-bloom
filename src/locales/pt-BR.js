@@ -1,15 +1,15 @@
 export const ptBR = {
   // ─── Hero (original) ───
   hero_prelude: "O Futuro de Presentear",
-  hero_title_1: "Faça seu amor",
-  hero_title_2: "brilhar no mundo",
+  hero_title_1: "Dê-lhes Suas Flores",
+  hero_title_2: "Enquanto Ainda Estão Aqui",
   hero_subtitle: "O Digital Bloom foi criado para expressar amor e gratidão com intenção. Acreditamos em dar às pessoas suas flores enquanto elas ainda estão aqui para sentir o gesto.",
   hero_cta: "Comece sua história",
 
   // ─── Hero (GradientHero — design-upgrade) ───
-  hero_new_title_1: "Faça Seu Amor",
-  hero_new_title_2: "Brilhar no Mundo",
-  hero_new_tagline: "Sem flores? Sem problema. Envie algo cinematográfico em minutos — a partir de $1,99.",
+  hero_new_title_1: "Dê-lhes Suas Flores",
+  hero_new_title_2: "Enquanto Ainda Estão Aqui",
+  hero_new_tagline: "Semana do Dia das Mães — cada bloom $1 até 10 de maio. Envie algo cinematográfico em minutos.",
   hero_new_cta: "ENVIAR UM BLOOM",
   hero_new_from: "Presentes a partir de",
   hero_new_no_app: "sem app necessário",
@@ -545,7 +545,7 @@ export const ptBR = {
   delivery_expired_message: "Este link protegido do bloom expirou. Entre em contato com o remetente para um novo link de entrega.",
   delivery_protection_note: "Links protegidos do bloom são apenas para visualização e podem ser revisitados a qualquer momento.",
   delivery_send_cta: "Envie seu próprio Bloom →",
-  delivery_brand_tagline: "Faça Seu Amor Brilhar no Mundo",
+  delivery_brand_tagline: "Dê-lhes Suas Flores Enquanto Ainda Estão Aqui",
 
   // ─── Mother's Day countdown banner ───
   md_countdown_today: "Hoje é Dia das Mães — envie o dela agora",

@@ -1,15 +1,15 @@
 export const vi = {
   // ─── Hero (original) ───
   hero_prelude: "Tương lai của việc tặng quà",
-  hero_title_1: "Hãy để tình yêu của bạn",
-  hero_title_2: "tỏa sáng trong thế giới",
+  hero_title_1: "Hãy Tặng Họ Hoa",
+  hero_title_2: "Khi Họ Vẫn Còn Đây",
   hero_subtitle: "Digital Bloom được tạo ra để bày tỏ tình yêu và sự trân trọng một cách có chủ đích. Chúng tôi tin vào việc trao hoa cho mọi người khi họ vẫn còn ở đây để cảm nhận hành động đó.",
   hero_cta: "Bắt đầu câu chuyện của bạn",
 
   // ─── Hero (GradientHero — design-upgrade) ───
-  hero_new_title_1: "Hãy để tình yêu của bạn",
-  hero_new_title_2: "tỏa sáng trong thế giới",
-  hero_new_tagline: "Không hoa? Không sao. Gửi điều gì đó điện ảnh trong vài phút — chỉ từ $1.99.",
+  hero_new_title_1: "Hãy Tặng Họ Hoa",
+  hero_new_title_2: "Khi Họ Vẫn Còn Đây",
+  hero_new_tagline: "Tuần Lễ Ngày Của Mẹ — mỗi bloom $1 đến hết ngày 10/5. Gửi điều gì đó điện ảnh trong vài phút.",
   hero_new_cta: "GỬI MỘT BLOOM",
   hero_new_from: "Quà tặng từ",
   hero_new_no_app: "không cần ứng dụng",
@@ -545,7 +545,7 @@ export const vi = {
   delivery_expired_message: "Liên kết bloom được bảo vệ này đã hết hạn. Vui lòng liên hệ người gửi để có liên kết giao hàng mới.",
   delivery_protection_note: "Liên kết bloom được bảo vệ chỉ để xem và có thể xem lại bất cứ lúc nào.",
   delivery_send_cta: "Gửi một Bloom của riêng bạn →",
-  delivery_brand_tagline: "Hãy để tình yêu của bạn tỏa sáng trong thế giới",
+  delivery_brand_tagline: "Hãy Tặng Họ Hoa Khi Họ Vẫn Còn Đây",
 
   // ─── Mother's Day countdown banner ───
   md_countdown_today: "Hôm nay là Ngày Của Mẹ — gửi ngay bây giờ",

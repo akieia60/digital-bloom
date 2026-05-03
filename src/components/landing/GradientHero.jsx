@@ -128,11 +128,6 @@ export default function GradientHero() {
               </div>
             )}
 
-            <div className="gradient-hero__pill">
-              <span className="gradient-hero__pill-dot" aria-hidden="true" />
-              <span className="gradient-hero__pill-text">{t('hero_pill_badge')}</span>
-            </div>
-
             <h1 className="gradient-hero__title">
               {t('hero_new_title_1')}<br />
               <em>{t('hero_new_title_2')}</em>
@@ -141,7 +136,7 @@ export default function GradientHero() {
             <p className="gradient-hero__tagline">{t('hero_new_tagline')}</p>
 
             <p className="gradient-hero__from">
-              {t('hero_new_from')} <strong>$1.99</strong> · {t('hero_from_suffix')}
+              {t('hero_new_from')} <strong>$1</strong> · {t('hero_from_suffix')}
             </p>
 
           </div>

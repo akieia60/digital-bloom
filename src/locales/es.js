@@ -1,15 +1,15 @@
 export const es = {
   // ─── Hero (original) ───
   hero_prelude: "El Futuro de los Regalos",
-  hero_title_1: "Brilla tu amor",
-  hero_title_2: "en el mundo",
+  hero_title_1: "Dales Sus Flores",
+  hero_title_2: "Mientras Aún Estén Aquí",
   hero_subtitle: "Digital Bloom fue creado para expresar amor y aprecio con intención. Creemos en dar a las personas sus flores mientras todavía están aquí para experimentar el gesto.",
   hero_cta: "Comienza Tu Historia",
 
   // ─── Hero (GradientHero — design-upgrade) ───
-  hero_new_title_1: "Brilla Tu Amor",
-  hero_new_title_2: "en el Mundo",
-  hero_new_tagline: "Arte en movimiento de lujo para cada ocasión — cumpleaños, amor, celebraciones y más",
+  hero_new_title_1: "Dales Sus Flores",
+  hero_new_title_2: "Mientras Aún Estén Aquí",
+  hero_new_tagline: "Semana del Día de la Madre — cada bloom $1 hasta el 10 de mayo. Arte en movimiento de lujo para cada ocasión.",
   hero_new_cta: "ENVIAR UN BLOOM",
   hero_new_from: "Regalos desde",
   hero_new_no_app: "sin aplicación necesaria",
@@ -541,7 +541,7 @@ export const es = {
   delivery_expired_title: "El enlace del Bloom venció",
   delivery_expired_message: "Este enlace protegido del bloom ya venció. Pídele al remitente un enlace nuevo.",
   delivery_protection_note: "Los enlaces protegidos del bloom son solo de visualización y se pueden volver a ver en cualquier momento.",
-  delivery_brand_tagline: "Brilla Tu Amor en el Mundo",
+  delivery_brand_tagline: "Dales Sus Flores Mientras Aún Estén Aquí",
 
   // ─── Mother's Day countdown banner ───
   md_countdown_today: "Hoy es el Día de las Madres — envía la suya ahora mismo",

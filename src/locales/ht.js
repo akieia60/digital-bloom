@@ -1,15 +1,15 @@
 export const ht = {
   // ─── Hero (original) ───
   hero_prelude: "Avni Yo Dwe Demen",
-  hero_title_1: "Klere lanmou ou",
-  hero_title_2: "nan mond la",
+  hero_title_1: "Bay Yo Flè Yo",
+  hero_title_2: "Pandan Yo Toujou La",
   hero_subtitle: "Digital Bloom te kreye pou w eksprime renmen ak apresyasyon avèk entansyon. Nou kwè nan bay moun flè yo pandan yo tou la pou experyanse jès sa a.",
   hero_cta: "Kòmanse Istwa Ou",
 
   // ─── Hero (GradientHero — design-upgrade) ───
-  hero_new_title_1: "Klere Lanmou Ou",
-  hero_new_title_2: "nan Mond la",
-  hero_new_tagline: "Atizay mouvman di liks pou chak okasyon — anivèsè, renmen, fèt ak ankò",
+  hero_new_title_1: "Bay Yo Flè Yo",
+  hero_new_title_2: "Pandan Yo Toujou La",
+  hero_new_tagline: "Semèn Fèt Manman — chak bloom $1 jiska 10 me. Atizay mouvman di liks pou chak okasyon.",
   hero_new_cta: "VOYE YON BLOOM",
   hero_new_from: "Kado a komanse nan",
   hero_new_no_app: "pa gen bezwen app",
@@ -541,7 +541,7 @@ export const ht = {
   delivery_expired_title: "Lyen Bloom nan ekspire",
   delivery_expired_message: "Lyen bloom ki pwoteje sa a ekspire. Tanpri kontakte moun ki voye li a pou yon nouvo lyen.",
   delivery_protection_note: "Lyen Bloom ki pwoteje yo se pou gade sèlman epi ou ka retounen gade yo nenpòt ki lè.",
-  delivery_brand_tagline: "Klere Lanmou Ou nan Mond la",
+  delivery_brand_tagline: "Bay Yo Flè Yo Pandan Yo Toujou La",
 
   // ─── Mother's Day countdown banner ───
   md_countdown_today: "Jodi a se Fèt Manman — voye pa li kounye a",

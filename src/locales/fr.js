@@ -1,15 +1,15 @@
 export const fr = {
   // ─── Hero (original) ───
   hero_prelude: "L'Avenir du Cadeau",
-  hero_title_1: "Fais briller ton amour",
-  hero_title_2: "dans le monde",
+  hero_title_1: "Offrez-leur Leurs Fleurs",
+  hero_title_2: "Tant Qu'ils Sont Encore Là",
   hero_subtitle: "Digital Bloom a été créé pour exprimer l'amour et l'appréciation avec intention. Nous croyons en l'importance d'offrir aux gens leurs fleurs pendant qu'ils sont encore là pour savourer ce geste.",
   hero_cta: "Commencez Votre Histoire",
 
   // ─── Hero (GradientHero — design-upgrade) ───
-  hero_new_title_1: "Fais Briller Ton Amour",
-  hero_new_title_2: "dans le Monde",
-  hero_new_tagline: "Art en mouvement de luxe pour tous les occasions — anniversaires, amour, célébrations et bien plus",
+  hero_new_title_1: "Offrez-leur Leurs Fleurs",
+  hero_new_title_2: "Tant Qu'ils Sont Encore Là",
+  hero_new_tagline: "Semaine de la Fête des Mères — chaque bloom $1 jusqu'au 10 mai. Art en mouvement de luxe pour toute occasion.",
   hero_new_cta: "ENVOYER UNE BLOOM",
   hero_new_from: "Les cadeaux commencent à partir de",
   hero_new_no_app: "aucune application requise",
@@ -541,7 +541,7 @@ export const fr = {
   delivery_expired_title: "Le lien du Bloom a expiré",
   delivery_expired_message: "Ce lien protégé du bloom a expiré. Demandez à l’expéditeur un nouveau lien.",
   delivery_protection_note: "Les liens protégés du bloom sont en lecture seule et peuvent être revisités à tout moment.",
-  delivery_brand_tagline: "Fais Briller Ton Amour dans le Monde",
+  delivery_brand_tagline: "Offrez-leur Leurs Fleurs Tant Qu'ils Sont Encore Là",
 
   // ─── Mother's Day countdown banner ───
   md_countdown_today: "C'est la Fête des Mères — envoie le sien maintenant",

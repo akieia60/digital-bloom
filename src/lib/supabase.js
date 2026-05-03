@@ -14,6 +14,8 @@ export const supabase = createClient(supabaseUrl || '', supabaseAnonKey || '');
 // PRODUCT QUERIES
 // ============================================
 
+import { applyPromoToProduct, applyPromoToProducts } from '../config/promo';
+
 /**
  * Fetch active products from Supabase.
  * @param {object} options
@@ -37,7 +39,7 @@ export const getProducts = async ({ tier = null } = {}) => {
     return [];
   }
 
-  return data;
+  return applyPromoToProducts(data);
 };
 
 export const getProductById = async (id) => {
@@ -53,7 +55,7 @@ export const getProductById = async (id) => {
     return null;
   }
 
-  return data;
+  return applyPromoToProduct(data);
 };
 
 export const getProductBySlug = async (slug) => {
@@ -69,7 +71,7 @@ export const getProductBySlug = async (slug) => {
     return null;
   }
 
-  return data;
+  return applyPromoToProduct(data);
 };
 
 export const getProductsByCategory = async (category) => {
@@ -85,7 +87,7 @@ export const getProductsByCategory = async (category) => {
     return [];
   }
 
-  return data;
+  return applyPromoToProducts(data);
 };
 
 // ============================================

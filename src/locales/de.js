@@ -1,15 +1,15 @@
 export const de = {
   // ─── Hero (original) ───
   hero_prelude: "Die Zukunft des Schenkens",
-  hero_title_1: "Lass deine Liebe",
-  hero_title_2: "in der Welt erstrahlen",
+  hero_title_1: "Schenk Ihnen Ihre Blumen",
+  hero_title_2: "Solange Sie Noch Da Sind",
   hero_subtitle: "Digital Bloom wurde geschaffen, um Liebe und Wertschätzung mit Bedacht auszudrücken. Wir glauben daran, Menschen ihre Blumen zu schenken, solange sie noch hier sind, um die Geste zu erleben.",
   hero_cta: "Beginne deine Geschichte",
 
   // ─── Hero (GradientHero — design-upgrade) ───
-  hero_new_title_1: "Lass deine Liebe",
-  hero_new_title_2: "in der Welt erstrahlen",
-  hero_new_tagline: "Keine Blumen? Kein Problem. Verschicke etwas Cinematisches in Minuten — ab $1.99.",
+  hero_new_title_1: "Schenk Ihnen Ihre Blumen",
+  hero_new_title_2: "Solange Sie Noch Da Sind",
+  hero_new_tagline: "Muttertagswoche — jeder Bloom $1 bis 10. Mai. Keine Blumen? Kein Problem. Verschicke etwas Cinematisches in Minuten.",
   hero_new_cta: "BLOOM SENDEN",
   hero_new_from: "Geschenke ab",
   hero_new_no_app: "keine App nötig",
@@ -545,7 +545,7 @@ export const de = {
   delivery_expired_message: "Dieser geschützte Bloom-Link ist abgelaufen. Bitte kontaktiere den Absender für einen neuen Lieferungs-Link.",
   delivery_protection_note: "Geschützte Bloom-Links sind nur zur Ansicht und können jederzeit erneut besucht werden.",
   delivery_send_cta: "Sende einen eigenen Bloom →",
-  delivery_brand_tagline: "Lass deine Liebe in der Welt erstrahlen",
+  delivery_brand_tagline: "Schenk Ihnen Ihre Blumen, Solange Sie Noch Da Sind",
 
   // ─── Mother's Day countdown banner ───
   md_countdown_today: "Heute ist Muttertag — verschicke ihren jetzt",

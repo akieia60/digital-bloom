@@ -1,15 +1,15 @@
 export const zh = {
   // ─── Hero (original) ───
   hero_prelude: "礼物的未来",
-  hero_title_1: "让你的爱",
-  hero_title_2: "照亮这个世界",
+  hero_title_1: "送上他们的花",
+  hero_title_2: "趁他们还在身边",
   hero_subtitle: "Digital Bloom 的创意就是让你用最真挚的方式表达爱与感谢。我们相信，趁他们还在身边时，就该给他们最真诚的掌声。",
   hero_cta: "开始你的故事",
 
   // ─── Hero (GradientHero — design-upgrade) ───
-  hero_new_title_1: "让你的爱",
-  hero_new_title_2: "照亮这个世界",
-  hero_new_tagline: "为每个时刻设计的高端动画艺术——生日、告白、庆祝等",
+  hero_new_title_1: "送上他们的花",
+  hero_new_title_2: "趁他们还在身边",
+  hero_new_tagline: "母亲节周——5月10日前每个绽放仅需$1。为每个时刻设计的高端动画艺术。",
   hero_new_cta: "发送一个绽放",
   hero_new_from: "礼物起价仅为",
   hero_new_no_app: "无需下载应用",
@@ -541,7 +541,7 @@ export const zh = {
   delivery_expired_title: "Bloom 链接已过期",
   delivery_expired_message: "这个受保护的 bloom 链接已过期。请联系发送者获取新的链接。",
   delivery_protection_note: "受保护的 bloom 链接仅供查看，可随时重新访问。",
-  delivery_brand_tagline: "让你的爱照亮这个世界",
+  delivery_brand_tagline: "送上他们的花，趁他们还在身边",
 
   // ─── 母亲节倒计时横幅 ───
   md_countdown_today: "今天是母亲节 — 现在就送给她",

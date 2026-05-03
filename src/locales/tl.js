@@ -1,15 +1,15 @@
 export const tl = {
   // ─── Hero (original) ───
   hero_prelude: "Ang Hinaharap ng Pagregalo",
-  hero_title_1: "Pagningningin ang iyong pagmamahal",
-  hero_title_2: "sa mundo",
+  hero_title_1: "Bigyan Sila ng Bulaklak",
+  hero_title_2: "Habang Nandito Pa Sila",
   hero_subtitle: "Ginawa ang Digital Bloom upang ipahayag ang pagmamahal at pagpapahalaga nang may layunin. Naniniwala kami sa pagbibigay sa mga tao ng kanilang mga bulaklak habang sila ay narito pa upang maranasan ang himig.",
   hero_cta: "Simulan ang Iyong Kuwento",
 
   // ─── Hero (GradientHero — design-upgrade) ───
-  hero_new_title_1: "Pagningningin ang Iyong Pagmamahal",
-  hero_new_title_2: "sa Mundo",
-  hero_new_tagline: "Walang bulaklak? Walang problema. Magpadala ng cinematic sa loob ng ilang minuto — mula $1.99.",
+  hero_new_title_1: "Bigyan Sila ng Bulaklak",
+  hero_new_title_2: "Habang Nandito Pa Sila",
+  hero_new_tagline: "Linggo ng Araw ng mga Ina — bawat bloom $1 hanggang Mayo 10. Magpadala ng cinematic sa loob ng ilang minuto.",
   hero_new_cta: "MAGPADALA NG BLOOM",
   hero_new_from: "Mga regalo magmula sa",
   hero_new_no_app: "walang app na kailangan",
@@ -545,7 +545,7 @@ export const tl = {
   delivery_expired_message: "Nag-expire na ang protected bloom link na ito. Mangyaring makipag-ugnayan sa nagpadala para sa bagong delivery link.",
   delivery_protection_note: "Ang protected bloom links ay view-only at maaaring balikan anumang oras.",
   delivery_send_cta: "Magpadala ng sariling Bloom →",
-  delivery_brand_tagline: "Pagningningin ang Iyong Pagmamahal sa Mundo",
+  delivery_brand_tagline: "Bigyan Sila ng Bulaklak Habang Nandito Pa Sila",
 
   // ─── Mother's Day countdown banner ───
   md_countdown_today: "Ngayon ang Araw ng mga Ina — ipadala ang sa kanya ngayon",

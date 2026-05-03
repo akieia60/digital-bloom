@@ -16,11 +16,18 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
 // Test-mode price IDs don't exist in live mode, so we ALWAYS use dynamic
 // price_data built from product metadata. This is mode-agnostic and safer.
 
+// Mother's Day 2026 promo: flat $1 every bloom through 2026-05-10. Mirrors
+// src/config/promo.js — keep the cutoff in sync.
+const MOTHERS_DAY_PROMO_END_MS = Date.parse('2026-05-11T05:00:00Z');
+const isMothersDayPromoActive = () => Date.now() < MOTHERS_DAY_PROMO_END_MS;
+
 function buildLineItems(cartItems) {
+  const promoActive = isMothersDayPromoActive();
   return cartItems.map((item) => {
     const product = item.product || {};
 
-    const priceInCents = Math.round((Number(product.price) || 1.99) * 100);
+    const basePriceCents = Math.round((Number(product.price) || 1.99) * 100);
+    const priceInCents = promoActive ? 100 : basePriceCents;
     let imageUrl = product.image_url || '';
     if (imageUrl && !imageUrl.startsWith('http')) {
       imageUrl = `https://digitalbloom.store${imageUrl.startsWith('/') ? '' : '/'}${imageUrl}`;

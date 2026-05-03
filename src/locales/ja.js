@@ -1,15 +1,15 @@
 export const ja = {
   // ─── Hero (original) ───
   hero_prelude: "ギフトの未来",
-  hero_title_1: "あなたの愛を",
-  hero_title_2: "世界に咲かせて",
+  hero_title_1: "彼らに花を贈ろう",
+  hero_title_2: "まだここにいるうちに",
   hero_subtitle: "Digital Bloomは、心を込めて愛と感謝を伝えるために生まれました。大切な人がまだここにいるうちに、その想いを届けることを大切にしています。",
   hero_cta: "あなたの物語を始める",
 
   // ─── Hero (GradientHero — design-upgrade) ───
-  hero_new_title_1: "あなたの愛を",
-  hero_new_title_2: "世界に咲かせて",
-  hero_new_tagline: "花は要りません。シネマティックなギフトを数分で送れます — $1.99から。",
+  hero_new_title_1: "彼らに花を贈ろう",
+  hero_new_title_2: "まだここにいるうちに",
+  hero_new_tagline: "母の日ウィーク — 5月10日まで全ブルーム$1。シネマティックなギフトを数分で送れます。",
   hero_new_cta: "ブルームを贈る",
   hero_new_from: "ギフトは",
   hero_new_no_app: "アプリ不要",
@@ -545,7 +545,7 @@ export const ja = {
   delivery_expired_message: "この保護されたブルームリンクは期限切れです。送信者に新しい配信リンクを依頼してください。",
   delivery_protection_note: "保護されたブルームリンクは閲覧専用で、いつでも見直すことができます。",
   delivery_send_cta: "あなたもブルームを贈る →",
-  delivery_brand_tagline: "あなたの愛を世界に咲かせて",
+  delivery_brand_tagline: "彼らに花を贈ろう、まだここにいるうちに",
 
   // ─── Mother's Day countdown banner ───
   md_countdown_today: "今日は母の日です — 今すぐ贈りましょう",
