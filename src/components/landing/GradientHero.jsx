@@ -122,12 +122,6 @@ export default function GradientHero() {
           }}
         >
           <div className="gradient-hero__content">
-            {holiday && (
-              <div className="gradient-hero__banner">
-                <span className="gradient-hero__banner-title">{t(holiday.name)}</span>
-              </div>
-            )}
-
             <h1 className="gradient-hero__title">
               {t('hero_new_title_1')}<br />
               <em>{t('hero_new_title_2')}</em>
