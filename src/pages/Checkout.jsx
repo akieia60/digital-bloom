@@ -77,6 +77,26 @@ export default function Checkout() {
       .finally(() => setIsCheckingKnownCredit(false));
   }, [creditApplied, isCheckingKnownCredit, knownCredit]);
 
+  // Auto-apply a known credit on cart load — buyers who just purchased
+  // credits shouldn't have to tap "apply" to use them. Per Ak/Gamble:
+  // most people won't know to copy/paste the code at checkout.
+  useEffect(() => {
+    if (creditApplied || isApplyingCredit) return;
+    if (!knownCredit?.code || !hasPersonalizedBloom || totalCents === 0) return;
+    let cancelled = false;
+    setIsApplyingCredit(true);
+    reserveAndApplyCredit(knownCredit.code, { skipValidation: true })
+      .catch((err) => {
+        if (!cancelled) {
+          // Fail silently — the manual "Apply credit" tap stays available.
+          console.warn('auto-apply known credit failed:', err?.message || err);
+        }
+      })
+      .finally(() => { if (!cancelled) setIsApplyingCredit(false); });
+    return () => { cancelled = true; };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [knownCredit?.code, hasPersonalizedBloom, totalCents]);
+
   const reserveAndApplyCredit = async (formattedCode, { skipValidation = false } = {}) => {
     if (!skipValidation) {
       const validation = await validateCreditCode(formattedCode);

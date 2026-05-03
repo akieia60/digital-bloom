@@ -79,7 +79,9 @@ export const createCartCheckoutSession = async (cartItems, creditMetadata = null
       } catch (parseError) {
         errorData = null;
       }
-      throw new Error(errorData?.error || errorData?.details || text || 'Failed to create checkout session');
+      // Prefer the specific `details` over the generic `error` so the real
+      // cause surfaces in the UI instead of "Internal server error".
+      throw new Error(errorData?.details || errorData?.error || text || 'Failed to create checkout session');
     }
 
     const { sessionId, url, free_checkout } = await response.json();

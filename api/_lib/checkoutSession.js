@@ -86,33 +86,47 @@ export async function createCheckoutSessionResult({
 
   if (reservation_id && remaining_due_cents === 0) {
     const pseudoSessionId = `free_${reservation_id}`;
-    const purchases = await insertPurchaseRows(
-      buildPurchaseRows(cartItems, {
-        customerEmail,
-        stripeSessionId: pseudoSessionId,
-        status: 'pending',
-        delivery,
-      })
-    );
+    let step = 'init';
+    try {
+      step = 'insertPurchaseRows';
+      const purchases = await insertPurchaseRows(
+        buildPurchaseRows(cartItems, {
+          customerEmail,
+          stripeSessionId: pseudoSessionId,
+          status: 'pending',
+          delivery,
+        })
+      );
 
-    await captureFullCreditReservation(reservation_id);
+      step = 'captureFullCreditReservation';
+      await captureFullCreditReservation(reservation_id);
 
-    const finalizedPurchases = [];
-    for (const purchase of purchases) {
-      finalizedPurchases.push(await finalizePurchaseRecord(purchase, null));
+      const finalizedPurchases = [];
+      for (const purchase of purchases) {
+        step = `finalizePurchaseRecord(${purchase.id})`;
+        finalizedPurchases.push(await finalizePurchaseRecord(purchase, null));
+      }
+
+      step = 'processBloomDeliveryEmails';
+      await processBloomDeliveryEmails({
+        supabase,
+        purchases: finalizedPurchases,
+        req,
+        explicitTestMode: String(process.env.STRIPE_SECRET_KEY || '').includes('_test_'),
+      });
+
+      return {
+        free_checkout: true,
+        url: successUrl.replace('{CHECKOUT_SESSION_ID}', pseudoSessionId),
+      };
+    } catch (err) {
+      // Re-throw with the failing step prefixed so the front-end + logs show
+      // which call broke (insertPurchaseRows / captureFullCreditReservation /
+      // finalizePurchaseRecord / processBloomDeliveryEmails).
+      const detail = err && err.message ? err.message : String(err);
+      console.error(`free_checkout failed at step=${step}:`, err);
+      throw new Error(`free_checkout step=${step}: ${detail}`);
     }
-
-    await processBloomDeliveryEmails({
-      supabase,
-      purchases: finalizedPurchases,
-      req,
-      explicitTestMode: String(process.env.STRIPE_SECRET_KEY || '').includes('_test_'),
-    });
-
-    return {
-      free_checkout: true,
-      url: successUrl.replace('{CHECKOUT_SESSION_ID}', pseudoSessionId),
-    };
   }
 
   const lineItems = buildLineItems(cartItems);
