@@ -9,6 +9,10 @@
   color: #fff;
   font-family: 'Outfit', sans-serif;
   border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  /* Push below the iPhone notch / Dynamic Island so the headline isn't
+     clipped by the system status bar. Requires viewport-fit=cover (set
+     in index.html). */
+  padding-top: env(safe-area-inset-top, 0);
 }
 
 .md-countdown-banner__inner {

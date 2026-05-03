@@ -3,7 +3,10 @@
   min-height: 100vh;
   overflow: hidden;
   background: #0c1f3f;
-  padding: 120px 24px 96px;
+  /* Tightened from 120px top — Header sits directly above and the
+     hero pill + H1 should land just under it, not floating mid-page.
+     Per Gamble's screenshot feedback 2026-05-03. */
+  padding: 32px 24px 64px;
 }
 
 .gradient-hero__bg {
@@ -610,7 +613,7 @@
 
 @media (max-width: 980px) {
   .gradient-hero {
-    padding-top: 108px;
+    padding-top: 28px;
   }
 
   .gradient-hero__layout {
@@ -634,7 +637,9 @@
 @media (max-width: 640px) {
   .gradient-hero {
     min-height: 88vh;
-    padding: 96px 18px 88px;
+    /* Tight top padding — Header sits directly above. Hero pill + H1
+       should be visible above the fold without scrolling on iPhone. */
+    padding: 20px 18px 64px;
   }
 
   .gradient-hero__title {
