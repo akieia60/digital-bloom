@@ -80,6 +80,52 @@
   .err { background:#3a1010; border:1px solid #6a2222; color:#ff8888; padding:12px 16px; margin:14px; border-radius:6px; font-size:0.85rem; }
   .toast { position:fixed; bottom:20px; left:50%; transform:translateX(-50%); padding:12px 22px; border-radius:8px; font-size:0.85rem; z-index:30; opacity:0; transition:opacity 0.25s; pointer-events:none; max-width:88vw; text-align:center; }
   .toast.show { opacity:1; }
+
+  /* ── Feedback (comments) UI ─────────────────────────────────────── */
+  .fb-icon { position:absolute; top:8px; left:8px; z-index:3; background:rgba(13,27,54,0.78); border:1px solid #D4AF37; color:#D4AF37; width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.85rem; cursor:pointer; backdrop-filter:blur(4px); -webkit-backdrop-filter:blur(4px); }
+  .fb-icon:hover { background:rgba(212,175,55,0.18); }
+  .fb-icon .fb-badge { position:absolute; top:-5px; right:-5px; background:#D4AF37; color:#0D1B36; font-size:0.55rem; font-weight:800; min-width:16px; height:16px; padding:0 4px; border-radius:8px; display:flex; align-items:center; justify-content:center; }
+  .fb-icon .fb-badge:empty { display:none; }
+  .fb-modal { position:fixed; inset:0; background:rgba(8,15,30,0.86); z-index:40; display:none; align-items:center; justify-content:center; padding:18px; }
+  .fb-modal.show { display:flex; }
+  .fb-modal__panel { background:#0f1c36; border:1px solid #D4AF37; border-radius:12px; padding:18px; width:100%; max-width:460px; max-height:90vh; overflow-y:auto; }
+  .fb-modal__title { color:#D4AF37; font-family:Georgia,serif; font-size:0.95rem; letter-spacing:0.05em; margin-bottom:4px; }
+  .fb-modal__sub { color:#8da4c5; font-size:0.75rem; margin-bottom:14px; }
+  .fb-modal__list { display:flex; flex-direction:column; gap:8px; margin-bottom:14px; max-height:280px; overflow-y:auto; }
+  .fb-modal__list:empty { display:none; }
+  .fb-comment { background:#152544; border:1px solid #2a3e5e; border-radius:8px; padding:10px 12px; }
+  .fb-comment.resolved { opacity:0.5; }
+  .fb-comment__head { display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; font-size:0.7rem; }
+  .fb-comment__author { color:#D4AF37; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; }
+  .fb-comment__date { color:#7a8fad; }
+  .fb-comment__body { color:#f4ebd0; font-size:0.88rem; line-height:1.4; white-space:pre-wrap; }
+  .fb-comment__resolve { background:transparent; border:1px solid #2a3e5e; color:#8da4c5; font-size:0.65rem; letter-spacing:0.08em; text-transform:uppercase; padding:5px 10px; margin-top:8px; border-radius:14px; cursor:pointer; font-family:inherit; }
+  .fb-comment__resolve:hover { background:#1f3a1f; border-color:#2c5a2c; color:#9be39b; }
+  .fb-form label { display:block; color:#8da4c5; font-size:0.7rem; letter-spacing:0.08em; text-transform:uppercase; margin:8px 0 4px; }
+  .fb-form select, .fb-form textarea { width:100%; background:#0a142a; border:1px solid #2a3e5e; color:#f4ebd0; padding:10px; border-radius:6px; font-size:0.9rem; font-family:inherit; }
+  .fb-form textarea { resize:vertical; min-height:90px; }
+  .fb-form__row { display:flex; gap:8px; margin-top:14px; }
+  .fb-form__row button { flex:1; padding:11px; border:none; border-radius:6px; font-weight:700; font-size:0.78rem; letter-spacing:0.06em; text-transform:uppercase; cursor:pointer; font-family:inherit; }
+  .fb-form__row button.cancel { background:#1a2c4d; color:#8da4c5; border:1px solid #2a3e5e; }
+  .fb-form__row button.save { background:#D4AF37; color:#0D1B36; }
+  .fb-form__row button.save:disabled { opacity:0.4; cursor:default; }
+
+  /* Feedback queue tab — list view of every open comment */
+  .fb-queue { padding:10px 14px 24px; display:flex; flex-direction:column; gap:10px; }
+  .fb-row { background:#152544; border:1px solid #2a3e5e; border-radius:10px; padding:12px; display:grid; grid-template-columns:80px 1fr; gap:12px; }
+  .fb-row.resolved { opacity:0.45; }
+  .fb-row__thumb { width:80px; height:80px; border-radius:6px; background:#0a142a; overflow:hidden; display:flex; align-items:center; justify-content:center; }
+  .fb-row__thumb img, .fb-row__thumb video { width:100%; height:100%; object-fit:cover; }
+  .fb-row__thumb .fb-row__placeholder { color:#D4AF37; opacity:0.4; font-size:0.6rem; letter-spacing:0.1em; text-transform:uppercase; text-align:center; padding:6px; }
+  .fb-row__main { display:flex; flex-direction:column; gap:4px; min-width:0; }
+  .fb-row__head { display:flex; justify-content:space-between; align-items:baseline; gap:10px; font-size:0.65rem; color:#7a8fad; letter-spacing:0.05em; text-transform:uppercase; }
+  .fb-row__author { color:#D4AF37; font-weight:700; }
+  .fb-row__title { color:#f4ebd0; font-size:0.88rem; font-family:Georgia,serif; }
+  .fb-row__title a { color:#f4ebd0; text-decoration:none; border-bottom:1px dotted #5a7090; }
+  .fb-row__body { color:#cbdaf0; font-size:0.85rem; line-height:1.4; white-space:pre-wrap; }
+  .fb-row__actions { display:flex; gap:6px; margin-top:6px; }
+  .fb-row__actions button { background:#0a142a; border:1px solid #2a3e5e; color:#8da4c5; font-size:0.65rem; letter-spacing:0.08em; text-transform:uppercase; padding:6px 12px; border-radius:14px; cursor:pointer; font-family:inherit; }
+  .fb-row__actions button.resolve:hover { background:#1f3a1f; border-color:#2c5a2c; color:#9be39b; }
 </style>
 </head>
 <body>
@@ -94,12 +140,37 @@
   <button class="mode-btn" data-mode="active">On Site</button>
   <button class="mode-btn" data-mode="inactive">Archive</button>
   <button class="mode-btn" data-mode="marketing">Marketing</button>
+  <button class="mode-btn" data-mode="feedback">Feedback</button>
 </div>
 
 <div class="cat-tabs" id="cat-tabs"></div>
 <div class="stats" id="stats">Loading…</div>
 <div id="content"></div>
 <div class="toast" id="toast"></div>
+
+<!-- Feedback modal — shared across every card -->
+<div class="fb-modal" id="fb-modal" onclick="if(event.target===this) closeFb()">
+  <div class="fb-modal__panel">
+    <div class="fb-modal__title" id="fb-title">Feedback</div>
+    <div class="fb-modal__sub" id="fb-sub"></div>
+    <div class="fb-modal__list" id="fb-list"></div>
+    <div class="fb-form">
+      <label for="fb-author">Who's commenting?</label>
+      <select id="fb-author">
+        <option value="gamble">Gamble</option>
+        <option value="ak">Ak</option>
+        <option value="david">David</option>
+        <option value="other">Other</option>
+      </select>
+      <label for="fb-body">Directive / comment</label>
+      <textarea id="fb-body" placeholder="e.g. Use this as the flyer, add red+gold text 'Don't forget mom'"></textarea>
+      <div class="fb-form__row">
+        <button class="cancel" onclick="closeFb()">Close</button>
+        <button class="save" id="fb-save" onclick="saveFb()">Save comment</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <script>
 const params = new URLSearchParams(location.search);
@@ -138,8 +209,26 @@ const CATEGORIES = [
 ];
 let currentCat = params.get('category') || 'mothers-day';
 let currentMode = params.get('mode') || 'renders';
-const VALID_MODES = new Set(['renders', 'active', 'inactive', 'marketing']);
+const VALID_MODES = new Set(['renders', 'active', 'inactive', 'marketing', 'feedback']);
 if (!VALID_MODES.has(currentMode)) currentMode = 'renders';
+
+// Per-target open-feedback counts loaded once per tab change so card
+// badges show the count without N+1 fetches.
+let feedbackCountIndex = {}; // key = `${kind}:${ref}` → number
+async function loadFeedbackCounts() {
+  if (!TOKEN) return;
+  try {
+    const r = await fetch(`/api/admin/feedback?token=${encodeURIComponent(TOKEN)}&status=open&limit=500`);
+    if (!r.ok) return;
+    const j = await r.json();
+    const idx = {};
+    for (const f of j.feedback || []) {
+      const k = `${f.target_kind}:${f.target_ref}`;
+      idx[k] = (idx[k] || 0) + 1;
+    }
+    feedbackCountIndex = idx;
+  } catch {}
+}
 
 function syncUrl() {
   const u = new URL(location.href);
@@ -150,10 +239,9 @@ function syncUrl() {
 
 function tabs() {
   const el = document.getElementById('cat-tabs');
-  // Marketing mode isn't keyed off prompt-engine cat — files in
-  // monique-videos/commercial_drafts/ aren't bucketed by category.
-  // Hide the category strip when in marketing mode.
-  if (currentMode === 'marketing') {
+  // Marketing + Feedback aren't keyed off prompt-engine cat. Hide the
+  // category strip when in those modes.
+  if (currentMode === 'marketing' || currentMode === 'feedback') {
     el.style.display = 'none';
   } else {
     el.style.display = '';
@@ -168,6 +256,144 @@ function tabs() {
     b.classList.toggle('active', b.dataset.mode === currentMode);
     b.onclick = () => { currentMode = b.dataset.mode; syncUrl(); tabs(); load(); };
   });
+}
+
+// ── Feedback modal helpers ─────────────────────────────────────────
+let fbContext = null; // { kind, ref, label, thumb_url, video_url }
+
+function fbBadge(kind, ref) {
+  const n = feedbackCountIndex[`${kind}:${ref}`] || 0;
+  if (!n) return '';
+  return `<span class="fb-badge">${n}</span>`;
+}
+
+function fbIcon(kind, ref, label, thumbUrl, videoUrl) {
+  const safe = (v) => String(v || '').replace(/'/g, "\\'");
+  const onclick = `openFb('${safe(kind)}', '${safe(ref)}', '${safe(label)}', '${safe(thumbUrl)}', '${safe(videoUrl)}')`;
+  return `<button class="fb-icon" onclick="event.stopPropagation();${onclick}" aria-label="Comments">💬${fbBadge(kind, ref)}</button>`;
+}
+
+async function openFb(kind, ref, label, thumbUrl, videoUrl) {
+  fbContext = { kind, ref, label, thumb_url: thumbUrl, video_url: videoUrl };
+  document.getElementById('fb-title').textContent = label || `${kind} feedback`;
+  document.getElementById('fb-sub').textContent = `${kind} · ${ref.slice(0, 40)}`;
+  document.getElementById('fb-body').value = '';
+  document.getElementById('fb-list').innerHTML = '<div style="color:#7a8fad;font-size:0.8rem;padding:8px 4px">Loading…</div>';
+  document.getElementById('fb-modal').classList.add('show');
+  try {
+    const r = await fetch(`/api/admin/feedback?token=${encodeURIComponent(TOKEN)}&target_kind=${encodeURIComponent(kind)}&target_ref=${encodeURIComponent(ref)}&limit=50`);
+    const j = await r.json();
+    const items = j.feedback || [];
+    if (!items.length) {
+      document.getElementById('fb-list').innerHTML = '<div style="color:#7a8fad;font-size:0.8rem;padding:8px 4px">No comments yet — be the first.</div>';
+    } else {
+      document.getElementById('fb-list').innerHTML = items.map(c => `
+        <div class="fb-comment ${c.status === 'resolved' ? 'resolved' : ''}">
+          <div class="fb-comment__head">
+            <span class="fb-comment__author">${escape(c.author)}</span>
+            <span class="fb-comment__date">${fmtDate(c.created_at)}${c.status==='resolved' ? ' · resolved' : ''}</span>
+          </div>
+          <div class="fb-comment__body">${escape(c.body)}</div>
+          ${c.status === 'open'
+            ? `<button class="fb-comment__resolve" onclick="resolveFb('${c.id}')">✓ Mark resolved</button>`
+            : ''}
+        </div>
+      `).join('');
+    }
+  } catch (e) {
+    document.getElementById('fb-list').innerHTML = `<div style="color:#ff8888">${e.message}</div>`;
+  }
+}
+
+function closeFb() {
+  document.getElementById('fb-modal').classList.remove('show');
+  fbContext = null;
+}
+
+async function saveFb() {
+  if (!fbContext) return;
+  const author = document.getElementById('fb-author').value;
+  const body = document.getElementById('fb-body').value.trim();
+  if (!body) { toast('Comment is empty.', false); return; }
+  const btn = document.getElementById('fb-save');
+  btn.disabled = true; btn.textContent = 'Saving…';
+  try {
+    const r = await fetch('/api/admin/feedback', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        token: TOKEN,
+        target_kind: fbContext.kind,
+        target_ref: fbContext.ref,
+        target_label: fbContext.label,
+        target_thumb_url: fbContext.thumb_url,
+        target_video_url: fbContext.video_url,
+        author,
+        body,
+      }),
+    });
+    const j = await r.json();
+    if (!r.ok) throw new Error(j.error || 'failed');
+    toast('Comment saved.');
+    closeFb();
+    await loadFeedbackCounts();
+    load(); // refresh card badges
+  } catch (e) {
+    toast(e.message, false);
+    btn.disabled = false; btn.textContent = 'Save comment';
+  }
+}
+
+async function resolveFb(id) {
+  try {
+    const r = await fetch('/api/admin/feedback', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token: TOKEN, action: 'resolve', id, resolved_by: 'admin' }),
+    });
+    if (!r.ok) {
+      const j = await r.json().catch(() => ({}));
+      throw new Error(j.error || 'failed');
+    }
+    toast('Marked resolved.');
+    await loadFeedbackCounts();
+    if (currentMode === 'feedback') {
+      load();
+    } else if (fbContext) {
+      openFb(fbContext.kind, fbContext.ref, fbContext.label, fbContext.thumb_url, fbContext.video_url);
+    }
+  } catch (e) { toast(e.message, false); }
+}
+
+function feedbackQueue(items) {
+  if (!items.length) {
+    return `<div class="empty">No open feedback. Comments left on any item show up here.</div>`;
+  }
+  return `<div class="fb-queue">${items.map(c => {
+    const thumb = c.target_video_url
+      ? `<video src="${escape(c.target_video_url)}" muted preload="metadata" playsinline></video>`
+      : c.target_thumb_url
+        ? `<img src="${escape(c.target_thumb_url)}" alt="">`
+        : `<div class="fb-row__placeholder">${escape(c.target_kind)}</div>`;
+    const titleText = c.target_label || `${c.target_kind} ${c.target_ref.slice(0, 8)}`;
+    const titleLink = c.target_kind === 'product'
+      ? `<a href="${location.pathname}?token=${encodeURIComponent(TOKEN)}&mode=active&category=${currentCat}#${c.target_ref}">${escape(titleText)}</a>`
+      : escape(titleText);
+    return `<div class="fb-row ${c.status==='resolved' ? 'resolved' : ''}">
+      <div class="fb-row__thumb">${thumb}</div>
+      <div class="fb-row__main">
+        <div class="fb-row__head">
+          <span class="fb-row__author">${escape(c.author)}</span>
+          <span>${fmtDate(c.created_at)}${c.status==='resolved' ? ' · resolved' : ''}</span>
+        </div>
+        <div class="fb-row__title">${titleLink}</div>
+        <div class="fb-row__body">${escape(c.body)}</div>
+        ${c.status==='open' ? `<div class="fb-row__actions">
+          <button class="resolve" onclick="resolveFb('${c.id}')">✓ Mark resolved</button>
+        </div>` : ''}
+      </div>
+    </div>`;
+  }).join('')}</div>`;
 }
 
 function toast(msg, ok=true) {
@@ -304,6 +530,7 @@ function rendersGrid(items) {
       ? `<div class="placeholder" data-src="${p.render_url}" onclick="loadVideo(this)"><div class="play-circle">▶</div><div class="label">Tap to play</div></div>`
       : `<div class="placeholder"><div class="label" style="opacity:0.5">no preview</div></div>`;
     return `<div class="card">
+      ${fbIcon('render', p.id, p.title || 'Untitled', '', p.render_url || '')}
       <div class="video-wrap">${media}</div>
       <div class="body">
         ${pill}
@@ -339,6 +566,7 @@ function productsGrid(items, mode) {
     const audit = escape(fmtAudit(p.last_action_by, p.last_action_at));
     return `<div class="card ${cardClass}">
       ${ribbon}
+      ${fbIcon('product', p.id, p.name || 'Untitled', poster, vid)}
       <div class="video-wrap">${media}</div>
       <div class="body">
         <div class="name">${name}</div>
@@ -379,6 +607,7 @@ function marketingGrid(items) {
     // Inline <video controls> so Ak can tap to play. Audio ON for marketing
     // (commercials have dialogue / music) — different from bloom previews.
     return `<div class="card">
+      ${fbIcon('marketing', p.name, pretty, '', p.url)}
       <div class="video-wrap">
         <video src="${escape(p.url)}" controls preload="metadata" playsinline style="width:100%;height:100%;object-fit:cover;display:block"></video>
       </div>
@@ -401,6 +630,28 @@ async function load() {
     document.getElementById('stats').textContent = '';
     return;
   }
+
+  // Feedback tab — its own data source (the feedback table, not the
+  // archive endpoint).
+  if (currentMode === 'feedback') {
+    try {
+      const r = await fetch(`/api/admin/feedback?token=${encodeURIComponent(TOKEN)}&status=open&limit=200`);
+      const j = await r.json();
+      if (!r.ok) throw new Error(j.error || 'failed');
+      const items = j.feedback || [];
+      document.getElementById('stats').innerHTML = `<strong>${items.length}</strong> open ${items.length === 1 ? 'comment' : 'comments'} across all items`;
+      document.getElementById('content').innerHTML = feedbackQueue(items);
+    } catch (e) {
+      document.getElementById('content').innerHTML = `<div class="err">${e.message}</div>`;
+      document.getElementById('stats').textContent = '';
+    }
+    return;
+  }
+
+  // Refresh per-card open-comment counts before rendering the grid so
+  // badges show alongside the cards.
+  await loadFeedbackCounts();
+
   try {
     const r = await fetch(`/api/admin/archive?token=${encodeURIComponent(TOKEN)}&category=${currentCat}&status=${currentMode}`);
     const j = await r.json();
