@@ -531,8 +531,7 @@ function rendersGrid(items) {
       ? `<div class="placeholder" data-src="${p.render_url}" onclick="loadVideo(this)"><div class="play-circle">▶</div><div class="label">Tap to play</div></div>`
       : `<div class="placeholder"><div class="label" style="opacity:0.5">no preview</div></div>`;
     return `<div class="card">
-      ${fbIcon('render', p.id, p.title || 'Untitled', '', p.render_url || '')}
-      <div class="video-wrap">${media}</div>
+      <div class="video-wrap">${media}${fbIcon('render', p.id, p.title || 'Untitled', '', p.render_url || '')}</div>
       <div class="body">
         ${pill}
         <div class="name">${name}</div>
@@ -567,8 +566,7 @@ function productsGrid(items, mode) {
     const audit = escape(fmtAudit(p.last_action_by, p.last_action_at));
     return `<div class="card ${cardClass}">
       ${ribbon}
-      ${fbIcon('product', p.id, p.name || 'Untitled', poster, vid)}
-      <div class="video-wrap">${media}</div>
+      <div class="video-wrap">${media}${fbIcon('product', p.id, p.name || 'Untitled', poster, vid)}</div>
       <div class="body">
         <div class="name">${name}</div>
         <div class="date">${date}</div>
@@ -608,9 +606,9 @@ function marketingGrid(items) {
     // Inline <video controls> so Ak can tap to play. Audio ON for marketing
     // (commercials have dialogue / music) — different from bloom previews.
     return `<div class="card">
-      ${fbIcon('marketing', p.name, pretty, '', p.url)}
       <div class="video-wrap">
         <video src="${escape(p.url)}" controls preload="metadata" playsinline style="width:100%;height:100%;object-fit:cover;display:block"></video>
+        ${fbIcon('marketing', p.name, pretty, '', p.url)}
       </div>
       <div class="body">
         ${newPill}
