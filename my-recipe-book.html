@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Recipes" />
+  <link rel="apple-touch-icon" id="apple-icon" />
+  <title>My Personal Recipe Book</title>
+  <script>
+    // Generates a beautiful navy + gold home screen icon
+    (function() {
+      const SIZE = 180;
+      const c = document.createElement('canvas');
+      c.width = c.height = SIZE;
+      const ctx = c.getContext('2d');
+
+      // ── Background: deep navy gradient ──
+      const bg = ctx.createLinearGradient(0, 0, SIZE, SIZE);
+      bg.addColorStop(0, '#0D1B36');
+      bg.addColorStop(1, '#162947');
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, SIZE, SIZE);
+
+      // ── Outer gold border ──
+      ctx.strokeStyle = '#D4AF37';
+      ctx.lineWidth = 3;
+      ctx.strokeRect(10, 10, SIZE - 20, SIZE - 20);
+
+      // ── Inner gold border (double-line effect) ──
+      ctx.strokeStyle = 'rgba(212,175,55,0.35)';
+      ctx.lineWidth = 1;
+      ctx.strokeRect(15, 15, SIZE - 30, SIZE - 30);
+
+      // ── Corner flourishes ──
+      const corners = [[18,18],[SIZE-18,18],[18,SIZE-18],[SIZE-18,SIZE-18]];
+      ctx.fillStyle = '#D4AF37';
+      corners.forEach(([x,y]) => {
+        ctx.beginPath();
+        ctx.arc(x, y, 3, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      // ── Top ornament line ──
+      ctx.strokeStyle = '#D4AF37';
+      ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(40, 52); ctx.lineTo(SIZE-40, 52); ctx.stroke();
+
+      // ── Small diamond center of top line ──
+      ctx.save();
+      ctx.translate(SIZE/2, 52);
+      ctx.rotate(Math.PI/4);
+      ctx.fillStyle = '#D4AF37';
+      ctx.fillRect(-5, -5, 10, 10);
+      ctx.restore();
+
+      // ── "MY" small caps text ──
+      ctx.fillStyle = 'rgba(212,175,55,0.8)';
+      ctx.font = '500 13px Georgia';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.letterSpacing = '4px';
+      ctx.fillText('MY', SIZE/2, 75);
+
+      // ── "Recipes" main text ──
+      ctx.fillStyle = '#D4AF37';
+      ctx.font = 'italic bold 36px Georgia';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('Recipes', SIZE/2, 105);
+
+      // ── Bottom ornament line ──
+      ctx.strokeStyle = '#D4AF37';
+      ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(40, 130); ctx.lineTo(SIZE-40, 130); ctx.stroke();
+
+      // ── Small sprig dots below line ──
+      [SIZE/2 - 14, SIZE/2, SIZE/2 + 14].forEach((x, i) => {
+        ctx.beginPath();
+        ctx.arc(x, 130, i === 1 ? 3 : 2, 0, Math.PI * 2);
+        ctx.fillStyle = i === 1 ? '#D4AF37' : 'rgba(212,175,55,0.5)';
+        ctx.fill();
+      });
+
+      // ── Set as apple-touch-icon ──
+      document.getElementById('apple-icon').href = c.toDataURL('image/png');
+
+      // ── Also set as favicon ──
+      const fav = document.createElement('link');
+      fav.rel = 'icon'; fav.type = 'image/png';
+      fav.href = c.toDataURL('image/png');
+      document.head.appendChild(fav);
+    })();
+  </script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Georgia', serif;
+      background: #fdf6ee;
+      color: #2c1a0e;
+      min-height: 100vh;
+    }
+
+    /* ── HEADER ── */
+    .site-header {
+      background: #5c2e00;
+      color: #fdf6ee;
+      padding: 20px 16px 16px;
+      text-align: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+    .site-header h1 { font-size: 1.5rem; letter-spacing: 1px; }
+    .site-header p  { font-size: 0.8rem; opacity: 0.75; margin-top: 2px; }
+
+    /* ── BACK BUTTON ── */
+    .back-btn {
+      display: none;
+      background: none;
+      border: none;
+      color: #fdf6ee;
+      font-size: 1.1rem;
+      cursor: pointer;
+      padding: 4px 0 8px;
+      text-align: left;
+      width: 100%;
+    }
+    .back-btn::before { content: '← '; }
+
+    /* ── HOME: RECIPE CARDS ── */
+    #home-view { padding: 16px; }
+
+    .recipe-card {
+      background: #fff;
+      border-radius: 14px;
+      padding: 18px 20px;
+      margin-bottom: 14px;
+      box-shadow: 0 2px 10px rgba(92,46,0,0.1);
+      cursor: pointer;
+      border-left: 5px solid #c8720a;
+      transition: transform 0.15s, box-shadow 0.15s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .recipe-card:active { transform: scale(0.98); box-shadow: 0 1px 5px rgba(92,46,0,0.15); }
+
+    .recipe-card .emoji { font-size: 2rem; margin-bottom: 8px; display: block; }
+    .recipe-card h2 { font-size: 1.05rem; color: #5c2e00; line-height: 1.3; }
+    .recipe-card .tag { font-size: 0.72rem; color: #9b6530; margin-top: 5px; font-style: italic; }
+
+    /* ── RECIPE DETAIL VIEW ── */
+    #recipe-view { display: none; }
+
+    .recipe-title-bar {
+      background: #7a3a00;
+      color: #fdf6ee;
+      padding: 16px;
+      text-align: center;
+    }
+    .recipe-title-bar h2 { font-size: 1.15rem; line-height: 1.4; }
+
+    /* ── TABS ── */
+    .tabs {
+      display: flex;
+      background: #f0e0cc;
+      border-bottom: 2px solid #c8720a;
+    }
+    .tab-btn {
+      flex: 1;
+      padding: 12px 4px;
+      border: none;
+      background: none;
+      font-size: 0.9rem;
+      font-family: 'Georgia', serif;
+      color: #7a4010;
+      cursor: pointer;
+      transition: background 0.2s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .tab-btn.active {
+      background: #fdf6ee;
+      color: #5c2e00;
+      font-weight: bold;
+      border-bottom: 3px solid #c8720a;
+      margin-bottom: -2px;
+    }
+
+    /* ── TAB PANELS ── */
+    .tab-panel { display: none; padding: 16px; }
+    .tab-panel.active { display: block; }
+
+    /* Shopping List */
+    .shop-section { margin-bottom: 20px; }
+    .shop-section h3 {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: #9b6530;
+      border-bottom: 1px solid #e8c99a;
+      padding-bottom: 4px;
+      margin-bottom: 10px;
+    }
+    .shop-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 8px 0;
+      border-bottom: 1px solid #f5e8d5;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .shop-item input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+      margin-top: 2px;
+      accent-color: #c8720a;
+      cursor: pointer;
+    }
+    .shop-item label {
+      font-size: 0.95rem;
+      line-height: 1.4;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+    .shop-item.checked label {
+      text-decoration: line-through;
+      color: #b0906a;
+    }
+
+    .clear-btn {
+      margin-top: 12px;
+      background: none;
+      border: 1px solid #c8720a;
+      color: #c8720a;
+      padding: 7px 14px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      font-family: 'Georgia', serif;
+    }
+
+    /* Ingredients */
+    .ing-group { margin-bottom: 18px; }
+    .ing-group h3 {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: #9b6530;
+      border-bottom: 1px solid #e8c99a;
+      padding-bottom: 4px;
+      margin-bottom: 10px;
+    }
+    .ing-group ul { list-style: none; }
+    .ing-group ul li {
+      padding: 6px 0;
+      font-size: 0.95rem;
+      border-bottom: 1px solid #f5e8d5;
+      padding-left: 14px;
+      position: relative;
+    }
+    .ing-group ul li::before {
+      content: '•';
+      color: #c8720a;
+      position: absolute;
+      left: 0;
+    }
+
+    /* Instructions */
+    .steps ol { list-style: none; counter-reset: step-counter; }
+    .steps ol li {
+      counter-increment: step-counter;
+      display: flex;
+      gap: 12px;
+      margin-bottom: 16px;
+      align-items: flex-start;
+    }
+    .steps ol li::before {
+      content: counter(step-counter);
+      background: #c8720a;
+      color: white;
+      font-size: 0.85rem;
+      font-weight: bold;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 1px;
+    }
+    .steps ol li span { font-size: 0.95rem; line-height: 1.6; }
+    .steps .note {
+      background: #fff3e0;
+      border-left: 3px solid #c8720a;
+      padding: 10px 14px;
+      border-radius: 0 8px 8px 0;
+      font-size: 0.9rem;
+      font-style: italic;
+      color: #5c2e00;
+      margin-top: 12px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="site-header">
+  <button class="back-btn" id="backBtn" onclick="showHome()">All Recipes</button>
+  <h1 id="headerTitle">My Recipe Book</h1>
+  <p id="headerSub">5 personal recipes</p>
+</div>
+
+<!-- HOME VIEW -->
+<div id="home-view">
+  <div style="padding: 14px 16px 4px; color: #7a4010; font-size: 0.85rem; font-style: italic;">
+    Tap a recipe to view ingredients &amp; instructions
+  </div>
+
+  <div class="recipe-card" onclick="showRecipe(0)">
+    <span class="emoji">🥩</span>
+    <h2>Ultimate Slow Braised Beef Chuck Roast</h2>
+    <div class="tag">Oven · ~4.5 hrs · Dutch oven</div>
+  </div>
+
+  <div class="recipe-card" onclick="showRecipe(1)">
+    <span class="emoji">🧀</span>
+    <h2>Creamy Baked Mac and Cheese</h2>
+    <div class="tag">Oven · ~35 min · Stovetop + bake</div>
+  </div>
+
+  <div class="recipe-card" onclick="showRecipe(2)">
+    <span class="emoji">🍖</span>
+    <h2>Ninja Air Roasted Flavor Bomb Ribs</h2>
+    <div class="tag">Air Roast · ~45 min · Ninja oven</div>
+  </div>
+
+  <div class="recipe-card" onclick="showRecipe(3)">
+    <span class="emoji">🍷</span>
+    <h2>Red Wine-Braised Beef Short Ribs</h2>
+    <div class="tag">Oven · 3–3.5 hrs · Dutch oven</div>
+  </div>
+
+  <div class="recipe-card" onclick="showRecipe(4)">
+    <span class="emoji">✨</span>
+    <h2>Sherry-Glazed Beef Ribs</h2>
+    <div class="tag">Oven · 2.5–3 hrs · Skillet</div>
+  </div>
+</div>
+
+<!-- RECIPE DETAIL VIEW -->
+<div id="recipe-view">
+  <div class="recipe-title-bar">
+    <h2 id="recipeTitle"></h2>
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('shopping')">🛒 Shopping List</button>
+    <button class="tab-btn" onclick="switchTab('ingredients')">🧂 Ingredients</button>
+    <button class="tab-btn" onclick="switchTab('instructions')">📋 Instructions</button>
+  </div>
+
+  <div class="tab-panel active" id="tab-shopping"></div>
+  <div class="tab-panel" id="tab-ingredients"></div>
+  <div class="tab-panel" id="tab-instructions"></div>
+</div>
+
+<script>
+// ─────────────────────────────────────────────
+// RECIPE DATA
+// ─────────────────────────────────────────────
+const recipes = [
+
+  // ── 1. CHUCK ROAST ──────────────────────────
+  {
+    title: "Ultimate Slow Braised Beef Chuck Roast",
+    shopping: [
+      { group: "Meat",    items: ["3 to 4 lb beef chuck roast"] },
+      { group: "Produce", items: ["1 large yellow onion","4 cloves garlic","4 carrots","1 lb baby potatoes","2 sprigs fresh thyme"] },
+      { group: "Pantry",  items: ["Kosher salt","Fresh cracked black pepper","1 tbsp smoked paprika","1 tsp garlic powder","1 tsp onion powder","1 tsp dried thyme","2 tbsp olive oil or avocado oil","2 tbsp tomato paste","1 cup beef broth","1 cup red wine or additional broth","2 tbsp Worcestershire sauce","1 tbsp soy sauce","1 bay leaf","2 tbsp butter"] }
+    ],
+    ingredients: [
+      { group: "Meat & Spice Rub", items: ["3 to 4 lb beef chuck roast","Kosher salt","Fresh cracked black pepper","1 tbsp smoked paprika","1 tsp garlic powder","1 tsp onion powder","1 tsp dried thyme"] },
+      { group: "Sear + Base",      items: ["2 tbsp olive oil or avocado oil","1 large yellow onion, sliced","4 cloves garlic, smashed","2 tbsp tomato paste"] },
+      { group: "Braising Liquid",  items: ["1 cup beef broth","1 cup red wine or additional broth","2 tbsp Worcestershire sauce","1 tbsp soy sauce","2 sprigs fresh thyme or 1 tsp dried","1 bay leaf"] },
+      { group: "Vegetables",       items: ["4 carrots, cut large","1 lb baby potatoes, halved"] },
+      { group: "Finish",           items: ["2 tbsp butter"] }
+    ],
+    steps: [
+      "Pat roast completely dry. Season heavily on all sides with salt, pepper, paprika, garlic powder, onion powder, and thyme. Let sit 20 to 30 minutes.",
+      "Preheat oven to 300°F.",
+      "Heat oil in a heavy Dutch oven. Sear roast 4 to 5 minutes per side until deeply browned. Remove and set aside.",
+      "Lower heat to medium. Add onions and cook until soft and golden, about 6 to 8 minutes. Add garlic and tomato paste. Cook 1 minute.",
+      "Deglaze with wine, scraping all browned bits from the bottom.",
+      "Add broth, Worcestershire, soy sauce, thyme, and bay leaf.",
+      "Return roast to pot. Liquid should come halfway up the meat. Cover tightly.",
+      "Bake 3 hours.",
+      "Add carrots and potatoes. Bake another 1 to 1.5 hours until fork tender.",
+      "Remove roast and vegetables. Simmer liquid on stove and whisk in butter to finish gravy."
+    ],
+    note: "Let rest before slicing or shredding."
+  },
+
+  // ── 2. MAC AND CHEESE ───────────────────────
+  {
+    title: "Creamy Baked Mac and Cheese",
+    shopping: [
+      { group: "Dairy & Cheese", items: ["4 tbsp butter","3 cups whole milk","1 cup heavy cream","2 cups sharp cheddar, grated","1½ cups smoked gouda","1 cup mozzarella","½ cup parmesan (optional)"] },
+      { group: "Pantry", items: ["1 lb elbow macaroni","4 tbsp flour","1 tsp salt","1 tsp garlic powder","1 tsp onion powder","½ tsp smoked paprika","½ tsp black pepper","Pinch cayenne (optional)","1 cup panko breadcrumbs","2 tbsp melted butter"] }
+    ],
+    ingredients: [
+      { group: "Pasta", items: ["1 lb elbow macaroni"] },
+      { group: "Sauce", items: ["4 tbsp butter","4 tbsp flour","3 cups whole milk","1 cup heavy cream","2 cups sharp cheddar, grated","1½ cups smoked gouda","1 cup mozzarella","½ cup parmesan (optional)","1 tsp salt","1 tsp garlic powder","1 tsp onion powder","½ tsp smoked paprika","½ tsp black pepper","Pinch cayenne (optional)"] },
+      { group: "Topping", items: ["1 cup panko breadcrumbs","2 tbsp melted butter"] }
+    ],
+    steps: [
+      "Cook pasta just shy of al dente. Drain and set aside. Do not rinse.",
+      "Melt butter over medium heat. Whisk in flour and cook 1 to 2 minutes.",
+      "Slowly whisk in milk, then cream. Cook until thick enough to coat a spoon.",
+      "Add salt, garlic powder, onion powder, paprika, pepper, and cayenne.",
+      "Reduce heat to low. Add cheeses gradually, stirring until smooth. Do not boil.",
+      "Fold in pasta until fully coated.",
+      "Transfer to buttered baking dish.",
+      "Mix panko with melted butter and sprinkle on top.",
+      "Bake at 375°F for 20 to 25 minutes until bubbly and golden."
+    ],
+    note: "Let rest 10 minutes before serving."
+  },
+
+  // ── 3. NINJA AIR RIBS ───────────────────────
+  {
+    title: "Ninja Air Roasted Flavor Bomb Ribs",
+    shopping: [
+      { group: "Meat",   items: ["Ribs (your choice of type and quantity)"] },
+      { group: "Pantry", items: ["3 tbsp olive oil","2 tbsp Worcestershire sauce","1 tbsp soy sauce","1 tbsp brown sugar","1 tbsp garlic paste or minced garlic","1 tsp onion powder","1 tsp smoked paprika","1 tsp dried rosemary or thyme","1 tsp salt","1 tsp black pepper","1 tsp Dijon mustard (optional)","1 tbsp balsamic vinegar (optional)"] }
+    ],
+    ingredients: [
+      { group: "Ribs", items: ["Ribs — your choice of type and quantity"] },
+      { group: "Spice Paste", items: ["3 tbsp olive oil","2 tbsp Worcestershire sauce","1 tbsp soy sauce","1 tbsp brown sugar","1 tbsp garlic paste or minced garlic","1 tsp onion powder","1 tsp smoked paprika","1 tsp dried rosemary or thyme","1 tsp salt","1 tsp black pepper","Optional: 1 tsp Dijon mustard","Optional: 1 tbsp balsamic vinegar"] }
+    ],
+    steps: [
+      "Preheat Ninja Air Roast to 400°F. If no Air Roast, use Bake at 425°F.",
+      "Pat ribs completely dry with paper towels.",
+      "Mix all spice paste ingredients together until thick. Rub paste generously over both sides of ribs.",
+      "Place ribs bone-side down in tray or basket.",
+      "Roast 20 minutes.",
+      "Flip and roast another 20 to 25 minutes until internal temperature reaches 195 to 203°F.",
+      "Optional: Broil at 450°F for 3 to 5 minutes for crispy edges.",
+      "Rest 5 to 10 minutes before serving."
+    ],
+    note: "Optional finish: Brush with melted garlic butter or spoon pan drippings over top."
+  },
+
+  // ── 4. RED WINE SHORT RIBS ──────────────────
+  {
+    title: "Red Wine-Braised Beef Short Ribs",
+    shopping: [
+      { group: "Meat",    items: ["4 lbs bone-in beef short ribs"] },
+      { group: "Produce", items: ["2 medium onions","2 large carrots","2 celery stalks","1 head of garlic","Fresh thyme (4 sprigs)","Fresh rosemary (2 sprigs)"] },
+      { group: "Pantry",  items: ["All-purpose flour","Kosher salt","Freshly ground black pepper","Olive oil","1 (750 ml) bottle dry red wine (Cabernet Sauvignon or Merlot)","4 cups beef broth","Tomato paste","2 bay leaves"] }
+    ],
+    ingredients: [
+      { group: "Ribs", items: ["4 lbs bone-in beef short ribs","Kosher salt and freshly ground black pepper to taste","¼ cup all-purpose flour","3 tbsp olive oil"] },
+      { group: "Aromatics", items: ["2 medium onions, chopped","2 large carrots, chopped","2 celery stalks, chopped","1 head of garlic, halved crosswise","2 tbsp tomato paste"] },
+      { group: "Braising Liquid", items: ["1 (750 ml) bottle dry red wine (Cabernet Sauvignon or Merlot)","4 cups beef broth","4 sprigs fresh thyme","2 sprigs fresh rosemary","2 bay leaves"] }
+    ],
+    steps: [
+      "Preheat your oven to 325°F (165°C). Pat the short ribs dry with paper towels and season generously on all sides with salt and pepper. Lightly dredge the ribs in flour, shaking off any excess.",
+      "In a large Dutch oven or heavy-bottomed pot, heat the olive oil over medium-high heat. Sear the short ribs in batches, turning until browned on all sides, about 8–10 minutes per batch. Transfer the seared ribs to a plate and set aside.",
+      "Reduce the heat to medium. Add the chopped onions, carrots, and celery to the pot. Cook, stirring occasionally, until the vegetables have softened and are lightly caramelized, about 10–12 minutes. Add the halved head of garlic and tomato paste, and cook for another 2 minutes, stirring constantly.",
+      "Pour the red wine into the pot, scraping up any browned bits from the bottom. Bring the wine to a simmer and let it cook until it has reduced by about half, about 10–15 minutes. This step is crucial for developing a deep, rich flavor.",
+      "Return the seared short ribs to the pot. Add the beef broth, thyme sprigs, rosemary sprigs, and bay leaves. The liquid should almost cover the ribs. Bring the mixture to a simmer on the stovetop, then cover the pot tightly and transfer it to the preheated oven.",
+      "Braise for 3 to 3.5 hours, or until the meat is exceptionally tender and falling off the bone.",
+      "Carefully remove the pot from the oven. Transfer the short ribs to a serving platter. Strain the braising liquid through a fine-mesh sieve into a saucepan, pressing on the solids to extract all the liquid. Skim off any excess fat from the surface. Bring the sauce to a simmer over medium heat and cook until it has thickened to your desired consistency. Season with salt and pepper to taste.",
+      "Pour the rich sauce over the short ribs and serve immediately."
+    ],
+    note: "This dish pairs wonderfully with creamy mashed potatoes, polenta, or egg noodles."
+  },
+
+  // ── 5. SHERRY-GLAZED RIBS ───────────────────
+  {
+    title: "Sherry-Glazed Beef Ribs",
+    shopping: [
+      { group: "Meat",    items: ["3–4 lbs beef back ribs or short ribs"] },
+      { group: "Pantry",  items: ["Olive oil","Kosher salt","Black pepper","1 cup dry sherry (Fino or Amontillado)","½ cup beef broth","¼ cup honey","3 tbsp soy sauce","1 tbsp Dijon mustard"] },
+      { group: "Produce", items: ["4 cloves garlic","1-inch piece of ginger","Green onions (for garnish)"] }
+    ],
+    ingredients: [
+      { group: "Ribs", items: ["3–4 lbs beef back ribs or short ribs","2 tbsp olive oil","Kosher salt and freshly ground black pepper"] },
+      { group: "Sherry Glaze", items: ["4 cloves garlic, minced","1-inch piece of ginger, grated","1 cup dry sherry (Fino or Amontillado)","½ cup beef broth","¼ cup honey","3 tbsp soy sauce","1 tbsp Dijon mustard"] },
+      { group: "Garnish", items: ["Sliced green onions"] }
+    ],
+    steps: [
+      "Preheat your oven to 300°F (150°C). Season the ribs generously with salt and pepper. Heat the olive oil in a large, oven-safe skillet or Dutch oven over medium-high heat. Sear the ribs on all sides until nicely browned. Remove the ribs and set them aside.",
+      "In the same skillet, reduce the heat to medium and add the minced garlic and grated ginger. Cook until fragrant, about 1 minute.",
+      "Pour in the sherry, scraping up any browned bits from the bottom of the pan. Let it simmer for a couple of minutes to burn off some of the alcohol. Stir in the beef broth, honey, soy sauce, and Dijon mustard. Bring the mixture to a simmer.",
+      "Return the seared ribs to the skillet, turning to coat them in the glaze. Cover the skillet with a lid or foil and transfer it to the preheated oven. Bake for 2.5 to 3 hours, or until the ribs are tender.",
+      "Remove the ribs from the skillet and set them aside. Place the skillet on the stovetop over medium-high heat. Bring the remaining glaze to a boil and cook until it has thickened and is syrupy, about 5–7 minutes.",
+      "Brush the thickened glaze over the ribs. Garnish with sliced green onions and serve immediately."
+    ],
+    note: "These ribs are delicious with a side of roasted vegetables or a simple rice pilaf."
+  }
+
+];
+
+// ─────────────────────────────────────────────
+// STATE
+// ─────────────────────────────────────────────
+let activeRecipe = null;
+let activeTab = 'shopping';
+let checkState = {}; // { "recipeIndex-group-itemIndex": true/false }
+
+// ─────────────────────────────────────────────
+// NAV
+// ─────────────────────────────────────────────
+function showHome() {
+  document.getElementById('home-view').style.display = 'block';
+  document.getElementById('recipe-view').style.display = 'none';
+  document.getElementById('backBtn').style.display = 'none';
+  document.getElementById('headerTitle').textContent = 'My Recipe Book';
+  document.getElementById('headerSub').textContent = '5 personal recipes';
+  activeRecipe = null;
+}
+
+function showRecipe(index) {
+  activeRecipe = index;
+  const r = recipes[index];
+
+  document.getElementById('home-view').style.display = 'none';
+  document.getElementById('recipe-view').style.display = 'block';
+  document.getElementById('backBtn').style.display = 'block';
+  document.getElementById('headerTitle').textContent = '';
+  document.getElementById('headerSub').textContent = '';
+  document.getElementById('recipeTitle').textContent = r.title;
+
+  switchTab('shopping');
+}
+
+// ─────────────────────────────────────────────
+// TABS
+// ─────────────────────────────────────────────
+function switchTab(tab) {
+  activeTab = tab;
+
+  document.querySelectorAll('.tab-btn').forEach((btn, i) => {
+    btn.classList.toggle('active', ['shopping','ingredients','instructions'][i] === tab);
+  });
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+
+  const panel = document.getElementById('tab-' + tab);
+  panel.classList.add('active');
+  renderPanel(tab);
+}
+
+// ─────────────────────────────────────────────
+// RENDER
+// ─────────────────────────────────────────────
+function renderPanel(tab) {
+  const r = recipes[activeRecipe];
+
+  if (tab === 'shopping') {
+    let html = '';
+    r.shopping.forEach((section, gi) => {
+      html += `<div class="shop-section"><h3>${section.group}</h3>`;
+      section.items.forEach((item, ii) => {
+        const key = `${activeRecipe}-shop-${gi}-${ii}`;
+        const checked = checkState[key] ? 'checked' : '';
+        const cls = checkState[key] ? 'shop-item checked' : 'shop-item';
+        html += `<div class="${cls}" id="wrap-${key}" onclick="toggleCheck('${key}')">
+          <input type="checkbox" ${checked} onclick="event.stopPropagation(); toggleCheck('${key}')" />
+          <label>${item}</label>
+        </div>`;
+      });
+      html += '</div>';
+    });
+    html += `<button class="clear-btn" onclick="clearChecks()">Clear all checks</button>`;
+    document.getElementById('tab-shopping').innerHTML = html;
+  }
+
+  else if (tab === 'ingredients') {
+    let html = '';
+    r.ingredients.forEach(section => {
+      html += `<div class="ing-group"><h3>${section.group}</h3><ul>`;
+      section.items.forEach(item => { html += `<li>${item}</li>`; });
+      html += '</ul></div>';
+    });
+    document.getElementById('tab-ingredients').innerHTML = html;
+  }
+
+  else if (tab === 'instructions') {
+    let html = '<div class="steps"><ol>';
+    r.steps.forEach(step => { html += `<li><span>${step}</span></li>`; });
+    html += '</ol>';
+    if (r.note) html += `<div class="note">💡 ${r.note}</div>`;
+    html += '</div>';
+    document.getElementById('tab-instructions').innerHTML = html;
+  }
+}
+
+// ─────────────────────────────────────────────
+// CHECKBOXES
+// ─────────────────────────────────────────────
+function toggleCheck(key) {
+  checkState[key] = !checkState[key];
+  const wrap = document.getElementById('wrap-' + key);
+  if (!wrap) return;
+  wrap.classList.toggle('checked', checkState[key]);
+  wrap.querySelector('input').checked = checkState[key];
+}
+
+function clearChecks() {
+  // clear only current recipe's shopping items
+  Object.keys(checkState).forEach(k => {
+    if (k.startsWith(activeRecipe + '-shop-')) checkState[k] = false;
+  });
+  renderPanel('shopping');
+}
+
+// Start on home
+showHome();
+</script>
+</body>
+</html>
