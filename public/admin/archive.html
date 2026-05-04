@@ -82,7 +82,8 @@
   .toast.show { opacity:1; }
 
   /* ── Feedback (comments) UI ─────────────────────────────────────── */
-  .fb-icon { position:absolute; top:8px; left:8px; z-index:3; background:rgba(13,27,54,0.78); border:1px solid #D4AF37; color:#D4AF37; width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.85rem; cursor:pointer; backdrop-filter:blur(4px); -webkit-backdrop-filter:blur(4px); }
+  /* Bottom-right per Gamble — top-left collided with the Safari page-expander control on iPhone. */
+  .fb-icon { position:absolute; bottom:8px; right:8px; z-index:3; background:rgba(13,27,54,0.78); border:1px solid #D4AF37; color:#D4AF37; width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.85rem; cursor:pointer; backdrop-filter:blur(4px); -webkit-backdrop-filter:blur(4px); }
   .fb-icon:hover { background:rgba(212,175,55,0.18); }
   .fb-icon .fb-badge { position:absolute; top:-5px; right:-5px; background:#D4AF37; color:#0D1B36; font-size:0.55rem; font-weight:800; min-width:16px; height:16px; padding:0 4px; border-radius:8px; display:flex; align-items:center; justify-content:center; }
   .fb-icon .fb-badge:empty { display:none; }
