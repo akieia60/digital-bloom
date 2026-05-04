@@ -60,7 +60,6 @@
       ctx.font = '500 13px Georgia';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-      ctx.letterSpacing = '4px';
       ctx.fillText('MY', SIZE/2, 75);
 
       // ── "Recipes" main text ──
@@ -130,6 +129,43 @@
     }
     .back-btn::before { content: '← '; }
 
+    /* ── METHOD FILTER BAR ── */
+    .method-filter {
+      display: flex;
+      gap: 8px;
+      padding: 12px 16px;
+      background: #f5ece0;
+      border-bottom: 1px solid #e8c99a;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    .method-filter::-webkit-scrollbar { display: none; }
+
+    .method-btn {
+      flex-shrink: 0;
+      padding: 8px 16px;
+      border-radius: 999px;
+      border: 2px solid #c8720a;
+      background: #fff;
+      color: #5c2e00;
+      font-family: 'Georgia', serif;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+      -webkit-tap-highlight-color: transparent;
+      white-space: nowrap;
+    }
+    .method-btn.active {
+      background: #c8720a;
+      color: #fff;
+      font-weight: bold;
+    }
+    .method-btn.grill-btn.active {
+      background: #6b3a1f;
+      border-color: #6b3a1f;
+    }
+
     /* ── HOME: RECIPE CARDS ── */
     #home-view { padding: 16px; }
 
@@ -145,10 +181,31 @@
       -webkit-tap-highlight-color: transparent;
     }
     .recipe-card:active { transform: scale(0.98); box-shadow: 0 1px 5px rgba(92,46,0,0.15); }
+    .recipe-card.hidden { display: none; }
+
+    /* Charcoal grill cards get a darker left border */
+    .recipe-card.grill {
+      border-left-color: #6b3a1f;
+      background: linear-gradient(135deg, #fff 85%, #fff5ec);
+    }
 
     .recipe-card .emoji { font-size: 2rem; margin-bottom: 8px; display: block; }
     .recipe-card h2 { font-size: 1.05rem; color: #5c2e00; line-height: 1.3; }
     .recipe-card .tag { font-size: 0.72rem; color: #9b6530; margin-top: 5px; font-style: italic; }
+
+    /* Method badge on each card */
+    .method-badge {
+      display: inline-block;
+      margin-top: 7px;
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-size: 0.7rem;
+      font-style: normal;
+      font-weight: bold;
+      letter-spacing: 0.5px;
+    }
+    .method-badge.oven  { background: #fff3e0; color: #c8720a; border: 1px solid #f5c890; }
+    .method-badge.grill { background: #3a1a06; color: #f5c890; border: 1px solid #6b3a1f; }
 
     /* ── RECIPE DETAIL VIEW ── */
     #recipe-view { display: none; }
@@ -160,6 +217,19 @@
       text-align: center;
     }
     .recipe-title-bar h2 { font-size: 1.15rem; line-height: 1.4; }
+
+    /* ── GRILL TIP BOX ── */
+    .grill-tip {
+      background: #3a1a06;
+      color: #f5c890;
+      border-radius: 10px;
+      padding: 14px 16px;
+      margin: 16px 16px 0;
+      font-size: 0.88rem;
+      line-height: 1.6;
+      border-left: 4px solid #e07b30;
+    }
+    .grill-tip strong { display: block; margin-bottom: 4px; font-size: 0.8rem; letter-spacing: 1px; text-transform: uppercase; color: #e07b30; }
 
     /* ── TABS ── */
     .tabs {
@@ -311,44 +381,26 @@
 <div class="site-header">
   <button class="back-btn" id="backBtn" onclick="showHome()">All Recipes</button>
   <h1 id="headerTitle">My Recipe Book</h1>
-  <p id="headerSub">5 personal recipes</p>
+  <p id="headerSub">10 personal recipes</p>
 </div>
 
 <!-- HOME VIEW -->
 <div id="home-view">
+
+  <!-- Method filter bar -->
+  <div class="method-filter">
+    <button class="method-btn active" onclick="setMethod('all')">🍽 All</button>
+    <button class="method-btn" onclick="setMethod('oven')">🔥 Oven &amp; Air Fryer</button>
+    <button class="method-btn grill-btn" onclick="setMethod('grill')">🪵 Charcoal Grill</button>
+  </div>
+
   <div style="padding: 14px 16px 4px; color: #7a4010; font-size: 0.85rem; font-style: italic;">
     Tap a recipe to view ingredients &amp; instructions
   </div>
 
-  <div class="recipe-card" onclick="showRecipe(0)">
-    <span class="emoji">🥩</span>
-    <h2>Ultimate Slow Braised Beef Chuck Roast</h2>
-    <div class="tag">Oven · ~4.5 hrs · Dutch oven</div>
-  </div>
+  <!-- Cards rendered by JS -->
+  <div id="card-container"></div>
 
-  <div class="recipe-card" onclick="showRecipe(1)">
-    <span class="emoji">🧀</span>
-    <h2>Creamy Baked Mac and Cheese</h2>
-    <div class="tag">Oven · ~35 min · Stovetop + bake</div>
-  </div>
-
-  <div class="recipe-card" onclick="showRecipe(2)">
-    <span class="emoji">🍖</span>
-    <h2>Ninja Air Roasted Flavor Bomb Ribs</h2>
-    <div class="tag">Air Roast · ~45 min · Ninja oven</div>
-  </div>
-
-  <div class="recipe-card" onclick="showRecipe(3)">
-    <span class="emoji">🍷</span>
-    <h2>Red Wine-Braised Beef Short Ribs</h2>
-    <div class="tag">Oven · 3–3.5 hrs · Dutch oven</div>
-  </div>
-
-  <div class="recipe-card" onclick="showRecipe(4)">
-    <span class="emoji">✨</span>
-    <h2>Sherry-Glazed Beef Ribs</h2>
-    <div class="tag">Oven · 2.5–3 hrs · Skillet</div>
-  </div>
 </div>
 
 <!-- RECIPE DETAIL VIEW -->
@@ -356,6 +408,8 @@
   <div class="recipe-title-bar">
     <h2 id="recipeTitle"></h2>
   </div>
+
+  <div id="grill-setup-box"></div>
 
   <div class="tabs">
     <button class="tab-btn active" onclick="switchTab('shopping')">🛒 Shopping List</button>
@@ -374,8 +428,11 @@
 // ─────────────────────────────────────────────
 const recipes = [
 
-  // ── 1. CHUCK ROAST ──────────────────────────
+  // ── 1. CHUCK ROAST (OVEN) ──────────────────
   {
+    cookType: 'oven',
+    emoji: '🥩',
+    cardTag: 'Oven · ~4.5 hrs · Dutch oven',
     title: "Ultimate Slow Braised Beef Chuck Roast",
     shopping: [
       { group: "Meat",    items: ["3 to 4 lb beef chuck roast"] },
@@ -404,8 +461,11 @@ const recipes = [
     note: "Let rest before slicing or shredding."
   },
 
-  // ── 2. MAC AND CHEESE ───────────────────────
+  // ── 2. MAC AND CHEESE (OVEN) ─────────────────
   {
+    cookType: 'oven',
+    emoji: '🧀',
+    cardTag: 'Oven · ~35 min · Stovetop + bake',
     title: "Creamy Baked Mac and Cheese",
     shopping: [
       { group: "Dairy & Cheese", items: ["4 tbsp butter","3 cups whole milk","1 cup heavy cream","2 cups sharp cheddar, grated","1½ cups smoked gouda","1 cup mozzarella","½ cup parmesan (optional)"] },
@@ -430,8 +490,11 @@ const recipes = [
     note: "Let rest 10 minutes before serving."
   },
 
-  // ── 3. NINJA AIR RIBS ───────────────────────
+  // ── 3. NINJA AIR RIBS (OVEN) ─────────────────
   {
+    cookType: 'oven',
+    emoji: '🍖',
+    cardTag: 'Air Roast · ~45 min · Ninja oven',
     title: "Ninja Air Roasted Flavor Bomb Ribs",
     shopping: [
       { group: "Meat",   items: ["Ribs (your choice of type and quantity)"] },
@@ -454,8 +517,11 @@ const recipes = [
     note: "Optional finish: Brush with melted garlic butter or spoon pan drippings over top."
   },
 
-  // ── 4. RED WINE SHORT RIBS ──────────────────
+  // ── 4. RED WINE SHORT RIBS (OVEN) ────────────
   {
+    cookType: 'oven',
+    emoji: '🍷',
+    cardTag: 'Oven · 3–3.5 hrs · Dutch oven',
     title: "Red Wine-Braised Beef Short Ribs",
     shopping: [
       { group: "Meat",    items: ["4 lbs bone-in beef short ribs"] },
@@ -480,8 +546,11 @@ const recipes = [
     note: "This dish pairs wonderfully with creamy mashed potatoes, polenta, or egg noodles."
   },
 
-  // ── 5. SHERRY-GLAZED RIBS ───────────────────
+  // ── 5. SHERRY-GLAZED RIBS (OVEN) ─────────────
   {
+    cookType: 'oven',
+    emoji: '✨',
+    cardTag: 'Oven · 2.5–3 hrs · Skillet',
     title: "Sherry-Glazed Beef Ribs",
     shopping: [
       { group: "Meat",    items: ["3–4 lbs beef back ribs or short ribs"] },
@@ -502,6 +571,165 @@ const recipes = [
       "Brush the thickened glaze over the ribs. Garnish with sliced green onions and serve immediately."
     ],
     note: "These ribs are delicious with a side of roasted vegetables or a simple rice pilaf."
+  },
+
+  // ── 6. CHARCOAL CHUCK ROAST (GRILL) ──────────
+  {
+    cookType: 'grill',
+    emoji: '🔥',
+    cardTag: 'Charcoal Grill · 4–5 hrs · Two-zone indirect',
+    title: "Charcoal Smoked Chuck Roast",
+    grillSetup: "Use two-zone setup: pile all coals on one side. Place roast on the cool side. Target 275°F with the lid down. Add 2–3 chunks of hickory or oak wood at the start for smoke. Replenish coals every 90 minutes using the snake method or a chimney of fresh lit coals.",
+    shopping: [
+      { group: "Meat",    items: ["3 to 4 lb beef chuck roast"] },
+      { group: "Spices",  items: ["Kosher salt","Coarse black pepper","1 tbsp smoked paprika","1 tsp garlic powder","1 tsp onion powder","1 tsp dried thyme"] },
+      { group: "Grill Supplies", items: ["2–3 chunks of hickory or oak wood","Charcoal (enough for a full chimney plus extra)","Disposable aluminum drip pan","Spray bottle with apple juice or water"] },
+      { group: "Finish",  items: ["2 tbsp butter","½ cup beef broth (for the foil wrap)"] }
+    ],
+    ingredients: [
+      { group: "Meat & Rub", items: ["3 to 4 lb beef chuck roast","Kosher salt and coarse black pepper (generous — bark-building is the goal)","1 tbsp smoked paprika","1 tsp garlic powder","1 tsp onion powder","1 tsp dried thyme"] },
+      { group: "Wood & Fire", items: ["Full chimney of charcoal","2–3 fist-sized chunks of hickory or oak wood"] },
+      { group: "Texas Crutch Wrap", items: ["2 tbsp butter","½ cup beef broth","Heavy-duty aluminum foil"] }
+    ],
+    steps: [
+      "The night before (or at least 1 hour ahead), rub the chuck roast heavily on all sides with salt, pepper, paprika, garlic powder, onion powder, and thyme. The salt will start pulling moisture out and then reabsorb — this is how the bark forms.",
+      "Light a full chimney of charcoal. When coals are ashed over, pour them all to one side of the grill. Nestle 2–3 wood chunks on top of or beside the coals.",
+      "Place a disposable aluminum drip pan on the empty (cool) side of the grill and fill halfway with water. This creates steam and catches drippings.",
+      "Put the grill grate on and place the chuck roast over the drip pan (the cool side, NOT over the coals). Lid goes on, vents adjusted to maintain 275°F. You want the vent on the lid above the meat so smoke is pulled across it.",
+      "Smoke for 2.5 to 3 hours, spraying with apple juice every 45 minutes after the first hour. The roast will form a dark, flavorful crust called the bark. This is exactly what you want.",
+      "When internal temp hits 160°F, wrap tightly in two layers of heavy-duty foil with the butter and beef broth poured inside the packet. This is called the Texas Crutch — it powers through the stall and keeps moisture in.",
+      "Return the foil-wrapped roast to the cool side of the grill. Keep temp at 275°F. Add fresh coals if needed.",
+      "Cook another 1.5 to 2 hours until internal temp reaches 200 to 205°F. At this point the collagen has fully broken down and the meat will shred or slice cleanly.",
+      "Rest the roast — still wrapped — for at least 30 minutes before opening. The juices redistribute and the texture becomes perfectly tender.",
+      "Unwrap, slice against the grain or shred, and pour the collected juices from the foil over the top."
+    ],
+    note: "For extra smoke flavor, skip covering the grill for the first 30 minutes, then lid on for the rest of the cook."
+  },
+
+  // ── 7. CHARCOAL SMOKED MAC & CHEESE (GRILL) ──
+  {
+    cookType: 'grill',
+    emoji: '🧀',
+    cardTag: 'Charcoal Grill · ~1.5 hrs · Cast iron indirect',
+    title: "Charcoal Smoked Mac & Cheese",
+    grillSetup: "Two-zone setup with coals on one side only. Target 325–350°F with the lid closed. Use 1–2 chunks of apple or cherry wood for a mild, sweet smoke that pairs beautifully with cheese. Too much smoke will overpower the cheese — less is more here.",
+    shopping: [
+      { group: "Dairy & Cheese", items: ["4 tbsp butter","3 cups whole milk","1 cup heavy cream","2 cups sharp cheddar, grated","1½ cups smoked gouda","1 cup mozzarella","½ cup parmesan (optional)"] },
+      { group: "Pantry", items: ["1 lb elbow macaroni","4 tbsp flour","1 tsp salt","1 tsp garlic powder","1 tsp onion powder","½ tsp smoked paprika","½ tsp black pepper","Pinch cayenne (optional)","1 cup panko breadcrumbs","2 tbsp melted butter"] },
+      { group: "Grill Supplies", items: ["1–2 chunks of apple or cherry wood","Cast iron skillet or disposable aluminum pan (9x13)","Charcoal"] }
+    ],
+    ingredients: [
+      { group: "Pasta", items: ["1 lb elbow macaroni, cooked just shy of al dente"] },
+      { group: "Cheese Sauce", items: ["4 tbsp butter","4 tbsp flour","3 cups whole milk","1 cup heavy cream","2 cups sharp cheddar, grated","1½ cups smoked gouda","1 cup mozzarella","½ cup parmesan (optional)","1 tsp salt, 1 tsp garlic powder, 1 tsp onion powder, ½ tsp smoked paprika, ½ tsp black pepper, pinch cayenne"] },
+      { group: "Topping", items: ["1 cup panko breadcrumbs","2 tbsp melted butter"] },
+      { group: "Wood & Fire", items: ["1–2 chunks of apple or cherry wood","Charcoal"] }
+    ],
+    steps: [
+      "Prep the mac and cheese fully indoors first: cook pasta just shy of al dente, make the cheese sauce, fold pasta in, transfer to a well-buttered cast iron skillet or aluminum pan. Top with buttered panko.",
+      "Light your charcoal and set up two-zone cooking with coals on one side. Add 1–2 apple or cherry wood chunks to the coals. Let the grill stabilize at 325 to 350°F.",
+      "Place the mac and cheese pan on the cool side of the grill (no direct heat underneath it).",
+      "Close the lid. Position the top vent over the mac and cheese so smoke is drawn across the top.",
+      "Smoke for 45 minutes to 1 hour. You're looking for the top to turn golden and bubbly and for a light golden-brown crust to form on the panko.",
+      "Check after 30 minutes — if the top is browning too fast, slide the pan even further from the coals or close the bottom vent slightly to reduce heat.",
+      "When the top is golden, bubbly, and set, remove from grill.",
+      "Let rest 10 minutes before serving."
+    ],
+    note: "For extra char-kissed flavor, finish 3–4 minutes on the hot side with the lid open — watch closely."
+  },
+
+  // ── 8. CHARCOAL FLAVOR BOMB RIBS (GRILL) ─────
+  {
+    cookType: 'grill',
+    emoji: '🍖',
+    cardTag: 'Charcoal Grill · 5–6 hrs · Low & slow indirect',
+    title: "Charcoal Flavor Bomb Ribs",
+    grillSetup: "Snake method: arrange charcoal in a C-shape or half-moon along the outside of the grill, 2 coals wide and 2 coals high. Light only one end. This burns slowly for 5+ hours and keeps a steady 225–250°F. Place 3–4 wood chunks evenly along the snake. Ribs go on the cool center of the grate.",
+    shopping: [
+      { group: "Meat",   items: ["Full rack of spare ribs or baby back ribs"] },
+      { group: "Rub",    items: ["2 tbsp brown sugar","1 tbsp smoked paprika","1 tbsp garlic powder","1 tsp onion powder","1 tsp black pepper","1 tsp kosher salt","½ tsp cayenne (optional)"] },
+      { group: "Mop / Spritz", items: ["Apple juice (in a spray bottle)","2 tbsp apple cider vinegar"] },
+      { group: "Glaze",  items: ["½ cup your favorite BBQ sauce or honey mixed with soy sauce"] },
+      { group: "Grill Supplies", items: ["3–4 chunks of hickory, cherry, or peach wood","Charcoal (enough for a full snake)","Heavy-duty foil","Spray bottle"] }
+    ],
+    ingredients: [
+      { group: "Ribs & Rub", items: ["Full rack of spare ribs or baby back ribs, membrane removed from the back","2 tbsp brown sugar","1 tbsp smoked paprika, 1 tbsp garlic powder, 1 tsp onion powder, 1 tsp black pepper, 1 tsp kosher salt, ½ tsp cayenne (optional)"] },
+      { group: "The Spritz", items: ["½ cup apple juice + 2 tbsp apple cider vinegar in a spray bottle"] },
+      { group: "Glaze", items: ["½ cup BBQ sauce or honey-soy glaze, warmed"] },
+      { group: "Wood", items: ["3–4 chunks of hickory, cherry, or peach wood"] }
+    ],
+    steps: [
+      "The night before, remove the membrane from the back of the ribs (grab it with a paper towel and pull — it comes off in one sheet). Mix all rub ingredients and coat ribs generously on both sides. Refrigerate uncovered overnight.",
+      "Set up the snake method on your charcoal grill. Arrange coals in a C-shape, 2 wide and 2 high. Place wood chunks every few inches along the snake. Light only one end with a few lit coals from a chimney.",
+      "When grill hits 225 to 250°F, place ribs bone-side down on the cool center of the grate. Lid on, top vent over the ribs.",
+      "Cook for 3 hours without peeking. After the first hour, spritz with the apple juice mixture every 45 minutes to keep moisture up and help the bark set.",
+      "After 3 hours, wrap ribs tightly in foil. This is the Texas Crutch — keeps them moist and powers them through the stall.",
+      "Return to grill and cook another 1.5 to 2 hours until they reach 200 to 205°F internally and pass the bend test: pick up the rack with tongs in the middle — if it droops and cracks on the surface, they're done.",
+      "Unwrap ribs and brush with the glaze. Move to the hot side of the grill for 10 to 15 minutes to caramelize the glaze, flipping once.",
+      "Rest 10 minutes, then slice between the bones and serve."
+    ],
+    note: "The bend test never lies. Don't rush it — ribs that take 6 hours are always better than 4-hour ribs."
+  },
+
+  // ── 9. CHARCOAL SMOKED BEEF SHORT RIBS (GRILL)
+  {
+    cookType: 'grill',
+    emoji: '🦴',
+    cardTag: 'Charcoal Grill · 7–9 hrs · True low & slow',
+    title: "Charcoal Smoked Beef Short Ribs",
+    grillSetup: "Minion method: fill the charcoal basket or pile with unlit coals, then pour a small chimney of lit coals on top. This burns slowly and evenly for 8+ hours at 250°F. Use 3–4 chunks of post oak or hickory. These ribs need the full low-and-slow treatment — no shortcuts.",
+    shopping: [
+      { group: "Meat",   items: ["4–6 bone-in beef short ribs (plate ribs, 3-bone rack if possible — they look massive and they're worth it)"] },
+      { group: "Rub",    items: ["Kosher salt (lots — be generous)","Coarse black pepper (equal to salt)","Optional: 1 tsp garlic powder"] },
+      { group: "Grill Supplies", items: ["3–4 chunks of post oak or hickory wood","Large chimney of charcoal plus 1 bag of unlit briquettes","Disposable aluminum drip pan","Instant-read thermometer"] }
+    ],
+    ingredients: [
+      { group: "Ribs & Rub", items: ["4–6 bone-in beef short ribs, plate-style if possible","Kosher salt — apply liberally, all sides","Coarse black pepper — equal amount to salt (this is the classic Texas BBQ ratio)","Optional: 1 tsp garlic powder mixed in"] },
+      { group: "Wood", items: ["3–4 fist-sized chunks of post oak or hickory"] }
+    ],
+    steps: [
+      "The night before or at least 4 hours ahead, season the short ribs heavily with salt and pepper on all sides. Don't be shy — a thick bark needs a thick seasoning layer. Let rest uncovered in the fridge.",
+      "Set up the Minion method: fill your charcoal area with unlit briquettes, then dump a small chimney (about 20 lit coals) on top. Add 3 to 4 wood chunks throughout the pile. Grill should stabilize at 250°F.",
+      "Place a drip pan with an inch of water on the cool side of the grill. This helps regulate temp and keeps the environment moist.",
+      "Place ribs bone-side down on the grill over the drip pan. Lid on, top vent positioned over the ribs.",
+      "Do not open the lid for the first 3 hours. Smoke is doing its job. Trust it.",
+      "After 3 hours, check the bark. It should be dark mahogany — almost black. This is not burned. This is flavor. If it looks great, leave the lid open for 30 seconds, then close again.",
+      "Continue cooking, checking temp every hour. At 165°F internal, the stall begins — the temp will plateau for 1 to 2 hours. Do not panic. Do not raise the heat. Wait it out.",
+      "Push through to 200 to 210°F internal. At this point the collagen is fully rendered and the meat jiggles like jello when you shake the rack.",
+      "Rest uncovered for 30 to 45 minutes before slicing. The crust will stay crisp. Slice between bones and serve as-is — no sauce needed.",
+    ],
+    note: "Post oak is traditional Texas BBQ for beef. If you can find it, use it. The flavor is in a completely different league."
+  },
+
+  // ── 10. CHARCOAL SHERRY-GLAZED RIBS (GRILL) ──
+  {
+    cookType: 'grill',
+    emoji: '✨',
+    cardTag: 'Charcoal Grill · 3–4 hrs · Indirect + glaze finish',
+    title: "Charcoal Sherry-Glazed Beef Ribs",
+    grillSetup: "Two-zone setup: all coals on one side, ribs on the other. Start at 275°F for the cook, then open vents wide and move ribs directly over coals for the glaze caramelization at the end. Use 2 chunks of cherry wood — it pairs beautifully with the sherry and honey glaze.",
+    shopping: [
+      { group: "Meat",    items: ["3–4 lbs beef back ribs or short ribs"] },
+      { group: "Dry Rub", items: ["1 tsp kosher salt","1 tsp black pepper","½ tsp smoked paprika","½ tsp garlic powder"] },
+      { group: "Sherry Glaze", items: ["4 cloves garlic","1-inch piece of ginger","1 cup dry sherry (Fino or Amontillado)","½ cup beef broth","¼ cup honey","3 tbsp soy sauce","1 tbsp Dijon mustard"] },
+      { group: "Grill Supplies", items: ["2 chunks of cherry wood","Charcoal","Small saucepan or fireproof pan for glaze","Basting brush","Green onions (garnish)"] }
+    ],
+    ingredients: [
+      { group: "Ribs & Rub", items: ["3–4 lbs beef back ribs or short ribs","1 tsp each: kosher salt, black pepper, smoked paprika, garlic powder"] },
+      { group: "Sherry Glaze (make in advance)", items: ["4 cloves garlic, minced","1-inch ginger, grated","1 cup dry sherry","½ cup beef broth","¼ cup honey","3 tbsp soy sauce","1 tbsp Dijon mustard"] },
+      { group: "Finish", items: ["Sliced green onions for garnish"] },
+      { group: "Wood", items: ["2 chunks of cherry wood"] }
+    ],
+    steps: [
+      "Season the ribs with the dry rub on all sides. Let rest at room temperature while the grill heats up, or refrigerate overnight for deeper flavor.",
+      "Make the sherry glaze on your stove: combine all glaze ingredients in a saucepan, bring to a simmer, and cook 15 to 20 minutes until thickened and syrupy. Set aside.",
+      "Set up two-zone fire: all coals on one side with 2 cherry wood chunks. Stabilize at 275°F.",
+      "Place ribs on the cool side of the grill, bone-side down. Lid on, top vent over the ribs.",
+      "Cook indirect for 2 to 2.5 hours. Spritz with a mix of apple juice and beef broth every 45 minutes.",
+      "When internal temp reaches 180°F, brush a generous coat of the sherry glaze over the ribs.",
+      "Move the ribs directly over the coals for 5 to 8 minutes, flipping once and brushing with more glaze on each side. Watch closely — the honey in the glaze caramelizes fast and will burn if left too long. This is where the flavor explodes.",
+      "Rest 10 minutes off the heat. Slice and garnish with green onions. Drizzle any remaining warm glaze over the plate."
+    ],
+    note: "The glaze on charcoal heat creates a sticky, lacquered crust that you simply cannot replicate in an oven. Worth every minute."
   }
 
 ];
@@ -511,7 +739,57 @@ const recipes = [
 // ─────────────────────────────────────────────
 let activeRecipe = null;
 let activeTab = 'shopping';
-let checkState = {}; // { "recipeIndex-group-itemIndex": true/false }
+let activeMethod = 'all';
+let checkState = {};
+
+// ─────────────────────────────────────────────
+// METHOD FILTER
+// ─────────────────────────────────────────────
+function setMethod(m) {
+  activeMethod = m;
+
+  // update button styles
+  document.querySelectorAll('.method-btn').forEach(btn => btn.classList.remove('active'));
+  const methods = ['all','oven','grill'];
+  document.querySelectorAll('.method-btn')[methods.indexOf(m)].classList.add('active');
+
+  renderCards();
+}
+
+// ─────────────────────────────────────────────
+// RENDER HOME CARDS
+// ─────────────────────────────────────────────
+function renderCards() {
+  const container = document.getElementById('card-container');
+  let html = '';
+  let visible = 0;
+
+  recipes.forEach((r, index) => {
+    if (activeMethod !== 'all' && r.cookType !== activeMethod) return;
+    visible++;
+    const isGrill = r.cookType === 'grill';
+    const badgeClass = isGrill ? 'method-badge grill' : 'method-badge oven';
+    const badgeText = isGrill ? '🪵 Charcoal Grill' : '🔥 Oven / Air Fryer';
+    const cardClass = isGrill ? 'recipe-card grill' : 'recipe-card';
+
+    html += `<div class="${cardClass}" onclick="showRecipe(${index})">
+      <span class="emoji">${r.emoji}</span>
+      <h2>${r.title}</h2>
+      <div class="tag">${r.cardTag}</div>
+      <span class="${badgeClass}">${badgeText}</span>
+    </div>`;
+  });
+
+  if (visible === 0) {
+    html = `<div style="padding:32px 16px; text-align:center; color:#9b6530; font-style:italic;">No recipes in this category yet.</div>`;
+  }
+
+  container.innerHTML = html;
+
+  // Update subtitle count
+  const total = activeMethod === 'all' ? recipes.length : recipes.filter(r => r.cookType === activeMethod).length;
+  document.getElementById('headerSub').textContent = total + ' recipe' + (total !== 1 ? 's' : '');
+}
 
 // ─────────────────────────────────────────────
 // NAV
@@ -521,7 +799,7 @@ function showHome() {
   document.getElementById('recipe-view').style.display = 'none';
   document.getElementById('backBtn').style.display = 'none';
   document.getElementById('headerTitle').textContent = 'My Recipe Book';
-  document.getElementById('headerSub').textContent = '5 personal recipes';
+  renderCards();
   activeRecipe = null;
 }
 
@@ -535,6 +813,14 @@ function showRecipe(index) {
   document.getElementById('headerTitle').textContent = '';
   document.getElementById('headerSub').textContent = '';
   document.getElementById('recipeTitle').textContent = r.title;
+
+  // Show or hide grill setup tip
+  const setupBox = document.getElementById('grill-setup-box');
+  if (r.grillSetup) {
+    setupBox.innerHTML = `<div class="grill-tip"><strong>🪵 Charcoal Grill Setup</strong>${r.grillSetup}</div>`;
+  } else {
+    setupBox.innerHTML = '';
+  }
 
   switchTab('shopping');
 }
@@ -556,13 +842,22 @@ function switchTab(tab) {
 }
 
 // ─────────────────────────────────────────────
-// RENDER
+// RENDER PANELS
 // ─────────────────────────────────────────────
 function renderPanel(tab) {
   const r = recipes[activeRecipe];
 
   if (tab === 'shopping') {
     let html = '';
+
+    // Grill supplies section at the top if it's a grill recipe
+    if (r.cookType === 'grill') {
+      html += `<div style="background:#fff5ec; border-radius:8px; padding:10px 14px; margin-bottom:14px; font-size:0.82rem; color:#5c2e00; border:1px solid #e8c99a;">
+        <strong style="display:block; margin-bottom:4px; color:#c8720a;">💡 Check the Grill Setup tip above before shopping</strong>
+        Wood type and quantity is listed in the Grill Supplies section below.
+      </div>`;
+    }
+
     r.shopping.forEach((section, gi) => {
       html += `<div class="shop-section"><h3>${section.group}</h3>`;
       section.items.forEach((item, ii) => {
@@ -612,7 +907,6 @@ function toggleCheck(key) {
 }
 
 function clearChecks() {
-  // clear only current recipe's shopping items
   Object.keys(checkState).forEach(k => {
     if (k.startsWith(activeRecipe + '-shop-')) checkState[k] = false;
   });
