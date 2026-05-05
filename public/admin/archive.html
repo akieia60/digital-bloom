@@ -80,7 +80,15 @@
   button.action.done { background:#1f3a1f; color:#5cba5c; border:1px solid #1f3a1f; }
   .buffer-state { display:inline-block; font-size:0.6rem; letter-spacing:0.1em; text-transform:uppercase; padding:3px 8px; border-radius:10px; font-weight:700; margin:0 0 6px 6px; border:1px solid #2a3e5e; color:#8da4c5; }
   .buffer-state.approved { background:#0f2f24; color:#9be39b; border-color:#2f8f65; }
+  .buffer-state.queued { background:#17243f; color:#a8c0e0; border-color:#4a6490; }
   .buffer-actions { display:grid; grid-template-columns:1fr; gap:0; }
+  .marketing-tools { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:10px; padding:10px 14px 0; }
+  .marketing-tools button { border:none; padding:11px; border-radius:8px; font-weight:800; font-size:0.76rem; letter-spacing:0.06em; text-transform:uppercase; cursor:pointer; font-family:inherit; }
+  .marketing-tools .batch { background:#0f2f24; color:#9be39b; border:1px solid #2f8f65; }
+  .marketing-tools .buffer { background:#D4AF37; color:#0D1B36; }
+  .marketing-tools .queue { background:#173c2d; color:#b6f1c4; border:1px solid #2f8f65; }
+  .marketing-tools .muted { background:#0a142a; color:#8da4c5; border:1px solid #2a3e5e; }
+  .marketing-tools button:disabled { opacity:0.55; cursor:default; }
 
   .empty { text-align:center; padding:60px 20px; color:#7a8fad; font-size:0.95rem; }
   .err { background:#3a1010; border:1px solid #6a2222; color:#ff8888; padding:12px 16px; margin:14px; border-radius:6px; font-size:0.85rem; }
@@ -223,6 +231,8 @@ if (!VALID_MODES.has(currentMode)) currentMode = 'renders';
 // badges show the count without N+1 fetches.
 let feedbackCountIndex = {}; // key = `${kind}:${ref}` → number
 let marketingApprovalIndex = {}; // key = filename → true when open feedback has BUFFER_APPROVED marker
+let marketingQueuedIndex = {}; // key = filename → true when open feedback has BUFFER_QUEUED marker
+let lastMarketingItems = [];
 async function loadFeedbackCounts() {
   if (!TOKEN) return;
   try {
@@ -231,9 +241,14 @@ async function loadFeedbackCounts() {
     const j = await r.json();
     const idx = {};
     const approvals = {};
+    const queued = {};
     for (const f of j.feedback || []) {
       if (f.target_kind === 'marketing' && String(f.body || '').startsWith('[BUFFER_APPROVED]')) {
         approvals[f.target_ref] = true;
+        continue;
+      }
+      if (f.target_kind === 'marketing' && String(f.body || '').startsWith('[BUFFER_QUEUED]')) {
+        queued[f.target_ref] = true;
         continue;
       }
       const k = `${f.target_kind}:${f.target_ref}`;
@@ -241,6 +256,7 @@ async function loadFeedbackCounts() {
     }
     feedbackCountIndex = idx;
     marketingApprovalIndex = approvals;
+    marketingQueuedIndex = queued;
   } catch {}
 }
 
@@ -618,8 +634,11 @@ function writeBufferState(state) {
   try { localStorage.setItem(BUFFER_STATE_KEY, JSON.stringify(state)); } catch {}
 }
 function bufferStatus(name) {
+  const localStatus = readBufferState()[name];
+  if (localStatus === 'queued') return 'queued';
+  if (marketingQueuedIndex[name]) return 'queued';
   if (marketingApprovalIndex[name]) return 'approved';
-  return readBufferState()[name] || 'new';
+  return localStatus || 'new';
 }
 async function persistBufferApproval(name, btn) {
   if (!TOKEN || marketingApprovalIndex[name]) return;
@@ -649,16 +668,17 @@ async function setBufferStatus(name, status, btn) {
   writeBufferState(state);
   if (status === 'approved') await persistBufferApproval(name, btn);
   if (btn) {
-    btn.textContent = status === 'approved' ? '✓ Approved for Buffer' : 'Approve for Buffer';
-    btn.classList.toggle('done', status === 'approved');
+    btn.textContent = status === 'queued' ? '✓ Marked Queued' : status === 'approved' ? '✓ Approved for Buffer' : 'Approve for Buffer';
+    btn.classList.toggle('done', status === 'approved' || status === 'queued');
   }
   const card = btn?.closest('.card');
   const pill = card?.querySelector('.buffer-state');
   if (pill) {
-    pill.textContent = status === 'approved' ? 'Buffer Approved' : 'Needs Approval';
+    pill.textContent = status === 'queued' ? 'Queued in Buffer' : status === 'approved' ? 'Buffer Approved' : 'Needs Approval';
     pill.classList.toggle('approved', status === 'approved');
+    pill.classList.toggle('queued', status === 'queued');
   }
-  toast(status === 'approved' ? 'Marked approved for Buffer.' : 'Approval cleared.');
+  toast(status === 'queued' ? 'Marked queued in Buffer.' : status === 'approved' ? 'Marked approved for Buffer.' : 'Approval cleared.');
 }
 async function toggleBufferApproval(name, btn) {
   if (bufferStatus(name) === 'approved') {
@@ -691,7 +711,7 @@ function marketingCaption(name) {
 }
 async function copyBufferPack(name, url, btn) {
   const caption = marketingCaption(name);
-  const pack = `ASSET URL:\\n${url}\\n\\nCAPTION:\\n${caption}\\n\\nBUFFER NOTE:\\nQueue to Creative Vision Pro LLC / Digital Bloom social channels. Suggested platforms: Instagram, Facebook, TikTok, Pinterest, X.`;
+  const pack = bufferPackText({ name, url });
   try {
     await navigator.clipboard.writeText(pack);
     btn.textContent = '✓ Buffer pack copied';
@@ -704,6 +724,85 @@ async function copyBufferPack(name, url, btn) {
 function openBufferComposer() {
   window.open('https://publish.buffer.com/', '_blank', 'noopener');
 }
+function bufferPackText(item) {
+  const name = item.name || item.target_ref || '';
+  const url = item.url || item.target_video_url || '';
+  const caption = marketingCaption(name);
+  return `ASSET URL:\\n${url}\\n\\nCAPTION:\\n${caption}\\n\\nBUFFER NOTE:\\nQueue to Creative Vision Pro LLC / Digital Bloom social channels. Suggested platforms: Instagram, Facebook, TikTok, Pinterest, X.`;
+}
+function approvedMarketingItems() {
+  return lastMarketingItems.filter(p => bufferStatus(p.name) === 'approved');
+}
+async function queueApprovedViaApi(btn) {
+  const approved = approvedMarketingItems();
+  if (!approved.length) {
+    toast('No approved Buffer items to queue.', false);
+    return;
+  }
+  const original = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = 'Queueing...';
+  try {
+    const r = await fetch('/api/admin/buffer', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token: TOKEN, action: 'queue-approved' }),
+    });
+    const j = await r.json().catch(() => ({}));
+    if (!r.ok) throw new Error(j.error || 'Could not queue approved posts.');
+    if (j.failed?.length) {
+      toast(`Queued ${j.queued?.length || 0}; ${j.failed.length} failed. Check Buffer settings.`, false);
+    } else if (j.skipped) {
+      toast(j.skipped, false);
+    } else {
+      toast(`Queued ${j.itemCount || approved.length} approved posts to ${j.channelCount || 0} Buffer channel(s).`);
+    }
+    await load();
+  } catch (e) {
+    toast(e.message || 'Could not queue approved posts.', false);
+    btn.disabled = false;
+    btn.textContent = original;
+  }
+}
+async function copyApprovedBufferBatch(btn) {
+  const approved = approvedMarketingItems();
+  if (!approved.length) {
+    toast('No approved Buffer items yet.', false);
+    return;
+  }
+  const batch = approved.map((p, i) => `POST ${i + 1} OF ${approved.length}\\n${bufferPackText(p)}`).join('\\n\\n---\\n\\n');
+  try {
+    await navigator.clipboard.writeText(batch);
+    btn.textContent = `✓ Copied ${approved.length} approved`;
+    setTimeout(()=>btn.textContent='Copy Approved Batch', 1800);
+    toast(`Copied ${approved.length} approved Buffer posts.`);
+  } catch {
+    toast('Could not copy approved batch.', false);
+  }
+}
+function markApprovedQueued() {
+  const approved = approvedMarketingItems();
+  if (!approved.length) {
+    toast('No approved Buffer items to mark queued.', false);
+    return;
+  }
+  const state = readBufferState();
+  for (const p of approved) state[p.name] = 'queued';
+  writeBufferState(state);
+  load();
+  toast(`Marked ${approved.length} approved posts as queued.`);
+}
+function marketingTools(items) {
+  const approvedCount = items.filter(p => bufferStatus(p.name) === 'approved').length;
+  const queuedCount = items.filter(p => bufferStatus(p.name) === 'queued').length;
+  return `<div class="marketing-tools">
+    <button class="queue" onclick="queueApprovedViaApi(this)">Queue Approved to Buffer (${approvedCount})</button>
+    <button class="batch" onclick="copyApprovedBufferBatch(this)">Copy Approved Batch (${approvedCount})</button>
+    <button class="buffer" onclick="openBufferComposer()">Open Buffer</button>
+    <button class="muted" onclick="markApprovedQueued()">Mark Approved Queued</button>
+    <button class="muted" disabled>${queuedCount} queued</button>
+  </div>`;
+}
 
 function marketingGrid(items) {
   return items.map(p => {
@@ -714,8 +813,8 @@ function marketingGrid(items) {
     const isNew = ageMs < 24 * 60 * 60 * 1000;
     const newPill = isNew ? `<span class="pill new">New</span>` : '';
     const status = bufferStatus(p.name);
-    const bufferPill = `<span class="buffer-state ${status === 'approved' ? 'approved' : ''}">${status === 'approved' ? 'Buffer Approved' : 'Needs Approval'}</span>`;
-    const approveLabel = status === 'approved' ? '✓ Approved for Buffer' : 'Approve for Buffer';
+    const bufferPill = `<span class="buffer-state ${status === 'queued' ? 'queued' : status === 'approved' ? 'approved' : ''}">${status === 'queued' ? 'Queued in Buffer' : status === 'approved' ? 'Buffer Approved' : 'Needs Approval'}</span>`;
+    const approveLabel = status === 'queued' ? '✓ Marked Queued' : status === 'approved' ? '✓ Approved for Buffer' : 'Approve for Buffer';
     const sizeLine = sizeKb ? `<div class="cat-line">${sizeKb} KB · ${escape(p.name)}</div>` : `<div class="cat-line">${escape(p.name)}</div>`;
     // Inline <video controls> so Ak can tap to play. Audio ON for marketing
     // (commercials have dialogue / music) — different from bloom previews.
@@ -733,6 +832,7 @@ function marketingGrid(items) {
           <button class="action archive" onclick="navigator.clipboard.writeText('${escape(p.url)}'); this.textContent='✓ URL copied'; setTimeout(()=>this.textContent='Copy URL', 1800)">Copy URL</button>
           <button class="action buffer ${status === 'approved' ? 'done' : ''}" onclick="toggleBufferApproval(${jsArg(p.name)}, this)">${approveLabel}</button>
           <button class="action buffer-copy" onclick="copyBufferPack(${jsArg(p.name)}, ${jsArg(p.url)}, this)">Copy Buffer Pack</button>
+          <button class="action buffer-copy" onclick="setBufferStatus(${jsArg(p.name)}, 'queued', this)">Mark Queued</button>
           <button class="action buffer-open" onclick="openBufferComposer()">Open Buffer</button>
         </div>
       </div>
@@ -779,12 +879,16 @@ async function load() {
 
     if (currentMode === 'marketing') {
       const items = j.marketing || [];
+      lastMarketingItems = items;
+      const approvedCount = items.filter(p => bufferStatus(p.name) === 'approved').length;
+      const queuedCount = items.filter(p => bufferStatus(p.name) === 'queued').length;
       document.getElementById('stats').innerHTML = `<strong>${items.length}</strong> commercials in the marketing folder`;
       if (!items.length) {
         document.getElementById('content').innerHTML = `<div class="empty">No marketing drafts yet. Files in monique-videos/commercial_drafts/ will surface here.</div>`;
         return;
       }
-      document.getElementById('content').innerHTML = `<div class="grid">${marketingGrid(items)}</div>`;
+      document.getElementById('stats').innerHTML = `<strong>${items.length}</strong> commercials · <strong>${approvedCount}</strong> approved for Buffer · <strong>${queuedCount}</strong> queued`;
+      document.getElementById('content').innerHTML = `${marketingTools(items)}<div class="grid">${marketingGrid(items)}</div>`;
     } else if (currentMode === 'renders') {
       const items = j.renders || [];
       const liveCount = items.filter(x => x.is_live).length;
