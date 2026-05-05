@@ -47,6 +47,10 @@
     {
       "path": "/api/cron/process-bloom-deliveries",
       "schedule": "0 14 * * *"
+    },
+    {
+      "path": "/api/cron/buffer-marketing",
+      "schedule": "0 13,16,19,22 * * *"
     }
   ],
   "rewrites": [

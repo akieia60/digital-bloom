@@ -10,6 +10,7 @@ const BUFFER_CHANNEL_IDS = (process.env.BUFFER_CHANNEL_IDS || '')
   .split(',')
   .map((s) => s.trim())
   .filter(Boolean);
+const STORE_URL = 'https://digitalbloom.store';
 
 function authOk(token) {
   return Boolean(ADMIN_TOKEN) && token === ADMIN_TOKEN;
@@ -48,6 +49,17 @@ function marketingCaption(name) {
   return "Send flowers that bloom on their phone screen. Personal. Cinematic. Ready when your heart is. digitalbloom.store\n\n#DigitalBloom #ShineYourLove #DigitalFlowers";
 }
 
+function postTitle(name) {
+  return String(name || '')
+    .replace(/\.mp4$/i, '')
+    .replace(/^\d{4}-\d{2}-\d{2}-flyer-/, '')
+    .split('-')
+    .filter(Boolean)
+    .map((word) => word[0]?.toUpperCase() + word.slice(1))
+    .join(' ')
+    .slice(0, 90) || 'Digital Bloom';
+}
+
 async function bufferRequest(query) {
   const response = await fetch('https://api.buffer.com', {
     method: 'POST',
@@ -84,20 +96,56 @@ async function getBufferChannels() {
       displayName
       service
       isQueuePaused
+      isDisconnected
+      isLocked
+      metadata {
+        ... on PinterestMetadata {
+          boards { serviceId name }
+        }
+      }
     }
   }`);
-  return (channelData?.channels || []).filter((c) => !c.isQueuePaused);
+  return (channelData?.channels || []).filter((c) => !c.isQueuePaused && !c.isDisconnected && !c.isLocked);
 }
 
-async function createBufferVideoPost({ channelId, text, videoUrl }) {
+function bufferPostMetadata(channel, item) {
+  const title = gqlString(postTitle(item.target_ref));
+  if (channel.service === 'facebook') {
+    return 'metadata: { facebook: { type: reel } }';
+  }
+  if (channel.service === 'instagram') {
+    return 'metadata: { instagram: { type: reel, shouldShareToFeed: true } }';
+  }
+  if (channel.service === 'youtube') {
+    return `metadata: { youtube: { title: ${title}, categoryId: "24", privacy: public, madeForKids: false, notifySubscribers: false, embeddable: true } }`;
+  }
+  if (channel.service === 'pinterest') {
+    const boardServiceId = channel.metadata?.boards?.[0]?.serviceId;
+    if (!boardServiceId) return '';
+    return `metadata: { pinterest: { title: ${title}, url: ${gqlString(STORE_URL)}, boardServiceId: ${gqlString(boardServiceId)} } }`;
+  }
+  return '';
+}
+
+function shouldSkipChannel(channel) {
+  if (channel.service === 'pinterest') {
+    return 'Pinterest needs an image/board setup before video flyers can be queued there.';
+  }
+  return '';
+}
+
+async function createBufferVideoPost({ channel, text, videoUrl, item }) {
+  const metadata = bufferPostMetadata(channel, item);
   const data = await bufferRequest(`mutation CreatePost {
     createPost(input: {
       text: ${gqlString(text)}
-      channelId: ${gqlString(channelId)}
+      channelId: ${gqlString(channel.id)}
       schedulingType: automatic
       mode: addToQueue
+      source: "digital-bloom-archive"
+      ${metadata}
       assets: {
-        videos: [{ url: ${gqlString(videoUrl)} }]
+        videos: [{ url: ${gqlString(videoUrl)}, metadata: { title: ${gqlString(postTitle(item.target_ref))} } }]
       }
     }) {
       ... on PostActionSuccess {
@@ -123,13 +171,100 @@ async function getApprovedMarketingItems(supabase) {
   if (error) throw new Error(error.message);
 
   const queued = new Set();
+  const queuedChannelsByRef = new Map();
   const approvals = [];
   for (const item of data || []) {
     const body = String(item.body || '');
     if (body.startsWith('[BUFFER_QUEUED]')) queued.add(item.target_ref);
+    const channelMatch = body.match(/^\[BUFFER_CHANNEL_QUEUED:([^\]]+)\]/);
+    if (channelMatch) {
+      const channels = queuedChannelsByRef.get(item.target_ref) || new Set();
+      channels.add(channelMatch[1]);
+      queuedChannelsByRef.set(item.target_ref, channels);
+    }
     if (body.startsWith('[BUFFER_APPROVED]')) approvals.push(item);
   }
-  return approvals.filter((item) => !queued.has(item.target_ref));
+  return approvals
+    .filter((item) => !queued.has(item.target_ref))
+    .map((item) => ({ ...item, queuedChannelIds: queuedChannelsByRef.get(item.target_ref) || new Set() }));
+}
+
+export async function queueApprovedMarketingPosts({ dryRun = false, source = 'manual' } = {}) {
+  if (!BUFFER_API_KEY) {
+    const error = new Error('BUFFER_API_KEY is not configured. Generate a Buffer API key at https://publish.buffer.com/settings/api and add it to Vercel/local env.');
+    error.statusCode = 400;
+    throw error;
+  }
+  if (!supabaseUrl || !serviceKey) {
+    const error = new Error('Supabase admin environment is not configured.');
+    error.statusCode = 500;
+    throw error;
+  }
+
+  const supabase = createClient(supabaseUrl, serviceKey, { auth: { persistSession: false } });
+  const [items, channels] = await Promise.all([
+    getApprovedMarketingItems(supabase),
+    getBufferChannels(),
+  ]);
+
+  const skippedChannels = [];
+  const eligibleChannels = channels.filter((channel) => {
+    const reason = shouldSkipChannel(channel);
+    if (reason) skippedChannels.push({ channelId: channel.id, channel: channel.displayName || channel.name, service: channel.service, reason });
+    return !reason;
+  });
+
+  if (!eligibleChannels.length) throw new Error('No active Buffer channels are eligible for video flyer posting.');
+  if (!items.length) {
+    return { queued: [], failed: [], skipped: 'No approved unqueued marketing posts found.', channelCount: eligibleChannels.length, skippedChannels, itemCount: 0 };
+  }
+
+  if (dryRun) {
+    return { dryRun: true, items, channels: eligibleChannels, skippedChannels, channelCount: eligibleChannels.length, itemCount: items.length };
+  }
+
+  const queued = [];
+  const failed = [];
+  for (const item of items) {
+    const text = marketingCaption(item.target_ref);
+    const itemChannels = eligibleChannels.filter((channel) => !item.queuedChannelIds.has(channel.id));
+    for (const channel of itemChannels) {
+      try {
+        const post = await createBufferVideoPost({
+          channel,
+          text,
+          videoUrl: item.target_video_url,
+          item,
+        });
+        queued.push({ target_ref: item.target_ref, channelId: channel.id, channel: channel.displayName || channel.name, postId: post.id, dueAt: post.dueAt });
+        await supabase.from('product_feedback').insert({
+          target_kind: 'marketing',
+          target_ref: item.target_ref,
+          target_label: item.target_label,
+          target_video_url: item.target_video_url,
+          author: 'system',
+          body: `[BUFFER_CHANNEL_QUEUED:${channel.id}] ${channel.displayName || channel.name} (${channel.service}) queued by ${source}. Buffer post ${post.id}.`,
+          status: 'open',
+        });
+        item.queuedChannelIds.add(channel.id);
+      } catch (error) {
+        failed.push({ target_ref: item.target_ref, channelId: channel.id, channel: channel.displayName || channel.name, error: error.message });
+      }
+    }
+    if (eligibleChannels.every((channel) => item.queuedChannelIds.has(channel.id))) {
+      await supabase.from('product_feedback').insert({
+        target_kind: 'marketing',
+        target_ref: item.target_ref,
+        target_label: item.target_label,
+        target_video_url: item.target_video_url,
+        author: 'system',
+        body: `[BUFFER_QUEUED] Queued to ${eligibleChannels.length} Buffer channel(s) by ${source}.`,
+        status: 'open',
+      });
+    }
+  }
+
+  return { queued, failed, skippedChannels, channelCount: eligibleChannels.length, itemCount: items.length, source };
 }
 
 export default async function handler(req, res) {
@@ -151,61 +286,12 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  if (!BUFFER_API_KEY) {
-    return res.status(400).json({
-      error: 'BUFFER_API_KEY is not configured. Generate a Buffer API key at https://publish.buffer.com/settings/api and add it to Vercel/local env.',
-    });
-  }
-
-  const supabase = createClient(supabaseUrl, serviceKey, { auth: { persistSession: false } });
   const { action = 'queue-approved', dryRun = false } = req.body || {};
   if (action !== 'queue-approved') return res.status(400).json({ error: 'Unsupported action.' });
 
   try {
-    const [items, channels] = await Promise.all([
-      getApprovedMarketingItems(supabase),
-      getBufferChannels(),
-    ]);
-
-    if (!channels.length) throw new Error('No active Buffer channels found.');
-    if (!items.length) return res.status(200).json({ queued: [], skipped: 'No approved unqueued marketing posts found.' });
-
-    if (dryRun) {
-      return res.status(200).json({ dryRun: true, items, channels });
-    }
-
-    const queued = [];
-    const failed = [];
-    for (const item of items) {
-      const text = marketingCaption(item.target_ref);
-      for (const channel of channels) {
-        try {
-          const post = await createBufferVideoPost({
-            channelId: channel.id,
-            text,
-            videoUrl: item.target_video_url,
-          });
-          queued.push({ target_ref: item.target_ref, channelId: channel.id, channel: channel.displayName || channel.name, postId: post.id, dueAt: post.dueAt });
-        } catch (error) {
-          failed.push({ target_ref: item.target_ref, channelId: channel.id, channel: channel.displayName || channel.name, error: error.message });
-        }
-      }
-      if (!failed.some((f) => f.target_ref === item.target_ref)) {
-        await supabase.from('product_feedback').insert({
-          target_kind: 'marketing',
-          target_ref: item.target_ref,
-          target_label: item.target_label,
-          target_video_url: item.target_video_url,
-          author: 'ak',
-          body: `[BUFFER_QUEUED] Queued to ${channels.length} Buffer channel(s).`,
-          status: 'open',
-        });
-      }
-    }
-
-    return res.status(200).json({ queued, failed, channelCount: channels.length, itemCount: items.length });
+    return res.status(200).json(await queueApprovedMarketingPosts({ dryRun, source: 'archive button' }));
   } catch (error) {
-    return res.status(500).json({ error: error.message });
+    return res.status(error.statusCode || 500).json({ error: error.message });
   }
 }
-
