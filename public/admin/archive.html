@@ -73,8 +73,14 @@
   button.action.refresh { background:#1a2c4d; color:#D4AF37; border:1px solid #D4AF37; }
   button.action.restore { background:#D4AF37; color:#0D1B36; }
   button.action.archive { background:#1a2c4d; color:#D4AF37; border:1px solid #D4AF37; }
+  button.action.buffer { background:#0f2f24; color:#9be39b; border:1px solid #2f8f65; margin-top:8px; }
+  button.action.buffer-copy { background:#0a142a; color:#f4ebd0; border:1px solid #2a3e5e; margin-top:8px; }
+  button.action.buffer-open { background:#D4AF37; color:#0D1B36; margin-top:8px; }
   button.action:disabled { background:#2a3e5e; color:#7a8fad; border-color:#2a3e5e; cursor:default; }
   button.action.done { background:#1f3a1f; color:#5cba5c; border:1px solid #1f3a1f; }
+  .buffer-state { display:inline-block; font-size:0.6rem; letter-spacing:0.1em; text-transform:uppercase; padding:3px 8px; border-radius:10px; font-weight:700; margin:0 0 6px 6px; border:1px solid #2a3e5e; color:#8da4c5; }
+  .buffer-state.approved { background:#0f2f24; color:#9be39b; border-color:#2f8f65; }
+  .buffer-actions { display:grid; grid-template-columns:1fr; gap:0; }
 
   .empty { text-align:center; padding:60px 20px; color:#7a8fad; font-size:0.95rem; }
   .err { background:#3a1010; border:1px solid #6a2222; color:#ff8888; padding:12px 16px; margin:14px; border-radius:6px; font-size:0.85rem; }
@@ -216,6 +222,7 @@ if (!VALID_MODES.has(currentMode)) currentMode = 'renders';
 // Per-target open-feedback counts loaded once per tab change so card
 // badges show the count without N+1 fetches.
 let feedbackCountIndex = {}; // key = `${kind}:${ref}` → number
+let marketingApprovalIndex = {}; // key = filename → true when open feedback has BUFFER_APPROVED marker
 async function loadFeedbackCounts() {
   if (!TOKEN) return;
   try {
@@ -223,11 +230,17 @@ async function loadFeedbackCounts() {
     if (!r.ok) return;
     const j = await r.json();
     const idx = {};
+    const approvals = {};
     for (const f of j.feedback || []) {
+      if (f.target_kind === 'marketing' && String(f.body || '').startsWith('[BUFFER_APPROVED]')) {
+        approvals[f.target_ref] = true;
+        continue;
+      }
       const k = `${f.target_kind}:${f.target_ref}`;
       idx[k] = (idx[k] || 0) + 1;
     }
     feedbackCountIndex = idx;
+    marketingApprovalIndex = approvals;
   } catch {}
 }
 
@@ -423,6 +436,9 @@ function loadVideo(el) {
 function escape(s) {
   return String(s ?? '').replace(/[<>&"]/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c]));
 }
+function jsArg(s) {
+  return JSON.stringify(String(s ?? '')).replace(/[<>&"]/g, c => ({'<':'\\u003C','>':'\\u003E','&':'\\u0026','"':'&quot;'}[c]));
+}
 
 function fmtDate(s) {
   if (!s) return '';
@@ -594,6 +610,101 @@ function prettyMarketingName(filename) {
   return `${when} · ${occLabel} · ${version}${modelLabel}`;
 }
 
+const BUFFER_STATE_KEY = 'db_buffer_marketing_state_v1';
+function readBufferState() {
+  try { return JSON.parse(localStorage.getItem(BUFFER_STATE_KEY) || '{}'); } catch { return {}; }
+}
+function writeBufferState(state) {
+  try { localStorage.setItem(BUFFER_STATE_KEY, JSON.stringify(state)); } catch {}
+}
+function bufferStatus(name) {
+  if (marketingApprovalIndex[name]) return 'approved';
+  return readBufferState()[name] || 'new';
+}
+async function persistBufferApproval(name, btn) {
+  if (!TOKEN || marketingApprovalIndex[name]) return;
+  const card = btn?.closest('.card');
+  const label = card?.querySelector('.name')?.textContent || name;
+  const video = card?.querySelector('video')?.getAttribute('src') || '';
+  try {
+    const r = await fetch('/api/admin/feedback', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        token: TOKEN,
+        target_kind: 'marketing',
+        target_ref: name,
+        target_label: label,
+        target_video_url: video,
+        author: 'ak',
+        body: '[BUFFER_APPROVED] Ready to queue in Buffer.',
+      }),
+    });
+    if (r.ok) marketingApprovalIndex[name] = true;
+  } catch {}
+}
+async function setBufferStatus(name, status, btn) {
+  const state = readBufferState();
+  state[name] = status;
+  writeBufferState(state);
+  if (status === 'approved') await persistBufferApproval(name, btn);
+  if (btn) {
+    btn.textContent = status === 'approved' ? '✓ Approved for Buffer' : 'Approve for Buffer';
+    btn.classList.toggle('done', status === 'approved');
+  }
+  const card = btn?.closest('.card');
+  const pill = card?.querySelector('.buffer-state');
+  if (pill) {
+    pill.textContent = status === 'approved' ? 'Buffer Approved' : 'Needs Approval';
+    pill.classList.toggle('approved', status === 'approved');
+  }
+  toast(status === 'approved' ? 'Marked approved for Buffer.' : 'Approval cleared.');
+}
+async function toggleBufferApproval(name, btn) {
+  if (bufferStatus(name) === 'approved') {
+    toast('Already approved for Buffer.');
+    return;
+  }
+  await setBufferStatus(name, 'approved', btn);
+}
+function marketingCaption(name) {
+  const lower = name.toLowerCase();
+  if (lower.includes('mothers-day') || lower.includes('mothers')) {
+    return "Mother's Day is May 10. Send her flowers that bloom on her screen the moment she opens your message. Shine your love in the world. digitalbloom.store\\n\\n#MothersDay #MothersDayGift #DigitalBloom #ShineYourLove #DigitalFlowers";
+  }
+  if (lower.includes('birthday') || lower.includes('g-day') || lower.includes('gday')) {
+    return "Make their birthday feel seen. Send a Digital Bloom that opens like a gift and blooms right on their phone. digitalbloom.store\\n\\n#BirthdayGift #DigitalBloom #ShineYourLove #DigitalFlowers #GiftIdeas";
+  }
+  if (lower.includes('love') || lower.includes('valentine')) {
+    return "Love does not need to wait for a holiday. Send flowers that bloom on their screen today. digitalbloom.store\\n\\n#DigitalBloom #ShineYourLove #LoveGift #DigitalFlowers";
+  }
+  if (lower.includes('reach-out')) {
+    return "Reach out while it still matters. Send a Digital Bloom and let somebody feel loved today. digitalbloom.store\\n\\n#DigitalBloom #ShineYourLove #GiveThemTheirFlowers #DigitalFlowers";
+  }
+  if (lower.includes('flowers-in-hand')) {
+    return "Put the flowers in their hands while they are here to feel them. Send a Digital Bloom today. digitalbloom.store\\n\\n#DigitalBloom #GiveThemTheirFlowers #ShineYourLove #DigitalFlowers";
+  }
+  if (lower.includes('support')) {
+    return "A little love and support can change the whole day. Send a Digital Bloom that opens on their phone. digitalbloom.store\\n\\n#DigitalBloom #ShineYourLove #ThinkingOfYou #DigitalFlowers";
+  }
+  return "Send flowers that bloom on their phone screen. Personal. Cinematic. Ready when your heart is. digitalbloom.store\\n\\n#DigitalBloom #ShineYourLove #DigitalFlowers";
+}
+async function copyBufferPack(name, url, btn) {
+  const caption = marketingCaption(name);
+  const pack = `ASSET URL:\\n${url}\\n\\nCAPTION:\\n${caption}\\n\\nBUFFER NOTE:\\nQueue to Creative Vision Pro LLC / Digital Bloom social channels. Suggested platforms: Instagram, Facebook, TikTok, Pinterest, X.`;
+  try {
+    await navigator.clipboard.writeText(pack);
+    btn.textContent = '✓ Buffer pack copied';
+    setTimeout(()=>btn.textContent='Copy Buffer Pack', 1800);
+    toast('Buffer caption + URL copied.');
+  } catch {
+    toast('Could not copy Buffer pack.');
+  }
+}
+function openBufferComposer() {
+  window.open('https://publish.buffer.com/', '_blank', 'noopener');
+}
+
 function marketingGrid(items) {
   return items.map(p => {
     const pretty = escape(prettyMarketingName(p.name));
@@ -602,6 +713,9 @@ function marketingGrid(items) {
     const ageMs = p.created_at ? (Date.now() - new Date(p.created_at).getTime()) : Infinity;
     const isNew = ageMs < 24 * 60 * 60 * 1000;
     const newPill = isNew ? `<span class="pill new">New</span>` : '';
+    const status = bufferStatus(p.name);
+    const bufferPill = `<span class="buffer-state ${status === 'approved' ? 'approved' : ''}">${status === 'approved' ? 'Buffer Approved' : 'Needs Approval'}</span>`;
+    const approveLabel = status === 'approved' ? '✓ Approved for Buffer' : 'Approve for Buffer';
     const sizeLine = sizeKb ? `<div class="cat-line">${sizeKb} KB · ${escape(p.name)}</div>` : `<div class="cat-line">${escape(p.name)}</div>`;
     // Inline <video controls> so Ak can tap to play. Audio ON for marketing
     // (commercials have dialogue / music) — different from bloom previews.
@@ -611,11 +725,16 @@ function marketingGrid(items) {
         ${fbIcon('marketing', p.name, pretty, '', p.url)}
       </div>
       <div class="body">
-        ${newPill}
+        ${newPill}${bufferPill}
         <div class="name">${pretty}</div>
         ${sizeLine}
         <div class="date">${date}</div>
-        <button class="action archive" onclick="navigator.clipboard.writeText('${escape(p.url)}'); this.textContent='✓ URL copied'; setTimeout(()=>this.textContent='Copy URL', 1800)">Copy URL</button>
+        <div class="buffer-actions">
+          <button class="action archive" onclick="navigator.clipboard.writeText('${escape(p.url)}'); this.textContent='✓ URL copied'; setTimeout(()=>this.textContent='Copy URL', 1800)">Copy URL</button>
+          <button class="action buffer ${status === 'approved' ? 'done' : ''}" onclick="toggleBufferApproval(${jsArg(p.name)}, this)">${approveLabel}</button>
+          <button class="action buffer-copy" onclick="copyBufferPack(${jsArg(p.name)}, ${jsArg(p.url)}, this)">Copy Buffer Pack</button>
+          <button class="action buffer-open" onclick="openBufferComposer()">Open Buffer</button>
+        </div>
       </div>
     </div>`;
   }).join('');
