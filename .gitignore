@@ -21,6 +21,12 @@ dist/
 .DS_Store
 Thumbs.db
 
+# Broken git backups (from May 3 corruption recovery)
+.git.broken-*
+
+# Recipe book (moved to its own repo: akieia60/recipe-book)
+my-recipe-book.html
+
 # Large media folders (videos are stored in Supabase)
 media/
 # Note: public/videos/ is tracked for the homepage hero video
