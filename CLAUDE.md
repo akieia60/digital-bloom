@@ -168,9 +168,9 @@ digital-bloom/
 - ❌ Never access Ak's Messages, iMessage, or personal apps for information — ask Ak directly instead
 - ❌ Never make changes without explaining what you're doing and why
 - ❌ Never use pure black (`#0A0A0A`, `#000000`) for backgrounds — use navy `#0D1B36`
-- ❌ Never declare something "done" or "deployed" unless you've actually verified the build passes
+- ❌ Never run `npm run build` or `vite build` locally on Ak's Mac mini to "verify" your changes — vite hangs in this environment and orphans esbuild service daemons that pile up and break future builds. Vercel runs the real build via `vercel-build` on every push and is the source of truth. Verify with `npm run lint`, `npm run validate-categories`, or by reading the diff. If you absolutely must build, use `npm run build` (it's wrapped in `scripts/safe-build.js` which kills any hang at 180s, but you still don't get a useful artifact).
+- ❌ Never declare something "done" or "deployed" unless you've confirmed the change is committed and pushed (Vercel will then build it)
 - ❌ Never be overly dramatic or use excessive emoji/ALL CAPS in responses — keep it calm and professional
-- ❌ Never push to GitHub — Ak handles all git commits and pushes via GitHub Desktop
 - ❌ Never use the word "Digital Balloon" — it's always "Digital Bloom"
 
 ---
