@@ -375,10 +375,18 @@ h1, h2, h3, .font-display {
 
 /* ============================================
    PRODUCT VIDEO PROTECTION
+   Gamble 2026-05-05 PM: long-press, right-click, drag-to-save and
+   share-sheet must all be disabled on every bloom — only play/pause is
+   allowed. -webkit-touch-callout cancels the iOS long-press menu;
+   user-drag prevents drag-to-Photos. Right-click + selection are
+   blocked globally in main.jsx.
    ============================================ */
 video {
   user-select: none;
   pointer-events: none;
+  -webkit-touch-callout: none;
+  -webkit-user-drag: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .demo-video-player video,

@@ -186,6 +186,9 @@ const ProductDetails = () => {
               </div>
             ))}
           </div>
+          {/* Paired corner pills (Gamble 2026-05-05 PM): TM on the left,
+              © on the right, both in the same navy/gold capsule. */}
+          <div className="db-watermark-corner db-watermark-corner--left">™ Digital Bloom</div>
           <div className="db-watermark-corner">© Digital Bloom</div>
         </div>
 

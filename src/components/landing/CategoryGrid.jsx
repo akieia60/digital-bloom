@@ -136,6 +136,9 @@ export default function CategoryGrid() {
                       ))}
                     </div>
                   </div>
+                  {/* Paired corner pills — TM left, © right (Gamble 2026-05-05 PM) */}
+                  <div className="db-watermark-corner db-watermark-corner--left" aria-hidden="true">™ Digital Bloom</div>
+                  <div className="db-watermark-corner" aria-hidden="true">© Digital Bloom</div>
                 </div>
               </Link>
             </div>

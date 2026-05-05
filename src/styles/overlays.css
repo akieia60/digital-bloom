@@ -865,7 +865,9 @@
    Was Playfair italic in gold @ 11px / 0.9 opacity — Gamble 2026-05-05 called
    it out as "bubble letters… can't read it." Switched to Outfit semibold,
    white-on-navy capsule, larger size, 1.0 opacity so the mark reads cleanly
-   on every video frame. */
+   on every video frame. The same pill renders in BOTH bottom corners now
+   (Gamble 2026-05-05 PM): right shows © DIGITAL BLOOM, left shows ™ DIGITAL
+   BLOOM via the .db-watermark-corner--left modifier. */
 .db-watermark-corner {
   position: absolute;
   bottom: 10px;
@@ -887,6 +889,11 @@
   user-select: none;
   -webkit-font-smoothing: antialiased;
   z-index: 51;
+}
+
+.db-watermark-corner--left {
+  right: auto;
+  left: 12px;
 }
 
 /* ── Periodic watermark flash ──
@@ -916,6 +923,11 @@
   padding: 6px 11px;
 }
 
+.db-watermark--hero .db-watermark-corner--left {
+  right: auto;
+  left: 22px;
+}
+
 /* Responsive — smaller on mobile but still legible (no smaller than 11px) */
 @media (max-width: 480px) {
   .db-watermark-row span {
@@ -928,6 +940,10 @@
     padding: 4px 8px;
     bottom: 8px;
     right: 9px;
+  }
+  .db-watermark-corner--left {
+    right: auto;
+    left: 9px;
   }
 }
 

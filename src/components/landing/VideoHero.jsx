@@ -86,8 +86,11 @@ export default function VideoHero() {
   return (
     <>
       <section ref={heroRef} className="video-hero">
-        {/* Background music — "Flowers" hook, muted by default */}
-        <audio ref={audioRef} src="/audio/flowers-hook.m4a" loop preload="auto" />
+        {/* Background music — canonical FLOWERS CLIP from the flyer pack
+            (Gamble 2026-05-05: "change the music to on the website… add this
+            clip we're using on the digital flyers"). Same track used across
+            every Digital Bloom flyer so the brand sound stays unified. */}
+        <audio ref={audioRef} src="/audio/flowers-clip.mp3" loop preload="auto" />
 
         {/* Music toggle — top right of hero */}
         <button

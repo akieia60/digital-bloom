@@ -34,7 +34,11 @@ export default function Checkout() {
   const [recipientPhone, setRecipientPhone] = useState('');
   // 'email' is fully wired today; 'phone' captures the number into Stripe
   // metadata but SMS sending is gated until Twilio is provisioned (Ak).
-  const [deliveryChannel, setDeliveryChannel] = useState('email');
+  // Default to Text per Gamble 2026-05-05 PM. While Twilio is still gated the
+  // existing fallback in the SMS hint copy keeps the flow alive — number is
+  // saved on the order, gift link email-falls-back to the buyer until SMS
+  // goes live.
+  const [deliveryChannel, setDeliveryChannel] = useState('phone');
   const [deliveryMode, setDeliveryMode] = useState('now');
   const [deliveryDate, setDeliveryDate] = useState('');
 
@@ -372,7 +376,19 @@ export default function Checkout() {
                   <div className="cart-credit-entry-label" style={{ marginBottom: '-4px' }}>
                     Delivery preference
                   </div>
+                  {/* Phone (SMS) listed first per Gamble 2026-05-05 PM:
+                      "the option to receive as a text should be the first
+                      option then Email should be the second option." */}
                   <div className="cart-credit-choice-row" role="radiogroup" aria-label="Delivery preference">
+                    <button
+                      type="button"
+                      role="radio"
+                      aria-checked={deliveryChannel === 'phone'}
+                      onClick={() => setDeliveryChannel('phone')}
+                      className={`cart-credit-choice ${deliveryChannel === 'phone' ? 'is-active' : ''}`}
+                    >
+                      Text <span style={{ opacity: 0.7, fontSize: '0.75em', fontWeight: 500 }}>(SMS — coming soon)</span>
+                    </button>
                     <button
                       type="button"
                       role="radio"
@@ -381,15 +397,6 @@ export default function Checkout() {
                       className={`cart-credit-choice ${deliveryChannel === 'email' ? 'is-active' : ''}`}
                     >
                       Email
-                    </button>
-                    <button
-                      type="button"
-                      role="radio"
-                      aria-checked={deliveryChannel === 'phone'}
-                      onClick={() => setDeliveryChannel('phone')}
-                      className={`cart-credit-choice ${deliveryChannel === 'phone' ? 'is-active' : ''}`}
-                    >
-                      Phone <span style={{ opacity: 0.7, fontSize: '0.75em', fontWeight: 500 }}>(SMS — coming soon)</span>
                     </button>
                   </div>
 

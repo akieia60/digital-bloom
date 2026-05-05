@@ -57,8 +57,11 @@ const VideoPlayer = ({ videoUrl, posterUrl, alt }) => {
           ))}
         </div>
       </div>
-      {/* Corner badge — always-visible brand mark */}
-      <div className="db-watermark-corner" aria-hidden="true">Digital Bloom™</div>
+      {/* Corner badges — paired pills (Gamble 2026-05-05 PM): same legible
+          navy/gold capsule on both bottom corners. Right side carries the
+          copyright mark, left side carries the trademark mark. */}
+      <div className="db-watermark-corner db-watermark-corner--left" aria-hidden="true">™ Digital Bloom</div>
+      <div className="db-watermark-corner" aria-hidden="true">© Digital Bloom</div>
     </div>
   );
 };

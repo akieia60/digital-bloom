@@ -84,8 +84,10 @@ export default function GradientHero() {
   return (
     <>
       <section className="gradient-hero">
-        {/* Background music — "Flowers" hook (28s loop), muted by default */}
-        <audio ref={audioRef} src="/audio/flowers-hook-trimmed.m4a" loop preload="auto" />
+        {/* Background music — canonical FLOWERS CLIP from the flyer pack
+            (Gamble 2026-05-05). Same track used on every Digital Bloom flyer
+            so the brand sound stays unified across the site + ads. */}
+        <audio ref={audioRef} src="/audio/flowers-clip.mp3" loop preload="auto" />
 
         <div className="gradient-hero__bg" aria-hidden="true">
           <div className="gradient-hero__glow gradient-hero__glow--1" />
@@ -157,7 +159,12 @@ export default function GradientHero() {
                 </video>
               )}
 
-              <div className="gradient-hero__media-brandmark">Digital Bloom™</div>
+              {/* Paired corner pills — TM left, © right (Gamble 2026-05-05 PM):
+                  replaced the cursive "Digital Bloom™" brandmark with the
+                  legible navy/gold capsule pair, same as every other bloom
+                  on the site. */}
+              <div className="db-watermark-corner db-watermark-corner--left" aria-hidden="true">™ Digital Bloom</div>
+              <div className="db-watermark-corner" aria-hidden="true">© Digital Bloom</div>
 
               {/* Music toggle — on video card */}
               {musicHinted && (
