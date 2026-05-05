@@ -439,28 +439,32 @@ async function createOverlayImage(destination, {
   }
 
   if (senderName) {
+    // FROM is sized + colored to match TO so the two labels read as a pair.
+    // Was height*0.024 (smaller, faded) — Gamble 2026-05-05 flagged "two them
+    // from is not the same color. Plus, it's too small." Same font size,
+    // same fill, same box treatment as the recipient capsule above.
     const label = `${labels.from} ${senderName}`;
-    const maxBoxWidth = width * 0.34;
-    let senderFontSize = height * 0.024;
+    const maxBoxWidth = width * 0.42;
+    let senderFontSize = height * 0.034;
     ctx.font = getCanvasFont(fontChoice, senderFontSize, messageBold ? 900 : 700, false);
     let textWidth = ctx.measureText(label).width;
 
-    while ((textWidth + 24) > maxBoxWidth && senderFontSize > (height * 0.017)) {
+    while ((textWidth + 28) > maxBoxWidth && senderFontSize > (height * 0.024)) {
       senderFontSize -= 1.5;
       ctx.font = getCanvasFont(fontChoice, senderFontSize, messageBold ? 900 : 700, false);
       textWidth = ctx.measureText(label).width;
     }
 
-    const boxW = textWidth + 24;
-    const boxH = 42;
-    const boxX = width - boxW - (width * 0.085);
+    const boxW = textWidth + 28;
+    const boxH = 46;
+    const boxX = width - boxW - (width * 0.06);
     const boxY = height * 0.758;
     roundRect(ctx, boxX, boxY, boxW, boxH, 18);
-    // Dark navy base so "From Name" is always readable
     ctx.fillStyle = 'rgba(6, 14, 26, 0.72)';
     ctx.fill();
     ctx.fillStyle = 'rgba(255,255,255,0.97)';
-    ctx.fillText(label, boxX + 12, boxY + 27);
+    ctx.textBaseline = 'middle';
+    ctx.fillText(label, boxX + 14, boxY + (boxH / 2));
   }
 
   // ── TOP LEFT stamp — same clean style as bottom-right corner ──

@@ -14,12 +14,16 @@
   left: 0;
   right: 0;
   z-index: 100;
-  padding: 20px 0;
+  /* Respect the iOS Dynamic Island / notch — without env(safe-area-inset-top)
+     the nav (and its cart icon) sat under the system status bar and was
+     unreachable on iPhone (Gamble 2026-05-05: cart "sits so high up… blocked
+     by the top of the screen"). */
+  padding: calc(env(safe-area-inset-top, 0px) + 14px) 0 20px;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .landing-nav--scrolled {
-  padding: 12px 0;
+  padding: calc(env(safe-area-inset-top, 0px) + 8px) 0 12px;
   background: var(--nav-bg-scrolled);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);

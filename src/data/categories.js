@@ -182,6 +182,11 @@ export const CATEGORIES = [
     expectedPrompts: 21,
   },
   {
+    // Hidden from customer-facing surfaces per Gamble 2026-05-05 ("Signature
+    // Categories needs to come off the site"). Slug stays registered so the
+    // prompt-engine `Signature Stories` / `Signature Series` cat: strings
+    // still resolve and validate-categories.js keeps passing. Flip `hidden`
+    // back to false (or delete the line) to restore the tile + shop section.
     slug: 'signature-stories',
     name: 'Signature Stories',
     title: 'Signature Stories',
@@ -190,6 +195,7 @@ export const CATEGORIES = [
     accent: '#D4AF37',
     promptEngineLabels: ['Signature Stories', 'Signature Series'],
     expectedPrompts: 2,
+    hidden: true,
   },
   {
     slug: 'acknowledgement',

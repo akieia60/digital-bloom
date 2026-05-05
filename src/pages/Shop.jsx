@@ -123,7 +123,7 @@ export default function Shop({ searchQuery, setSearchQuery }) {
           </div>
         ) : (
           <div className="gallery-sections">
-            {CATEGORIES.map((cat) => (
+            {CATEGORIES.filter((cat) => !cat.hidden).map((cat) => (
               <CategorySection key={cat.slug} cat={cat} products={products} />
             ))}
             {/* Empty-state helper — shown only while the entire site has no

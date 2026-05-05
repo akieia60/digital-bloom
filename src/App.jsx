@@ -25,6 +25,7 @@ const BloomManage = lazy(() => import('./pages/BloomManage'));
 const ComingSoon = lazy(() => import('./pages/ComingSoon'));
 const ShoppingCart = lazy(() => import('./components/ShoppingCart'));
 const FAQ = lazy(() => import('./components/landing/FAQ'));
+const FloatingCartButton = lazy(() => import('./components/FloatingCartButton'));
 
 /**
  * ErrorBoundary — catches any JavaScript error inside a child component tree,
@@ -141,6 +142,10 @@ function AppContent({ searchQuery, setSearchQuery }) {
       </Suspense>
       <Suspense fallback={null}>
         <ShoppingCart />
+      </Suspense>
+
+      <Suspense fallback={null}>
+        <FloatingCartButton />
       </Suspense>
 
       {/* Global FAQ modal */}

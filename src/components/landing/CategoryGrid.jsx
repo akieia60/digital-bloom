@@ -35,6 +35,7 @@ export default function CategoryGrid() {
     }
 
     return CATEGORIES
+      .filter((cat) => !cat.hidden)
       .map((cat) => {
         const preview = PREVIEW_OVERRIDES[cat.slug] || firstVideoBySlug[cat.slug] || null;
         if (!preview) return null; // auto-hide categories with no content yet
