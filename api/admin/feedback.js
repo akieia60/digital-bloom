@@ -6,12 +6,24 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY
 );
 
-const ADMIN_TOKEN = process.env.ADMIN_TOKEN || '';
 const VALID_KINDS = new Set(['product', 'render', 'marketing']);
 const VALID_AUTHORS = new Set(['ak', 'gamble', 'david', 'monique', 'aubrey', 'gam', 'linda', 'other']);
 
+// Multi-admin auth — every Digital Bloom admin who has a token can post + read
+// feedback. Add a new ADMIN_TOKEN_<NAME> env var on Vercel to onboard another
+// admin and add a row below. Mirrors the pattern in archive.js.
+function actorFromToken(token) {
+  if (!token) return null;
+  const map = {
+    [process.env.ADMIN_TOKEN || '_disabled_ak_']: 'ak',
+    [process.env.ADMIN_TOKEN_GAMBLE || '_disabled_gamble_']: 'gamble',
+    [process.env.ADMIN_TOKEN_DAVID || '_disabled_david_']: 'david',
+  };
+  return map[token] || null;
+}
+
 function authOk(token) {
-  return Boolean(ADMIN_TOKEN) && token === ADMIN_TOKEN;
+  return actorFromToken(token) !== null;
 }
 
 export default async function handler(req, res) {
