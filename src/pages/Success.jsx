@@ -178,7 +178,17 @@ const Success = () => {
   const shareBody = senderName
     ? `${senderName} sent you a Digital Bloom 💐 ${shareUrl}`
     : `You have a Digital Bloom 💐 ${shareUrl}`;
-  const smsHref = `sms:?&body=${encodeURIComponent(shareBody)}`;
+  // If the buyer entered the recipient's phone number in checkout (Text
+  // delivery option), pre-fill the SMS recipient too so the buyer just taps
+  // Send. Falls back to no-recipient (just body pre-fill) if no phone.
+  const recipientPhone = String(
+    primaryPurchase?.delivery?.recipient_phone ||
+    primaryPurchase?.composition_manifest?.delivery?.recipientPhone ||
+    ''
+  ).replace(/[^\d+]/g, '');
+  const smsHref = recipientPhone
+    ? `sms:${recipientPhone}?&body=${encodeURIComponent(shareBody)}`
+    : `sms:?&body=${encodeURIComponent(shareBody)}`;
   const whatsappHref = `https://wa.me/?text=${encodeURIComponent(shareBody)}`;
   const getPurchaseStatusLabel = (status) => {
     const normalized = String(status || '').toLowerCase();

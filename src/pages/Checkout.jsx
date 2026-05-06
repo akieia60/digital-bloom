@@ -387,7 +387,7 @@ export default function Checkout() {
                       onClick={() => setDeliveryChannel('phone')}
                       className={`cart-credit-choice ${deliveryChannel === 'phone' ? 'is-active' : ''}`}
                     >
-                      Text <span style={{ opacity: 0.7, fontSize: '0.75em', fontWeight: 500 }}>(SMS — coming soon)</span>
+                      Text <span style={{ opacity: 0.7, fontSize: '0.75em', fontWeight: 500 }}>(send from your phone)</span>
                     </button>
                     <button
                       type="button"
@@ -426,8 +426,10 @@ export default function Checkout() {
                         inputMode="tel"
                       />
                       <span className="cart-credit-entry-hint">
-                        We'll save the number now and text the gift link as soon as SMS goes live —
-                        in the meantime your bloom email-delivers to you so the gift still lands today.
+                        After checkout, we'll open your Messages app pre-filled
+                        with the bloom link to {recipientPhone || 'this number'} —
+                        you tap Send, the gift goes through your own phone so
+                        the recipient sees a familiar contact, not a shortcode.
                       </span>
                     </label>
                   )}
