@@ -545,8 +545,8 @@ export const fr = {
 
   // ─── Mother's Day countdown banner ───
   md_countdown_today: "C'est la Fête des Mères — envoie le sien maintenant",
-  md_countdown_tomorrow: "La Fête des Mères, c'est demain — commande avant minuit pour une livraison garantie",
-  md_countdown_days: "Fête des Mères dans {days} jours — commande avant vendredi pour une livraison garantie",
+  md_countdown_tomorrow: "La Fête des Mères, c'est demain — ton bloom est livré instantanément",
+  md_countdown_days: "Fête des Mères dans {days} jours — ton bloom est livré instantanément",
   md_countdown_aria: "Compte à rebours de la Fête des Mères",
   md_countdown_dismiss: "Fermer la bannière de la Fête des Mères",
 

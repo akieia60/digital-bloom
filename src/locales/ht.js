@@ -545,8 +545,8 @@ export const ht = {
 
   // ─── Mother's Day countdown banner ───
   md_countdown_today: "Jodi a se Fèt Manman — voye pa li kounye a",
-  md_countdown_tomorrow: "Fèt Manman se demen — kòmande anvan minui pou livrezon garanti",
-  md_countdown_days: "Fèt Manman nan {days} jou — kòmande anvan vandredi pou livrezon garanti",
+  md_countdown_tomorrow: "Fèt Manman se demen — bloom ou livre lapò",
+  md_countdown_days: "Fèt Manman nan {days} jou — bloom ou livre lapò",
   md_countdown_aria: "Kont alebò Fèt Manman",
   md_countdown_dismiss: "Fèmen banyè Fèt Manman",
 

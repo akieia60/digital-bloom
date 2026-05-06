@@ -559,8 +559,8 @@ export const en = {
 
   // ─── Mother's Day countdown banner ───
   md_countdown_today: "It's Mother's Day — send hers right now",
-  md_countdown_tomorrow: "Mother's Day is tomorrow — order before midnight for guaranteed delivery",
-  md_countdown_days: "Mother's Day in {days} days — order by Friday for guaranteed delivery",
+  md_countdown_tomorrow: "Mother's Day is tomorrow — your bloom delivers instantly",
+  md_countdown_days: "Mother's Day in {days} days — your bloom delivers instantly",
   md_countdown_aria: "Mother's Day countdown",
   md_countdown_dismiss: "Dismiss Mother's Day banner",
 

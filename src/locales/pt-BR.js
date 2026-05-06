@@ -549,8 +549,8 @@ export const ptBR = {
 
   // ─── Mother's Day countdown banner ───
   md_countdown_today: "Hoje é Dia das Mães — envie o dela agora",
-  md_countdown_tomorrow: "Dia das Mães é amanhã — peça antes da meia-noite para entrega garantida",
-  md_countdown_days: "Dia das Mães em {days} dias — peça até sexta para entrega garantida",
+  md_countdown_tomorrow: "Dia das Mães é amanhã — seu bloom é entregue instantaneamente",
+  md_countdown_days: "Dia das Mães em {days} dias — seu bloom é entregue instantaneamente",
   md_countdown_aria: "Contagem regressiva do Dia das Mães",
   md_countdown_dismiss: "Fechar banner do Dia das Mães",
 

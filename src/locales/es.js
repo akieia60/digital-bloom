@@ -545,8 +545,8 @@ export const es = {
 
   // ─── Mother's Day countdown banner ───
   md_countdown_today: "Hoy es el Día de las Madres — envía la suya ahora mismo",
-  md_countdown_tomorrow: "El Día de las Madres es mañana — pide antes de medianoche para entrega garantizada",
-  md_countdown_days: "Día de las Madres en {days} días — pide antes del viernes para entrega garantizada",
+  md_countdown_tomorrow: "El Día de las Madres es mañana — tu bloom se entrega al instante",
+  md_countdown_days: "Día de las Madres en {days} días — tu bloom se entrega al instante",
   md_countdown_aria: "Cuenta regresiva del Día de las Madres",
   md_countdown_dismiss: "Cerrar el banner del Día de las Madres",
 

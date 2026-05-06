@@ -549,8 +549,8 @@ export const tl = {
 
   // ─── Mother's Day countdown banner ───
   md_countdown_today: "Ngayon ang Araw ng mga Ina — ipadala ang sa kanya ngayon",
-  md_countdown_tomorrow: "Bukas na ang Araw ng mga Ina — mag-order bago hatinggabi para sa garantisadong paghahatid",
-  md_countdown_days: "Araw ng mga Ina sa loob ng {days} araw — mag-order bago Biyernes para sa garantisadong paghahatid",
+  md_countdown_tomorrow: "Bukas na ang Araw ng mga Ina — agad na naipapadala ang iyong bloom",
+  md_countdown_days: "Araw ng mga Ina sa loob ng {days} araw — agad na naipapadala ang iyong bloom",
   md_countdown_aria: "Countdown ng Araw ng mga Ina",
   md_countdown_dismiss: "Isara ang banner ng Araw ng mga Ina",
 

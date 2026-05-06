@@ -549,8 +549,8 @@ export const vi = {
 
   // ─── Mother's Day countdown banner ───
   md_countdown_today: "Hôm nay là Ngày Của Mẹ — gửi ngay bây giờ",
-  md_countdown_tomorrow: "Ngày Của Mẹ là ngày mai — đặt trước nửa đêm để giao hàng đảm bảo",
-  md_countdown_days: "Ngày Của Mẹ còn {days} ngày — đặt trước Thứ Sáu để giao hàng đảm bảo",
+  md_countdown_tomorrow: "Ngày Của Mẹ là ngày mai — bloom của bạn giao ngay tức thì",
+  md_countdown_days: "Ngày Của Mẹ còn {days} ngày — bloom của bạn giao ngay tức thì",
   md_countdown_aria: "Đếm ngược Ngày Của Mẹ",
   md_countdown_dismiss: "Đóng banner Ngày Của Mẹ",
 

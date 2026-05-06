@@ -549,8 +549,8 @@ export const de = {
 
   // ─── Mother's Day countdown banner ───
   md_countdown_today: "Heute ist Muttertag — verschicke ihren jetzt",
-  md_countdown_tomorrow: "Muttertag ist morgen — bestelle vor Mitternacht für garantierte Lieferung",
-  md_countdown_days: "Muttertag in {days} Tagen — bestelle bis Freitag für garantierte Lieferung",
+  md_countdown_tomorrow: "Muttertag ist morgen — dein Bloom wird sofort geliefert",
+  md_countdown_days: "Muttertag in {days} Tagen — dein Bloom wird sofort geliefert",
   md_countdown_aria: "Muttertags-Countdown",
   md_countdown_dismiss: "Muttertags-Banner schließen",
 

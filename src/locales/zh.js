@@ -545,8 +545,8 @@ export const zh = {
 
   // ─── 母亲节倒计时横幅 ───
   md_countdown_today: "今天是母亲节 — 现在就送给她",
-  md_countdown_tomorrow: "明天就是母亲节 — 午夜前下单确保送达",
-  md_countdown_days: "距母亲节还有 {days} 天 — 周五前下单确保送达",
+  md_countdown_tomorrow: "明天就是母亲节 — 您的Bloom即时送达",
+  md_countdown_days: "距母亲节还有 {days} 天 — 您的Bloom即时送达",
   md_countdown_aria: "母亲节倒计时",
   md_countdown_dismiss: "关闭母亲节横幅",
 

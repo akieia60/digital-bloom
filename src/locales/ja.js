@@ -549,8 +549,8 @@ export const ja = {
 
   // ─── Mother's Day countdown banner ───
   md_countdown_today: "今日は母の日です — 今すぐ贈りましょう",
-  md_countdown_tomorrow: "母の日は明日です — 配達確実のため深夜前にご注文を",
-  md_countdown_days: "母の日まで{days}日 — 配達確実のため金曜までにご注文を",
+  md_countdown_tomorrow: "母の日は明日です — ブルームは瞬時にお届け",
+  md_countdown_days: "母の日まで{days}日 — ブルームは瞬時にお届け",
   md_countdown_aria: "母の日カウントダウン",
   md_countdown_dismiss: "母の日バナーを閉じる",
 
