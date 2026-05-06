@@ -319,7 +319,10 @@ const Success = () => {
 
             <div className="success-card-actions success-card-actions--inline">
               {sendReadyPurchases.length > 0 && (
-                <Link to={`/gift/${sendReadyPurchases[0].bloom_slug}`} className="success-btn-gold success-btn-gold--compact">
+                /* Buyer lands on /manage (stamped view), NOT /gift/ which is
+                   the recipient's clean view. Gamble 2026-05-05 PM: buyer
+                   never sees a clean copy. */
+                <Link to={`/bloom/${sendReadyPurchases[0].bloom_slug}/manage`} className="success-btn-gold success-btn-gold--compact">
                   {t('success_open_bloom')}
                 </Link>
               )}
@@ -394,7 +397,11 @@ const Success = () => {
                   ) : isReady ? (
                     purchase.bloom_slug ? (
                       <div style={{ marginTop: '12px' }}>
-                        <Link to={`/gift/${purchase.bloom_slug}`} className="success-btn-gold">
+                        {/* Buyer → /manage (stamped). The clean /gift/ link
+                            is reserved for the recipient via the share URL.
+                            The raw download_url fallback was removed for
+                            blooms — buyer never gets a clean MP4. */}
+                        <Link to={`/bloom/${purchase.bloom_slug}/manage`} className="success-btn-gold">
                           {t('success_open_bloom')}
                         </Link>
                         <p className="success-card-text" style={{ marginTop: '10px' }}>
@@ -402,6 +409,8 @@ const Success = () => {
                         </p>
                       </div>
                     ) : purchase.download_url ? (
+                      // Non-bloom artifact (e.g. credit-pack invoice PDF) —
+                      // direct download is fine here, this isn't a bloom file.
                       <a href={purchase.download_url} download className="success-btn-gold" style={{ marginTop: '12px' }}>
                         {t('success_download')}
                       </a>
@@ -415,7 +424,7 @@ const Success = () => {
                   )}
                   {purchase.bloom_slug && !isScheduledHold && (
                     <p className="success-note" style={{ marginTop: '10px' }}>
-                      {t('success_view_link')} <Link to={`/gift/${purchase.bloom_slug}`}>{t('success_open_bloom')}</Link>
+                      {t('success_view_link')} <Link to={`/bloom/${purchase.bloom_slug}/manage`}>{t('success_open_bloom')}</Link>
                     </p>
                   )}
                 </div>
@@ -430,7 +439,8 @@ const Success = () => {
             {sendReadyPurchases.map((purchase) => (
               <div key={purchase.id} className="success-row">
                 <span className="success-row-label">{purchase.products?.name || t('success_bloom')}</span>
-                <Link to={`/gift/${purchase.bloom_slug}`} className="success-row-value success-row-gold">
+                {/* Buyer → /manage (stamped view) — never the clean /gift/ link. */}
+                <Link to={`/bloom/${purchase.bloom_slug}/manage`} className="success-row-value success-row-gold">
                   {t('success_view_bloom')}
                 </Link>
               </div>

@@ -153,7 +153,16 @@ export default function BloomManage() {
               fontChoice={delivery.fontChoice}
               messageTextColor={delivery.messageTextColor}
               messageBold={delivery.messageBold}
-              previewStamp={delivered ? null : 'Delivery on the way'}
+              {/* Always-on protection stamp on the BUYER's preview (Gamble
+                  2026-05-05 PM: the buyer should never see a clean copy of
+                  their bloom — only a stamped version that signals the
+                  purchase belongs to a specific order and isn't reusable).
+                  Pre-send: "Purchase Finalized" so they know payment cleared
+                  but it hasn't been sent yet. Post-send: matches Gamble's
+                  exact copy "Purchase Finalized & Sent". The recipient's
+                  view (BloomDelivery) never passes previewStamp, so they
+                  get the clean experience on the gift link. */}
+              previewStamp={delivered ? 'Purchase Finalized & Sent' : 'Purchase Finalized'}
               className="bloom-delivery__preview"
             />
           </div>
