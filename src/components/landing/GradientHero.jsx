@@ -85,9 +85,10 @@ export default function GradientHero() {
     <>
       <section className="gradient-hero">
         {/* Background music — canonical FLOWERS CLIP from the flyer pack
-            (Gamble 2026-05-05). Same track used on every Digital Bloom flyer
-            so the brand sound stays unified across the site + ads. */}
-        <audio ref={audioRef} src="/audio/flowers-clip.mp3" loop preload="auto" />
+            (Gamble 2026-05-05). preload="none" so the 1.78 MB file doesn't
+            block the hero video on first paint — fetched only when the user
+            taps the music toggle (muted by default). */}
+        <audio ref={audioRef} src="/audio/flowers-clip.mp3" loop preload="none" />
 
         <div className="gradient-hero__bg" aria-hidden="true">
           <div className="gradient-hero__glow gradient-hero__glow--1" />

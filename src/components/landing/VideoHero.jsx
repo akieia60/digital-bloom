@@ -88,9 +88,12 @@ export default function VideoHero() {
       <section ref={heroRef} className="video-hero">
         {/* Background music — canonical FLOWERS CLIP from the flyer pack
             (Gamble 2026-05-05: "change the music to on the website… add this
-            clip we're using on the digital flyers"). Same track used across
-            every Digital Bloom flyer so the brand sound stays unified. */}
-        <audio ref={audioRef} src="/audio/flowers-clip.mp3" loop preload="auto" />
+            clip we're using on the digital flyers"). preload="none" so the
+            1.78 MB audio file does NOT compete with the bloom videos for
+            bandwidth on first paint — it loads only when the user taps the
+            music toggle. Music is muted by default so the deferred load is
+            invisible to anyone who doesn't opt in. */}
+        <audio ref={audioRef} src="/audio/flowers-clip.mp3" loop preload="none" />
 
         {/* Music toggle — top right of hero */}
         <button

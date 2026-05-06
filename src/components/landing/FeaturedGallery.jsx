@@ -71,6 +71,7 @@ export default function FeaturedGallery() {
                   loop
                   muted
                   playsInline
+                  preload="metadata"
                   className="gallery-video"
                 />
                 {/* Getty-style diagonal watermark */}
