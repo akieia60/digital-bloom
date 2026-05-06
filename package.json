@@ -25,6 +25,7 @@
     "@stripe/stripe-js": "^8.6.4",
     "@supabase/supabase-js": "^2.91.1",
     "@vercel/analytics": "^1.4.1",
+    "@vercel/blob": "^2.3.3",
     "@vercel/functions": "^3.4.3",
     "@vercel/speed-insights": "^1.1.0",
     "canvas": "^3.2.2",
