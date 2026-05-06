@@ -14,16 +14,19 @@ import { supabase } from '../lib/supabase';
  * Storage:    Vercel Blob (public read URLs).
  */
 
+// Video grid first (mobile-first — Breana picks one bloom, taps Download,
+// posts it). Master zip stays in the data but renders at the very bottom
+// as a "power user" option so it doesn't dominate the page on phones.
 const BUCKET_ORDER = [
-  ['master-zip',     '⬇ Download Everything', 'One zip file with every video'],
+  ['mothers-day',    'Mother\'s Day',         'For her — every kind of mother'],
   ['commercials',    'Hero Commercials',      'Long-form ads with full storyline'],
   ['flyers',         'Daily Flyers',          'Daily-post format with FLOWERS CLIP music'],
-  ['mothers-day',    'Mother\'s Day',         'For her — every kind of mother'],
   ['fathers-day',    'Father\'s Day',         'Strong roots, tall flowers'],
   ['birthday',       'Birthday',              'Their day — make it unforgettable'],
   ['graduation',     'Graduation',            'For the diploma earned the long way home'],
   ['love',           'Love & Romance',        'For the one who has their heart'],
   ['anniversary',    'Anniversary',           'Every year you chose each other'],
+  ['master-zip',     'Download Everything',   'Power user / desktop — all 40 videos in one zip'],
 ];
 
 export default function CreatorPortal() {
