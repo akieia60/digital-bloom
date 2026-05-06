@@ -22,11 +22,23 @@ const ProductGrid = ({ searchQuery = '', category = null }) => {
   const categoryFilter = category || searchParams.get('category') || null;
 
   const filteredProducts = useMemo(() => {
+    const q = (searchQuery || '').toLowerCase().trim();
     return products.filter((product) => {
+      // Search matches the canonical name + description AND any i18n
+      // translations on the row, so a Spanish/French/etc. user can find a
+      // bloom by their language's name. Also matches on category slug so
+      // a query like "friendship" surfaces the Friendship category blooms
+      // even if the bloom name doesn't say "friend" anywhere.
       const matchesSearch =
-        !searchQuery ||
-        product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        (product.description || '').toLowerCase().includes(searchQuery.toLowerCase());
+        !q ||
+        (product.name || '').toLowerCase().includes(q) ||
+        (product.description || '').toLowerCase().includes(q) ||
+        (product.category || '').toLowerCase().includes(q) ||
+        Object.values(product.i18n || {}).some((entry) =>
+          [entry?.name, entry?.description]
+            .filter(Boolean)
+            .some((str) => String(str).toLowerCase().includes(q)),
+        );
 
       const matchesTier = tierFilter === null || product.tier === tierFilter;
       const matchesCategory = !categoryFilter || product.category === categoryFilter;

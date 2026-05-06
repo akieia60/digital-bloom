@@ -1,9 +1,22 @@
-import { useEffect } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import BloomListCard from '../components/BloomListCard';
 import { useProducts } from '../hooks/useProducts';
 import OCCASIONS from '../data/occasions';
 import { CATEGORY_BY_SLUG } from '../data/categories';
+
+// Quick recipient filters (Ak / David 2026-05-06): customers think in terms
+// of WHO they're sending to ("for my friend who's a mom") not just WHAT
+// occasion. Tapping a chip fills the search box with the keyword and
+// matches against bloom names + descriptions.
+const RECIPIENT_CHIPS = [
+  { label: 'For Mom',     keyword: 'mom' },
+  { label: 'For Friend',  keyword: 'friend' },
+  { label: 'For Sister',  keyword: 'sister' },
+  { label: 'For Auntie',  keyword: 'aunt' },
+  { label: 'For Mentor',  keyword: 'mentor' },
+  { label: 'For Anyone',  keyword: '' },
+];
 
 export default function CategoryPage() {
   const { categorySlug } = useParams();
@@ -20,7 +33,32 @@ export default function CategoryPage() {
   });
   const { products, loading } = useProducts();
 
-  const categoryProducts = products.filter((p) => p.category === categorySlug);
+  const categoryProducts = useMemo(
+    () => products.filter((p) => p.category === categorySlug),
+    [products, categorySlug],
+  );
+
+  // Search-within-category state. Empty string = no filter, show everything.
+  const [search, setSearch] = useState('');
+
+  const visibleProducts = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    if (!q) return categoryProducts;
+    return categoryProducts.filter((p) => {
+      const haystack = [
+        p.name || '',
+        p.description || '',
+        // Multilingual names ride along on the products row's i18n column when
+        // present — Spanish/French/etc. searches land here too.
+        ...Object.values(p.i18n || {}).flatMap((entry) =>
+          [entry?.name, entry?.description].filter(Boolean),
+        ),
+      ]
+        .join(' ')
+        .toLowerCase();
+      return haystack.includes(q);
+    });
+  }, [categoryProducts, search]);
 
   // A category is "coming soon" when it's a real category but has no products
   // yet — so Ak doesn't have to hand-maintain a hardcoded list anymore.
@@ -128,14 +166,88 @@ export default function CategoryPage() {
       ) : (
         /* Full-width stacked bloom cards matching the hand-drawn sketch */
         <section className="max-w-3xl mx-auto px-4 sm:px-6 pb-32 pt-8">
-          <p className="text-[11px] uppercase tracking-[0.15em] text-[var(--text-muted)] mb-8 font-medium">
-            {categoryProducts.length} experience{categoryProducts.length !== 1 ? 's' : ''} available
-          </p>
-          <div className="flex flex-col gap-6">
-            {categoryProducts.map((product) => (
-              <BloomListCard key={product.id} product={product} />
-            ))}
+          {/* ── SEARCH + RECIPIENT CHIPS (David 2026-05-06):
+              he was on Mother's Day looking for "for a friend who's a mom"
+              with no way to refine. Now he can type "friend" or tap the
+              For Friend chip and the list filters in-place. ── */}
+          <div className="mb-8">
+            <div className="relative mb-4">
+              <input
+                type="text"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder={`Search ${occasion.title}…  e.g. "friend", "sister", "auntie"`}
+                aria-label={`Search ${occasion.title}`}
+                className="w-full px-5 py-4 rounded-full text-base focus:outline-none focus:ring-2 transition-all"
+                style={{
+                  background: 'rgba(255,255,255,0.07)',
+                  border: '1px solid rgba(255,255,255,0.18)',
+                  color: '#FFFFFF',
+                }}
+              />
+              {search && (
+                <button
+                  type="button"
+                  onClick={() => setSearch('')}
+                  aria-label="Clear search"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-sm font-medium uppercase tracking-widest"
+                  style={{ color: 'rgba(255,255,255,0.6)' }}
+                >
+                  Clear
+                </button>
+              )}
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {RECIPIENT_CHIPS.map((chip) => {
+                const isActive =
+                  (chip.keyword === '' && search === '') ||
+                  (chip.keyword !== '' && search.toLowerCase() === chip.keyword);
+                return (
+                  <button
+                    key={chip.label}
+                    type="button"
+                    onClick={() => setSearch(chip.keyword)}
+                    className="px-4 py-2 rounded-full text-xs uppercase tracking-[0.12em] font-medium transition-all"
+                    style={{
+                      background: isActive ? occasion.accent : 'rgba(255,255,255,0.06)',
+                      color: isActive ? '#0D1B36' : 'rgba(255,255,255,0.78)',
+                      border: `1px solid ${isActive ? occasion.accent : 'rgba(255,255,255,0.15)'}`,
+                    }}
+                  >
+                    {chip.label}
+                  </button>
+                );
+              })}
+            </div>
           </div>
+
+          <p className="text-[11px] uppercase tracking-[0.15em] text-[var(--text-muted)] mb-8 font-medium">
+            {visibleProducts.length} experience{visibleProducts.length !== 1 ? 's' : ''}
+            {search ? ` matching "${search}"` : ' available'}
+          </p>
+
+          {visibleProducts.length === 0 ? (
+            <div className="text-center py-16 px-6 rounded-2xl" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)' }}>
+              <p className="text-[var(--text-secondary)] font-light mb-6">
+                No {occasion.title.toLowerCase()} blooms match "<span className="font-medium" style={{ color: '#FFFFFF' }}>{search}</span>".
+              </p>
+              <p className="text-sm text-[var(--text-muted)] font-light mb-8">
+                Try searching across every category — the right bloom might live somewhere unexpected.
+              </p>
+              <Link
+                to={`/shop?search=${encodeURIComponent(search)}`}
+                className="inline-block px-8 py-3 rounded-full text-sm uppercase tracking-widest bg-[var(--accent-gold)] text-[var(--bg-page)] hover:bg-[var(--accent-gold-hover)] transition-all font-semibold"
+              >
+                Search all blooms for "{search}"
+              </Link>
+            </div>
+          ) : (
+            <div className="flex flex-col gap-6">
+              {visibleProducts.map((product) => (
+                <BloomListCard key={product.id} product={product} />
+              ))}
+            </div>
+          )}
         </section>
       )}
     </div>

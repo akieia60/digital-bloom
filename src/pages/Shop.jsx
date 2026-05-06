@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import ProductGrid from '../components/ProductGrid';
 import ProductCard from '../components/ProductCard';
 import { useProducts } from '../hooks/useProducts';
@@ -67,6 +67,19 @@ export default function Shop({ searchQuery, setSearchQuery }) {
   const [localSearch, setLocalSearch] = useState(searchQuery || '');
   const navigate = useNavigate();
   const { products, loading } = useProducts();
+  const [searchParams] = useSearchParams();
+
+  // Sync ?search=X from the URL into the App-level searchQuery so deep links
+  // like /shop?search=friend (from CategoryPage's "search all blooms" escape
+  // hatch) actually run the global search instead of dropping users on a
+  // blank shop page.
+  useEffect(() => {
+    const urlSearch = searchParams.get('search') || '';
+    if (urlSearch && urlSearch !== searchQuery) {
+      if (setSearchQuery) setSearchQuery(urlSearch);
+      setLocalSearch(urlSearch);
+    }
+  }, [searchParams, searchQuery, setSearchQuery]);
 
   const handleSearch = (e) => {
     e.preventDefault();
