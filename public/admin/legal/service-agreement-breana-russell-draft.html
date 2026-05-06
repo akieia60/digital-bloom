@@ -21,8 +21,70 @@ small { font-size: 10pt; color: #666; }
 table { width: 100%; border-collapse: collapse; margin: 8pt 0; font-size: 11pt; }
 table td { border: 1px solid #aaa; padding: 4pt 8pt; vertical-align: top; }
 table td:first-child { background: #f4f4f4; font-weight: 600; width: 32%; }
-@media print { .no-print { display: none; } body { margin: 0; } }
+@media print { .no-print { display: none; } body { margin: 0; } .placeholder { background: transparent !important; border: none !important; } .sigpad { border: none !important; } .sigpad-controls { display: none !important; } }
+.placeholder[contenteditable="true"] { cursor: text; outline: none; }
+.placeholder[contenteditable="true"]:focus { background: #fff; border-color: #4ec9b0; box-shadow: 0 0 0 2px #4ec9b066; }
+.placeholder.filled { background: #e8f4ee; border-color: #4ec9b0; color: #111; font-style: normal; }
+.sigpad-wrap { margin-top: 6pt; }
+.sigpad { display: block; width: 100%; max-width: 320pt; height: 70pt; border: 1px dashed #888; border-radius: 4pt; background: #fcfcfc; touch-action: none; cursor: crosshair; }
+.sigpad-controls { font-family: sans-serif; font-size: 9pt; margin-top: 4pt; color: #888; }
+.sigpad-controls button { font-size: 9pt; padding: 2pt 8pt; cursor: pointer; }
+.sigpad-hint { color: #888; font-size: 9pt; font-style: italic; }
 </style>
+<script>
+window.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.placeholder').forEach(el => {
+    el.setAttribute('contenteditable', 'true');
+    el.setAttribute('spellcheck', 'false');
+    const original = el.textContent;
+    el.addEventListener('focus', () => {
+      if (el.textContent === original) el.textContent = '';
+    });
+    el.addEventListener('blur', () => {
+      const t = el.textContent.trim();
+      if (!t) {
+        el.textContent = original;
+        el.classList.remove('filled');
+      } else {
+        el.classList.add('filled');
+      }
+    });
+  });
+  document.querySelectorAll('.signature-block').forEach((block) => {
+    const wrap = document.createElement('div');
+    wrap.className = 'sigpad-wrap';
+    const cv = document.createElement('canvas');
+    cv.className = 'sigpad';
+    cv.width = 600;
+    cv.height = 140;
+    const ctrl = document.createElement('div');
+    ctrl.className = 'sigpad-controls';
+    ctrl.innerHTML = '<span class="sigpad-hint">Sign with trackpad / mouse above</span> &nbsp; <button type="button">Clear</button>';
+    wrap.appendChild(cv);
+    wrap.appendChild(ctrl);
+    block.insertBefore(wrap, block.firstChild);
+    const ctx = cv.getContext('2d');
+    ctx.lineWidth = 2; ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.strokeStyle = '#0a0a0a';
+    let drawing = false;
+    const getPos = (e) => {
+      const r = cv.getBoundingClientRect();
+      const cx = (e.touches ? e.touches[0].clientX : e.clientX) - r.left;
+      const cy = (e.touches ? e.touches[0].clientY : e.clientY) - r.top;
+      return { x: cx * (cv.width / r.width), y: cy * (cv.height / r.height) };
+    };
+    const start = (e) => { e.preventDefault(); drawing = true; const p = getPos(e); ctx.beginPath(); ctx.moveTo(p.x, p.y); };
+    const move = (e) => { if (!drawing) return; e.preventDefault(); const p = getPos(e); ctx.lineTo(p.x, p.y); ctx.stroke(); };
+    const stop = () => { drawing = false; };
+    cv.addEventListener('mousedown', start);
+    cv.addEventListener('mousemove', move);
+    window.addEventListener('mouseup', stop);
+    cv.addEventListener('touchstart', start);
+    cv.addEventListener('touchmove', move);
+    cv.addEventListener('touchend', stop);
+    ctrl.querySelector('button').addEventListener('click', () => { ctx.clearRect(0, 0, cv.width, cv.height); });
+  });
+});
+</script>
 </head>
 <body>
 
