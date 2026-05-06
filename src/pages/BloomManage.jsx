@@ -137,6 +137,12 @@ export default function BloomManage() {
       {/* ── Bloom Preview ── */}
       <div className="bloom-delivery__hero">
         <div className="bloom-delivery__composition">
+          {/* Always-on protection stamp on the BUYER's preview (Gamble
+              2026-05-05 PM): the buyer should never see a clean copy.
+              Pre-send: "Purchase Finalized" — payment cleared, not yet
+              delivered. Post-send: "Purchase Finalized & Sent" (Gamble's
+              exact copy). The recipient view (BloomDelivery) never passes
+              previewStamp so they get the clean gift experience. */}
           <div className="bloom-delivery__protected-frame">
             <LivePreview
               product={{
@@ -153,15 +159,6 @@ export default function BloomManage() {
               fontChoice={delivery.fontChoice}
               messageTextColor={delivery.messageTextColor}
               messageBold={delivery.messageBold}
-              {/* Always-on protection stamp on the BUYER's preview (Gamble
-                  2026-05-05 PM: the buyer should never see a clean copy of
-                  their bloom — only a stamped version that signals the
-                  purchase belongs to a specific order and isn't reusable).
-                  Pre-send: "Purchase Finalized" so they know payment cleared
-                  but it hasn't been sent yet. Post-send: matches Gamble's
-                  exact copy "Purchase Finalized & Sent". The recipient's
-                  view (BloomDelivery) never passes previewStamp, so they
-                  get the clean experience on the gift link. */}
               previewStamp={delivered ? 'Purchase Finalized & Sent' : 'Purchase Finalized'}
               className="bloom-delivery__preview"
             />
