@@ -120,10 +120,34 @@ export default async function handler(req, res) {
     const videoUrl = `${supabaseUrl}/storage/v1/object/public/product-media/${watermarkedStoragePath}`;
     const productSlug = pid || `${categorySlug}-${slug}`;
 
+    // Pull the prompt's badge so subcategory tags ("🌸 Mothers-Day · Friend
+    // Honoring · An Incredible Mother") flow into the product description.
+    // Without this every product gets the same generic blurb and customer
+    // searches like "friend" or "stepmom" miss the relevant blooms — Monique
+    // 2026-05-06 noted the gap; we surface it via description until a proper
+    // subcategory schema lands. Falls back to the generic copy if no pid or
+    // the prompt has no badge.
+    let promptBadge = '';
+    if (pid) {
+      try {
+        const { data: promptRow } = await supabase
+          .from('prompt_engine_custom_prompts')
+          .select('badge')
+          .eq('id', pid)
+          .maybeSingle();
+        promptBadge = (promptRow?.badge || '').trim();
+      } catch (badgeErr) {
+        console.warn(`process-bloom: badge lookup failed for prompt ${pid}:`, badgeErr);
+      }
+    }
+    const description = promptBadge
+      ? `${promptBadge} — A Digital Bloom by Digital Bloom™.`
+      : 'A beautiful Digital Bloom for every occasion.';
+
     const baseProductPayload = {
       name: title,
       slug: productSlug,
-      description: `A beautiful Digital Bloom for every occasion.`,
+      description,
       price: 1.99,
       image_url: videoUrl,
       video_url: videoUrl,

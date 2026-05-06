@@ -7,15 +7,19 @@ import { CATEGORY_BY_SLUG } from '../data/categories';
 
 // Quick recipient filters (Ak / David 2026-05-06): customers think in terms
 // of WHO they're sending to ("for my friend who's a mom") not just WHAT
-// occasion. Tapping a chip fills the search box with the keyword and
-// matches against bloom names + descriptions.
+// occasion. Tapping a chip fills the search box with the keyword which then
+// matches against name + description (description now carries Monique's
+// subcategory badge — "Friend Honoring", "Stepmom", etc. — via the
+// process-bloom flow). Keywords below align to Monique's 5 Mother's Day
+// subcategories so each chip lands on a populated set.
 const RECIPIENT_CHIPS = [
-  { label: 'For Mom',     keyword: 'mom' },
-  { label: 'For Friend',  keyword: 'friend' },
-  { label: 'For Sister',  keyword: 'sister' },
-  { label: 'For Auntie',  keyword: 'aunt' },
-  { label: 'For Mentor',  keyword: 'mentor' },
-  { label: 'For Anyone',  keyword: '' },
+  { label: 'For Mom',          keyword: 'mom' },
+  { label: 'For Wife',         keyword: 'mother of' },
+  { label: 'For Friend',       keyword: 'friend' },
+  { label: 'For Stepmom',      keyword: 'stepmom' },
+  { label: 'For Auntie',       keyword: 'auntie' },
+  { label: 'For Single Mom',   keyword: 'single' },
+  { label: 'For Anyone',       keyword: '' },
 ];
 
 export default function CategoryPage() {
