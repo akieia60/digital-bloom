@@ -88,6 +88,16 @@ if (!slug) {
 }
 
 // ── Env loading ────────────────────────────────────────────────────────
+function stripQuotes(val) {
+  if (
+    (val.startsWith('"') && val.endsWith('"')) ||
+    (val.startsWith("'") && val.endsWith("'"))
+  ) {
+    return val.slice(1, -1);
+  }
+  return val;
+}
+
 const ENV_PATH = path.join(os.homedir(), '.openclaw', '.env');
 if (fs.existsSync(ENV_PATH)) {
   const envFile = fs.readFileSync(ENV_PATH, 'utf8');
@@ -97,7 +107,7 @@ if (fs.existsSync(ENV_PATH)) {
     const eq = trimmed.indexOf('=');
     if (eq === -1) continue;
     const key = trimmed.slice(0, eq).trim();
-    const val = trimmed.slice(eq + 1).trim();
+    const val = stripQuotes(trimmed.slice(eq + 1).trim());
     if (!process.env[key]) process.env[key] = val;
   }
 }
@@ -112,10 +122,7 @@ if (fs.existsSync(PROJECT_ENV)) {
     const eq = trimmed.indexOf('=');
     if (eq === -1) continue;
     const key = trimmed.slice(0, eq).trim();
-    let val = trimmed.slice(eq + 1).trim();
-    if ((val.startsWith('"') && val.endsWith('"')) || (val.startsWith("'") && val.endsWith("'"))) {
-      val = val.slice(1, -1);
-    }
+    const val = stripQuotes(trimmed.slice(eq + 1).trim());
     if (!process.env[key]) process.env[key] = val;
   }
 }
@@ -155,12 +162,16 @@ async function generateQrPng(url, outputPath) {
 }
 
 async function burnQr({ inputPath, outputPath, qrPath, slug }) {
+  // Fixed-size QR (~140×140 viewable + 12px white padding) keeps it
+  // scannable from across a room regardless of input video dimensions.
+  // Earlier draft used scale2ref which inverted base/QR sizing on some
+  // inputs and produced 69×122 base video — libx264 rejects odd widths.
+  // Forcing even base dimensions at the end is belt + suspenders.
   const fontFile = '/System/Library/Fonts/Helvetica.ttc';
   const filterGraph = [
-    `[1:v]scale=iw*1:ih*1,pad=w=iw+24:h=ih+24:x=12:y=12:color=white[qrPadded]`,
-    `[0:v][qrPadded]scale2ref=w=iw*0.18:h=ow/mdar[base][qrFinal]`,
-    `[base][qrFinal]overlay=x=W-w-28:y=H-h-92[withQr]`,
-    `[withQr]drawtext=fontfile='${fontFile}':text='digitalbloom.store/go/${slug}':fontcolor=white:fontsize=22:borderw=2:bordercolor=black@0.85:x=W-text_w-32:y=H-60[outv]`,
+    `[1:v]scale=140:140:flags=lanczos,pad=164:164:x=12:y=12:color=white[qrPadded]`,
+    `[0:v][qrPadded]overlay=x=W-w-28:y=H-h-92[withQr]`,
+    `[withQr]drawtext=fontfile='${fontFile}':text='digitalbloom.store/go/${slug}':fontcolor=white:fontsize=22:borderw=2:bordercolor=black@0.85:x=W-text_w-32:y=H-60,scale=trunc(iw/2)*2:trunc(ih/2)*2[outv]`,
   ].join(';');
 
   await runFfmpeg([

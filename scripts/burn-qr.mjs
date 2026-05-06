@@ -93,16 +93,15 @@ async function main() {
   //      drawtext caption underneath with the URL → [outv]
   //
   //    fontfile uses macOS Helvetica which is always present.
+  // Fixed-size QR (~140×140 + white padding to 164×164) keeps it scannable
+  // from across a room on any video resolution. Earlier draft used
+  // scale2ref which inverted base/QR sizing on some inputs. The final
+  // scale=trunc(iw/2)*2 forces even dimensions so libx264 never rejects.
   const fontFile = '/System/Library/Fonts/Helvetica.ttc';
   const filterGraph = [
-    // Make the QR ~18% of the input video width with a white padding border.
-    '[1:v]scale=iw*1:ih*1,pad=w=iw+24:h=ih+24:x=12:y=12:color=white[qrPadded]',
-    // Scale the padded QR to ~18% of the base video width.
-    '[0:v][qrPadded]scale2ref=w=iw*0.18:h=ow/mdar[base][qrFinal]',
-    // Overlay bottom-right with a 28px margin from each edge.
-    '[base][qrFinal]overlay=x=W-w-28:y=H-h-92[withQr]',
-    // Caption beneath the QR — slightly smaller than the QR itself.
-    `[withQr]drawtext=fontfile='${fontFile}':text='digitalbloom.store/go/${slug}':fontcolor=white:fontsize=22:borderw=2:bordercolor=black@0.85:x=W-text_w-32:y=H-60[outv]`,
+    '[1:v]scale=140:140:flags=lanczos,pad=164:164:x=12:y=12:color=white[qrPadded]',
+    '[0:v][qrPadded]overlay=x=W-w-28:y=H-h-92[withQr]',
+    `[withQr]drawtext=fontfile='${fontFile}':text='digitalbloom.store/go/${slug}':fontcolor=white:fontsize=22:borderw=2:bordercolor=black@0.85:x=W-text_w-32:y=H-60,scale=trunc(iw/2)*2:trunc(ih/2)*2[outv]`,
   ].join(';');
 
   await runFfmpeg([
