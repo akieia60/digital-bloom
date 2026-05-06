@@ -63,10 +63,18 @@ export function normalizeBloomDeliverySettings(purchase) {
       : (delivery.recipientEmail || purchaserEmail || '')
   ).trim();
 
+  // Phone delivery surfaced 2026-05-06 (Twilio wired). When the buyer chose
+  // the Text option in checkout, recipientPhone + deliveryChannel='phone'
+  // ride along on the manifest. Stays empty for email-channel orders.
+  const recipientPhone = String(delivery.recipientPhone || '').trim();
+  const deliveryChannel = delivery.deliveryChannel === 'phone' ? 'phone' : 'email';
+
   return {
     target,
     purchaserEmail,
     recipientEmail,
+    recipientPhone,
+    deliveryChannel,
     deliveryMode: delivery.deliveryMode === 'scheduled' ? 'scheduled' : 'now',
     deliveryDate: delivery.deliveryDate ? String(delivery.deliveryDate) : '',
     buyerTimezone: delivery.buyerTimezone || 'America/Chicago',

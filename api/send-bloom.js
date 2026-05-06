@@ -3,6 +3,8 @@ import {
   normalizeBloomDeliverySettings,
   sendBloomDeliveryEmail,
 } from './_lib/bloomDeliveryEmail.js';
+import { sendBloomDeliverySms } from './_lib/bloomDeliverySms.js';
+import { resolvePublicBaseUrl } from './_lib/publicBaseUrl.js';
 
 const supabase = createClient(
   process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL,
@@ -57,13 +59,22 @@ export default async function handler(req, res) {
       });
     }
 
-    // Determine recipient email
+    // Decide channel — Text (Twilio SMS) if buyer chose phone in checkout
+    // AND we have a recipientPhone AND Twilio is configured. Otherwise email.
+    const wantsSms = delivery.deliveryChannel === 'phone' && delivery.recipientPhone;
+    const twilioConfigured = Boolean(
+      process.env.TWILIO_ACCOUNT_SID &&
+      process.env.TWILIO_AUTH_TOKEN &&
+      process.env.TWILIO_FROM_NUMBER
+    );
+    const useSms = wantsSms && twilioConfigured;
+
     const recipientEmail = delivery.target === 'recipient'
       ? delivery.recipientEmail
       : (delivery.recipientEmail || delivery.purchaserEmail || purchase.customer_email || '');
 
-    if (!recipientEmail) {
-      return res.status(400).json({ error: 'No recipient email address' });
+    if (!useSms && !recipientEmail) {
+      return res.status(400).json({ error: 'No recipient address (email or phone) on this bloom' });
     }
 
     // Mark as sending
@@ -80,14 +91,44 @@ export default async function handler(req, res) {
       .update({ composition_manifest: manifest, updated_at: new Date().toISOString() })
       .eq('id', purchase.id);
 
-    // Send the recipient delivery email
-    await sendBloomDeliveryEmail({
-      req,
-      to: recipientEmail,
-      purchase,
-      delivery,
-      isTest: isTestMode(purchase),
-    });
+    let sentVia = 'email';
+    let smsResult = null;
+
+    if (useSms) {
+      const giftUrl = `${resolvePublicBaseUrl(req)}/gift/${encodeURIComponent(purchase.bloom_slug)}`;
+      try {
+        smsResult = await sendBloomDeliverySms({
+          to: delivery.recipientPhone,
+          purchase,
+          delivery,
+          giftUrl,
+          isTest: isTestMode(purchase),
+        });
+        sentVia = 'sms';
+      } catch (smsError) {
+        // Twilio refused — fall back to email if we have one. Mother's Day
+        // weekend the manual iMessage path also still exists from Success.
+        console.warn('[send-bloom] Twilio SMS failed, falling back to email:', smsError);
+        if (!recipientEmail) {
+          throw smsError;
+        }
+        await sendBloomDeliveryEmail({
+          req,
+          to: recipientEmail,
+          purchase,
+          delivery,
+          isTest: isTestMode(purchase),
+        });
+      }
+    } else {
+      await sendBloomDeliveryEmail({
+        req,
+        to: recipientEmail,
+        purchase,
+        delivery,
+        isTest: isTestMode(purchase),
+      });
+    }
 
     // Mark as sent
     const now = new Date().toISOString();
@@ -95,7 +136,12 @@ export default async function handler(req, res) {
     manifest.delivery.emailSentAt = now;
     manifest.delivery.sentByBuyerAt = now;
     manifest.delivery.lastError = null;
-    manifest.delivery.recipientEmail = recipientEmail;
+    manifest.delivery.sentVia = sentVia;
+    if (sentVia === 'sms' && smsResult?.sid) {
+      manifest.delivery.smsMessageSid = smsResult.sid;
+    }
+    if (recipientEmail) manifest.delivery.recipientEmail = recipientEmail;
+    if (delivery.recipientPhone) manifest.delivery.recipientPhone = delivery.recipientPhone;
 
     await supabase
       .from('purchases')
@@ -104,7 +150,8 @@ export default async function handler(req, res) {
 
     return res.status(200).json({
       success: true,
-      sentTo: recipientEmail,
+      channel: sentVia,
+      sentTo: sentVia === 'sms' ? delivery.recipientPhone : recipientEmail,
       sentAt: now,
     });
   } catch (error) {
