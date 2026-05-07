@@ -33,9 +33,7 @@ async function downloadToFile(url, dest) {
  * Pull the source video, overlay a QR for a tracked /go/<slug> link,
  * upload the result to Vercel Blob (public), and return the blob URL.
  *
- * Used by:
- *   - /api/admin/creator-push     (legacy creator portal flow)
- *   - /api/admin/bre-download     (Bre's direct-download flow)
+ * Used by /api/admin/bre-download (Bre's direct-download flow).
  */
 export async function burnQrAndUpload({ inputUrl, slug, title, category, bucket = 'pulls' }) {
   const tmp = os.tmpdir();

@@ -27,9 +27,9 @@ function actorFromToken(token) {
  * to save the file to Photos / Files. From there she posts to social
  * by hand. No Buffer integration, no creator portal.
  *
- * Replaces:
- *   - /c/breana page (consumer-style portal that wouldn't download)
- *   - admin/creators.html → creator-push API (push to a portal)
+ * Replaces the abandoned 2026-05-06 creator-portal flow (/c/<slug>
+ * + admin/creators.html + creator-push API + creators tables —
+ * all dropped 2026-05-07).
  *
  * QR target slug defaults to "bre" so referral clicks attribute to her.
  */
