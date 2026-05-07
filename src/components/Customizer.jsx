@@ -36,11 +36,15 @@ const SOUND_TRACKS = [
   { id: 'give-flowers', nameKey: 'customize_sound_flowers', icon: '💐', src: null, comingSoon: true },
 ];
 
+// Customizer flow simplified 2026-05-07 (Gamble + Ak): dropped the
+// "Video Frame" sub-section and the Live Effects step entirely.
+// Frame styles didn't read on the final video, and Live Effects
+// competed visually with the bloom that already has plenty of motion.
+// Step 2 is now just engraving finish.
 const FLOW_STEPS = [
   { id: 1, key: 'message', labelKey: 'customize_step_message', icon: '✉️' },
-  { id: 2, key: 'frame', labelKey: 'customize_step_frame', icon: '🎨' },
-  { id: 3, key: 'effect', labelKey: 'customize_step_effect', icon: '✨' },
-  { id: 4, key: 'review', labelKey: 'customize_step_review', icon: '✓' },
+  { id: 2, key: 'frame',   labelKey: 'customize_step_frame',   icon: '🎨' },
+  { id: 3, key: 'review',  labelKey: 'customize_step_review',  icon: '✓' },
 ];
 
 // Generic fallback starters used when no category is provided
@@ -796,15 +800,14 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
           <div className="customizer-section">
             <div className="customizer-section__header">
               <span className="customizer-section__number">2</span>
-              <h3 className="customizer-section__title">{t('customize_style')}</h3>
+              <h3 className="customizer-section__title">{t('customize_step_frame')}</h3>
             </div>
-            {/* Color Mood palette grid removed per Gamble's clarification on
-                2026-04-26: it didn't change the bloom in a way customers
-                noticed and competed for screen real estate with the things
-                that DO matter (engraving finish, frame, font, effects).
-                The default palette stays beautiful as-is. */}
-
-            {/* Engraving finish */}
+            {/* Engraving finish — the only thing that survived the
+                2026-05-07 customizer cull. Color Mood (removed 4/26),
+                Video Frame (removed 5/7), and Live Effects (removed
+                5/7) all earned their delete by adding decisions
+                without changing what the customer sees on the final
+                bloom. */}
             <div className="customizer-section__subgroup" style={{ marginTop: '18px' }}>
               <div className="customizer-label" style={{ marginBottom: '10px', display: 'block' }}>{t('customize_engraving_finish')}</div>
               <div className="extras-grid">
@@ -830,108 +833,22 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
                 ))}
               </div>
             </div>
-
-            {/* Frame / Border picker */}
-            <div className="customizer-section__subgroup" style={{ marginTop: '22px' }}>
-              <div className="customizer-label" style={{ marginBottom: '10px', display: 'block', color: '#1D1D1F' }}>Video Frame</div>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
-                {FRAME_OPTIONS.map((frame) => (
-                  <button
-                    key={frame.id}
-                    type="button"
-                    onClick={() => setFrameStyle(frame.id)}
-                    style={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'flex-start',
-                      gap: '3px',
-                      padding: '10px 12px',
-                      borderRadius: '12px',
-                      border: `2px solid ${frameStyle === frame.id ? '#D4AF37' : 'rgba(13,27,54,0.18)'}`,
-                      background: frameStyle === frame.id ? 'rgba(212,175,55,0.1)' : 'rgba(13,27,54,0.04)',
-                      cursor: 'pointer',
-                      transition: 'all 0.18s',
-                      textAlign: 'left',
-                    }}
-                    aria-pressed={frameStyle === frame.id}
-                  >
-                    <span style={{ fontFamily: 'Outfit, sans-serif', fontSize: '0.85rem', fontWeight: '600', color: frameStyle === frame.id ? '#D4AF37' : '#1D1D1F', letterSpacing: '0.02em' }}>
-                      {frame.label}
-                    </span>
-                    <span style={{ fontFamily: 'Outfit, sans-serif', fontSize: '0.72rem', color: '#6E6E73', lineHeight: 1.3 }}>
-                      {frame.description}
-                    </span>
-                  </button>
-                ))}
-              </div>
-            </div>
           </div>
             </>
           )}
 
           {activeStep === 3 && (
-            <>
-          <div className="customizer-section">
-            <div className="customizer-section__header">
-              <span className="customizer-section__number">3</span>
-              <h3 className="customizer-section__title">Live Effects</h3>
-            </div>
-            <p style={{ fontSize: '12px', color: 'rgba(255,255,255,0.4)', marginBottom: '14px', letterSpacing: '0.02em', fontFamily: 'Outfit, sans-serif' }}>
-              Canvas-rendered — watch them appear on your preview in real time. Mix and match.
-            </p>
-            <div className="extras-grid">
-              {EFFECTS.map(effect => (
-                <button
-                  key={effect.id}
-                  type="button"
-                  className={`extra-toggle ${extras[effect.id] ? 'extra-toggle--active' : ''}`}
-                  onClick={() => toggleExtra(effect.id)}
-                  aria-pressed={extras[effect.id]}
-                  aria-label={effect.label}
-                >
-                  <div className="extra-toggle__info">
-                    <span className="extra-toggle__icon" aria-hidden="true" style={{ fontStyle: 'normal', fontSize: '1rem', minWidth: '20px', textAlign: 'center' }}>{effect.icon}</span>
-                    <div>
-                      <span className="extra-toggle__name">{effect.label}</span>
-                      <div className="extra-toggle__description">{effect.description}</div>
-                    </div>
-                  </div>
-                  <span className="toggle-switch" aria-hidden="true">
-                    <input type="checkbox" tabIndex={-1} checked={!!extras[effect.id]} readOnly />
-                    <span className="toggle-switch__slider" />
-                  </span>
-                </button>
-              ))}
-            </div>
-
-            <div className="customizer-sound-summary" style={{ marginTop: '18px' }}>
-              <span className="customizer-sound-summary__label">{t('customize_review_effects')}</span>
-              <span className="customizer-sound-summary__value">
-                {selectedExtras.length > 0 ? selectedExtras.join(', ') : t('customize_extras_selected_none')}
-              </span>
-              <p className="customizer-sound-summary__note">{t('customize_extras_hint')}</p>
-            </div>
-          </div>
-            </>
-          )}
-
-          {activeStep === 4 && (
             <div className="customizer-section customizer-section--review">
               <div className="customizer-section__header">
-                <span className="customizer-section__number">5</span>
+                <span className="customizer-section__number">3</span>
                 <h3 className="customizer-section__title">{t('customize_review_title')}</h3>
               </div>
               <div className="customizer-review-card">
                 <div className="review-row"><span className="review-label">{t('customize_review_to')}</span><span className="review-value">{message.toName || '—'}</span></div>
                 <div className="review-row"><span className="review-label">{t('customize_review_from')}</span><span className="review-value">{message.fromName || '—'}</span></div>
                 <div className="review-row"><span className="review-label">{t('customize_review_message')}</span><span className="review-value">{message.short || '—'}</span></div>
-                <div className="review-row"><span className="review-label">{t('customize_review_frame')}</span><span className="review-value">{t((COLOR_PALETTES[colorTheme] || COLOR_PALETTES.custom).nameKey)}</span></div>
-                <div className="review-row"><span className="review-label">{t('customize_review_palette')}</span><span className="review-value">{primaryColor} · {accentColor}</span></div>
                 <div className="review-row"><span className="review-label">{t('customize_review_engraving')}</span><span className="review-value">{t(`customize_engraving_${engravingStyle}`)}</span></div>
                 <div className="review-row"><span className="review-label">{t('customize_review_font')}</span><span className="review-value">{fontOptions.find((option) => option.id === fontChoice)?.label || t('customize_font_playfair')}</span></div>
-                <div className="review-row"><span className="review-label">Frame</span><span className="review-value">{FRAME_OPTIONS.find(f => f.id === frameStyle)?.label || 'None'}</span></div>
-                <div className="review-row"><span className="review-label">{t('customize_review_effects')}</span><span className="review-value">{selectedExtras.join(', ') || t('customize_extras_selected_none')}</span></div>
-                <div className="review-row"><span className="review-label">{t('customize_review_sound')}</span><span className="review-value">{SOUND_TRACKS.find((track) => track.id === selectedSound) ? t(SOUND_TRACKS.find((track) => track.id === selectedSound).nameKey) : t('customize_sound_none')}</span></div>
                 <div className="review-row"><span className="review-label">{t('customize_review_protection')}</span><span className="review-value">{t('customize_review_protection_value')}</span></div>
               </div>
             </div>

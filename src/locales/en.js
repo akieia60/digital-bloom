@@ -179,7 +179,7 @@ export const en = {
   customize_close: "Close",
   customize_preview: "Live Bloom Preview",
   customize_step_message: "Message",
-  customize_step_frame: "Frame",
+  customize_step_frame: "Engraving",
   customize_step_effect: "Effect",
   customize_step_sound: "Sound",
   customize_step_review: "Review",
