@@ -373,21 +373,44 @@ export default function Checkout() {
 
               {deliveryTarget === 'recipient' && (
                 <>
-                  <div className="cart-credit-entry-label" style={{ marginBottom: '-4px' }}>
-                    Delivery preference
+                  {/* Delivery preference — Ak + Gamble 2026-05-07: end
+                      users were missing the SMS path because the toggle
+                      was buried below other cart fields. Added a clear
+                      eyebrow + "RECOMMENDED" badge on Text so it reads
+                      as the default at a glance, not just first in
+                      tab order. */}
+                  <div className="cart-credit-entry-label" style={{ marginBottom: '4px' }}>
+                    How does it reach them?
                   </div>
-                  {/* Phone (SMS) listed first per Gamble 2026-05-05 PM:
-                      "the option to receive as a text should be the first
-                      option then Email should be the second option." */}
+                  <p className="cart-credit-entry-hint" style={{ margin: '0 0 4px' }}>
+                    Texting is fastest — the bloom link opens in Messages on your phone, so they see it from your familiar number, not a shortcode.
+                  </p>
                   <div className="cart-credit-choice-row" role="radiogroup" aria-label="Delivery preference">
                     <button
                       type="button"
                       role="radio"
                       aria-checked={deliveryChannel === 'phone'}
                       onClick={() => setDeliveryChannel('phone')}
-                      className={`cart-credit-choice ${deliveryChannel === 'phone' ? 'is-active' : ''}`}
+                      className={`cart-credit-choice cart-credit-choice--recommended ${deliveryChannel === 'phone' ? 'is-active' : ''}`}
                     >
-                      Text <span style={{ opacity: 0.7, fontSize: '0.75em', fontWeight: 500 }}>(send from your phone)</span>
+                      <span aria-hidden="true" style={{ marginRight: '6px' }}>📱</span>
+                      Text
+                      <span
+                        aria-hidden="true"
+                        style={{
+                          marginLeft: '8px',
+                          fontSize: '0.62em',
+                          fontWeight: 700,
+                          letterSpacing: '0.12em',
+                          padding: '3px 7px',
+                          borderRadius: '999px',
+                          background: 'rgba(212, 175, 55, 0.22)',
+                          color: '#D4AF37',
+                          textTransform: 'uppercase',
+                        }}
+                      >
+                        Recommended
+                      </span>
                     </button>
                     <button
                       type="button"
@@ -396,6 +419,7 @@ export default function Checkout() {
                       onClick={() => setDeliveryChannel('email')}
                       className={`cart-credit-choice ${deliveryChannel === 'email' ? 'is-active' : ''}`}
                     >
+                      <span aria-hidden="true" style={{ marginRight: '6px' }}>✉️</span>
                       Email
                     </button>
                   </div>
