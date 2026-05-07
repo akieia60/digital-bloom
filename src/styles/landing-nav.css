@@ -361,15 +361,21 @@
     justify-content: space-between;
   }
 
-  .landing-nav__right {
-    gap: 6px;
+  /* Mobile top-nav cleanup (Gamble + Ak 5/7): the right cluster
+     was crammed — Send-a-Bloom CTA + language switcher + cart icon
+     all squeezed into ~80px and the cart was hard to tap. Drop the
+     CTA + language switcher on phones (both reachable via the
+     hamburger menu) and let FloatingCartButton at bottom-right
+     handle cart access — it has a 56px gold pill that's far more
+     reachable with a thumb. */
+  .landing-nav__send-btn,
+  .lang-switcher,
+  .landing-nav__cart-btn {
+    display: none;
   }
 
-  .landing-nav__send-btn {
-    min-height: 34px;
-    padding: 5px 10px;
-    font-size: 0.68rem;
-    letter-spacing: 0.04em;
+  .landing-nav__right {
+    gap: 0;
   }
 }
 
