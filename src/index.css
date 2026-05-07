@@ -799,6 +799,14 @@ img {
   color: var(--accent-gold);
 }
 
+/* The full diagonal-grid watermark inside VideoPlayer is sized for
+   the big landing/product hero — at 200px-wide lane tiles it turns
+   into illegible visual noise. Hide the grid on tiles; keep the
+   corner ™ / © pills which scale fine. */
+.bloom-lane-tile .db-watermark-overlay {
+  display: none;
+}
+
 /* ============================================
    BLOOM LIST CARD — Occasion label & badge
    ============================================ */

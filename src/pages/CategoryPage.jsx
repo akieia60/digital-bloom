@@ -140,37 +140,27 @@ export default function CategoryPage() {
         <span>Back</span>
       </button>
 
-      {/* Category Hero — pt-44 on mobile so the sticky Back pill (which
-          lives at top:64px from the safe-area inset) doesn't overlap
-          the salesPitch copy. Ak/Breana 2026-05-07 caught Back hovering
-          over the pitch text. */}
-      <section className="relative pt-44 sm:pt-32 pb-10 px-6 text-center overflow-hidden">
+      {/* Category Hero — Ak 2026-05-07 #2: dropped the salesPitch box.
+          Title + tagline only so the search bar gets breathing room
+          and the sticky Back button doesn't fight the copy. */}
+      <section className="relative pt-32 sm:pt-28 pb-8 px-6 text-center overflow-hidden">
         <div className="absolute top-0 left-0 right-0 h-1" style={{ background: `linear-gradient(90deg, ${occasion.accent}, ${occasion.accent}66)` }} />
         <div className="absolute inset-0 opacity-[0.07] pointer-events-none" style={{ background: `radial-gradient(ellipse at 50% 0%, ${occasion.accent}, transparent 65%)` }} />
 
-        <div className="relative flex items-center justify-center gap-4 mb-10">
+        <div className="relative flex items-center justify-center gap-4 mb-6">
           <Link to="/shop" className="inline-flex items-center text-[11px] uppercase tracking-[0.15em] hover:text-[var(--accent-gold)] transition-colors font-medium" style={{ color: 'rgba(255,255,255,0.6)' }}>
             All Occasions
           </Link>
         </div>
 
-        <h1 className="relative text-4xl sm:text-5xl md:text-6xl font-display font-medium tracking-[0.06em] uppercase mb-4" style={{ color: '#FFFFFF' }}>
+        <h1 className="relative text-4xl sm:text-5xl md:text-6xl font-display font-medium tracking-[0.06em] uppercase mb-3" style={{ color: '#FFFFFF' }}>
           {occasion.title}
         </h1>
         <p className="relative text-base sm:text-lg font-light max-w-xl mx-auto leading-relaxed" style={{ color: 'rgba(255,255,255,0.75)' }}>
           {occasion.tagline}
         </p>
 
-        {/* Gamble's Sales Pitch */}
-        {occasion.salesPitch && (
-          <div className="relative max-w-2xl mx-auto mt-8 p-6 rounded-2xl" style={{ background: 'rgba(255,255,255,0.07)', border: `1px solid rgba(255,255,255,0.15)` }}>
-            <p className="text-sm sm:text-base font-medium leading-relaxed text-center" style={{ color: 'rgba(255,255,255,0.9)' }}>
-              {occasion.salesPitch}
-            </p>
-          </div>
-        )}
-
-        <div className="relative mx-auto mt-6 h-[2px] w-12 rounded-full" style={{ background: occasion.accent }} />
+        <div className="relative mx-auto mt-5 h-[2px] w-12 rounded-full" style={{ background: occasion.accent }} />
       </section>
 
       {isComingSoon ? (

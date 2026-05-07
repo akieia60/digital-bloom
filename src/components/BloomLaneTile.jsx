@@ -1,13 +1,13 @@
 import { Link } from 'react-router-dom';
+import VideoPlayer from './VideoPlayer';
 import { getPosterUrl } from '../lib/media';
 import { useLocalizedProduct } from '../hooks/useLocalizedProduct';
 
 /**
  * Compact tile for horizontal subcategory lanes (Ak whiteboard sketch
- * 2026-05-07). Smaller than BloomListCard so a row of them fits inside
- * a horizontally-scrolling strip on phones. Uses a static poster
- * instead of an autoplay video — multiple inline videos crushed
- * scroll performance on mid-range Androids during testing.
+ * 2026-05-07). Uses VideoPlayer so the bloom auto-plays inline like
+ * every other product card — Ak's first phone test caught that the
+ * tiles were just dark navy placeholders without it.
  */
 export default function BloomLaneTile({ product: rawProduct }) {
   const product = useLocalizedProduct(rawProduct);
@@ -17,16 +17,7 @@ export default function BloomLaneTile({ product: rawProduct }) {
   return (
     <Link to={`/product/${product.id}`} className="bloom-lane-tile">
       <div className="bloom-lane-tile__media">
-        {posterUrl ? (
-          <img
-            src={posterUrl}
-            alt={product.name}
-            loading="lazy"
-            className="bloom-lane-tile__poster"
-          />
-        ) : (
-          <div className="bloom-lane-tile__poster-placeholder" />
-        )}
+        <VideoPlayer videoUrl={videoUrl} posterUrl={posterUrl} alt={product.name} />
         <div className="bloom-lane-tile__media-overlay" />
         <span className="bloom-lane-tile__price">
           ${parseFloat(product.price).toFixed(2)}
