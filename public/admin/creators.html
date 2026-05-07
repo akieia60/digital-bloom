@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<title>Digital Bloom — Creators Admin</title>
+<style>
+  :root {
+    --bg: #0D1B36;
+    --surface: rgba(255,255,255,0.06);
+    --border: rgba(255,255,255,0.14);
+    --gold: #D4AF37;
+    --text: #FFFFFF;
+    --muted: rgba(255,255,255,0.65);
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text);
+    font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+    padding-top: env(safe-area-inset-top); padding-bottom: env(safe-area-inset-bottom);
+    overflow-x: hidden; }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 24px 16px 80px; }
+  h1 { font-family: 'Playfair Display', Georgia, serif; font-size: 28px; font-weight: 600; margin: 0 0 4px; }
+  .eyebrow { font-size: 11px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
+  .sub { color: var(--muted); font-size: 14px; margin: 0 0 24px; }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 18px; margin-bottom: 16px; }
+  .creator-name { font-size: 20px; font-weight: 600; margin: 0 0 6px; }
+  .creator-meta { font-size: 12px; color: var(--muted); margin-bottom: 14px; }
+  .stats { display: flex; gap: 16px; margin-bottom: 14px; flex-wrap: wrap; }
+  .stat { background: rgba(212,175,55,0.08); border: 1px solid rgba(212,175,55,0.25); border-radius: 999px; padding: 6px 14px; font-size: 12px; color: var(--gold); }
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+    padding: 12px 20px; border-radius: 999px; background: var(--gold); color: #0D1B36;
+    font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; font-size: 13px;
+    border: none; cursor: pointer; text-decoration: none; min-height: 44px;
+  }
+  .btn--ghost { background: transparent; color: var(--gold); border: 1px solid var(--gold); }
+  .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .auth { padding: 24px; }
+  .auth input { width: 100%; padding: 14px; background: rgba(255,255,255,0.08); border: 1px solid var(--border); border-radius: 10px; color: var(--text); font-size: 16px; margin-bottom: 12px; }
+  .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; margin-top: 14px; max-height: 60vh; overflow-y: auto; padding: 4px 2px 8px; }
+  .product-tile { background: rgba(0,0,0,0.4); border: 2px solid transparent; border-radius: 10px; overflow: hidden; cursor: pointer; transition: border-color 0.15s; }
+  .product-tile.selected { border-color: var(--gold); }
+  .product-tile video { width: 100%; aspect-ratio: 9/16; background: #000; object-fit: cover; display: block; }
+  .product-tile .title { font-size: 12px; padding: 8px; line-height: 1.3; min-height: 40px; }
+  .filter-row { display: flex; gap: 8px; margin: 10px 0; flex-wrap: wrap; }
+  .chip { padding: 6px 14px; border-radius: 999px; background: rgba(255,255,255,0.06); border: 1px solid var(--border); color: var(--muted); font-size: 12px; cursor: pointer; }
+  .chip.active { background: var(--gold); color: #0D1B36; border-color: var(--gold); }
+  .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 100; display: none; }
+  .modal-bg.show { display: flex; align-items: center; justify-content: center; padding: 16px; }
+  .modal { background: var(--bg); border: 1px solid var(--border); border-radius: 16px; max-width: 720px; width: 100%; max-height: 90vh; overflow-y: auto; padding: 22px; }
+  .modal h2 { margin: 0 0 6px; font-size: 22px; }
+  .modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 16px; flex-wrap: wrap; }
+  .selected-count { color: var(--gold); font-weight: 600; font-size: 13px; }
+  .log { font-family: ui-monospace, Menlo, monospace; font-size: 12px; background: rgba(0,0,0,0.4); padding: 10px; border-radius: 8px; max-height: 200px; overflow-y: auto; margin-top: 14px; line-height: 1.5; white-space: pre-wrap; }
+  .log .ok  { color: #7CFC9E; }
+  .log .bad { color: #FF8585; }
+  hr { border: 0; border-top: 1px solid var(--border); margin: 18px 0; }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <p class="eyebrow">Digital Bloom · Creators</p>
+    <h1>Creator Push Panel</h1>
+    <p class="sub">Pick videos from the storefront, push them to a creator's portal with their tracked QR burned in. Live in seconds.</p>
+
+    <div id="auth-gate" class="card auth">
+      <h2 style="margin:0 0 6px; font-size:18px;">Admin token</h2>
+      <p class="sub" style="margin-bottom:14px;">Paste the same token you use for /admin/archive.html. Stored only in this tab's session.</p>
+      <input id="token-input" type="password" placeholder="ADMIN_TOKEN…" autocomplete="off" />
+      <button class="btn" onclick="authIn()">Continue</button>
+    </div>
+
+    <div id="app" style="display:none;">
+      <div id="creators-list"></div>
+    </div>
+  </div>
+
+  <!-- PUSH MODAL -->
+  <div id="push-modal" class="modal-bg" onclick="closeModalBg(event)">
+    <div class="modal">
+      <h2 id="push-title">Push videos</h2>
+      <p class="sub" id="push-sub" style="margin-bottom:8px;"></p>
+
+      <div class="filter-row" id="cat-chips"></div>
+      <div class="product-grid" id="product-grid"></div>
+
+      <div class="modal-actions">
+        <span class="selected-count" id="picked-count">0 selected</span>
+        <button class="btn btn--ghost" onclick="closeModal()">Cancel</button>
+        <button class="btn" id="push-btn" onclick="doPush()" disabled>Push to portal</button>
+      </div>
+      <div class="log" id="push-log" style="display:none;"></div>
+    </div>
+  </div>
+
+<script type="module">
+  // ── State ──────────────────────────────────────────────────────────
+  const SUPABASE_URL = 'https://yhdbeblowolfinxxhsnt.supabase.co';
+  const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InloZGJlYmxvd29sZmlueHhoc250Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjkyNjA0NjMsImV4cCI6MjA4NDgzNjQ2M30.DGIJ5FSr2M4wBi3eQ5rjC0jx3CVS4pEcJe1PMOSR0yM';
+  let token = sessionStorage.getItem('admin_token') || '';
+  let allProducts = [];
+  let pickedIds = new Set();
+  let activeCat = null;
+  let pushTargetSlug = null;
+
+  function $(s) { return document.querySelector(s); }
+  function $$(s) { return Array.from(document.querySelectorAll(s)); }
+
+  async function supaGet(path) {
+    const url = `${SUPABASE_URL}/rest/v1/${path}`;
+    const r = await fetch(url, { headers: { apikey: SUPABASE_ANON, Authorization: `Bearer ${SUPABASE_ANON}` } });
+    if (!r.ok) throw new Error(`supabase ${r.status}: ${await r.text()}`);
+    return r.json();
+  }
+
+  // ── Auth ───────────────────────────────────────────────────────────
+  window.authIn = function() {
+    const v = $('#token-input').value.trim();
+    if (!v) return alert('Token?');
+    token = v;
+    sessionStorage.setItem('admin_token', token);
+    $('#auth-gate').style.display = 'none';
+    $('#app').style.display = 'block';
+    loadCreators();
+  };
+  if (token) {
+    $('#auth-gate').style.display = 'none';
+    $('#app').style.display = 'block';
+    loadCreators();
+  }
+
+  // ── Creators list ──────────────────────────────────────────────────
+  async function loadCreators() {
+    const list = $('#creators-list');
+    list.innerHTML = `<p class="sub">Loading…</p>`;
+    const creators = await supaGet('creators?is_active=eq.true&order=created_at.desc');
+
+    // Click + assignment counts per creator.
+    const enriched = await Promise.all(creators.map(async (c) => {
+      const [clicks, vids] = await Promise.all([
+        fetch(`${SUPABASE_URL}/rest/v1/referral_clicks?slug=eq.${encodeURIComponent(c.slug)}&select=count`, {
+          headers: { apikey: SUPABASE_ANON, Authorization: `Bearer ${SUPABASE_ANON}`, Prefer: 'count=exact' },
+        }).then((r) => parseInt(r.headers.get('content-range')?.split('/')[1] || '0', 10)),
+        fetch(`${SUPABASE_URL}/rest/v1/creator_video_assignments?creator_slug=eq.${encodeURIComponent(c.slug)}&is_active=eq.true&select=count`, {
+          headers: { apikey: SUPABASE_ANON, Authorization: `Bearer ${SUPABASE_ANON}`, Prefer: 'count=exact' },
+        }).then((r) => parseInt(r.headers.get('content-range')?.split('/')[1] || '0', 10)),
+      ]);
+      return { ...c, clicks, vids };
+    }));
+
+    list.innerHTML = enriched.map((c) => `
+      <div class="card">
+        <h2 class="creator-name">${escapeHtml(c.display_name)}</h2>
+        <p class="creator-meta">
+          ${escapeHtml(c.contact_phone || '')} ${c.contact_email ? '· ' + escapeHtml(c.contact_email) : ''}
+        </p>
+        <div class="stats">
+          <span class="stat">${c.vids} video${c.vids === 1 ? '' : 's'} on portal</span>
+          <span class="stat">${c.clicks} click${c.clicks === 1 ? '' : 's'} all-time</span>
+          <span class="stat">/c/${escapeHtml(c.slug)}</span>
+        </div>
+        <button class="btn" onclick="openPush('${escapeAttr(c.slug)}', '${escapeAttr(c.display_name)}')">+ Push videos</button>
+        <a class="btn btn--ghost" href="/c/${encodeURIComponent(c.slug)}" target="_blank" style="margin-left:8px;">View portal →</a>
+      </div>
+    `).join('');
+  }
+
+  // ── Push modal ─────────────────────────────────────────────────────
+  window.openPush = async function(slug, name) {
+    pushTargetSlug = slug;
+    pickedIds.clear();
+    activeCat = null;
+    $('#push-title').textContent = `Push videos to ${name}`;
+    $('#push-sub').textContent = `Pick up to 5 videos. Each gets ${name}'s QR (digitalbloom.store/go/${slug}) burned in before it lands on her portal.`;
+    $('#push-modal').classList.add('show');
+    $('#push-log').style.display = 'none';
+    $('#push-log').textContent = '';
+    if (allProducts.length === 0) {
+      const data = await supaGet('products?is_active=eq.true&order=created_at.desc&limit=200&select=id,name,category,video_file_url,video_url');
+      allProducts = data.filter((p) => p.video_file_url || p.video_url);
+    }
+    renderCategoryChips();
+    renderProductGrid();
+    updatePickedCount();
+  };
+
+  function renderCategoryChips() {
+    const cats = Array.from(new Set(allProducts.map((p) => p.category).filter(Boolean))).sort();
+    const html = ['<span class="chip ' + (activeCat === null ? 'active' : '') + '" data-cat="">All</span>']
+      .concat(cats.map((c) => `<span class="chip ${activeCat === c ? 'active' : ''}" data-cat="${escapeAttr(c)}">${escapeHtml(c)}</span>`))
+      .join('');
+    $('#cat-chips').innerHTML = html;
+    $$('#cat-chips .chip').forEach((el) => {
+      el.onclick = () => { activeCat = el.dataset.cat || null; renderCategoryChips(); renderProductGrid(); };
+    });
+  }
+
+  function renderProductGrid() {
+    const filtered = activeCat ? allProducts.filter((p) => p.category === activeCat) : allProducts;
+    const grid = $('#product-grid');
+    grid.innerHTML = filtered.map((p) => {
+      const url = p.video_file_url || p.video_url;
+      const sel = pickedIds.has(p.id) ? 'selected' : '';
+      return `<div class="product-tile ${sel}" data-id="${escapeAttr(p.id)}">
+        <video src="${escapeAttr(url)}" muted playsinline preload="metadata" loop onmouseenter="this.play()" onmouseleave="this.pause()"></video>
+        <div class="title">${escapeHtml(p.name)}</div>
+      </div>`;
+    }).join('');
+    $$('#product-grid .product-tile').forEach((el) => {
+      el.onclick = () => {
+        const id = el.dataset.id;
+        if (pickedIds.has(id)) pickedIds.delete(id);
+        else if (pickedIds.size < 5) pickedIds.add(id);
+        else { alert('Max 5 per push. Push these, then push another batch.'); return; }
+        el.classList.toggle('selected', pickedIds.has(id));
+        updatePickedCount();
+      };
+    });
+  }
+
+  function updatePickedCount() {
+    $('#picked-count').textContent = `${pickedIds.size}/5 selected`;
+    $('#push-btn').disabled = pickedIds.size === 0;
+  }
+
+  window.closeModal = function() { $('#push-modal').classList.remove('show'); };
+  window.closeModalBg = function(e) { if (e.target.id === 'push-modal') closeModal(); };
+
+  window.doPush = async function() {
+    const ids = Array.from(pickedIds);
+    if (ids.length === 0) return;
+    $('#push-btn').disabled = true;
+    const log = $('#push-log');
+    log.style.display = 'block';
+    log.textContent = `Pushing ${ids.length} video(s) to ${pushTargetSlug}…\n(this takes ~10s per video — burning QR + uploading)\n\n`;
+    try {
+      const r = await fetch('/api/admin/creator-push', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-admin-token': token },
+        body: JSON.stringify({ creatorSlug: pushTargetSlug, productIds: ids }),
+      });
+      const j = await r.json();
+      if (!r.ok) {
+        log.innerHTML += `<span class="bad">ERROR: ${escapeHtml(j.error || r.statusText)}</span>\n`;
+        $('#push-btn').disabled = false;
+        return;
+      }
+      for (const result of j.results || []) {
+        if (result.ok) {
+          log.innerHTML += `<span class="ok">✓ ${escapeHtml(result.name)}</span>\n`;
+        } else {
+          log.innerHTML += `<span class="bad">✗ ${escapeHtml(result.name)} — ${escapeHtml(result.reason)}</span>\n`;
+        }
+      }
+      log.innerHTML += `\nDone. View portal at /c/${escapeHtml(pushTargetSlug)} (refresh to see new tiles).`;
+      pickedIds.clear();
+      renderProductGrid();
+      updatePickedCount();
+      // Refresh creators list to show updated video count.
+      loadCreators();
+    } catch (err) {
+      log.innerHTML += `<span class="bad">ERROR: ${escapeHtml(String(err.message || err))}</span>`;
+      $('#push-btn').disabled = false;
+    }
+  };
+
+  // ── helpers ────────────────────────────────────────────────────────
+  function escapeHtml(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c])); }
+  function escapeAttr(s) { return escapeHtml(s); }
+</script>
+</body>
+</html>
