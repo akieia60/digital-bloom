@@ -241,27 +241,35 @@ const Success = () => {
           </p>
         </div>
 
-        <div className="success-card">
-          <h3 className="success-card-label">{t('success_order_summary')}</h3>
-          <div className="success-row">
-            <span className="success-row-label">{t('success_session')}</span>
-            <span className="success-row-value success-row-mono">{displayId}</span>
+        {/* Order summary (Session / Items / Total / Status) is now
+            email-only for bloom purchases. Ak + Gamble 2026-05-07:
+            "the only thing that should come up is the bottom box —
+            the protected bloom link. Everything else goes in the
+            email or invoice." Credit purchases keep their dedicated
+            credit-code card below; this one is gone for non-credit. */}
+        {isCreditPurchase && (
+          <div className="success-card">
+            <h3 className="success-card-label">{t('success_order_summary')}</h3>
+            <div className="success-row">
+              <span className="success-row-label">{t('success_session')}</span>
+              <span className="success-row-value success-row-mono">{displayId}</span>
+            </div>
+            <div className="success-row">
+              <span className="success-row-label">{t('success_items')}</span>
+              <span className="success-row-value">1</span>
+            </div>
+            <div className="success-row">
+              <span className="success-row-label">{t('success_total')}</span>
+              <span className="success-row-value success-row-gold">${totalAmount}</span>
+            </div>
+            <div className="success-row success-row-last">
+              <span className="success-row-label">{t('success_status')}</span>
+              <span className="success-badge">
+                {checkout?.checkout_status === 'completed' ? t('success_status_confirmed') : t('success_status_processing')}
+              </span>
+            </div>
           </div>
-          <div className="success-row">
-            <span className="success-row-label">{t('success_items')}</span>
-            <span className="success-row-value">{isCreditPurchase ? 1 : purchases.length}</span>
-          </div>
-          <div className="success-row">
-            <span className="success-row-label">{t('success_total')}</span>
-            <span className="success-row-value success-row-gold">${totalAmount}</span>
-          </div>
-          <div className="success-row success-row-last">
-            <span className="success-row-label">{t('success_status')}</span>
-            <span className="success-badge">
-              {checkout?.checkout_status === 'completed' ? t('success_status_confirmed') : t('success_status_processing')}
-            </span>
-          </div>
-        </div>
+        )}
 
         {isCreditPurchase && (
           <div className="success-card">
@@ -346,117 +354,18 @@ const Success = () => {
           </div>
         )}
 
-        {!isCreditPurchase && queuedBloomPurchases.length > 0 && (
-          <div className="success-card success-card--highlight">
-            <h3 className="success-card-label">Scheduled delivery</h3>
-            {queuedBloomPurchases.map((purchase) => (
-              <div key={purchase.id} className="success-row success-row-last" style={{ display: 'block', marginBottom: '14px' }}>
-                <div className="success-row" style={{ paddingTop: 0 }}>
-                  <span className="success-row-label">{purchase.products?.name || t('success_bloom')}</span>
-                  <span className="success-row-value success-row-gold">{purchase.delivery?.display_date || 'Scheduled soon'}</span>
-                </div>
-                <p className="success-card-text success-card-text--tight">
-                  We’ll email this protected bloom to {purchase.delivery?.recipient_email || purchase.delivery?.purchaser_email || 'the selected inbox'} on {purchase.delivery?.display_date || 'the scheduled date'}.
-                </p>
-              </div>
-            ))}
-          </div>
-        )}
+        {/* Removed 2026-05-07: "Scheduled delivery" + "Delivery emails
+            sent" cards. The Experiences card below already surfaces
+            scheduled-status per purchase, and the email IS the
+            receipt/invoice now — the page doesn't need to repeat it. */}
 
-        {!isCreditPurchase && deliveredBloomPurchases.length > 0 && (
-          <div className="success-card">
-            <h3 className="success-card-label">Delivery emails sent</h3>
-            {deliveredBloomPurchases.map((purchase) => (
-              <div key={purchase.id} className="success-row success-row-last" style={{ display: 'block', marginBottom: '14px' }}>
-                <div className="success-row" style={{ paddingTop: 0 }}>
-                  <span className="success-row-label">{purchase.products?.name || t('success_bloom')}</span>
-                  <span className="success-row-value success-row-gold">
-                    {purchase.delivery?.test_label ? 'Test email sent' : 'Email sent'}
-                  </span>
-                </div>
-                <p className="success-card-text success-card-text--tight">
-                  Sent to {purchase.delivery?.recipient_email || purchase.delivery?.purchaser_email || 'the selected inbox'}.
-                </p>
-              </div>
-            ))}
-          </div>
-        )}
-
-        {!isCreditPurchase && (
-          <div className="success-card">
-            <h3 className="success-card-label">{t('success_experiences')}</h3>
-            {purchases.map((purchase) => {
-              const isReady = (purchase.download_url && (!purchase.download_expires_at || new Date(purchase.download_expires_at) > new Date()))
-                || (purchase.has_customization && String(purchase.status || '').toLowerCase() === 'completed' && purchase.bloom_slug);
-              const isRenderPending = purchase.has_customization && !purchase.download_url && String(purchase.status || '').toLowerCase() !== 'completed';
-              const isScheduledHold = purchase.delivery?.delivery_mode === 'scheduled' && purchase.delivery?.email_status !== 'sent';
-              return (
-                <div key={purchase.id} className="success-row success-row-last" style={{ display: 'block', marginBottom: '16px' }}>
-                  <div className="success-row" style={{ paddingTop: 0 }}>
-                    <span className="success-row-label">{purchase.products?.name || t('success_default_product')}</span>
-                    <span className="success-row-value">{getPurchaseStatusLabel(purchase.status)}</span>
-                  </div>
-                  {isScheduledHold ? (
-                    <p className="success-card-text" style={{ marginTop: '12px' }}>
-                      Scheduled for delivery on {purchase.delivery?.display_date || 'the selected date'}.
-                    </p>
-                  ) : isRenderPending ? (
-                    <p className="success-card-text" style={{ marginTop: '12px' }}>
-                      We’re still rendering the protected bloom video. Refresh in a moment and we’ll unlock the final delivery view here.
-                    </p>
-                  ) : isReady ? (
-                    purchase.bloom_slug ? (
-                      <div style={{ marginTop: '12px' }}>
-                        {/* Buyer → /manage (stamped). The clean /gift/ link
-                            is reserved for the recipient via the share URL.
-                            The raw download_url fallback was removed for
-                            blooms — buyer never gets a clean MP4. */}
-                        <Link to={`/bloom/${purchase.bloom_slug}/manage`} className="success-btn-gold">
-                          {t('success_open_bloom')}
-                        </Link>
-                        <p className="success-card-text" style={{ marginTop: '10px' }}>
-                          {t('success_protected_link_note')}
-                        </p>
-                      </div>
-                    ) : purchase.download_url ? (
-                      // Non-bloom artifact (e.g. credit-pack invoice PDF) —
-                      // direct download is fine here, this isn't a bloom file.
-                      <a href={purchase.download_url} download className="success-btn-gold" style={{ marginTop: '12px' }}>
-                        {t('success_download')}
-                      </a>
-                    ) : null
-                  ) : (
-                    <p className="success-card-text" style={{ marginTop: '12px' }}>
-                      {purchase.has_customization
-                        ? t('success_personalized_pending')
-                        : t('success_standard_pending')}
-                    </p>
-                  )}
-                  {purchase.bloom_slug && !isScheduledHold && (
-                    <p className="success-note" style={{ marginTop: '10px' }}>
-                      {t('success_view_link')} <Link to={`/bloom/${purchase.bloom_slug}/manage`}>{t('success_open_bloom')}</Link>
-                    </p>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        )}
-
-        {!isCreditPurchase && sendReadyPurchases.length > 0 && (
-          <div className="success-card">
-            <h3 className="success-card-label">{t('success_bloom_links')}</h3>
-            {sendReadyPurchases.map((purchase) => (
-              <div key={purchase.id} className="success-row">
-                <span className="success-row-label">{purchase.products?.name || t('success_bloom')}</span>
-                {/* Buyer → /manage (stamped view) — never the clean /gift/ link. */}
-                <Link to={`/bloom/${purchase.bloom_slug}/manage`} className="success-row-value success-row-gold">
-                  {t('success_view_bloom')}
-                </Link>
-              </div>
-            ))}
-          </div>
-        )}
+        {/* Removed 2026-05-07 (Ak + Gamble): the Experiences card and
+            the Bloom Links card both duplicated the action that lives
+            in the Send Protected Link box below. The buyer now sees
+            ONE box on a clean success page — the protected link
+            actions. Pending-render state is still handled by the
+            Processing card above. The receipt + scheduled-send
+            confirmation is in the buyer's email. */}
 
         {!isCreditPurchase && sendReadyPurchases.length > 0 && (
           <div className="success-card">
