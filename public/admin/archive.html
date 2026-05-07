@@ -76,6 +76,11 @@
   button.action.buffer { background:#0f2f24; color:#9be39b; border:1px solid #2f8f65; margin-top:8px; }
   button.action.buffer-copy { background:#0a142a; color:#f4ebd0; border:1px solid #2a3e5e; margin-top:8px; }
   button.action.buffer-open { background:#D4AF37; color:#0D1B36; margin-top:8px; }
+  /* Bre's Pull button (2026-05-07): QR-burn the source video and serve
+     it as a forced-download URL she can tap to save to Photos / Files. */
+  button.action.bre-pull { background:#2a1f3d; color:#e0c0ff; border:1px solid #6e4ca0; margin-top:8px; }
+  button.action.bre-pull.working { background:#1a1428; color:#9678c0; border-color:#3a2858; cursor:default; }
+  button.action.bre-pull.ready { background:#D4AF37; color:#0D1B36; border-color:#D4AF37; }
   button.action:disabled { background:#2a3e5e; color:#7a8fad; border-color:#2a3e5e; cursor:default; }
   button.action.done { background:#1f3a1f; color:#5cba5c; border:1px solid #1f3a1f; }
   .buffer-state { display:inline-block; font-size:0.6rem; letter-spacing:0.1em; text-transform:uppercase; padding:3px 8px; border-radius:10px; font-weight:700; margin:0 0 6px 6px; border:1px solid #2a3e5e; color:#8da4c5; }
@@ -523,6 +528,43 @@ async function smartRestore(productId, btn) {
   }
 }
 
+// Bre's pull workflow (2026-05-07 — replaces /c/breana + creator portal):
+// Server burns a tracked QR onto the source video, uploads to Vercel
+// Blob with public access, and returns a `?download=<name>.mp4` URL
+// that iOS Safari + Android Chrome both honor as a Save dialog.
+// We don't auto-trigger the navigation — many mobile browsers block
+// programmatic downloads. Instead the button mutates into a tappable
+// link Bre presses to save.
+async function brePull(productId, btn) {
+  const orig = btn.textContent;
+  btn.disabled = true;
+  btn.classList.add('working');
+  btn.textContent = 'Burning QR…';
+  try {
+    const r = await fetch('/api/admin/bre-download', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Admin-Token': TOKEN,
+      },
+      body: JSON.stringify({ productId, slug: 'bre' }),
+    });
+    const j = await r.json();
+    if (!r.ok) throw new Error(j.error || 'burn failed');
+    btn.classList.remove('working');
+    btn.classList.add('ready');
+    btn.disabled = false;
+    btn.textContent = '⬇ TAP TO SAVE';
+    btn.onclick = () => { window.location.href = j.downloadUrl; };
+    toast('Ready — tap the button to save to your phone.');
+  } catch (e) {
+    btn.classList.remove('working');
+    btn.disabled = false;
+    btn.textContent = orig;
+    toast(e.message, false);
+  }
+}
+
 async function archiveProduct(productId, btn) {
   const orig = btn.textContent;
   btn.disabled = true;
@@ -596,6 +638,9 @@ function productsGrid(items, mode) {
     const btnClass = isActive ? 'archive' : 'restore';
     const cardClass = isActive ? 'archive-mode' : '';
     const audit = escape(fmtAudit(p.last_action_by, p.last_action_at));
+    const breBtn = isActive
+      ? `<button class="action bre-pull" onclick="brePull('${p.id}', this)">📥 Bre Pull (QR + Download)</button>`
+      : '';
     return `<div class="card ${cardClass}">
       ${ribbon}
       <div class="video-wrap">${media}${fbIcon('product', p.id, p.name || 'Untitled', poster, vid)}</div>
@@ -604,6 +649,7 @@ function productsGrid(items, mode) {
         <div class="date">${date}</div>
         <div class="audit">${audit}</div>
         <button class="action ${btnClass}" onclick="${btnHandler}">${btnLabel}</button>
+        ${breBtn}
       </div>
     </div>`;
   }).join('');
