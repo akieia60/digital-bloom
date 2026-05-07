@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import BloomListCard from '../components/BloomListCard';
 import SubcatLane from '../components/SubcatLane';
 import { useProducts } from '../hooks/useProducts';
@@ -28,7 +28,6 @@ const LANE_CATALOG = [
 
 export default function CategoryPage() {
   const { categorySlug } = useParams();
-  const navigate = useNavigate();
   // Prefer the canonical taxonomy; fall back to legacy OCCASIONS for slugs
   // like 'gratitude' or 'baby' that exist only in the legacy customizer data.
   const canonical = CATEGORY_BY_SLUG[categorySlug];
@@ -127,28 +126,25 @@ export default function CategoryPage() {
 
   return (
     <div className="min-h-screen bg-[var(--bg-page)]">
-      {/* Sticky floating back button — stays visible as the user scrolls */}
-      <button
-        onClick={() => navigate(-1)}
-        type="button"
-        aria-label="Back"
-        className="db-sticky-back"
-      >
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-        </svg>
-        <span>Back</span>
-      </button>
-
-      {/* Category Hero — Ak 2026-05-07 #2: dropped the salesPitch box.
-          Title + tagline only so the search bar gets breathing room
-          and the sticky Back button doesn't fight the copy. */}
-      <section className="relative pt-32 sm:pt-28 pb-8 px-6 text-center overflow-hidden">
+      {/* Category Hero — Ak 2026-05-07 #3: removed the floating sticky
+          Back pill (it was overlapping the title on phones). The
+          "All Occasions" eyebrow is now the Back link, prefixed with
+          a chevron and left-aligned so it sits cleanly above the
+          title with no overlay. Same destination — /shop — which is
+          where back-from-category-page belongs in the hierarchy. */}
+      <section className="relative pt-28 sm:pt-24 pb-8 px-6 text-center overflow-hidden">
         <div className="absolute top-0 left-0 right-0 h-1" style={{ background: `linear-gradient(90deg, ${occasion.accent}, ${occasion.accent}66)` }} />
         <div className="absolute inset-0 opacity-[0.07] pointer-events-none" style={{ background: `radial-gradient(ellipse at 50% 0%, ${occasion.accent}, transparent 65%)` }} />
 
-        <div className="relative flex items-center justify-center gap-4 mb-6">
-          <Link to="/shop" className="inline-flex items-center text-[11px] uppercase tracking-[0.15em] hover:text-[var(--accent-gold)] transition-colors font-medium" style={{ color: 'rgba(255,255,255,0.6)' }}>
+        <div className="relative flex items-center mb-6 px-1">
+          <Link
+            to="/shop"
+            className="inline-flex items-center gap-2 text-[11px] uppercase tracking-[0.15em] font-semibold transition-colors"
+            style={{ color: 'rgba(255,255,255,0.7)' }}
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true" style={{ width: 14, height: 14, color: '#D4AF37' }}>
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
             All Occasions
           </Link>
         </div>
