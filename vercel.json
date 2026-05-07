@@ -59,6 +59,14 @@
       "destination": "/guide.html"
     },
     {
+      "source": "/marketing",
+      "destination": "/marketing.html"
+    },
+    {
+      "source": "/marketing.html",
+      "destination": "/marketing.html"
+    },
+    {
       "source": "/go/:slug",
       "destination": "/api/go?slug=:slug"
     },
