@@ -431,13 +431,14 @@ function feedbackQueue(items) {
   }).join('')}</div>`;
 }
 
-function toast(msg, ok=true) {
+function toast(msg, ok=true, durationMs=2600) {
   const t = document.getElementById('toast');
   t.textContent = msg;
   t.style.background = ok ? '#1f3a1f' : '#3a1010';
   t.style.color = ok ? '#5cba5c' : '#ff8888';
   t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2600);
+  if (toast._timer) clearTimeout(toast._timer);
+  toast._timer = setTimeout(() => t.classList.remove('show'), durationMs);
 }
 
 function loadVideo(el) {
@@ -554,9 +555,25 @@ async function brePull(productId, btn) {
     btn.classList.remove('working');
     btn.classList.add('ready');
     btn.disabled = false;
-    btn.textContent = '⬇ TAP TO SAVE';
-    btn.onclick = () => { window.location.href = j.downloadUrl; };
-    toast('Ready — tap the button to save to your phone.');
+    btn.textContent = '⬇ TAP TO SAVE TO PHONE';
+    // Use a real anchor click instead of window.location.href — iOS Safari
+    // honors the `download` attribute on same-origin anchors more reliably.
+    // The blob URL is cross-origin but Vercel Blob is uploaded with
+    // application/octet-stream, which makes Safari prompt to save.
+    btn.onclick = (event) => {
+      event.preventDefault();
+      const a = document.createElement('a');
+      a.href = j.downloadUrl;
+      a.download = j.fileName || 'bloom.mp4';
+      a.rel = 'noopener';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      // Tell Bre exactly where the file landed — the #1 question after
+      // a mobile download is "where did it go?"
+      toast('Saved. Open the Files app → On My iPhone → Downloads. Or tap the share-sheet ↗ in Safari to send straight to Photos.', true, 8000);
+    };
+    toast('Ready — tap the gold "Tap to save" button.');
   } catch (e) {
     btn.classList.remove('working');
     btn.disabled = false;

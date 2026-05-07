@@ -79,10 +79,15 @@ export async function burnQrAndUpload({ inputUrl, slug, title, category, bucket 
     // storage path, so we don't need to repeat it here.
     const blobPath = `${bucket}/${category || 'misc'}/${safeName}-${stamp}.mp4`;
 
+    // Content-Type matters here: video/mp4 makes iOS Safari OPEN the
+    // file inline and ignore `?download=`. application/octet-stream
+    // forces Safari to show the Save dialog instead. The QR-burned
+    // videos aren't previewed anywhere else (the storefront uses the
+    // unmarked source video), so the binary content-type is fine.
     const result = await put(blobPath, buf, {
       access: 'public',
       token: process.env.BLOB_READ_WRITE_TOKEN,
-      contentType: 'video/mp4',
+      contentType: 'application/octet-stream',
       addRandomSuffix: false,
     });
 
