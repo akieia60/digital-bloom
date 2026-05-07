@@ -10,8 +10,19 @@ import { CATEGORY_BY_SLUG } from '../data/categories';
 // slug (set at publish time from the prompt's badge — see
 // api/process-bloom.js). Chips with zero matches in the current category
 // auto-hide so customers never tap an empty pill.
+// Each chip filters in-category products by `subcategory`. Chips with zero
+// matches in the current category auto-hide so customers never tap an empty
+// pill. The list mixes legacy slugs (mother-of-my-children, single-mom, …)
+// with the 2026-05-07 backfill buckets (from-son, for-grandma, memorial, …)
+// so every category shows whatever pills it actually has products for.
 const RECIPIENT_CHIPS = [
-  { label: 'For Mom',          subcategory: null }, // default — clear filter
+  { label: 'All',              subcategory: null }, // default — clear filter
+  { label: 'For Mom',          subcategory: 'for-mom' },
+  { label: 'From Son',         subcategory: 'from-son' },
+  { label: 'For Grandma',      subcategory: 'for-grandma' },
+  { label: 'For New Mom',      subcategory: 'new-mom' },
+  { label: 'In Memory',        subcategory: 'memorial' },
+  { label: 'Long Distance',    subcategory: 'long-distance' },
   { label: 'For Wife',         subcategory: 'mother-of-my-children' },
   { label: 'For Friend',       subcategory: 'friend-honoring' },
   { label: 'For Stepmom',      subcategory: 'stepmom' },
