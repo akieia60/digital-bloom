@@ -60,7 +60,7 @@
     },
     {
       "source": "/go/:slug",
-      "destination": "/api/go/:slug"
+      "destination": "/api/go?slug=:slug"
     },
     {
       "source": "/(.*)",
