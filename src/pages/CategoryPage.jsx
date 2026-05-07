@@ -5,26 +5,7 @@ import SubcatLane from '../components/SubcatLane';
 import { useProducts } from '../hooks/useProducts';
 import OCCASIONS from '../data/occasions';
 import { CATEGORY_BY_SLUG } from '../data/categories';
-
-// Lane catalog (Ak whiteboard 2026-05-07): each entry is a potential
-// row on the category page. Rows with products show the strip; rows
-// with no products yet show a "Coming soon" placeholder so customers
-// see the breadth of the catalog. Order is editorial — closest
-// recipients (Mom, Grandma) first, support roles after, sender-side
-// labels (From Son) mixed in where they read naturally.
-const LANE_CATALOG = [
-  { slug: 'for-mom',               label: 'For Mom',          tagline: 'The classic — for the woman who raised you.' },
-  { slug: 'for-grandma',           label: 'For Grandma',      tagline: 'Matriarch, heirloom, the garden she planted.' },
-  { slug: 'new-mom',               label: 'For New Mom',      tagline: 'First Mother\'s Day — quiet awe, new motherhood.' },
-  { slug: 'mother-of-my-children', label: 'For Wife',         tagline: 'From a husband — the mother of your children.' },
-  { slug: 'stepmom',               label: 'For Stepmom',      tagline: 'The woman who chose to show up.' },
-  { slug: 'godmother-auntie',      label: 'For Auntie',       tagline: 'Auntie, godmother, the second mom in the family.' },
-  { slug: 'single-mom',            label: 'For Single Mom',   tagline: 'For the mom who did it on her own.' },
-  { slug: 'friend-honoring',       label: 'For Friend',       tagline: 'For your friend — celebrate her motherhood.' },
-  { slug: 'from-son',              label: 'From a Son',       tagline: 'Masculine tribute — son\'s perspective on Mom.' },
-  { slug: 'long-distance',         label: 'Long Distance',    tagline: 'When miles are between you and her.' },
-  { slug: 'memorial',              label: 'In Memory',        tagline: 'For the mother whose love still blooms.' },
-];
+import { getLaneCatalog } from '../data/laneCatalogs';
 
 export default function CategoryPage() {
   const { categorySlug } = useParams();
@@ -49,26 +30,43 @@ export default function CategoryPage() {
   // Non-empty = flat list across every subcategory matching the query.
   const [search, setSearch] = useState('');
 
-  // Bucket products by subcategory so each LANE_CATALOG row gets its
-  // matched products in O(n) instead of O(n²).
+  // Lane catalog for THIS category (or null when there's no catalog
+  // defined yet). David caught Mother's Day relationships leaking into
+  // Father's Day on 2026-05-07 PM — fix is to scope the catalog to the
+  // category slug and fall back to a flat grid when there's no
+  // editorial catalog for the page.
+  const laneCatalog = useMemo(() => getLaneCatalog(categorySlug), [categorySlug]);
+
+  // Bucket products by their subcategory tag, only for categories that
+  // have a lane catalog. Untagged products fall into a "more" bucket
+  // that the page renders below the lanes (instead of being silently
+  // forced into For Mom which is the bug David caught).
   const productsBySubcat = useMemo(() => {
+    if (!laneCatalog) return null;
     const map = new Map();
     for (const p of categoryProducts) {
-      const key = p.subcategory || 'for-mom'; // untagged → default lane
+      const key = p.subcategory || '__untagged';
       if (!map.has(key)) map.set(key, []);
       map.get(key).push(p);
     }
     return map;
-  }, [categoryProducts]);
+  }, [categoryProducts, laneCatalog]);
 
-  // The lanes we actually render: every catalog entry, marked
-  // populated or coming-soon based on whether this category has
-  // products under that subcategory.
   const lanes = useMemo(() => {
-    return LANE_CATALOG.map((entry) => {
+    if (!laneCatalog || !productsBySubcat) return [];
+    return laneCatalog.map((entry) => {
       const items = productsBySubcat.get(entry.slug) || [];
       return { ...entry, products: items, comingSoon: items.length === 0 };
     });
+  }, [laneCatalog, productsBySubcat]);
+
+  // Untagged products in a category that DOES have a lane catalog —
+  // render them in a final "more in this collection" lane so they
+  // don't disappear from the page just because Monique hasn't tagged
+  // them yet.
+  const untaggedProducts = useMemo(() => {
+    if (!productsBySubcat) return [];
+    return productsBySubcat.get('__untagged') || [];
   }, [productsBySubcat]);
 
   // Search results — flat list, used when search is non-empty.
@@ -245,8 +243,13 @@ export default function CategoryPage() {
                 </div>
               )}
             </div>
-          ) : (
-            // Lane mode: stacked subcategory rows, each horizontally scrollable.
+          ) : laneCatalog ? (
+            // Lane mode: this category has an editorial catalog
+            // (Mother's Day, Father's Day…) — render stacked
+            // subcategory rows. Untagged products in the category
+            // get a final "More blooms in this collection" row so
+            // they aren't hidden just because Monique hasn't
+            // categorized them yet.
             <div className="flex flex-col gap-12">
               {lanes.map((lane) => (
                 <SubcatLane
@@ -257,6 +260,27 @@ export default function CategoryPage() {
                   comingSoon={lane.comingSoon}
                   accent={occasion.accent}
                 />
+              ))}
+              {untaggedProducts.length > 0 && (
+                <SubcatLane
+                  key="__untagged"
+                  label="More in this collection"
+                  tagline="Untagged blooms — being sorted into the rows above."
+                  products={untaggedProducts}
+                  comingSoon={false}
+                  accent={occasion.accent}
+                />
+              )}
+            </div>
+          ) : (
+            // Flat-grid mode: this category has no lane catalog yet
+            // (Birthday, Anniversary, Graduation, etc.) — render the
+            // full category as a stacked list using the existing
+            // BloomListCard. Avoids the bug where Mother's Day
+            // relationship rows leaked into other categories.
+            <div className="max-w-3xl mx-auto flex flex-col gap-6">
+              {categoryProducts.map((product) => (
+                <BloomListCard key={product.id} product={product} />
               ))}
             </div>
           )}
