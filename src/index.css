@@ -578,6 +578,228 @@ img {
 }
 
 /* ============================================
+   SUBCAT LANE — Horizontal subcategory rows
+   (Ak whiteboard sketch 2026-05-07)
+   Replaces the full-width grid on category pages so each
+   recipient subcategory gets its own labeled, swipeable strip.
+   ============================================ */
+.subcat-lane {
+  width: 100%;
+}
+
+.subcat-lane__header {
+  margin-bottom: 14px;
+  padding: 0 4px;
+}
+
+.subcat-lane__title-row {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+}
+
+.subcat-lane__title {
+  font-family: 'Playfair Display', 'Georgia', serif;
+  font-size: clamp(1.25rem, 3vw, 1.6rem);
+  font-weight: 500;
+  color: #FFFFFF;
+  margin: 0;
+  letter-spacing: 0.01em;
+}
+
+.subcat-lane__count {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+  font-weight: 500;
+}
+
+.subcat-lane__tagline {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 300;
+  color: rgba(255, 255, 255, 0.6);
+  margin: 4px 0 0;
+  line-height: 1.5;
+}
+
+/* Horizontal scrolling strip — phone-native swipe gesture, snap to tile. */
+.subcat-lane__strip {
+  display: flex;
+  flex-direction: row;
+  gap: 14px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  padding: 4px 4px 16px;
+  /* Negative margin + padding combo lets the first/last tile bleed
+     to the page edge instead of leaving an awkward gutter. */
+  margin: 0 -4px;
+}
+
+.subcat-lane__strip::-webkit-scrollbar {
+  height: 6px;
+}
+
+.subcat-lane__strip::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 4px;
+}
+
+.subcat-lane__strip::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+}
+
+.subcat-lane__strip-item {
+  flex: 0 0 auto;
+  width: 200px;
+  scroll-snap-align: start;
+}
+
+@media (min-width: 768px) {
+  .subcat-lane__strip-item {
+    width: 240px;
+  }
+}
+
+/* Coming-soon strip — single placeholder tile at the start of the row. */
+.subcat-lane__coming-soon {
+  padding: 4px 4px 16px;
+  margin: 0 -4px;
+}
+
+.subcat-lane__coming-soon-tile {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 200px;
+  min-height: 240px;
+  padding: 24px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px dashed rgba(255, 255, 255, 0.18);
+}
+
+@media (min-width: 768px) {
+  .subcat-lane__coming-soon-tile {
+    width: 240px;
+    min-height: 280px;
+  }
+}
+
+.subcat-lane__coming-soon-eyebrow {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.65rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent-gold);
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.subcat-lane__coming-soon-copy {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 300;
+  color: rgba(255, 255, 255, 0.6);
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* ============================================
+   BLOOM LANE TILE — Compact card inside a lane strip
+   ============================================ */
+.bloom-lane-tile {
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  border-radius: 14px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              border-color 0.3s,
+              box-shadow 0.3s;
+  cursor: pointer;
+  height: 100%;
+}
+
+.bloom-lane-tile:hover {
+  transform: translateY(-3px);
+  border-color: var(--accent-gold-border-hover);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+}
+
+.bloom-lane-tile__media {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  background: #111;
+}
+
+.bloom-lane-tile__poster,
+.bloom-lane-tile__poster-placeholder {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.bloom-lane-tile__poster-placeholder {
+  background: linear-gradient(135deg, #1a2640, #0d1b36);
+}
+
+.bloom-lane-tile__media-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent 60%, rgba(0,0,0,0.55) 100%);
+  pointer-events: none;
+}
+
+.bloom-lane-tile__price {
+  position: absolute;
+  bottom: 10px;
+  right: 12px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--accent-gold);
+  background: rgba(0, 0, 0, 0.65);
+  padding: 4px 10px;
+  border-radius: 999px;
+  letter-spacing: 0.02em;
+  z-index: 2;
+}
+
+.bloom-lane-tile__info {
+  padding: 12px 14px 14px;
+}
+
+.bloom-lane-tile__name {
+  font-family: 'Playfair Display', 'Georgia', serif;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #FFFFFF;
+  margin: 0;
+  line-height: 1.3;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  transition: color 0.3s;
+}
+
+.bloom-lane-tile:hover .bloom-lane-tile__name {
+  color: var(--accent-gold);
+}
+
+/* ============================================
    BLOOM LIST CARD — Occasion label & badge
    ============================================ */
 

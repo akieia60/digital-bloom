@@ -1,33 +1,29 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import BloomListCard from '../components/BloomListCard';
+import SubcatLane from '../components/SubcatLane';
 import { useProducts } from '../hooks/useProducts';
 import OCCASIONS from '../data/occasions';
 import { CATEGORY_BY_SLUG } from '../data/categories';
 
-// Subcategory chips (Ak / David 2026-05-07): each chip filters the
-// in-category list to products tagged with the matching `subcategory`
-// slug (set at publish time from the prompt's badge — see
-// api/process-bloom.js). Chips with zero matches in the current category
-// auto-hide so customers never tap an empty pill.
-// Each chip filters in-category products by `subcategory`. Chips with zero
-// matches in the current category auto-hide so customers never tap an empty
-// pill. The list mixes legacy slugs (mother-of-my-children, single-mom, …)
-// with the 2026-05-07 backfill buckets (from-son, for-grandma, memorial, …)
-// so every category shows whatever pills it actually has products for.
-const RECIPIENT_CHIPS = [
-  { label: 'All',              subcategory: null }, // default — clear filter
-  { label: 'For Mom',          subcategory: 'for-mom' },
-  { label: 'From Son',         subcategory: 'from-son' },
-  { label: 'For Grandma',      subcategory: 'for-grandma' },
-  { label: 'For New Mom',      subcategory: 'new-mom' },
-  { label: 'In Memory',        subcategory: 'memorial' },
-  { label: 'Long Distance',    subcategory: 'long-distance' },
-  { label: 'For Wife',         subcategory: 'mother-of-my-children' },
-  { label: 'For Friend',       subcategory: 'friend-honoring' },
-  { label: 'For Stepmom',      subcategory: 'stepmom' },
-  { label: 'For Auntie',       subcategory: 'godmother-auntie' },
-  { label: 'For Single Mom',   subcategory: 'single-mom' },
+// Lane catalog (Ak whiteboard 2026-05-07): each entry is a potential
+// row on the category page. Rows with products show the strip; rows
+// with no products yet show a "Coming soon" placeholder so customers
+// see the breadth of the catalog. Order is editorial — closest
+// recipients (Mom, Grandma) first, support roles after, sender-side
+// labels (From Son) mixed in where they read naturally.
+const LANE_CATALOG = [
+  { slug: 'for-mom',               label: 'For Mom',          tagline: 'The classic — for the woman who raised you.' },
+  { slug: 'for-grandma',           label: 'For Grandma',      tagline: 'Matriarch, heirloom, the garden she planted.' },
+  { slug: 'new-mom',               label: 'For New Mom',      tagline: 'First Mother\'s Day — quiet awe, new motherhood.' },
+  { slug: 'mother-of-my-children', label: 'For Wife',         tagline: 'From a husband — the mother of your children.' },
+  { slug: 'stepmom',               label: 'For Stepmom',      tagline: 'The woman who chose to show up.' },
+  { slug: 'godmother-auntie',      label: 'For Auntie',       tagline: 'Auntie, godmother, the second mom in the family.' },
+  { slug: 'single-mom',            label: 'For Single Mom',   tagline: 'For the mom who did it on her own.' },
+  { slug: 'friend-honoring',       label: 'For Friend',       tagline: 'For your friend — celebrate her motherhood.' },
+  { slug: 'from-son',              label: 'From a Son',       tagline: 'Masculine tribute — son\'s perspective on Mom.' },
+  { slug: 'long-distance',         label: 'Long Distance',    tagline: 'When miles are between you and her.' },
+  { slug: 'memorial',              label: 'In Memory',        tagline: 'For the mother whose love still blooms.' },
 ];
 
 export default function CategoryPage() {
@@ -50,39 +46,37 @@ export default function CategoryPage() {
     [products, categorySlug],
   );
 
-  // Search-within-category state. Empty string = no filter, show everything.
+  // Search-within-category state. Empty string = no filter, show lanes.
+  // Non-empty = flat list across every subcategory matching the query.
   const [search, setSearch] = useState('');
-  const [activeSubcat, setActiveSubcat] = useState(null);
 
-  // Which subcategories actually have products in this category right now?
-  // Chips that aren't represented get hidden so users never tap an empty pill.
-  const availableSubcats = useMemo(() => {
-    const set = new Set();
+  // Bucket products by subcategory so each LANE_CATALOG row gets its
+  // matched products in O(n) instead of O(n²).
+  const productsBySubcat = useMemo(() => {
+    const map = new Map();
     for (const p of categoryProducts) {
-      if (p.subcategory) set.add(p.subcategory);
+      const key = p.subcategory || 'for-mom'; // untagged → default lane
+      if (!map.has(key)) map.set(key, []);
+      map.get(key).push(p);
     }
-    return set;
+    return map;
   }, [categoryProducts]);
 
-  const visibleChips = useMemo(
-    () => RECIPIENT_CHIPS.filter(
-      (c) => c.subcategory === null || availableSubcats.has(c.subcategory),
-    ),
-    [availableSubcats],
-  );
+  // The lanes we actually render: every catalog entry, marked
+  // populated or coming-soon based on whether this category has
+  // products under that subcategory.
+  const lanes = useMemo(() => {
+    return LANE_CATALOG.map((entry) => {
+      const items = productsBySubcat.get(entry.slug) || [];
+      return { ...entry, products: items, comingSoon: items.length === 0 };
+    });
+  }, [productsBySubcat]);
 
-  const visibleProducts = useMemo(() => {
-    let pool = categoryProducts;
-
-    // Subcategory filter — exact match on the slug stamped at publish time.
-    if (activeSubcat) {
-      pool = pool.filter((p) => p.subcategory === activeSubcat);
-    }
-
-    // Free-text search runs on top of any subcategory filter.
+  // Search results — flat list, used when search is non-empty.
+  const searchResults = useMemo(() => {
     const q = search.trim().toLowerCase();
-    if (!q) return pool;
-    return pool.filter((p) => {
+    if (!q) return [];
+    return categoryProducts.filter((p) => {
       const haystack = [
         p.name || '',
         p.description || '',
@@ -94,14 +88,16 @@ export default function CategoryPage() {
         .toLowerCase();
       return haystack.includes(q);
     });
-  }, [categoryProducts, search, activeSubcat]);
+  }, [categoryProducts, search]);
 
-  // A category is "coming soon" when it's a real category but has no products
-  // yet — so Ak doesn't have to hand-maintain a hardcoded list anymore.
+  const isSearching = search.trim().length > 0;
+
+  // A category is "coming soon" when it's a real category but has no
+  // products yet — so Ak doesn't have to hand-maintain a hardcoded list.
   const isComingSoon = !loading && Boolean(canonical) && categoryProducts.length === 0;
 
-  // Lightweight per-category SEO: set <title> and meta description so each
-  // category page is individually indexable by Google.
+  // Lightweight per-category SEO: set <title> and meta description so
+  // each category page is individually indexable by Google.
   useEffect(() => {
     if (!occasion) return;
     const previousTitle = document.title;
@@ -144,9 +140,10 @@ export default function CategoryPage() {
         <span>Back</span>
       </button>
 
-      {/* Category Hero — pt-44 on mobile so the sticky Back pill (which lives
-          at top:64px from the safe-area inset) doesn't overlap the salesPitch
-          copy. Ak/Breana 2026-05-07 caught Back hovering over the pitch text. */}
+      {/* Category Hero — pt-44 on mobile so the sticky Back pill (which
+          lives at top:64px from the safe-area inset) doesn't overlap
+          the salesPitch copy. Ak/Breana 2026-05-07 caught Back hovering
+          over the pitch text. */}
       <section className="relative pt-44 sm:pt-32 pb-10 px-6 text-center overflow-hidden">
         <div className="absolute top-0 left-0 right-0 h-1" style={{ background: `linear-gradient(90deg, ${occasion.accent}, ${occasion.accent}66)` }} />
         <div className="absolute inset-0 opacity-[0.07] pointer-events-none" style={{ background: `radial-gradient(ellipse at 50% 0%, ${occasion.accent}, transparent 65%)` }} />
@@ -172,7 +169,7 @@ export default function CategoryPage() {
             </p>
           </div>
         )}
-        
+
         <div className="relative mx-auto mt-6 h-[2px] w-12 rounded-full" style={{ background: occasion.accent }} />
       </section>
 
@@ -202,14 +199,10 @@ export default function CategoryPage() {
           </Link>
         </div>
       ) : (
-        /* Full-width stacked bloom cards matching the hand-drawn sketch */
-        <section className="max-w-3xl mx-auto px-4 sm:px-6 pb-32 pt-8">
-          {/* ── SEARCH + RECIPIENT CHIPS (David 2026-05-06):
-              he was on Mother's Day looking for "for a friend who's a mom"
-              with no way to refine. Now he can type "friend" or tap the
-              For Friend chip and the list filters in-place. ── */}
-          <div className="mb-8">
-            <div className="relative mb-4">
+        <section className="max-w-6xl mx-auto px-4 sm:px-6 pb-32 pt-4">
+          {/* Search bar — when active, replaces lanes with a flat list. */}
+          <div className="mb-8 max-w-2xl mx-auto">
+            <div className="relative">
               <input
                 type="text"
                 value={search}
@@ -235,42 +228,19 @@ export default function CategoryPage() {
                 </button>
               )}
             </div>
-            <div className="flex flex-wrap gap-2">
-              {visibleChips.map((chip) => {
-                const isActive = chip.subcategory === activeSubcat;
-                return (
-                  <button
-                    key={chip.label}
-                    type="button"
-                    onClick={() => { setActiveSubcat(chip.subcategory); setSearch(''); }}
-                    className="px-4 py-2 rounded-full text-xs uppercase tracking-[0.12em] font-medium transition-all"
-                    style={{
-                      background: isActive ? occasion.accent : 'rgba(255,255,255,0.06)',
-                      color: isActive ? '#0D1B36' : 'rgba(255,255,255,0.78)',
-                      border: `1px solid ${isActive ? occasion.accent : 'rgba(255,255,255,0.15)'}`,
-                    }}
-                  >
-                    {chip.label}
-                  </button>
-                );
-              })}
-            </div>
           </div>
 
-          <p className="text-[11px] uppercase tracking-[0.15em] text-[var(--text-muted)] mb-8 font-medium">
-            {visibleProducts.length} experience{visibleProducts.length !== 1 ? 's' : ''}
-            {search ? ` matching "${search}"` : (activeSubcat ? ` in this collection` : ' available')}
-          </p>
-
-          {visibleProducts.length === 0 ? (
-            <div className="text-center py-16 px-6 rounded-2xl" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)' }}>
-              <p className="text-[var(--text-secondary)] font-light mb-6">
-                {search
-                  ? <>No {occasion.title.toLowerCase()} blooms match "<span className="font-medium" style={{ color: '#FFFFFF' }}>{search}</span>".</>
-                  : <>No blooms in this collection yet — check back soon.</>}
+          {isSearching ? (
+            // Search mode: flat list across all subcategories.
+            <div className="max-w-3xl mx-auto">
+              <p className="text-[11px] uppercase tracking-[0.15em] text-[var(--text-muted)] mb-6 font-medium text-center">
+                {searchResults.length} match{searchResults.length === 1 ? '' : 'es'} for "{search}"
               </p>
-              {search && (
-                <>
+              {searchResults.length === 0 ? (
+                <div className="text-center py-16 px-6 rounded-2xl" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)' }}>
+                  <p className="text-[var(--text-secondary)] font-light mb-6">
+                    No {occasion.title.toLowerCase()} blooms match "<span className="font-medium" style={{ color: '#FFFFFF' }}>{search}</span>".
+                  </p>
                   <p className="text-sm text-[var(--text-muted)] font-light mb-8">
                     Try searching across every category — the right bloom might live somewhere unexpected.
                   </p>
@@ -280,22 +250,27 @@ export default function CategoryPage() {
                   >
                     Search all blooms for "{search}"
                   </Link>
-                </>
-              )}
-              {!search && activeSubcat && (
-                <button
-                  type="button"
-                  onClick={() => setActiveSubcat(null)}
-                  className="inline-block px-8 py-3 rounded-full text-sm uppercase tracking-widest bg-[var(--accent-gold)] text-[var(--bg-page)] hover:bg-[var(--accent-gold-hover)] transition-all font-semibold"
-                >
-                  Show all {occasion.title.toLowerCase()} blooms
-                </button>
+                </div>
+              ) : (
+                <div className="flex flex-col gap-6">
+                  {searchResults.map((product) => (
+                    <BloomListCard key={product.id} product={product} />
+                  ))}
+                </div>
               )}
             </div>
           ) : (
-            <div className="flex flex-col gap-6">
-              {visibleProducts.map((product) => (
-                <BloomListCard key={product.id} product={product} />
+            // Lane mode: stacked subcategory rows, each horizontally scrollable.
+            <div className="flex flex-col gap-12">
+              {lanes.map((lane) => (
+                <SubcatLane
+                  key={lane.slug}
+                  label={lane.label}
+                  tagline={lane.tagline}
+                  products={lane.products}
+                  comingSoon={lane.comingSoon}
+                  accent={occasion.accent}
+                />
               ))}
             </div>
           )}
