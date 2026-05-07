@@ -144,10 +144,30 @@ export default async function handler(req, res) {
       ? `${promptBadge} — A Digital Bloom by Digital Bloom™.`
       : 'A beautiful Digital Bloom for every occasion.';
 
+    // Extract subcategory from the badge — Monique tags every prompt as
+    // "🌸 Mothers-Day · Friend Honoring · An Incredible Mother". The middle
+    // segment is the human-readable subcategory; we slugify it so the
+    // CategoryPage chips can filter on a stable key. Skips emojis, falls
+    // back to null if the badge doesn't have a middle segment. The
+    // CategoryPage hides chips that have zero matches in this category,
+    // so leaving subcategory null is safe — those rows just live under the
+    // default "For Mom" / un-filtered view.
+    let subcategory = null;
+    if (promptBadge) {
+      const segments = promptBadge.split(/\s+·\s+/).map((s) => s.trim());
+      if (segments.length >= 2) {
+        const middle = segments[1].replace(/[^a-zA-Z0-9 -]/g, '').trim();
+        if (middle) {
+          subcategory = middle.toLowerCase().replace(/\s+/g, '-');
+        }
+      }
+    }
+
     const baseProductPayload = {
       name: title,
       slug: productSlug,
       description,
+      subcategory,
       price: 1.99,
       image_url: videoUrl,
       video_url: videoUrl,

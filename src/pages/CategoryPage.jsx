@@ -5,21 +5,18 @@ import { useProducts } from '../hooks/useProducts';
 import OCCASIONS from '../data/occasions';
 import { CATEGORY_BY_SLUG } from '../data/categories';
 
-// Quick recipient filters (Ak / David 2026-05-06): customers think in terms
-// of WHO they're sending to ("for my friend who's a mom") not just WHAT
-// occasion. Tapping a chip fills the search box with the keyword which then
-// matches against name + description (description now carries Monique's
-// subcategory badge — "Friend Honoring", "Stepmom", etc. — via the
-// process-bloom flow). Keywords below align to Monique's 5 Mother's Day
-// subcategories so each chip lands on a populated set.
+// Subcategory chips (Ak / David 2026-05-07): each chip filters the
+// in-category list to products tagged with the matching `subcategory`
+// slug (set at publish time from the prompt's badge — see
+// api/process-bloom.js). Chips with zero matches in the current category
+// auto-hide so customers never tap an empty pill.
 const RECIPIENT_CHIPS = [
-  { label: 'For Mom',          keyword: 'mom' },
-  { label: 'For Wife',         keyword: 'mother of' },
-  { label: 'For Friend',       keyword: 'friend' },
-  { label: 'For Stepmom',      keyword: 'stepmom' },
-  { label: 'For Auntie',       keyword: 'auntie' },
-  { label: 'For Single Mom',   keyword: 'single' },
-  { label: 'For Anyone',       keyword: '' },
+  { label: 'For Mom',          subcategory: null }, // default — clear filter
+  { label: 'For Wife',         subcategory: 'mother-of-my-children' },
+  { label: 'For Friend',       subcategory: 'friend-honoring' },
+  { label: 'For Stepmom',      subcategory: 'stepmom' },
+  { label: 'For Auntie',       subcategory: 'godmother-auntie' },
+  { label: 'For Single Mom',   subcategory: 'single-mom' },
 ];
 
 export default function CategoryPage() {
@@ -44,16 +41,40 @@ export default function CategoryPage() {
 
   // Search-within-category state. Empty string = no filter, show everything.
   const [search, setSearch] = useState('');
+  const [activeSubcat, setActiveSubcat] = useState(null);
+
+  // Which subcategories actually have products in this category right now?
+  // Chips that aren't represented get hidden so users never tap an empty pill.
+  const availableSubcats = useMemo(() => {
+    const set = new Set();
+    for (const p of categoryProducts) {
+      if (p.subcategory) set.add(p.subcategory);
+    }
+    return set;
+  }, [categoryProducts]);
+
+  const visibleChips = useMemo(
+    () => RECIPIENT_CHIPS.filter(
+      (c) => c.subcategory === null || availableSubcats.has(c.subcategory),
+    ),
+    [availableSubcats],
+  );
 
   const visibleProducts = useMemo(() => {
+    let pool = categoryProducts;
+
+    // Subcategory filter — exact match on the slug stamped at publish time.
+    if (activeSubcat) {
+      pool = pool.filter((p) => p.subcategory === activeSubcat);
+    }
+
+    // Free-text search runs on top of any subcategory filter.
     const q = search.trim().toLowerCase();
-    if (!q) return categoryProducts;
-    return categoryProducts.filter((p) => {
+    if (!q) return pool;
+    return pool.filter((p) => {
       const haystack = [
         p.name || '',
         p.description || '',
-        // Multilingual names ride along on the products row's i18n column when
-        // present — Spanish/French/etc. searches land here too.
         ...Object.values(p.i18n || {}).flatMap((entry) =>
           [entry?.name, entry?.description].filter(Boolean),
         ),
@@ -62,7 +83,7 @@ export default function CategoryPage() {
         .toLowerCase();
       return haystack.includes(q);
     });
-  }, [categoryProducts, search]);
+  }, [categoryProducts, search, activeSubcat]);
 
   // A category is "coming soon" when it's a real category but has no products
   // yet — so Ak doesn't have to hand-maintain a hardcoded list anymore.
@@ -112,8 +133,10 @@ export default function CategoryPage() {
         <span>Back</span>
       </button>
 
-      {/* Category Hero */}
-      <section className="relative pt-32 pb-10 px-6 text-center overflow-hidden">
+      {/* Category Hero — pt-44 on mobile so the sticky Back pill (which lives
+          at top:64px from the safe-area inset) doesn't overlap the salesPitch
+          copy. Ak/Breana 2026-05-07 caught Back hovering over the pitch text. */}
+      <section className="relative pt-44 sm:pt-32 pb-10 px-6 text-center overflow-hidden">
         <div className="absolute top-0 left-0 right-0 h-1" style={{ background: `linear-gradient(90deg, ${occasion.accent}, ${occasion.accent}66)` }} />
         <div className="absolute inset-0 opacity-[0.07] pointer-events-none" style={{ background: `radial-gradient(ellipse at 50% 0%, ${occasion.accent}, transparent 65%)` }} />
 
@@ -202,15 +225,13 @@ export default function CategoryPage() {
               )}
             </div>
             <div className="flex flex-wrap gap-2">
-              {RECIPIENT_CHIPS.map((chip) => {
-                const isActive =
-                  (chip.keyword === '' && search === '') ||
-                  (chip.keyword !== '' && search.toLowerCase() === chip.keyword);
+              {visibleChips.map((chip) => {
+                const isActive = chip.subcategory === activeSubcat;
                 return (
                   <button
                     key={chip.label}
                     type="button"
-                    onClick={() => setSearch(chip.keyword)}
+                    onClick={() => { setActiveSubcat(chip.subcategory); setSearch(''); }}
                     className="px-4 py-2 rounded-full text-xs uppercase tracking-[0.12em] font-medium transition-all"
                     style={{
                       background: isActive ? occasion.accent : 'rgba(255,255,255,0.06)',
@@ -227,23 +248,38 @@ export default function CategoryPage() {
 
           <p className="text-[11px] uppercase tracking-[0.15em] text-[var(--text-muted)] mb-8 font-medium">
             {visibleProducts.length} experience{visibleProducts.length !== 1 ? 's' : ''}
-            {search ? ` matching "${search}"` : ' available'}
+            {search ? ` matching "${search}"` : (activeSubcat ? ` in this collection` : ' available')}
           </p>
 
           {visibleProducts.length === 0 ? (
             <div className="text-center py-16 px-6 rounded-2xl" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)' }}>
               <p className="text-[var(--text-secondary)] font-light mb-6">
-                No {occasion.title.toLowerCase()} blooms match "<span className="font-medium" style={{ color: '#FFFFFF' }}>{search}</span>".
+                {search
+                  ? <>No {occasion.title.toLowerCase()} blooms match "<span className="font-medium" style={{ color: '#FFFFFF' }}>{search}</span>".</>
+                  : <>No blooms in this collection yet — check back soon.</>}
               </p>
-              <p className="text-sm text-[var(--text-muted)] font-light mb-8">
-                Try searching across every category — the right bloom might live somewhere unexpected.
-              </p>
-              <Link
-                to={`/shop?search=${encodeURIComponent(search)}`}
-                className="inline-block px-8 py-3 rounded-full text-sm uppercase tracking-widest bg-[var(--accent-gold)] text-[var(--bg-page)] hover:bg-[var(--accent-gold-hover)] transition-all font-semibold"
-              >
-                Search all blooms for "{search}"
-              </Link>
+              {search && (
+                <>
+                  <p className="text-sm text-[var(--text-muted)] font-light mb-8">
+                    Try searching across every category — the right bloom might live somewhere unexpected.
+                  </p>
+                  <Link
+                    to={`/shop?search=${encodeURIComponent(search)}`}
+                    className="inline-block px-8 py-3 rounded-full text-sm uppercase tracking-widest bg-[var(--accent-gold)] text-[var(--bg-page)] hover:bg-[var(--accent-gold-hover)] transition-all font-semibold"
+                  >
+                    Search all blooms for "{search}"
+                  </Link>
+                </>
+              )}
+              {!search && activeSubcat && (
+                <button
+                  type="button"
+                  onClick={() => setActiveSubcat(null)}
+                  className="inline-block px-8 py-3 rounded-full text-sm uppercase tracking-widest bg-[var(--accent-gold)] text-[var(--bg-page)] hover:bg-[var(--accent-gold-hover)] transition-all font-semibold"
+                >
+                  Show all {occasion.title.toLowerCase()} blooms
+                </button>
+              )}
             </div>
           ) : (
             <div className="flex flex-col gap-6">
