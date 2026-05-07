@@ -67,12 +67,14 @@ async function burnQrAndUpload({ inputUrl, slug, title, category, bucket }) {
       color: { dark: '#0D1B36', light: '#FFFFFF' },
     });
 
-    const fontFile = '/System/Library/Fonts/Helvetica.ttc';
-    // Vercel functions don't have macOS Helvetica — fall back to default.
+    // QR-only filter (no drawtext) — Vercel's bundled ffmpeg doesn't ship
+    // with a font usable by drawtext, and "parsing global options filter
+    // not found" was killing every push. The QR encodes the same URL
+    // viewers would have read from the caption, so we lose nothing.
+    // Final scale forces even dimensions so libx264 never rejects.
     const filterGraph = [
       `[1:v]scale=140:140:flags=lanczos,pad=164:164:x=12:y=12:color=white[qrPadded]`,
-      `[0:v][qrPadded]overlay=x=W-w-28:y=H-h-92[withQr]`,
-      `[withQr]drawtext=text='digitalbloom.store/go/${slug}':fontcolor=white:fontsize=22:borderw=2:bordercolor=black@0.85:x=W-text_w-32:y=H-60,scale=trunc(iw/2)*2:trunc(ih/2)*2[outv]`,
+      `[0:v][qrPadded]overlay=x=W-w-28:y=H-h-28,scale=trunc(iw/2)*2:trunc(ih/2)*2[outv]`,
     ].join(';');
 
     await runFfmpeg([
