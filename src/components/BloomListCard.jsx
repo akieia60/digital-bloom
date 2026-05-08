@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import VideoPlayer from './VideoPlayer';
+import LazySection from './LazySection';
 import { getTierByNumber } from '../config/pricingTiers';
 import { getPosterUrl } from '../lib/media';
 import OCCASIONS from '../data/occasions';
@@ -24,13 +25,36 @@ export default function BloomListCard({ product: rawProduct }) {
       to={`/product/${product.id}`}
       className="bloom-list-card"
     >
-      {/* Bloom media — fills the card */}
+      {/* Bloom media — fills the card. Lazy-mounted (Ak 2026-05-08
+          lazy-load audit) so categories with 50+ products don't fire
+          50+ video metadata requests on first paint. */}
       <div className="bloom-list-card__media">
-        <VideoPlayer
-          videoUrl={videoUrl}
-          posterUrl={posterUrl}
-          alt={product.name}
-        />
+        <LazySection
+          fallback={
+            posterUrl ? (
+              <img
+                src={posterUrl}
+                alt={product.name}
+                loading="lazy"
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <div
+                className="w-full h-full"
+                style={{ background: 'linear-gradient(135deg, #1a2640, #0d1b36)' }}
+                aria-hidden="true"
+              />
+            )
+          }
+          rootMargin="300px 0px"
+          className="w-full h-full"
+        >
+          <VideoPlayer
+            videoUrl={videoUrl}
+            posterUrl={posterUrl}
+            alt={product.name}
+          />
+        </LazySection>
         <div className="bloom-list-card__media-overlay" />
         {/* Occasion greeting — overlaid on the video */}
         {balloonGreeting && (
