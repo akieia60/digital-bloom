@@ -155,6 +155,15 @@
   <p>Renders, On Site, Archive — one tap to publish or restore.</p>
 </header>
 
+<!-- Bre's download tray — sticky, lives outside the re-rendered grid so
+     it can't be wiped mid-burn. When a Bre Pull completes, the burned-
+     video link gets prepended here. Tap to save. -->
+<div id="bre-tray" style="display:none;position:sticky;top:env(safe-area-inset-top,0);z-index:50;background:#0D1B36;border-bottom:2px solid #D4AF37;padding:12px 14px;">
+  <div style="font-size:0.7rem;letter-spacing:0.12em;color:#D4AF37;text-transform:uppercase;font-weight:700;margin-bottom:8px;">📥 Ready to save</div>
+  <div id="bre-tray-list" style="display:flex;flex-direction:column;gap:8px"></div>
+  <button onclick="document.getElementById('bre-tray').style.display='none';document.getElementById('bre-tray-list').innerHTML=''" style="display:block;margin-top:10px;background:none;border:1px solid rgba(212,175,55,0.35);color:#a8c0e0;padding:6px 12px;border-radius:14px;font-size:0.65rem;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;font-family:inherit;">Clear tray</button>
+</div>
+
 <div class="mode-toggle" id="mode-toggle">
   <button class="mode-btn" data-mode="renders">Renders</button>
   <button class="mode-btn" data-mode="active">On Site</button>
@@ -560,24 +569,39 @@ async function brePull(productId, btn) {
     const j = await r.json();
     if (!r.ok) throw new Error(j.error || 'burn failed');
 
-    // Replace the button with a real anchor element. This is the key
-    // fix — anchors handle iOS download semantics natively and don't
-    // depend on the user-gesture timer like programmatic clicks do.
-    const link = document.createElement('a');
-    link.href = j.downloadUrl;
-    link.download = j.fileName || 'bloom.mp4';
-    link.target = '_blank';
-    link.rel = 'noopener';
-    link.className = 'action bre-pull ready';
-    link.style.cssText = 'display:flex;align-items:center;justify-content:center;text-decoration:none;width:100%;padding:10px;border-radius:6px;font-weight:700;font-size:0.78rem;letter-spacing:0.06em;text-transform:uppercase;font-family:inherit;cursor:pointer;background:#D4AF37;color:#0D1B36;border:1px solid #D4AF37;margin-top:8px;';
-    link.textContent = '⬇ TAP TO SAVE TO PHONE';
-    link.addEventListener('click', () => {
-      // Show the where-did-it-go toast right after the tap. The actual
-      // navigation to the blob URL is handled by the anchor itself.
-      toast('Saving… Check the Files app → On My iPhone → Downloads. Or tap the share-sheet ↗ in Safari to save to Photos.', true, 9000);
+    // Append the download link to the persistent tray at the top of
+    // the page. The tray lives outside the content div so it can't be
+    // wiped by mode/category re-renders mid-burn. Even if Brie taps
+    // a different category tab while waiting, the link still lands
+    // here and is reachable.
+    const tray = document.getElementById('bre-tray');
+    const trayList = document.getElementById('bre-tray-list');
+    const trayItem = document.createElement('a');
+    trayItem.href = j.downloadUrl;
+    trayItem.download = j.fileName || 'bloom.mp4';
+    trayItem.target = '_blank';
+    trayItem.rel = 'noopener';
+    trayItem.style.cssText = 'display:flex;align-items:center;justify-content:space-between;text-decoration:none;width:100%;padding:14px 16px;border-radius:10px;font-weight:700;font-size:0.85rem;font-family:inherit;background:#D4AF37;color:#0D1B36;cursor:pointer;';
+    trayItem.innerHTML = `
+      <span>⬇ ${(j.productName || 'Bloom').slice(0,40)}</span>
+      <span style="font-size:0.7rem;letter-spacing:0.12em;text-transform:uppercase;opacity:0.7;">Tap to save</span>
+    `;
+    trayItem.addEventListener('click', () => {
+      toast('Saving… Files app → On My iPhone → Downloads, or tap the share-sheet ↗ in Safari to save to Photos.', true, 9000);
     });
-    btn.parentNode.replaceChild(link, btn);
-    toast('Ready — tap the gold "TAP TO SAVE" link below the bloom.');
+    trayList.prepend(trayItem);
+    tray.style.display = 'block';
+    // Scroll the tray into view so Brie sees the new link immediately.
+    tray.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+    // Reset the original button so Brie can pull more videos without
+    // having to refresh.
+    btn.classList.remove('working');
+    btn.classList.add('done');
+    btn.disabled = false;
+    btn.dataset.brePulling = '';
+    btn.textContent = '✓ Pulled — see top of page';
+    toast('Ready — gold link added at the top of the page.', true, 6000);
   } catch (e) {
     btn.classList.remove('working');
     btn.disabled = false;
