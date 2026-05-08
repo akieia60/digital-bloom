@@ -30,11 +30,24 @@ const Header = ({ onSearchChange, searchQuery, onOpenFaq }) => {
   }, [isMobileMenuOpen]);
 
   return (
-    <header className={`sticky top-0 z-50 transition-all duration-500 ${isScrolled ? 'py-3 bg-[var(--nav-bg-scrolled)] backdrop-blur-xl border-b border-[var(--nav-border-scrolled)]' : 'py-6 bg-[var(--nav-bg)]'}`}>
+    <header
+      className={`sticky top-0 z-50 transition-all duration-500 ${isScrolled ? 'pb-2 bg-[var(--nav-bg-scrolled)] backdrop-blur-xl border-b border-[var(--nav-border-scrolled)]' : 'pb-3 sm:pb-4 bg-[var(--nav-bg)]'}`}
+      style={{
+        // 2026-05-08 (Ak): the iOS Dynamic Island + status-bar pill
+        // were eating into the nav. Reserve safe-area space at the
+        // very top so hamburger / cart / brand never cram against
+        // the system chrome. Bottom padding is the controlled
+        // breathing room.
+        paddingTop: `calc(env(safe-area-inset-top, 0px) + ${isScrolled ? 8 : 12}px)`,
+      }}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
         <div className="flex items-center h-12 relative">
-          
-          {/* Left: Hamburger menu button — visible on ALL screen sizes */}
+
+          {/* Left: Hamburger only on mobile (Home icon is redundant
+              with the centered brand logo which links home + the
+              Home item in the hamburger menu). On sm+ the Home
+              shortcut returns. */}
           <div className="flex-1 flex items-center gap-2">
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -52,7 +65,7 @@ const Header = ({ onSearchChange, searchQuery, onOpenFaq }) => {
 
             <Link
               to="/"
-              className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-full border border-white/10 bg-white/5 p-2 text-white/82 transition-colors hover:bg-white/10 hover:text-white"
+              className="hidden sm:inline-flex min-h-11 min-w-11 items-center justify-center rounded-full border border-white/10 bg-white/5 p-2 text-white/82 transition-colors hover:bg-white/10 hover:text-white"
               aria-label={t('nav_home')}
               onClick={() => setIsMobileMenuOpen(false)}
             >
