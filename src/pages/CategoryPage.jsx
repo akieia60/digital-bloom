@@ -250,14 +250,19 @@ export default function CategoryPage() {
             // get a final "More blooms in this collection" row so
             // they aren't hidden just because Monique hasn't
             // categorized them yet.
+            //
+            // 2026-05-08 (David's feedback for Mother's Day weekend):
+            // empty "Coming Soon" lanes 2 days before the holiday
+            // signal "incomplete." Filter them out entirely. Lanes
+            // refill automatically as products get published.
             <div className="flex flex-col gap-12">
-              {lanes.map((lane) => (
+              {lanes.filter((lane) => !lane.comingSoon).map((lane) => (
                 <SubcatLane
                   key={lane.slug}
                   label={lane.label}
                   tagline={lane.tagline}
                   products={lane.products}
-                  comingSoon={lane.comingSoon}
+                  comingSoon={false}
                   accent={occasion.accent}
                 />
               ))}
