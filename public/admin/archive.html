@@ -529,18 +529,25 @@ async function smartRestore(productId, btn) {
   }
 }
 
-// Bre's pull workflow (2026-05-07 — replaces /c/breana + creator portal):
-// Server burns a tracked QR onto the source video, uploads to Vercel
-// Blob with public access, and returns a `?download=<name>.mp4` URL
-// that iOS Safari + Android Chrome both honor as a Save dialog.
-// We don't auto-trigger the navigation — many mobile browsers block
-// programmatic downloads. Instead the button mutates into a tappable
-// link Bre presses to save.
+// Bre's pull workflow (5/8 v2 — Brie reported the "TAP TO SAVE" button
+// wasn't triggering a download on her iPhone):
+//
+// iOS Safari has a "user gesture" timer — programmatic anchor clicks after
+// an async fetch (which can take 15–30s for the QR burn) often fail because
+// Safari decides the click isn't user-initiated anymore. Fix: REPLACE the
+// button DOM element with an actual <a href> anchor pointing to the burned
+// blob URL, so when Brie taps it, Safari sees it as a fresh user-initiated
+// link click and honors the download.
+//
+// Bonus: if Brie navigates away mid-burn, the link anchor is still on the
+// page when she returns, so the burn isn't wasted.
 async function brePull(productId, btn) {
+  if (btn.dataset.brePulling === '1') return; // guard against double-tap
+  btn.dataset.brePulling = '1';
   const orig = btn.textContent;
   btn.disabled = true;
   btn.classList.add('working');
-  btn.textContent = 'Burning QR…';
+  btn.textContent = 'Burning QR… (15–30 sec)';
   try {
     const r = await fetch('/api/admin/bre-download', {
       method: 'POST',
@@ -552,31 +559,29 @@ async function brePull(productId, btn) {
     });
     const j = await r.json();
     if (!r.ok) throw new Error(j.error || 'burn failed');
-    btn.classList.remove('working');
-    btn.classList.add('ready');
-    btn.disabled = false;
-    btn.textContent = '⬇ TAP TO SAVE TO PHONE';
-    // Use a real anchor click instead of window.location.href — iOS Safari
-    // honors the `download` attribute on same-origin anchors more reliably.
-    // The blob URL is cross-origin but Vercel Blob is uploaded with
-    // application/octet-stream, which makes Safari prompt to save.
-    btn.onclick = (event) => {
-      event.preventDefault();
-      const a = document.createElement('a');
-      a.href = j.downloadUrl;
-      a.download = j.fileName || 'bloom.mp4';
-      a.rel = 'noopener';
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      // Tell Bre exactly where the file landed — the #1 question after
-      // a mobile download is "where did it go?"
-      toast('Saved. Open the Files app → On My iPhone → Downloads. Or tap the share-sheet ↗ in Safari to send straight to Photos.', true, 8000);
-    };
-    toast('Ready — tap the gold "Tap to save" button.');
+
+    // Replace the button with a real anchor element. This is the key
+    // fix — anchors handle iOS download semantics natively and don't
+    // depend on the user-gesture timer like programmatic clicks do.
+    const link = document.createElement('a');
+    link.href = j.downloadUrl;
+    link.download = j.fileName || 'bloom.mp4';
+    link.target = '_blank';
+    link.rel = 'noopener';
+    link.className = 'action bre-pull ready';
+    link.style.cssText = 'display:flex;align-items:center;justify-content:center;text-decoration:none;width:100%;padding:10px;border-radius:6px;font-weight:700;font-size:0.78rem;letter-spacing:0.06em;text-transform:uppercase;font-family:inherit;cursor:pointer;background:#D4AF37;color:#0D1B36;border:1px solid #D4AF37;margin-top:8px;';
+    link.textContent = '⬇ TAP TO SAVE TO PHONE';
+    link.addEventListener('click', () => {
+      // Show the where-did-it-go toast right after the tap. The actual
+      // navigation to the blob URL is handled by the anchor itself.
+      toast('Saving… Check the Files app → On My iPhone → Downloads. Or tap the share-sheet ↗ in Safari to save to Photos.', true, 9000);
+    });
+    btn.parentNode.replaceChild(link, btn);
+    toast('Ready — tap the gold "TAP TO SAVE" link below the bloom.');
   } catch (e) {
     btn.classList.remove('working');
     btn.disabled = false;
+    btn.dataset.brePulling = '';
     btn.textContent = orig;
     toast(e.message, false);
   }
