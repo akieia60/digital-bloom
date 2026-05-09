@@ -533,3 +533,52 @@
   justify-content: center;
   width: 18px;
 }
+
+/* Language picker inside the mobile hamburger menu. */
+.landing-nav__mobile-lang {
+  margin-top: 4px;
+  padding: 14px 14px 12px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.landing-nav__mobile-lang-label {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+  margin-bottom: 10px;
+}
+
+.landing-nav__mobile-lang-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.landing-nav__mobile-lang-btn {
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: transparent;
+  color: rgba(255, 255, 255, 0.72);
+  font-family: -apple-system, BlinkMacSystemFont, 'Outfit', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.landing-nav__mobile-lang-btn:hover {
+  border-color: rgba(212, 175, 55, 0.4);
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.landing-nav__mobile-lang-btn--active {
+  border-color: #D4AF37;
+  background: rgba(212, 175, 55, 0.12);
+  color: #F5E7C8;
+}

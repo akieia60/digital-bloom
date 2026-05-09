@@ -161,6 +161,25 @@ export default function LandingNav({ onOpenFaq }) {
                   </span>
                 )}
               </button>
+              {/* Language picker — top-nav lang switcher is hidden on
+                  mobile (Gamble 5/7 "un-cram"), so it must live here
+                  in the hamburger or it's unreachable. */}
+              <div className="landing-nav__mobile-lang">
+                <div className="landing-nav__mobile-lang-label">
+                  {t('header_select_language') || 'Language'}
+                </div>
+                <div className="landing-nav__mobile-lang-options">
+                  {AVAILABLE_LANGUAGES.map(l => (
+                    <button
+                      key={l.code}
+                      onClick={() => { changeLanguage(l.code); setIsMobileMenuOpen(false); }}
+                      className={`landing-nav__mobile-lang-btn ${lang === l.code ? 'landing-nav__mobile-lang-btn--active' : ''}`}
+                    >
+                      {l.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
               {onOpenFaq && (
                 <button
                   onClick={() => { setIsMobileMenuOpen(false); onOpenFaq(); }}
