@@ -203,6 +203,37 @@ const Success = () => {
     window.localStorage.setItem('dbloom_credit_code', creditPurchase.code);
   }, [creditPurchase?.code]);
 
+  // Google Ads conversion (AW-18151509513) — fires once per session_id when
+  // the checkout is confirmed paid. Production hostnames only so localhost +
+  // Vercel preview deploys don't pollute the campaign data.
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    if (!sessionId || !checkout || checkout.checkout_status !== 'completed') return;
+    if (typeof window.gtag !== 'function') return;
+    const host = window.location.hostname;
+    if (host !== 'digitalbloom.store' && host !== 'www.digitalbloom.store') return;
+    const dedupeKey = `gtag_purchase_${sessionId}`;
+    try {
+      if (window.sessionStorage.getItem(dedupeKey)) return;
+      window.sessionStorage.setItem(dedupeKey, '1');
+    } catch {
+      /* sessionStorage blocked — still fire once per page load */
+    }
+    const value = Number(checkout?.totals?.amount || 0);
+    const items = (checkout?.purchases || []).map((purchase) => ({
+      item_id: purchase.bloom_slug || purchase.id || 'digital_bloom',
+      item_name: purchase.bloom_slug || 'Digital Bloom',
+      price: Number(purchase.amount || purchase.unit_amount || 0),
+      quantity: 1,
+    }));
+    window.gtag('event', 'purchase', {
+      transaction_id: sessionId,
+      value,
+      currency: 'USD',
+      items,
+    });
+  }, [checkout, sessionId]);
+
   if (isProcessing) {
     return (
       <div className="success-page">
