@@ -1,127 +1,72 @@
-# Agents Briefing — Digital Bloom
+# Digital Bloom — Agent Instructions
 
-> Universal context for ANY AI coding agent (Claude Code, Antigravity,
-> Cursor, GitHub Copilot, etc.) opening this repository.
->
-> **Tool-specific files:** `CLAUDE.md` (Claude Code) is more detailed —
-> read it for the full project context. `AGENTS.md` is the cross-tool
-> briefing every agent should read first.
+> **IMPORTANT:** This file is intentionally minimal as of May 9, 2026.
+> The full project context, team roster, current priorities, and session state
+> all live in Notion. Always read Notion first — never rely on this file alone.
 
 ---
 
-## What this repo is
+## Your First Two Steps (mandatory, every session)
 
-**Digital Bloom** — a luxury digital gifting platform. Customers send animated video bouquets ("blooms") for occasions (Mother's Day, birthday, anniversary, sympathy, …) instead of physical flowers.
+1. **Read the Master Briefing** — full project context, rules, architecture, team:
+   https://www.notion.so/34e4b19f45c98127ab30c9c3603547d8
 
-- **Live site:** digitabloom.com (note: `.com` has no L)
-- **Storefront:** digitalbloom.store (note: `.store` has the L)
-- **Owner:** Ak (Akieia Davis, GitHub: `akieia60`)
-- **Business partner:** Gamble — does UI/UX walkthroughs, drives feature requests
-- **Stack:** React 19 + Vite 7 frontend, Vercel serverless functions in `api/`, Supabase Postgres, Stripe Checkout
-- **Hosting:** Vercel (auto-deploys on push to `main`)
+2. **Read the Agent Coordination Hub** — what other agents have done, active handoffs for you:
+   https://www.notion.so/35b4b19f45c981b983e6fcef2df9e62b
 
----
+## Your Last Step (mandatory, every session)
 
-## Workstation map (this matters for context)
-
-Ak runs the project from two machines:
-
-| Machine     | Antigravity instance name | Path to this repo                                  |
-|-------------|---------------------------|----------------------------------------------------|
-| Mac mini    | "Deuce"                   | `/Users/ak/Documents/GitHub/digital-bloom`         |
-| MacBook Pro | "Aubrey"                  | `/Users/akieiamonniquedavis/Documents/GitHub/digital-bloom` |
-
-**Both Antigravity instances and BOTH machines share this single GitHub repo as the source of truth.** Cross-machine sync = `git pull` before working, `git push` after. There is no other sync mechanism.
-
-In addition, Ak runs **5 standing Claude Code lanes** as detached `screen` sessions on each Mac (only Mac mini is fully populated today):
-
-- **Deuce** — code & ship lane (this repo's primary author)
-- **Monique** — runs the Monique daemon that generates bloom videos via Grok / Higgsfield
-- **Aubrey** — audio briefer; writes chapters to `public/guide.html` after every substantial work block
-- **Gam** — business operations lane (LLC paperwork, banking, copyright filings)
-- **Linda** — ground control; system health, lane liveness, daemon monitoring
-
-The lanes communicate via a cross-lane inbox at `~/.openclaw/inbox/{lane}/*.md` (NOT in this repo — local per-machine).
+Before ending your session, add a log entry to the Agent Coordination Hub with:
+- Your agent name and platform
+- The date
+- What you completed
+- Any handoffs for other agents (use the Breadcrumb Protocol format in the Hub)
 
 ---
 
-## Single source of truth: categories
+## Quick Reference
 
-`src/data/categories.js` is the canonical taxonomy for everything category-related (slugs, names, taglines, accent colors, expected counts).
-
-**Never hardcode a category list anywhere else.** Drift silently misroutes uploads. The build guard at `scripts/validate-categories.js` runs on every Vercel build (`vercel-build` script) and fails the deploy if `cat:` strings in `public/prompt-engine.html` don't map to canonical slugs, or if per-category counts drift.
-
-Consumers that read `categories.js`: `api/process-bloom.js`, `src/pages/Shop.jsx`, `src/pages/CategoryPage.jsx`, `src/components/ProductGrid.jsx`, `src/components/landing/CategoryGrid.jsx`, `src/pages/Admin.jsx`, `scripts/generate-sitemap.js`.
-
----
-
-## Build hygiene (read this — agents have wedged the system before)
-
-**Do NOT run `npm run build` or `vite build` locally on Ak's Mac mini.** Vite hangs in that environment and orphans `esbuild --service` daemons. Multiple agents have piled up wedged build chains here.
-
-- **Vercel runs the real build** via the `vercel-build` script on every push and is the source of truth.
-- **Verify changes** with `npm run lint`, `npm run validate-categories`, or by reading the diff.
-- The local `build` script is wrapped by `scripts/safe-build.js` (180s hard timeout, kills the whole process group on hang) so even if you forget the rule, you can't orphan processes anymore. But you still won't get a useful artifact.
-- `vercel-build` is unchanged — production deploys are unaffected by the local wrapper.
+| What | Where |
+|------|-------|
+| Live site | https://digitalbloom.store |
+| GitHub repo | https://github.com/akieia60/digital-bloom |
+| Vercel project | `flower-shop` (auto-deploys from `main` branch) |
+| Supabase project ID | `yhdbeblowolfinxxhsnt` |
+| Admin archive | https://digitalbloom.store/admin/archive.html?token=... |
+| Prompt engine | https://digitalbloom.store/prompt-engine.html |
+| Audio guide | https://digitalbloom.store/guide |
 
 ---
 
-## Design system (Brand-critical — never deviate)
+## Critical Rules (never break these — these override everything)
 
-| Color       | Hex       | Use                                       |
-|-------------|-----------|-------------------------------------------|
-| Navy Blue   | `#0D1B36` | Dark backgrounds (hero, category headers) |
-| Pure Gold   | `#D4AF37` | Accents, watermarks, CTAs                 |
-| White       | `#FFFFFF` | Text on dark backgrounds                  |
-| Apple Dark  | `#1D1D1F` | Body text on white                        |
-| Apple Gray  | `#6E6E73` | Secondary text                            |
-
-**Fonts:** Playfair Display (headings) · Outfit (body) · Cormorant Garamond (accents)
-
-**Hard rules:**
-- Never use pure black (`#000000`, `#0A0A0A`) for backgrounds — always navy `#0D1B36`.
-- Brand name is **Digital Bloom™** (with TM). Never "Digital Balloon."
-- Hero video has a gold "Digital Bloom™" watermark in the bottom-left corner — don't remove it.
-- Don't break the prompt engine URL `digitalbloom.store/prompt-engine.html` — Ak uses it daily from her phone.
+- Navy `#0D1B36` for dark backgrounds — NEVER pure black
+- Gold `#D4AF37` for accents, CTAs, watermarks
+- Fonts: Playfair Display (headings), Outfit (body), Cormorant Garamond (accents)
+- Brand name always: **Digital Bloom™** (with ™). Never "Digital Balloon."
+- Never hardcode category lists outside `src/data/categories.js`
+- Never break `/prompt-engine.html` — Ak uses it daily from her phone
+- All blooms must be silent (audio stripped). `ffmpeg -movflags +faststart` is mandatory on every MP4 destined for the storefront.
+- Watermark is baked in-video via ffmpeg drawtext — never DOM overlay
+- Do NOT run `npm run build` locally on Ak's Mac mini — Vite hangs. Vercel runs the real build on every push.
+- Ak uses GitHub Desktop, not terminal git. Agents may push directly when work is done.
 
 ---
 
-## Current priorities (refresh date 2026-05-05)
+## Build & Deploy Hygiene
 
-1. **Mother's Day 2026 (deadline 2026-05-10)** — Mother's Day content is top focus. Ak reviews every video on Telegram before any goes to the site.
-2. **Multi-language commercial rollout** — Spanish, Mandarin, Japanese, French, German, Vietnamese, Tagalog, Portuguese-BR. Multi-ethnicity casts. Dual watermark, 45s minimum.
-3. **Stripe live mode** — currently sandbox. Blocked until Mercury account opens.
-4. **Copyright filings** — heroes + first video of every category being filed.
-
----
-
-## How Ak works (style cues for agent tone + scope)
-
-- Ak drives a truck. Her primary device is her phone. Mobile-first responses, low taps, bookmarks stable.
-- Wrap user-facing replies in a single fenced code block by default — she uses iOS Speak Screen with a programmed voice and needs one tap target. Drop the box only when she says "drop the box."
-- Default to action on small reversible work (<$50). Don't ask "which way?" — pick a path.
-- She uses GitHub Desktop, not terminal git. But Claude / Antigravity agents may push directly when the work is done.
-- Don't run interactive commands that need her keyboard. If you need her to type something, tell her exactly what to tap and where.
+- **Verify changes** with `npm run lint` and `npm run validate-categories` before pushing.
+- `vercel-build` is the production build script — do not modify it.
+- The local `build` script has a 180s hard timeout via `scripts/safe-build.js` to prevent orphaned processes.
 
 ---
 
-## When you start a new session
+## How Ak Works (agent tone + scope)
 
-1. `git pull origin main` — make sure you have the latest, especially Aubrey's chapter additions and Gamble's UI feedback merges.
-2. Read `CLAUDE.md` if you're Claude (more detail than this file). Otherwise this file is enough to start.
-3. Check `public/guide.html` — the audio chapters tell you the project's narrative arc.
-4. If the work touches storefront/admin pages, glance at `public/admin/archive.html` (Gamble reviews here daily).
+- Ak drives a truck. Her primary device is her phone. Keep responses mobile-first, low taps.
+- Default to action on small reversible work. Don't ask "which way?" — pick a path and execute.
+- Don't run interactive commands that need her keyboard. Tell her exactly what to tap and where.
 
 ---
 
-## Cross-machine sync rhythm (Mac mini ↔ MacBook Pro)
-
-```
-On the OLD machine before walking away:
-  GitHub Desktop → "Push origin"   (only if there are pending commits)
-
-On the NEW machine when you arrive:
-  GitHub Desktop → "Fetch origin" → "Pull origin"
-```
-
-That's the entire ritual. Both Antigravity instances + both Claude Code lane systems will see identical state immediately after.
+*Last updated: May 9, 2026 by Magic (Manus) — Hub-and-Spoke architecture implemented.*
