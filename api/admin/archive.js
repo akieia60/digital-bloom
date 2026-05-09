@@ -152,7 +152,7 @@ export default async function handler(req, res) {
       }
       let q = supabase
         .from(PROMPTS_TABLE)
-        .select('id, title, cat, generation_completed_at, generation_status')
+        .select('id, title, cat, badge, generation_completed_at, generation_status')
         .eq('generation_status', 'completed')
         .order('generation_completed_at', { ascending: false })
         .limit(200)
@@ -165,7 +165,7 @@ export default async function handler(req, res) {
       if (ids.length) {
         const { data: prods, error: prErr } = await supabase
           .from('products')
-          .select('id, slug, is_active, updated_at, video_url, video_file_url, thumbnail_url, last_action_by, last_action_at')
+          .select('id, slug, is_active, updated_at, video_url, video_file_url, thumbnail_url, subcategory, last_action_by, last_action_at')
           .in('slug', ids);
         if (prErr) return res.status(500).json({ error: prErr.message });
         products = prods || [];
@@ -183,10 +183,22 @@ export default async function handler(req, res) {
           && (product.video_url || '').includes(p.id)
           && productUpdatedMs >= promptCompletedMs,
         );
+        // Extract subcategory from the badge (e.g. "🌸 Mother's Day · For Auntie · Title")
+        // so the archive front-end can bucket renders into lane chips.
+        let subcategory = product?.subcategory || null;
+        if (!subcategory && p.badge) {
+          const segs = p.badge.split(/\s+·\s+/).map(s => s.trim());
+          if (segs.length >= 2) {
+            const mid = segs[1].replace(/[^a-zA-Z0-9 -]/g, '').trim();
+            if (mid) subcategory = mid.toLowerCase().replace(/\s+/g, '-');
+          }
+        }
         return {
           id: p.id,
           title: p.title,
           cat: p.cat,
+          badge: p.badge || null,
+          subcategory,
           completed_at: p.generation_completed_at,
           render_url: `${monique}/${p.id}/full.mp4`,
           is_live: isLive,
@@ -202,7 +214,7 @@ export default async function handler(req, res) {
     const isActive = status === 'active';
     const { data, error } = await supabase
       .from('products')
-      .select('id, name, slug, category, video_file_url, video_url, thumbnail_url, image_url, is_active, created_at, updated_at, price_cents, last_action_by, last_action_at, qr_burned_url')
+      .select('id, name, slug, category, subcategory, video_file_url, video_url, thumbnail_url, image_url, is_active, created_at, updated_at, price_cents, last_action_by, last_action_at, qr_burned_url')
       .eq('category', categorySlug)
       .eq('is_active', isActive)
       .order('updated_at', { ascending: false });

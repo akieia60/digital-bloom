@@ -32,6 +32,17 @@
   .cat-tab { background:#152544; border:1px solid #2a3e5e; color:#a8c0e0; padding:8px 16px; border-radius:18px; font-size:0.78rem; white-space:nowrap; cursor:pointer; font-family:inherit; }
   .cat-tab.active { background:#D4AF37; color:#0D1B36; border-color:#D4AF37; font-weight:600; }
 
+  /* ── Subcategory filter row ─────────────────────────────────────── */
+  .subcat-bar { display:flex; gap:6px; padding:6px 14px 10px; overflow-x:auto; background:#0D1B36; border-bottom:1px solid #1a2a4a; scrollbar-width:none; }
+  .subcat-bar::-webkit-scrollbar { display:none; }
+  .subcat-bar.hidden { display:none; }
+  .subcat-chip { background:#0a142a; border:1px solid #2a3e5e; color:#8da4c5; padding:5px 12px; border-radius:14px; font-size:0.7rem; white-space:nowrap; cursor:pointer; font-family:inherit; letter-spacing:0.04em; display:flex; align-items:center; gap:5px; }
+  .subcat-chip.active { background:#1a2c4d; color:#D4AF37; border-color:#D4AF37; font-weight:600; }
+  .subcat-chip .chip-count { font-size:0.6rem; background:rgba(212,175,55,0.15); color:#D4AF37; padding:1px 5px; border-radius:8px; font-weight:700; }
+  .subcat-chip.active .chip-count { background:rgba(212,175,55,0.3); }
+  .subcat-chip.empty { opacity:0.45; }
+  .subcat-chip.empty .chip-count { background:rgba(100,120,160,0.15); color:#5a7090; }
+
   .stats { padding:14px 18px 6px; color:#8da4c5; font-size:0.85rem; }
   .stats strong { color:#D4AF37; }
 
@@ -173,6 +184,7 @@
 </div>
 
 <div class="cat-tabs" id="cat-tabs"></div>
+<div class="subcat-bar hidden" id="subcat-bar"></div>
 <div class="stats" id="stats">Loading…</div>
 <div id="content"></div>
 <div class="toast" id="toast"></div>
@@ -236,6 +248,147 @@ const CATEGORIES = [
   ['grief', 'Grief'],
   ['zodiac', 'Zodiac'],
 ];
+
+// ── Lane / Subcategory Catalog ──────────────────────────────────────────
+// Mirrors src/data/laneCatalogs.js. Keep in sync when new lanes are added.
+// Categories without entries here get no subcat bar (flat grid only).
+const LANE_CATALOGS = {
+  'mothers-day': [
+    { slug: 'for-mom',               label: 'For Mom' },
+    { slug: 'to-my-wife',            label: 'To My Wife' },
+    { slug: 'for-grandma',           label: 'For Grandma' },
+    { slug: 'new-mom',               label: 'For New Mom' },
+    { slug: 'mother-of-my-children', label: 'Mother of My Children' },
+    { slug: 'stepmom',               label: 'For Stepmom' },
+    { slug: 'godmother-auntie',      label: 'For Auntie' },
+    { slug: 'single-mom',            label: 'For Single Mom' },
+    { slug: 'friend-honoring',       label: 'For Friend' },
+    { slug: 'from-son',              label: 'From a Son' },
+    { slug: 'long-distance',         label: 'Long Distance' },
+    { slug: 'memorial',              label: 'In Memory' },
+  ],
+  'fathers-day': [
+    { slug: 'for-dad',           label: 'For Dad' },
+    { slug: 'for-grandpa',       label: 'For Grandpa' },
+    { slug: 'for-stepdad',       label: 'For Stepdad' },
+    { slug: 'father-in-law',     label: 'For Father-in-Law' },
+    { slug: 'from-son',          label: 'From a Son' },
+    { slug: 'from-daughter',     label: 'From a Daughter' },
+    { slug: 'memorial',          label: 'In Memory' },
+  ],
+  'graduation': [
+    { slug: 'high-school',       label: 'High School' },
+    { slug: 'college',           label: 'College' },
+    { slug: 'first-gen',         label: 'First Gen' },
+    { slug: 'single-mom-grad',   label: 'Single Mom Grad' },
+    { slug: 'trade-school',      label: 'Trade School' },
+    { slug: 'night-school',      label: 'Night School' },
+  ],
+  'birthday': [
+    { slug: 'for-her',           label: 'For Her' },
+    { slug: 'for-him',           label: 'For Him' },
+    { slug: 'milestone',         label: 'Milestone Birthday' },
+    { slug: 'for-friend',        label: 'For a Friend' },
+    { slug: 'for-mom',           label: 'For Mom' },
+    { slug: 'for-dad',           label: 'For Dad' },
+    { slug: 'for-grandparent',   label: 'For Grandparent' },
+    { slug: 'for-child',         label: 'For a Child' },
+  ],
+  'anniversary': [
+    { slug: 'to-my-wife',        label: 'To My Wife' },
+    { slug: 'to-my-husband',     label: 'To My Husband' },
+    { slug: 'milestone',         label: 'Milestone Anniversary' },
+    { slug: 'long-distance',     label: 'Long Distance' },
+  ],
+  'love': [
+    { slug: 'to-my-partner',     label: 'To My Partner' },
+    { slug: 'i-love-you',        label: 'I Love You' },
+    { slug: 'just-because',      label: 'Just Because' },
+    { slug: 'long-distance',     label: 'Long Distance' },
+  ],
+  'friendship': [
+    { slug: 'thinking-of-you',   label: 'Thinking of You' },
+    { slug: 'miss-you',          label: 'Miss You' },
+    { slug: 'checking-in',       label: 'Checking In' },
+    { slug: 'best-friend',       label: 'Best Friend' },
+  ],
+  'celebration': [
+    { slug: 'congratulations',   label: 'Congratulations' },
+    { slug: 'new-job',           label: 'New Job' },
+    { slug: 'new-home',          label: 'New Home' },
+    { slug: 'new-baby',          label: 'New Baby' },
+    { slug: 'promotion',         label: 'Promotion' },
+    { slug: 'engagement',        label: 'Engagement' },
+  ],
+  'sympathy': [
+    { slug: 'get-well',          label: 'Get Well' },
+    { slug: 'thinking-of-you',   label: 'Thinking of You' },
+    { slug: 'sending-love',      label: 'Sending Love' },
+  ],
+  'grief': [
+    { slug: 'in-memory',         label: 'In Memory' },
+    { slug: 'loss-of-parent',    label: 'Loss of Parent' },
+    { slug: 'loss-of-spouse',    label: 'Loss of Spouse' },
+    { slug: 'loss-of-child',     label: 'Loss of Child' },
+    { slug: 'loss-of-friend',    label: 'Loss of Friend' },
+  ],
+  'acknowledgement': [
+    { slug: 'for-a-king',        label: 'For a King' },
+    { slug: 'for-a-queen',       label: 'For a Queen' },
+    { slug: 'real-one',          label: 'Real One' },
+    { slug: 'ride-or-die',       label: 'Ride or Die' },
+    { slug: 'mentor',            label: 'Mentor' },
+  ],
+  'zodiac': [
+    { slug: 'aries',             label: 'Aries' },
+    { slug: 'taurus',            label: 'Taurus' },
+    { slug: 'gemini',            label: 'Gemini' },
+    { slug: 'cancer',            label: 'Cancer' },
+    { slug: 'leo',               label: 'Leo' },
+    { slug: 'virgo',             label: 'Virgo' },
+    { slug: 'libra',             label: 'Libra' },
+    { slug: 'scorpio',           label: 'Scorpio' },
+    { slug: 'sagittarius',       label: 'Sagittarius' },
+    { slug: 'capricorn',         label: 'Capricorn' },
+    { slug: 'aquarius',          label: 'Aquarius' },
+    { slug: 'pisces',            label: 'Pisces' },
+  ],
+  'holidays': [
+    { slug: 'new-years',         label: "New Year's" },
+    { slug: 'easter',            label: 'Easter' },
+    { slug: '4th-of-july',       label: '4th of July' },
+    { slug: 'halloween',         label: 'Halloween' },
+    { slug: 'thanksgiving',      label: 'Thanksgiving' },
+    { slug: 'hanukkah',          label: 'Hanukkah' },
+    { slug: 'kwanzaa',           label: 'Kwanzaa' },
+    { slug: 'veterans-day',      label: 'Veterans Day' },
+  ],
+  'christmas': [
+    { slug: 'for-family',        label: 'For Family' },
+    { slug: 'for-friend',        label: 'For a Friend' },
+    { slug: 'religious',         label: 'Religious' },
+    { slug: 'secular',           label: 'Secular' },
+  ],
+  'luxury': [
+    { slug: 'glass-stiletto',    label: 'Glass Stiletto' },
+    { slug: 'couture',           label: 'Couture' },
+    { slug: 'editorial',         label: 'Editorial' },
+  ],
+  'thank-you': [
+    { slug: 'general',           label: 'General' },
+    { slug: 'for-teacher',       label: 'For Teacher' },
+    { slug: 'for-mentor',        label: 'For Mentor' },
+    { slug: 'for-support',       label: 'For Support' },
+  ],
+  'encouragement': [
+    { slug: 'keep-going',        label: 'Keep Going' },
+    { slug: 'you-got-this',      label: 'You Got This' },
+    { slug: 'hard-times',        label: 'Through Hard Times' },
+  ],
+};
+
+// Current subcategory filter — null means "All" (no filter)
+let currentSubcat = null;
 let currentCat = params.get('category') || 'mothers-day';
 let currentMode = params.get('mode') || 'renders';
 const VALID_MODES = new Set(['renders', 'active', 'inactive', 'marketing', 'feedback']);
@@ -283,23 +436,141 @@ function syncUrl() {
 
 function tabs() {
   const el = document.getElementById('cat-tabs');
+  const subcatBar = document.getElementById('subcat-bar');
   // Marketing + Feedback aren't keyed off prompt-engine cat. Hide the
-  // category strip when in those modes.
+  // category strip and subcat bar when in those modes.
   if (currentMode === 'marketing' || currentMode === 'feedback') {
     el.style.display = 'none';
+    subcatBar.classList.add('hidden');
   } else {
     el.style.display = '';
     el.innerHTML = CATEGORIES.map(([slug, label]) =>
       `<button class="cat-tab ${slug===currentCat?'active':''}" data-cat="${slug}">${label}</button>`
     ).join('');
     el.querySelectorAll('.cat-tab').forEach(b => b.onclick = () => {
-      currentCat = b.dataset.cat; syncUrl(); tabs(); load();
+      currentCat = b.dataset.cat;
+      currentSubcat = null; // reset subcat filter on category change
+      syncUrl(); tabs(); load();
     });
+    // Render subcategory bar if this category has a lane catalog
+    renderSubcatBar(subcatBar);
   }
   document.querySelectorAll('.mode-btn').forEach(b => {
     b.classList.toggle('active', b.dataset.mode === currentMode);
-    b.onclick = () => { currentMode = b.dataset.mode; syncUrl(); tabs(); load(); };
+    b.onclick = () => { currentMode = b.dataset.mode; currentSubcat = null; syncUrl(); tabs(); load(); };
   });
+}
+
+// Render the subcategory chip bar for the current category.
+// `counts` is an optional object { [subcatSlug]: number } populated after
+// data loads so chips can show how many items exist in each lane.
+let subcatCounts = {}; // populated by updateSubcatCounts() after each load
+function renderSubcatBar(subcatBar, counts) {
+  const lanes = LANE_CATALOGS[currentCat];
+  if (!lanes || !lanes.length) {
+    subcatBar.classList.add('hidden');
+    return;
+  }
+  subcatBar.classList.remove('hidden');
+  const c = counts || subcatCounts;
+  const allCount = Object.values(c).reduce((s, n) => s + n, 0);
+  const chips = [
+    // "All" chip
+    `<button class="subcat-chip ${currentSubcat === null ? 'active' : ''}" onclick="selectSubcat(null)">
+      All <span class="chip-count">${allCount || ''}</span>
+    </button>`,
+    // Per-lane chips
+    ...lanes.map(lane => {
+      const n = c[lane.slug] || 0;
+      const isEmpty = n === 0;
+      return `<button class="subcat-chip ${currentSubcat === lane.slug ? 'active' : ''} ${isEmpty ? 'empty' : ''}" onclick="selectSubcat('${lane.slug}')">
+        ${lane.label} <span class="chip-count">${n || '0'}</span>
+      </button>`;
+    }),
+    // Untagged chip — items with no subcategory set
+    (() => {
+      const n = c['__untagged'] || 0;
+      return n > 0 ? `<button class="subcat-chip ${currentSubcat === '__untagged' ? 'active' : ''} ${n === 0 ? 'empty' : ''}" onclick="selectSubcat('__untagged')">
+        Untagged <span class="chip-count">${n}</span>
+      </button>` : '';
+    })(),
+  ].join('');
+  subcatBar.innerHTML = chips;
+}
+
+function selectSubcat(slug) {
+  currentSubcat = slug;
+  renderSubcatBar(document.getElementById('subcat-bar'));
+  // Re-render the current grid with the new filter (no network call needed)
+  applySubcatFilter();
+}
+
+// Last loaded items — stored so we can re-filter without a network round-trip
+let lastLoadedItems = [];
+let lastLoadedMode = null;
+
+function updateSubcatCounts(items, mode) {
+  const counts = {};
+  const lanes = LANE_CATALOGS[currentCat];
+  if (!lanes) return;
+  for (const item of items) {
+    // Renders use `subcategory` from the badge extraction; products use `subcategory` column
+    const sub = item.subcategory || item.sub || null;
+    if (!sub) {
+      counts['__untagged'] = (counts['__untagged'] || 0) + 1;
+    } else {
+      // Match the subcategory slug against known lane slugs
+      // (badge extraction produces slugs like 'for-mom', 'godmother-auntie', etc.)
+      const matched = lanes.find(l => sub.includes(l.slug) || l.slug.includes(sub) || sub === l.slug);
+      const key = matched ? matched.slug : '__untagged';
+      counts[key] = (counts[key] || 0) + 1;
+    }
+  }
+  subcatCounts = counts;
+  renderSubcatBar(document.getElementById('subcat-bar'), counts);
+}
+
+function filterItemsBySubcat(items) {
+  if (!currentSubcat) return items;
+  const lanes = LANE_CATALOGS[currentCat];
+  if (!lanes) return items;
+  if (currentSubcat === '__untagged') {
+    return items.filter(item => {
+      const sub = item.subcategory || item.sub || null;
+      if (!sub) return true;
+      const matched = lanes.find(l => sub.includes(l.slug) || l.slug.includes(sub) || sub === l.slug);
+      return !matched;
+    });
+  }
+  return items.filter(item => {
+    const sub = item.subcategory || item.sub || null;
+    if (!sub) return false;
+    const matched = lanes.find(l => sub.includes(l.slug) || l.slug.includes(sub) || sub === l.slug);
+    return matched && matched.slug === currentSubcat;
+  });
+}
+
+function applySubcatFilter() {
+  if (!lastLoadedItems.length) return;
+  const filtered = filterItemsBySubcat(lastLoadedItems);
+  const label = CATEGORIES.find(c=>c[0]===currentCat)?.[1] || currentCat;
+  const subcatLabel = currentSubcat
+    ? (LANE_CATALOGS[currentCat]?.find(l => l.slug === currentSubcat)?.label || currentSubcat)
+    : 'All';
+  if (lastLoadedMode === 'renders') {
+    const liveCount = filtered.filter(x => x.is_live).length;
+    const newCount = filtered.length - liveCount;
+    document.getElementById('stats').innerHTML = `<strong>${filtered.length}</strong> renders · ${label} · ${subcatLabel} · <strong>${newCount}</strong> new, ${liveCount} live`;
+    document.getElementById('content').innerHTML = filtered.length
+      ? `<div class="grid">${rendersGrid(filtered)}</div>`
+      : `<div class="empty">No renders in this subcategory yet.</div>`;
+  } else {
+    const modeLabel = lastLoadedMode === 'active' ? 'on the site' : 'in the archive';
+    document.getElementById('stats').innerHTML = `<strong>${filtered.length}</strong> ${modeLabel} · ${label} · ${subcatLabel}`;
+    document.getElementById('content').innerHTML = filtered.length
+      ? `<div class="grid">${productsGrid(filtered, lastLoadedMode)}</div>`
+      : `<div class="empty">No items in this subcategory yet.</div>`;
+  }
 }
 
 // ── Feedback modal helpers ─────────────────────────────────────────
@@ -995,21 +1266,47 @@ async function load() {
       document.getElementById('stats').innerHTML = `<strong>${items.length}</strong> commercials · <strong>${approvedCount}</strong> approved for Buffer · <strong>${queuedCount}</strong> queued`;
       document.getElementById('content').innerHTML = `${marketingTools(items)}<div class="grid">${marketingGrid(items)}</div>`;
     } else if (currentMode === 'renders') {
-      const items = j.renders || [];
+      const allItems = j.renders || [];
+      // Store for subcat filtering without re-fetching
+      lastLoadedItems = allItems;
+      lastLoadedMode = 'renders';
+      // Update subcategory chip counts from the full dataset
+      updateSubcatCounts(allItems, 'renders');
+      // Apply current subcat filter
+      const items = filterItemsBySubcat(allItems);
+      const subcatLabel = currentSubcat
+        ? (LANE_CATALOGS[currentCat]?.find(l => l.slug === currentSubcat)?.label || currentSubcat)
+        : null;
       const liveCount = items.filter(x => x.is_live).length;
       const newCount = items.length - liveCount;
-      document.getElementById('stats').innerHTML = `<strong>${items.length}</strong> renders · ${label} · <strong>${newCount}</strong> new, ${liveCount} live`;
+      const subcatPart = subcatLabel ? ` · ${subcatLabel}` : '';
+      document.getElementById('stats').innerHTML = `<strong>${allItems.length}</strong> total · <strong>${items.length}</strong> shown · ${label}${subcatPart} · <strong>${newCount}</strong> new, ${liveCount} live`;
       if (!items.length) {
-        document.getElementById('content').innerHTML = `<div class="empty">No completed renders for this category.</div>`;
+        document.getElementById('content').innerHTML = currentSubcat
+          ? `<div class="empty">No renders tagged for this subcategory yet. Tap <strong>All</strong> to see everything.</div>`
+          : `<div class="empty">No completed renders for this category.</div>`;
         return;
       }
       document.getElementById('content').innerHTML = `<div class="grid">${rendersGrid(items)}</div>`;
     } else {
-      const items = j.products || [];
+      const allItems = j.products || [];
+      // Store for subcat filtering without re-fetching
+      lastLoadedItems = allItems;
+      lastLoadedMode = currentMode;
+      // Update subcategory chip counts from the full dataset
+      updateSubcatCounts(allItems, currentMode);
+      // Apply current subcat filter
+      const items = filterItemsBySubcat(allItems);
+      const subcatLabel = currentSubcat
+        ? (LANE_CATALOGS[currentCat]?.find(l => l.slug === currentSubcat)?.label || currentSubcat)
+        : null;
       const modeLabel = currentMode === 'active' ? 'on the site' : 'in the archive';
-      document.getElementById('stats').innerHTML = `<strong>${items.length}</strong> ${modeLabel} · ${label}`;
+      const subcatPart = subcatLabel ? ` · ${subcatLabel}` : '';
+      document.getElementById('stats').innerHTML = `<strong>${allItems.length}</strong> total · <strong>${items.length}</strong> shown · ${label}${subcatPart} · ${modeLabel}`;
       if (!items.length) {
-        const empty = currentMode === 'active' ? 'Nothing live on the site for this category.' : 'Nothing in the archive for this category.';
+        const empty = currentSubcat
+          ? `No items tagged for this subcategory yet.`
+          : (currentMode === 'active' ? 'Nothing live on the site for this category.' : 'Nothing in the archive for this category.');
         document.getElementById('content').innerHTML = `<div class="empty">${empty}</div>`;
         return;
       }
