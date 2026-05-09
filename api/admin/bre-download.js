@@ -60,15 +60,23 @@ export default async function handler(req, res) {
     if (!inputUrl) return res.status(400).json({ error: 'product has no video url' });
 
     try {
-      const { buffer, fileName } = await burnQrToBuffer({
-        inputUrl, slug, title: product.name,
+      // Upload to Blob and 302-redirect (Bre 2026-05-08 v4): Ak tested
+      // direct streaming and got "Safari can't open the page" — the
+      // burned MP4 is 8-15 MB which exceeds Vercel functions' ~4.5 MB
+      // sync response body cap, so the response was truncated and the
+      // browser saw a broken stream. Fix: upload to Vercel Blob (no
+      // size cap), redirect there. Blob serves with octet-stream from
+      // the upload step, so iOS still gets the Save dialog.
+      const { videoUrl, fileName } = await burnQrAndUpload({
+        inputUrl,
+        slug,
+        title: product.name,
+        category: product.category,
+        bucket: 'bre-pulls',
       });
-      // application/octet-stream + Content-Disposition: attachment is
-      // the iOS Safari magic combo — forces Save dialog.
-      res.setHeader('Content-Type', 'application/octet-stream');
-      res.setHeader('Content-Disposition', `attachment; filename="${fileName}"`);
+      const redirectUrl = `${videoUrl}?download=${encodeURIComponent(fileName)}`;
       res.setHeader('Cache-Control', 'private, no-store');
-      return res.status(200).send(buffer);
+      return res.redirect(302, redirectUrl);
     } catch (err) {
       return res.status(500).json({ error: String(err.message || err) });
     }
