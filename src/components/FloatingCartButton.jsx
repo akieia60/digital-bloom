@@ -15,6 +15,7 @@ export default function FloatingCartButton() {
   return (
     <button
       type="button"
+      className="db-floating-cart"
       onClick={toggleCart}
       aria-label={`Open cart (${cartCount} ${cartCount === 1 ? 'item' : 'items'})`}
       style={{

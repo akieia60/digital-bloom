@@ -505,6 +505,8 @@ export function buildDeliverySummary(delivery) {
   return {
     target: delivery.target,
     recipient_email: delivery.recipientEmail || '',
+    recipient_phone: delivery.recipientPhone || '',
+    delivery_channel: delivery.deliveryChannel === 'phone' ? 'phone' : 'email',
     purchaser_email: delivery.purchaserEmail || '',
     delivery_mode: delivery.deliveryMode,
     delivery_date: delivery.deliveryDate || '',

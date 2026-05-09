@@ -190,6 +190,26 @@ const Success = () => {
     ? `sms:${recipientPhone}?&body=${encodeURIComponent(shareBody)}`
     : `sms:?&body=${encodeURIComponent(shareBody)}`;
   const whatsappHref = `https://wa.me/?text=${encodeURIComponent(shareBody)}`;
+  // Email share — David Chamberlain 2026-05-09: he picked Email at checkout
+  // and saw only SMS/WhatsApp here. mailto: lets the buyer send through their
+  // own email client (Gmail / Apple Mail / Outlook) so the recipient sees a
+  // trusted personal address, not a transactional sender.
+  const recipientEmailAddr = String(
+    primaryPurchase?.delivery?.recipient_email ||
+    primaryPurchase?.composition_manifest?.delivery?.recipientEmail ||
+    ''
+  ).trim();
+  const emailSubject = senderName
+    ? `${senderName} sent you a Digital Bloom`
+    : `You have a Digital Bloom`;
+  const emailBody = `${shareBody}\n\nOpen the link above to view it. No app needed.`;
+  const mailtoHref = `mailto:${encodeURIComponent(recipientEmailAddr)}?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
+  // The buyer's chosen delivery channel — drives which share button leads.
+  const chosenChannel = String(
+    primaryPurchase?.delivery?.delivery_channel ||
+    primaryPurchase?.composition_manifest?.delivery?.deliveryChannel ||
+    ''
+  ).toLowerCase();
   const getPurchaseStatusLabel = (status) => {
     const normalized = String(status || '').toLowerCase();
     const labelKey = PURCHASE_STATUS_LABELS[normalized];
@@ -402,6 +422,15 @@ const Success = () => {
           <div className="success-card">
             <h3 className="success-card-label">{t('success_send_protected_link')}</h3>
             <div className="success-share-row" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              {chosenChannel === 'email' && (
+                <a
+                  href={mailtoHref}
+                  className="success-share-btn"
+                  style={{ textAlign: 'center', textDecoration: 'none', background: '#0D1B36', color: '#fff', fontWeight: 600 }}
+                >
+                  ✉️ Send via email
+                </a>
+              )}
               <a
                 href={smsHref}
                 className="success-share-btn"
@@ -409,6 +438,15 @@ const Success = () => {
               >
                 💬 {t('success_send_via_text')}
               </a>
+              {chosenChannel !== 'email' && (
+                <a
+                  href={mailtoHref}
+                  className="success-share-btn"
+                  style={{ textAlign: 'center', textDecoration: 'none', background: '#0D1B36', color: '#fff', fontWeight: 600 }}
+                >
+                  ✉️ Send via email
+                </a>
+              )}
               <a
                 href={whatsappHref}
                 target="_blank"

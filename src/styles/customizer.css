@@ -3,6 +3,13 @@
    Premium slide-up panel with sticky CTA
    ============================================ */
 
+/* Hide the global floating cart pill while the customizer sheet is open —
+   David Chamberlain 2026-05-09: the pill (z-index 1500) was sitting on top
+   of the customizer's Next button (z-index 10 inside a z-1000 sheet), so
+   the user couldn't tap Next on mobile. The body class is already toggled
+   by Customizer's isOpen effect; this rule just acts on it. */
+body.customizer-open .db-floating-cart { display: none !important; }
+
 /* ─── OVERLAY ─── */
 .customizer-overlay {
   position: fixed;
