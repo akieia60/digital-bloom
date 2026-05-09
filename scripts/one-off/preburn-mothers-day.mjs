@@ -1,14 +1,21 @@
 /**
- * preburn-mothers-day.mjs (2026-05-08 night)
+ * preburn-mothers-day.mjs (2026-05-08 night, generalized 2026-05-09)
  *
- * Pre-burns QR + uploads ALL active Mother's Day blooms to Vercel Blob,
- * writes the burned URL back to products.qr_burned_url. With this in
- * place, Bre Pull links can point DIRECTLY to a ready-to-download Blob
- * URL — zero burn time on tap, iOS Save dialog appears in <2 seconds.
+ * Pre-burns QR + uploads active blooms to Vercel Blob, writes the
+ * burned URL back to products.qr_burned_url. With this in place, Bre
+ * Pull links point DIRECTLY to a ready-to-download Blob URL — zero
+ * burn time on tap, iOS Save dialog appears in <2 seconds.
+ *
+ * Defaults to mothers-day for backwards compatibility (Ak's muscle
+ * memory). Pass --category=<slug> for any single category, or
+ * --category=all to burn every active product across the catalog.
  *
  * Usage:
- *   node scripts/one-off/preburn-mothers-day.mjs            # dry run
- *   node scripts/one-off/preburn-mothers-day.mjs --apply    # do it
+ *   node scripts/one-off/preburn-mothers-day.mjs                              # dry run, mothers-day
+ *   node scripts/one-off/preburn-mothers-day.mjs --apply                      # do mothers-day
+ *   node scripts/one-off/preburn-mothers-day.mjs --apply --category=graduation
+ *   node scripts/one-off/preburn-mothers-day.mjs --apply --category=birthday
+ *   node scripts/one-off/preburn-mothers-day.mjs --apply --category=all       # every category
  *   node scripts/one-off/preburn-mothers-day.mjs --apply --concurrency=4
  */
 import { createClient } from '@supabase/supabase-js';
@@ -29,6 +36,8 @@ const apply = process.argv.includes('--apply');
 const force = process.argv.includes('--force');
 const concurrencyArg = process.argv.find((a) => a.startsWith('--concurrency='));
 const concurrency = concurrencyArg ? Number(concurrencyArg.split('=')[1]) : 3;
+const categoryArg = process.argv.find((a) => a.startsWith('--category='));
+const categoryFilter = categoryArg ? categoryArg.split('=')[1].trim() : 'mothers-day';
 const blobToken = env.BLOB_READ_WRITE_TOKEN;
 
 function runFfmpeg(args) {
@@ -92,17 +101,27 @@ async function burnAndUpload(product) {
   }
 }
 
-const { data, error } = await sb
+let query = sb
   .from('products')
   .select('id, name, category, video_file_url, video_url, qr_burned_url')
-  .eq('category', 'mothers-day')
   .eq('is_active', true)
   .order('created_at', { ascending: false });
+if (categoryFilter !== 'all') {
+  query = query.eq('category', categoryFilter);
+}
+const { data, error } = await query;
 if (error) { console.error(error); process.exit(1); }
 
 const need = data.filter((p) => force || !p.qr_burned_url);
 const skip = data.length - need.length;
-console.log(`\n${apply ? '[APPLY]' : '[DRY RUN]'} Active Mother's Day blooms: ${data.length}, skipping (already burned): ${skip}, to-process: ${need.length}, concurrency: ${concurrency}\n`);
+const label = categoryFilter === 'all' ? 'all categories' : categoryFilter;
+console.log(`\n${apply ? '[APPLY]' : '[DRY RUN]'} Active blooms (${label}): ${data.length}, skipping (already burned): ${skip}, to-process: ${need.length}, concurrency: ${concurrency}\n`);
+if (categoryFilter === 'all' && need.length) {
+  const byCat = need.reduce((acc, p) => { acc[p.category] = (acc[p.category] || 0) + 1; return acc; }, {});
+  console.log('  Breakdown:');
+  for (const [c, n] of Object.entries(byCat).sort()) console.log(`    ${c}: ${n}`);
+  console.log('');
+}
 if (!apply) { console.log('(--apply to commit)'); process.exit(0); }
 
 let done = 0, fail = 0;
