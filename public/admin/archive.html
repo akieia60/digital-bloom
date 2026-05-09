@@ -684,15 +684,22 @@ function productsGrid(items, mode) {
     const btnClass = isActive ? 'archive' : 'restore';
     const cardClass = isActive ? 'archive-mode' : '';
     const audit = escape(fmtAudit(p.last_action_by, p.last_action_at));
-    // Direct GET-redirect link (5/8 v5): API burns QR server-side,
-    // uploads to Vercel Blob, 302-redirects to the Blob URL with
-    // octet-stream content-type. SAME-TAB navigation (no target=_blank)
-    // so Brie sees the URL-bar progress during the 15-30 sec burn
-    // instead of a blank new tab. After the save dialog she taps
-    // Back to return to the admin page.
-    const breBtn = isActive
-      ? `<a class="action bre-pull" href="/api/admin/bre-download?productId=${encodeURIComponent(p.id)}&token=${encodeURIComponent(TOKEN)}&slug=bre" style="display:flex;align-items:center;justify-content:center;text-decoration:none;width:100%;padding:10px;border-radius:6px;font-weight:700;font-size:0.78rem;letter-spacing:0.06em;text-transform:uppercase;font-family:inherit;background:#2a1f3d;color:#e0c0ff;border:1px solid #6e4ca0;margin-top:8px;cursor:pointer;">📥 Bre Pull (QR + Save) — wait 15-30 sec</a>`
-      : '';
+    // Bre Pull link (5/8 v6 — pre-burned mode):
+    // If the product has a `qr_burned_url` (pre-burned by the
+    // batch script and uploaded to Vercel Blob), link DIRECTLY
+    // to that URL. iOS Safari fetches the octet-stream file in
+    // ~2 seconds and shows the Save dialog immediately.
+    // Fallback: if no pre-burn yet, link to the on-demand
+    // /api/admin/bre-download endpoint (which still works but
+    // takes 30-50 sec end-to-end).
+    let breBtn = '';
+    if (isActive) {
+      if (p.qr_burned_url) {
+        breBtn = `<a class="action bre-pull" href="${p.qr_burned_url}" style="display:flex;align-items:center;justify-content:center;text-decoration:none;width:100%;padding:10px;border-radius:6px;font-weight:700;font-size:0.78rem;letter-spacing:0.06em;text-transform:uppercase;font-family:inherit;background:#D4AF37;color:#0D1B36;border:1px solid #D4AF37;margin-top:8px;cursor:pointer;">⬇ Bre Pull (QR + Save) — instant</a>`;
+      } else {
+        breBtn = `<a class="action bre-pull" href="/api/admin/bre-download?productId=${encodeURIComponent(p.id)}&token=${encodeURIComponent(TOKEN)}&slug=bre" style="display:flex;align-items:center;justify-content:center;text-decoration:none;width:100%;padding:10px;border-radius:6px;font-weight:700;font-size:0.78rem;letter-spacing:0.06em;text-transform:uppercase;font-family:inherit;background:#2a1f3d;color:#e0c0ff;border:1px solid #6e4ca0;margin-top:8px;cursor:pointer;">📥 Bre Pull (QR + Save) — burning…</a>`;
+      }
+    }
     return `<div class="card ${cardClass}">
       ${ribbon}
       <div class="video-wrap">${media}${fbIcon('product', p.id, p.name || 'Untitled', poster, vid)}</div>

@@ -202,7 +202,7 @@ export default async function handler(req, res) {
     const isActive = status === 'active';
     const { data, error } = await supabase
       .from('products')
-      .select('id, name, slug, category, video_file_url, video_url, thumbnail_url, image_url, is_active, created_at, updated_at, price_cents, last_action_by, last_action_at')
+      .select('id, name, slug, category, video_file_url, video_url, thumbnail_url, image_url, is_active, created_at, updated_at, price_cents, last_action_by, last_action_at, qr_burned_url')
       .eq('category', categorySlug)
       .eq('is_active', isActive)
       .order('updated_at', { ascending: false });
