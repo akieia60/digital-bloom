@@ -59,8 +59,11 @@ async function downloadToFile(url, dest) {
   writeFileSync(dest, buf);
 }
 async function burnAndUpload(product) {
-  const inputUrl = product.video_file_url || product.video_url;
+  let inputUrl = product.video_file_url || product.video_url;
   if (!inputUrl) throw new Error('no video url');
+  // Legacy products store relative /videos/shop/... paths; prefix with
+  // the production origin so node:fetch can resolve them.
+  if (inputUrl.startsWith('/')) inputUrl = `https://digitalbloom.store${inputUrl}`;
   const tmp = os.tmpdir();
   const stamp = Date.now() + '-' + Math.random().toString(36).slice(2, 8);
   const inPath  = path.join(tmp, `pb-in-${stamp}.mp4`);
