@@ -245,20 +245,26 @@ const ProductDetails = () => {
             ))}
           </div>
 
-          <div className="mt-6 grid grid-cols-2 gap-3">
+          {/* Cart button only appears AFTER something is in the cart.
+              Forces the flow: View → Customize → Cart. Until then, the
+              gold CUSTOMIZE EXPERIENCE button is the only path forward —
+              no two-button confusion (UX audit 2026-05-08). */}
+          <div className={`mt-6 grid gap-3 ${cartCount > 0 ? 'grid-cols-2' : 'grid-cols-1'}`}>
             <Link
               to="/shop"
               className="flex min-h-[48px] items-center justify-center rounded-full border border-[#E5E5EA] px-4 text-[12px] font-semibold uppercase tracking-[0.12em] text-[#6E6E73] transition-all hover:border-[var(--accent-gold)] hover:text-[var(--accent-gold)]"
             >
               {t('product_continue')}
             </Link>
-            <button
-              type="button"
-              onClick={toggleCart}
-              className="flex min-h-[48px] items-center justify-center rounded-full border border-[rgba(201,161,74,0.22)] bg-[rgba(201,161,74,0.08)] px-4 text-[12px] font-semibold uppercase tracking-[0.12em] text-[var(--accent-gold)] transition-all hover:bg-[rgba(201,161,74,0.14)]"
-            >
-              {t('nav_cart')} {cartCount > 0 ? `(${cartCount})` : ''}
-            </button>
+            {cartCount > 0 && (
+              <button
+                type="button"
+                onClick={toggleCart}
+                className="flex min-h-[48px] items-center justify-center rounded-full border border-[rgba(201,161,74,0.22)] bg-[rgba(201,161,74,0.08)] px-4 text-[12px] font-semibold uppercase tracking-[0.12em] text-[var(--accent-gold)] transition-all hover:bg-[rgba(201,161,74,0.14)]"
+              >
+                {t('nav_cart')} ({cartCount})
+              </button>
+            )}
           </div>
         </div>
 
