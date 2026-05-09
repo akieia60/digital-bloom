@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useLanguage, AVAILABLE_LANGUAGES } from '../contexts/LanguageContext';
+import '../styles/landing-nav.css';
 
 const Header = ({ onSearchChange, searchQuery, onOpenFaq }) => {
   const { getCartCount, toggleCart } = useCart();
@@ -9,6 +10,9 @@ const Header = ({ onSearchChange, searchQuery, onOpenFaq }) => {
   const cartCount = getCartCount();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isLangOpen, setIsLangOpen] = useState(false);
+  const langRef = useRef(null);
+  const currentLang = AVAILABLE_LANGUAGES.find(l => l.code === lang) || AVAILABLE_LANGUAGES[0];
 
   useEffect(() => {
     const handleScroll = () => {
@@ -29,6 +33,16 @@ const Header = ({ onSearchChange, searchQuery, onOpenFaq }) => {
     };
   }, [isMobileMenuOpen]);
 
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (langRef.current && !langRef.current.contains(e.target)) {
+        setIsLangOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
   return (
     <header
       className={`sticky top-0 z-50 transition-all duration-500 ${isScrolled ? 'pb-2 bg-[var(--nav-bg-scrolled)] backdrop-blur-xl border-b border-[var(--nav-border-scrolled)]' : 'pb-3 sm:pb-4 bg-[var(--nav-bg)]'}`}
@@ -44,10 +58,10 @@ const Header = ({ onSearchChange, searchQuery, onOpenFaq }) => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
         <div className="flex items-center h-12 relative">
 
-          {/* Left: Hamburger only on mobile (Home icon is redundant
-              with the centered brand logo which links home + the
-              Home item in the hamburger menu). On sm+ the Home
-              shortcut returns. */}
+          {/* Left: Hamburger + Home icon. Home is visible on every
+              screen size (Ak 2026-05-08) — the centered brand logo
+              also links home, but Ak wants an unmistakable house
+              icon that doesn't look like a logo. */}
           <div className="flex-1 flex items-center gap-2">
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -65,7 +79,7 @@ const Header = ({ onSearchChange, searchQuery, onOpenFaq }) => {
 
             <Link
               to="/"
-              className="hidden sm:inline-flex min-h-11 min-w-11 items-center justify-center rounded-full border border-white/10 bg-white/5 p-2 text-white/82 transition-colors hover:bg-white/10 hover:text-white"
+              className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-full border border-white/10 bg-white/5 p-2 text-white/82 transition-colors hover:bg-white/10 hover:text-white"
               aria-label={t('nav_home')}
               onClick={() => setIsMobileMenuOpen(false)}
             >
@@ -94,8 +108,45 @@ const Header = ({ onSearchChange, searchQuery, onOpenFaq }) => {
             </Link>
           </div>
 
-          {/* Right: Cart + SEND A BLOOM */}
-          <div className="flex-1 flex justify-end items-center space-x-3 sm:space-x-5 ml-4">
+          {/* Right: Language switcher + Cart + SEND A BLOOM */}
+          <div className="flex-1 flex justify-end items-center space-x-2 sm:space-x-3 ml-2 sm:ml-4">
+            {/* Language switcher — top-level on every inner page (Ak 2026-05-08). */}
+            <div className="lang-switcher" ref={langRef}>
+              <button
+                className="lang-switcher__btn"
+                onClick={() => setIsLangOpen(!isLangOpen)}
+                aria-label="Change language"
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="12" r="10" />
+                  <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+                </svg>
+                <span>{currentLang.short}</span>
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                  <path d="M6 9l6 6 6-6" />
+                </svg>
+              </button>
+
+              {isLangOpen && (
+                <div className="lang-switcher__dropdown">
+                  {AVAILABLE_LANGUAGES.map(l => (
+                    <button
+                      key={l.code}
+                      className={`lang-switcher__option ${lang === l.code ? 'lang-switcher__option--active' : ''}`}
+                      onClick={() => { changeLanguage(l.code); setIsLangOpen(false); }}
+                    >
+                      <span className="lang-switcher__option-label">{l.label}</span>
+                      {lang === l.code && (
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#D4AF37" strokeWidth="2.5" strokeLinecap="round">
+                          <path d="M20 6L9 17l-5-5" />
+                        </svg>
+                      )}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+
             <button
               onClick={toggleCart}
               className="relative inline-flex min-h-11 min-w-11 items-center justify-center rounded-full border border-white/10 bg-white/5 p-2.5 group transition-colors hover:bg-white/10"
