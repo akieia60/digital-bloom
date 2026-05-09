@@ -28,5 +28,9 @@ export default async function handler(req, res) {
 
   if (error) return res.status(500).json({ error: error.message });
 
+  res.setHeader(
+    'Cache-Control',
+    'public, max-age=0, s-maxage=300, stale-while-revalidate=86400'
+  );
   return res.status(200).json({ products: data || [] });
 }
