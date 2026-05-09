@@ -1,5 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
-import { burnQrAndUpload } from '../_lib/burnQr.js';
+import { burnQrAndUpload, burnQrToBuffer } from '../_lib/burnQr.js';
 
 export const maxDuration = 60;
 
@@ -34,8 +34,50 @@ function actorFromToken(token) {
  * QR target slug defaults to "bre" so referral clicks attribute to her.
  */
 export default async function handler(req, res) {
+  // GET = direct-stream mode (Bre 2026-05-08 v3): the client puts a real
+  // anchor link to this URL, the response IS the burned video file. iOS
+  // Safari handles the link-tap → file-response path natively, no
+  // user-gesture-timer issues, no two-step button dance, no Vercel Blob
+  // intermediate. Token is taken from query param so it works in <a href>.
+  if (req.method === 'GET') {
+    const token = String(req.query.token || '');
+    const actor = actorFromToken(token);
+    if (!actor) return unauthorized(res);
+
+    const productId = String(req.query.productId || '');
+    if (!productId) return res.status(400).json({ error: 'productId required' });
+    const slug = String(req.query.slug || 'bre');
+
+    const { data: product, error: pErr } = await supabase
+      .from('products')
+      .select('id, name, category, video_file_url, video_url')
+      .eq('id', productId)
+      .maybeSingle();
+    if (pErr) return res.status(500).json({ error: pErr.message });
+    if (!product) return res.status(404).json({ error: 'product not found' });
+
+    const inputUrl = product.video_file_url || product.video_url;
+    if (!inputUrl) return res.status(400).json({ error: 'product has no video url' });
+
+    try {
+      const { buffer, fileName } = await burnQrToBuffer({
+        inputUrl, slug, title: product.name,
+      });
+      // application/octet-stream + Content-Disposition: attachment is
+      // the iOS Safari magic combo — forces Save dialog.
+      res.setHeader('Content-Type', 'application/octet-stream');
+      res.setHeader('Content-Disposition', `attachment; filename="${fileName}"`);
+      res.setHeader('Cache-Control', 'private, no-store');
+      return res.status(200).send(buffer);
+    } catch (err) {
+      return res.status(500).json({ error: String(err.message || err) });
+    }
+  }
+
   if (req.method !== 'POST') return res.status(405).json({ error: 'method' });
 
+  // Legacy POST mode kept for the old persistent-tray flow. Returns a
+  // Vercel Blob URL Bre can tap. May still be useful when batching.
   const token = String(req.headers['x-admin-token'] || req.headers.authorization?.replace(/^Bearer\s+/i, '') || '');
   const actor = actorFromToken(token);
   if (!actor) return unauthorized(res);
@@ -62,8 +104,6 @@ export default async function handler(req, res) {
       category: product.category,
       bucket: 'bre-pulls',
     });
-    // Vercel Blob honors `?download=<filename>` to force a Save dialog
-    // even on iOS Safari (which would otherwise open the MP4 inline).
     const downloadUrl = `${videoUrl}?download=${encodeURIComponent(fileName)}`;
     return res.status(200).json({ ok: true, actor, downloadUrl, fileName, productName: product.name });
   } catch (err) {

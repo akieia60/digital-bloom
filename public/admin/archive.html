@@ -684,8 +684,13 @@ function productsGrid(items, mode) {
     const btnClass = isActive ? 'archive' : 'restore';
     const cardClass = isActive ? 'archive-mode' : '';
     const audit = escape(fmtAudit(p.last_action_by, p.last_action_at));
+    // Direct GET-stream link (5/8 v3): the API burns the QR server-side
+    // and streams the file directly as the response body. iOS Safari
+    // handles a real <a href> tap as a fresh user gesture every time —
+    // no two-step button dance, no replaceChild, no DOM-state fragility.
+    // Tap → wait 15-30 sec → iOS Save dialog. That's it.
     const breBtn = isActive
-      ? `<button class="action bre-pull" onclick="brePull('${p.id}', this)">📥 Bre Pull (QR + Download)</button>`
+      ? `<a class="action bre-pull" href="/api/admin/bre-download?productId=${encodeURIComponent(p.id)}&token=${encodeURIComponent(TOKEN)}&slug=bre" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:center;text-decoration:none;width:100%;padding:10px;border-radius:6px;font-weight:700;font-size:0.78rem;letter-spacing:0.06em;text-transform:uppercase;font-family:inherit;background:#2a1f3d;color:#e0c0ff;border:1px solid #6e4ca0;margin-top:8px;cursor:pointer;">📥 Bre Pull (QR + Save) — wait 15-30 sec</a>`
       : '';
     return `<div class="card ${cardClass}">
       ${ribbon}
