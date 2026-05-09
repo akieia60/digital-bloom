@@ -37,9 +37,47 @@ export const LANE_CATALOGS = {
     { slug: 'memorial',          label: 'In Memory',         tagline: 'For the father whose strength still echoes.' },
   ],
 
-  // Birthday / Anniversary / etc. — no lane catalogs yet. CategoryPage falls
-  // back to its flat grid for these until Monique starts tagging products
-  // and we lock in editorial copy here.
+  birthday: [
+    { slug: 'for-her',            label: 'For Her',           tagline: 'Queens, sisters, daughters, friends — make the day hers.' },
+    { slug: 'for-him',            label: 'For Him',           tagline: 'Kings, brothers, sons, friends — give him his crown.' },
+    { slug: 'for-mom',            label: 'For Mom',           tagline: 'The woman who started it all — now her day.' },
+    { slug: 'for-dad',            label: 'For Dad',           tagline: 'For Pops, Daddy, the man who made you who you are.' },
+    { slug: 'for-grandma',        label: 'For Grandma',       tagline: 'Wisdom, warmth, and a lifetime of cake.' },
+    { slug: 'for-sister',         label: 'For Sister',        tagline: 'Day-one, ride-or-die, sister bloom.' },
+    { slug: 'for-brother',        label: 'For Brother',       tagline: 'For the brother who built you up alongside him.' },
+    { slug: 'for-bestie',         label: 'For Bestie',        tagline: "Your person — the one who gets the inside jokes." },
+    { slug: 'for-niece-nephew',   label: 'For Niece/Nephew',  tagline: 'For the sweet ones — Sweet Sixteen, Little Man, the next generation.' },
+    { slug: 'for-partner',        label: 'For Partner',       tagline: "Wife, husband, the one you're choosing every birthday." },
+    { slug: 'for-auntie',         label: 'For Auntie',        tagline: 'Auntie energy — fabulous and full of glow.' },
+    { slug: 'for-twins',          label: 'For Twins',         tagline: 'Womb mates, twin flames — the day you both share.' },
+    { slug: 'milestone',          label: 'Milestones',        tagline: 'Sweet Sixteen, 21, 30, 40, 50 — the years that earn their own scene.' },
+    { slug: 'classic',            label: 'Classic Birthday',  tagline: 'Cards, roses, balloons — the bloom that fits anyone.' },
+  ],
+
+  anniversary: [
+    { slug: 'for-spouse',         label: 'For Spouse',        tagline: 'Still choosing each other — the love you keep building.' },
+    { slug: 'milestone',          label: 'Milestones',        tagline: 'Five, ten, twenty-five, golden — the years that earned a celebration.' },
+    { slug: 'vault',              label: 'Vault Edition',     tagline: 'The premium anniversary blooms — heirloom-grade.' },
+  ],
+
+  graduation: [
+    { slug: 'class-of-2026',      label: 'Class of 2026',     tagline: 'For the cap-tossing, future-ready Class of 2026.' },
+    { slug: 'for-her',            label: 'For Her',           tagline: "Quiet dignity, hard-earned — she did it." },
+    { slug: 'for-firstgen',       label: 'First in the Line', tagline: 'Generational pride — the first to make it through.' },
+    { slug: 'classic',            label: 'Classic Graduation', tagline: 'The long nights, the comeback semesters — the diploma in hand.' },
+  ],
+
+  zodiac: [
+    { slug: 'fire-signs',         label: 'Fire Signs',        tagline: 'Aries, Leo, Sagittarius — born to lead, roar, and aim higher.' },
+    { slug: 'earth-signs',        label: 'Earth Signs',       tagline: 'Taurus, Virgo, Capricorn — built to bloom, quietly sacred, on stone.' },
+    { slug: 'air-signs',          label: 'Air Signs',         tagline: 'Gemini, Libra, Aquarius — two sides, perfect balance, different by design.' },
+    { slug: 'water-signs',        label: 'Water Signs',       tagline: 'Cancer, Scorpio, Pisces — soft heart, truth underneath, deeper than the sea.' },
+  ],
+
+  // Acknowledgement / Love / Valentine / Luxury / Sports / Women's Day /
+  // Signature-Stories — no lane catalogs yet. CategoryPage falls back to
+  // its flat grid for these. Add when there's editorial copy + enough
+  // products to fill the lanes.
 };
 
 export function getLaneCatalog(categorySlug) {
