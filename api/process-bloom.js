@@ -117,7 +117,13 @@ export default async function handler(req, res) {
 
     // 6. Upsert product record (insert or update on slug conflict so re-uploads work)
     const supabaseUrl = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL;
-    const videoUrl = `${supabaseUrl}/storage/v1/object/public/product-media/${watermarkedStoragePath}`;
+    // Cache-buster: republishes overwrite the same storage path, so browsers and
+    // the storefront's <video> tag would replay the old bytes against an unchanged
+    // URL. Appending ?v=<minute-precision-utc> flips the URL on every republish so
+    // a refreshed page always pulls fresh bytes. (Ak 2026-05-10 — David spotted
+    // the prior render still playing after a republish that the archive said shipped.)
+    const cacheBust = new Date().toISOString().replace(/[-:T]/g, '').slice(0, 12);
+    const videoUrl = `${supabaseUrl}/storage/v1/object/public/product-media/${watermarkedStoragePath}?v=${cacheBust}`;
     const productSlug = pid || `${categorySlug}-${slug}`;
 
     // Pull the prompt's badge so subcategory tags ("🌸 Mothers-Day · Friend
