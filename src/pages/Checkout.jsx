@@ -332,61 +332,47 @@ export default function Checkout() {
             <div className="cart-credits-wallet__eyebrow">Bloom Delivery</div>
             <div className="cart-credits-wallet__heading-row">
               <div>
-                <h3 className="cart-credits-wallet__title">Who should receive this bloom?</h3>
+                <h3 className="cart-credits-wallet__title">Who's getting this bloom?</h3>
                 <p className="cart-credits-wallet__copy">
-                  Pick how you want to send their bloom link. After checkout we'll
-                  give you a one-tap share screen — text, email, or copy link.
+                  Pick who it's for and how they should get it.
                 </p>
               </div>
               <span className="cart-credits-wallet__icon" aria-hidden="true">📬</span>
             </div>
 
             <div className="cart-credit-entry-grid" style={{ gap: '14px', display: 'grid' }}>
-              <label className="cart-credit-entry-label">
-                Your email
-                <input
-                  type="email"
-                  value={buyerEmail}
-                  onChange={(event) => setBuyerEmail(event.target.value)}
-                  placeholder="you@email.com"
-                  className="cart-credit-entry-input"
-                  autoComplete="email"
-                  inputMode="email"
-                />
-              </label>
-
-              <div className="cart-credit-choice-row">
+              {/* 1. Who is this bloom for? */}
+              <div className="cart-credit-choice-row" role="radiogroup" aria-label="Recipient">
                 <button
                   type="button"
+                  role="radio"
+                  aria-checked={deliveryTarget === 'recipient'}
                   onClick={() => setDeliveryTarget('recipient')}
                   className={`cart-credit-choice ${deliveryTarget === 'recipient' ? 'is-active' : ''}`}
                 >
-                  Send to recipient
+                  Send to a loved one
                 </button>
                 <button
                   type="button"
+                  role="radio"
+                  aria-checked={deliveryTarget === 'self'}
                   onClick={() => setDeliveryTarget('self')}
                   className={`cart-credit-choice ${deliveryTarget === 'self' ? 'is-active' : ''}`}
                 >
-                  Send to me
+                  Send to me first
                 </button>
               </div>
 
+              {/* 2. How should it reach them? — only when sending to a loved one. */}
               {deliveryTarget === 'recipient' && (
                 <>
-                  {/* Delivery preference — Ak + Gamble 2026-05-07: end
-                      users were missing the SMS path because the toggle
-                      was buried below other cart fields. Added a clear
-                      eyebrow + "RECOMMENDED" badge on Text so it reads
-                      as the default at a glance, not just first in
-                      tab order. */}
                   <div className="cart-credit-entry-label" style={{ marginBottom: '4px' }}>
-                    How does it reach them?
+                    How should it reach them?
                   </div>
                   <p className="cart-credit-entry-hint" style={{ margin: '0 0 4px' }}>
                     Texting is fastest — the bloom link opens in Messages on your phone, so they see it from your familiar number, not a shortcode.
                   </p>
-                  <div className="cart-credit-choice-row" role="radiogroup" aria-label="Delivery preference">
+                  <div className="cart-credit-choice-row" role="radiogroup" aria-label="Delivery channel">
                     <button
                       type="button"
                       role="radio"
@@ -395,7 +381,7 @@ export default function Checkout() {
                       className={`cart-credit-choice cart-credit-choice--recommended ${deliveryChannel === 'phone' ? 'is-active' : ''}`}
                     >
                       <span aria-hidden="true" style={{ marginRight: '6px' }}>📱</span>
-                      Text
+                      By Text
                       <span
                         aria-hidden="true"
                         style={{
@@ -421,13 +407,13 @@ export default function Checkout() {
                       className={`cart-credit-choice ${deliveryChannel === 'email' ? 'is-active' : ''}`}
                     >
                       <span aria-hidden="true" style={{ marginRight: '6px' }}>✉️</span>
-                      Email
+                      By Email
                     </button>
                   </div>
 
                   {deliveryChannel === 'email' ? (
                     <label className="cart-credit-entry-label">
-                      Recipient email
+                      Their email
                       <input
                         type="email"
                         value={recipientEmail}
@@ -440,7 +426,7 @@ export default function Checkout() {
                     </label>
                   ) : (
                     <label className="cart-credit-entry-label">
-                      Recipient phone
+                      Their phone
                       <input
                         type="tel"
                         value={recipientPhone}
@@ -461,16 +447,21 @@ export default function Checkout() {
                 </>
               )}
 
-              <div className="cart-credit-choice-row">
+              {/* 3. When? */}
+              <div className="cart-credit-choice-row" role="radiogroup" aria-label="Delivery timing">
                 <button
                   type="button"
+                  role="radio"
+                  aria-checked={deliveryMode === 'now'}
                   onClick={() => setDeliveryMode('now')}
                   className={`cart-credit-choice ${deliveryMode === 'now' ? 'is-active' : ''}`}
                 >
-                  Send immediately
+                  Send now
                 </button>
                 <button
                   type="button"
+                  role="radio"
+                  aria-checked={deliveryMode === 'scheduled'}
                   onClick={() => setDeliveryMode('scheduled')}
                   className={`cart-credit-choice ${deliveryMode === 'scheduled' ? 'is-active' : ''}`}
                 >
@@ -493,6 +484,25 @@ export default function Checkout() {
                   </span>
                 </label>
               )}
+
+              {/* 4. Buyer email — receipt + (when sending to self) the bloom itself. */}
+              <label className="cart-credit-entry-label">
+                Your email (for the receipt)
+                <input
+                  type="email"
+                  value={buyerEmail}
+                  onChange={(event) => setBuyerEmail(event.target.value)}
+                  placeholder="you@email.com"
+                  className="cart-credit-entry-input"
+                  autoComplete="email"
+                  inputMode="email"
+                />
+                {deliveryTarget === 'self' && (
+                  <span className="cart-credit-entry-hint">
+                    We'll also send the bloom here so you can preview it and forward it to whoever you want.
+                  </span>
+                )}
+              </label>
             </div>
           </div>
         )}
