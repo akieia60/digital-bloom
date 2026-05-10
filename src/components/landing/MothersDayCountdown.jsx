@@ -8,11 +8,19 @@ import '../../styles/mothers-day-countdown.css';
 const MOTHERS_DAY = new Date('2026-05-10T23:59:59-04:00');
 const HIDE_AFTER  = new Date('2026-05-11T06:00:00-04:00');
 
+// Calendar-day diff in America/New_York so the banner says "today" all day
+// on Mother's Day (not "tomorrow" until midnight). Previous Math.ceil math
+// kept showing "tomorrow" until 11:59 PM on 5/10 because ~7 hours of remaining
+// ms still rounded up to a full day. David caught it at ~5pm.
 function daysUntil(target) {
-  const now = new Date();
-  const ms = target.getTime() - now.getTime();
-  if (ms <= 0) return 0;
-  return Math.ceil(ms / (1000 * 60 * 60 * 24));
+  const tz = 'America/New_York';
+  const ymd = (d) => d.toLocaleDateString('en-CA', { timeZone: tz });
+  const targetYmd = ymd(target);
+  const nowYmd = ymd(new Date());
+  if (nowYmd >= targetYmd) return 0;
+  const t1 = new Date(`${targetYmd}T00:00:00Z`).getTime();
+  const t0 = new Date(`${nowYmd}T00:00:00Z`).getTime();
+  return Math.round((t1 - t0) / (1000 * 60 * 60 * 24));
 }
 
 export default function MothersDayCountdown() {
