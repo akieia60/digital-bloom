@@ -182,6 +182,7 @@ export default async function handler(req, res) {
       'for-the-mother-of-my-children': 'mother-of-my-children',
       'for-my-kids-grandma': 'kids-grandma',
       'for-a-mother-figure': 'mother-figure',
+      'for-any-mother': 'any-mother',
     };
     if (subcategory && BADGE_SUBCATEGORY_ALIASES[subcategory]) {
       subcategory = BADGE_SUBCATEGORY_ALIASES[subcategory];

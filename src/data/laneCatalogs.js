@@ -14,6 +14,7 @@
 export const LANE_CATALOGS = {
   'mothers-day': [
     { slug: 'for-mom',               label: 'For Mom',          tagline: 'The classic — for the woman who raised you.' },
+    { slug: 'any-mother',            label: 'For Any Mother',   tagline: 'Universal — for any woman in your life who is a mother.' },
     { slug: 'to-my-wife',            label: 'To My Wife',       tagline: "From the husband she's raising the kingdom with." },
     { slug: 'for-grandma',           label: 'For Grandma',      tagline: 'Matriarch, heirloom, the garden she planted.' },
     { slug: 'kids-grandma',          label: "For My Kids' Grandma", tagline: "For the woman whose son or daughter made you a parent — your children's grandma." },
