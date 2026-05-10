@@ -3,11 +3,14 @@ import os from 'os';
 import path from 'path';
 import { execFile } from 'child_process';
 import { promisify } from 'util';
+import { createRequire } from 'module';
 import { createClient } from '@supabase/supabase-js';
 import { createCanvas } from 'canvas';
 import { normalizePublicBaseUrl } from './publicBaseUrl.js';
 
 const execFileAsync = promisify(execFile);
+const require = createRequire(import.meta.url);
+const ffmpegPath = require('ffmpeg-static');
 const DELIVERY_BUCKET = process.env.BLOOM_DELIVERY_BUCKET || 'bloom-deliveries';
 const PUBLIC_FALLBACK_BUCKET = 'product-media';
 
@@ -340,19 +343,21 @@ function wrapText(ctx, text, maxWidth) {
 }
 
 async function getVideoMetadata(inputPath) {
-  const { stdout } = await execFileAsync('ffprobe', [
-    '-v', 'error',
-    '-select_streams', 'v:0',
-    '-show_entries', 'stream=width,height',
-    '-of', 'json',
-    inputPath,
-  ]);
-
-  const parsed = JSON.parse(stdout || '{}');
-  const stream = parsed.streams?.[0] || {};
+  // ffprobe isn't bundled with ffmpeg-static, so we parse ffmpeg's own
+  // stderr stream info. Running ffmpeg with no output target exits with
+  // code 1 but writes the full stream description to stderr first.
+  let stderr = '';
+  try {
+    await execFileAsync(ffmpegPath, ['-hide_banner', '-i', inputPath], {
+      maxBuffer: 4 * 1024 * 1024,
+    });
+  } catch (err) {
+    stderr = err.stderr || '';
+  }
+  const dim = stderr.match(/Stream #\d+:\d+[^,]*: Video:[^,]+,[^,]+,\s*(\d+)x(\d+)/);
   return {
-    width: Number(stream.width || 720),
-    height: Number(stream.height || 1280),
+    width: dim ? Number(dim[1]) : 720,
+    height: dim ? Number(dim[2]) : 1280,
   };
 }
 
@@ -643,7 +648,7 @@ export async function renderBloomDelivery(purchaseId) {
       extras,
     });
 
-    await execFileAsync('ffmpeg', [
+    await execFileAsync(ffmpegPath, [
       '-y',
       '-i', inputPath,
       '-i', overlayPath,
