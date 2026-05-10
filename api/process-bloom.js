@@ -168,6 +168,21 @@ export default async function handler(req, res) {
         }
       }
     }
+    // Canonicalize: prompt badges drift toward elaborated phrasings ("Friend
+    // Honoring a Friend Who's a Mom") that don't match the canonical slugs in
+    // src/data/laneCatalogs.js the storefront filter chips use. Without this
+    // map every republish silently moved blooms out of their proper subcategory
+    // tab. (Ak 2026-05-10 — David found Mom Friend Energy hidden from the
+    // Friend tab; bulk-fixed 10 affected blooms at the same time.)
+    const BADGE_SUBCATEGORY_ALIASES = {
+      'friend-honoring-a-friend-whos-a-mom': 'friend-honoring',
+      'for-a-single-mom-mom-doing-it-all': 'single-mom',
+      'for-a-stepmom': 'stepmom',
+      'for-a-godmother-auntie-mother-figure': 'godmother-auntie',
+    };
+    if (subcategory && BADGE_SUBCATEGORY_ALIASES[subcategory]) {
+      subcategory = BADGE_SUBCATEGORY_ALIASES[subcategory];
+    }
 
     const baseProductPayload = {
       name: title,
