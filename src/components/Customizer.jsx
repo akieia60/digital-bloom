@@ -110,9 +110,6 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
   const [ribbonColor, setRibbonColor] = useState(stateDefaults.ribbonColor || null);
   const [playingTrack, setPlayingTrack] = useState(null);
   const [activeStep, setActiveStep] = useState(1);
-  // Collapsed starter-phrase tray (Ak + Gamble 5/7) — one input, one
-  // optional "tap for inspiration" panel below it.
-  const [showStarters, setShowStarters] = useState(false);
 
   // Pre-fill from editData when editing an existing customization from cart
   useEffect(() => {
@@ -518,12 +515,32 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
               <h3 className="customizer-section__title">{t('customize_your_message')}</h3>
             </div>
 
-            {/* YOUR MESSAGE — single field (Ak + Gamble 2026-05-07).
-                The old setup had two competing fields: "Choose a phrase"
-                dropdown above and "Your Message" textarea below. End
-                users couldn't tell which one they were supposed to fill
-                in. Merged into one input + a collapsible starter list
-                that injects phrases directly into the message box. */}
+            {/* TWO MESSAGE FIELDS (Ak + Gamble 2026-05-10 rollback).
+                1. Phrase dropdown — pick one or many; each selection
+                   appends to the message box below.
+                2. Free-text message box — type your own message.
+                Users can do either or both. */}
+            <div className="customizer-field">
+              <label className="customizer-label" htmlFor="cust-phrase">Choose a phrase</label>
+              <select
+                id="cust-phrase"
+                className="customizer-input customizer-select"
+                value=""
+                onChange={(e) => {
+                  if (e.target.value) {
+                    appendSlogan(e.target.value);
+                    e.target.value = '';
+                  }
+                }}
+              >
+                <option value="" disabled>Tap to add a phrase…</option>
+                {sloganPresets.map((slogan, i) => (
+                  <option key={i} value={slogan}>{slogan}</option>
+                ))}
+              </select>
+              <span className="customizer-hint">Pick as many as you like — each adds to your message.</span>
+            </div>
+
             <div className="customizer-field">
               <label className="customizer-label" htmlFor="cust-msg">{t('customize_your_message')}</label>
               <textarea
@@ -551,37 +568,6 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
                   </button>
                 )}
               </div>
-              {/* Starter phrases — collapsed link below the message box.
-                  Tap → reveals the same sloganPresets as buttons; each
-                  tap appends to the message and keeps the panel open
-                  so multiple phrases can stack. */}
-              <button
-                type="button"
-                className="customizer-starter-toggle"
-                onClick={() => setShowStarters((s) => !s)}
-                aria-expanded={showStarters}
-              >
-                <span aria-hidden="true">✨</span>
-                {showStarters ? 'Hide starter phrases' : 'Need inspiration? Tap for starter phrases'}
-                <span aria-hidden="true">{showStarters ? ' ↑' : ' ↓'}</span>
-              </button>
-              {showStarters && (
-                <div className="customizer-starter-list" role="group" aria-label="Starter phrases">
-                  {sloganPresets.map((slogan, i) => (
-                    <button
-                      key={i}
-                      type="button"
-                      className="customizer-starter-chip"
-                      onClick={() => appendSlogan(slogan)}
-                    >
-                      {slogan}
-                    </button>
-                  ))}
-                  <p className="customizer-hint" style={{ marginTop: '8px' }}>
-                    Tap as many as you like — each adds to your message.
-                  </p>
-                </div>
-              )}
             </div>
 
             {/* TO / FROM — both required per Gamble's 2026-04-26 note. Mandatory
