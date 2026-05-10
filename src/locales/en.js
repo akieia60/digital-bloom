@@ -527,6 +527,7 @@ export const en = {
   success_send_protected_link: "Send Protected Bloom Link",
   success_send_via_text: "Send via Text Message",
   success_send_via_whatsapp: "Send via WhatsApp",
+  success_send_via_email: "Send via Email",
   success_protected_link_note: "This bloom opens through a protected viewing link and is not offered here as a raw downloadable file.",
   success_copy_link: "🔗 Copy Link",
   success_copied: "✓ Copied!",

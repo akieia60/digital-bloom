@@ -334,7 +334,7 @@ export default function Checkout() {
               <div>
                 <h3 className="cart-credits-wallet__title">Who should receive this bloom?</h3>
                 <p className="cart-credits-wallet__copy">
-                  Pick how the gift link reaches them — email is delivered automatically today, SMS is launching soon.
+                  Pick how you'll share the gift link — after checkout you'll send it from your own phone via Text, WhatsApp, or Email so they see it from your familiar number, not a shortcode.
                 </p>
               </div>
               <span className="cart-credits-wallet__icon" aria-hidden="true">📬</span>
