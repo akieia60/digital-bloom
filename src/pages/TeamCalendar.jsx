@@ -64,6 +64,50 @@ export default function TeamCalendar() {
     return () => clearInterval(poll);
   }, []);
 
+  // Set the iOS "Add to Home Screen" icon + display title to a Digital Bloom
+  // calendar tile so it's identifiable on the home screen, separate from
+  // the main storefront icon.
+  useEffect(() => {
+    const head = document.head;
+    const previousTitle = document.title;
+    document.title = 'Digital Bloom · Team Calendar';
+
+    const tags = [
+      { rel: 'apple-touch-icon', sizes: '180x180', href: '/cal-icon-180.png' },
+      { rel: 'icon', type: 'image/png', sizes: '192x192', href: '/cal-icon-192.png' },
+      { rel: 'icon', type: 'image/png', sizes: '512x512', href: '/cal-icon-512.png' },
+    ];
+    const linkEls = tags.map((t) => {
+      const el = document.createElement('link');
+      Object.entries(t).forEach(([k, v]) => el.setAttribute(k, v));
+      el.dataset.calOwned = 'true';
+      head.appendChild(el);
+      return el;
+    });
+
+    const metas = [
+      { name: 'apple-mobile-web-app-capable', content: 'yes' },
+      { name: 'apple-mobile-web-app-title', content: 'Bloom Cal' },
+      { name: 'apple-mobile-web-app-status-bar-style', content: 'black-translucent' },
+      { name: 'theme-color', content: '#0D1B36' },
+    ];
+    const metaEls = metas.map(({ name, content }) => {
+      const el = document.createElement('meta');
+      el.setAttribute('name', name);
+      el.setAttribute('content', content);
+      el.dataset.calOwned = 'true';
+      head.appendChild(el);
+      return el;
+    });
+
+    return () => {
+      document.title = previousTitle;
+      [...linkEls, ...metaEls].forEach((el) => {
+        try { head.removeChild(el); } catch {}
+      });
+    };
+  }, []);
+
   async function patchEvent(id, updates) {
     if (!editMode) return;
     setSavingId(id);
