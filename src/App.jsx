@@ -24,6 +24,7 @@ const BloomDelivery = lazy(() => import('./pages/BloomDelivery'));
 const BloomManage = lazy(() => import('./pages/BloomManage'));
 const ComingSoon = lazy(() => import('./pages/ComingSoon'));
 const Share = lazy(() => import('./pages/Share'));
+const TeamCalendar = lazy(() => import('./pages/TeamCalendar'));
 const ShoppingCart = lazy(() => import('./components/ShoppingCart'));
 const FAQ = lazy(() => import('./components/landing/FAQ'));
 const FloatingCartButton = lazy(() => import('./components/FloatingCartButton'));
@@ -113,6 +114,7 @@ function AppContent({ searchQuery, setSearchQuery }) {
           <Route path="/contact" element={<ComingSoon />} />
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/share" element={<Share />} />
+          <Route path="/cal" element={<TeamCalendar />} />
           <Route path="/bloom/:id/manage" element={<BloomManage />} />
           <Route path="/bloom/:id" element={<BloomDelivery />} />
           <Route path="/gift/:id" element={<BloomDelivery />} />
