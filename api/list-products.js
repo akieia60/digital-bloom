@@ -32,7 +32,7 @@ export default async function handler(req, res) {
 
   res.setHeader(
     'Cache-Control',
-    'public, max-age=0, s-maxage=300, stale-while-revalidate=86400'
+    'public, max-age=0, s-maxage=30, must-revalidate'
   );
   return res.status(200).json({ products: data || [] });
 }

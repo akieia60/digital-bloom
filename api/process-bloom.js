@@ -207,6 +207,16 @@ export default async function handler(req, res) {
     if (dbErr) throw new Error(`DB upsert failed: ${dbErr.message}`);
 
     console.log(`[process-bloom] ✅ ${product.name} — ${videoUrl}`);
+
+    // Warm the storefront catalog edge cache with the freshly-published row so
+    // shoppers see the new video immediately instead of waiting on s-maxage.
+    const baseUrl = process.env.APP_BASE_URL
+      || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : null)
+      || 'https://digitalbloom.store';
+    fetch(`${baseUrl}/api/list-products?_=${Date.now()}`, {
+      headers: { 'Cache-Control': 'no-cache' },
+    }).catch(() => {});
+
     return res.status(200).json({ success: true, product });
 
   } catch (err) {
