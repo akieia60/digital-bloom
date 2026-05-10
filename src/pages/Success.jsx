@@ -175,9 +175,13 @@ const Success = () => {
     primaryPurchase?.composition_manifest?.delivery?.senderName ||
     primaryPurchase?.delivery?.senderName ||
     '';
-  const shareBody = senderName
-    ? `${senderName} sent you a Digital Bloom 💐 ${shareUrl}`
-    : `You have a Digital Bloom 💐 ${shareUrl}`;
+  // Recipients (especially less tech-savvy ones) sometimes saw the rich-link
+  // card and didn't realize it was tappable. Spell out the action and add
+  // "no app needed" to defuse the install-anxiety reflex.
+  const senderLine = senderName
+    ? `🌸 ${senderName} sent you a Digital Bloom!`
+    : `🌸 You have a Digital Bloom!`;
+  const shareBody = `${senderLine}\n\nTap the rose below to open it — no app needed.\n\n${shareUrl}`;
   // If the buyer entered the recipient's phone number in checkout (Text
   // delivery option), pre-fill the SMS recipient too so the buyer just taps
   // Send. Falls back to no-recipient (just body pre-fill) if no phone.
@@ -202,7 +206,9 @@ const Success = () => {
   const emailSubject = senderName
     ? `${senderName} sent you a Digital Bloom`
     : `You have a Digital Bloom`;
-  const emailBody = `${shareBody}\n\nOpen the link above to view it. No app needed.`;
+  // Email recipients see the URL inline rather than a rich card, so reword
+  // "rose below" → "link below" for the email-channel variant.
+  const emailBody = `${senderLine}\n\nClick the link below to open it — no app needed.\n\n${shareUrl}`;
   const mailtoHref = `mailto:${encodeURIComponent(recipientEmailAddr)}?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
   // The buyer's chosen delivery channel — drives which share button leads.
   const chosenChannel = String(
