@@ -12,7 +12,7 @@ export default async function handler(req, res) {
 
   let query = supabase
     .from('products')
-    .select('id, name, slug, prompt_id:prompt_used, category, price, is_active, video_url, updated_at')
+    .select('id, name, slug, prompt_id:prompt_used, category, subcategory, price, is_active, video_url, updated_at')
     .eq('is_active', true)
     .order('updated_at', { ascending: false })
     .limit(500);
@@ -22,7 +22,7 @@ export default async function handler(req, res) {
   if (error?.code === '42703' || error?.code === 'PGRST204') {
     ({ data, error } = await supabase
       .from('products')
-      .select('id, name, slug, category, price, is_active, video_url, updated_at')
+      .select('id, name, slug, category, subcategory, price, is_active, video_url, updated_at')
       .eq('is_active', true)
       .order('updated_at', { ascending: false })
       .limit(500));
