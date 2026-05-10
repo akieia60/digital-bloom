@@ -6,7 +6,7 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY
 );
 
-const TEAM_CAL_KEY = process.env.TEAM_CAL_KEY;
+const TEAM_CAL_KEY = process.env.TEAM_CAL_KEY?.trim();
 
 const ALLOWED_FIELDS = new Set([
   'event_date',
