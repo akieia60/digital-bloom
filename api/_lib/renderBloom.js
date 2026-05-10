@@ -373,6 +373,7 @@ async function createOverlayImage(destination, {
   primaryColor,
   accentColor,
   messageBold = false,
+  messageOffset = { x: 0, y: 0 },
 }) {
   const layout = ENGRAVING_LAYOUTS[engravingStyle] || ENGRAVING_LAYOUTS.heirloom;
   const labels = LOCALE_LABELS[locale] || LOCALE_LABELS.en;
@@ -635,6 +636,7 @@ export async function renderBloomDelivery(purchaseId) {
       engravingStyle,
       fontChoice,
       locale,
+      messageOffset,
       primaryColor,
       accentColor,
       messageBold,
