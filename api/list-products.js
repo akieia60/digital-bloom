@@ -30,9 +30,14 @@ export default async function handler(req, res) {
 
   if (error) return res.status(500).json({ error: error.message });
 
+  // Post-Mother's-Day: relaxed from s-maxage=30 to s-maxage=300 now that
+  // we don't need <1min visibility on new bloom pushes. process-bloom still
+  // warms this endpoint after each publish, so freshly-republished blooms
+  // remain visible to the next shopper without waiting on the cache window.
+  // Cuts cost of the hottest API endpoint by ~10x.
   res.setHeader(
     'Cache-Control',
-    'public, max-age=0, s-maxage=30, must-revalidate'
+    'public, max-age=0, s-maxage=300, must-revalidate'
   );
   return res.status(200).json({ products: data || [] });
 }
