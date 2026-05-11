@@ -9,7 +9,7 @@ export const vi = {
   // ─── Hero (GradientHero — design-upgrade) ───
   hero_new_title_1: "Hãy Tặng Họ Hoa",
   hero_new_title_2: "Khi Họ Vẫn Còn Đây",
-  hero_new_tagline: "Tuần Lễ Ngày Của Mẹ — mỗi bloom $1 đến hết ngày 10/5. Gửi điều gì đó điện ảnh trong vài phút.",
+  hero_new_tagline: "Gửi điều gì đó điện ảnh trong vài phút.",
   hero_new_cta: "GỬI MỘT BLOOM",
   hero_new_from: "Quà tặng từ",
   hero_new_no_app: "không cần ứng dụng",
