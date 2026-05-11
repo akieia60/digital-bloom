@@ -594,6 +594,10 @@ async function openFb(kind, ref, label, thumbUrl, videoUrl) {
   document.getElementById('fb-sub').textContent = `${kind} · ${ref.slice(0, 40)}`;
   document.getElementById('fb-body').value = '';
   document.getElementById('fb-list').innerHTML = '<div style="color:#7a8fad;font-size:0.8rem;padding:8px 4px">Loading…</div>';
+  // Reset Save button state — saveFb's success path doesn't re-enable, so opening
+  // a second video would show a stale "Saving…" disabled button. (Ak 2026-05-11)
+  const saveBtn = document.getElementById('fb-save');
+  if (saveBtn) { saveBtn.disabled = false; saveBtn.textContent = 'Save comment'; }
   document.getElementById('fb-modal').classList.add('show');
   try {
     const r = await fetch(`/api/admin/feedback?token=${encodeURIComponent(TOKEN)}&target_kind=${encodeURIComponent(kind)}&target_ref=${encodeURIComponent(ref)}&limit=50`);
