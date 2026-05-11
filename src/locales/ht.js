@@ -9,7 +9,7 @@ export const ht = {
   // ─── Hero (GradientHero — design-upgrade) ───
   hero_new_title_1: "Bay Yo Flè Yo",
   hero_new_title_2: "Pandan Yo Toujou La",
-  hero_new_tagline: "Semèn Fèt Manman — chak bloom $1 jiska 10 me. Atizay mouvman di liks pou chak okasyon.",
+  hero_new_tagline: "Atizay mouvman di liks pou chak okasyon.",
   hero_new_cta: "VOYE YON BLOOM",
   hero_new_from: "Kado a komanse nan",
   hero_new_no_app: "pa gen bezwen app",
