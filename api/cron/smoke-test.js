@@ -25,14 +25,14 @@ function isAuthorized(req) {
   return userAgent.includes('vercel-cron');
 }
 
-async function checkEndpoint(name, url, validate) {
+async function checkEndpoint(name, url, validate, allowNon2xx = false) {
   const start = Date.now();
   try {
     const res = await fetch(url, {
       headers: { 'Cache-Control': 'no-cache', 'User-Agent': 'digitalbloom-smoke/1.0' },
     });
     const elapsed = Date.now() - start;
-    if (!res.ok) {
+    if (!res.ok && !allowNon2xx) {
       return { name, ok: false, status: res.status, ms: elapsed, error: `HTTP ${res.status}` };
     }
     if (validate) {
@@ -107,15 +107,18 @@ async function runSmokeTests() {
     {
       name: 'session-status-auth',
       url: `${BASE_URL}/api/session-status`,
+      allowNon2xx: true,
       validate: (text, res) =>
         // We expect an auth-gated response (400 or 401), NOT a 500 or hang.
-        res.status === 400 || res.status === 401 || 'session-status should require auth (400/401)',
+        // 400/401 means the CORS guard + auth path is intact; a 500/timeout
+        // would indicate the kind of inverted-guard bug we hit yesterday.
+        res.status === 400 || res.status === 401 || `session-status should require auth (got ${res.status})`,
     },
   ];
 
   const results = [];
   for (const check of checks) {
-    results.push(await checkEndpoint(check.name, check.url, check.validate));
+    results.push(await checkEndpoint(check.name, check.url, check.validate, check.allowNon2xx));
   }
 
   const failed = results.filter((r) => !r.ok);
