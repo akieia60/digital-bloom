@@ -51,7 +51,10 @@
   ],
   "functions": {
     "api/process-bloom.js": { "maxDuration": 60, "memory": 3008 },
-    "api/get-upload-url.js": { "maxDuration": 10 }
+    "api/get-upload-url.js": { "maxDuration": 10 },
+    "api/render-bloom.js": { "maxDuration": 60, "memory": 3008, "includeFiles": "api/_fonts/**" },
+    "api/stripe/webhook.js": { "maxDuration": 60, "memory": 3008, "includeFiles": "api/_fonts/**" },
+    "api/cron/retry-failed-renders.js": { "maxDuration": 300, "memory": 3008, "includeFiles": "api/_fonts/**" }
   },
   "crons": [
     {

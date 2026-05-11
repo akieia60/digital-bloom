@@ -4,13 +4,34 @@ import path from 'path';
 import { execFile } from 'child_process';
 import { promisify } from 'util';
 import { createRequire } from 'module';
+import { fileURLToPath } from 'url';
 import { createClient } from '@supabase/supabase-js';
-import { createCanvas } from 'canvas';
+import { createCanvas, registerFont } from 'canvas';
 import { normalizePublicBaseUrl } from './publicBaseUrl.js';
 
 const execFileAsync = promisify(execFile);
 const require = createRequire(import.meta.url);
 const ffmpegPath = require('ffmpeg-static');
+
+// Vercel Lambda doesn't ship with Arial / Georgia / Allura / Great Vibes /
+// any Google Web Fonts, so when canvas asked for them by name the renderer
+// fell back to a glyph-poor default and customer text rendered as tofu
+// (the placeholder rectangle). Bundle and register the 4 fonts the customizer
+// actually offers so canvas resolves them properly inside the function.
+// Files live in api/_fonts/ and are pulled into the bundle via the
+// `includeFiles` glob set on render/webhook/cron functions in vercel.json.
+const __fontsDir = fileURLToPath(new URL('../_fonts', import.meta.url));
+function tryRegister(file, family) {
+  try {
+    registerFont(path.join(__fontsDir, file), { family });
+  } catch (err) {
+    console.warn(`registerFont(${family}) skipped:`, err.message);
+  }
+}
+tryRegister('PlayfairDisplay.ttf', 'Playfair Display');
+tryRegister('Outfit.ttf', 'Outfit');
+tryRegister('GreatVibes-Regular.ttf', 'Great Vibes');
+tryRegister('Allura-Regular.ttf', 'Allura');
 const DELIVERY_BUCKET = process.env.BLOOM_DELIVERY_BUCKET || 'bloom-deliveries';
 const PUBLIC_FALLBACK_BUCKET = 'product-media';
 
@@ -318,9 +339,26 @@ function roundRect(ctx, x, y, width, height, radius) {
   ctx.closePath();
 }
 
+// Map the customizer's fontChoice values to the families we've registered
+// above. Customizer offers playfair, outfit, arialBold, greatVibes, allura
+// (and a few synonyms). Anything unknown falls back to Playfair Display so
+// names always render with a real glyphset instead of node-canvas's tofu
+// default.
+const FONT_FAMILY_BY_CHOICE = {
+  playfair: 'Playfair Display',
+  outfit: 'Outfit',
+  arialBold: 'Outfit',
+  greatVibes: 'Great Vibes',
+  cursive: 'Great Vibes',
+  script: 'Great Vibes',
+  allura: 'Allura',
+};
+
 function getCanvasFont(fontChoice, size, weight = 600, italic = false) {
-  const family = fontChoice === 'playfair' ? 'Georgia' : 'Arial';
-  return `${italic ? 'italic ' : ''}${weight} ${Math.round(size)}px ${family}`;
+  const family = FONT_FAMILY_BY_CHOICE[fontChoice] || 'Playfair Display';
+  // Quote the family — node-canvas needs quoted family names that contain
+  // spaces (e.g. "Playfair Display").
+  return `${italic ? 'italic ' : ''}${weight} ${Math.round(size)}px "${family}"`;
 }
 
 function wrapText(ctx, text, maxWidth) {
