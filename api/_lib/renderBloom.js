@@ -692,7 +692,15 @@ export async function renderBloomDelivery(purchaseId) {
       '-y',
       '-i', inputPath,
       '-i', overlayPath,
-      '-filter_complex', `[0:v]${filterGraph ? `${filterGraph},` : ''}format=yuv420p[base];[1:v]format=rgba[overlay];[base][overlay]overlay=0:0[outv]`,
+      // Customer-input overlay (To/Message/From) is gated to the bouquet
+      // scene 10-20s window. Many master videos in the catalog have card
+      // text already baked into scenes 1 and 3 — drawing the overlay over
+      // the whole 30s duplicates that text and produces the overlap bug
+      // Gamble flagged on 2026-05-11 (the "Aunt Cheryl" bloom). 67 of 238
+      // active products are affected. Limiting to the no-text bouquet
+      // window cleanly resolves it for every affected product without
+      // having to re-render the masters.
+      '-filter_complex', `[0:v]${filterGraph ? `${filterGraph},` : ''}format=yuv420p[base];[1:v]format=rgba[overlay];[base][overlay]overlay=0:0:enable='between(t,10,20)'[outv]`,
       '-map', '[outv]',
       '-c:v', 'libx264',
       '-preset', 'veryfast',
