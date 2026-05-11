@@ -32,6 +32,15 @@ tryRegister('PlayfairDisplay.ttf', 'Playfair Display');
 tryRegister('Outfit.ttf', 'Outfit');
 tryRegister('GreatVibes-Regular.ttf', 'Great Vibes');
 tryRegister('Allura-Regular.ttf', 'Allura');
+tryRegister('CormorantGaramond.ttf', 'Cormorant Garamond');
+tryRegister('Cinzel.ttf', 'Cinzel');
+tryRegister('Lora.ttf', 'Lora');
+tryRegister('JosefinSans.ttf', 'Josefin Sans');
+tryRegister('DancingScript.ttf', 'Dancing Script');
+tryRegister('Sacramento-Regular.ttf', 'Sacramento');
+tryRegister('Italianno-Regular.ttf', 'Italianno');
+tryRegister('Caveat.ttf', 'Caveat');
+tryRegister('Marcellus-Regular.ttf', 'Marcellus');
 const DELIVERY_BUCKET = process.env.BLOOM_DELIVERY_BUCKET || 'bloom-deliveries';
 const PUBLIC_FALLBACK_BUCKET = 'product-media';
 
@@ -345,13 +354,26 @@ function roundRect(ctx, x, y, width, height, radius) {
 // names always render with a real glyphset instead of node-canvas's tofu
 // default.
 const FONT_FAMILY_BY_CHOICE = {
+  // Serif family
   playfair: 'Playfair Display',
+  cormorant: 'Cormorant Garamond',
+  cinzel: 'Cinzel',
+  lora: 'Lora',
+  marcellus: 'Marcellus',
+  // Sans family
   outfit: 'Outfit',
+  josefinSans: 'Josefin Sans',
   arialBold: 'Outfit',
+  // Script / cursive family
   greatVibes: 'Great Vibes',
+  dancingScript: 'Dancing Script',
+  sacramento: 'Sacramento',
+  italianno: 'Italianno',
+  caveat: 'Caveat',
+  allura: 'Allura',
+  // Legacy generic aliases
   cursive: 'Great Vibes',
   script: 'Great Vibes',
-  allura: 'Allura',
 };
 
 function getCanvasFont(fontChoice, size, weight = 600, italic = false) {

@@ -55,3 +55,4 @@ service-account*.json
 stripe-product-ids.json
 .env*.local
 .api-keys
+.vercel
