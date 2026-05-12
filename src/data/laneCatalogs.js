@@ -32,9 +32,13 @@ export const LANE_CATALOGS = {
 
   'fathers-day': [
     { slug: 'for-dad',           label: 'For Dad',           tagline: 'The classic — for the man who raised you.' },
+    { slug: 'young-dad',         label: 'For a Young Dad',   tagline: 'First-time dad, fresh fatherhood — for the man learning to love new.' },
+    { slug: 'working-dad',       label: 'For a Working Dad', tagline: 'Boots, hands, hammer — the man who builds for the family.' },
     { slug: 'for-grandpa',       label: 'For Grandpa',       tagline: 'Patriarch, legacy, the wisdom passed down.' },
     { slug: 'for-stepdad',       label: 'For Stepdad',       tagline: "Bonus Dad — the man who chose to show up." },
     { slug: 'father-in-law',     label: 'For Father-in-Law', tagline: 'The dad you inherited.' },
+    { slug: 'multigenerational', label: 'Generations',       tagline: 'Father, son, father again — the line you carry.' },
+    { slug: 'patriarch',         label: 'Patriarch',         tagline: 'The elder, the king, the one who raised the village.' },
     { slug: 'from-son',          label: 'From a Son',        tagline: "Father-and-son — proud-son perspective." },
     { slug: 'from-daughter',     label: 'From a Daughter',   tagline: "Daddy's girl, all grown up." },
     { slug: 'memorial',          label: 'In Memory',         tagline: 'For the father whose strength still echoes.' },
