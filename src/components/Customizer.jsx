@@ -518,6 +518,30 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
               <span className="customizer-hint">Pick as many as you like — each adds to your message.</span>
             </div>
 
+            {/* TO / FROM moved 2026-05-13 per Gamble: must sit clearly right
+                below the phrase bar, before the message field. Both required
+                per Gamble's 2026-04-26 note. */}
+            <div className="customizer-tofrom-grid" style={{ marginTop: '4px' }}>
+              <div className="customizer-field">
+                <label className="customizer-label" htmlFor="cust-to">
+                  {t('customize_to')} <span className="customizer-required" aria-hidden="true">*</span>
+                </label>
+                <input id="cust-to" type="text" required aria-required="true" className="customizer-input customizer-input--lg"
+                  placeholder={toPlaceholder || t('customize_to_placeholder')}
+                  value={message.toName}
+                  onChange={(e) => handleMessageChange('toName', e.target.value)} />
+              </div>
+              <div className="customizer-field">
+                <label className="customizer-label" htmlFor="cust-from">
+                  {t('customize_from')} <span className="customizer-required" aria-hidden="true">*</span>
+                </label>
+                <input id="cust-from" type="text" required aria-required="true" className="customizer-input customizer-input--lg"
+                  placeholder={t('customize_from_placeholder')}
+                  value={message.fromName}
+                  onChange={(e) => handleMessageChange('fromName', e.target.value)} />
+              </div>
+            </div>
+
             <div className="customizer-field">
               <label className="customizer-label" htmlFor="cust-msg">{t('customize_your_message')}</label>
               <textarea
@@ -544,30 +568,6 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
                     Clear
                   </button>
                 )}
-              </div>
-            </div>
-
-            {/* TO / FROM — both required per Gamble's 2026-04-26 note. Mandatory
-                customization disincentives anyone trying to screen-record a
-                generic bloom and reuse it elsewhere. */}
-            <div className="customizer-tofrom-grid">
-              <div className="customizer-field">
-                <label className="customizer-label" htmlFor="cust-to">
-                  {t('customize_to')} <span className="customizer-required" aria-hidden="true">*</span>
-                </label>
-                <input id="cust-to" type="text" required aria-required="true" className="customizer-input customizer-input--lg"
-                  placeholder={toPlaceholder || t('customize_to_placeholder')}
-                  value={message.toName}
-                  onChange={(e) => handleMessageChange('toName', e.target.value)} />
-              </div>
-              <div className="customizer-field">
-                <label className="customizer-label" htmlFor="cust-from">
-                  {t('customize_from')} <span className="customizer-required" aria-hidden="true">*</span>
-                </label>
-                <input id="cust-from" type="text" required aria-required="true" className="customizer-input customizer-input--lg"
-                  placeholder={t('customize_from_placeholder')}
-                  value={message.fromName}
-                  onChange={(e) => handleMessageChange('fromName', e.target.value)} />
               </div>
             </div>
 
