@@ -39,6 +39,21 @@ export const LANE_CATALOGS = {
     { slug: 'father-in-law',     label: 'For Father-in-Law', tagline: 'The dad you inherited.' },
     { slug: 'multigenerational', label: 'Generations',       tagline: 'Father, son, father again — the line you carry.' },
     { slug: 'patriarch',         label: 'Patriarch',         tagline: 'The elder, the king, the one who raised the village.' },
+    // 12 hobby-based subcategories per Gamble's 2026-05-13 1:19 PM directive.
+    // "I will send you some prompts to create some manly blooms that most men
+    // can relate to based off of hobbies."
+    { slug: 'basketball-fan',    label: 'Basketball Fan',    tagline: 'Court-side dad — bracket-watcher, jersey-collector.' },
+    { slug: 'football-fan',      label: 'Football Fan',      tagline: 'Sunday-game dad — pigskin, tailgate, the championship dream.' },
+    { slug: 'baseball-fan',      label: 'Baseball Fan',      tagline: 'Diamond dad — ballpark hot dogs, the seventh-inning stretch.' },
+    { slug: 'soccer-fan',        label: 'Soccer Fan',        tagline: 'Pitch dad — the beautiful game, his Saturday morning sideline.' },
+    { slug: 'hockey-fan',        label: 'Hockey Fan',        tagline: 'Rink dad — slap shot, ice time, the Cup chase.' },
+    { slug: 'auto-enthusiast',   label: 'Sports Car Fan',    tagline: 'Garage dad — chrome, horsepower, the open road.' },
+    { slug: 'foodie-dad',        label: 'Food Fanatic',      tagline: 'Grill master dad — pitmaster, BBQ purist, knife and flame.' },
+    { slug: 'family-man',        label: 'Family Man',        tagline: 'Everyday dad — quietly building the people around him.' },
+    { slug: 'fishing-fan',       label: 'Fishing Fan',       tagline: 'Lake dad — early mornings, tackle box, the patient catch.' },
+    { slug: 'hunting-fan',       label: 'Hunting Fan',       tagline: 'Outdoors dad — camo, the trail, the silence before dawn.' },
+    { slug: 'truck-driver',      label: 'Truck Driver',      tagline: 'Highway dad — the long haul, the open road, the family at the end of it.' },
+    { slug: 'young-father',      label: 'Young Father',      tagline: 'New-dad energy — sleep-deprived, deeply in love, learning every day.' },
     { slug: 'from-son',          label: 'From a Son',        tagline: "Father-and-son — proud-son perspective." },
     { slug: 'from-daughter',     label: 'From a Daughter',   tagline: "Daddy's girl, all grown up." },
     { slug: 'memorial',          label: 'In Memory',         tagline: 'For the father whose strength still echoes.' },
