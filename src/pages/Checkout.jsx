@@ -32,6 +32,12 @@ export default function Checkout() {
   const [deliveryTarget, setDeliveryTarget] = useState('recipient');
   const [recipientEmail, setRecipientEmail] = useState('');
   const [recipientPhone, setRecipientPhone] = useState('');
+  // Simplified-checkout disclosure (2026-05-13). Older / non-tech buyers
+  // told Ak the checkout had "too many steps." Smart defaults — send to a
+  // loved one, by text, send now — handle ~95% of orders. The radios for
+  // alternate flows (self-preview, by-email, schedule) hide behind this
+  // disclosure unless the buyer opens it.
+  const [isAdvancedOpen, setIsAdvancedOpen] = useState(false);
   // 'email' is fully wired today; 'phone' captures the number into Stripe
   // metadata but SMS sending is gated until Twilio is provisioned (Ak).
   // Default to Text per Gamble 2026-05-05 PM. While Twilio is still gated the
@@ -329,163 +335,53 @@ export default function Checkout() {
 
         {hasPersonalizedBloom && (
           <div className="cart-credits-wallet mb-8">
-            <div className="cart-credits-wallet__eyebrow">Bloom Delivery</div>
+            <div className="cart-credits-wallet__eyebrow">Send your bloom</div>
             <div className="cart-credits-wallet__heading-row">
               <div>
-                <h3 className="cart-credits-wallet__title">Who's getting this bloom?</h3>
+                <h3 className="cart-credits-wallet__title">Type their phone, type your email, pay.</h3>
                 <p className="cart-credits-wallet__copy">
-                  Pick who it's for and how they should get it.
+                  We text the bloom link to them through your phone — they see your name, not a shortcode.
                 </p>
               </div>
               <span className="cart-credits-wallet__icon" aria-hidden="true">📬</span>
             </div>
 
             <div className="cart-credit-entry-grid" style={{ gap: '14px', display: 'grid' }}>
-              {/* 1. Who is this bloom for? */}
-              <div className="cart-credit-choice-row" role="radiogroup" aria-label="Recipient">
-                <button
-                  type="button"
-                  role="radio"
-                  aria-checked={deliveryTarget === 'recipient'}
-                  onClick={() => setDeliveryTarget('recipient')}
-                  className={`cart-credit-choice ${deliveryTarget === 'recipient' ? 'is-active' : ''}`}
-                >
-                  Send to a loved one
-                </button>
-                <button
-                  type="button"
-                  role="radio"
-                  aria-checked={deliveryTarget === 'self'}
-                  onClick={() => setDeliveryTarget('self')}
-                  className={`cart-credit-choice ${deliveryTarget === 'self' ? 'is-active' : ''}`}
-                >
-                  Send to me first
-                </button>
-              </div>
+              {/* Default-case inputs: recipient phone (or email if user
+                  switched channel in More Options) + buyer email. Anything
+                  else hides behind the disclosure below. */}
 
-              {/* 2. How should it reach them? — only when sending to a loved one. */}
-              {deliveryTarget === 'recipient' && (
-                <>
-                  <div className="cart-credit-entry-label" style={{ marginBottom: '4px' }}>
-                    How should it reach them?
-                  </div>
-                  <p className="cart-credit-entry-hint" style={{ margin: '0 0 4px' }}>
-                    Texting is fastest — the bloom link opens in Messages on your phone, so they see it from your familiar number, not a shortcode.
-                  </p>
-                  <div className="cart-credit-choice-row" role="radiogroup" aria-label="Delivery channel">
-                    <button
-                      type="button"
-                      role="radio"
-                      aria-checked={deliveryChannel === 'phone'}
-                      onClick={() => setDeliveryChannel('phone')}
-                      className={`cart-credit-choice cart-credit-choice--recommended ${deliveryChannel === 'phone' ? 'is-active' : ''}`}
-                    >
-                      <span aria-hidden="true" style={{ marginRight: '6px' }}>📱</span>
-                      By Text
-                      <span
-                        aria-hidden="true"
-                        style={{
-                          marginLeft: '8px',
-                          fontSize: '0.62em',
-                          fontWeight: 700,
-                          letterSpacing: '0.12em',
-                          padding: '3px 7px',
-                          borderRadius: '999px',
-                          background: 'rgba(212, 175, 55, 0.22)',
-                          color: '#D4AF37',
-                          textTransform: 'uppercase',
-                        }}
-                      >
-                        Recommended
-                      </span>
-                    </button>
-                    <button
-                      type="button"
-                      role="radio"
-                      aria-checked={deliveryChannel === 'email'}
-                      onClick={() => setDeliveryChannel('email')}
-                      className={`cart-credit-choice ${deliveryChannel === 'email' ? 'is-active' : ''}`}
-                    >
-                      <span aria-hidden="true" style={{ marginRight: '6px' }}>✉️</span>
-                      By Email
-                    </button>
-                  </div>
-
-                  {deliveryChannel === 'email' ? (
-                    <label className="cart-credit-entry-label">
-                      Their email
-                      <input
-                        type="email"
-                        value={recipientEmail}
-                        onChange={(event) => setRecipientEmail(event.target.value)}
-                        placeholder="their@email.com"
-                        className="cart-credit-entry-input"
-                        autoComplete="email"
-                        inputMode="email"
-                      />
-                    </label>
-                  ) : (
-                    <label className="cart-credit-entry-label">
-                      Their phone
-                      <input
-                        type="tel"
-                        value={recipientPhone}
-                        onChange={(event) => setRecipientPhone(event.target.value)}
-                        placeholder="(555) 123-4567"
-                        className="cart-credit-entry-input"
-                        autoComplete="tel"
-                        inputMode="tel"
-                      />
-                      <span className="cart-credit-entry-hint">
-                        After checkout, we'll open your Messages app pre-filled
-                        with the bloom link to {recipientPhone || 'this number'} —
-                        you tap Send, the gift goes through your own phone so
-                        the recipient sees a familiar contact, not a shortcode.
-                      </span>
-                    </label>
-                  )}
-                </>
-              )}
-
-              {/* 3. When? */}
-              <div className="cart-credit-choice-row" role="radiogroup" aria-label="Delivery timing">
-                <button
-                  type="button"
-                  role="radio"
-                  aria-checked={deliveryMode === 'now'}
-                  onClick={() => setDeliveryMode('now')}
-                  className={`cart-credit-choice ${deliveryMode === 'now' ? 'is-active' : ''}`}
-                >
-                  Send now
-                </button>
-                <button
-                  type="button"
-                  role="radio"
-                  aria-checked={deliveryMode === 'scheduled'}
-                  onClick={() => setDeliveryMode('scheduled')}
-                  className={`cart-credit-choice ${deliveryMode === 'scheduled' ? 'is-active' : ''}`}
-                >
-                  Schedule for later
-                </button>
-              </div>
-
-              {deliveryMode === 'scheduled' && (
+              {deliveryTarget === 'recipient' && deliveryChannel === 'phone' && (
                 <label className="cart-credit-entry-label">
-                  Delivery date
+                  Their phone number
                   <input
-                    type="date"
-                    value={deliveryDate}
-                    onChange={(event) => setDeliveryDate(event.target.value)}
-                    min={todayString}
+                    type="tel"
+                    value={recipientPhone}
+                    onChange={(event) => setRecipientPhone(event.target.value)}
+                    placeholder="(555) 123-4567"
                     className="cart-credit-entry-input"
+                    autoComplete="tel"
+                    inputMode="tel"
                   />
-                  <span className="cart-credit-entry-hint">
-                    Scheduled blooms send in a morning delivery window using your timezone: {buyerTimezone}
-                  </span>
                 </label>
               )}
 
-              {/* 4. Buyer email — receipt + (when sending to self) the bloom itself. */}
+              {deliveryTarget === 'recipient' && deliveryChannel === 'email' && (
+                <label className="cart-credit-entry-label">
+                  Their email
+                  <input
+                    type="email"
+                    value={recipientEmail}
+                    onChange={(event) => setRecipientEmail(event.target.value)}
+                    placeholder="their@email.com"
+                    className="cart-credit-entry-input"
+                    autoComplete="email"
+                    inputMode="email"
+                  />
+                </label>
+              )}
+
+              {/* Buyer email — receipt + (when sending to self) the bloom itself. */}
               <label className="cart-credit-entry-label">
                 Your email (for the receipt)
                 <input
@@ -503,6 +399,126 @@ export default function Checkout() {
                   </span>
                 )}
               </label>
+
+              {deliveryMode === 'scheduled' && (
+                <label className="cart-credit-entry-label">
+                  Delivery date
+                  <input
+                    type="date"
+                    value={deliveryDate}
+                    onChange={(event) => setDeliveryDate(event.target.value)}
+                    min={todayString}
+                    className="cart-credit-entry-input"
+                  />
+                  <span className="cart-credit-entry-hint">
+                    Scheduled blooms send in a morning delivery window using your timezone: {buyerTimezone}
+                  </span>
+                </label>
+              )}
+
+              {/* "More options" disclosure — hidden by default 2026-05-13.
+                  Buyers who need self-preview, email-channel, or scheduled
+                  delivery open this; the 95%-case buyer never sees it. */}
+              <button
+                type="button"
+                onClick={() => setIsAdvancedOpen((open) => !open)}
+                className="cart-credit-advanced-toggle"
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  padding: '4px 0',
+                  marginTop: '4px',
+                  fontSize: '13px',
+                  color: 'rgba(255,255,255,0.6)',
+                  cursor: 'pointer',
+                  textAlign: 'left',
+                  textDecoration: 'underline',
+                }}
+              >
+                {isAdvancedOpen ? 'Hide options' : 'More options'}
+              </button>
+
+              {isAdvancedOpen && (
+                <div style={{ display: 'grid', gap: '14px', marginTop: '4px' }}>
+                  <div className="cart-credit-entry-label" style={{ marginBottom: 0 }}>
+                    Who's it for?
+                  </div>
+                  <div className="cart-credit-choice-row" role="radiogroup" aria-label="Recipient">
+                    <button
+                      type="button"
+                      role="radio"
+                      aria-checked={deliveryTarget === 'recipient'}
+                      onClick={() => setDeliveryTarget('recipient')}
+                      className={`cart-credit-choice ${deliveryTarget === 'recipient' ? 'is-active' : ''}`}
+                    >
+                      A loved one
+                    </button>
+                    <button
+                      type="button"
+                      role="radio"
+                      aria-checked={deliveryTarget === 'self'}
+                      onClick={() => setDeliveryTarget('self')}
+                      className={`cart-credit-choice ${deliveryTarget === 'self' ? 'is-active' : ''}`}
+                    >
+                      Me (preview first)
+                    </button>
+                  </div>
+
+                  {deliveryTarget === 'recipient' && (
+                    <>
+                      <div className="cart-credit-entry-label" style={{ marginBottom: 0 }}>
+                        How should it reach them?
+                      </div>
+                      <div className="cart-credit-choice-row" role="radiogroup" aria-label="Delivery channel">
+                        <button
+                          type="button"
+                          role="radio"
+                          aria-checked={deliveryChannel === 'phone'}
+                          onClick={() => setDeliveryChannel('phone')}
+                          className={`cart-credit-choice ${deliveryChannel === 'phone' ? 'is-active' : ''}`}
+                        >
+                          <span aria-hidden="true" style={{ marginRight: '6px' }}>📱</span>
+                          By Text
+                        </button>
+                        <button
+                          type="button"
+                          role="radio"
+                          aria-checked={deliveryChannel === 'email'}
+                          onClick={() => setDeliveryChannel('email')}
+                          className={`cart-credit-choice ${deliveryChannel === 'email' ? 'is-active' : ''}`}
+                        >
+                          <span aria-hidden="true" style={{ marginRight: '6px' }}>✉️</span>
+                          By Email
+                        </button>
+                      </div>
+                    </>
+                  )}
+
+                  <div className="cart-credit-entry-label" style={{ marginBottom: 0 }}>
+                    When?
+                  </div>
+                  <div className="cart-credit-choice-row" role="radiogroup" aria-label="Delivery timing">
+                    <button
+                      type="button"
+                      role="radio"
+                      aria-checked={deliveryMode === 'now'}
+                      onClick={() => setDeliveryMode('now')}
+                      className={`cart-credit-choice ${deliveryMode === 'now' ? 'is-active' : ''}`}
+                    >
+                      Send now
+                    </button>
+                    <button
+                      type="button"
+                      role="radio"
+                      aria-checked={deliveryMode === 'scheduled'}
+                      onClick={() => setDeliveryMode('scheduled')}
+                      className={`cart-credit-choice ${deliveryMode === 'scheduled' ? 'is-active' : ''}`}
+                    >
+                      Schedule for later
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         )}

@@ -36,15 +36,12 @@ const SOUND_TRACKS = [
   { id: 'give-flowers', nameKey: 'customize_sound_flowers', icon: '💐', src: null, comingSoon: true },
 ];
 
-// Customizer flow simplified 2026-05-07 (Gamble + Ak): dropped the
-// "Video Frame" sub-section and the Live Effects step entirely.
-// Frame styles didn't read on the final video, and Live Effects
-// competed visually with the bloom that already has plenty of motion.
-// Step 2 is now just engraving finish.
+// Customizer flow collapsed 2026-05-13 (Ak): three coworkers/family members
+// told her the checkout was "too many steps." The old three-step flow (message,
+// frame, review) is now a single scrollable screen. Message + engraving finish
+// render together; the live preview at the top of the sheet IS the review.
 const FLOW_STEPS = [
-  { id: 1, key: 'message', labelKey: 'customize_step_message', icon: '✉️' },
-  { id: 2, key: 'frame',   labelKey: 'customize_step_frame',   icon: '🎨' },
-  { id: 3, key: 'review',  labelKey: 'customize_step_review',  icon: '✓' },
+  { id: 1, key: 'all', labelKey: 'customize_step_message', icon: '✉️' },
 ];
 
 // Generic fallback starters used when no category is provided
@@ -462,28 +459,10 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
           <button type="button" className="customizer-sheet__close" onClick={onClose} aria-label={t('customize_close')}>✕</button>
         </div>
 
-        {/* Step Progress Bar */}
-        <div className="customizer-step-bar">
-          {FLOW_STEPS.map((step) => (
-            <button
-              key={step.id}
-              type="button"
-              className={`customizer-step-bar__item ${activeStep === step.id ? 'active' : ''} ${activeStep > step.id ? 'done' : ''}`}
-              onClick={() => setActiveStep(step.id)}
-            >
-              <span className="customizer-step-bar__dot">
-                {activeStep > step.id ? '✓' : step.icon}
-              </span>
-              <span className="customizer-step-bar__label">{t(step.labelKey)}</span>
-            </button>
-          ))}
-          {/* Progress line */}
-          <div className="customizer-step-bar__track">
-            <div className="customizer-step-bar__fill" style={{ width: `${((activeStep - 1) / (FLOW_STEPS.length - 1)) * 100}%` }} />
-          </div>
-        </div>
+        {/* Step bar removed 2026-05-13 — single-screen flow now. The
+            persistent live preview below is the only progress indicator. */}
 
-        {/* Body — step flow with persistent top preview */}
+        {/* Body — single scrollable screen with persistent top preview */}
         <div className="customizer-sheet__body">
 
           <div className="customizer-preview-shell">
@@ -507,11 +486,9 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
             />
           </div>
 
-          {activeStep === 1 && (
-            <>
+          {/* Single screen: message + engraving finish render together. */}
           <div className="customizer-section">
             <div className="customizer-section__header">
-              <span className="customizer-section__number">1</span>
               <h3 className="customizer-section__title">{t('customize_your_message')}</h3>
             </div>
 
@@ -786,14 +763,10 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
               </div>
             </div>
           </div>
-            </>
-          )}
 
-          {activeStep === 2 && (
-            <>
+          {/* Engraving finish — was a separate "step 2" before 2026-05-13; now inline. */}
           <div className="customizer-section">
             <div className="customizer-section__header">
-              <span className="customizer-section__number">2</span>
               <h3 className="customizer-section__title">{t('customize_step_frame')}</h3>
             </div>
             {/* Engraving finish — the only thing that survived the
@@ -828,25 +801,11 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
               </div>
             </div>
           </div>
-            </>
-          )}
 
-          {activeStep === 3 && (
-            <div className="customizer-section customizer-section--review">
-              <div className="customizer-section__header">
-                <span className="customizer-section__number">3</span>
-                <h3 className="customizer-section__title">{t('customize_review_title')}</h3>
-              </div>
-              <div className="customizer-review-card">
-                <div className="review-row"><span className="review-label">{t('customize_review_to')}</span><span className="review-value">{message.toName || '—'}</span></div>
-                <div className="review-row"><span className="review-label">{t('customize_review_from')}</span><span className="review-value">{message.fromName || '—'}</span></div>
-                <div className="review-row"><span className="review-label">{t('customize_review_message')}</span><span className="review-value">{message.short || '—'}</span></div>
-                <div className="review-row"><span className="review-label">{t('customize_review_engraving')}</span><span className="review-value">{t(`customize_engraving_${engravingStyle}`)}</span></div>
-                <div className="review-row"><span className="review-label">{t('customize_review_font')}</span><span className="review-value">{fontOptions.find((option) => option.id === fontChoice)?.label || t('customize_font_playfair')}</span></div>
-                <div className="review-row"><span className="review-label">{t('customize_review_protection')}</span><span className="review-value">{t('customize_review_protection_value')}</span></div>
-              </div>
-            </div>
-          )}
+          {/* The "Review" step was removed 2026-05-13. The live preview at the
+              top of the sheet shows To / From / Message / Engraving in real
+              time as the customer types — a separate review pane was
+              redundant and added a tap nobody needed. */}
         </div>
 
         {/* Validation error surface — shown when To/From are empty on submit */}
@@ -856,26 +815,16 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
           </div>
         )}
 
-        {/* ── UNIFIED BOTTOM BAR — Back / Next or Add to Cart ── */}
+        {/* ── BOTTOM BAR — Close + price + Add to Cart ── */}
         <div className="customizer-sticky-cta">
-          {activeStep > 1 ? (
-            <button type="button" className="cta-back-btn" onClick={goBack}>{t('customize_btn_back')}</button>
-          ) : (
-            <button type="button" className="cta-back-btn" onClick={onClose}>{t('customize_btn_close')}</button>
-          )}
+          <button type="button" className="cta-back-btn" onClick={onClose}>{t('customize_btn_close')}</button>
           <div className="cta-pricing">
             <div className="cta-pricing__amount">${totalPrice.toFixed(2)}</div>
           </div>
-          {activeStep < FLOW_STEPS.length ? (
-            <button type="button" className="cta-add-btn" onClick={goNext}>
-              {t('customize_btn_next')}
-            </button>
-          ) : (
-            <button type="button" className="cta-add-btn" onClick={handleComplete}
-              disabled={!isProductValid} aria-label={`Add to cart for $${totalPrice.toFixed(2)}`}>
-              {t('customize_btn_add_cart')}
-            </button>
-          )}
+          <button type="button" className="cta-add-btn" onClick={handleComplete}
+            disabled={!isProductValid} aria-label={`Add to cart for $${totalPrice.toFixed(2)}`}>
+            {t('customize_btn_add_cart')}
+          </button>
         </div>
       </div>
     </>
