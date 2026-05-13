@@ -1,9 +1,13 @@
-// Mother's Day 2026 promo — flat $1 every bloom through May 10.
-// Auto-expires after 2026-05-10 23:59:59 buyer-local time.
-// Per Gamble (2026-05-02 21:03) and Ak greenlight (2026-05-03 — Mother's
-// Day week only). After 5/10 the original tier prices restore automatically.
+// "All blooms $1 until further notice" — Gamble 2026-05-13 07:45 AM.
+// Originally a Mother's Day 2026 promo (2026-05-02 → 2026-05-11). Gamble
+// extended it after Mother's Day to keep momentum while we build Father's
+// Day catalog and stabilize the rest of the funnel. Variable + flag names
+// keep the MOTHERS_DAY_PROMO prefix so imports across the codebase don't
+// churn — what matters is the date constant below.
+// To roll back: set this date to a past timestamp (e.g. yesterday) and
+// the original tier prices ($1.99 / $2.99 / $3.99) restore automatically.
 
-export const MOTHERS_DAY_PROMO_END = new Date('2026-05-11T05:00:00Z'); // 12:01 AM CDT 5/11
+export const MOTHERS_DAY_PROMO_END = new Date('2027-12-31T23:59:59Z'); // indefinite per Gamble 2026-05-13
 export const PROMO_PRICE_DOLLARS = 1.00;
 export const PROMO_PRICE_CENTS = 100;
 

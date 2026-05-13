@@ -16,9 +16,11 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
 // Test-mode price IDs don't exist in live mode, so we ALWAYS use dynamic
 // price_data built from product metadata. This is mode-agnostic and safer.
 
-// Mother's Day 2026 promo: flat $1 every bloom through 2026-05-10. Mirrors
-// src/config/promo.js — keep the cutoff in sync.
-const MOTHERS_DAY_PROMO_END_MS = Date.parse('2026-05-11T05:00:00Z');
+// "All blooms $1 until further notice" — Gamble 2026-05-13 07:45 AM.
+// Mirrors src/config/promo.js — keep the cutoff in sync. Variable name kept
+// as MOTHERS_DAY_PROMO_END_MS so the rest of this file stays unchanged.
+// To roll back: set to a past timestamp and tier prices restore.
+const MOTHERS_DAY_PROMO_END_MS = Date.parse('2027-12-31T23:59:59Z');
 const isMothersDayPromoActive = () => Date.now() < MOTHERS_DAY_PROMO_END_MS;
 
 function buildLineItems(cartItems) {
