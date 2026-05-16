@@ -174,8 +174,11 @@ export const en = {
   demo_fallback: "Your browser does not support the video tag.",
 
   // ─── Customizer ───
-  customize_button: "Customize",
-  customize_title: "Customize",
+  // 2026-05-16: Ak directive — user-facing label changed from "Customize" to "Personalize" so
+  // customers understand the form personalizes the message (To/From/phrase/font/color), not the
+  // underlying bloom video. The string keys stay customize_* to avoid touching every component.
+  customize_button: "Personalize",
+  customize_title: "Personalize Bloom",
   customize_close: "Close",
   customize_preview: "Live Bloom Preview",
   customize_step_message: "Message",

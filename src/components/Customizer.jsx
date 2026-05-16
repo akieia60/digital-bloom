@@ -453,7 +453,7 @@ const Customizer = ({ product, isOpen, onClose, onComplete, defaults = {}, editD
     <>
       <div className={`customizer-overlay ${isOpen ? 'active' : ''}`} onClick={onClose} role="presentation" />
 
-      <div className={`customizer-sheet ${isOpen ? 'open' : ''}`} role="dialog" aria-modal="true" aria-label="Customize your experience">
+      <div className={`customizer-sheet ${isOpen ? 'open' : ''}`} role="dialog" aria-modal="true" aria-label="Personalize your bloom">
         <div className="customizer-sheet__drag-indicator" />
 
         {/* Header */}
