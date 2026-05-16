@@ -82,7 +82,7 @@ export default function BloomListCard({ product: rawProduct }) {
           <span className="bloom-list-card__price">
             ${parseFloat(product.price).toFixed(2)}
           </span>
-          <span className="bloom-list-card__cta">Customize</span>
+          <span className="bloom-list-card__cta">Personalize</span>
         </div>
       </div>
     </Link>
