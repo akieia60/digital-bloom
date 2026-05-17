@@ -279,6 +279,50 @@ const OCCASIONS = {
     },
   },
 
+  'wedding': {
+    name: 'Wedding',
+    title: 'Wedding Blooms',
+    tagline: 'Today and forever — celebrate the start of their always.',
+    accent: '#E8B4B8',
+    emoji: '💒',
+    sloganPresets: [
+      "Today and forever.",
+      "Two hearts, one forever.",
+      "To have and to hold — wishing you a lifetime.",
+      "Wishing you all the love.",
+      "Mr & Mrs — the rest of your story starts now.",
+      "Congratulations on your wedding day.",
+    ],
+    customizerDefaults: {
+      colorTheme: 'romantic',
+      balloonMessage: "Congratulations",
+      messagePlaceholder: "e.g., Wishing you a lifetime of love.",
+      toPlaceholder: "The Newlyweds, Bride and Groom...",
+    },
+  },
+
+  'memorial-day': {
+    name: 'Memorial Day',
+    title: 'Memorial Day Blooms',
+    tagline: 'Honoring those who served — and those we carry forever.',
+    accent: '#1F3D6E',
+    emoji: '🇺🇸',
+    sloganPresets: [
+      "Thank you for your service.",
+      "Honored. Remembered. Forever.",
+      "Still standing because of you.",
+      "Their sacrifice, our gratitude.",
+      "Never forgotten.",
+      "In memory of every hero who came before.",
+    ],
+    customizerDefaults: {
+      colorTheme: 'cool',
+      balloonMessage: "Memorial Day",
+      messagePlaceholder: "e.g., Honoring your service and sacrifice.",
+      toPlaceholder: "A Veteran, A Service Member, A Family...",
+    },
+  },
+
   'baby': {
     name: 'New Baby',
     title: 'New Baby Blooms',
