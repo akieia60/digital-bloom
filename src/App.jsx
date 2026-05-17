@@ -28,6 +28,7 @@ const TeamCalendar = lazy(() => import('./pages/TeamCalendar'));
 const ShoppingCart = lazy(() => import('./components/ShoppingCart'));
 const FAQ = lazy(() => import('./components/landing/FAQ'));
 const FloatingCartButton = lazy(() => import('./components/FloatingCartButton'));
+const V3Preview = lazy(() => import('./pages/V3Preview'));
 
 /**
  * ErrorBoundary — catches any JavaScript error inside a child component tree,
@@ -113,6 +114,7 @@ function AppContent({ searchQuery, setSearchQuery }) {
           <Route path="/about" element={<ComingSoon />} />
           <Route path="/contact" element={<ComingSoon />} />
           <Route path="/checkout" element={<Checkout />} />
+          <Route path="/v3-preview" element={<V3Preview />} />
           <Route path="/share" element={<Share />} />
           <Route path="/cal" element={<TeamCalendar />} />
           <Route path="/bloom/:id/manage" element={<BloomManage />} />
