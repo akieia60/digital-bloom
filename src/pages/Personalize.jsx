@@ -6,6 +6,7 @@ import { useLanguage } from '../contexts/LanguageContext';
 import { createCartCheckoutSession, redirectToCheckout, startCartCheckoutRedirect } from '../lib/stripe';
 import { buildCartComposition } from '../lib/fulfillmentMapper';
 import OCCASIONS from '../data/occasions';
+import LivePreview from '../components/LivePreview';
 
 // Personalize page — wired version of Gamble's 2026-05-15 wireframe.
 // Two screens (Personalize Bloom → Checkout) live on one route,
@@ -214,6 +215,42 @@ export default function Personalize() {
           marginBottom: '1.25rem',
         }}>
           {loading ? 'Loading bloom…' : `Personalizing: ${product.title || product.name || 'Bloom'}`}
+        </div>
+      )}
+
+      {/* ─── Live preview — the bloom video with text overlay ─── */}
+      {product && (
+        <div style={{
+          marginBottom: '1.4rem',
+          borderRadius: '14px',
+          overflow: 'hidden',
+          border: `1px solid ${GOLD_DIM}`,
+          background: NAVY_DEEP,
+        }}>
+          <LivePreview
+            product={product}
+            colorTheme="custom"
+            primaryColor={color}
+            accentColor={color}
+            extras={{}}
+            message={{ short: message.trim() || phrase, toName: to, fromName: from }}
+            engravingStyle="classic"
+            fontChoice={FONT_CHOICES[fontIdx].fontKey}
+            messageTextColor={color}
+            messageBold={true}
+            messageTextSize="md"
+            frameStyle="none"
+            occasion={product.category}
+          />
+          <div style={{
+            padding: '0.55rem 0.9rem',
+            fontSize: '0.72rem',
+            color: TEXT_MUTED,
+            textAlign: 'center',
+            borderTop: `1px solid ${NAVY_LINE}`,
+          }}>
+            Live preview — updates as you type
+          </div>
         </div>
       )}
 
