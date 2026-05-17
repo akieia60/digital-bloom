@@ -9,7 +9,7 @@ export const ptBR = {
   // ─── Hero (GradientHero — design-upgrade) ───
   hero_new_title_1: "Dê-lhes Suas Flores",
   hero_new_title_2: "Enquanto Ainda Estão Aqui",
-  hero_new_tagline: "Semana do Dia das Mães — cada bloom $1 até 10 de maio. Envie algo cinematográfico em minutos.",
+  hero_new_tagline: "Envie o que você não conseguiu dizer. A partir de $1, entregue em minutos.",
   hero_new_cta: "ENVIAR UM BLOOM",
   hero_new_from: "Presentes a partir de",
   hero_new_no_app: "sem app necessário",

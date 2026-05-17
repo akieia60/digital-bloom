@@ -9,7 +9,7 @@ export const ja = {
   // ─── Hero (GradientHero — design-upgrade) ───
   hero_new_title_1: "彼らに花を贈ろう",
   hero_new_title_2: "まだここにいるうちに",
-  hero_new_tagline: "母の日ウィーク — 5月10日まで全ブルーム$1。シネマティックなギフトを数分で送れます。",
+  hero_new_tagline: "言葉にできなかった気持ちを贈ろう。$1から、数分でお届け。",
   hero_new_cta: "ブルームを贈る",
   hero_new_from: "ギフトは",
   hero_new_no_app: "アプリ不要",

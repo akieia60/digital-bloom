@@ -9,7 +9,7 @@ export const zh = {
   // ─── Hero (GradientHero — design-upgrade) ───
   hero_new_title_1: "送上他们的花",
   hero_new_title_2: "趁他们还在身边",
-  hero_new_tagline: "母亲节周——5月10日前每个绽放仅需$1。为每个时刻设计的高端动画艺术。",
+  hero_new_tagline: "把没说出口的话送出去。仅需$1起，几分钟内送达。",
   hero_new_cta: "发送一个绽放",
   hero_new_from: "礼物起价仅为",
   hero_new_no_app: "无需下载应用",

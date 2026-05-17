@@ -9,7 +9,7 @@ export const tl = {
   // ─── Hero (GradientHero — design-upgrade) ───
   hero_new_title_1: "Bigyan Sila ng Bulaklak",
   hero_new_title_2: "Habang Nandito Pa Sila",
-  hero_new_tagline: "Linggo ng Araw ng mga Ina — bawat bloom $1 hanggang Mayo 10. Magpadala ng cinematic sa loob ng ilang minuto.",
+  hero_new_tagline: "Ipadala ang hindi mo nasabi. Mula sa $1, dadating sa loob ng ilang minuto.",
   hero_new_cta: "MAGPADALA NG BLOOM",
   hero_new_from: "Mga regalo magmula sa",
   hero_new_no_app: "walang app na kailangan",

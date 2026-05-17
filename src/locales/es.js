@@ -9,7 +9,7 @@ export const es = {
   // ─── Hero (GradientHero — design-upgrade) ───
   hero_new_title_1: "Dales Sus Flores",
   hero_new_title_2: "Mientras Aún Estén Aquí",
-  hero_new_tagline: "Semana del Día de la Madre — cada bloom $1 hasta el 10 de mayo. Arte en movimiento de lujo para cada ocasión.",
+  hero_new_tagline: "Envía lo que no pudiste decir. Desde $1, entregado en minutos.",
   hero_new_cta: "ENVIAR UN BLOOM",
   hero_new_from: "Regalos desde",
   hero_new_no_app: "sin aplicación necesaria",
