@@ -204,57 +204,38 @@ export default function Personalize() {
 
   return (
     <div style={{
-      minHeight: '100vh',
+      position: 'fixed',
+      inset: 0,
       background: NAVY,
       color: TEXT,
       fontFamily: "'Outfit', -apple-system, sans-serif",
-      padding: '1.5rem 1rem 4rem',
-      maxWidth: '460px',
-      margin: '0 auto',
+      display: 'flex',
+      flexDirection: 'column',
+      overflow: 'hidden',
     }}>
-      {isDemoMode ? (
-        <div style={{
-          fontSize: '0.78rem',
-          color: TEXT_MUTED,
-          textAlign: 'center',
-          lineHeight: 1.6,
-          padding: '0.9rem',
-          marginBottom: '1.25rem',
-          border: `1px dashed ${GOLD_DIM}`,
-          borderRadius: '8px',
-        }}>
-          Static demo mode — no product loaded. To test the live wiring,
-          visit <code>/personalize/&lt;product-id&gt;</code> from any bloom in <Link to="/shop" style={{ color: GOLD }}>/shop</Link>.
-        </div>
-      ) : (
-        <div style={{
-          fontSize: '0.75rem',
-          color: TEXT_MUTED,
-          textAlign: 'center',
-          lineHeight: 1.6,
-          marginBottom: '1.25rem',
-        }}>
-          {loading ? 'Loading bloom…' : `Personalizing: ${product.title || product.name || 'Bloom'}`}
-        </div>
-      )}
-
-      {/* ─── Sticky live preview — follows you as you scroll/type ─── */}
-      {product && (
-        <div style={{
-          position: 'sticky',
-          top: '0.5rem',
-          zIndex: 30,
-          marginBottom: '1.4rem',
-          borderRadius: '14px',
-          overflow: 'hidden',
-          border: `1px solid ${GOLD_DIM}`,
-          background: NAVY_DEEP,
-          maxHeight: '38vh',
-          display: 'flex',
-          flexDirection: 'column',
-          boxShadow: '0 6px 18px rgba(0,0,0,0.4)',
-        }}>
-          <div style={{ flex: 1, minHeight: 0, overflow: 'hidden' }}>
+      {/* ─── TOP 40vh — whole bloom scaled to fit, never scrolls ─── */}
+      <div style={{
+        height: '40vh',
+        flexShrink: 0,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        background: NAVY_DEEP,
+        borderBottom: `1px solid ${GOLD_DIM}`,
+        position: 'relative',
+        padding: '0.5rem',
+      }}>
+        {product ? (
+          <div style={{
+            height: '100%',
+            aspectRatio: '9 / 16',
+            maxWidth: '100%',
+            borderRadius: '10px',
+            overflow: 'hidden',
+            border: `1px solid ${GOLD_DIM}`,
+            background: '#000',
+            boxShadow: '0 6px 18px rgba(0,0,0,0.45)',
+          }}>
             <LivePreview
               product={product}
               colorTheme="custom"
@@ -271,19 +252,59 @@ export default function Personalize() {
               occasion={product.category}
             />
           </div>
+        ) : (
           <div style={{
-            padding: '0.4rem 0.9rem',
-            fontSize: '0.68rem',
+            textAlign: 'center',
+            color: TEXT_MUTED,
+            fontSize: '0.85rem',
+            lineHeight: 1.6,
+            padding: '1rem',
+          }}>
+            {loading ? 'Loading bloom…' : (
+              <>
+                Static demo mode — no product loaded.<br/>
+                Visit <code>/personalize/&lt;product-id&gt;</code> from any bloom in <Link to="/shop" style={{ color: GOLD }}>/shop</Link>.
+              </>
+            )}
+          </div>
+        )}
+
+        {/* Step indicator */}
+        <div style={{
+          position: 'absolute',
+          top: '0.5rem',
+          right: '0.7rem',
+          padding: '0.25rem 0.55rem',
+          fontSize: '0.65rem',
+          fontWeight: 700,
+          letterSpacing: '0.1em',
+          background: 'rgba(13,27,54,0.85)',
+          color: GOLD,
+          borderRadius: '999px',
+          border: `1px solid ${GOLD_DIM}`,
+        }}>
+          STEP {currentScreen} / 2
+        </div>
+      </div>
+
+      {/* ─── BOTTOM 60vh — scrollable form area ─── */}
+      <div style={{
+        flex: 1,
+        overflow: 'auto',
+        WebkitOverflowScrolling: 'touch',
+        padding: '1rem',
+      }}>
+        <div style={{ maxWidth: '460px', margin: '0 auto' }}>
+        {!isDemoMode && product && (
+          <div style={{
+            fontSize: '0.72rem',
             color: TEXT_MUTED,
             textAlign: 'center',
-            borderTop: `1px solid ${NAVY_LINE}`,
-            flexShrink: 0,
-            background: NAVY_DEEP,
+            marginBottom: '0.9rem',
           }}>
-            Live preview — stays here as you scroll
+            {loading ? 'Loading bloom…' : `Personalizing: ${product.title || product.name || 'Bloom'}`}
           </div>
-        </div>
-      )}
+        )}
 
       {/* ─── Screen 1 — Personalize Bloom ─── */}
       {currentScreen === 1 && (
@@ -579,6 +600,7 @@ export default function Personalize() {
 
       <div style={{
         marginTop: '2.5rem',
+        marginBottom: '1rem',
         textAlign: 'center',
         fontSize: '0.72rem',
         color: TEXT_MUTED,
@@ -586,6 +608,8 @@ export default function Personalize() {
       }}>
         Approved layout 2026-05-17 (Ak + Gamble). Wired to real cart + Stripe.
       </div>
+        </div>{/* /maxWidth wrapper */}
+      </div>{/* /BOTTOM scrollable area */}
     </div>
   );
 }
