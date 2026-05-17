@@ -68,6 +68,26 @@ export default function Personalize() {
   const [receiver, setReceiver] = useState('');
   const [error, setError] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
+  const [currentScreen, setCurrentScreen] = useState(1);  // 1 = Personalize, 2 = Checkout
+
+  const goToCheckout = useCallback(() => {
+    setError('');
+    const toTrim = to.trim();
+    const fromTrim = from.trim();
+    if (!toTrim || !fromTrim) {
+      setError('Please fill in To and From before continuing.');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+    setCurrentScreen(2);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [to, from]);
+
+  const goBackToPersonalize = useCallback(() => {
+    setError('');
+    setCurrentScreen(1);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
 
   // Category-driven phrase list
   const phraseOptions = useMemo(() => {
@@ -218,43 +238,56 @@ export default function Personalize() {
         </div>
       )}
 
-      {/* ─── Live preview — the bloom video with text overlay ─── */}
+      {/* ─── Sticky live preview — follows you as you scroll/type ─── */}
       {product && (
         <div style={{
+          position: 'sticky',
+          top: '0.5rem',
+          zIndex: 30,
           marginBottom: '1.4rem',
           borderRadius: '14px',
           overflow: 'hidden',
           border: `1px solid ${GOLD_DIM}`,
           background: NAVY_DEEP,
+          maxHeight: '38vh',
+          display: 'flex',
+          flexDirection: 'column',
+          boxShadow: '0 6px 18px rgba(0,0,0,0.4)',
         }}>
-          <LivePreview
-            product={product}
-            colorTheme="custom"
-            primaryColor={color}
-            accentColor={color}
-            extras={{}}
-            message={{ short: message.trim() || phrase, toName: to, fromName: from }}
-            engravingStyle="classic"
-            fontChoice={FONT_CHOICES[fontIdx].fontKey}
-            messageTextColor={color}
-            messageBold={true}
-            messageTextSize="md"
-            frameStyle="none"
-            occasion={product.category}
-          />
+          <div style={{ flex: 1, minHeight: 0, overflow: 'hidden' }}>
+            <LivePreview
+              product={product}
+              colorTheme="custom"
+              primaryColor={color}
+              accentColor={color}
+              extras={{}}
+              message={{ short: message.trim() || phrase, toName: to, fromName: from }}
+              engravingStyle="classic"
+              fontChoice={FONT_CHOICES[fontIdx].fontKey}
+              messageTextColor={color}
+              messageBold={true}
+              messageTextSize="md"
+              frameStyle="none"
+              occasion={product.category}
+            />
+          </div>
           <div style={{
-            padding: '0.55rem 0.9rem',
-            fontSize: '0.72rem',
+            padding: '0.4rem 0.9rem',
+            fontSize: '0.68rem',
             color: TEXT_MUTED,
             textAlign: 'center',
             borderTop: `1px solid ${NAVY_LINE}`,
+            flexShrink: 0,
+            background: NAVY_DEEP,
           }}>
-            Live preview — updates as you type
+            Live preview — stays here as you scroll
           </div>
         </div>
       )}
 
-      {/* ─── Screen 1 ─── */}
+      {/* ─── Screen 1 — Personalize Bloom ─── */}
+      {currentScreen === 1 && (
+      <>
       <Card screenLabel="SCREEN 1 OF 2" title="Personalize Bloom">
         <Field label="To"><Input value={to} onChange={setTo} placeholder="Recipient name" /></Field>
         <Field label="From"><Input value={from} onChange={setFrom} placeholder="Your name" /></Field>
@@ -365,8 +398,67 @@ export default function Personalize() {
         </Section>
       </Card>
 
-      {/* ─── Screen 2 ─── */}
-      <div style={{ marginTop: '2rem' }}>
+      {error && (
+        <div style={{
+          marginTop: '1rem',
+          padding: '0.7rem 0.9rem',
+          background: 'rgba(184, 60, 60, 0.18)',
+          border: '1px solid rgba(184, 60, 60, 0.7)',
+          borderRadius: '8px',
+          color: '#FFC8C8',
+          fontSize: '0.85rem',
+        }}>{error}</div>
+      )}
+
+      <button
+        type="button"
+        onClick={goToCheckout}
+        disabled={isDemoMode}
+        style={{
+          display: 'block',
+          width: '100%',
+          margin: '1.4rem 0 0.4rem',
+          padding: '1.05rem',
+          background: isDemoMode ? 'rgba(212,175,55,0.4)' : GOLD,
+          color: NAVY_DEEP,
+          border: 'none',
+          borderRadius: '10px',
+          fontSize: '1.05rem',
+          fontWeight: 700,
+          letterSpacing: '0.1em',
+          cursor: isDemoMode ? 'not-allowed' : 'pointer',
+          boxShadow: '0 6px 18px rgba(212,175,55,0.22)',
+        }}
+      >
+        CONTINUE TO CHECKOUT →
+      </button>
+      </>
+      )}
+
+      {/* ─── Screen 2 — Checkout ─── */}
+      {currentScreen === 2 && (
+      <div>
+        <button
+          type="button"
+          onClick={goBackToPersonalize}
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '0.35rem',
+            margin: '0 0 1rem',
+            padding: '0.45rem 0.9rem',
+            background: 'transparent',
+            color: GOLD,
+            border: `1px solid ${GOLD_DIM}`,
+            borderRadius: '999px',
+            fontSize: '0.78rem',
+            fontWeight: 600,
+            cursor: 'pointer',
+            letterSpacing: '0.04em',
+          }}
+        >
+          ← Back to Personalize
+        </button>
         <Card screenLabel="SCREEN 2 OF 2" title="Checkout">
           <div style={{
             textAlign: 'center',
@@ -483,6 +575,7 @@ export default function Personalize() {
           </button>
         </Card>
       </div>
+      )}
 
       <div style={{
         marginTop: '2.5rem',
