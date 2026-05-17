@@ -69,6 +69,7 @@ export default function Personalize() {
   const [error, setError] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
   const [currentScreen, setCurrentScreen] = useState(1);  // 1 = Personalize, 2 = Checkout
+  const [showColorPicker, setShowColorPicker] = useState(false);
 
   const goToCheckout = useCallback(() => {
     setError('');
@@ -326,47 +327,6 @@ export default function Personalize() {
           <Textarea value={message} onChange={setMessage} />
         </Field>
 
-        <Section label="Message Color">
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(9, 1fr)',
-            gap: '0.45rem',
-            marginTop: '0.5rem',
-          }}>
-            {COLOR_SWATCHES.map((c, i) => (
-              <button
-                key={i}
-                type="button"
-                onClick={() => setColor(c)}
-                aria-label={`Color ${c}`}
-                style={{
-                  width: '100%',
-                  aspectRatio: '1 / 1',
-                  borderRadius: '50%',
-                  background: c,
-                  border: color === c ? `2px solid ${GOLD}` : `1px solid ${NAVY_LINE}`,
-                  cursor: 'pointer',
-                  padding: 0,
-                  boxShadow: color === c ? `0 0 0 2px rgba(212,175,55,0.25)` : 'none',
-                }}
-              />
-            ))}
-          </div>
-
-          <div style={{
-            marginTop: '0.9rem',
-            padding: '0.7rem 0.9rem',
-            background: NAVY_DEEP,
-            border: `1px solid ${NAVY_LINE}`,
-            borderRadius: '8px',
-            fontSize: '0.82rem',
-            lineHeight: 1.4,
-          }}>
-            <strong style={{ color: GOLD }}>Text Weight:</strong> Bold &amp; Medium only{' '}
-            <span style={{ color: TEXT_MUTED }}>(automatic)</span>
-          </div>
-        </Section>
-
         <Section label="Message Font">
           <Select
             value={FONT_CHOICES[fontIdx].label}
@@ -376,45 +336,106 @@ export default function Personalize() {
             }}
             options={FONT_CHOICES.map((f) => f.label)}
           />
-
+          {/* Live preview of the chosen font on a sample word */}
           <div style={{
+            marginTop: '0.55rem',
+            padding: '0.6rem 0.9rem',
+            border: `1px solid ${NAVY_LINE}`,
+            borderRadius: '8px',
             textAlign: 'center',
-            fontSize: '0.7rem',
-            color: TEXT_MUTED,
-            letterSpacing: '0.18em',
-            margin: '1rem 0 0.5rem',
+            background: NAVY_DEEP,
+            fontFamily: FONT_CHOICES[fontIdx].family,
+            fontWeight: FONT_CHOICES[fontIdx].weight,
+            fontStyle: FONT_CHOICES[fontIdx].style,
+            letterSpacing: FONT_CHOICES[fontIdx].spacing,
+            textTransform: FONT_CHOICES[fontIdx].transform,
+            color: color,
+            fontSize: '1.1rem',
           }}>
-            CHOOSE ANY STYLE
+            Sample
           </div>
+        </Section>
+
+        <Section label="Message Color">
+          <button
+            type="button"
+            onClick={() => setShowColorPicker(v => !v)}
+            aria-expanded={showColorPicker}
+            style={{
+              width: '100%',
+              padding: '0.7rem 0.9rem',
+              background: 'transparent',
+              color: TEXT,
+              border: `1px solid ${GOLD_DIM}`,
+              borderRadius: '8px',
+              fontSize: '0.95rem',
+              fontFamily: 'inherit',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              gap: '0.7rem',
+            }}
+          >
+            <span style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+              <span style={{
+                width: '1.4rem',
+                height: '1.4rem',
+                borderRadius: '50%',
+                background: color,
+                border: `1px solid ${NAVY_LINE}`,
+                flexShrink: 0,
+              }} />
+              <span>{showColorPicker ? 'Tap a swatch to choose' : 'Tap to change color'}</span>
+            </span>
+            <span style={{ color: GOLD, fontSize: '1.1rem', lineHeight: 1 }}>
+              {showColorPicker ? '▲' : '▼'}
+            </span>
+          </button>
+
+          {showColorPicker && (
+            <div style={{
+              marginTop: '0.5rem',
+              padding: '0.7rem',
+              background: NAVY_DEEP,
+              border: `1px solid ${NAVY_LINE}`,
+              borderRadius: '8px',
+              display: 'grid',
+              gridTemplateColumns: 'repeat(9, 1fr)',
+              gap: '0.45rem',
+            }}>
+              {COLOR_SWATCHES.map((c, i) => (
+                <button
+                  key={i}
+                  type="button"
+                  onClick={() => { setColor(c); setShowColorPicker(false); }}
+                  aria-label={`Color ${c}`}
+                  style={{
+                    width: '100%',
+                    aspectRatio: '1 / 1',
+                    borderRadius: '50%',
+                    background: c,
+                    border: color === c ? `2px solid ${GOLD}` : `1px solid ${NAVY_LINE}`,
+                    cursor: 'pointer',
+                    padding: 0,
+                    boxShadow: color === c ? `0 0 0 2px rgba(212,175,55,0.25)` : 'none',
+                  }}
+                />
+              ))}
+            </div>
+          )}
 
           <div style={{
-            display: 'grid',
-            gridTemplateColumns: '1fr 1fr',
-            gap: '0.65rem',
+            marginTop: '0.7rem',
+            padding: '0.6rem 0.85rem',
+            background: NAVY_DEEP,
+            border: `1px solid ${NAVY_LINE}`,
+            borderRadius: '8px',
+            fontSize: '0.78rem',
+            lineHeight: 1.4,
           }}>
-            {FONT_CHOICES.map((f, i) => (
-              <button
-                key={f.label}
-                type="button"
-                onClick={() => setFontIdx(i)}
-                style={{
-                  padding: '0.85rem 0.5rem',
-                  background: 'transparent',
-                  color: fontIdx === i ? GOLD : TEXT,
-                  border: `1px solid ${fontIdx === i ? GOLD : GOLD_DIM}`,
-                  borderRadius: '6px',
-                  fontSize: '1rem',
-                  cursor: 'pointer',
-                  fontFamily: f.family,
-                  fontWeight: f.weight,
-                  fontStyle: f.style,
-                  letterSpacing: f.spacing,
-                  textTransform: f.transform,
-                }}
-              >
-                {f.label}
-              </button>
-            ))}
+            <strong style={{ color: GOLD }}>Text Weight:</strong> Bold &amp; Medium only{' '}
+            <span style={{ color: TEXT_MUTED }}>(automatic)</span>
           </div>
         </Section>
       </Card>
