@@ -295,8 +295,42 @@ export default async function handler(req, res) {
       }
     }
 
+    // ── Hard-delete a render row + its mp4 (Ak 2026-05-17 directive)
+    // Used to clear bad/test renders Ak + Gamble will never publish.
+    if (action === 'delete_render') {
+      if (!promptId) return res.status(400).json({ error: 'promptId required' });
+      // Remove the storage object first; ignore "not found" so retries succeed
+      try {
+        await supabase.storage.from('monique-videos').remove([`${promptId}/full.mp4`]);
+      } catch (e) { /* non-fatal — the row delete is the source of truth */ }
+      const { error } = await supabase.from(PROMPTS_TABLE).delete().eq('id', promptId);
+      if (error) return res.status(500).json({ error: error.message });
+      return res.status(200).json({ ok: true, action: 'delete_render', promptId });
+    }
+
+    // ── Hard-delete a product row (only allowed on inactive/archived products)
+    // Doesn't touch product-media storage — those files are referenced by
+    // multiple variants and Bre Pull artifacts. Row removal is enough to
+    // make it disappear from every Studio view.
+    if (action === 'delete_product') {
+      if (!productId) return res.status(400).json({ error: 'productId required' });
+      // Safety: only delete if already archived (is_active=false)
+      const { data: existing, error: lookupErr } = await supabase
+        .from('products').select('id, is_active, name').eq('id', productId).maybeSingle();
+      if (lookupErr) return res.status(500).json({ error: lookupErr.message });
+      if (!existing) return res.status(404).json({ error: 'product not found' });
+      if (existing.is_active) {
+        return res.status(400).json({
+          error: 'Archive the product first (Archive button), then delete from the Archive tab.',
+        });
+      }
+      const { error } = await supabase.from('products').delete().eq('id', productId);
+      if (error) return res.status(500).json({ error: error.message });
+      return res.status(200).json({ ok: true, action: 'delete_product', productId, name: existing.name });
+    }
+
     if (!productId || !['restore', 'archive'].includes(action)) {
-      return res.status(400).json({ error: 'productId and action (restore|archive|publish) required' });
+      return res.status(400).json({ error: 'productId and action (restore|archive|publish|delete_render|delete_product) required' });
     }
 
     // ── Archive: simple is_active=false flip

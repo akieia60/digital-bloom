@@ -90,6 +90,17 @@
   /* Bre's Pull button (2026-05-07): QR-burn the source video and serve
      it as a forced-download URL she can tap to save to Photos / Files. */
   button.action.bre-pull { background:#2a1f3d; color:#e0c0ff; border:1px solid #6e4ca0; margin-top:8px; }
+  /* Delete buttons (Ak 2026-05-17 — kill bad renders from the archive). */
+  button.action.delete-render, button.action.delete-product {
+    background:#1a0f0f; color:#ffb4b4; border:1px solid #6e3636; margin-top:6px;
+    font-size:0.72rem;
+  }
+  button.action.delete-render:hover, button.action.delete-product:hover {
+    background:#2c1414; color:#ffd4d4; border-color:#a04848;
+  }
+  button.action.delete-render.working, button.action.delete-product.working {
+    background:#0f0a0a; color:#7a4949; border-color:#3a2222; cursor:default;
+  }
   button.action.bre-pull.working { background:#1a1428; color:#9678c0; border-color:#3a2858; cursor:default; }
   button.action.bre-pull.ready { background:#D4AF37; color:#0D1B36; border-color:#D4AF37; }
   button.action:disabled { background:#2a3e5e; color:#7a8fad; border-color:#2a3e5e; cursor:default; }
@@ -909,6 +920,68 @@ async function archiveProduct(productId, btn) {
   }
 }
 
+// Hard-delete a render (prompt row + mp4). Confirms first; one-tap from the
+// Renders tab. The card fades + removes itself on success. Ak 2026-05-17.
+async function deleteRender(promptId, title, btn) {
+  if (!confirm(`Delete "${title}" permanently?\n\nThis removes the render row AND the mp4 from storage. Can't be undone.`)) return;
+  const orig = btn.textContent;
+  btn.classList.add('working');
+  btn.disabled = true;
+  btn.textContent = 'Deleting…';
+  try {
+    const r = await fetch('/api/admin/archive', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token: TOKEN, action: 'delete_render', promptId }),
+    });
+    const j = await r.json();
+    if (!r.ok) throw new Error(j.error || 'failed');
+    const card = btn.closest('.card');
+    if (card) {
+      card.style.transition = 'opacity 0.35s';
+      card.style.opacity = '0';
+      setTimeout(() => card.remove(), 350);
+    }
+    toast('Deleted.');
+  } catch (e) {
+    btn.classList.remove('working');
+    btn.disabled = false;
+    btn.textContent = orig;
+    toast(e.message, false);
+  }
+}
+
+// Hard-delete an archived product. Only available on the Archive tab (the
+// inactive view) because the API gates this — must be is_active=false first.
+async function deleteProduct(productId, name, btn) {
+  if (!confirm(`Delete "${name}" forever?\n\nThe product row is removed from the database. Active product files in product-media are not touched. Can't be undone.`)) return;
+  const orig = btn.textContent;
+  btn.classList.add('working');
+  btn.disabled = true;
+  btn.textContent = 'Deleting…';
+  try {
+    const r = await fetch('/api/admin/archive', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token: TOKEN, action: 'delete_product', productId }),
+    });
+    const j = await r.json();
+    if (!r.ok) throw new Error(j.error || 'failed');
+    const card = btn.closest('.card');
+    if (card) {
+      card.style.transition = 'opacity 0.35s';
+      card.style.opacity = '0';
+      setTimeout(() => card.remove(), 350);
+    }
+    toast('Deleted forever.');
+  } catch (e) {
+    btn.classList.remove('working');
+    btn.disabled = false;
+    btn.textContent = orig;
+    toast(e.message, false);
+  }
+}
+
 function rendersGrid(items) {
   return items.map(p => {
     const name = escape(p.title || 'Untitled');
@@ -934,6 +1007,7 @@ function rendersGrid(items) {
         <div class="date">${date}</div>
         <div class="audit">${audit}</div>
         <button class="action ${btnClass}" onclick="publishRender('${p.id}', ${safeProductId}, this, ${isLive})">${btnLabel}</button>
+        <button class="action delete-render" onclick="deleteRender('${p.id}', ${JSON.stringify(p.title || 'Untitled').replace(/"/g,'&quot;')}, this)">🗑 Delete</button>
       </div>
     </div>`;
   }).join('');
@@ -983,6 +1057,7 @@ function productsGrid(items, mode) {
         <div class="date">${date}</div>
         <div class="audit">${audit}</div>
         <button class="action ${btnClass}" onclick="${btnHandler}">${btnLabel}</button>
+        ${!isActive ? `<button class="action delete-product" onclick="deleteProduct('${p.id}', ${JSON.stringify(p.name || 'Untitled').replace(/"/g,'&quot;')}, this)">🗑 Delete forever</button>` : ''}
         ${breBtn}
       </div>
     </div>`;
