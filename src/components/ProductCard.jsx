@@ -19,7 +19,7 @@ const ProductCard = ({ product: rawProduct, compact = false }) => {
     <div className="group">
       <Link to={`/product/${product.id}`} className="block">
         {/* Image Container */}
-        <div className={`relative overflow-hidden bg-[var(--surface-soft,#F7F7F7)] border border-[#E5E5EA] transition-all duration-500 group-hover:shadow-xl group-hover:border-[var(--accent-gold)]/30 ${compact ? 'rounded-xl aspect-square' : 'rounded-2xl aspect-[3/4]'}`}>
+        <div className={`relative overflow-hidden bg-[var(--surface-soft,#F7F7F7)] border border-[#E5E5EA] transition-all duration-500 group-hover:shadow-xl group-hover:border-[var(--accent-gold)]/30 ${compact ? 'rounded-xl aspect-square' : 'rounded-2xl aspect-[9/16]'}`}>
           <div className="w-full h-full transition-transform duration-700 group-hover:scale-105">
             <VideoPlayer
               videoUrl={videoUrl}

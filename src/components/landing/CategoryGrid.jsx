@@ -74,42 +74,87 @@ export default function CategoryGrid() {
   }, [categories.length]);
 
   return (
-    <section className="cat-stack-section" ref={sectionRef}>
-      {/* Section header */}
-      <div className="cat-stack-header">
-        <span className="cat-stack-eyebrow">{t('category_title')}</span>
-        <h2 className="cat-stack-headline">{t('category_subtitle')}</h2>
-      </div>
+    <section
+      ref={sectionRef}
+      aria-labelledby="category-grid-title"
+      style={{
+        background: '#0c1f3f',
+        padding: '3rem 1rem 2.5rem',
+      }}
+    >
+      <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
+        {/* Section header — matches RelationshipNav styling */}
+        <div style={{
+          textAlign: 'center',
+          marginBottom: '0.6rem',
+          fontFamily: "'Cormorant Garamond', Georgia, serif",
+          fontSize: '0.85rem',
+          letterSpacing: '0.25em',
+          textTransform: 'uppercase',
+          color: '#D4AF37',
+          fontStyle: 'italic',
+        }}>
+          {t('category_title') || 'Shop by occasion'}
+        </div>
+        <h2
+          id="category-grid-title"
+          style={{
+            textAlign: 'center',
+            fontFamily: "'Playfair Display', Georgia, serif",
+            fontSize: 'clamp(1.6rem, 5vw, 2.4rem)',
+            fontWeight: 600,
+            color: '#FFFFFF',
+            margin: '0 0 2.2rem',
+            lineHeight: 1.2,
+          }}
+        >
+          {t('category_subtitle') || "Every moment has its bloom."}
+        </h2>
 
-      {/* Stacked category list */}
-      <div className="cat-stack-list">
-        {categories.map((cat, idx) => {
-          const visible = visibleItems.has(String(idx));
-          return (
-            <div
-              key={cat.slug}
-              className={`cat-stack-item ${visible ? 'cat-stack-item--visible' : ''}`}
-              data-idx={idx}
-              style={{ transitionDelay: `${idx * 0.07}s` }}
-            >
-              {/* Category name row — full width */}
-              <div className="cat-stack-name-row">
-                <h3 className="cat-stack-name">
-                  <span style={{ marginRight: '8px', opacity: 0.85 }}>{cat.emoji}</span>
-                  {cat.name}
-                </h3>
-              </div>
-
-              {/* Divider line — full width */}
-              <div className="cat-stack-divider" style={{ background: cat.accent }} />
-
-              {/* Full-width square bloom — tap to open */}
+        {/* 9:16 tile grid — matches RelationshipNav size + style */}
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fill, minmax(170px, 1fr))',
+          gap: '1rem',
+        }}>
+          {categories.map((cat, idx) => {
+            const visible = visibleItems.has(String(idx));
+            return (
               <Link
+                key={cat.slug}
                 to={`/shop/${cat.slug}`}
-                className="cat-stack-bloom-link"
+                data-idx={idx}
                 aria-label={`${t('shop_search_button')} ${cat.name}`}
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  background: 'rgba(255,255,255,0.03)',
+                  border: '1px solid rgba(212,175,55,0.25)',
+                  borderRadius: '14px',
+                  color: '#FFFFFF',
+                  textDecoration: 'none',
+                  overflow: 'hidden',
+                  opacity: visible ? 1 : 0,
+                  transform: visible ? 'translateY(0)' : 'translateY(8px)',
+                  transition: `opacity 0.45s ease ${idx * 0.04}s, transform 0.45s ease ${idx * 0.04}s, border-color 0.18s, box-shadow 0.18s`,
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.borderColor = '#D4AF37';
+                  e.currentTarget.style.boxShadow = '0 10px 22px rgba(0,0,0,0.45)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.borderColor = 'rgba(212,175,55,0.25)';
+                  e.currentTarget.style.boxShadow = 'none';
+                }}
               >
-                <div className="db-watermark cat-stack-bloom-square">
+                {/* 9:16 video preview */}
+                <div style={{
+                  position: 'relative',
+                  width: '100%',
+                  aspectRatio: '9 / 16',
+                  background: '#000',
+                  overflow: 'hidden',
+                }}>
                   <video
                     src={cat.previewVideo}
                     autoPlay
@@ -117,33 +162,43 @@ export default function CategoryGrid() {
                     muted
                     playsInline
                     preload="metadata"
-                    className="cat-stack-bloom-video"
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'cover',
+                      display: 'block',
+                    }}
                   />
-                  {/* Tap hint overlay */}
-                  <div className="cat-stack-tap-hint">
-                    <span className="cat-stack-tap-text">{t('cat_tap_explore')}</span>
+                  {/* Soft bottom gradient for label legibility */}
+                  <div style={{
+                    position: 'absolute',
+                    bottom: 0, left: 0, right: 0,
+                    height: '40%',
+                    background: 'linear-gradient(to top, rgba(13,27,54,0.85) 0%, transparent 100%)',
+                    pointerEvents: 'none',
+                  }} />
+                </div>
+
+                {/* Label + emoji accent */}
+                <div style={{ padding: '0.85rem 0.9rem 1rem' }}>
+                  <div style={{
+                    fontFamily: "'Playfair Display', Georgia, serif",
+                    fontSize: '1.05rem',
+                    fontWeight: 600,
+                    marginBottom: '0.3rem',
+                    letterSpacing: '0.01em',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.45rem',
+                  }}>
+                    <span style={{ opacity: 0.85, fontSize: '1rem' }}>{cat.emoji}</span>
+                    <span>{cat.name}</span>
                   </div>
-                  {/* Getty-style diagonal watermark */}
-                  <div className="db-watermark-overlay" aria-hidden="true">
-                    <div className="db-watermark-grid">
-                      {Array.from({ length: 10 }, (_, i) => (
-                        <div key={i} className="db-watermark-row">
-                          <span>© Digital Bloom</span>
-                          <span>© Digital Bloom</span>
-                          <span>© Digital Bloom</span>
-                          <span>© Digital Bloom</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                  {/* Paired corner pills — TM left, © right (Gamble 2026-05-05 PM) */}
-                  <div className="db-watermark-corner db-watermark-corner--left" aria-hidden="true">™ Digital Bloom</div>
-                  <div className="db-watermark-corner" aria-hidden="true">© Digital Bloom</div>
                 </div>
               </Link>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
       </div>
     </section>
   );
