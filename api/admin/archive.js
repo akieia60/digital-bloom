@@ -297,15 +297,37 @@ export default async function handler(req, res) {
 
     // ── Hard-delete a render row + its mp4 (Ak 2026-05-17 directive)
     // Used to clear bad/test renders Ak + Gamble will never publish.
+    //
+    // 2026-05-18 fix (Ak: "How is it I'm deleting in archive and they
+    // still live on the website?"): if the render has a matching product
+    // row (slug = promptId), ALSO archive that product so the live site
+    // stops showing it. Without this, deleting a render orphans its
+    // product, which keeps appearing on /shop forever.
     if (action === 'delete_render') {
       if (!promptId) return res.status(400).json({ error: 'promptId required' });
-      // Remove the storage object first; ignore "not found" so retries succeed
+      // 1. Archive any matching product so it disappears from the storefront
+      let archivedProduct = null;
+      try {
+        const now = new Date().toISOString();
+        const { data } = await supabase
+          .from('products')
+          .update({ is_active: false, updated_at: now, last_action_by: actor, last_action_at: now })
+          .eq('slug', promptId)
+          .select('id, name')
+          .maybeSingle();
+        archivedProduct = data || null;
+      } catch (e) { /* non-fatal — continue with the render delete */ }
+      // 2. Remove the mp4 from monique-videos
       try {
         await supabase.storage.from('monique-videos').remove([`${promptId}/full.mp4`]);
-      } catch (e) { /* non-fatal — the row delete is the source of truth */ }
+      } catch (e) { /* non-fatal */ }
+      // 3. Delete the prompt row (source of truth)
       const { error } = await supabase.from(PROMPTS_TABLE).delete().eq('id', promptId);
       if (error) return res.status(500).json({ error: error.message });
-      return res.status(200).json({ ok: true, action: 'delete_render', promptId });
+      return res.status(200).json({
+        ok: true, action: 'delete_render', promptId,
+        productArchived: archivedProduct,
+      });
     }
 
     // ── Hard-delete a product row (only allowed on inactive/archived products)
