@@ -14,15 +14,25 @@ import { useProducts } from '../../hooks/useProducts';
 // existing Shop page handles the filter. Preview video = first live product
 // in that category.
 
+// Curated preview overrides per relationship — pins a SPECIFIC product slug
+// so the right-gendered/right-toned bloom always represents the tile, not
+// just "first product in the category." Add/edit here when Ak flags a
+// mismatch. (Ak 2026-05-17: 'You put King of the Cut in For Sister and that's
+// a man's bloom — use To My Sister.')
+const PREVIEW_OVERRIDES = {
+  // For Sister → "To My Sister" (birthday/for-sister)
+  'sister': 'a7ac1152-7a1e-4b29-894d-db738fe81d48',
+};
+
 const RELATIONSHIPS = [
-  { label: 'For Mom',                  categorySlug: 'mothers-day',  tagline: "Say what she means to you." },
-  { label: 'For Dad',                  categorySlug: 'fathers-day',  tagline: "Hero. Lighthouse. Yours." },
-  { label: 'For Sister',               categorySlug: 'birthday',     tagline: "The one who always gets it." },
-  { label: 'For Friend',               categorySlug: 'friendship',   tagline: "Same great you, every day." },
-  { label: 'Going Through a Hard Time', categorySlug: 'sympathy',    tagline: "You never handle it alone." },
-  { label: 'On Their Wedding',         categorySlug: 'wedding',      tagline: "Today and forever." },
-  { label: 'New Baby',                 categorySlug: 'celebration',  tagline: "A new bloom in the family." },
-  { label: "When Words Aren't Enough", categorySlug: 'encouragement', tagline: "Send what you couldn't quite say." },
+  { label: 'For Mom',                  categorySlug: 'mothers-day',  tagline: "Say what she means to you.",      overrideKey: 'mom' },
+  { label: 'For Dad',                  categorySlug: 'fathers-day',  tagline: "Hero. Lighthouse. Yours.",        overrideKey: 'dad' },
+  { label: 'For Sister',               categorySlug: 'birthday',     tagline: "The one who always gets it.",     overrideKey: 'sister' },
+  { label: 'For Friend',               categorySlug: 'friendship',   tagline: "Same great you, every day.",      overrideKey: 'friend' },
+  { label: 'Going Through a Hard Time', categorySlug: 'sympathy',    tagline: "You never handle it alone.",      overrideKey: 'hard-time' },
+  { label: 'On Their Wedding',         categorySlug: 'wedding',      tagline: "Today and forever.",              overrideKey: 'wedding' },
+  { label: 'New Baby',                 categorySlug: 'celebration',  tagline: "A new bloom in the family.",      overrideKey: 'new-baby' },
+  { label: "When Words Aren't Enough", categorySlug: 'encouragement', tagline: "Send what you couldn't quite say.", overrideKey: 'words' },
 ];
 
 export default function RelationshipNav() {
@@ -35,15 +45,22 @@ export default function RelationshipNav() {
   const tiles = useMemo(() => {
     const firstVideoBySlug = {};
     const firstPosterBySlug = {};
+    const productBySlug = {};
     for (const p of products) {
       if (p.video_url && !firstVideoBySlug[p.category]) firstVideoBySlug[p.category] = p.video_url;
       if (p.thumbnail_url && !firstPosterBySlug[p.category]) firstPosterBySlug[p.category] = p.thumbnail_url;
+      // Index by the row id (which our renderer uses as slug for new products)
+      if (p.slug) productBySlug[p.slug] = p;
+      if (p.id) productBySlug[p.id] = p;
     }
-    return RELATIONSHIPS.map((rel) => ({
-      ...rel,
-      previewVideo: firstVideoBySlug[rel.categorySlug] || null,
-      previewPoster: firstPosterBySlug[rel.categorySlug] || null,
-    }));
+    return RELATIONSHIPS.map((rel) => {
+      // Check for a curated override first
+      const overrideSlug = PREVIEW_OVERRIDES[rel.overrideKey];
+      const overrideProduct = overrideSlug ? productBySlug[overrideSlug] : null;
+      const previewVideo = overrideProduct?.video_url || firstVideoBySlug[rel.categorySlug] || null;
+      const previewPoster = overrideProduct?.thumbnail_url || firstPosterBySlug[rel.categorySlug] || null;
+      return { ...rel, previewVideo, previewPoster };
+    });
   }, [products]);
 
   return (
