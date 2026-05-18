@@ -1,5 +1,6 @@
 import { lazy, Suspense } from 'react';
 import LandingNav from '../components/landing/LandingNav';
+import HeroRecipientVideo from '../components/landing/HeroRecipientVideo';
 import GradientHero from '../components/landing/GradientHero';
 import MothersDayCountdown from '../components/landing/MothersDayCountdown';
 import LazySection from '../components/LazySection';
@@ -16,6 +17,7 @@ export default function LandingPage({ onOpenFaq }) {
           Mother's Day so the page doesn't go stale. */}
       <MothersDayCountdown />
       <LandingNav onOpenFaq={onOpenFaq} />
+      <HeroRecipientVideo />
       <GradientHero />
       <LazySection
         fallback={<div style={{ minHeight: '1200px' }} aria-hidden="true" />}
