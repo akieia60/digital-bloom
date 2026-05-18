@@ -295,38 +295,68 @@ export default async function handler(req, res) {
       }
     }
 
-    // ── Hard-delete a render row + its mp4 (Ak 2026-05-17 directive)
-    // Used to clear bad/test renders Ak + Gamble will never publish.
+    // ── Delete = FULL WIPE per Ak's 2026-05-18 spec
+    // "If I push delete, that means it doesn't belong in our database anymore.
+    //  That means it gets completely deleted from the site and from the archive."
     //
-    // 2026-05-18 fix (Ak: "How is it I'm deleting in archive and they
-    // still live on the website?"): if the render has a matching product
-    // row (slug = promptId), ALSO archive that product so the live site
-    // stops showing it. Without this, deleting a render orphans its
-    // product, which keeps appearing on /shop forever.
+    // This removes:
+    //   • prompt_engine_custom_prompts row (source of truth render)
+    //   • products row (the live/archive listing)
+    //   • monique-videos/{id}/full.mp4   (raw render)
+    //   • product-media/raw/{id}.mp4      (staging from publish)
+    //   • product-media/<category>/<id>_watermarked.mp4 (live storefront mp4)
+    //
+    // The bloom no longer exists anywhere after this call. Reversal requires
+    // a fresh render — there is no soft-delete.
     if (action === 'delete_render') {
       if (!promptId) return res.status(400).json({ error: 'promptId required' });
-      // 1. Archive any matching product so it disappears from the storefront
-      let archivedProduct = null;
+      const wiped = { prompt: false, product: false, monique: 0, productMedia: 0 };
+
+      // 1. Look up the matching product (need its category to nuke watermarked mp4 path)
+      let product = null;
       try {
-        const now = new Date().toISOString();
         const { data } = await supabase
           .from('products')
-          .update({ is_active: false, updated_at: now, last_action_by: actor, last_action_at: now })
+          .select('id, slug, category, name')
           .eq('slug', promptId)
-          .select('id, name')
           .maybeSingle();
-        archivedProduct = data || null;
-      } catch (e) { /* non-fatal — continue with the render delete */ }
-      // 2. Remove the mp4 from monique-videos
-      try {
-        await supabase.storage.from('monique-videos').remove([`${promptId}/full.mp4`]);
+        product = data || null;
       } catch (e) { /* non-fatal */ }
-      // 3. Delete the prompt row (source of truth)
+
+      // 2. Storage cleanup — best-effort, tolerant of missing files
+      try {
+        const { data: rm1 } = await supabase.storage.from('monique-videos')
+          .remove([`${promptId}/full.mp4`]);
+        wiped.monique = (rm1 || []).length;
+      } catch (e) { /* non-fatal */ }
+
+      const productMediaPaths = [`raw/${promptId}.mp4`];
+      if (product?.category) {
+        productMediaPaths.push(`${product.category}/${promptId}_watermarked.mp4`);
+      }
+      try {
+        const { data: rm2 } = await supabase.storage.from('product-media')
+          .remove(productMediaPaths);
+        wiped.productMedia = (rm2 || []).length;
+      } catch (e) { /* non-fatal */ }
+
+      // 3. Hard-delete the product row (full wipe — no soft delete)
+      if (product) {
+        try {
+          await supabase.from('products').delete().eq('id', product.id);
+          wiped.product = true;
+        } catch (e) { /* non-fatal — prompt delete still runs */ }
+      }
+
+      // 4. Hard-delete the prompt row (source of truth)
       const { error } = await supabase.from(PROMPTS_TABLE).delete().eq('id', promptId);
       if (error) return res.status(500).json({ error: error.message });
+      wiped.prompt = true;
+
       return res.status(200).json({
         ok: true, action: 'delete_render', promptId,
-        productArchived: archivedProduct,
+        productName: product?.name || null,
+        wiped,
       });
     }
 
