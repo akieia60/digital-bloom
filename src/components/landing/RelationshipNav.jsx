@@ -1,28 +1,50 @@
+import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '../../contexts/LanguageContext';
+import { useProducts } from '../../hooks/useProducts';
 
 // Relationship-first nav row — Hallmark/Shoebox model.
 // Ak directive 2026-05-17: 'For Mom / For Dad / For Sister / For Friend...
 // the Hallmark aisle.' Buyers walk in with a person in mind, not a feeling.
-// Each tile deep-links into /shop?relationship=<slug> so the existing Shop
-// page can filter by relationship using its sentiment metadata.
+// Each tile shows a REAL bloom video preview (not generic emojis) pulled
+// from the mapped category, so the homepage demonstrates the actual product
+// the moment you land.
 //
-// This sits ABOVE the occasion-first CategoryGrid; both are kept so the
-// transition is additive (Gamble greenlit 2026-05-17 via Wispr Flow).
+// Mapping: each relationship deep-links into /shop/<categorySlug> so the
+// existing Shop page handles the filter. Preview video = first live product
+// in that category.
 
 const RELATIONSHIPS = [
-  { slug: 'mom',        label: 'For Mom',     emoji: '💐', taglineKey: 'rel_mom_tagline',     fallback: 'Say what she means to you.' },
-  { slug: 'dad',        label: 'For Dad',     emoji: '👑', taglineKey: 'rel_dad_tagline',     fallback: 'Hero. Lighthouse. Yours.' },
-  { slug: 'sister',     label: 'For Sister',  emoji: '💗', taglineKey: 'rel_sister_tagline',  fallback: 'The one who always gets it.' },
-  { slug: 'friend',     label: 'For Friend',  emoji: '🌟', taglineKey: 'rel_friend_tagline',  fallback: 'Same great you, every day.' },
-  { slug: 'hard-time',  label: 'Going Through a Hard Time', emoji: '🤍', taglineKey: 'rel_hard_tagline', fallback: 'You never have to handle it alone.' },
-  { slug: 'wedding',    label: 'On Their Wedding',  emoji: '💒', taglineKey: 'rel_wedding_tagline', fallback: 'Today and forever.' },
-  { slug: 'new-baby',   label: 'New Baby',    emoji: '🍼', taglineKey: 'rel_baby_tagline',    fallback: 'A new bloom in the family.' },
-  { slug: 'words',      label: "When Words Aren't Enough", emoji: '✨', taglineKey: 'rel_words_tagline', fallback: 'Send what you couldn\'t quite say.' },
+  { label: 'For Mom',                  categorySlug: 'mothers-day',  tagline: "Say what she means to you." },
+  { label: 'For Dad',                  categorySlug: 'fathers-day',  tagline: "Hero. Lighthouse. Yours." },
+  { label: 'For Sister',               categorySlug: 'birthday',     tagline: "The one who always gets it." },
+  { label: 'For Friend',               categorySlug: 'friendship',   tagline: "Same great you, every day." },
+  { label: 'Going Through a Hard Time', categorySlug: 'sympathy',    tagline: "You never handle it alone." },
+  { label: 'On Their Wedding',         categorySlug: 'wedding',      tagline: "Today and forever." },
+  { label: 'New Baby',                 categorySlug: 'celebration',  tagline: "A new bloom in the family." },
+  { label: "When Words Aren't Enough", categorySlug: 'encouragement', tagline: "Send what you couldn't quite say." },
 ];
 
 export default function RelationshipNav() {
   const { t } = useLanguage();
+  const { products } = useProducts();
+
+  // Map each relationship to its first available video in the target category.
+  // If no product yet in that slug, the tile gracefully falls back to a poster
+  // image or the next-best category video.
+  const tiles = useMemo(() => {
+    const firstVideoBySlug = {};
+    const firstPosterBySlug = {};
+    for (const p of products) {
+      if (p.video_url && !firstVideoBySlug[p.category]) firstVideoBySlug[p.category] = p.video_url;
+      if (p.thumbnail_url && !firstPosterBySlug[p.category]) firstPosterBySlug[p.category] = p.thumbnail_url;
+    }
+    return RELATIONSHIPS.map((rel) => ({
+      ...rel,
+      previewVideo: firstVideoBySlug[rel.categorySlug] || null,
+      previewPoster: firstPosterBySlug[rel.categorySlug] || null,
+    }));
+  }, [products]);
 
   return (
     <section
@@ -74,64 +96,109 @@ export default function RelationshipNav() {
 
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))',
-          gap: '0.85rem',
+          gridTemplateColumns: 'repeat(auto-fill, minmax(170px, 1fr))',
+          gap: '1rem',
         }}>
-          {RELATIONSHIPS.map((rel) => {
-            const tagline = t(rel.taglineKey);
-            const taglineFinal = (tagline && tagline !== rel.taglineKey) ? tagline : rel.fallback;
-            return (
-              <Link
-                key={rel.slug}
-                to={`/shop?relationship=${rel.slug}`}
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  textAlign: 'center',
-                  padding: '1.3rem 0.8rem',
-                  background: 'rgba(255,255,255,0.03)',
-                  border: '1px solid rgba(212,175,55,0.25)',
-                  borderRadius: '14px',
-                  color: '#FFFFFF',
-                  textDecoration: 'none',
-                  transition: 'transform 0.18s, border-color 0.18s, background 0.18s',
-                  minHeight: '140px',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = 'translateY(-2px)';
-                  e.currentTarget.style.borderColor = '#D4AF37';
-                  e.currentTarget.style.background = 'rgba(212,175,55,0.06)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = 'translateY(0)';
-                  e.currentTarget.style.borderColor = 'rgba(212,175,55,0.25)';
-                  e.currentTarget.style.background = 'rgba(255,255,255,0.03)';
-                }}
-              >
-                <span style={{ fontSize: '2rem', marginBottom: '0.45rem', lineHeight: 1 }}>
-                  {rel.emoji}
-                </span>
-                <span style={{
+          {tiles.map((rel) => (
+            <Link
+              key={rel.categorySlug}
+              to={`/shop/${rel.categorySlug}`}
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                background: 'rgba(255,255,255,0.03)',
+                border: '1px solid rgba(212,175,55,0.25)',
+                borderRadius: '14px',
+                color: '#FFFFFF',
+                textDecoration: 'none',
+                overflow: 'hidden',
+                transition: 'transform 0.18s, border-color 0.18s, box-shadow 0.18s',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'translateY(-3px)';
+                e.currentTarget.style.borderColor = '#D4AF37';
+                e.currentTarget.style.boxShadow = '0 10px 22px rgba(0,0,0,0.45)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.borderColor = 'rgba(212,175,55,0.25)';
+                e.currentTarget.style.boxShadow = 'none';
+              }}
+            >
+              {/* Real bloom video preview — silent autoplay loop */}
+              <div style={{
+                position: 'relative',
+                width: '100%',
+                aspectRatio: '9 / 16',
+                background: '#000',
+                overflow: 'hidden',
+              }}>
+                {rel.previewVideo ? (
+                  <video
+                    src={rel.previewVideo}
+                    poster={rel.previewPoster || undefined}
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    preload="metadata"
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'cover',
+                      display: 'block',
+                    }}
+                  />
+                ) : (
+                  <div style={{
+                    width: '100%',
+                    height: '100%',
+                    background: 'linear-gradient(135deg, #1a2c4d 0%, #0d1b36 100%)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    color: 'rgba(212,175,55,0.45)',
+                    fontFamily: "'Playfair Display', Georgia, serif",
+                    fontStyle: 'italic',
+                    fontSize: '0.85rem',
+                    textAlign: 'center',
+                    padding: '1rem',
+                  }}>
+                    Coming soon
+                  </div>
+                )}
+                {/* Subtle gold corner glint */}
+                <div style={{
+                  position: 'absolute',
+                  bottom: 0, left: 0, right: 0,
+                  height: '40%',
+                  background: 'linear-gradient(to top, rgba(13,27,54,0.85) 0%, transparent 100%)',
+                  pointerEvents: 'none',
+                }} />
+              </div>
+
+              {/* Label + tagline */}
+              <div style={{ padding: '0.85rem 0.9rem 1rem' }}>
+                <div style={{
                   fontFamily: "'Playfair Display', Georgia, serif",
-                  fontSize: '1rem',
+                  fontSize: '1.05rem',
                   fontWeight: 600,
                   marginBottom: '0.3rem',
+                  letterSpacing: '0.01em',
                 }}>
                   {rel.label}
-                </span>
-                <span style={{
-                  fontSize: '0.75rem',
+                </div>
+                <div style={{
+                  fontSize: '0.78rem',
                   color: 'rgba(255,255,255,0.55)',
                   fontStyle: 'italic',
-                  lineHeight: 1.35,
+                  lineHeight: 1.4,
                 }}>
-                  {taglineFinal}
-                </span>
-              </Link>
-            );
-          })}
+                  {rel.tagline}
+                </div>
+              </div>
+            </Link>
+          ))}
         </div>
 
         <div style={{
