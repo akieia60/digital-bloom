@@ -96,10 +96,19 @@ export const LANE_CATALOGS = {
     { slug: 'water-signs',        label: 'Water Signs',       tagline: 'Cancer, Scorpio, Pisces — soft heart, truth underneath, deeper than the sea.' },
   ],
 
-  // Acknowledgement / Love / Valentine / Luxury / Sports / Women's Day /
-  // Signature-Stories — no lane catalogs yet. CategoryPage falls back to
-  // its flat grid for these. Add when there's editorial copy + enough
-  // products to fill the lanes.
+  acknowledgement: [
+    { slug: 'peer-recognition',     label: 'Peer Recognition',  tagline: 'For the one who earned the nod from people who matter.' },
+    { slug: 'peer-recognition-him', label: 'For Him',           tagline: 'Recognition cut for the brothers — game-respects-game.' },
+    { slug: 'i-see-you',            label: 'I See You',         tagline: 'For the one carrying it quietly — you are seen.' },
+    { slug: 'job-well-done',        label: 'Job Well Done',     tagline: 'For the win that took everything you had.' },
+    { slug: 'keep-your-head-up',    label: 'Keep Your Head Up', tagline: "When you can't see the next step — the bloom that says: keep going." },
+    { slug: 'thinking-of-you',      label: 'Thinking of You',   tagline: "Across the distance, across the silence — you are on someone's mind." },
+  ],
+
+  // Love / Valentine / Luxury / Sports / Women's Day / Signature-Stories
+  // — no lane catalogs yet. CategoryPage falls back to its flat grid for
+  // these. Add when there's editorial copy + enough products to fill the
+  // lanes.
 };
 
 export function getLaneCatalog(categorySlug) {
