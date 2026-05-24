@@ -7,7 +7,7 @@ import { useLocalizedProduct } from '../hooks/useLocalizedProduct';
 import ProductCard from './ProductCard';
 import Customizer from './Customizer';
 import OCCASIONS from '../data/occasions';
-import { getPosterUrl, primeVideoPlayback } from '../lib/media';
+import { getCanonicalVideoUrl, getPosterUrl, primeVideoPlayback } from '../lib/media';
 
 const ProductDetails = () => {
   const { t } = useLanguage();
@@ -119,7 +119,7 @@ const ProductDetails = () => {
     setShowSuccess(true);
   };
 
-  const heroVideoSrc = product.video_file_url || product.video_url;
+  const heroVideoSrc = getCanonicalVideoUrl(product);
   const heroImageSrc = getPosterUrl(heroVideoSrc, product.image_url);
   const displayPrice = Number(product.price || 0).toFixed(2);
 

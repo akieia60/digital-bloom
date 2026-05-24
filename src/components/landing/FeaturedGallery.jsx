@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
 import { useLanguage } from '../../contexts/LanguageContext';
+import { getCanonicalVideoUrl } from '../../lib/media';
 
 /**
  * FeaturedGallery — Landing Page
@@ -66,7 +67,7 @@ export default function FeaturedGallery() {
             >
               <div className="db-watermark gallery-media">
                 <video
-                  src={product.video_file_url || product.video_url}
+                  src={getCanonicalVideoUrl(product)}
                   autoPlay
                   loop
                   muted

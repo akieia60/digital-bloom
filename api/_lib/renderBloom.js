@@ -8,6 +8,7 @@ import { fileURLToPath } from 'url';
 import { createClient } from '@supabase/supabase-js';
 import { createCanvas, registerFont } from 'canvas';
 import { normalizePublicBaseUrl } from './publicBaseUrl.js';
+import { getCanonicalVideoUrl } from './mediaUrl.js';
 
 const execFileAsync = promisify(execFile);
 const require = createRequire(import.meta.url);
@@ -671,7 +672,7 @@ export async function renderBloomDelivery(purchaseId) {
   const hueRotate = purchase.composition_manifest?.composition?.hueRotate ?? customization.hueRotate ?? themeTuning.hueRotate;
   const saturate = purchase.composition_manifest?.composition?.saturate ?? customization.saturate ?? themeTuning.saturate;
   const brightness = purchase.composition_manifest?.composition?.brightness ?? customization.brightness ?? themeTuning.brightness;
-  const sourceVideoUrl = purchase.products?.video_file_url || purchase.products?.video_url;
+  const sourceVideoUrl = getCanonicalVideoUrl(purchase.products);
 
   if (!sourceVideoUrl) {
     throw new Error('No source video available for this purchase');

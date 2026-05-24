@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import VideoPlayer from './VideoPlayer';
 import LazySection from './LazySection';
 import { getTierByNumber } from '../config/pricingTiers';
-import { getPosterUrl } from '../lib/media';
+import { getCanonicalVideoUrl, getPosterUrl } from '../lib/media';
 import OCCASIONS from '../data/occasions';
 import { useLocalizedProduct } from '../hooks/useLocalizedProduct';
 
@@ -14,7 +14,7 @@ import { useLocalizedProduct } from '../hooks/useLocalizedProduct';
 export default function BloomListCard({ product: rawProduct }) {
   const product = useLocalizedProduct(rawProduct);
   const tierInfo = product.tier ? getTierByNumber(product.tier) : null;
-  const videoUrl = product.video_file_url || product.video_url;
+  const videoUrl = getCanonicalVideoUrl(product);
   const posterUrl = getPosterUrl(videoUrl, product.image_url);
   const occasion = OCCASIONS[product.category];
   const occasionName = occasion?.name;

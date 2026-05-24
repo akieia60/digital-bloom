@@ -2,6 +2,7 @@ import crypto from 'crypto';
 import { createClient } from '@supabase/supabase-js';
 import { waitUntil } from '@vercel/functions';
 import { renderBloomDelivery } from './renderBloom.js';
+import { getCanonicalVideoUrl } from './mediaUrl.js';
 
 export const supabase = createClient(
   process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL,
@@ -110,7 +111,7 @@ export async function insertPurchaseRows(rows) {
 export async function finalizePurchaseRecord(purchase, stripePaymentIntentId = null) {
   const hasCustomization = Boolean(purchase.composition_manifest?.customization);
   const product = purchase.products || {};
-  const isDigital = product.product_type === 'digital' || Boolean(product.video_file_url || product.video_url);
+  const isDigital = product.product_type === 'digital' || Boolean(getCanonicalVideoUrl(product));
 
   if (purchase.status === 'completed') {
     return purchase;
@@ -130,7 +131,7 @@ export async function finalizePurchaseRecord(purchase, stripePaymentIntentId = n
   }
 
   if (isDigital && !hasCustomization) {
-    updates.download_url = product.video_file_url || product.video_url || null;
+    updates.download_url = getCanonicalVideoUrl(product) || null;
     updates.download_expires_at = null; // bloom links never expire (per FAQ)
     updates.download_count = 0;
   }

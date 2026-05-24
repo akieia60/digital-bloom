@@ -1,8 +1,22 @@
 const VIDEO_ASSET_RE = /\.(mp4|webm|mov|m4v)(\?.*)?$/i;
+const REMOTE_URL_RE = /^https?:\/\//i;
 const DEFAULT_VIDEO_START_OFFSET = 0.9;
 
 export function isVideoAsset(url) {
   return Boolean(url) && VIDEO_ASSET_RE.test(url);
+}
+
+// Canonical bloom-video resolver. Prefers absolute remote URLs (Supabase / R2 /
+// CDN) over legacy local /videos/... paths so the storefront never falls back
+// to bundled Vercel static assets when a remote URL exists. Returns null if
+// the product has nothing playable.
+export function getCanonicalVideoUrl(product) {
+  if (!product || typeof product !== 'object') return null;
+  const candidates = [product.video_file_url, product.video_url];
+  for (const c of candidates) {
+    if (typeof c === 'string' && REMOTE_URL_RE.test(c)) return c;
+  }
+  return candidates.find((v) => typeof v === 'string' && v.length > 0) || null;
 }
 
 export function getSafeImageUrl(imageUrl) {

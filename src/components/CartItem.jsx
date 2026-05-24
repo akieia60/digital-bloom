@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useLanguage } from '../contexts/LanguageContext';
 import LivePreview from './LivePreview';
-import { getPosterUrl, getSafeImageUrl, primeVideoPlayback } from '../lib/media';
+import { getCanonicalVideoUrl, getPosterUrl, getSafeImageUrl, primeVideoPlayback } from '../lib/media';
 
 const OVERLAY_ICON_MAP = {
   ribbon: '🎀',
@@ -49,7 +49,7 @@ const CartItem = ({ item }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const expandedRef = useRef(null);
   const itemKey = item.lineItemId || item.id;
-  const videoUrl = item.video_file_url || item.video_url;
+  const videoUrl = getCanonicalVideoUrl(item);
   const posterUrl = getPosterUrl(videoUrl, item.image_url || item.image);
   const imageUrl = getSafeImageUrl(item.image_url || item.image);
   const customizationMessage = typeof item.customization?.message === 'string'

@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import VideoPlayer from './VideoPlayer';
 import LazySection from './LazySection';
-import { getPosterUrl } from '../lib/media';
+import { getCanonicalVideoUrl, getPosterUrl } from '../lib/media';
 import { useLocalizedProduct } from '../hooks/useLocalizedProduct';
 
 /**
@@ -18,7 +18,7 @@ import { useLocalizedProduct } from '../hooks/useLocalizedProduct';
  */
 export default function BloomLaneTile({ product: rawProduct }) {
   const product = useLocalizedProduct(rawProduct);
-  const videoUrl = product.video_file_url || product.video_url;
+  const videoUrl = getCanonicalVideoUrl(product);
   const posterUrl = getPosterUrl(videoUrl, product.image_url);
 
   // Static poster fallback rendered until the tile is near-viewport.

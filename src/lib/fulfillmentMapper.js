@@ -6,7 +6,7 @@
  */
 
 import { ENGRAVING_STYLES, getThemeSpec } from './compositionEngine';
-import { getPosterUrl } from './media';
+import { getCanonicalVideoUrl, getPosterUrl } from './media';
 
 export function buildFulfillmentManifest(product, customization) {
   const {
@@ -26,7 +26,7 @@ export function buildFulfillmentManifest(product, customization) {
   const theme = getThemeSpec(colorTheme, { primaryColor, accentColor });
   const engraving = ENGRAVING_STYLES[engravingStyle] || ENGRAVING_STYLES.heirloom;
 
-  const baseVideoUrl = product.video_file_url || product.video_url;
+  const baseVideoUrl = getCanonicalVideoUrl(product);
   const basePosterUrl = getPosterUrl(baseVideoUrl, product.image_url);
   const baseAsset = {
     type: baseVideoUrl ? 'video' : 'image',

@@ -13,6 +13,7 @@
 
 import { getCompositionLayers } from './compositionEngine';
 import { getApiBase } from './apiBase';
+import { getCanonicalVideoUrl } from './media';
 
 /**
  * Status constants for delivery states.
@@ -119,7 +120,7 @@ export async function resolveBloomDelivery(bloomSlug) {
     const composition = getCompositionLayers({
       product: {
         id: product.id,
-        video_file_url: product.video_file_url || product.video_url,
+        video_file_url: getCanonicalVideoUrl(product),
         image_url: product.image_url,
         name: product.name,
       },
