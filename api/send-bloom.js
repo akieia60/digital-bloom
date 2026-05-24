@@ -50,7 +50,21 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'No delivery config on this bloom' });
     }
 
-    // Check if already sent
+    // ── Hard send-once lock (belt-and-suspenders) ──
+    // sendCount tracks how many times send-bloom has been called for this bloom.
+    // Even if emailStatus somehow isn't 'sent', we block re-sends.
+    const currentSendCount = Number(
+      purchase.composition_manifest?.delivery?.sendCount || 0
+    );
+    if (currentSendCount >= 1) {
+      return res.status(409).json({
+        error: 'already_sent',
+        message: 'This bloom has already been delivered.',
+        sentAt: delivery.emailSentAt || null,
+      });
+    }
+
+    // Check if already sent (original emailStatus check — kept for clarity)
     if (delivery.emailStatus === 'sent' && delivery.emailSentAt) {
       return res.status(409).json({
         error: 'already_sent',
@@ -77,11 +91,12 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'No recipient address (email or phone) on this bloom' });
     }
 
-    // Mark as sending
+    // Mark as sending and increment sendCount
     const manifest = JSON.parse(JSON.stringify(purchase.composition_manifest || {}));
     manifest.delivery = {
       ...(manifest.delivery || {}),
       emailStatus: 'sending',
+      sendCount: currentSendCount + 1,
       lastAttemptAt: new Date().toISOString(),
       lastError: null,
     };

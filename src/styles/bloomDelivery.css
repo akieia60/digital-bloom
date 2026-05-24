@@ -729,56 +729,54 @@
 }
 
 /* ============================================
-   SOCIAL SHARE BUTTONS — Recipient view
+   SEND YOUR OWN BLOOM CTA — Recipient view
+   Replaces social share buttons (forwarding vector removed)
    ============================================ */
 
-.bloom-delivery__social {
+.bloom-delivery__cta {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 12px;
-  padding: 24px 24px 10px;
+  gap: 14px;
+  padding: 32px 24px 10px;
   width: 100%;
   max-width: 460px;
 }
 
-.bloom-delivery__social-label {
-  width: 100%;
-  text-align: center;
-  font-family: 'Outfit', sans-serif;
-  font-size: 0.72rem;
+.bloom-delivery__cta-text {
+  font-family: 'Cormorant Garamond', 'Georgia', serif;
+  font-size: 1.05rem;
   font-weight: 400;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.35);
-  margin: 0 0 4px;
+  font-style: italic;
+  color: rgba(255, 255, 255, 0.5);
+  letter-spacing: 0.06em;
+  margin: 0;
+  text-align: center;
 }
 
-.bloom-delivery__social-btn {
-  display: flex;
+.bloom-delivery__cta-btn {
+  display: inline-flex;
   align-items: center;
-  justify-content: center;
-  width: 52px;
-  height: 52px;
-  border-radius: 50%;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(255, 255, 255, 0.06);
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 1.2rem;
-  cursor: pointer;
+  gap: 6px;
+  padding: 13px 32px;
+  border-radius: 980px;
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  background: rgba(212, 175, 55, 0.08);
+  color: #D4AF37;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
   text-decoration: none;
-  transition: all 0.2s ease;
+  cursor: pointer;
+  transition: all 0.25s ease;
 }
 
-.bloom-delivery__social-btn:hover {
-  background: rgba(255, 255, 255, 0.12);
-  border-color: rgba(212, 175, 55, 0.3);
-  color: #FFFFFF;
+.bloom-delivery__cta-btn:hover {
+  background: rgba(212, 175, 55, 0.18);
+  border-color: #D4AF37;
+  color: #D4AF37;
   transform: translateY(-1px);
+  box-shadow: 0 6px 24px rgba(212, 175, 55, 0.2);
 }
 
-.bloom-delivery__social-btn svg {
-  width: 22px;
-  height: 22px;
-}

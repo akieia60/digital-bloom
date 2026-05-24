@@ -123,6 +123,38 @@ export default function BloomManage() {
     );
   }
 
+  // ── EXPIRED ──
+  if (state.status === DELIVERY_STATUS.EXPIRED) {
+    return (
+      <div className="bloom-delivery bloom-delivery--not-found">
+        <div className="bloom-delivery__status-card">
+          <div className="bloom-delivery__status-icon">🌸</div>
+          <h1 className="bloom-delivery__status-title">Bloom Expired</h1>
+          <p className="bloom-delivery__status-message">
+            {state.error || 'This bloom has reached its viewing limit or has expired.'}
+          </p>
+        </div>
+        <ManageBrand />
+      </div>
+    );
+  }
+
+  // ── SCHEDULED ──
+  if (state.status === DELIVERY_STATUS.SCHEDULED) {
+    return (
+      <div className="bloom-delivery bloom-delivery--processing">
+        <div className="bloom-delivery__status-card">
+          <div className="bloom-delivery__status-icon">📬</div>
+          <h1 className="bloom-delivery__status-title">Bloom Scheduled</h1>
+          <p className="bloom-delivery__status-message">
+            This bloom is queued for delivery and will be sent automatically.
+          </p>
+        </div>
+        <ManageBrand />
+      </div>
+    );
+  }
+
   // ── READY — Buyer manage experience ──
   const { delivery, composition } = state;
   const message = delivery?.message || {};

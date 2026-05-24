@@ -193,14 +193,18 @@ export default async function handler(req, res) {
 
       // ── View-count enforcement ──
       // Only count opens for completed blooms (not processing/scheduled).
-      // Increment first, then check — so the Nth open is the last valid one.
+      // Only increment when context=gift (recipient gift page), NOT manage page.
+      const isGiftContext = String(req.query.context || '').toLowerCase() === 'gift';
+
       if (resolvedPurchase.status === 'completed') {
         const currentCount = Number(resolvedPurchase.download_count || 0);
         if (currentCount >= MAX_BLOOM_OPENS) {
           // Bloom has been opened too many times — treat as expired
-          return res.status(200).json({
-            ok: true,
+          return res.status(410).json({
+            ok: false,
             kind: 'bloom',
+            error: 'view_limit_reached',
+            message: 'This bloom has reached its viewing limit. Want your own? Visit digitalbloom.store',
             purchase: {
               id: resolvedPurchase.id,
               bloom_slug: resolvedPurchase.bloom_slug,
@@ -216,13 +220,32 @@ export default async function handler(req, res) {
             } : null,
           });
         }
-        // Increment — fire-and-forget so it never slows down the response
-        supabase
-          .from('purchases')
-          .update({ download_count: currentCount + 1 })
-          .eq('id', resolvedPurchase.id)
-          .then(() => {})
-          .catch((err) => console.warn('[bloom-views] count update failed:', err));
+
+        // Only increment view count for gift-page views (not manage-page previews)
+        if (isGiftContext) {
+          const manifest = JSON.parse(JSON.stringify(resolvedPurchase.composition_manifest || {}));
+          const deliveryMeta = manifest.delivery || {};
+          const newViewCount = (Number(deliveryMeta.viewCount) || 0) + 1;
+          deliveryMeta.viewCount = newViewCount;
+          deliveryMeta.maxViews = deliveryMeta.maxViews || MAX_BLOOM_OPENS;
+          // Stamp claimedAt on first gift-context view
+          if (!deliveryMeta.claimedAt) {
+            deliveryMeta.claimedAt = new Date().toISOString();
+          }
+          manifest.delivery = deliveryMeta;
+
+          // Fire-and-forget: update both download_count and manifest delivery metadata
+          supabase
+            .from('purchases')
+            .update({
+              download_count: currentCount + 1,
+              composition_manifest: manifest,
+              updated_at: new Date().toISOString(),
+            })
+            .eq('id', resolvedPurchase.id)
+            .then(() => {})
+            .catch((err) => console.warn('[bloom-views] count update failed:', err));
+        }
       }
 
       if (delivery && isScheduledBloomLocked(delivery)) {
