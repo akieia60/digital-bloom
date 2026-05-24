@@ -1,4 +1,5 @@
 import { resolvePublicBaseUrl } from './publicBaseUrl.js';
+import { sendBloomDeliverySms } from './bloomDeliverySms.js';
 
 function escapeHtml(value = '') {
   return String(value)
@@ -427,28 +428,28 @@ export async function processBloomDeliveryEmails({
       continue;
     }
 
-    // For immediate deliveries, don't auto-send the recipient email.
-    // The buyer sends it manually from the /bloom/:slug/manage page.
-    // Scheduled deliveries still auto-send when the date arrives.
-    if (delivery.deliveryMode !== 'scheduled') {
-      processed.push(purchase);
-      continue;
-    }
+    // ── Auto-deliver immediately for both "now" and "scheduled" modes ──
+    // Previously, immediate-mode deliveries were skipped here and required
+    // the buyer to manually click "Send Now" from /bloom/:slug/manage.
+    // Now we auto-send right after checkout for a seamless buyer experience.
 
-    const due = isBloomDeliveryDue(delivery, now);
-    if (!due) {
-      if (delivery.emailStatus !== 'queued') {
-        try {
-          purchase = await updatePurchaseDeliveryManifest(supabase, purchase, {
-            emailStatus: 'queued',
-            lastError: null,
-          });
-        } catch (manifestError) {
-          console.error(`Failed to update delivery manifest to 'queued' for purchase ${purchase.id}:`, manifestError);
+    // For scheduled deliveries, still wait until the date arrives.
+    if (delivery.deliveryMode === 'scheduled') {
+      const due = isBloomDeliveryDue(delivery, now);
+      if (!due) {
+        if (delivery.emailStatus !== 'queued') {
+          try {
+            purchase = await updatePurchaseDeliveryManifest(supabase, purchase, {
+              emailStatus: 'queued',
+              lastError: null,
+            });
+          } catch (manifestError) {
+            console.error(`Failed to update delivery manifest to 'queued' for purchase ${purchase.id}:`, manifestError);
+          }
         }
+        processed.push(purchase);
+        continue;
       }
-      processed.push(purchase);
-      continue;
     }
 
     try {
@@ -462,27 +463,77 @@ export async function processBloomDeliveryEmails({
       console.error(`Failed to update delivery manifest to 'sending' for purchase ${purchase.id}:`, manifestError);
     }
 
+    // ── Route delivery: SMS if buyer chose phone, else email ──
+    const wantsSms = delivery.deliveryChannel === 'phone' && delivery.recipientPhone;
+    const twilioReady = Boolean(
+      process.env.TWILIO_ACCOUNT_SID &&
+      process.env.TWILIO_AUTH_TOKEN &&
+      process.env.TWILIO_FROM_NUMBER
+    );
+    const useSms = wantsSms && twilioReady;
+
     try {
-      await sendBloomDeliveryEmail({
-        req,
-        to: recipientEmail,
-        purchase,
-        delivery,
-        isTest: isTestModePurchase(purchase, explicitTestMode),
-      });
+      let sentVia = 'email';
+      let smsResult = null;
+
+      if (useSms) {
+        // SMS path — send text with gift link
+        const appBaseUrl = resolvePublicBaseUrl(req);
+        const giftUrl = `${appBaseUrl}/gift/${encodeURIComponent(purchase.bloom_slug)}`;
+        try {
+          smsResult = await sendBloomDeliverySms({
+            to: delivery.recipientPhone,
+            purchase,
+            delivery,
+            giftUrl,
+            isTest: isTestModePurchase(purchase, explicitTestMode),
+          });
+          sentVia = 'sms';
+        } catch (smsError) {
+          // SMS failed — fall back to email if we have an address
+          console.warn(`[processBloomDeliveryEmails] SMS failed for purchase ${purchase.id}, falling back to email:`, smsError);
+          if (recipientEmail) {
+            await sendBloomDeliveryEmail({
+              req,
+              to: recipientEmail,
+              purchase,
+              delivery,
+              isTest: isTestModePurchase(purchase, explicitTestMode),
+            });
+            sentVia = 'email_fallback';
+          } else {
+            throw smsError; // No fallback available
+          }
+        }
+      } else {
+        // Email path
+        await sendBloomDeliveryEmail({
+          req,
+          to: recipientEmail,
+          purchase,
+          delivery,
+          isTest: isTestModePurchase(purchase, explicitTestMode),
+        });
+      }
+
+      // Mark as sent
+      const sentPatch = {
+        emailStatus: 'sent',
+        emailSentAt: now.toISOString(),
+        lastError: null,
+        sentVia,
+        recipientEmail: recipientEmail || '',
+      };
+      if (smsResult?.sid) sentPatch.smsMessageSid = smsResult.sid;
+      if (delivery.recipientPhone) sentPatch.recipientPhone = delivery.recipientPhone;
 
       try {
-        purchase = await updatePurchaseDeliveryManifest(supabase, purchase, {
-          emailStatus: 'sent',
-          emailSentAt: now.toISOString(),
-          lastError: null,
-          recipientEmail,
-        });
+        purchase = await updatePurchaseDeliveryManifest(supabase, purchase, sentPatch);
       } catch (manifestError) {
         console.error(`Failed to update delivery manifest to 'sent' for purchase ${purchase.id}:`, manifestError);
       }
     } catch (error) {
-      console.error(`Bloom delivery email failed for purchase ${purchase.id}:`, error);
+      console.error(`Bloom delivery failed for purchase ${purchase.id}:`, error);
       try {
         purchase = await updatePurchaseDeliveryManifest(supabase, purchase, {
           emailStatus: 'failed',
