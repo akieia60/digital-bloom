@@ -5,6 +5,7 @@ import { captureReservedCredit } from '../_lib/creditReservations.js';
 import { finalizePurchasesBySession } from '../_lib/purchaseFlow.js';
 import { processBloomDeliveryEmails } from '../_lib/bloomDeliveryEmail.js';
 import { sendBloomCreditEmail } from '../_lib/creditEmail.js';
+import { sendOrderAlertSms } from '../_lib/orderAlertSms.js';
 
 export const config = {
   api: {
@@ -148,10 +149,27 @@ export default async function handler(req, res) {
       console.error('Bloom delivery email processing failed (background):', emailError);
     });
 
+    // Order alert — text AK when someone buys (non-blocking)
+    const alertTask = (async () => {
+      try {
+        const firstPurchase = purchases?.[0];
+        if (firstPurchase) {
+          const delivery = firstPurchase.composition_manifest?.delivery || {};
+          await sendOrderAlertSms({
+            purchase: firstPurchase,
+            delivery,
+          });
+        }
+      } catch (alertError) {
+        console.error('[order-alert] Failed in webhook (non-blocking):', alertError);
+      }
+    })();
+
     try {
-      waitUntil(deliveryTask);
+      waitUntil(Promise.all([deliveryTask, alertTask]));
     } catch {
       void deliveryTask;
+      void alertTask;
     }
 
     return res.status(200).json({ received: true });
