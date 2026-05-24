@@ -91,12 +91,14 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'No recipient address (email or phone) on this bloom' });
     }
 
-    // Mark as sending and increment sendCount
+    // Mark as sending — do NOT increment sendCount yet. sendCount only ticks
+    // up on PROVEN delivery (see the success block below). Codex 2026-05-24
+    // caught that incrementing here permanently locked out buyers whose
+    // first attempt hit a transient SMS/email provider error.
     const manifest = JSON.parse(JSON.stringify(purchase.composition_manifest || {}));
     manifest.delivery = {
       ...(manifest.delivery || {}),
       emailStatus: 'sending',
-      sendCount: currentSendCount + 1,
       lastAttemptAt: new Date().toISOString(),
       lastError: null,
     };
@@ -145,11 +147,14 @@ export default async function handler(req, res) {
       });
     }
 
-    // Mark as sent
+    // Mark as sent + commit sendCount=1 (the actual send-once lock — only set
+    // here, AFTER the provider acknowledged delivery, so failures don't
+    // strand the buyer).
     const now = new Date().toISOString();
     manifest.delivery.emailStatus = 'sent';
     manifest.delivery.emailSentAt = now;
     manifest.delivery.sentByBuyerAt = now;
+    manifest.delivery.sendCount = currentSendCount + 1;
     manifest.delivery.lastError = null;
     manifest.delivery.sentVia = sentVia;
     if (sentVia === 'sms' && smsResult?.sid) {
