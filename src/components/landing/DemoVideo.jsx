@@ -61,9 +61,9 @@ export default function DemoVideo() {
             controls
             playsInline
             preload="metadata"
-            poster="/videos/digital_bloom_poster.jpg"
+            poster="https://yhdbeblowolfinxxhsnt.supabase.co/storage/v1/object/public/product-media/site-assets/digital_bloom_poster.jpg"
           >
-            <source src="/videos/digital_bloom_seamless.mp4" type="video/mp4" />
+            <source src="https://yhdbeblowolfinxxhsnt.supabase.co/storage/v1/object/public/product-media/site-assets/digital_bloom_seamless.mp4" type="video/mp4" />
             {t('demo_fallback')}
           </video>
           {/* Getty-style diagonal watermark */}

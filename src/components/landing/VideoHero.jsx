@@ -129,18 +129,18 @@ export default function VideoHero() {
                 muted
                 loop
                 playsInline
-                poster="/videos/hero_bloom_poster.jpg"
+                poster="https://yhdbeblowolfinxxhsnt.supabase.co/storage/v1/object/public/product-media/site-assets/hero_bloom_poster.jpg"
                 preload="auto"
                 onCanPlay={() => setVideoLoaded(true)}
                 onError={() => setVideoFailed(true)}
               >
-                <source src="/videos/digital_bloom_hero_morph.mp4" type="video/mp4" />
+                <source src="https://yhdbeblowolfinxxhsnt.supabase.co/storage/v1/object/public/product-media/site-assets/digital_bloom_hero_morph.mp4" type="video/mp4" />
               </video>
             )}
             {/* Fallback: poster image if video fails */}
             {(videoFailed || !videoLoaded) && (
               <img
-                src="/videos/hero_bloom_poster.jpg"
+                src="https://yhdbeblowolfinxxhsnt.supabase.co/storage/v1/object/public/product-media/site-assets/hero_bloom_poster.jpg"
                 alt="Digital Bloom"
                 className="video-hero__fallback-img"
                 style={{

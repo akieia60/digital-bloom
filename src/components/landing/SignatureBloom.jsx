@@ -67,9 +67,9 @@ export default function SignatureBloom() {
               loop
               playsInline
               preload="none"
-              poster="/videos/digital_bloom_poster.jpg"
+              poster="https://yhdbeblowolfinxxhsnt.supabase.co/storage/v1/object/public/product-media/site-assets/digital_bloom_poster.jpg"
             >
-              <source src="/videos/digital_bloom_seamless.mp4" type="video/mp4" />
+              <source src="https://yhdbeblowolfinxxhsnt.supabase.co/storage/v1/object/public/product-media/site-assets/digital_bloom_seamless.mp4" type="video/mp4" />
             </video>
             {/* Getty-style diagonal watermark */}
             <div className="db-watermark-overlay" aria-hidden="true">

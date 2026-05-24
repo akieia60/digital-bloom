@@ -156,7 +156,7 @@ export default function GradientHero() {
                     transition: 'opacity 0.5s ease',
                   }}
                 >
-                  <source src="/videos/digital_bloom_hero_morph.mp4" type="video/mp4" />
+                  <source src="https://yhdbeblowolfinxxhsnt.supabase.co/storage/v1/object/public/product-media/site-assets/digital_bloom_hero_morph.mp4" type="video/mp4" />
                 </video>
               )}
 

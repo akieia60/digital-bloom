@@ -13,9 +13,10 @@ import OCCASIONS from '../../data/occasions';
 // Key = canonical slug. Value = video URL (local path or full Supabase URL).
 // To re-curate, just add/edit an entry here and push. To remove a curation
 // and let auto-pick take over, delete the entry.
-const PREVIEW_OVERRIDES = {
-  'mothers-day': '/videos/category-previews/preview_mothers-day_grok1.mp4',
-};
+// Removed mothers-day override 2026-05-24 — file deleted from public/videos.
+// Component falls back to firstVideoBySlug auto-pick (line ~30) which uses
+// the first live product's video_url for the category.
+const PREVIEW_OVERRIDES = {};
 
 export default function CategoryGrid() {
   const { t } = useLanguage();
