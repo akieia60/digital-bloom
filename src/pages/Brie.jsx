@@ -54,11 +54,13 @@ const EVERGREEN_FLYERS = [
 // by listing the latest matching file in the bucket via the public listing API.
 // Simpler v1: hard-link to the v6 upload URLs once we know them.
 const V6_BASE = `${SUPA_FLYERS}/v6-qr-topright`;
+const V6_POSTER_BASE = 'https://yhdbeblowolfinxxhsnt.supabase.co/storage/v1/object/public/product-media/flyer-posters/v6';
 
 function flyerUrl({ slot, label }) {
   const name = `${slot}.mp4`;
   return {
     src: `${V6_BASE}/${name}`,
+    poster: `${V6_POSTER_BASE}/${slot}.jpg`,
     download: `${V6_BASE}/${name}?download=${encodeURIComponent(`${label}.mp4`)}`,
     label,
   };
@@ -99,7 +101,12 @@ export default function Brie() {
       <header style={{ padding: '24px 16px 12px', textAlign: 'center', borderBottom: '1px solid #2a2a2a' }}>
         <div style={{ color: '#D4AF37', fontWeight: 700, fontSize: '14px', letterSpacing: '2px' }}>DIGITAL BLOOM</div>
         <h1 style={{ margin: '6px 0', fontSize: '22px', fontWeight: 400 }}>For Brianna</h1>
-        <p style={{ margin: 0, color: '#888', fontSize: '13px' }}>Tap any video to save it to your phone.</p>
+        <p style={{ margin: 0, color: '#888', fontSize: '13px' }}>
+          Tap a video to preview. <strong style={{ color: '#D4AF37' }}>Long-press the video</strong> to save it to your Camera Roll.
+        </p>
+        <p style={{ margin: '4px 0 0', color: '#666', fontSize: '11px' }}>
+          (Or use "↓ Save to Phone" — saves to Files, then move to Photos.)
+        </p>
       </header>
 
       <nav style={{ display: 'flex', gap: 0, borderBottom: '1px solid #2a2a2a', position: 'sticky', top: 0, background: '#0a0a0a', zIndex: 10 }}>
@@ -146,7 +153,8 @@ function FlyerGrid({ items }) {
         const f = flyerUrl(it);
         return (
           <div key={it.slot} style={{ background: '#111', borderRadius: '8px', overflow: 'hidden' }}>
-            <video src={f.src} muted playsInline preload="metadata" style={{ width: '100%', display: 'block', background: '#000' }} controls />
+            <video src={f.src} poster={f.poster} muted playsInline preload="none"
+                   style={{ width: '100%', display: 'block', background: '#000' }} controls />
             <div style={{ padding: '8px' }}>
               <div style={{ fontSize: '12px', color: '#ccc', marginBottom: '6px', lineHeight: 1.3 }}>{it.label}</div>
               <a href={f.download} download
