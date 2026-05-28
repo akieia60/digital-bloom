@@ -105,6 +105,22 @@ export const LANE_CATALOGS = {
     { slug: 'thinking-of-you',      label: 'Thinking of You',   tagline: "Across the distance, across the silence — you are on someone's mind." },
   ],
 
+  'thank-you': [
+    { slug: 'teachers',              label: 'For a Teacher',           tagline: 'For the one who shaped the kid you love.' },
+    { slug: 'doctors',               label: 'For a Doctor',            tagline: 'For the hands that held you up.' },
+    { slug: 'family',                label: 'For Family',              tagline: 'For the people who showed up — blood or chosen.' },
+    { slug: 'lawyers',               label: 'For a Lawyer',            tagline: 'For counsel that watched your back.' },
+    { slug: 'friends',               label: 'For a Friend',            tagline: 'For the friend who never asked for credit.' },
+    { slug: 'pastors',               label: 'For a Pastor',            tagline: 'For the shepherd of your soul.' },
+    { slug: 'colleagues',            label: 'For a Colleague',         tagline: 'For the coworker who carried weight with you.' },
+    { slug: 'employees',             label: 'For an Employee',         tagline: 'For the ones who built it alongside you.' },
+    { slug: 'employers',             label: 'For an Employer',         tagline: 'For the boss who believed in you first.' },
+    { slug: 'investors',             label: 'For an Investor',         tagline: 'For the believer who funded the vision.' },
+    { slug: 'nonprofit-supporters',  label: 'For a Nonprofit Supporter', tagline: 'For the giver who powers your mission.' },
+    { slug: 'business-partners',     label: 'For a Business Partner',  tagline: 'For the partner sharing the table.' },
+    { slug: 'contractors',           label: 'For a Contractor',        tagline: 'For the craftsman behind the work.' },
+  ],
+
   // Love / Valentine / Luxury / Sports / Women's Day / Signature-Stories
   // — no lane catalogs yet. CategoryPage falls back to its flat grid for
   // these. Add when there's editorial copy + enough products to fill the
