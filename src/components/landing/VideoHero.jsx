@@ -83,18 +83,18 @@ export default function VideoHero() {
                 muted
                 loop
                 playsInline
-                poster="/videos/hero_bloom_poster.jpg"
+                poster="/shara-bloom-poster.jpg"
                 preload="auto"
                 onCanPlay={() => setVideoLoaded(true)}
                 onError={() => setVideoFailed(true)}
               >
-                <source src="/videos/digital_bloom_hero_morph.mp4" type="video/mp4" />
+                <source src="/shara-bloom-reaction.mp4" type="video/mp4" />
               </video>
             )}
             {/* Fallback: poster image if video fails */}
             {(videoFailed || !videoLoaded) && (
               <img
-                src="/videos/hero_bloom_poster.jpg"
+                src="/shara-bloom-poster.jpg"
                 alt="Digital Bloom"
                 className="video-hero__fallback-img"
                 style={{
