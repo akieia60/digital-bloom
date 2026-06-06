@@ -46,7 +46,6 @@ export default function VideoHero() {
   const [videoFailed, setVideoFailed] = useState(false);
   const [contentVisible, setContentVisible] = useState(false);
   const [musicPlaying, setMusicPlaying] = useState(false);
-  const [voiceOn, setVoiceOn] = useState(false);
 
   const holiday = useMemo(() => getUpcomingHoliday(), []);
 
@@ -79,36 +78,10 @@ export default function VideoHero() {
       audio.pause();
       setMusicPlaying(false);
     } else {
-      // Music + Shara's voice are mutually exclusive — pause her voice if it's on.
-      const video = videoRef.current;
-      if (video && !video.muted) {
-        video.muted = true;
-        setVoiceOn(false);
-      }
       audio.volume = 0.35;
       audio.play().then(() => setMusicPlaying(true)).catch(() => {});
     }
   }, [musicPlaying]);
-
-  const toggleVoice = useCallback(() => {
-    const video = videoRef.current;
-    if (!video) return;
-    const next = video.muted;
-    if (next) {
-      // Turning Shara's voice ON — pause music so they don't fight.
-      const audio = audioRef.current;
-      if (audio && !audio.paused) {
-        audio.pause();
-        setMusicPlaying(false);
-      }
-      video.muted = false;
-      video.play().catch(() => {});
-      setVoiceOn(true);
-    } else {
-      video.muted = true;
-      setVoiceOn(false);
-    }
-  }, []);
 
   return (
     <>
@@ -156,18 +129,18 @@ export default function VideoHero() {
                 muted
                 loop
                 playsInline
-                poster="https://yhdbeblowolfinxxhsnt.supabase.co/storage/v1/object/public/product-media/site-assets/shara-bloom-poster.jpg"
+                poster="https://yhdbeblowolfinxxhsnt.supabase.co/storage/v1/object/public/product-media/site-assets/hero_bloom_poster.jpg"
                 preload="auto"
                 onCanPlay={() => setVideoLoaded(true)}
                 onError={() => setVideoFailed(true)}
               >
-                <source src="https://yhdbeblowolfinxxhsnt.supabase.co/storage/v1/object/public/product-media/site-assets/shara-bloom-reaction.mp4" type="video/mp4" />
+                <source src="https://yhdbeblowolfinxxhsnt.supabase.co/storage/v1/object/public/product-media/site-assets/digital_bloom_hero_morph.mp4" type="video/mp4" />
               </video>
             )}
             {/* Fallback: poster image if video fails */}
             {(videoFailed || !videoLoaded) && (
               <img
-                src="https://yhdbeblowolfinxxhsnt.supabase.co/storage/v1/object/public/product-media/site-assets/shara-bloom-poster.jpg"
+                src="https://yhdbeblowolfinxxhsnt.supabase.co/storage/v1/object/public/product-media/site-assets/hero_bloom_poster.jpg"
                 alt="Digital Bloom"
                 className="video-hero__fallback-img"
                 style={{
@@ -186,36 +159,6 @@ export default function VideoHero() {
           <div className="video-hero__watermark" aria-hidden="true">
             Digital Bloom™
           </div>
-
-          {/* Tap-to-unmute — Shara's real recipient reaction */}
-          <button
-            type="button"
-            className="video-hero__sound-toggle"
-            onClick={toggleVoice}
-            aria-label={voiceOn ? 'Mute her voice' : 'Tap to hear her reaction'}
-            aria-pressed={voiceOn}
-            style={{ opacity: contentVisible ? 1 : 0, transition: 'opacity 0.5s ease 0.6s' }}
-          >
-            {voiceOn ? (
-              <>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                  <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
-                  <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
-                  <path d="M19.07 4.93a10 10 0 0 1 0 14.14" />
-                </svg>
-                <span className="video-hero__sound-label">Mute</span>
-              </>
-            ) : (
-              <>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                  <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
-                  <line x1="23" y1="9" x2="17" y2="15" />
-                  <line x1="17" y1="9" x2="23" y2="15" />
-                </svg>
-                <span className="video-hero__sound-label">Tap for sound</span>
-              </>
-            )}
-          </button>
         </div>
 
         {/* Text Content — visible immediately on mobile */}

@@ -5,23 +5,15 @@ import { useEffect, useRef, useState } from 'react';
 // understand the product within 3 seconds. THE #1 fix for the 226-clicks-
 // zero-sales problem is an above-the-fold recipient-experience clip.
 //
-// PLACEHOLDER STATE: until Ak films a real screen-recording of a phone
-// opening a bloom, this component plays the most universal Mother's Day
-// bloom ("For Every Mother") as a stand-in. Caption tells the visitor
-// exactly what they're looking at.
-//
-// HOW TO SWAP IN THE REAL CLIP:
-//   1. Save the real receiver-experience MP4 to public/videos/
-//      e.g. public/videos/recipient-experience.mp4
-//   2. Change HERO_VIDEO_SRC below to '/videos/recipient-experience.mp4'
-//   3. Change CAPTION to match (or set null to remove caption)
-//   4. Commit + push. Vercel auto-deploys.
+// 2026-06-06: Real recipient reaction footage from Shara replaces the
+// placeholder bloom. 38s, 720x1280 vertical, H.264 + AAC + faststart,
+// served from Supabase site-assets. Tap the video (or "Tap for sound"
+// pill) to unmute — Shara's "oh my god that is so pretty" is the
+// natural reaction we want visitors to hear.
 
-const HERO_VIDEO_SRC = 'https://yhdbeblowolfinxxhsnt.supabase.co/storage/v1/object/public/product-media/mothers-day/68b0a309-fba4-4243-a34e-674aca7cffb5_watermarked.mp4';
-const CAPTION = "Watch what they'll see when you send a bloom.";
-
-// Visually flag this is a placeholder so Ak knows to swap when she films
-const IS_PLACEHOLDER = true;
+const HERO_VIDEO_SRC = 'https://yhdbeblowolfinxxhsnt.supabase.co/storage/v1/object/public/product-media/site-assets/shara-bloom-reaction.mp4';
+const HERO_POSTER_SRC = 'https://yhdbeblowolfinxxhsnt.supabase.co/storage/v1/object/public/product-media/site-assets/shara-bloom-poster.jpg';
+const CAPTION = "A real first-time reaction.";
 
 export default function HeroRecipientVideo() {
   const videoRef = useRef(null);
@@ -67,6 +59,7 @@ export default function HeroRecipientVideo() {
         <video
           ref={videoRef}
           src={HERO_VIDEO_SRC}
+          poster={HERO_POSTER_SRC}
           autoPlay
           muted
           loop
