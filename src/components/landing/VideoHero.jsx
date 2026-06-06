@@ -44,6 +44,16 @@ export default function VideoHero() {
   const [videoLoaded, setVideoLoaded] = useState(false);
   const [videoFailed, setVideoFailed] = useState(false);
   const [contentVisible, setContentVisible] = useState(false);
+  const [muted, setMuted] = useState(true);
+
+  const toggleMute = useCallback(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    const next = !video.muted;
+    video.muted = next;
+    if (!next) video.play().catch(() => {});
+    setMuted(next);
+  }, []);
 
   const holiday = useMemo(() => getUpcomingHoliday(), []);
 
@@ -113,6 +123,35 @@ export default function VideoHero() {
           <div className="video-hero__watermark" aria-hidden="true">
             Digital Bloom™
           </div>
+
+          {/* Tap-to-unmute — hear Shara's real reaction */}
+          <button
+            type="button"
+            className="video-hero__sound-toggle"
+            onClick={toggleMute}
+            aria-label={muted ? 'Tap to hear sound' : 'Mute sound'}
+            aria-pressed={!muted}
+          >
+            {muted ? (
+              <>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                  <line x1="23" y1="9" x2="17" y2="15" />
+                  <line x1="17" y1="9" x2="23" y2="15" />
+                </svg>
+                <span className="video-hero__sound-label">Tap for sound</span>
+              </>
+            ) : (
+              <>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                  <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                  <path d="M19.07 4.93a10 10 0 0 1 0 14.14" />
+                </svg>
+                <span className="video-hero__sound-label">Mute</span>
+              </>
+            )}
+          </button>
         </div>
 
         {/* Text Content — visible immediately on mobile */}
