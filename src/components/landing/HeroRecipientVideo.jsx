@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 
 // HeroRecipientVideo — auto-play hero clip above GradientHero.
 // Brief from Michael 2026-05-18 (per Google Ads debrief): visitors must
@@ -7,7 +7,7 @@ import { useEffect, useRef, useState } from 'react';
 //
 // 2026-06-06: Real recipient reaction footage from Shara replaces the
 // placeholder bloom. 38s, 720x1280 vertical, H.264 + AAC + faststart,
-// served from Supabase site-assets. Tap the video (or "Tap for sound"
+// served from Supabase site-assets. Tap the video (or the "Tap for sound"
 // pill) to unmute — Shara's "oh my god that is so pretty" is the
 // natural reaction we want visitors to hear.
 
@@ -17,19 +17,30 @@ const CAPTION = "A real first-time reaction.";
 
 export default function HeroRecipientVideo() {
   const videoRef = useRef(null);
-  const [hasInteracted, setHasInteracted] = useState(false);
+  const [isMuted, setIsMuted] = useState(true);
 
   useEffect(() => {
-    // Most iOS browsers require muted + playsInline + a user gesture for
-    // autoplay; the attributes below satisfy that. play() throws silently
-    // if the gesture is missing — that's expected and OK.
     const v = videoRef.current;
     if (!v) return;
-    const tryPlay = () => {
+    const p = v.play();
+    if (p && typeof p.catch === 'function') p.catch(() => {});
+  }, []);
+
+  // Keep DOM `muted` synced with React state, then nudge play() so
+  // iOS Safari actually starts the audio stream after a user gesture.
+  useEffect(() => {
+    const v = videoRef.current;
+    if (!v) return;
+    v.muted = isMuted;
+    if (!isMuted) {
       const p = v.play();
       if (p && typeof p.catch === 'function') p.catch(() => {});
-    };
-    tryPlay();
+    }
+  }, [isMuted]);
+
+  const toggleMute = useCallback((e) => {
+    if (e) e.stopPropagation();
+    setIsMuted((m) => !m);
   }, []);
 
   return (
@@ -46,37 +57,35 @@ export default function HeroRecipientVideo() {
         borderBottom: '1px solid rgba(212,175,55,0.18)',
       }}
     >
-      <div style={{
-        position: 'relative',
-        width: '100%',
-        maxWidth: '480px',
-        aspectRatio: '9 / 16',
-        background: '#000',
-        borderRadius: '14px',
-        overflow: 'hidden',
-        boxShadow: '0 12px 32px rgba(0,0,0,0.6)',
-      }}>
+      <div
+        onClick={toggleMute}
+        style={{
+          position: 'relative',
+          width: '100%',
+          maxWidth: '480px',
+          aspectRatio: '9 / 16',
+          background: '#000',
+          borderRadius: '14px',
+          overflow: 'hidden',
+          boxShadow: '0 12px 32px rgba(0,0,0,0.6)',
+          cursor: 'pointer',
+        }}
+      >
         <video
           ref={videoRef}
           src={HERO_VIDEO_SRC}
           poster={HERO_POSTER_SRC}
           autoPlay
-          muted
+          muted={isMuted}
           loop
           playsInline
           preload="auto"
-          onClick={() => {
-            if (!hasInteracted && videoRef.current) {
-              videoRef.current.muted = false;
-              setHasInteracted(true);
-            }
-          }}
           style={{
             width: '100%',
             height: '100%',
             objectFit: 'cover',
             display: 'block',
-            cursor: 'pointer',
+            pointerEvents: 'none',
           }}
         />
         {/* Soft bottom gradient for caption legibility */}
@@ -105,24 +114,58 @@ export default function HeroRecipientVideo() {
             </div>
           </>
         )}
-        {/* Tap-to-unmute hint while still muted */}
-        {!hasInteracted && (
-          <div style={{
+        {/* Sound toggle — own button, so the badge is itself a tap target.
+            iOS Safari often misroutes taps when a sibling overlay sits on
+            top of a <video>; making this its own <button> guarantees the
+            tap fires the unmute. */}
+        <button
+          type="button"
+          onClick={toggleMute}
+          aria-label={isMuted ? 'Tap to hear her reaction' : 'Mute her voice'}
+          aria-pressed={!isMuted}
+          style={{
             position: 'absolute',
-            top: '0.7rem', right: '0.7rem',
+            top: '0.7rem',
+            right: '0.7rem',
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '0.35rem',
             background: 'rgba(13,27,54,0.85)',
             color: '#D4AF37',
+            fontFamily: "'Outfit', sans-serif",
             fontSize: '0.65rem',
             fontWeight: 700,
             letterSpacing: '0.08em',
-            padding: '0.32rem 0.6rem',
+            padding: '0.4rem 0.7rem',
             borderRadius: '999px',
             border: '1px solid rgba(212,175,55,0.6)',
             backdropFilter: 'blur(4px)',
-          }}>
-            TAP FOR SOUND
-          </div>
-        )}
+            WebkitBackdropFilter: 'blur(4px)',
+            cursor: 'pointer',
+            textTransform: 'uppercase',
+            zIndex: 3,
+          }}
+        >
+          {isMuted ? (
+            <>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                <line x1="23" y1="9" x2="17" y2="15" />
+                <line x1="17" y1="9" x2="23" y2="15" />
+              </svg>
+              <span>Tap for sound</span>
+            </>
+          ) : (
+            <>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                <path d="M19.07 4.93a10 10 0 0 1 0 14.14" />
+              </svg>
+              <span>Mute</span>
+            </>
+          )}
+        </button>
       </div>
     </section>
   );
