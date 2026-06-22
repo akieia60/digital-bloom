@@ -1,6 +1,5 @@
 import { lazy, Suspense } from 'react';
 import LandingNav from '../components/landing/LandingNav';
-import HeroRecipientVideo from '../components/landing/HeroRecipientVideo';
 import GradientHero from '../components/landing/GradientHero';
 import MothersDayCountdown from '../components/landing/MothersDayCountdown';
 import LazySection from '../components/LazySection';
@@ -17,7 +16,9 @@ export default function LandingPage({ onOpenFaq }) {
           Mother's Day so the page doesn't go stale. */}
       <MothersDayCountdown />
       <LandingNav onOpenFaq={onOpenFaq} />
-      <HeroRecipientVideo />
+      {/* HeroRecipientVideo (Shara towel reaction clip) removed 2026-06-22 per
+          Ak — too revealing for the storefront. GradientHero (bloom morph) is
+          the hero again. Component file kept for a future approved reaction clip. */}
       <GradientHero />
       <LazySection
         fallback={<div style={{ minHeight: '1200px' }} aria-hidden="true" />}
