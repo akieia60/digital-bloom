@@ -28,9 +28,6 @@ const TeamCalendar = lazy(() => import('./pages/TeamCalendar'));
 const ShoppingCart = lazy(() => import('./components/ShoppingCart'));
 const FAQ = lazy(() => import('./components/landing/FAQ'));
 const FloatingCartButton = lazy(() => import('./components/FloatingCartButton'));
-const V3Preview = lazy(() => import('./pages/V3Preview'));
-const Personalize = lazy(() => import('./pages/Personalize'));
-const Brie = lazy(() => import('./pages/Brie'));
 
 /**
  * ErrorBoundary — catches any JavaScript error inside a child component tree,
@@ -116,11 +113,7 @@ function AppContent({ searchQuery, setSearchQuery }) {
           <Route path="/about" element={<ComingSoon />} />
           <Route path="/contact" element={<ComingSoon />} />
           <Route path="/checkout" element={<Checkout />} />
-          <Route path="/v3-preview" element={<V3Preview />} />
-          <Route path="/personalize" element={<Personalize />} />
-          <Route path="/personalize/:productId" element={<Personalize />} />
           <Route path="/share" element={<Share />} />
-          <Route path="/brie" element={<Brie />} />
           <Route path="/cal" element={<TeamCalendar />} />
           <Route path="/bloom/:id/manage" element={<BloomManage />} />
           <Route path="/bloom/:id" element={<BloomDelivery />} />
@@ -135,7 +128,7 @@ function AppContent({ searchQuery, setSearchQuery }) {
               padding: '2rem', textAlign: 'center',
             }}>
               <p style={{ fontSize: '3rem', marginBottom: '0.5rem' }}>404</p>
-              <h1 style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: '1.6rem', fontStyle: 'italic', color: '#D4AF37', marginBottom: '1rem' }}>
+              <h1 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: '1.6rem', fontStyle: 'italic', color: '#D4AF37', marginBottom: '1rem' }}>
                 Page Not Found
               </h1>
               <p style={{ color: 'rgba(255,255,255,0.55)', fontSize: '0.95rem', maxWidth: '360px', marginBottom: '2rem', lineHeight: 1.6 }}>

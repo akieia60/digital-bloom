@@ -4,44 +4,13 @@ import path from 'path';
 import { execFile } from 'child_process';
 import { promisify } from 'util';
 import { createRequire } from 'module';
-import { fileURLToPath } from 'url';
 import { createClient } from '@supabase/supabase-js';
-import { createCanvas, registerFont } from 'canvas';
+import { createCanvas } from 'canvas';
 import { normalizePublicBaseUrl } from './publicBaseUrl.js';
-import { getCanonicalVideoUrl } from './mediaUrl.js';
 
 const execFileAsync = promisify(execFile);
 const require = createRequire(import.meta.url);
 const ffmpegPath = require('ffmpeg-static');
-
-// Vercel Lambda doesn't ship with Arial / Georgia / Allura / Great Vibes /
-// any Google Web Fonts, so when canvas asked for them by name the renderer
-// fell back to a glyph-poor default and customer text rendered as tofu
-// (the placeholder rectangle). Bundle and register the 4 fonts the customizer
-// actually offers so canvas resolves them properly inside the function.
-// Files live in api/_fonts/ and are pulled into the bundle via the
-// `includeFiles` glob set on render/webhook/cron functions in vercel.json.
-const __fontsDir = fileURLToPath(new URL('../_fonts', import.meta.url));
-function tryRegister(file, family) {
-  try {
-    registerFont(path.join(__fontsDir, file), { family });
-  } catch (err) {
-    console.warn(`registerFont(${family}) skipped:`, err.message);
-  }
-}
-tryRegister('PlayfairDisplay.ttf', 'Playfair Display');
-tryRegister('Outfit.ttf', 'Outfit');
-tryRegister('GreatVibes-Regular.ttf', 'Great Vibes');
-tryRegister('Allura-Regular.ttf', 'Allura');
-tryRegister('CormorantGaramond.ttf', 'Cormorant Garamond');
-tryRegister('Cinzel.ttf', 'Cinzel');
-tryRegister('Lora.ttf', 'Lora');
-tryRegister('JosefinSans.ttf', 'Josefin Sans');
-tryRegister('DancingScript.ttf', 'Dancing Script');
-tryRegister('Sacramento-Regular.ttf', 'Sacramento');
-tryRegister('Italianno-Regular.ttf', 'Italianno');
-tryRegister('Caveat.ttf', 'Caveat');
-tryRegister('Marcellus-Regular.ttf', 'Marcellus');
 const DELIVERY_BUCKET = process.env.BLOOM_DELIVERY_BUCKET || 'bloom-deliveries';
 const PUBLIC_FALLBACK_BUCKET = 'product-media';
 
@@ -349,39 +318,9 @@ function roundRect(ctx, x, y, width, height, radius) {
   ctx.closePath();
 }
 
-// Map the customizer's fontChoice values to the families we've registered
-// above. Customizer offers playfair, outfit, arialBold, greatVibes, allura
-// (and a few synonyms). Anything unknown falls back to Playfair Display so
-// names always render with a real glyphset instead of node-canvas's tofu
-// default.
-const FONT_FAMILY_BY_CHOICE = {
-  // Serif family
-  playfair: 'Playfair Display',
-  cormorant: 'Cormorant Garamond',
-  cinzel: 'Cinzel',
-  lora: 'Lora',
-  marcellus: 'Marcellus',
-  // Sans family
-  outfit: 'Outfit',
-  josefinSans: 'Josefin Sans',
-  arialBold: 'Outfit',
-  // Script / cursive family
-  greatVibes: 'Great Vibes',
-  dancingScript: 'Dancing Script',
-  sacramento: 'Sacramento',
-  italianno: 'Italianno',
-  caveat: 'Caveat',
-  allura: 'Allura',
-  // Legacy generic aliases
-  cursive: 'Great Vibes',
-  script: 'Great Vibes',
-};
-
 function getCanvasFont(fontChoice, size, weight = 600, italic = false) {
-  const family = FONT_FAMILY_BY_CHOICE[fontChoice] || 'Playfair Display';
-  // Quote the family — node-canvas needs quoted family names that contain
-  // spaces (e.g. "Playfair Display").
-  return `${italic ? 'italic ' : ''}${weight} ${Math.round(size)}px "${family}"`;
+  const family = fontChoice === 'playfair' ? 'Georgia' : 'Arial';
+  return `${italic ? 'italic ' : ''}${weight} ${Math.round(size)}px ${family}`;
 }
 
 function wrapText(ctx, text, maxWidth) {
@@ -672,7 +611,7 @@ export async function renderBloomDelivery(purchaseId) {
   const hueRotate = purchase.composition_manifest?.composition?.hueRotate ?? customization.hueRotate ?? themeTuning.hueRotate;
   const saturate = purchase.composition_manifest?.composition?.saturate ?? customization.saturate ?? themeTuning.saturate;
   const brightness = purchase.composition_manifest?.composition?.brightness ?? customization.brightness ?? themeTuning.brightness;
-  const sourceVideoUrl = getCanonicalVideoUrl(purchase.products);
+  const sourceVideoUrl = purchase.products?.video_file_url || purchase.products?.video_url;
 
   if (!sourceVideoUrl) {
     throw new Error('No source video available for this purchase');
@@ -715,15 +654,7 @@ export async function renderBloomDelivery(purchaseId) {
       '-y',
       '-i', inputPath,
       '-i', overlayPath,
-      // Customer-input overlay (To/Message/From) is gated to the bouquet
-      // scene 10-20s window. Many master videos in the catalog have card
-      // text already baked into scenes 1 and 3 — drawing the overlay over
-      // the whole 30s duplicates that text and produces the overlap bug
-      // Gamble flagged on 2026-05-11 (the "Aunt Cheryl" bloom). 67 of 238
-      // active products are affected. Limiting to the no-text bouquet
-      // window cleanly resolves it for every affected product without
-      // having to re-render the masters.
-      '-filter_complex', `[0:v]${filterGraph ? `${filterGraph},` : ''}format=yuv420p[base];[1:v]format=rgba[overlay];[base][overlay]overlay=0:0:enable='between(t,10,20)'[outv]`,
+      '-filter_complex', `[0:v]${filterGraph ? `${filterGraph},` : ''}format=yuv420p[base];[1:v]format=rgba[overlay];[base][overlay]overlay=0:0[outv]`,
       '-map', '[outv]',
       '-c:v', 'libx264',
       '-preset', 'veryfast',

@@ -161,7 +161,7 @@
 }
 
 .video-hero__title {
-  font-family: 'Cormorant Garamond', 'Playfair Display', 'Georgia', serif;
+  font-family: 'Playfair Display', 'Playfair Display', 'Georgia', serif;
   font-weight: 600;
   font-style: italic;
   font-size: clamp(2.4rem, 8vw, 5rem);
@@ -175,7 +175,7 @@
 }
 
 .video-hero__tagline {
-  font-family: 'Cormorant Garamond', 'Georgia', serif;
+  font-family: 'Playfair Display', 'Georgia', serif;
   font-weight: 400;
   font-style: italic;
   font-size: clamp(1rem, 2.8vw, 1.5rem);

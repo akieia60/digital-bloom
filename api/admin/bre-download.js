@@ -1,6 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
 import { burnQrAndUpload, burnQrToBuffer } from '../_lib/burnQr.js';
-import { getCanonicalVideoUrl } from '../_lib/mediaUrl.js';
 
 export const maxDuration = 60;
 
@@ -57,7 +56,7 @@ export default async function handler(req, res) {
     if (pErr) return res.status(500).json({ error: pErr.message });
     if (!product) return res.status(404).json({ error: 'product not found' });
 
-    const inputUrl = getCanonicalVideoUrl(product);
+    const inputUrl = product.video_file_url || product.video_url;
     if (!inputUrl) return res.status(400).json({ error: 'product has no video url' });
 
     try {
@@ -102,7 +101,7 @@ export default async function handler(req, res) {
   if (pErr) return res.status(500).json({ error: pErr.message });
   if (!product) return res.status(404).json({ error: 'product not found' });
 
-  const inputUrl = getCanonicalVideoUrl(product);
+  const inputUrl = product.video_file_url || product.video_url;
   if (!inputUrl) return res.status(400).json({ error: 'product has no video url' });
 
   try {

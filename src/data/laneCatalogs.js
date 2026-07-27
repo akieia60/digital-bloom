@@ -32,28 +32,9 @@ export const LANE_CATALOGS = {
 
   'fathers-day': [
     { slug: 'for-dad',           label: 'For Dad',           tagline: 'The classic — for the man who raised you.' },
-    { slug: 'young-dad',         label: 'For a Young Dad',   tagline: 'First-time dad, fresh fatherhood — for the man learning to love new.' },
-    { slug: 'working-dad',       label: 'For a Working Dad', tagline: 'Boots, hands, hammer — the man who builds for the family.' },
     { slug: 'for-grandpa',       label: 'For Grandpa',       tagline: 'Patriarch, legacy, the wisdom passed down.' },
     { slug: 'for-stepdad',       label: 'For Stepdad',       tagline: "Bonus Dad — the man who chose to show up." },
     { slug: 'father-in-law',     label: 'For Father-in-Law', tagline: 'The dad you inherited.' },
-    { slug: 'multigenerational', label: 'Generations',       tagline: 'Father, son, father again — the line you carry.' },
-    { slug: 'patriarch',         label: 'Patriarch',         tagline: 'The elder, the king, the one who raised the village.' },
-    // 12 hobby-based subcategories per Gamble's 2026-05-13 1:19 PM directive.
-    // "I will send you some prompts to create some manly blooms that most men
-    // can relate to based off of hobbies."
-    { slug: 'basketball-fan',    label: 'Basketball Fan',    tagline: 'Court-side dad — bracket-watcher, jersey-collector.' },
-    { slug: 'football-fan',      label: 'Football Fan',      tagline: 'Sunday-game dad — pigskin, tailgate, the championship dream.' },
-    { slug: 'baseball-fan',      label: 'Baseball Fan',      tagline: 'Diamond dad — ballpark hot dogs, the seventh-inning stretch.' },
-    { slug: 'soccer-fan',        label: 'Soccer Fan',        tagline: 'Pitch dad — the beautiful game, his Saturday morning sideline.' },
-    { slug: 'hockey-fan',        label: 'Hockey Fan',        tagline: 'Rink dad — slap shot, ice time, the Cup chase.' },
-    { slug: 'auto-enthusiast',   label: 'Sports Car Fan',    tagline: 'Garage dad — chrome, horsepower, the open road.' },
-    { slug: 'foodie-dad',        label: 'Food Fanatic',      tagline: 'Grill master dad — pitmaster, BBQ purist, knife and flame.' },
-    { slug: 'family-man',        label: 'Family Man',        tagline: 'Everyday dad — quietly building the people around him.' },
-    { slug: 'fishing-fan',       label: 'Fishing Fan',       tagline: 'Lake dad — early mornings, tackle box, the patient catch.' },
-    { slug: 'hunting-fan',       label: 'Hunting Fan',       tagline: 'Outdoors dad — camo, the trail, the silence before dawn.' },
-    { slug: 'truck-driver',      label: 'Truck Driver',      tagline: 'Highway dad — the long haul, the open road, the family at the end of it.' },
-    { slug: 'young-father',      label: 'Young Father',      tagline: 'New-dad energy — sleep-deprived, deeply in love, learning every day.' },
     { slug: 'from-son',          label: 'From a Son',        tagline: "Father-and-son — proud-son perspective." },
     { slug: 'from-daughter',     label: 'From a Daughter',   tagline: "Daddy's girl, all grown up." },
     { slug: 'memorial',          label: 'In Memory',         tagline: 'For the father whose strength still echoes.' },
@@ -96,35 +77,10 @@ export const LANE_CATALOGS = {
     { slug: 'water-signs',        label: 'Water Signs',       tagline: 'Cancer, Scorpio, Pisces — soft heart, truth underneath, deeper than the sea.' },
   ],
 
-  acknowledgement: [
-    { slug: 'peer-recognition',     label: 'Peer Recognition',  tagline: 'For the one who earned the nod from people who matter.' },
-    { slug: 'peer-recognition-him', label: 'For Him',           tagline: 'Recognition cut for the brothers — game-respects-game.' },
-    { slug: 'i-see-you',            label: 'I See You',         tagline: 'For the one carrying it quietly — you are seen.' },
-    { slug: 'job-well-done',        label: 'Job Well Done',     tagline: 'For the win that took everything you had.' },
-    { slug: 'keep-your-head-up',    label: 'Keep Your Head Up', tagline: "When you can't see the next step — the bloom that says: keep going." },
-    { slug: 'thinking-of-you',      label: 'Thinking of You',   tagline: "Across the distance, across the silence — you are on someone's mind." },
-  ],
-
-  'thank-you': [
-    { slug: 'teachers',              label: 'For a Teacher',           tagline: 'For the one who shaped the kid you love.' },
-    { slug: 'doctors',               label: 'For a Doctor',            tagline: 'For the hands that held you up.' },
-    { slug: 'family',                label: 'For Family',              tagline: 'For the people who showed up — blood or chosen.' },
-    { slug: 'lawyers',               label: 'For a Lawyer',            tagline: 'For counsel that watched your back.' },
-    { slug: 'friends',               label: 'For a Friend',            tagline: 'For the friend who never asked for credit.' },
-    { slug: 'pastors',               label: 'For a Pastor',            tagline: 'For the shepherd of your soul.' },
-    { slug: 'colleagues',            label: 'For a Colleague',         tagline: 'For the coworker who carried weight with you.' },
-    { slug: 'employees',             label: 'For an Employee',         tagline: 'For the ones who built it alongside you.' },
-    { slug: 'employers',             label: 'For an Employer',         tagline: 'For the boss who believed in you first.' },
-    { slug: 'investors',             label: 'For an Investor',         tagline: 'For the believer who funded the vision.' },
-    { slug: 'nonprofit-supporters',  label: 'For a Nonprofit Supporter', tagline: 'For the giver who powers your mission.' },
-    { slug: 'business-partners',     label: 'For a Business Partner',  tagline: 'For the partner sharing the table.' },
-    { slug: 'contractors',           label: 'For a Contractor',        tagline: 'For the craftsman behind the work.' },
-  ],
-
-  // Love / Valentine / Luxury / Sports / Women's Day / Signature-Stories
-  // — no lane catalogs yet. CategoryPage falls back to its flat grid for
-  // these. Add when there's editorial copy + enough products to fill the
-  // lanes.
+  // Acknowledgement / Love / Valentine / Luxury / Sports / Women's Day /
+  // Signature-Stories — no lane catalogs yet. CategoryPage falls back to
+  // its flat grid for these. Add when there's editorial copy + enough
+  // products to fill the lanes.
 };
 
 export function getLaneCatalog(categorySlug) {

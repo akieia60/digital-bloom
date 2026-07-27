@@ -3,7 +3,7 @@
    Refined, mobile-first, white-forward
    ============================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&family=Cormorant+Garamond:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap');
+/* Fonts loaded globally in index.css — no duplicate import needed */
 
 html {
   scroll-behavior: smooth;
@@ -31,7 +31,7 @@ html {
   padding: 32px 18px 56px;
   background:
     radial-gradient(circle at top center, rgba(212, 175, 55, 0.12), transparent 34%),
-    linear-gradient(180deg, #0c1f3f 0%, #102853 46%, #f7f4ef 100%);
+    linear-gradient(180deg, #0D1B36 0%, #102853 46%, #f7f4ef 100%);
 }
 
 .demo-video-header {
@@ -70,7 +70,7 @@ html {
   overflow: hidden;
   border-radius: 28px;
   border: 1px solid rgba(255, 255, 255, 0.12);
-  background: #07111f;
+  background: #0D1B36;
   box-shadow:
     0 28px 72px rgba(4, 12, 24, 0.38),
     0 0 0 1px rgba(212, 175, 55, 0.08);
@@ -92,7 +92,7 @@ html {
   width: 100%;
   aspect-ratio: 16 / 9;
   object-fit: cover;
-  background: #07111f;
+  background: #0D1B36;
 }
 
 .demo-video-caption {
@@ -139,11 +139,13 @@ html {
 
 /* ============================================
    BUTTONS / CTAs
+   Base styles live in index.css as .btn-primary / .btn-secondary.
+   These classes add landing-specific padding and sizing.
    ============================================ */
 .cta-primary {
   display: inline-block;
   padding: 16px 32px;
-  background: var(--accent-gold, #C9A14A);
+  background: var(--accent-gold);
   color: #FFFFFF;
   font-family: 'Outfit', sans-serif;
   font-size: 15px;
@@ -158,22 +160,22 @@ html {
 }
 
 .cta-primary:hover {
-  background: var(--accent-gold-hover, #B8923F);
+  background: var(--accent-gold-hover);
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(201, 161, 74, 0.25);
+  box-shadow: 0 8px 24px rgba(212, 175, 55, 0.25);
 }
 
 .cta-secondary {
   display: inline-block;
   padding: 16px 32px;
   background: transparent;
-  color: var(--text-primary, #1D1D1F);
+  color: var(--text-primary);
   font-family: 'Outfit', sans-serif;
   font-size: 15px;
   font-weight: 500;
   text-decoration: none;
   border-radius: 980px;
-  border: 1.5px solid var(--border-strong, #D2D2D7);
+  border: 1.5px solid var(--border-strong);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
   letter-spacing: 0.05em;
@@ -181,9 +183,9 @@ html {
 }
 
 .cta-secondary:hover {
-  border-color: var(--accent-gold, #C9A14A);
-  color: var(--accent-gold, #C9A14A);
-  background: rgba(201, 161, 74, 0.04);
+  border-color: var(--accent-gold);
+  color: var(--accent-gold);
+  background: var(--accent-gold-glow);
 }
 
 /* ============================================
@@ -218,7 +220,7 @@ html {
   font-size: 0.7rem;
   letter-spacing: 0.3em;
   text-transform: uppercase;
-  color: var(--accent-gold, #C9A14A);
+  color: var(--accent-gold, var(--accent-gold));
   display: block;
   text-align: center;
   margin-bottom: 14px;
@@ -275,7 +277,7 @@ html {
   font-size: 0.7rem;
   letter-spacing: 0.35em;
   text-transform: uppercase;
-  color: var(--accent-gold, #C9A14A);
+  color: var(--accent-gold, var(--accent-gold));
   display: block;
   margin-bottom: 14px;
 }
@@ -327,7 +329,7 @@ html {
   font-weight: 600;
   letter-spacing: 0.28em;
   text-transform: uppercase;
-  color: var(--accent-gold, #C9A14A);
+  color: var(--accent-gold, var(--accent-gold));
   margin-bottom: 12px;
 }
 
@@ -391,7 +393,7 @@ html {
   width: 100%;
   aspect-ratio: 1 / 1;
   overflow: hidden;
-  background: #0a0a0a;
+  background: #0D1B36;
 }
 
 .sq-cat-card__video {
@@ -439,7 +441,7 @@ html {
 }
 
 .sq-cat-card:hover .sq-cat-card__title {
-  color: var(--accent-gold, #C9A14A);
+  color: var(--accent-gold, var(--accent-gold));
 }
 
 .sq-cat-card__tagline {
@@ -515,7 +517,7 @@ html {
   font-weight: 600;
   letter-spacing: 0.3em;
   text-transform: uppercase;
-  color: var(--accent-gold, #C9A14A);
+  color: var(--accent-gold, var(--accent-gold));
   margin-bottom: 10px;
 }
 
@@ -581,7 +583,7 @@ html {
   width: 100%;
   aspect-ratio: 1 / 1;
   overflow: hidden;
-  background: #0a0a0a;
+  background: #0D1B36;
   position: relative;
 }
 
@@ -846,7 +848,7 @@ html {
    ============================================ */
 .landing-footer {
   padding: 64px 0 32px;
-  background: var(--bg-page, #0A0A0A);
+  background: var(--bg-page, #0D1B36);
   border-top: 1px solid rgba(255, 255, 255, 0.06);
 }
 
@@ -899,8 +901,8 @@ html {
 .form-group input:focus,
 .form-group textarea:focus {
   outline: none;
-  border-color: var(--accent-gold, #C9A14A);
-  box-shadow: 0 0 0 3px rgba(201, 161, 74, 0.1);
+  border-color: var(--accent-gold, var(--accent-gold));
+  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
 }
 
 .form-group input::placeholder,
@@ -956,7 +958,7 @@ html {
 
 .two-ways-card--gold:hover {
   border-color: var(--accent-gold-border-hover, rgba(201, 161, 74, 0.4));
-  box-shadow: 0 12px 40px rgba(201, 161, 74, 0.08);
+  box-shadow: 0 12px 40px rgba(212, 175, 55, 0.08);
 }
 
 .two-ways-icon {
@@ -972,8 +974,8 @@ html {
 }
 
 .two-ways-card--gold .two-ways-icon {
-  background: rgba(201, 161, 74, 0.08);
-  color: var(--accent-gold, #C9A14A);
+  background: rgba(212, 175, 55, 0.08);
+  color: var(--accent-gold, var(--accent-gold));
 }
 
 .two-ways-title {
@@ -1000,7 +1002,7 @@ html {
   font-family: 'Outfit', sans-serif;
   font-size: 14px;
   font-weight: 500;
-  color: var(--accent-gold, #C9A14A);
+  color: var(--accent-gold, var(--accent-gold));
   letter-spacing: 0.04em;
 }
 

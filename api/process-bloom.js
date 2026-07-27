@@ -210,14 +210,9 @@ export default async function handler(req, res) {
       .from('products')
       .upsert({
         ...baseProductPayload,
-        prompt_used: pid || null,
+        prompt_id: pid || null,
       }, { onConflict: 'slug' })
-      // PostgREST alias: return the column as `prompt_id` in the response so
-      // existing callers/frontend keep working even though the underlying
-      // column is `prompt_used`. Yesterday's /api/list-products fix used the
-      // same pattern. The 42703 fallback below is now dead code but kept as
-      // a safety net in case the schema drifts again.
-      .select('id, name, slug, prompt_id:prompt_used')
+      .select('id, name, slug, prompt_id')
       .single();
 
     if (dbErr?.code === '42703' || dbErr?.code === 'PGRST204') {
@@ -247,17 +242,6 @@ export default async function handler(req, res) {
     console.error('[process-bloom] ❌', err.message);
     return res.status(500).json({ error: err.message });
   } finally {
-    // Surface cleanup failures so we notice if Vercel /tmp starts filling up.
-    // ENOENT is fine and silenced (the file may not have been written if an
-    // earlier step threw). Anything else gets logged with the path so we can
-    // diagnose disk-full / permission issues before they hit a render.
-    [tmpRaw, tmpWm, tmpOut].forEach(f => {
-      try { unlinkSync(f); }
-      catch (err) {
-        if (err && err.code !== 'ENOENT') {
-          console.warn(`[process-bloom] cleanup failed for ${f}: ${err.message}`);
-        }
-      }
-    });
+    [tmpRaw, tmpWm, tmpOut].forEach(f => { try { unlinkSync(f); } catch {} });
   }
 }

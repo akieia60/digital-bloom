@@ -93,12 +93,12 @@
 }
 
 .gallery-search__input:focus {
-  border-color: var(--accent-gold, #C9A14A);
+  border-color: var(--accent-gold, var(--accent-gold));
 }
 
 .gallery-search__btn {
   padding: 12px 20px;
-  background: var(--accent-gold, #C9A14A);
+  background: var(--accent-gold, var(--accent-gold));
   color: #FFFFFF;
   border: none;
   border-radius: 980px;
@@ -112,7 +112,7 @@
 }
 
 .gallery-search__btn:hover {
-  background: var(--accent-gold-hover, #B8923F);
+  background: var(--accent-gold-hover, var(--accent-gold-hover));
 }
 
 /* ── EMPTY STATE ── */
@@ -147,7 +147,7 @@
 .gallery-empty__cta {
   display: inline-block;
   padding: 14px 32px;
-  background: var(--accent-gold, #C9A14A);
+  background: var(--accent-gold, var(--accent-gold));
   color: #FFFFFF;
   border-radius: 980px;
   text-decoration: none;
@@ -159,7 +159,7 @@
 }
 
 .gallery-empty__cta:hover {
-  background: var(--accent-gold-hover, #B8923F);
+  background: var(--accent-gold-hover, var(--accent-gold-hover));
 }
 
 /* ── SECTIONS ── */
@@ -212,7 +212,7 @@
   font-family: 'Outfit', sans-serif;
   font-size: 14px;
   font-weight: 500;
-  color: var(--accent-gold, #C9A14A);
+  color: var(--accent-gold, var(--accent-gold));
   text-decoration: none;
   letter-spacing: 0.03em;
   white-space: nowrap;
@@ -221,7 +221,7 @@
 }
 
 .gallery-section__see-all:hover {
-  color: var(--accent-gold-hover, #B8923F);
+  color: var(--accent-gold-hover, var(--accent-gold-hover));
 }
 
 /* ── PRODUCT GRID ── */

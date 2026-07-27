@@ -9,7 +9,7 @@ export const en = {
   // ─── Hero (GradientHero — design-upgrade) ───
   hero_new_title_1: "Give Them Their Flowers",
   hero_new_title_2: "While They're Still Here",
-  hero_new_tagline: "Send what you couldn't quite say. From $1, delivered in minutes.",
+  hero_new_tagline: "Mother's Day Week — every bloom $1 through May 10. No flowers? No problem. Send something cinematic in minutes.",
   hero_new_cta: "SEND A BLOOM",
   hero_new_from: "Gifts starting from",
   hero_new_no_app: "no app needed",
@@ -174,11 +174,8 @@ export const en = {
   demo_fallback: "Your browser does not support the video tag.",
 
   // ─── Customizer ───
-  // 2026-05-16: Ak directive — user-facing label changed from "Customize" to "Personalize" so
-  // customers understand the form personalizes the message (To/From/phrase/font/color), not the
-  // underlying bloom video. The string keys stay customize_* to avoid touching every component.
-  customize_button: "Personalize",
-  customize_title: "Personalize Bloom",
+  customize_button: "Customize",
+  customize_title: "Customize",
   customize_close: "Close",
   customize_preview: "Live Bloom Preview",
   customize_step_message: "Message",

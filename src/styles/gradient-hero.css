@@ -2,7 +2,7 @@
   position: relative;
   min-height: 100vh;
   overflow: hidden;
-  background: #0c1f3f;
+  background: #0D1B36;
   /* Tightened from 120px top — Header sits directly above and the
      hero pill + H1 should land just under it, not floating mid-page.
      Per Gamble's screenshot feedback 2026-05-03. */
@@ -34,7 +34,7 @@
 .gradient-hero__glow--2 {
   width: 520px;
   height: 520px;
-  background: radial-gradient(circle, rgba(201, 168, 76, 0.16) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(212, 175, 55, 0.16) 0%, transparent 70%);
   bottom: -100px;
   right: -80px;
   animation-delay: -5s;
@@ -64,7 +64,7 @@
     transparent 0%,
     transparent 30%,
     rgba(201, 133, 122, 0.06) 40%,
-    rgba(201, 168, 76, 0.04) 50%,
+    rgba(212, 175, 55, 0.04) 50%,
     transparent 60%,
     transparent 100%
   );
@@ -233,7 +233,7 @@
   position: absolute;
   bottom: 18px;
   right: 22px;
-  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-family: 'Playfair Display', Georgia, serif;
   font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.16em;
@@ -292,7 +292,7 @@
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: #c9a84c;
+  background: var(--accent-gold);
   box-shadow: 0 0 12px rgba(201, 168, 76, 0.7);
 }
 
@@ -306,7 +306,7 @@
 }
 
 .gradient-hero__title {
-  font-family: 'Playfair Display', 'Cormorant Garamond', Georgia, serif;
+  font-family: 'Playfair Display', 'Playfair Display', Georgia, serif;
   font-size: clamp(2.8rem, 6.6vw, 5.4rem);
   font-weight: 400;
   line-height: 1.02;
@@ -321,7 +321,7 @@
 }
 
 .gradient-hero__tagline {
-  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-family: 'Playfair Display', Georgia, serif;
   font-size: clamp(1.15rem, 2.3vw, 1.5rem);
   font-style: italic;
   color: rgba(250, 240, 236, 0.76);
@@ -355,7 +355,7 @@
   align-items: center;
   justify-content: center;
   text-decoration: none;
-  color: #0c1f3f;
+  color: #0D1B36;
   background: linear-gradient(135deg, #c9857a 0%, #e8b4ad 100%);
   box-shadow: 0 12px 40px rgba(201, 133, 122, 0.34);
   overflow: hidden;
@@ -427,7 +427,7 @@
   font-weight: 700;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: #c9a84c;
+  color: var(--accent-gold);
   margin-bottom: 8px;
 }
 
@@ -448,7 +448,7 @@
 }
 
 .gradient-hero__from strong {
-  color: #c9a84c;
+  color: var(--accent-gold);
 }
 
 .gradient-hero__media-column {
@@ -460,7 +460,7 @@
   min-height: 620px;
   border-radius: 34px;
   overflow: hidden;
-  background: #07111f;
+  background: #0D1B36;
   border: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: 0 32px 80px rgba(0, 0, 0, 0.38), 0 0 0 1px rgba(212, 175, 55, 0.08);
 }
@@ -547,7 +547,7 @@
 }
 
 .gradient-hero__media-brandbar span:first-child {
-  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-family: 'Playfair Display', Georgia, serif;
   font-size: clamp(1rem, 2vw, 1.3rem);
   font-weight: 700;
   font-style: italic;
@@ -566,7 +566,7 @@
 
 .gradient-hero__media-caption {
   margin: 16px 12px 0;
-  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-family: 'Playfair Display', Georgia, serif;
   font-size: 1.08rem;
   font-style: italic;
   line-height: 1.55;
@@ -604,7 +604,7 @@
 
 .gradient-hero__scroll-fade {
   height: 90px;
-  background: linear-gradient(to bottom, transparent, #0c1f3f);
+  background: linear-gradient(to bottom, transparent, var(--bg-page));
   margin-top: -90px;
   pointer-events: none;
   position: relative;

@@ -7,7 +7,7 @@ import { useLocalizedProduct } from '../hooks/useLocalizedProduct';
 import ProductCard from './ProductCard';
 import Customizer from './Customizer';
 import OCCASIONS from '../data/occasions';
-import { getCanonicalVideoUrl, getPosterUrl, primeVideoPlayback } from '../lib/media';
+import { getPosterUrl, primeVideoPlayback } from '../lib/media';
 
 const ProductDetails = () => {
   const { t } = useLanguage();
@@ -55,17 +55,10 @@ const ProductDetails = () => {
     setHeroVideoReady(false);
   }, [product?.id, product?.video_file_url, product?.video_url]);
 
-  // Personalize button now drives the v3 split-screen flow at /personalize/:id
-  // (approved by Ak + Gamble 2026-05-17). Legacy modal is preserved as fallback
-  // for the auto-open path from "Edit Customization" in cart.
   const openCustomizer = useCallback(() => {
     setShowSuccess(false);
-    if (product?.id) {
-      navigate(`/personalize/${product.id}`);
-    } else {
-      setIsCustomizerOpen(true);
-    }
-  }, [navigate, product?.id]);
+    setIsCustomizerOpen(true);
+  }, []);
 
   const clearEditState = useCallback(() => {
     if (location.state?.editCustomization || location.state?.editLineItemId) {
@@ -119,7 +112,7 @@ const ProductDetails = () => {
     setShowSuccess(true);
   };
 
-  const heroVideoSrc = getCanonicalVideoUrl(product);
+  const heroVideoSrc = product.video_file_url || product.video_url;
   const heroImageSrc = getPosterUrl(heroVideoSrc, product.image_url);
   const displayPrice = Number(product.price || 0).toFixed(2);
 

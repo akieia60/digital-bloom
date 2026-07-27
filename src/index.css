@@ -1,4 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&family=Outfit:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&family=Great+Vibes&family=Dancing+Script:wght@400;600;700&family=Cinzel:wght@400;600;700&family=Lora:ital,wght@0,400;0,600;1,400;1,600&family=Josefin+Sans:wght@300;400;600&family=Sacramento&family=Allura&family=Italianno&family=Caveat:wght@400;500;600&family=Marcellus&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Outfit:wght@300;400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&display=swap');
+/* Note: Cormorant Garamond is kept for the bloom customizer font picker only — not a store UI font */
 @import "tailwindcss";
 
 :root {
@@ -34,21 +35,22 @@
   --border-on-dark: rgba(255, 255, 255, 0.08);
 
   /* ── Brand Accent — Gold (accent only, never dominant) ── */
-  --accent-gold: #C9A14A;
-  --accent-gold-hover: #B8923F;
-  --accent-gold-glow: rgba(201, 161, 74, 0.08);
-  --accent-gold-border: rgba(201, 161, 74, 0.2);
-  --accent-gold-border-hover: rgba(201, 161, 74, 0.4);
-  --spec-gold: #C9A14A;
+  --accent-gold: #D4AF37;
+  --accent-gold-hover: #B8962E;
+  --accent-gold-glow: rgba(212, 175, 55, 0.08);
+  --accent-gold-border: rgba(212, 175, 55, 0.2);
+  --accent-gold-border-hover: rgba(212, 175, 55, 0.4);
+  --spec-gold: var(--accent-gold);
 
   /* ── Deep Blue — Subtle premium accent ── */
   --deep-blue: #0B1F3A;
+  --deep-blue-hover: #132d4f;
   --deep-blue-soft: rgba(11, 31, 58, 0.06);
   --deep-blue-text: #0B1F3A;
 
   /* ── Navigation (dark framing) ── */
   --nav-bg: #0D1B36;
-  --nav-bg-scrolled: rgba(10, 10, 10, 0.95);
+  --nav-bg-scrolled: rgba(13, 27, 54, 0.96);
   --nav-border-scrolled: rgba(255, 255, 255, 0.05);
 
   /* ── Spacing Tokens ── */
@@ -62,9 +64,10 @@
   --scrollbar-thumb: rgba(0, 0, 0, 0.15);
   --scrollbar-thumb-hover: rgba(0, 0, 0, 0.3);
 
-  /* ── Dynamic Theme Engine ── */
-  --bloom-primary: #FF69B4;
-  --bloom-primary-rgb: 255, 105, 180;
+  /* ── Dynamic Theme Engine (Customizer only — NOT a brand color) ── */
+  /* These are overridden per-product by the customizer. Default is a placeholder. */
+  --bloom-primary: #D4AF37;
+  --bloom-primary-rgb: 212, 175, 55;
   --bloom-radius: 20px;
   --bloom-glow: 0.15;
 
@@ -74,8 +77,8 @@
   --apple-text: #1D1D1F;
   --apple-secondary: #6E6E73;
   --apple-border: #D2D2D7;
-  --apple-accent: #C9A14A;
-  --pure-gold: #C9A14A;
+  --apple-accent: var(--accent-gold);
+  --pure-gold: var(--accent-gold);
   --champagne-white: #F5F5F7;
 }
 
@@ -94,7 +97,7 @@
   position: absolute;
   bottom: 10px;
   left: 12px;
-  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-family: 'Playfair Display', Georgia, serif;
   font-size: 0.62rem;
   font-style: italic;
   font-weight: 600;
@@ -135,6 +138,22 @@ body {
 h1, h2, h3, .font-display {
   font-family: 'Playfair Display', 'Georgia', serif;
   letter-spacing: 0.02em;
+}
+
+/* ============================================
+   EYEBROW UTILITY CLASS
+   One class for all the small uppercase labels above section headings.
+   Use .eyebrow on light backgrounds, .eyebrow--dark on dark/navy surfaces.
+   ============================================ */
+.eyebrow {
+  display: block;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--accent-gold);
+  margin-bottom: 12px;
 }
 
 /* ============================================
@@ -348,7 +367,7 @@ h1, h2, h3, .font-display {
 }
 
 .btn-deep-blue:hover {
-  background: #132d4f;
+  background: var(--deep-blue-hover);
   transform: translateY(-1px);
   box-shadow: 0 6px 20px rgba(11, 31, 58, 0.3);
 }
@@ -453,7 +472,7 @@ img {
   width: 100%;
   aspect-ratio: 16 / 7;
   overflow: hidden;
-  background: #111;
+  background: #0D1B36;
 }
 
 .bloom-list-card__media-overlay {
@@ -739,7 +758,7 @@ img {
   width: 100%;
   aspect-ratio: 4 / 5;
   overflow: hidden;
-  background: #111;
+  background: #0D1B36;
 }
 
 .bloom-lane-tile__poster,
@@ -884,6 +903,18 @@ img {
   text-transform: uppercase;
   color: var(--accent-gold);
   margin-bottom: 3px;
+}
+
+/* ============================================
+   VIDEO OVERLAY UTILITY
+   Consistent gradient fade for all video card overlays.
+   ============================================ */
+.video-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent 60%, rgba(0, 0, 0, 0.55) 100%);
+  pointer-events: none;
+  z-index: 1;
 }
 
 /* ============================================

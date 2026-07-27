@@ -13,7 +13,6 @@
 
 import { getCompositionLayers } from './compositionEngine';
 import { getApiBase } from './apiBase';
-import { getCanonicalVideoUrl } from './media';
 
 /**
  * Status constants for delivery states.
@@ -32,38 +31,19 @@ export const DELIVERY_STATUS = {
  * Resolve a bloom delivery by its slug.
  * 
  * @param {string} bloomSlug - The unique delivery identifier
- * @param {string} [context] - Optional context: 'gift' for recipient pages (counts views), omit for manage page
  * @returns {Object} { status, delivery, composition, error }
  */
-export async function resolveBloomDelivery(bloomSlug, context) {
+export async function resolveBloomDelivery(bloomSlug) {
   if (!bloomSlug) {
     return { status: DELIVERY_STATUS.NOT_FOUND, delivery: null, composition: null, error: 'No bloom ID provided' };
   }
 
   try {
     const apiUrl = getApiBase();
-    let fetchUrl = `${apiUrl}/api/session-status?bloom_slug=${encodeURIComponent(bloomSlug)}`;
-    if (context === 'gift') {
-      fetchUrl += '&context=gift';
-    }
-    const response = await fetch(fetchUrl);
+    const response = await fetch(`${apiUrl}/api/session-status?bloom_slug=${encodeURIComponent(bloomSlug)}`);
 
     if (response.status === 404) {
       return { status: DELIVERY_STATUS.NOT_FOUND, delivery: null, composition: null, error: 'This bloom could not be found' };
-    }
-
-    // Handle 410 Gone — bloom has reached its viewing limit
-    if (response.status === 410) {
-      const expiredData = await response.json().catch(() => ({}));
-      return {
-        status: DELIVERY_STATUS.EXPIRED,
-        delivery: expiredData?.purchase ? {
-          id: expiredData.purchase.id,
-          bloomSlug: expiredData.purchase.bloom_slug,
-        } : null,
-        composition: null,
-        error: expiredData?.message || 'This bloom has reached its viewing limit. Want your own? Visit digitalbloom.store',
-      };
     }
 
     if (!response.ok) {
@@ -139,7 +119,7 @@ export async function resolveBloomDelivery(bloomSlug, context) {
     const composition = getCompositionLayers({
       product: {
         id: product.id,
-        video_file_url: getCanonicalVideoUrl(product),
+        video_file_url: product.video_file_url || product.video_url,
         image_url: product.image_url,
         name: product.name,
       },

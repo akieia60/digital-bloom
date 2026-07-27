@@ -50,21 +50,7 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'No delivery config on this bloom' });
     }
 
-    // ── Hard send-once lock (belt-and-suspenders) ──
-    // sendCount tracks how many times send-bloom has been called for this bloom.
-    // Even if emailStatus somehow isn't 'sent', we block re-sends.
-    const currentSendCount = Number(
-      purchase.composition_manifest?.delivery?.sendCount || 0
-    );
-    if (currentSendCount >= 1) {
-      return res.status(409).json({
-        error: 'already_sent',
-        message: 'This bloom has already been delivered.',
-        sentAt: delivery.emailSentAt || null,
-      });
-    }
-
-    // Check if already sent (original emailStatus check — kept for clarity)
+    // Check if already sent
     if (delivery.emailStatus === 'sent' && delivery.emailSentAt) {
       return res.status(409).json({
         error: 'already_sent',
@@ -91,10 +77,7 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'No recipient address (email or phone) on this bloom' });
     }
 
-    // Mark as sending — do NOT increment sendCount yet. sendCount only ticks
-    // up on PROVEN delivery (see the success block below). Codex 2026-05-24
-    // caught that incrementing here permanently locked out buyers whose
-    // first attempt hit a transient SMS/email provider error.
+    // Mark as sending
     const manifest = JSON.parse(JSON.stringify(purchase.composition_manifest || {}));
     manifest.delivery = {
       ...(manifest.delivery || {}),
@@ -147,14 +130,11 @@ export default async function handler(req, res) {
       });
     }
 
-    // Mark as sent + commit sendCount=1 (the actual send-once lock — only set
-    // here, AFTER the provider acknowledged delivery, so failures don't
-    // strand the buyer).
+    // Mark as sent
     const now = new Date().toISOString();
     manifest.delivery.emailStatus = 'sent';
     manifest.delivery.emailSentAt = now;
     manifest.delivery.sentByBuyerAt = now;
-    manifest.delivery.sendCount = currentSendCount + 1;
     manifest.delivery.lastError = null;
     manifest.delivery.sentVia = sentVia;
     if (sentVia === 'sms' && smsResult?.sid) {

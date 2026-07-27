@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Digital Bloom — Characters</title>
+  <style>
+    :root {
+      --bg: #0e0a0a;
+      --card: #1a1414;
+      --ink: #f6efe7;
+      --muted: #a59989;
+      --accent: #d8a25e;
+      --good: #5fb87a;
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; background: var(--bg); color: var(--ink); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif; }
+    header { padding: 16px 16px 8px; border-bottom: 1px solid #2a2222; position: sticky; top: 0; background: var(--bg); z-index: 5; }
+    header h1 { margin: 0; font-size: 20px; font-weight: 600; letter-spacing: 0.02em; }
+    header .sub { margin-top: 4px; color: var(--muted); font-size: 13px; }
+    .filterbar { display: flex; gap: 8px; padding: 12px 16px; overflow-x: auto; border-bottom: 1px solid #2a2222; }
+    .filterbar button { background: var(--card); color: var(--ink); border: 1px solid #2a2222; padding: 8px 14px; border-radius: 999px; font-size: 14px; white-space: nowrap; }
+    .filterbar button.active { background: var(--accent); color: #1a1010; border-color: var(--accent); font-weight: 600; }
+    main { padding: 16px; }
+    .character-section { margin-bottom: 32px; }
+    .character-section h2 { margin: 0 0 4px; font-size: 18px; }
+    .character-section .meta { color: var(--muted); font-size: 12px; margin-bottom: 12px; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    @media (min-width: 720px) { .grid { grid-template-columns: repeat(4, 1fr); } }
+    .card { background: var(--card); border-radius: 14px; overflow: hidden; border: 2px solid transparent; transition: border-color .15s ease, transform .15s ease; }
+    .card.canonical { border-color: var(--good); }
+    .card .imgwrap { position: relative; aspect-ratio: 9/16; background: #000; }
+    .card img { display: block; width: 100%; height: 100%; object-fit: cover; cursor: zoom-in; }
+    .card .badge { position: absolute; top: 8px; left: 8px; background: rgba(0,0,0,.55); color: var(--ink); padding: 4px 8px; border-radius: 6px; font-size: 12px; font-weight: 600; backdrop-filter: blur(6px); }
+    .card .canonical-flag { position: absolute; top: 8px; right: 8px; background: var(--good); color: #0a1f10; padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 700; display: none; }
+    .card.canonical .canonical-flag { display: inline-block; }
+    .card .actions { padding: 10px 12px; display: flex; flex-direction: column; gap: 6px; }
+    .card button { width: 100%; padding: 10px; border-radius: 10px; border: 1px solid #2a2222; background: var(--bg); color: var(--ink); font-size: 14px; font-weight: 500; }
+    .card button:hover { background: #15100f; }
+    .card .pick { background: var(--accent); color: #1a1010; border-color: var(--accent); font-weight: 700; }
+    .card.canonical .pick { background: var(--good); color: #061a0c; border-color: var(--good); }
+    /* Lightbox */
+    .lightbox { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.92); z-index: 50; align-items: center; justify-content: center; padding: 16px; }
+    .lightbox.open { display: flex; }
+    .lightbox img { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 8px; }
+    .lightbox .close { position: absolute; top: 16px; right: 16px; background: rgba(255,255,255,0.1); color: var(--ink); border: 1px solid rgba(255,255,255,0.2); padding: 8px 14px; border-radius: 999px; font-size: 14px; }
+    .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--good); color: #061a0c; padding: 10px 18px; border-radius: 999px; font-weight: 600; font-size: 14px; opacity: 0; transition: opacity .2s ease; pointer-events: none; }
+    .toast.show { opacity: 1; }
+    .footer-note { color: var(--muted); font-size: 12px; padding: 24px 16px; text-align: center; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Characters — UGC Reference Library</h1>
+    <div class="sub">Tap any image to zoom. Tap "Pick this one" to flag the canonical face.</div>
+  </header>
+
+  <div class="filterbar" id="filterbar">
+    <button class="active" data-filter="all">All</button>
+    <button data-filter="auntie-rose">Auntie Rose</button>
+  </div>
+
+  <main id="main"></main>
+
+  <div class="lightbox" id="lightbox">
+    <button class="close" id="lightbox-close">Close</button>
+    <img id="lightbox-img" alt="" />
+  </div>
+
+  <div class="toast" id="toast">Saved</div>
+
+  <div class="footer-note">
+    Source bucket: product-media/character-refs/&lt;character&gt;/<br/>
+    More characters land here as Monique builds them — Mike the Vet, Mama T, Coach D, Sis Jenny, Pops.
+  </div>
+
+  <script>
+    const CHARACTERS = [
+      {
+        slug: 'auntie-rose',
+        display: 'Auntie Rose',
+        meta: '55, Black, kitchen — home / love / care vertical',
+        stills: [
+          { n: 1, jobId: '36b41360-5c07-4813-97de-16e092a9e32c', seed: 854253, url: 'https://yhdbeblowolfinxxhsnt.supabase.co/storage/v1/object/public/product-media/character-refs/auntie-rose/auntie-rose-1.png' },
+          { n: 2, jobId: '81c63d1c-4643-4ce3-8d16-1a3c30808de1', seed: 373495, url: 'https://yhdbeblowolfinxxhsnt.supabase.co/storage/v1/object/public/product-media/character-refs/auntie-rose/auntie-rose-2.png' },
+          { n: 3, jobId: '5a2c3c2e-b2a2-4b0d-9ed2-dc9393ede6c0', seed: 910035, url: 'https://yhdbeblowolfinxxhsnt.supabase.co/storage/v1/object/public/product-media/character-refs/auntie-rose/auntie-rose-3.png' },
+          { n: 4, jobId: 'a050235c-5581-432d-abf9-c19240471591', seed: 761007, url: 'https://yhdbeblowolfinxxhsnt.supabase.co/storage/v1/object/public/product-media/character-refs/auntie-rose/auntie-rose-4.png' }
+        ]
+      }
+    ];
+
+    const STORAGE_KEY = 'db.characters.canonical.v1';
+    function getCanonical() {
+      try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); } catch { return {}; }
+    }
+    function setCanonical(slug, jobId) {
+      const cur = getCanonical();
+      cur[slug] = jobId;
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(cur));
+    }
+
+    function render(filter) {
+      const main = document.getElementById('main');
+      main.innerHTML = '';
+      const canonical = getCanonical();
+      const list = filter === 'all' ? CHARACTERS : CHARACTERS.filter(c => c.slug === filter);
+      for (const c of list) {
+        const sec = document.createElement('section');
+        sec.className = 'character-section';
+        sec.innerHTML = `<h2>${c.display}</h2><div class="meta">${c.meta}</div>`;
+        const grid = document.createElement('div');
+        grid.className = 'grid';
+        for (const s of c.stills) {
+          const card = document.createElement('div');
+          card.className = 'card' + (canonical[c.slug] === s.jobId ? ' canonical' : '');
+          card.innerHTML = `
+            <div class="imgwrap">
+              <img src="${s.url}" alt="${c.display} #${s.n}" data-url="${s.url}" />
+              <span class="badge">#${s.n}</span>
+              <span class="canonical-flag">CANONICAL</span>
+            </div>
+            <div class="actions">
+              <button class="pick" data-slug="${c.slug}" data-jobid="${s.jobId}" data-n="${s.n}">${canonical[c.slug] === s.jobId ? '✓ Picked' : 'Pick this one'}</button>
+              <button class="copy" data-jobid="${s.jobId}">Copy job ID</button>
+            </div>
+          `;
+          grid.appendChild(card);
+        }
+        sec.appendChild(grid);
+        main.appendChild(sec);
+      }
+      bindHandlers();
+    }
+
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 1600);
+    }
+
+    function bindHandlers() {
+      document.querySelectorAll('.card img').forEach(img => {
+        img.addEventListener('click', () => {
+          const lb = document.getElementById('lightbox');
+          document.getElementById('lightbox-img').src = img.dataset.url;
+          lb.classList.add('open');
+        });
+      });
+      document.querySelectorAll('button.pick').forEach(btn => {
+        btn.addEventListener('click', () => {
+          setCanonical(btn.dataset.slug, btn.dataset.jobid);
+          showToast(`Picked #${btn.dataset.n} as canonical`);
+          render(currentFilter);
+        });
+      });
+      document.querySelectorAll('button.copy').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          try { await navigator.clipboard.writeText(btn.dataset.jobid); showToast('Job ID copied'); } catch { showToast('Copy failed'); }
+        });
+      });
+    }
+
+    let currentFilter = 'all';
+    document.getElementById('filterbar').addEventListener('click', e => {
+      const b = e.target.closest('button');
+      if (!b) return;
+      document.querySelectorAll('#filterbar button').forEach(x => x.classList.remove('active'));
+      b.classList.add('active');
+      currentFilter = b.dataset.filter;
+      render(currentFilter);
+    });
+    document.getElementById('lightbox-close').addEventListener('click', () => document.getElementById('lightbox').classList.remove('open'));
+    document.getElementById('lightbox').addEventListener('click', e => { if (e.target.id === 'lightbox') document.getElementById('lightbox').classList.remove('open'); });
+
+    render('all');
+  </script>
+</body>
+</html>

@@ -618,7 +618,7 @@
 }
 
 .composition-brand-chip__text {
-  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-family: 'Playfair Display', Georgia, serif;
   font-size: clamp(1rem, 3vw, 1.28rem);
   font-style: italic;
   font-weight: 700;

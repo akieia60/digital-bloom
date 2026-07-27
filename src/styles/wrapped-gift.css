@@ -110,7 +110,7 @@
 }
 
 .wrapped-gift__from-label {
-  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-family: 'Playfair Display', Georgia, serif;
   font-size: clamp(1.4rem, 5.5vw, 1.9rem);
   font-style: italic;
   color: #fff;
@@ -136,7 +136,7 @@
 }
 
 .wrapped-gift__brand {
-  font-family: 'Playfair Display', 'Cormorant Garamond', Georgia, serif;
+  font-family: 'Playfair Display', 'Playfair Display', Georgia, serif;
   font-size: clamp(1.6rem, 6vw, 2.2rem);
   font-weight: 600;
   font-style: italic;

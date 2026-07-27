@@ -2,14 +2,14 @@ import { Link } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useLocalizedProduct } from '../hooks/useLocalizedProduct';
 import VideoPlayer from './VideoPlayer';
-import { getCanonicalVideoUrl, getPosterUrl } from '../lib/media';
+import { getPosterUrl } from '../lib/media';
 import OCCASIONS from '../data/occasions';
 
 const ProductCard = ({ product: rawProduct, compact = false }) => {
   const { t } = useLanguage();
   const product = useLocalizedProduct(rawProduct);
   const displayPrice = Number(product?.price || 0).toFixed(2);
-  const videoUrl = getCanonicalVideoUrl(product);
+  const videoUrl = product.video_file_url || product.video_url;
   const posterUrl = getPosterUrl(videoUrl, product.image_url);
   const occasion = OCCASIONS[product.category];
   const occasionName = occasion?.name;
@@ -19,7 +19,7 @@ const ProductCard = ({ product: rawProduct, compact = false }) => {
     <div className="group">
       <Link to={`/product/${product.id}`} className="block">
         {/* Image Container */}
-        <div className={`relative overflow-hidden bg-[var(--surface-soft,#F7F7F7)] border border-[#E5E5EA] transition-all duration-500 group-hover:shadow-xl group-hover:border-[var(--accent-gold)]/30 ${compact ? 'rounded-xl aspect-square' : 'rounded-2xl aspect-[9/16]'}`}>
+        <div className={`relative overflow-hidden bg-[var(--surface-soft)] border border-[var(--border-default)] transition-all duration-500 group-hover:shadow-xl group-hover:border-[var(--accent-gold-border-hover)] ${compact ? 'rounded-xl aspect-square' : 'rounded-2xl aspect-[3/4]'}`}>
           <div className="w-full h-full transition-transform duration-700 group-hover:scale-105">
             <VideoPlayer
               videoUrl={videoUrl}
@@ -49,23 +49,23 @@ const ProductCard = ({ product: rawProduct, compact = false }) => {
         </div>
 
         {/* Product Info — White card surface */}
-        <div className={`bg-[var(--surface-white,#FFFFFF)] rounded-xl border border-[#F0F0F0] ${compact ? 'p-3 mt-2' : 'p-4 mt-3'}`}>
+        <div className={`bg-[var(--surface-white)] rounded-xl border border-[var(--border-subtle)] ${compact ? 'p-3 mt-2' : 'p-4 mt-3'}`}>
           {!compact && occasionName && (
             <span className="product-card__occasion-badge">{occasionName}</span>
           )}
-          <h3 className={`font-semibold text-[#1D1D1F] group-hover:text-[var(--accent-gold)] transition-colors duration-300 tracking-tight truncate ${compact ? 'text-xs' : 'text-[15px]'}`}>
+          <h3 className={`font-semibold text-[var(--text-primary)] group-hover:text-[var(--accent-gold)] transition-colors duration-300 tracking-tight truncate ${compact ? 'text-xs' : 'text-[15px]'}`}>
             {product.name}
           </h3>
           {!compact && (
             <>
-              <p className="text-[13px] text-[#6E6E73] mt-1.5 line-clamp-1 font-light">
+              <p className="text-[13px] text-[var(--text-secondary)] mt-1.5 line-clamp-1 font-light">
                 {product.description || product.category || t('product_digital_experience')}
               </p>
-              <div className="flex items-center justify-between mt-3 pt-3 border-t border-[#F0F0F0]">
+              <div className="flex items-center justify-between mt-3 pt-3 border-t border-[var(--border-subtle)]">
                 <span className="text-base font-bold text-[var(--accent-gold)]">
                   ${displayPrice}
                 </span>
-                <span className="text-[11px] uppercase tracking-[0.1em] text-[#AEAEB2] font-semibold">
+                <span className="text-[11px] uppercase tracking-[0.1em] text-[var(--text-muted)] font-semibold">
                   {t('product_card_customize')}
                 </span>
               </div>

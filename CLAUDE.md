@@ -37,7 +37,7 @@ Before ending your session, add a log entry to the Agent Coordination Hub with:
 - Fonts: Playfair Display (headings), Outfit (body)
 - Brand name always: **Digital Bloom™** (with ™)
 - Never hardcode category lists outside `src/data/categories.js`
-- Never break `/prompt-engine.html` — Ak uses it daily from her phone
+- Never break `/prompt-engine.html` — Ak uses it daily from her phone!
 - All blooms must be silent (audio stripped). `ffmpeg -movflags +faststart` is mandatory on every MP4.
 - Watermark is baked in-video via ffmpeg — never DOM overlay
 
