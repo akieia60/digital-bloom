@@ -1,5 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 import {
+  isTwilioSmsEnabled,
   normalizeBloomDeliverySettings,
   sendBloomDeliveryEmail,
 } from './_lib/bloomDeliveryEmail.js';
@@ -81,7 +82,10 @@ export default async function handler(req, res) {
       process.env.TWILIO_AUTH_TOKEN &&
       process.env.TWILIO_FROM_NUMBER
     );
-    const useSms = wantsSms && twilioConfigured;
+    // Carrier registration is unresolved, so Twilio accepts messages it never
+    // delivers. Until TWILIO_SMS_ENABLED is set, text orders go out through
+    // the buyer's own Messages app via /api/mark-bloom-sent instead.
+    const useSms = wantsSms && twilioConfigured && isTwilioSmsEnabled();
 
     const recipientEmail = delivery.target === 'recipient'
       ? delivery.recipientEmail

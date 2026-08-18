@@ -37,6 +37,16 @@ function currentDateInTimezone(timezone = 'America/Chicago', now = new Date()) {
   }).format(now);
 }
 
+// Twilio carrier registration is currently blocked (toll-free verification
+// TWILIO_REJECTED / error 30032; A2P 10DLC brand FAILED / error 30034), so
+// every SMS we hand Twilio is accepted and then dropped by the carrier.
+// Delivery stays off until TWILIO_SMS_ENABLED is explicitly set, at which
+// point the whole server-side path below resumes untouched.
+export function isTwilioSmsEnabled() {
+  const flag = String(process.env.TWILIO_SMS_ENABLED || '').trim().toLowerCase();
+  return flag === '1' || flag === 'true' || flag === 'yes';
+}
+
 function resolveSender() {
   return (
     process.env.BLOOM_CREDIT_EMAIL_FROM ||
@@ -452,6 +462,37 @@ export async function processBloomDeliveryEmails({
       }
     }
 
+    // ── Text-delivery guard (A.K. lane, 2026-08-18) ──
+    //
+    // Twilio ACCEPTS a message and only reports carrier rejection later, so
+    // sendBloomDeliverySms() resolves successfully even when the text is
+    // dropped. That marked the bloom 'sent', which in turn hid the buyer's
+    // hand-off button — the recipient got nothing and everyone was told it
+    // was delivered. Worst possible failure mode, so bail out early.
+    //
+    // With SMS disabled: fall back to email when we have an address,
+    // otherwise leave the bloom pending so the buyer's manage page offers
+    // "Text it to <name>" and the send happens from their own phone.
+    if (delivery.deliveryChannel === 'phone' && delivery.recipientPhone && !isTwilioSmsEnabled()) {
+      if (!recipientEmail) {
+        try {
+          purchase = await updatePurchaseDeliveryManifest(supabase, purchase, {
+            emailStatus: 'pending',
+            lastError: null,
+            awaitingBuyerHandoff: true,
+            recipientPhone: delivery.recipientPhone,
+          });
+        } catch (manifestError) {
+          console.error(`Failed to mark purchase ${purchase.id} as awaiting buyer hand-off:`, manifestError);
+        }
+        processed.push(purchase);
+        continue;
+      }
+      console.warn(
+        `[processBloomDeliveryEmails] SMS disabled; delivering purchase ${purchase.id} by email instead of text.`
+      );
+    }
+
     try {
       purchase = await updatePurchaseDeliveryManifest(supabase, purchase, {
         emailStatus: 'sending',
@@ -470,7 +511,7 @@ export async function processBloomDeliveryEmails({
       process.env.TWILIO_AUTH_TOKEN &&
       process.env.TWILIO_FROM_NUMBER
     );
-    const useSms = wantsSms && twilioReady;
+    const useSms = wantsSms && twilioReady && isTwilioSmsEnabled();
 
     try {
       let sentVia = 'email';
