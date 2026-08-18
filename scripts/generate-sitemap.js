@@ -45,6 +45,10 @@ const STATIC_PATHS = [
   { loc: '/shop',    priority: '0.9', changefreq: 'daily'  },
   { loc: '/about',   priority: '0.5', changefreq: 'monthly' },
   { loc: '/contact', priority: '0.4', changefreq: 'monthly' },
+  // Legal pages — indexed so Twilio's reviewers and Google Ads can find them.
+  { loc: '/privacy', priority: '0.3', changefreq: 'yearly' },
+  { loc: '/terms',   priority: '0.3', changefreq: 'yearly' },
+  { loc: '/refunds', priority: '0.3', changefreq: 'yearly' },
 ];
 
 // ── Fetch live products from Supabase (optional) ─────────────────────

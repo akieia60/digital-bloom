@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { useLanguage } from '../../contexts/LanguageContext';
 
 export default function LandingFooter() {
@@ -12,6 +13,15 @@ export default function LandingFooter() {
             <p className="footer-tagline">{t('footer_tagline')}</p>
           </div>
           <div className="footer-bottom">
+            {/* Legal links live in the footer because Twilio's carrier review
+                and Google Ads both check that they're reachable from the
+                landing page, not just by typing the URL. */}
+            <nav className="footer-legal" style={footerLegalStyle}>
+              <Link to="/privacy" style={footerLinkStyle}>Privacy Policy</Link>
+              <Link to="/terms" style={footerLinkStyle}>Terms of Service</Link>
+              <Link to="/refunds" style={footerLinkStyle}>Refunds</Link>
+              <a href="mailto:hello@digitalbloom.store" style={footerLinkStyle}>Contact</a>
+            </nav>
             <p className="footer-copyright">
               © {new Date().getFullYear()} {t('footer_brand')}. {t('footer_copyright')}
             </p>
@@ -21,3 +31,17 @@ export default function LandingFooter() {
     </footer>
   );
 }
+
+const footerLegalStyle = {
+  display: 'flex',
+  flexWrap: 'wrap',
+  justifyContent: 'center',
+  gap: '18px',
+  marginBottom: '12px',
+};
+
+const footerLinkStyle = {
+  color: '#D4AF37',
+  textDecoration: 'none',
+  fontSize: '0.85rem',
+};

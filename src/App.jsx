@@ -31,6 +31,7 @@ const FloatingCartButton = lazy(() => import('./components/FloatingCartButton'))
 const V3Preview = lazy(() => import('./pages/V3Preview'));
 const Personalize = lazy(() => import('./pages/Personalize'));
 const Brie = lazy(() => import('./pages/Brie'));
+const Legal = lazy(() => import('./pages/Legal'));
 
 /**
  * ErrorBoundary — catches any JavaScript error inside a child component tree,
@@ -121,6 +122,12 @@ function AppContent({ searchQuery, setSearchQuery }) {
           <Route path="/personalize/:productId" element={<Personalize />} />
           <Route path="/share" element={<Share />} />
           <Route path="/brie" element={<Brie />} />
+          {/* Legal pages. Twilio carrier verification and Google Ads
+              advertiser approval both require these to exist at stable,
+              publicly reachable URLs. Added 2026-08-18. */}
+          <Route path="/terms" element={<Legal doc="terms" />} />
+          <Route path="/privacy" element={<Legal doc="privacy" />} />
+          <Route path="/refunds" element={<Legal doc="refunds" />} />
           <Route path="/cal" element={<TeamCalendar />} />
           <Route path="/bloom/:id/manage" element={<BloomManage />} />
           <Route path="/bloom/:id" element={<BloomDelivery />} />
