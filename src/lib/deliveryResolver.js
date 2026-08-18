@@ -187,6 +187,12 @@ export async function resolveBloomDelivery(bloomSlug, context) {
         purchaserEmail: manifest.delivery?.purchaserEmail || purchase.customer_email || '',
         recipientName: manifest.delivery?.recipientName || customization.message?.toName || '',
         senderName: manifest.delivery?.senderName || customization.message?.fromName || '',
+        // Text-delivery fields. The buyer picks "Text message" at checkout,
+        // which sets deliveryChannel='phone' + recipientPhone. The manage page
+        // needs both to offer the hand-off-to-Messages flow.
+        deliveryChannel: manifest.delivery?.deliveryChannel === 'phone' ? 'phone' : 'email',
+        recipientPhone: manifest.delivery?.recipientPhone || '',
+        sentVia: manifest.delivery?.sentVia || null,
         emailStatus: manifest.delivery?.emailStatus || 'pending',
         emailSentAt: manifest.delivery?.emailSentAt || null,
         recipientViewedAt: manifest.delivery?.recipientViewedAt || null,

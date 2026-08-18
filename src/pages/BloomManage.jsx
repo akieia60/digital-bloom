@@ -26,6 +26,7 @@ export default function BloomManage() {
   });
   const [sending, setSending] = useState(false);
   const [sendResult, setSendResult] = useState(null); // { success, sentTo, sentAt } or { error }
+  const [handedOff, setHandedOff] = useState(false); // buyer's Messages app was opened
   const pollRef = useRef(null);
 
   // Fetch delivery data
@@ -72,6 +73,58 @@ export default function BloomManage() {
         setState(refreshed);
       } else {
         setSendResult({ error: data.message || data.error || 'Failed to send' });
+      }
+    } catch (err) {
+      setSendResult({ error: 'Network error. Please try again.' });
+    } finally {
+      setSending(false);
+    }
+  }, [bloomSlug, sending]);
+
+  // ── Text delivery: hand off to the buyer's own Messages app ──
+  //
+  // Digital Bloom can't send SMS itself right now (both Twilio numbers are
+  // blocked at the carrier). This is better than a broken button, and
+  // arguably better than a server send: the text arrives from a number the
+  // recipient already recognises instead of an unknown short code.
+  const handleOpenMessages = useCallback(() => {
+    const { delivery } = state;
+    const phone = String(delivery?.recipientPhone || '').replace(/[^\d+]/g, '');
+    const giftUrl = `${window.location.origin}/gift/${encodeURIComponent(bloomSlug)}`;
+    const senderName = String(delivery?.senderName || '').trim();
+    const recipientName = String(delivery?.recipientName || '').trim();
+
+    const intro = senderName
+      ? `${senderName} sent you a Digital Bloom`
+      : 'I sent you a Digital Bloom';
+    const greeting = recipientName ? `${recipientName}, ` : '';
+    const body = `${greeting}${intro} 💐 ${giftUrl}`;
+
+    // `sms:NUMBER?&body=` is the form both iOS and Android accept.
+    window.location.href = `sms:${phone}?&body=${encodeURIComponent(body)}`;
+    setHandedOff(true);
+  }, [state, bloomSlug]);
+
+  const handleConfirmTextSent = useCallback(async () => {
+    if (sending) return;
+    setSending(true);
+    setSendResult(null);
+
+    try {
+      const apiUrl = getApiBase();
+      const response = await fetch(`${apiUrl}/api/mark-bloom-sent`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ bloom_slug: bloomSlug }),
+      });
+      const data = await response.json();
+
+      if (response.ok) {
+        setSendResult({ success: true, sentTo: data.sentTo, sentAt: data.sentAt });
+        const refreshed = await resolveBloomDelivery(bloomSlug);
+        setState(refreshed);
+      } else {
+        setSendResult({ error: data.message || data.error || 'Failed to record delivery' });
       }
     } catch (err) {
       setSendResult({ error: 'Network error. Please try again.' });
@@ -160,6 +213,8 @@ export default function BloomManage() {
   const message = delivery?.message || {};
   const recipientName = delivery?.recipientName || message.toName || 'your recipient';
   const recipientEmail = delivery?.recipientEmail || '';
+  const recipientPhone = delivery?.recipientPhone || '';
+  const isTextDelivery = delivery?.deliveryChannel === 'phone' && Boolean(recipientPhone);
   const alreadySent = delivery?.emailStatus === 'sent' && delivery?.emailSentAt;
   const justSent = sendResult?.success;
   const delivered = alreadySent || justSent;
@@ -220,7 +275,10 @@ export default function BloomManage() {
             <div className="bloom-manage__delivered-icon">✓</div>
             <h2 className="bloom-manage__delivered-title">Bloom Delivered</h2>
             <p className="bloom-manage__delivered-detail">
-              Sent to {recipientName}{recipientEmail ? ` (${recipientEmail})` : ''}
+              Sent to {recipientName}
+              {isTextDelivery
+                ? (recipientPhone ? ` (${recipientPhone})` : '')
+                : (recipientEmail ? ` (${recipientEmail})` : '')}
             </p>
             {(sendResult?.sentAt || delivery?.emailSentAt) && (
               <p className="bloom-manage__delivered-time">
@@ -239,23 +297,64 @@ export default function BloomManage() {
             <div className="bloom-manage__recipient-card">
               <p className="bloom-manage__recipient-label">Delivering to</p>
               <p className="bloom-manage__recipient-name">{recipientName}</p>
-              {recipientEmail && (
-                <p className="bloom-manage__recipient-email">{recipientEmail}</p>
+              {isTextDelivery ? (
+                <p className="bloom-manage__recipient-email">{recipientPhone}</p>
+              ) : (
+                recipientEmail && (
+                  <p className="bloom-manage__recipient-email">{recipientEmail}</p>
+                )
               )}
             </div>
 
-            <button
-              type="button"
-              className="bloom-manage__send-btn"
-              onClick={handleSend}
-              disabled={sending}
-            >
-              {sending ? 'Sending...' : `Send to ${recipientName}`}
-            </button>
+            {isTextDelivery ? (
+              <>
+                <button
+                  type="button"
+                  className="bloom-manage__send-btn"
+                  onClick={handleOpenMessages}
+                  disabled={sending}
+                >
+                  {handedOff ? `Open Messages again` : `Text it to ${recipientName}`}
+                </button>
 
-            <p className="bloom-manage__send-note">
-              This will email the bloom directly to {recipientName}. You can only send it once.
-            </p>
+                <p className="bloom-manage__send-note">
+                  This opens your own Messages app with {recipientName}'s number and
+                  the bloom link already filled in — so it arrives from your number,
+                  not a number they don't recognize. Just hit send.
+                </p>
+
+                {handedOff && (
+                  <>
+                    <button
+                      type="button"
+                      className="bloom-manage__send-btn"
+                      onClick={handleConfirmTextSent}
+                      disabled={sending}
+                    >
+                      {sending ? 'Saving...' : 'I sent it ✓'}
+                    </button>
+                    <p className="bloom-manage__send-note">
+                      Tap this once the text is on its way so we can mark the bloom delivered.
+                    </p>
+                  </>
+                )}
+              </>
+            ) : (
+              <>
+                <button
+                  type="button"
+                  className="bloom-manage__send-btn"
+                  onClick={handleSend}
+                  disabled={sending}
+                >
+                  {sending ? 'Sending...' : `Send to ${recipientName}`}
+                </button>
+
+                <p className="bloom-manage__send-note">
+                  This will email the bloom directly to {recipientName}. You can only send it once.
+                </p>
+              </>
+            )}
 
             {sendResult?.error && (
               <p className="bloom-manage__error">{sendResult.error}</p>

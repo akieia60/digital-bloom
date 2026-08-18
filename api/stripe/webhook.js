@@ -5,7 +5,7 @@ import { captureReservedCredit } from '../_lib/creditReservations.js';
 import { finalizePurchasesBySession } from '../_lib/purchaseFlow.js';
 import { processBloomDeliveryEmails } from '../_lib/bloomDeliveryEmail.js';
 import { sendBloomCreditEmail } from '../_lib/creditEmail.js';
-import { sendOrderAlertSms } from '../_lib/orderAlertSms.js';
+import { sendOrderAlert } from '../_lib/orderAlert.js';
 
 export const config = {
   api: {
@@ -149,13 +149,14 @@ export default async function handler(req, res) {
       console.error('Bloom delivery email processing failed (background):', emailError);
     });
 
-    // Order alert — text AK when someone buys (non-blocking)
+    // Order alert — notify Ak when someone buys (non-blocking).
+    // Email is the live channel; SMS stays off until carrier registration passes.
     const alertTask = (async () => {
       try {
         const firstPurchase = purchases?.[0];
         if (firstPurchase) {
           const delivery = firstPurchase.composition_manifest?.delivery || {};
-          await sendOrderAlertSms({
+          await sendOrderAlert({
             purchase: firstPurchase,
             delivery,
           });
