@@ -42,10 +42,30 @@ function normalizeDeliveryConfig(delivery = null, customerEmail = null, cartItem
   ).trim();
   const message = cartItem?.customization?.message || {};
 
+  // recipientPhone + deliveryChannel were missing from this whitelist, so
+  // every "By Text" order silently lost its phone number the moment the
+  // purchase row was written — checkout collected it, Stripe metadata kept a
+  // copy, and nothing ever read it back. That is why the 2026-08-01 order
+  // landed with no recipient address at all and could never be delivered.
+  // (A.K. lane, 2026-08-18)
+  const deliveryChannel = delivery.deliveryChannel === 'phone' ? 'phone' : 'email';
+  const recipientPhone = String(delivery.recipientPhone || '').trim();
+
   return {
     target,
     purchaserEmail,
     recipientEmail,
+    recipientPhone,
+    deliveryChannel,
+    // Carrier consent, stored verbatim — Twilio and Google Ads both ask to
+    // see the exact sentence the buyer agreed to.
+    ...(delivery.smsConsent
+      ? {
+          smsConsent: true,
+          smsConsentAt: delivery.smsConsentAt || new Date().toISOString(),
+          smsConsentText: String(delivery.smsConsentText || ''),
+        }
+      : {}),
     deliveryMode: delivery.deliveryMode === 'scheduled' && delivery.deliveryDate ? 'scheduled' : 'now',
     deliveryDate: delivery.deliveryDate ? String(delivery.deliveryDate) : '',
     buyerTimezone: delivery.buyerTimezone || 'America/Chicago',

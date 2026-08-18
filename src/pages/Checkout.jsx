@@ -6,6 +6,13 @@ import { createCartCheckoutSession, redirectToCheckout, startCartCheckoutRedirec
 import { getCreditBalance, reserveCredit, validateCreditCode } from '../lib/creditStripe';
 import '../styles/credits.css';
 
+// The literal sentence shown at checkout before a text is sent. Twilio and the
+// carriers ask to see this exact wording during verification, and Google Ads
+// asks for it too, so it lives in one place and is stored verbatim on every
+// order that opts in. Change it here, not in the JSX.
+export const SMS_CONSENT_TEXT =
+  'I confirm this person knows me and is happy to receive a one-time text message with their Digital Bloom gift. Digital Bloom sends one message per gift — no marketing, no recurring texts. Message and data rates may apply.';
+
 function formatCurrency(cents) {
   return `$${(Number(cents || 0) / 100).toFixed(2)}`;
 }
@@ -39,6 +46,11 @@ export default function Checkout() {
   // saved on the order, gift link email-falls-back to the buyer until SMS
   // goes live.
   const [deliveryChannel, setDeliveryChannel] = useState('phone');
+  // Carrier consent. Twilio rejected our toll-free verification for exactly
+  // one reason — "Opt-in: Consent for messaging is a requirement for service"
+  // — and Google Ads asks for the same thing. Carriers want the literal
+  // sentence the buyer agreed to, so it is stored verbatim on the order.
+  const [smsConsent, setSmsConsent] = useState(false);
   const [deliveryMode, setDeliveryMode] = useState('now');
   const [deliveryDate, setDeliveryDate] = useState('');
 
@@ -189,6 +201,12 @@ export default function Checkout() {
         return;
       }
 
+      if (deliveryTarget === 'recipient' && deliveryChannel === 'phone' && !smsConsent) {
+        setError('Please confirm your recipient is happy to get a text before we send it.');
+        setIsProcessing(false);
+        return;
+      }
+
       if (deliveryMode === 'scheduled' && !deliveryDate) {
         setError('Please choose a delivery date for this bloom.');
         setIsProcessing(false);
@@ -219,6 +237,13 @@ export default function Checkout() {
             ? trimmedRecipientPhone
             : '',
           deliveryChannel,
+          ...(deliveryTarget === 'recipient' && deliveryChannel === 'phone'
+            ? {
+                smsConsent: true,
+                smsConsentAt: new Date().toISOString(),
+                smsConsentText: SMS_CONSENT_TEXT,
+              }
+            : {}),
           purchaserEmail: trimmedBuyerEmail,
           deliveryMode,
           deliveryDate: deliveryMode === 'scheduled' ? deliveryDate : '',
@@ -441,6 +466,33 @@ export default function Checkout() {
                         with the bloom link to {recipientPhone || 'this number'} —
                         you tap Send, the gift goes through your own phone so
                         the recipient sees a familiar contact, not a shortcode.
+                      </span>
+
+                      <span
+                        style={{
+                          display: 'flex',
+                          alignItems: 'flex-start',
+                          gap: '10px',
+                          marginTop: '12px',
+                          padding: '12px',
+                          borderRadius: '10px',
+                          background: 'rgba(212, 175, 55, 0.08)',
+                          border: '1px solid rgba(212, 175, 55, 0.28)',
+                        }}
+                      >
+                        <input
+                          type="checkbox"
+                          id="sms-consent"
+                          checked={smsConsent}
+                          onChange={(event) => setSmsConsent(event.target.checked)}
+                          style={{ marginTop: '3px', flexShrink: 0, width: '18px', height: '18px', accentColor: '#D4AF37' }}
+                        />
+                        <label
+                          htmlFor="sms-consent"
+                          style={{ fontSize: '0.82rem', lineHeight: 1.5, cursor: 'pointer' }}
+                        >
+                          {SMS_CONSENT_TEXT}
+                        </label>
                       </span>
                     </label>
                   )}

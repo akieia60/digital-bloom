@@ -86,6 +86,9 @@ export function normalizeBloomDeliverySettings(purchase) {
     recipientEmail,
     recipientPhone,
     deliveryChannel,
+    smsConsent: Boolean(delivery.smsConsent),
+    smsConsentAt: delivery.smsConsentAt || null,
+    smsConsentText: delivery.smsConsentText || '',
     deliveryMode: delivery.deliveryMode === 'scheduled' ? 'scheduled' : 'now',
     deliveryDate: delivery.deliveryDate ? String(delivery.deliveryDate) : '',
     buyerTimezone: delivery.buyerTimezone || 'America/Chicago',
@@ -474,23 +477,42 @@ export async function processBloomDeliveryEmails({
     // otherwise leave the bloom pending so the buyer's manage page offers
     // "Text it to <name>" and the send happens from their own phone.
     if (delivery.deliveryChannel === 'phone' && delivery.recipientPhone && !isTwilioSmsEnabled()) {
-      if (!recipientEmail) {
+      // Nudge the buyer once so they have the link in their inbox, then stop.
+      // Note checkout stores the BUYER's address in recipientEmail for phone
+      // orders, so emailing it and calling the bloom 'sent' would be a claim
+      // about the recipient that simply isn't true — and it would hide the
+      // hand-off button that is the only thing that actually delivers.
+      const nudgeTo = delivery.purchaserEmail || recipientEmail || purchase.customer_email || '';
+      const alreadyNudged = Boolean(delivery.buyerNudgeSentAt);
+
+      if (nudgeTo && !alreadyNudged) {
         try {
-          purchase = await updatePurchaseDeliveryManifest(supabase, purchase, {
-            emailStatus: 'pending',
-            lastError: null,
-            awaitingBuyerHandoff: true,
-            recipientPhone: delivery.recipientPhone,
+          await sendBloomDeliveryEmail({
+            req,
+            to: nudgeTo,
+            purchase,
+            delivery,
+            isTest: isTestModePurchase(purchase, explicitTestMode),
           });
-        } catch (manifestError) {
-          console.error(`Failed to mark purchase ${purchase.id} as awaiting buyer hand-off:`, manifestError);
+        } catch (nudgeError) {
+          console.error(`[processBloomDeliveryEmails] Buyer nudge failed for ${purchase.id}:`, nudgeError);
         }
-        processed.push(purchase);
-        continue;
       }
-      console.warn(
-        `[processBloomDeliveryEmails] SMS disabled; delivering purchase ${purchase.id} by email instead of text.`
-      );
+
+      try {
+        purchase = await updatePurchaseDeliveryManifest(supabase, purchase, {
+          emailStatus: 'pending',
+          lastError: null,
+          awaitingBuyerHandoff: true,
+          recipientPhone: delivery.recipientPhone,
+          ...(nudgeTo && !alreadyNudged ? { buyerNudgeSentAt: now.toISOString() } : {}),
+        });
+      } catch (manifestError) {
+        console.error(`Failed to mark purchase ${purchase.id} as awaiting buyer hand-off:`, manifestError);
+      }
+
+      processed.push(purchase);
+      continue;
     }
 
     try {
