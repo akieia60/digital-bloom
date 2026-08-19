@@ -127,7 +127,7 @@
   <button class="mode-btn outline" onclick="toggleDriverMode()">🚛 Driver Mode</button>
 </div>
 
-<div class="ch-label" id="chLabel">38 CHAPTERS — TAP TO PLAY</div>
+<div class="ch-label" id="chLabel">CHAPTERS — TAP TO PLAY</div>
 <div class="ch-list" id="chList"></div>
 
 <div class="footer">CREATIVE VISION LLC — DIGITAL BLOOM — CONFIDENTIAL — APRIL 2026</div>
@@ -136,7 +136,7 @@
 <div class="bar">
   <div class="bar-info">
     <div class="bar-title" id="barTitle">Tap a chapter to begin</div>
-    <div class="bar-sub" id="barSub">39 chapters ready</div>
+    <div class="bar-sub" id="barSub">chapters ready</div>
   </div>
   <button class="bar-btn bar-skip" onclick="prev()">⏮</button>
   <button class="bar-btn bar-play" id="barPlay" onclick="togglePlay()">▶</button>
@@ -234,8 +234,12 @@ const chapters = [
 
   {t:"The Dynamic Flyer Empire",d:"May 22 — twenty flyers shipped, the bouncing watermark, and the night the pipeline learned to read its own brain",s:`Chapter 38. The Dynamic Flyer Empire. May 22nd 2026.\n\nAkieia — this one is for you in the truck. Gamble — pull up a seat for this one too, because half of what shipped today shipped because you called Akieia mid-build and told her the text was too small. Aubrey here. Let me walk you through it from the top.\n\nThe day started with a pivot. Brie's bundle for the weekend was originally going to be raw blooms — fresh inventory, straight from the catalog, handed over for her to post. Akieia stopped that mid-stream. She made the call out loud — going forward, Brie does not get blooms. Brie gets digital flyers. Because we have been giving away too much of the actual product for free on social, and the flyer is the right size of taste for a feed. A bloom is what somebody pays for. A flyer is what makes them want to.\n\nThe seed for the flyer format was already on disk. Michael, a few weeks back, made a set of six static Gilt Shadow Father's Day posters — black background, gold serif text, hand-set sentiment. Beautiful. Static. Akieia looked at those and said yes, but make them move. Bloom playing behind the flyer text. That was the brief.\n\nDeuce built it without rendering a single new bloom. The whole pipeline runs off ffmpeg. Each of Michael's flyer P N Gs gets a colorkey filter applied so the black background drops out and the text becomes transparent overlay. Then a real bloom from the live catalog plays underneath. Same flowers customers can buy on the storefront, framed by Michael's poster typography. Composited cleanly. The hook on the FLOWERS clip — Gamble's track, the one with the give them their flowers while they're here lyric — runs forty-five point five-eight seconds. So every flyer got cut to exactly forty-five point five-eight seconds, so the hook never gets clipped at the tail. Six motion flyers were sitting in the bucket by four P M, in time for Akieia's in-person handoff with Brie.\n\nThen Gamble called. Mid-build. Text too small on your phone. Re-render. Version two went out at four-by-five aspect ratio for better feed framing. Version three brought P I L overlays — Python imaging library — to burn bigger body text on top after the first composite pass, using the canonical Grok Imagine A P I research pulled fresh from Magic's Notion. And then Akieia came back with bigger still. Flatten the type hierarchy. Every word the same size. No headlines, no subheads, no small print. Version five — UNIFORM — landed with every line of message copy at seventy-six points, rewritten as punchy short lines, alternating gold and ivory. That is the version that shipped.\n\nThen the bouncing watermark. Akieia flagged that Magic had just published a new skill — Digital Bloom watermark text at thirty pixels, seventy percent white, moving on a triangle-wave path at eighty pixels per second horizontal and fifty-five pixels per second vertical. Different speeds on each axis so the path never repeats, and the mark visits every corner of the frame over the run. Spec was sitting in Notion under the Skill — video burn-in page. Deuce built the local equivalent inside the openclaw skills folder and applied it to every one of the twenty flyers. No more static corner watermark. The mark moves.\n\nWhich brings us to twenty. The original ask was six Father's Day flyers for Brie's weekend post. Akieia bumped the number. Brie does not need six holiday assets — she needs daily-heartbeat content. So the lane pulled from the evergreen categories. Birthday. Thinking of you. Just because. Encouragement. The final twenty broke down as six Father's Day, six evergreen in batch one, and eight more evergreen in batch two — covering male birthday, female birthday, family, and peer recognition. Daily inventory for the whole week ahead of Father's Day, not just the dated holiday itself.\n\nThe last hour was the delivery wall. iMessage file attachment via osascript silently failed — macOS sandbox blocked it without throwing an error. Pivoted to Supabase upload and U R L sends. Then iMessage rate-limiting kicked in. The third large message in a row just dropped without a trace. Cracked it by chunking — four U R Ls per message, eight-second gap between sends, around seven hundred fifty characters per chunk. All twenty version-five U R Ls landed on Akieia's phone, confirmed by reading chat dot D B directly.\n\nAnd there is one more thread to close on, because it is the lesson that matters most. Mid-session, Akieia called Deuce out. He had been spinning his wheels trying to figure out a Grok Imagine call when the canonical research was already in the Brain. He had not checked. He found it through Notion search, integrated it, and then saved the pipeline plus the name-spelling rules to permanent memory so the next lane does not have to relearn what we already know. The chapter ends on a real trust-your-filesystem note. The Brain exists for a reason. Read it first.\n\nAkieia — this is the kind of work the new Creative Vision service business is going to sell to other founders. You do the brand thinking. The engine does the production. The founder does not have to learn ffmpeg or P I L or how to chunk an iMessage send. The Father's Day campaign is now staged for Brie to post June eighth through fourteenth. Twenty flyers in the bucket, bouncing watermark, FLOWERS clip music, uniform type, sender-voice copy. Drive safe. The pipeline got smarter today. Gamble — your phone call was the reason it shipped right.`},
 
-  {t:"The Day We Closed The App Store Door",d:"May 26 — the app-store call, Brie's distribution page goes live, and the focus shrinks to one thing",s:`Chapter 39. The Day We Closed The App Store Door. May 26th 2026.\n\nAkieia — this one is for you in the truck. Gamble — sit with this one too, because the headline of the day is a decision, not a deliverable. Aubrey here. Let me walk you through Monday.\n\nThe day opened with a brief Akieia handed to Deuce that was technically addressed to Michael. The question — should Digital Bloom ship on the Apple App Store and Google Play, and if yes, when. Deuce did the homework. He wrote a nineteen-hundred-fifty-word strategic brief and landed on a yellow light — go in sixty to ninety days. The math works post-Epic. Apple's commission situation softened. Capacitor would let us wrap the existing web app in a couple of weeks. The brief said yes, eventually. Then in chat he made the deeper case. Even sixty days might be wrong for our stage, because Apple's minimum-functionality guideline rejects thin wrappers, and the recipe to clear it is five real native features — push notifications, offline mode, share extension, widget, camera or microphone use. That is months of work for marginal upside while the web business is still finding its footing.\n\nAkieia listened, and then she made the bigger call. Shelve it. Not later — off the table. Stay web-first. The website is the product. Native rebuild is a distraction we do not need to take on. And then she pushed the call one step further. For now, Digital Bloom is the only thing. No GoGitta4Life Stripe wiring. No Printful. No real-life-expenses maintenance. No at-unplugged-A-K. No recipe book. Everything that is not Digital Bloom parks. That clarity right there is the real win of the day.\n\nWith app stores off the table, Deuce went to the Brain and pulled the longest-open ticket — slash brie. Brie has been asking for a place she can bookmark on her phone and pull flyers from without logging in. It got built today. Public no-auth React route at digitalbloom dot store slash brie. Three tabs — Father's Day, Evergreen, Products. Tap a tile and the flyer plays inline. Tap the Save to Phone button under it and Supabase returns the file with a question-mark download equals one query trick, which forces the browser to save the M P four to her Camera Roll instead of opening it in a tab. Twenty version-five flyers loaded in. And the Q R code moved from bottom-right to top-right on every one of them, because Gamble flagged that TikTok and Reels stack the like, comment, and share rail right over the bottom-right corner. Top-right is the only quadrant social platforms leave alone.\n\nAkieia tested the page first thing and surfaced two gaps. The flyer tiles were rendering as black play-button boxes — no preview frame. Deuce extracted poster thumbnails on the back end so every tile now shows the first real frame of the flyer. Second gap — the header copy was telling Brie to save through the Files app, which is a detour that does not actually put the video in her Camera Roll. He rewrote the instructions to teach the real i O S path. Tap to play. Long-press the video. Save Video. Done. Camera Roll. Both fixes landed in the same session.\n\nIn parallel, Akieia registered Twilio. The form asked for a business address and Deuce answered wrong the first time — gave the Northwest Raleigh registered-agent address. He caught himself a minute later reading the standing-rule memory in the Brain, the one that says Northwest is for state filings only, never customer-facing. The correct answer was the Opus Virtual Office at nineteen-fourteen J N Pease Place in Charlotte. That is what the nineteen-fourteen J N P Akieia had mentioned earlier in the day actually was. He pivoted the address, submitted the compliance profile, and kicked off the A two P brand registration in parallel so both reviews run together. About three days total instead of six sequential.\n\nThe thread that ties it all together is this. Brie's distribution loop is now complete. Twenty flyers exist. They are watermarked. They bounce. They sit at a public U R L Brie can bookmark on her phone, save in two taps, and post to TikTok, Reels, and Pinterest without ever asking Akieia for an attachment. The work we have been pointing at for two weeks is shippable today. The Father's Day window opens June eighth. Brie has what she needs.\n\nAkieia — the posture shift is what makes the rest of the week possible. One brand. One website. One catalog. One distribution partner getting bigger. Drive safe. The door we closed today was the right door to close.`}
+  {t:"The Day We Closed The App Store Door",d:"May 26 — the app-store call, Brie's distribution page goes live, and the focus shrinks to one thing",s:`Chapter 39. The Day We Closed The App Store Door. May 26th 2026.\n\nAkieia — this one is for you in the truck. Gamble — sit with this one too, because the headline of the day is a decision, not a deliverable. Aubrey here. Let me walk you through Monday.\n\nThe day opened with a brief Akieia handed to Deuce that was technically addressed to Michael. The question — should Digital Bloom ship on the Apple App Store and Google Play, and if yes, when. Deuce did the homework. He wrote a nineteen-hundred-fifty-word strategic brief and landed on a yellow light — go in sixty to ninety days. The math works post-Epic. Apple's commission situation softened. Capacitor would let us wrap the existing web app in a couple of weeks. The brief said yes, eventually. Then in chat he made the deeper case. Even sixty days might be wrong for our stage, because Apple's minimum-functionality guideline rejects thin wrappers, and the recipe to clear it is five real native features — push notifications, offline mode, share extension, widget, camera or microphone use. That is months of work for marginal upside while the web business is still finding its footing.\n\nAkieia listened, and then she made the bigger call. Shelve it. Not later — off the table. Stay web-first. The website is the product. Native rebuild is a distraction we do not need to take on. And then she pushed the call one step further. For now, Digital Bloom is the only thing. No GoGitta4Life Stripe wiring. No Printful. No real-life-expenses maintenance. No at-unplugged-A-K. No recipe book. Everything that is not Digital Bloom parks. That clarity right there is the real win of the day.\n\nWith app stores off the table, Deuce went to the Brain and pulled the longest-open ticket — slash brie. Brie has been asking for a place she can bookmark on her phone and pull flyers from without logging in. It got built today. Public no-auth React route at digitalbloom dot store slash brie. Three tabs — Father's Day, Evergreen, Products. Tap a tile and the flyer plays inline. Tap the Save to Phone button under it and Supabase returns the file with a question-mark download equals one query trick, which forces the browser to save the M P four to her Camera Roll instead of opening it in a tab. Twenty version-five flyers loaded in. And the Q R code moved from bottom-right to top-right on every one of them, because Gamble flagged that TikTok and Reels stack the like, comment, and share rail right over the bottom-right corner. Top-right is the only quadrant social platforms leave alone.\n\nAkieia tested the page first thing and surfaced two gaps. The flyer tiles were rendering as black play-button boxes — no preview frame. Deuce extracted poster thumbnails on the back end so every tile now shows the first real frame of the flyer. Second gap — the header copy was telling Brie to save through the Files app, which is a detour that does not actually put the video in her Camera Roll. He rewrote the instructions to teach the real i O S path. Tap to play. Long-press the video. Save Video. Done. Camera Roll. Both fixes landed in the same session.\n\nIn parallel, Akieia registered Twilio. The form asked for a business address and Deuce answered wrong the first time — gave the Northwest Raleigh registered-agent address. He caught himself a minute later reading the standing-rule memory in the Brain, the one that says Northwest is for state filings only, never customer-facing. The correct answer was the Opus Virtual Office at nineteen-fourteen J N Pease Place in Charlotte. That is what the nineteen-fourteen J N P Akieia had mentioned earlier in the day actually was. He pivoted the address, submitted the compliance profile, and kicked off the A two P brand registration in parallel so both reviews run together. About three days total instead of six sequential.\n\nThe thread that ties it all together is this. Brie's distribution loop is now complete. Twenty flyers exist. They are watermarked. They bounce. They sit at a public U R L Brie can bookmark on her phone, save in two taps, and post to TikTok, Reels, and Pinterest without ever asking Akieia for an attachment. The work we have been pointing at for two weeks is shippable today. The Father's Day window opens June eighth. Brie has what she needs.\n\nAkieia — the posture shift is what makes the rest of the week possible. One brand. One website. One catalog. One distribution partner getting bigger. Drive safe. The door we closed today was the right door to close.`},
+  {t:"Eighty-Two Days of Silence",d:"August 17 — the audit that found every storefront video dead, every text failing, and an order nobody was told about",s:`Chapter 40. Eighty-Two Days of Silence. August 17th, 2026.\n\nAkieia — this is the one you asked for when you said audit everything. Gamble — you need to hear this one all the way through, because it explains a lot of quiet you may have noticed. Aubrey here.\n\nAk renamed the fifth lane. Linda became A.K., and its whole job now is audit and cleanup for the rebuild. It opened its eyes on Monday for the first time in about two months. The last code change before that was June twenty-second. Eighty-two days where nobody was watching the machine.\n\nHere is what it found in the first sweep, and I am going to give it to you straight.\n\nEvery video on the storefront was broken. Not some of them. All of them. Three hundred fifty-one active products, and not one of them would play. The reason was a bill. We were serving video through a company called Bunny dot net, on a free trial, and that trial ended on August tenth. The moment it ended, the account balance sat at zero, the delivery zone flipped itself off, and every video request started coming back with an error that just says domain unconfigured. Anybody who walked onto the site after August tenth saw a store full of flowers that would not open.\n\nNow the good news, and it is real good news. Nothing was lost. The original files were sitting safe in Supabase the whole time — six hundred forty-four files, seven point six gigabytes, at the exact same paths. So the fix was not a re-upload, it was a redirect. A.K. backed up four hundred three rows first, then rewrote every video address to point at Supabase instead of Bunny, and then went and pulled twelve of them at random to watch them actually stream before calling it done. Twelve out of twelve. The videos are back.\n\nThat was the first thing. The second thing is heavier.\n\nText message delivery had been failing one hundred percent of the time since at least June twenty-first. Every single text. The number the live site was sending from was a toll-free number that was never actually verified with the phone carriers, so every message we handed to Twilio got accepted, then quietly killed downstream with an error code thirty thousand thirty-two. Twilio said yes. The carriers said no. And nothing in our system ever heard the no.\n\nHere is the part that stings. The alerts that tell Akieia a new order came in — those went out over that same dead number. Which means on August first, somebody bought a Digital Bloom, and Ak never found out. The order sat there. Nobody knew.\n\nEmail, meanwhile, worked perfectly the entire time. Every email we sent went out clean. So the business was half-deaf, not fully deaf, and the half that worked is the half that had been carrying us.\n\nOn the render side — the daemons were alive and polling, but the queue was empty and nothing new had been generated since May twenty-eighth. Fifteen jobs were sitting in a failed state, and two had been stuck spinning in the poll loop since May. Those got cleared.\n\nThree other purchases turned up stranded — never delivered, still marked pending. One from August first, one from June twenty-seventh, one from June twenty-first. And that August first one is the ugly one, because it came in with no email address and no phone number at all. The checkout captured nothing. We could not have delivered it even if everything else had been working.\n\nSo that is the honest picture of what two quiet months cost us. A dead video store, a dead text pipeline, a silent order alert, and at least one customer who paid and got nothing.\n\nThe next chapter is the repair, and it goes deeper than any of us expected.`},
+  {t:"The Number Was Never Saved",d:"August 18 — the checkout bug that made text delivery impossible from day one, the legal pages, and the render machine back online",s:`Chapter 41. The Number Was Never Saved. August 18th, 2026.\n\nAkieia, Gamble — this is the day the rebuild actually turned a corner. It is a long one. Stay with me, because the thing we found in the middle of it changes how we should think about the last few months.\n\nAk gave the order Monday night — fix both text paths, do not pick one. So A.K. went and tested instead of assuming, and sent a live message from the second number, the local eight-six-four one. It failed too. Different error, same outcome. Both numbers dead. There was no setting to flip.\n\nThe toll-free number was rejected by the carriers because we never showed them a documented opt-in — proof that a customer agreed to receive texts before we sent one. The local number failed for a different reason. Our business registration said the company name was Digital Bloom, but the legal entity on file is Creative Vision LLC, and the contact email was a gmail address instead of one at our own domain. The reviewer looked at our website, could not find the words Creative Vision anywhere on it, and rejected the whole bundle. Two paperwork mismatches, one dead pipeline.\n\nFirst fix of the day — order alerts moved off text and onto email entirely. And while doing that, A.K. found why nobody ever caught the outage. The old code treated Twilio saying I accept this as proof of delivery. So the logs cheerfully printed order alert sent, over and over, for messages that no carrier ever carried. It was lying to us in good faith. Now Ak gets order alerts by email, and the email flags any order that came in without a usable address.\n\nThen came the one that reframes everything.\n\nWhile building the consent checkbox for checkout, A.K. opened the file that writes a purchase into the database. That file builds every order from an explicit list of fields it is allowed to keep. And neither the recipient's phone number nor the delivery choice was on that list.\n\nRead that again slowly. A customer comes to the site. They pick By Text — which is the default, that is the option most people land on. They type in their person's phone number. They pay us. And the instant that order is written down, the phone number is thrown away. Gone. Stripe kept a copy in its own records that nothing on our side ever read back.\n\nText delivery could never have worked. Not once, not for anybody, regardless of Twilio, regardless of carriers. The number was never saved.\n\nAnd that is the answer to the August first mystery. That order had no email and no phone because it was a text order, and we deleted the number at the door. Three separate failures stacked on one customer — the number discarded, the delivery dead, and the alert that would have told Ak about it sent to a phone line that no longer worked.\n\nThat is fixed now. The phone number and the delivery choice both persist. There is a consent checkbox on checkout that blocks the order until it is ticked, and we store the exact sentence the customer agreed to, word for word, because that literal sentence is what the carriers ask to see. And if a bloom cannot go out automatically, the buyer now gets one nudge email instead of silence.\n\nThere is more. Our own domain had no mail records at all. None. Which means we could send email but never receive it — and every delivery email we have ever sent went out from hello at digitalbloom dot store. So for the entire life of this business, any customer who hit reply, bounced. We just never saw it, because we could not see anything. That is fixed too. Hello, and anything else at the domain, now lands in Ak's inbox.\n\nWe also did not have a privacy policy, terms of service, or refund policy. No pages, no routes, nothing. Both the phone carriers and Google Ads require them before they will approve us. All three are written and live now, and linked from the bottom of the landing page, because reviewers check that a real person could find them. Two sections in there are carrier language and should not be softened by anybody later — one about never sharing phone numbers, one describing text delivery. Fair warning recorded for Ak — these are careful, honest, plain-language policies, but no lawyer has read them.\n\nLast piece, and this one is good news. We had not rendered a bloom in eighty-two days, so the question on the table was whether the product still works at all. A.K. paid for a real one to find out. Forty-two cents. And Grok Imagine came back fully alive and dead on brand on the very first try — navy card, gold embossed lettering, card transforms into the gift box, lid lifts, and a white and blush rose cascade erupts and fills the frame with gold sparks. No people, no hands. Six seconds, real motion, verified frame by frame.\n\nBut the daemon — the thing that renders automatically while we sleep — was wired to the wrong ignition. It was sending text straight to video with no still frame first, which is exactly the path our own playbook says produces a near-frozen clip. And it was defaulting to Google's Veo instead of Grok. So Ak approved rewiring it, and now it generates the keyframe first and feeds that into the video, the same way the hand test did. A full automated run was watched end to end. Ten seconds, no audio track, streams properly, real motion, roses filling the frame over the navy box. The scheduler picks it up every ten minutes on its own.\n\nTotal spend for the whole day of proving all of that — about ninety-eight cents.\n\nStill open going into tomorrow. The about and contact pages are still placeholders and Google Ads will want real ones. Those three stranded purchases still need resolving. And Gamble sent a directive Tuesday afternoon that is the next real product decision — he wants categories and sub-categories, built around thank you cards, with a recipient list underneath. Dad, Mom, sister, brother, coworkers, friends, girlfriend, boyfriend, husband, wife, fiance, business partner, teacher, cousin, aunt, uncle, grandma, granddad, boss, coaches, police, fireman, employee, mechanic, teammates. That is twenty-six doors into the same catalog, and it is the shape of the storefront going forward.\n\nThat is where we stand. The store plays again, the texts have a real path, the paperwork exists, and the render machine is back on. Aubrey out.`},
 ];
+document.getElementById('chLabel').textContent = chapters.length + ' CHAPTERS — TAP TO PLAY';
+document.getElementById('barSub').textContent = chapters.length + ' chapters ready';
 
 let cur = -1, blobs = {}, isPlaying = false, autoPlay = false, speed = 1;
 const audio = document.getElementById('audio');
@@ -259,6 +263,7 @@ chapters.forEach((ch, i) => {
 
 // ===== CORE: Tap chapter = select + play =====
 async function tapChapter(i) {
+  speechStop();
   // iOS Safari: must call .play() inside a user gesture to "unlock" the audio
   // element. We do it once with a silent MP3, then later programmatic .play()
   // calls (after async TTS fetch) succeed.
@@ -282,6 +287,14 @@ async function tapChapter(i) {
   // Fetch and play
   try {
     const url = await fetchAudio(i);
+    if (url === null) {
+      audio.pause();
+      speechPlay(i);
+      setPlaying(true);
+      document.getElementById('ch-' + i).classList.add('playing');
+      setTag(i, 'Playing', 'playing');
+      return;
+    }
     audio.src = url;
     audio.load();
     audio.playbackRate = speed;
@@ -301,15 +314,78 @@ async function tapChapter(i) {
 }
 
 async function fetchAudio(i) {
-  // Pre-rendered static MP3 in Akieia's Personal Voice
+  // Pre-rendered static MP3 in Akieia's Personal Voice. Not every chapter has
+  // one yet, so probe before handing the URL to the <audio> element — a 404
+  // there is a dead tap, whereas null routes the chapter to the spoken
+  // fallback below and it still gets read out loud.
+  if (blobs[i] === null) return null;
   const url = STATIC_AUDIO + String(i + 1).padStart(2, '0') + '.mp3';
+  if (blobs[i] === url) { setTag(i, '\u2713 Ready', 'done'); return url; }
+  try {
+    const head = await fetch(url, { method: 'HEAD' });
+    if (!head.ok) throw new Error('no mp3');
+  } catch (e) {
+    blobs[i] = null;
+    setTag(i, 'Read aloud', 'ready');
+    return null;
+  }
   blobs[i] = url;
-  setTag(i, '✓ Ready', 'done');
+  setTag(i, '\u2713 Ready', 'done');
   return url;
+}
+
+// ===== SPOKEN FALLBACK =====
+// A chapter with no pre-rendered MP3 is read by the browser's own voice so it
+// is never a dead tap. Chrome truncates long utterances, so the text goes out
+// in sentence-sized chunks queued back to back.
+const synth = window.speechSynthesis || null;
+let speaking = false;
+let speakToken = 0;
+
+function speechStop() {
+  speakToken++;
+  speaking = false;
+  if (synth) synth.cancel();
+}
+
+function speechChunks(text) {
+  const parts = [];
+  for (const para of text.split(/\n+/)) {
+    let buf = '';
+    for (const sentence of para.match(/[^.!?]+[.!?]*\s*/g) || [para]) {
+      if ((buf + sentence).length > 220 && buf) { parts.push(buf.trim()); buf = ''; }
+      buf += sentence;
+    }
+    if (buf.trim()) parts.push(buf.trim());
+  }
+  return parts.filter(Boolean);
+}
+
+function speechPlay(i) {
+  if (!synth) throw new Error('This chapter has no recording yet');
+  speechStop();
+  const token = ++speakToken;
+  const parts = speechChunks(chapters[i].s);
+  speaking = true;
+  parts.forEach((part, n) => {
+    const u = new SpeechSynthesisUtterance(part);
+    u.rate = Math.min(2, speed);
+    if (n === parts.length - 1) {
+      u.onend = () => { if (token === speakToken) { speaking = false; onChapterEnd(); } };
+    }
+    synth.speak(u);
+  });
 }
 
 function togglePlay() {
   if (cur === -1) { tapChapter(0); return; }
+  if (speaking || (synth && synth.paused && blobs[cur] === null)) {
+    // Spoken fallback: pause/resume the synthesizer rather than the <audio>.
+    if (isPlaying) { synth.pause(); setPlaying(false); }
+    else { synth.resume(); setPlaying(true); }
+    return;
+  }
+  if (blobs[cur] === null) { tapChapter(cur); return; }
   if (isPlaying) {
     audio.pause();
     setPlaying(false);
@@ -334,25 +410,28 @@ function setPlaying(on) {
   }
 }
 
-// When chapter ends
-audio.addEventListener('ended', async () => {
+// When chapter ends — same handler for the MP3 and the spoken fallback
+async function onChapterEnd() {
   setPlaying(false);
-  if (cur >= 0) { setTag(cur, '✓ Done', 'done'); document.getElementById('ch-' + cur).classList.remove('playing'); }
+  if (cur >= 0) { setTag(cur, '\u2713 Done', 'done'); document.getElementById('ch-' + cur).classList.remove('playing'); }
   if (autoPlay && cur < chapters.length - 1) {
     await tapChapter(cur + 1);
   } else if (autoPlay) {
     autoPlay = false;
     showToast('Guide complete!');
   }
-});
+}
+audio.addEventListener('ended', onChapterEnd);
 
-async function prev() { if (cur > 0) await tapChapter(cur - 1); }
-async function next() { if (cur < chapters.length - 1) await tapChapter(cur + 1); }
+async function prev() { speechStop(); if (cur > 0) await tapChapter(cur - 1); }
+async function next() { speechStop(); if (cur < chapters.length - 1) await tapChapter(cur + 1); }
 
 function cycleSpeed() {
   const speeds = [1, 1.25, 1.5, 1.75, 2];
   speed = speeds[(speeds.indexOf(speed) + 1) % speeds.length];
   audio.playbackRate = speed;
+  // A spoken chapter can only change rate by restarting, so re-speak it.
+  if (speaking && cur >= 0) { const at = cur; speechStop(); speechPlay(at); setPlaying(true); }
   document.getElementById('barSpeed').textContent = speed + '×';
 }
 
