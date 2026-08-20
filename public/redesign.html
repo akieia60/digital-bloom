@@ -1,0 +1,738 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>Digital Bloom — Redesign Prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&family=Outfit:wght@300;400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap">
+<style>
+  :root{
+    --ink:#07111f; --navy:#0c1f3f; --navy-page:#0D1B36; --navy-mid:#10294d;
+    --blush:#c9857a; --blush-lt:#e8b4ad; --gold:#c9a84c; --gold-dk:#B8923F; --cream:#faf0ec;
+    --w:#fff; --soft:#FAFAFA; --line:#E5E5EA; --line-lt:#F0F0F0;
+    --t1:#1D1D1F; --t2:#6E6E73; --t3:#AEAEB2;
+    --sat: env(safe-area-inset-top, 0px); --sab: env(safe-area-inset-bottom, 0px);
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0;background:var(--ink);color:var(--cream);
+    font-family:'Outfit',-apple-system,BlinkMacSystemFont,sans-serif;
+    overscroll-behavior-y:none;-webkit-font-smoothing:antialiased}
+  img,video{display:block;max-width:100%}
+  button{font-family:inherit;cursor:pointer;border:0;background:none;color:inherit}
+  .screen{display:none;min-height:100vh;min-height:100dvh}
+  .screen.on{display:block}
+  .wrap{max-width:520px;margin:0 auto;position:relative}
+
+  /* ---- shared bits ---- */
+  .eyebrow{font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold)}
+  .h1{font-family:'Playfair Display',Georgia,serif;font-weight:400;line-height:1.02;letter-spacing:-.01em;color:var(--cream)}
+  .serif{font-family:'Cormorant Garamond',Georgia,serif}
+  .btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;height:54px;
+    border-radius:999px;font-size:12px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;
+    transition:transform .18s ease,opacity .18s ease}
+  .btn:active{transform:scale(.975)}
+  .btn-primary{background:linear-gradient(135deg,var(--blush) 0%,var(--blush-lt) 100%);color:var(--navy)}
+  .btn-ghost{border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.04);color:rgba(250,240,236,.82);font-weight:600;letter-spacing:.14em}
+  .btn-gold{border:1px solid rgba(201,168,76,.35);background:transparent;color:var(--gold);letter-spacing:.16em}
+  .nav{display:flex;align-items:center;justify-content:space-between;gap:12px;
+    padding:calc(12px + var(--sat)) 18px 12px;background:rgba(12,31,63,.94);
+    border-bottom:1px solid rgba(255,255,255,.06);position:sticky;top:0;z-index:40;backdrop-filter:blur(14px)}
+  .iconbtn{width:44px;height:44px;display:flex;align-items:center;justify-content:center;border-radius:50%;
+    background:rgba(255,255,255,.06);flex:none}
+  .iconbtn:active{background:rgba(255,255,255,.14)}
+  .brand{display:flex;align-items:center;gap:9px;font-family:'Playfair Display',Georgia,serif;font-size:16px}
+  .pill{height:36px;padding:0 16px;border-radius:999px;background:var(--gold);color:var(--ink);
+    font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase}
+
+  /* rails */
+  .rail{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding:0 18px 2px}
+  .rail::-webkit-scrollbar{display:none}
+  .chip{flex:none;min-height:44px;display:flex;align-items:center;padding:11px 18px;border-radius:999px;
+    border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.05);color:rgba(250,240,236,.72);
+    font-size:13px;font-weight:500;white-space:nowrap}
+  .chip.sel{border-color:var(--gold);background:rgba(201,168,76,.16);color:var(--gold);font-weight:600}
+
+  /* tiles */
+  .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;padding:0 18px}
+  .tile{position:relative;border-radius:20px;overflow:hidden;aspect-ratio:3/4;
+    border:1px solid rgba(255,255,255,.08);background:var(--navy-mid);isolation:isolate}
+  .tile:active{transform:scale(.98)}
+  .tile video,.tile img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+  .tile .veil{position:absolute;inset:0;background:linear-gradient(180deg,transparent 34%,rgba(7,17,31,.88) 100%)}
+  .tile .cap{position:absolute;left:13px;right:13px;bottom:11px}
+  .tile .cap b{display:block;font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:16px;line-height:1.15;color:#fff}
+  .tile .cap span{display:block;margin-top:4px;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.55)}
+  .badge{position:absolute;top:10px;left:10px;padding:5px 10px;border-radius:999px;background:rgba(6,13,24,.6);
+    border:1px solid rgba(201,168,76,.4);font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
+
+  .sectionhead{padding:24px 18px 14px}
+  .sectionhead h2{margin:8px 0 4px;font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:27px;color:var(--cream)}
+  .sectionhead p{margin:0;font-size:13px;line-height:1.5;color:rgba(250,240,236,.55)}
+
+  /* forms */
+  .label{display:block;font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--t2)}
+  .field{width:100%;min-height:52px;margin-top:8px;padding:14px 16px;border:1px solid #D2D2D7;border-radius:14px;
+    background:#fff;font-family:inherit;font-size:16px;color:var(--t1);outline:none}
+  .field:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(201,161,74,.14)}
+  .note{display:flex;gap:8px;margin-top:8px;padding:10px 12px;border-radius:12px;background:#FAF6EC;
+    font-size:12px;line-height:1.4;color:var(--t2)}
+  .opt{display:flex;align-items:flex-start;gap:12px;padding:15px;border-radius:16px;border:1px solid var(--line);background:#fff;text-align:left}
+  .opt.sel{border-color:#C9A14A;background:#FAF6EC}
+  .dot{flex:none;width:18px;height:18px;margin-top:2px;border-radius:50%;border:1.5px solid #D2D2D7;background:#fff}
+  .opt.sel .dot{border:5px solid #C9A14A}
+
+  .toast{position:fixed;left:50%;bottom:calc(26px + var(--sab));transform:translateX(-50%) translateY(20px);
+    padding:13px 22px;border-radius:999px;background:rgba(7,17,31,.94);border:1px solid rgba(201,168,76,.35);
+    color:var(--cream);font-size:13px;opacity:0;pointer-events:none;transition:.28s ease;z-index:200;max-width:88vw;text-align:center}
+  .toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+
+  .sheet{position:fixed;inset:0;z-index:150;display:none}
+  .sheet.on{display:block}
+  .sheet .scrim{position:absolute;inset:0;background:rgba(0,0,0,.6);opacity:0;transition:.3s}
+  .sheet.on .scrim{opacity:1}
+  .sheet .panel{position:absolute;left:0;right:0;bottom:0;max-height:92vh;overflow-y:auto;
+    padding:12px 18px calc(26px + var(--sab));border-radius:28px 28px 0 0;background:var(--navy);
+    border-top:1px solid rgba(255,255,255,.09);transform:translateY(100%);transition:transform .32s cubic-bezier(.32,.72,0,1)}
+  .sheet.on .panel{transform:translateY(0)}
+  .grab{margin:0 auto 14px}
+</style>
+</head>
+<body>
+
+<div class="toast" id="toast"></div>
+
+<!-- ===================== 1 · LANDING ===================== -->
+<section class="screen on" id="s-landing">
+ <div class="wrap">
+  <div class="nav">
+    <div class="brand">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#c9a84c" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 12c0-3 1.8-5.5 4.2-5.5C18 6.5 19 8 19 9.6 19 12 16.4 12 12 12z"/><path d="M12 12c0-3-1.8-5.5-4.2-5.5C6 6.5 5 8 5 9.6 5 12 7.6 12 12 12z"/><path d="M12 12c3 0 5.5 1.8 5.5 4.2 0 1.8-1.5 2.8-3.1 2.8C12 19 12 16.4 12 12z"/><path d="M12 12c-3 0-5.5 1.8-5.5 4.2 0 1.8 1.5 2.8 3.1 2.8C12 19 12 16.4 12 12z"/></svg>
+      Digital Bloom
+    </div>
+    <button class="pill" data-go="shop">Send</button>
+  </div>
+
+  <div style="position:relative;padding:34px 18px 40px;background:
+      radial-gradient(120% 80% at 12% 0%,rgba(201,133,122,.20) 0%,transparent 62%),
+      radial-gradient(100% 70% at 92% 100%,rgba(201,168,76,.14) 0%,transparent 62%),var(--navy);overflow:hidden">
+    <div style="display:inline-flex;align-items:center;gap:8px;padding:7px 16px;border:1px solid rgba(201,133,122,.28);border-radius:999px;background:rgba(201,133,122,.07)">
+      <span style="width:5px;height:5px;border-radius:50%;background:var(--gold)"></span>
+      <span style="font-size:10px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:rgba(250,240,236,.78)">Delivered in minutes</span>
+    </div>
+    <h1 class="h1" style="margin:20px 0 0;font-size:clamp(38px,10.5vw,50px)">Give Them Their Flowers<br><em style="color:var(--blush)">While They're Still Here</em></h1>
+    <p class="serif" style="margin:16px 0 0;font-size:19px;line-height:1.5;color:rgba(250,240,236,.76);max-width:340px">Send what you couldn't quite say — a cinematic video bouquet, made for one person, opened on their phone.</p>
+
+    <div style="position:relative;margin-top:24px;border-radius:34px;overflow:hidden;border:1px solid rgba(255,255,255,.09);background:var(--ink);aspect-ratio:4/5">
+      <video id="heroVideo" muted playsinline loop preload="metadata" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover"></video>
+      <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(7,17,31,.1) 0%,transparent 30%,rgba(7,17,31,.55) 100%);pointer-events:none"></div>
+      <div id="heroTag" style="position:absolute;left:16px;top:16px;padding:8px 14px;border-radius:999px;background:rgba(6,13,24,.55);border:1px solid rgba(255,255,255,.1);font-size:9px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.85)">Loading</div>
+      <button id="heroSound" class="iconbtn" style="position:absolute;right:16px;top:16px;background:rgba(6,13,24,.55)" aria-label="Sound">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H3v6h3l5 4z"/><path d="M17 9l4 6M21 9l-4 6"/></svg>
+      </button>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:10px;margin-top:22px">
+      <button class="btn btn-primary" data-go="shop">Send a Bloom</button>
+      <button class="btn btn-ghost" id="watchFirst">Watch one first</button>
+    </div>
+    <div style="margin-top:13px;text-align:center;font-size:12px;color:rgba(250,240,236,.42)">From <b style="color:var(--gold)">$1.99</b> · no app, no account, no signup</div>
+  </div>
+
+  <!-- how -->
+  <div style="padding:38px 18px;background:var(--navy-page);border-top:1px solid rgba(255,255,255,.05)">
+    <div class="eyebrow">How it works</div>
+    <h2 class="h1" style="margin:10px 0 20px;font-size:26px">Three minutes, start to tears.</h2>
+    <div style="display:flex;flex-direction:column;gap:10px" id="steps"></div>
+  </div>
+
+  <!-- occasions preview -->
+  <div style="padding:36px 0 40px;background:var(--navy)">
+    <div class="sectionhead" style="padding-bottom:16px">
+      <div class="eyebrow">Start here</div>
+      <h2>Who are you sending to?</h2>
+      <p id="occSub">Every occasion opens into the people inside it.</p>
+    </div>
+    <div class="grid" id="landingCats"></div>
+    <div style="padding:16px 18px 0"><button class="btn btn-gold" data-go="shop">See all occasions</button></div>
+  </div>
+
+  <div style="padding:42px 18px;background:#fff;color:var(--t1)">
+    <div class="eyebrow" style="color:var(--gold-dk)">What comes back</div>
+    <h2 style="margin:10px 0 18px;font-family:'Playfair Display',Georgia,serif;font-weight:500;font-size:26px;line-height:1.2">People don't text back thank you. They call you crying.</h2>
+    <div style="padding:18px;border:1px solid var(--line);border-radius:18px;background:var(--soft)">
+      <div class="serif" style="font-size:18px;font-style:italic;line-height:1.45">[REAL RECIPIENT QUOTE — drop in a real one from the archive comments]</div>
+      <div style="margin-top:12px;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--t3)">[Name] · [Occasion]</div>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:18px;align-items:center;justify-content:center;color:var(--t2)">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="4" y="10" width="16" height="10" rx="2.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+      <span style="font-size:12px">Secure checkout by Stripe · Apple Pay &amp; Google Pay</span>
+    </div>
+  </div>
+
+  <div style="padding:44px 18px calc(38px + var(--sab));background:var(--ink);text-align:center">
+    <h2 class="h1" style="margin:0;font-size:28px">Somebody in your phone<br><em style="color:var(--blush)">is waiting to hear it.</em></h2>
+    <button class="btn btn-primary" style="margin-top:22px" data-go="shop">Send a Bloom</button>
+    <div style="margin-top:24px;font-size:11px;letter-spacing:.14em;color:rgba(250,240,236,.25)">© Digital Bloom™ · prototype</div>
+  </div>
+ </div>
+</section>
+
+<!-- ===================== 2 · OCCASIONS ===================== -->
+<section class="screen" id="s-shop">
+ <div class="wrap">
+  <div class="nav">
+    <button class="iconbtn" data-back>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(250,240,236,.85)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
+    </button>
+    <div class="brand" style="flex:1">Occasions</div>
+  </div>
+  <div class="sectionhead">
+    <h2 style="font-size:30px;margin-top:0">Occasions</h2>
+    <p id="shopSub">Loading your catalog…</p>
+  </div>
+  <div class="grid" id="catGrid"></div>
+  <div style="height:calc(30px + var(--sab))"></div>
+ </div>
+</section>
+
+<!-- ===================== 3 · RECIPIENTS ===================== -->
+<section class="screen" id="s-recipients">
+ <div class="wrap">
+  <div class="nav" style="align-items:flex-start;padding-bottom:0;flex-direction:column;gap:0">
+    <div style="display:flex;align-items:center;gap:12px;width:100%">
+      <button class="iconbtn" data-back>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(250,240,236,.85)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
+      </button>
+      <div>
+        <div style="font-family:'Playfair Display',Georgia,serif;font-size:19px" id="recTitle">Category</div>
+        <div style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:rgba(250,240,236,.45)" id="recCount">—</div>
+      </div>
+    </div>
+    <div class="rail" id="recChips" style="padding:14px 0 12px;margin:0 -18px;width:calc(100% + 36px);padding-left:18px;padding-right:18px"></div>
+  </div>
+  <div class="sectionhead" style="padding-bottom:8px">
+    <h2 id="recSelLabel" style="font-size:25px;margin-top:0">Everyone</h2>
+    <p id="recSelCount">—</p>
+  </div>
+  <div class="grid" id="recGrid"></div>
+  <div style="height:calc(30px + var(--sab))"></div>
+ </div>
+</section>
+
+<!-- ===================== 4 · PRODUCT ===================== -->
+<section class="screen" id="s-product">
+ <div class="wrap" style="background:var(--ink)">
+  <div style="position:relative;aspect-ratio:3/4;background:#000">
+    <video id="pdVideo" playsinline preload="auto" style="width:100%;height:100%;object-fit:cover"></video>
+    <div style="position:absolute;top:calc(12px + var(--sat));left:14px;right:14px;display:flex;justify-content:space-between">
+      <button class="iconbtn" data-back style="background:rgba(6,13,24,.5)">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
+      </button>
+      <button class="iconbtn" id="pdSound" style="background:rgba(6,13,24,.5)">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H3v6h3l5 4z"/><path d="M17 9l4 6M21 9l-4 6"/></svg>
+      </button>
+    </div>
+    <button id="pdPlay" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center">
+      <span id="pdPlayIcon" style="width:70px;height:70px;border-radius:50%;background:rgba(6,13,24,.5);border:1px solid rgba(255,255,255,.22);display:flex;align-items:center;justify-content:center">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="#fff"><path d="M8 5l12 7-12 7z"/></svg>
+      </span>
+    </button>
+    <div style="position:absolute;left:14px;right:14px;bottom:14px;pointer-events:none">
+      <div style="height:3px;border-radius:3px;background:rgba(255,255,255,.18);overflow:hidden"><div id="pdBar" style="width:0%;height:100%;background:var(--gold)"></div></div>
+      <div style="display:flex;justify-content:space-between;margin-top:7px;font-size:11px;color:rgba(255,255,255,.55)"><span id="pdCur">0:00</span><span id="pdDur">0:00</span></div>
+    </div>
+  </div>
+
+  <div style="padding:22px 18px 0">
+    <div style="display:flex;gap:8px;flex-wrap:wrap" id="pdTags"></div>
+    <h1 class="h1" style="margin:14px 0 0;font-size:28px" id="pdName">—</h1>
+    <p class="serif" style="margin:11px 0 0;font-size:18px;line-height:1.5;color:rgba(250,240,236,.7)" id="pdDesc"></p>
+  </div>
+
+  <div style="padding:20px 18px 0">
+    <div class="eyebrow">Choose a length</div>
+    <div style="display:flex;flex-direction:column;gap:10px;margin-top:13px" id="pdTiers"></div>
+  </div>
+
+  <div style="position:sticky;bottom:0;margin-top:22px;padding:14px 18px calc(20px + var(--sab));background:linear-gradient(180deg,rgba(7,17,31,0) 0%,var(--ink) 26%)">
+    <button class="btn btn-primary" id="pdBuy">Personalize &amp; send — $4.99</button>
+    <div style="margin-top:9px;text-align:center;font-size:11px;color:rgba(250,240,236,.42)">One screen. No account. Apple Pay ready.</div>
+  </div>
+ </div>
+</section>
+
+<!-- ===================== 5 · PERSONALIZE + PAY ===================== -->
+<section class="screen" id="s-checkout">
+ <div class="wrap" style="background:#fff;color:var(--t1);min-height:100dvh">
+  <div style="display:flex;align-items:center;gap:12px;padding:calc(12px + var(--sat)) 18px 12px;border-bottom:1px solid var(--line-lt);position:sticky;top:0;background:#fff;z-index:40">
+    <button class="iconbtn" data-back style="background:#F5F5F7">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1D1D1F" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
+    </button>
+    <div style="flex:1">
+      <div style="font-family:'Playfair Display',Georgia,serif;font-size:17px">Personalize &amp; send</div>
+      <div style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--t3)">One screen · about 60 seconds</div>
+    </div>
+  </div>
+
+  <div style="padding:16px 18px 0">
+    <div style="position:relative;border-radius:20px;overflow:hidden;aspect-ratio:16/10;background:var(--ink)">
+      <video id="coVideo" muted playsinline loop preload="metadata" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.75"></video>
+      <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(7,17,31,.35),rgba(7,17,31,.75))"></div>
+      <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px;text-align:center">
+        <div style="font-size:9px;font-weight:700;letter-spacing:.24em;text-transform:uppercase;color:rgba(201,168,76,.9)">For</div>
+        <div id="pvName" style="margin-top:5px;font-family:'Playfair Display',Georgia,serif;font-size:26px;color:var(--cream)">Their name</div>
+        <div id="pvMsg" class="serif" style="margin-top:7px;max-width:250px;font-size:15px;font-style:italic;line-height:1.4;color:rgba(250,240,236,.8);white-space:pre-line"></div>
+      </div>
+      <div style="position:absolute;left:12px;bottom:9px;font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.4)">Live preview</div>
+    </div>
+  </div>
+
+  <div style="padding:20px 18px 0;display:flex;flex-direction:column;gap:16px">
+    <div>
+      <label class="label" for="fName">Their name</label>
+      <input class="field" id="fName" type="text" placeholder="Mama Lois" autocomplete="off" enterkeyhint="next">
+      <div class="note">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#B8923F" stroke-width="1.8" stroke-linecap="round" style="flex:none;margin-top:1px"><circle cx="12" cy="12" r="9"/><path d="M12 8v5"/><path d="M12 16h.01"/></svg>
+        <span>Double-check the spelling — it gets engraved on the card in the film.</span>
+      </div>
+    </div>
+    <div>
+      <label class="label" for="fMsg">What you want to say</label>
+      <textarea class="field" id="fMsg" rows="3" maxlength="120" placeholder="You planted everything I am."></textarea>
+      <div style="display:flex;justify-content:space-between;margin-top:6px;font-size:11px;color:var(--t3)">
+        <span>Keep it short — it stays on screen 4 seconds</span><span id="cCount">0 / 120</span>
+      </div>
+    </div>
+    <div>
+      <label class="label" for="fFrom">Signed</label>
+      <input class="field" id="fFrom" type="text" placeholder="Ak" autocomplete="off">
+    </div>
+    <div>
+      <label class="label">How it gets there</label>
+      <div style="display:flex;flex-direction:column;gap:10px;margin-top:10px">
+        <button class="opt sel" data-del="self">
+          <span class="dot"></span>
+          <span style="flex:1">
+            <b style="display:block;font-size:14px;font-weight:600;color:var(--t1)">I'll send it</b>
+            <span style="display:block;margin-top:3px;font-size:12px;line-height:1.4;color:var(--t2)">Opens your Messages with the link ready — arrives from your own number.</span>
+          </span>
+          <span style="font-size:12px;font-weight:600;color:var(--gold-dk)">Free</span>
+        </button>
+        <button class="opt" data-del="us">
+          <span class="dot"></span>
+          <span style="flex:1">
+            <b style="display:block;font-size:14px;font-weight:600;color:var(--t1)">We send it for you</b>
+            <span style="display:block;margin-top:3px;font-size:12px;line-height:1.4;color:var(--t2)">Schedule the exact day and time. We text it to them.</span>
+          </span>
+          <span style="font-size:12px;font-weight:600;color:var(--t3)">+$1.00</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin:22px 18px 0;padding:18px;border-radius:20px;background:var(--soft);border:1px solid var(--line-lt)">
+    <div style="display:flex;justify-content:space-between;font-size:14px;color:var(--t2)"><span id="sumLine">Bloom Experience</span><span id="sumPrice">$4.99</span></div>
+    <div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:8px;padding-top:12px;border-top:1px solid var(--line)">
+      <span style="font-size:15px;font-weight:600;color:var(--t1)">Total</span>
+      <span id="sumTotal" style="font-family:'Playfair Display',Georgia,serif;font-size:26px;color:var(--t1)">$4.99</span>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:10px;margin-top:16px">
+      <button class="btn" id="payApple" style="height:54px;border-radius:14px;background:#000;color:#fff;letter-spacing:0;text-transform:none;font-size:16px;font-weight:600">
+        <svg width="17" height="20" viewBox="0 0 17 20" fill="#fff"><path d="M13.6 10.6c0-2.3 1.9-3.4 2-3.5-1.1-1.6-2.8-1.8-3.4-1.8-1.4-.2-2.8.8-3.5.8-.7 0-1.9-.8-3.1-.8-1.6 0-3 .9-3.8 2.4-1.6 2.8-.4 7 1.2 9.3.8 1.1 1.7 2.4 2.9 2.3 1.2 0 1.6-.7 3-.7s1.8.7 3 .7c1.3 0 2.1-1.1 2.8-2.3.9-1.3 1.3-2.6 1.3-2.7 0 0-2.4-.9-2.4-3.7zM11.3 3.8c.6-.8 1.1-1.9 1-3-.9 0-2.1.6-2.8 1.4-.6.7-1.2 1.8-1 2.9 1 .1 2.1-.5 2.8-1.3z"/></svg>
+        Pay
+      </button>
+      <button class="btn" id="payCard" style="height:54px;border-radius:14px;border:1px solid #D2D2D7;background:#fff;color:var(--t1);letter-spacing:0;text-transform:none;font-size:15px;font-weight:600">Pay with card</button>
+    </div>
+  </div>
+  <div style="padding:14px 18px calc(28px + var(--sab));text-align:center;font-size:11px;line-height:1.5;color:var(--t3)">No account. No subscription. Yours to keep forever.</div>
+ </div>
+</section>
+
+<!-- ===================== 6 · DELIVERY ===================== -->
+<section class="screen" id="s-delivery">
+ <div style="position:relative;width:100%;height:100dvh;background:#000;overflow:hidden">
+   <video id="dlVideo" playsinline preload="auto" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover"></video>
+   <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.55) 0%,transparent 26%,transparent 46%,rgba(0,0,0,.82) 100%);pointer-events:none"></div>
+
+   <div style="position:absolute;top:calc(54px + var(--sat));left:24px;right:24px;text-align:center;pointer-events:none">
+     <div style="font-size:10px;font-weight:600;letter-spacing:.28em;text-transform:uppercase;color:rgba(201,168,76,.9)">A bloom for</div>
+     <div id="dlName" style="margin-top:9px;font-family:'Playfair Display',Georgia,serif;font-size:36px;color:var(--cream)">—</div>
+     <div id="dlFrom" style="margin-top:7px;font-size:12px;letter-spacing:.12em;color:rgba(250,240,236,.5)"></div>
+   </div>
+
+   <div id="dlMsg" class="serif" style="position:absolute;left:24px;right:24px;bottom:186px;text-align:center;font-size:23px;font-style:italic;line-height:1.42;color:rgba(250,240,236,.95);pointer-events:none"></div>
+
+   <button class="iconbtn" id="dlReplay" style="position:absolute;top:calc(14px + var(--sat));right:16px;background:rgba(255,255,255,.1)">
+     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(250,240,236,.9)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg>
+   </button>
+   <button class="iconbtn" id="dlSound" style="position:absolute;top:calc(14px + var(--sat));left:16px;background:rgba(255,255,255,.1)">
+     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(250,240,236,.9)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H3v6h3l5 4z"/><path d="M17 9l4 6M21 9l-4 6"/></svg>
+   </button>
+
+   <div style="position:absolute;left:16px;right:16px;bottom:calc(22px + var(--sab));display:flex;flex-direction:column;gap:10px">
+     <div style="display:flex;gap:10px">
+       <button class="btn btn-ghost" id="dlSave" style="height:50px;letter-spacing:.06em;font-size:13px;text-transform:none;backdrop-filter:blur(8px)">
+         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11"/><path d="M8 11l4 4 4-4"/><path d="M5 19h14"/></svg> Save it
+       </button>
+       <button class="btn btn-ghost" id="dlShare" style="height:50px;letter-spacing:.06em;font-size:13px;text-transform:none;backdrop-filter:blur(8px)">
+         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4"/><path d="M8 8l4-4 4 4"/><path d="M5 14v5h14v-5"/></svg> Share
+       </button>
+     </div>
+     <button class="btn btn-primary" style="height:52px;letter-spacing:.16em" data-go="shop">Send one back</button>
+     <div style="text-align:center;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:rgba(250,240,236,.3)">Digital Bloom™ · yours to keep forever</div>
+   </div>
+ </div>
+</section>
+
+<!-- ===================== SHARE SHEET ===================== -->
+<div class="sheet" id="shareSheet">
+  <div class="scrim" data-closesheet></div>
+  <div class="panel">
+    <button class="grab" data-closesheet style="display:block;width:56px;height:22px;padding:9px 9px 9px;background:none;border:0" aria-label="Close">
+      <span style="display:block;width:38px;height:4px;border-radius:4px;background:rgba(255,255,255,.2)"></span>
+    </button>
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:14px">
+      <h2 class="h1" style="margin:0;font-size:24px;flex:1">Let them see your face when you saw it.</h2>
+      <button class="iconbtn" data-closesheet style="flex:none;margin-top:-2px" aria-label="Close">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(250,240,236,.75)" stroke-width="1.8" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+    <p style="margin:9px 0 18px;font-size:13px;line-height:1.5;color:rgba(250,240,236,.58)">Save the bloom, then post it with the caption. Your people find out Digital Bloom exists from you — not an ad.</p>
+
+    <button class="opt" id="stepSave" style="width:100%;background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.09);align-items:center">
+      <span style="flex:none;width:34px;height:34px;display:flex;align-items:center;justify-content:center;border-radius:50%;border:1px solid rgba(201,168,76,.4);color:var(--gold)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11"/><path d="M8 11l4 4 4-4"/><path d="M5 19h14"/></svg>
+      </span>
+      <span style="flex:1">
+        <b style="display:block;font-size:14px;font-weight:600;color:var(--cream)">Save to camera roll</b>
+        <span style="display:block;margin-top:3px;font-size:12px;color:rgba(250,240,236,.5)">The full video, watermark and all</span>
+      </span>
+      <span style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:rgba(250,240,236,.35)">Step 1</span>
+    </button>
+
+    <div style="margin-top:10px;padding:15px;border-radius:16px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09)">
+      <div style="display:flex;align-items:center;gap:13px">
+        <span style="flex:none;width:34px;height:34px;display:flex;align-items:center;justify-content:center;border-radius:50%;border:1px solid rgba(201,168,76,.4);color:var(--gold)">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M15 5H6a2 2 0 0 0-2 2v9"/></svg>
+        </span>
+        <span style="flex:1">
+          <b style="display:block;font-size:14px;font-weight:600;color:var(--cream)">Copy the caption</b>
+          <span style="display:block;margin-top:3px;font-size:12px;color:rgba(250,240,236,.5)">Edit it — it should sound like you</span>
+        </span>
+        <span style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:rgba(250,240,236,.35)">Step 2</span>
+      </div>
+      <textarea id="capText" rows="5" style="width:100%;margin-top:12px;padding:14px;border-radius:12px;background:rgba(0,0,0,.28);border:1px solid rgba(255,255,255,.07);font-family:'Cormorant Garamond',Georgia,serif;font-size:16px;font-style:italic;line-height:1.5;color:rgba(250,240,236,.88);outline:none;resize:vertical"></textarea>
+      <button class="btn btn-ghost" id="copyCap" style="margin-top:12px;height:48px">Copy caption</button>
+    </div>
+
+    <div style="display:flex;gap:10px;margin-top:14px" id="shareTargets"></div>
+
+    <div style="margin-top:16px;padding:16px;border-radius:18px;border:1px solid rgba(201,168,76,.3);background:linear-gradient(180deg,rgba(201,168,76,.11) 0%,rgba(255,255,255,.02) 100%)">
+      <div class="eyebrow">Pass it on</div>
+      <div style="margin-top:6px;font-family:'Playfair Display',Georgia,serif;font-size:18px;color:var(--cream)">Somebody gave you yours. Who's next?</div>
+      <button class="btn btn-primary" style="height:50px;margin-top:13px;letter-spacing:.16em" data-go="shop" data-closesheet>Send a bloom back</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+"use strict";
+const SB   = "https://yhdbeblowolfinxxhsnt.supabase.co";
+const ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InloZGJlYmxvd29sZmlueHhoc250Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjkyNjA0NjMsImV4cCI6MjA4NDgzNjQ2M30.DGIJ5FSr2M4wBi3eQ5rjC0jx3CVS4pEcJe1PMOSR0yM";
+
+/* ---- 21 shipped categories consolidated to 10 ---- */
+const GROUPS = [
+  { key:'mothers-day',  name:"Mother's Day",       src:['mothers-day'],                          wash:'linear-gradient(150deg,#3a1f3c,#c9857a)' },
+  { key:'fathers-day',  name:"Father's Day",       src:['fathers-day'],                          wash:'linear-gradient(150deg,#10294d,#2980b9)' },
+  { key:'birthday',     name:'Birthday',           src:['birthday'],                             wash:'linear-gradient(150deg,#2b2410,#c9a84c)' },
+  { key:'thank-you',    name:'Thank You',          src:['thank-you','acknowledgement'],          wash:'linear-gradient(150deg,#10291f,#27ae60)' },
+  { key:'love',         name:'Love & Anniversary', src:['love','valentine','anniversary','wedding'], wash:'linear-gradient(150deg,#3d1020,#ff3b7f)' },
+  { key:'graduation',   name:'Graduation',         src:['graduation'],                           wash:'linear-gradient(150deg,#1d1a2e,#9b59b6)' },
+  { key:'sympathy',     name:'Sympathy',           src:['sympathy','grief','memorial-day'],      wash:'linear-gradient(150deg,#16211f,#8db4a5)' },
+  { key:'celebration',  name:'Congratulations',    src:['celebration','sports'],                 wash:'linear-gradient(150deg,#2a1c0f,#f39c12)' },
+  { key:'friendship',   name:'Friendship',         src:['friendship','encouragement'],           wash:'linear-gradient(150deg,#2d1710,#ff8c42)' },
+  { key:'holidays',     name:'Holidays',           src:['holidays','christmas','womens-day','zodiac','luxury','signature-stories'], wash:'linear-gradient(150deg,#1a1010,#c0392b)' },
+];
+const TIERS = [
+  { id:'single',     name:'Single Bloom',     desc:'8–10 seconds · one scene',            price:1.99, pop:false },
+  { id:'experience', name:'Bloom Experience', desc:'25–35 seconds · multi-scene story',   price:4.99, pop:true  },
+  { id:'premium',    name:'Premium Bloom',    desc:'35–45 seconds · full cinematic',      price:9.99, pop:false },
+];
+const STEPS = [
+  ["Pick who it's for","Mom, your brother, the coach who showed up. We sort by the relationship, not the holiday."],
+  ["Write the part you mean","Their name is engraved on the card inside the film. One screen, then pay."],
+  ["It arrives from your own number","We open your Messages with the link ready. They tap it and the bloom takes over their screen."],
+];
+
+const $  = (s,r)=> (r||document).querySelector(s);
+const $$ = (s,r)=> Array.from((r||document).querySelectorAll(s));
+const esc = s => String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const titleize = s => String(s||'').replace(/-/g,' ').replace(/\b\w/g,c=>c.toUpperCase())
+  .replace(/\bFor\b /,'For ').replace(/\bMy\b/,'My');
+const fmt = n => '$'+Number(n).toFixed(2);
+const time = t => { t=Math.max(0,t|0); return Math.floor(t/60)+':'+String(t%60).padStart(2,'0'); };
+
+const state = { products:[], byGroup:{}, group:null, sub:null, product:null, tier:'experience',
+                del:'self', name:'', msg:'', from:'', stack:[] };
+
+/* ---------- toast ---------- */
+let tT;
+function toast(msg){ const t=$('#toast'); t.textContent=msg; t.classList.add('on');
+  clearTimeout(tT); tT=setTimeout(()=>t.classList.remove('on'),2400); }
+
+/* ---------- navigation ---------- */
+function show(id,push){
+  $$('.screen').forEach(s=>s.classList.remove('on'));
+  const el = document.getElementById('s-'+id);
+  if(!el) return;
+  el.classList.add('on');
+  window.scrollTo(0,0);
+  if(push!==false) state.stack.push(id);
+  // pause any video not on screen
+  $$('video').forEach(v=>{ if(!el.contains(v)) { try{v.pause();}catch(e){} } });
+}
+function back(){
+  state.stack.pop();
+  const prev = state.stack[state.stack.length-1] || 'landing';
+  show(prev,false);
+}
+document.addEventListener('click', e=>{
+  const go = e.target.closest('[data-go]');
+  if(go){ const dest = go.dataset.go; if(dest==='shop') renderCats(); show(dest); }
+  if(e.target.closest('[data-back]')) back();
+  if(e.target.closest('[data-closesheet]')) $('#shareSheet').classList.remove('on');
+});
+
+/* ---------- data ---------- */
+async function load(){
+  const url = SB+'/rest/v1/products?select=id,name,description,category,subcategory,video_url,thumbnail_url,price,tier'
+            + '&is_active=eq.true&video_url=not.is.null&order=created_at.desc&limit=1000';
+  const r = await fetch(url,{headers:{apikey:ANON,Authorization:'Bearer '+ANON}});
+  if(!r.ok) throw new Error('HTTP '+r.status);
+  state.products = await r.json();
+  const map = {};
+  GROUPS.forEach(g=>{ map[g.key] = state.products.filter(p=> g.src.includes(p.category)); });
+  state.byGroup = map;
+}
+
+/* ---------- tiles ---------- */
+function tile(p){
+  const g = GROUPS.find(x=>x.src.includes(p.category));
+  const poster = p.thumbnail_url ? `<img src="${esc(p.thumbnail_url)}" alt="" loading="lazy">`
+    : `<video src="${esc(p.video_url)}#t=1" preload="metadata" muted playsinline></video>`;
+  return `<button class="tile" data-pid="${esc(p.id)}" style="background:${g?g.wash:'var(--navy-mid)'}">
+      ${poster}<div class="veil"></div>
+      <div class="cap"><b>${esc(p.name)}</b><span>${esc(titleize(p.subcategory||''))}</span></div>
+    </button>`;
+}
+
+function renderLanding(){
+  $('#steps').innerHTML = STEPS.map((s,i)=>`
+    <div style="display:flex;gap:14px;align-items:flex-start;padding:16px;border-radius:18px;background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.06)">
+      <div style="flex:none;width:30px;height:30px;border-radius:50%;border:1px solid rgba(201,168,76,.4);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--gold)">${i+1}</div>
+      <div><div style="font-size:15px;font-weight:600;color:var(--cream)">${esc(s[0])}</div>
+      <div style="margin-top:4px;font-size:13px;line-height:1.5;color:rgba(250,240,236,.6)">${esc(s[1])}</div></div>
+    </div>`).join('');
+
+  const top = GROUPS.filter(g=> (state.byGroup[g.key]||[]).length).slice(0,4);
+  $('#landingCats').innerHTML = top.map(g=>catTile(g)).join('');
+  $('#occSub').textContent = GROUPS.filter(g=>(state.byGroup[g.key]||[]).length).length
+    + ' occasions · ' + state.products.length + ' blooms ready to send';
+
+  // hero video = a real mother's-day bloom
+  const pool = (state.byGroup['mothers-day']||[]).concat(state.byGroup['birthday']||[]);
+  const hero = pool[0];
+  if(hero){
+    const v=$('#heroVideo'); v.src=hero.video_url; v.load();
+    v.play().catch(()=>{});
+    $('#heroTag').textContent = titleize(hero.subcategory||hero.category);
+    $('#watchFirst').onclick = ()=> openProduct(hero.id);
+  }
+}
+function catTile(g){
+  const items = state.byGroup[g.key]||[];
+  const subs = new Set(items.map(p=>p.subcategory).filter(Boolean));
+  const lead = items.find(p=>p.thumbnail_url) || items[0];
+  const media = lead ? (lead.thumbnail_url
+      ? `<img src="${esc(lead.thumbnail_url)}" alt="" loading="lazy">`
+      : `<video src="${esc(lead.video_url)}#t=1" preload="metadata" muted playsinline></video>`) : '';
+  return `<button class="tile" data-gkey="${esc(g.key)}">
+      <div style="position:absolute;inset:0;background:${g.wash}"></div>${media}
+      <div class="veil"></div>
+      <div class="cap"><b>${esc(g.name)}</b><span>${items.length} blooms · ${subs.size} recipients</span></div>
+    </button>`;
+}
+function renderCats(){
+  const live = GROUPS.filter(g=>(state.byGroup[g.key]||[]).length);
+  $('#catGrid').innerHTML = live.map(catTile).join('');
+  $('#shopSub').textContent = live.length+' occasions · every one opens into the people inside it.';
+}
+
+/* ---------- recipients ---------- */
+function openGroup(key){
+  const g = GROUPS.find(x=>x.key===key); if(!g) return;
+  state.group = g; state.sub = null;
+  const items = state.byGroup[key]||[];
+  const counts = {};
+  items.forEach(p=>{ const s=p.subcategory||'other'; counts[s]=(counts[s]||0)+1; });
+  const subs = Object.keys(counts).sort((a,b)=>counts[b]-counts[a]);
+
+  $('#recTitle').textContent = g.name;
+  $('#recCount').textContent = subs.length+' recipients · '+items.length+' blooms';
+  $('#recChips').innerHTML = ['__all'].concat(subs).map(s=>
+    `<button class="chip${s==='__all'?' sel':''}" data-sub="${esc(s)}">${s==='__all'?'Everyone':esc(titleize(s))}</button>`).join('');
+  paintRec();
+  show('recipients');
+}
+function paintRec(){
+  const items = state.byGroup[state.group.key]||[];
+  const list = state.sub ? items.filter(p=>(p.subcategory||'other')===state.sub) : items;
+  $('#recSelLabel').textContent = state.sub ? titleize(state.sub) : 'Everyone';
+  $('#recSelCount').textContent = list.length+' bloom'+(list.length===1?'':'s');
+  $('#recGrid').innerHTML = list.slice(0,60).map(p=>tile(p)).join('')
+    || `<div style="grid-column:1/-1;padding:40px 0;text-align:center;color:rgba(250,240,236,.45)">Nothing here yet.</div>`;
+}
+
+/* ---------- product ---------- */
+function openProduct(id){
+  const p = state.products.find(x=>x.id===id); if(!p) return;
+  state.product = p; state.tier='experience';
+  $('#pdName').textContent = p.name;
+  $('#pdDesc').textContent = p.description || 'A sealed card opens, their name in gold, and the whole screen fills until there is nothing left but the flowers and what you wrote.';
+  const g = GROUPS.find(x=>x.src.includes(p.category));
+  $('#pdTags').innerHTML =
+    `<span style="padding:6px 12px;border:1px solid rgba(201,168,76,.35);border-radius:999px;font-size:9px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--gold)">${esc(g?g.name:p.category)}</span>`
+  + (p.subcategory?`<span style="padding:6px 12px;border:1px solid rgba(255,255,255,.14);border-radius:999px;font-size:9px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:rgba(250,240,236,.62)">${esc(titleize(p.subcategory))}</span>`:'');
+  paintTiers();
+  const v=$('#pdVideo'); v.src=p.video_url; v.muted=true; v.load();
+  v.play().then(()=>setPlayIcon(true)).catch(()=>setPlayIcon(false));
+  show('product');
+}
+function paintTiers(){
+  $('#pdTiers').innerHTML = TIERS.map(t=>{
+    const sel = state.tier===t.id;
+    return `<button data-tier="${t.id}" style="display:flex;align-items:center;gap:14px;min-height:44px;padding:16px;border-radius:18px;text-align:left;
+      border:1px solid ${sel?'var(--gold)':'rgba(255,255,255,.1)'};background:${sel?'rgba(201,168,76,.12)':'rgba(255,255,255,.035)'}">
+      <span style="flex:1">
+        <span style="display:flex;align-items:center;gap:8px">
+          <b style="font-size:15px;font-weight:600;color:var(--cream)">${t.name}</b>
+          ${t.pop?'<span style="padding:3px 9px;border-radius:999px;background:rgba(201,168,76,.18);font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gold)">Most sent</span>':''}
+        </span>
+        <span style="display:block;margin-top:4px;font-size:12px;color:rgba(250,240,236,.55)">${t.desc}</span>
+      </span>
+      <b style="font-size:17px;font-weight:700;color:${sel?'var(--gold)':'rgba(250,240,236,.72)'}">${fmt(t.price)}</b>
+    </button>`;}).join('');
+  $('#pdBuy').textContent = 'Personalize & send — '+fmt(TIERS.find(t=>t.id===state.tier).price);
+}
+function setPlayIcon(playing){
+  $('#pdPlayIcon').style.opacity = playing ? '0' : '1';
+}
+
+/* ---------- checkout ---------- */
+function openCheckout(){
+  const p = state.product; if(!p) return;
+  const v=$('#coVideo'); v.src=p.video_url; v.load(); v.play().catch(()=>{});
+  paintSummary(); show('checkout');
+}
+function paintSummary(){
+  const t = TIERS.find(x=>x.id===state.tier);
+  const extra = state.del==='us' ? 1 : 0;
+  $('#sumLine').textContent = t.name;
+  $('#sumPrice').textContent = fmt(t.price);
+  $('#sumTotal').textContent = fmt(t.price+extra);
+}
+
+/* ---------- delivery ---------- */
+function openDelivery(){
+  const p = state.product; if(!p) return;
+  $('#dlName').textContent = state.name || 'Mama Lois';
+  $('#dlFrom').textContent = state.from ? 'from '+state.from : '';
+  $('#dlMsg').textContent  = state.msg ? '"'+state.msg+'"' : '';
+  const v=$('#dlVideo'); v.src=p.video_url; v.muted=false; v.load();
+  v.play().catch(()=>{ v.muted=true; v.play().catch(()=>{}); });
+  $('#capText').value =
+    (state.name||'Somebody')+" just got this from "+(state.from||'me')+" and I am NOT okay.\n\n"
+    +"It's called a Digital Bloom — give people their flowers while they're still here to see them. "
+    +"I'm challenging 3 of you to send one today. digitalbloom.store";
+  show('delivery');
+}
+
+/* ---------- events ---------- */
+document.addEventListener('click', e=>{
+  const g = e.target.closest('[data-gkey]');   if(g){ openGroup(g.dataset.gkey); return; }
+  const t = e.target.closest('[data-pid]');    if(t){ openProduct(t.dataset.pid); return; }
+  const c = e.target.closest('[data-sub]');    if(c){
+    state.sub = c.dataset.sub==='__all' ? null : c.dataset.sub;
+    $$('#recChips .chip').forEach(x=>x.classList.toggle('sel', x===c));
+    paintRec(); return; }
+  const tr = e.target.closest('[data-tier]');  if(tr){ state.tier=tr.dataset.tier; paintTiers(); return; }
+  const d = e.target.closest('[data-del]');    if(d){
+    state.del=d.dataset.del;
+    $$('[data-del]').forEach(x=>x.classList.toggle('sel', x===d));
+    paintSummary(); return; }
+});
+
+$('#pdBuy').onclick = openCheckout;
+$('#pdPlay').onclick = ()=>{ const v=$('#pdVideo');
+  if(v.paused){ v.play(); setPlayIcon(true); } else { v.pause(); setPlayIcon(false); } };
+$('#pdSound').onclick = ()=>{ const v=$('#pdVideo'); v.muted=!v.muted; toast(v.muted?'Sound off':'Sound on'); };
+$('#pdVideo').addEventListener('timeupdate', ()=>{ const v=$('#pdVideo');
+  if(v.duration){ $('#pdBar').style.width=(v.currentTime/v.duration*100)+'%';
+    $('#pdCur').textContent=time(v.currentTime); $('#pdDur').textContent=time(v.duration); } });
+$('#pdVideo').addEventListener('ended', ()=>setPlayIcon(false));
+
+$('#heroSound').onclick = ()=>{ const v=$('#heroVideo'); v.muted=!v.muted; if(!v.muted) v.play().catch(()=>{}); toast(v.muted?'Sound off':'Sound on'); };
+
+const fName=$('#fName'), fMsg=$('#fMsg'), fFrom=$('#fFrom');
+fName.addEventListener('input', ()=>{ state.name=fName.value; $('#pvName').textContent = state.name || 'Their name'; });
+fMsg.addEventListener('input', ()=>{ state.msg=fMsg.value; $('#pvMsg').textContent = state.msg;
+  $('#cCount').textContent = state.msg.length+' / 120'; });
+fFrom.addEventListener('input', ()=>{ state.from=fFrom.value; });
+
+function pay(){
+  if(!state.name.trim()){ fName.focus(); toast('Who is it for?'); return; }
+  toast('Paid — building their bloom…');
+  setTimeout(openDelivery, 900);
+}
+$('#payApple').onclick = pay;
+$('#payCard').onclick  = pay;
+
+$('#dlReplay').onclick = ()=>{ const v=$('#dlVideo'); v.currentTime=0; v.play().catch(()=>{}); };
+$('#dlSound').onclick  = ()=>{ const v=$('#dlVideo'); v.muted=!v.muted; if(!v.muted) v.play().catch(()=>{}); toast(v.muted?'Sound off':'Sound on'); };
+$('#dlShare').onclick  = ()=> $('#shareSheet').classList.add('on');
+$('#dlSave').onclick   = ()=>{ if(state.product) window.open(state.product.video_url,'_blank'); toast('Opening the video — press and hold to save'); };
+$('#stepSave').onclick = ()=>{ if(state.product) window.open(state.product.video_url,'_blank'); toast('Press and hold the video to save it'); };
+$('#copyCap').onclick  = async ()=>{
+  try{ await navigator.clipboard.writeText($('#capText').value); }
+  catch(e){ $('#capText').select(); document.execCommand('copy'); }
+  $('#copyCap').textContent='Copied — now open Instagram';
+  $('#copyCap').style.borderColor='var(--gold)'; $('#copyCap').style.color='var(--gold)';
+  toast('Caption copied');
+};
+$('#shareTargets').innerHTML = [
+  ['Instagram','linear-gradient(135deg,#f9ce34,#ee2a7b 50%,#6228d7)'],
+  ['TikTok','linear-gradient(135deg,#25f4ee,#000 50%,#fe2c55)'],
+  ['Messages','linear-gradient(135deg,#5bd75b,#0bbf3c)'],
+  ['More','rgba(255,255,255,.18)'],
+].map(([n,bg])=>`<button data-target="${n}" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:7px;min-height:44px;padding:13px 0;border-radius:14px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09)">
+  <span style="width:22px;height:22px;border-radius:7px;background:${bg}"></span>
+  <span style="font-size:11px;color:rgba(250,240,236,.7)">${n}</span></button>`).join('');
+$('#shareTargets').addEventListener('click', async e=>{
+  const b=e.target.closest('[data-target]'); if(!b) return;
+  const text=$('#capText').value;
+  if(navigator.share){ try{ await navigator.share({text, url:location.origin}); return; }catch(err){} }
+  try{ await navigator.clipboard.writeText(text); toast('Caption copied — open '+b.dataset.target); }
+  catch(err){ toast('Copy the caption above'); }
+});
+
+/* ---------- boot ---------- */
+load().then(()=>{ renderLanding(); renderCats(); })
+      .catch(err=>{ toast('Could not load the catalog'); console.error(err); });
+})();
+</script>
+</body>
+</html>
