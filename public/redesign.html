@@ -573,9 +573,17 @@ const GENERAL_RECIPIENTS = [
     ['employee','Employee'],          ['mechanic','Mechanic'],
     ['teammates','Teammates'],
 ];
+// Gamble 2026-08-20 17:01: "make sure that all of the sub categories are in
+// consistency with the sub categories from the thank you category — they should
+// all be the same." So every category carries the same recipient list.
+// Paired with 17:02: "save the old categories in Akieia's old category list" —
+// the occasion-specific tags that already hold blooms are NOT dropped. Stocked
+// shelves sort first, then the shared roster fills in the rest, so Mother's Day
+// keeps Stepmom / Single Mom / Godmother and still offers the common names.
+// The full original taxonomy is archived at
+// docs/taxonomy/ORIGINAL-CATEGORIES-2026-08-20.md.
 const ROSTER = {};
-['thank-you','celebration','friendship','sympathy']
-  .forEach(k => { ROSTER[k] = GENERAL_RECIPIENTS; });
+GROUPS.forEach(g => { ROSTER[g.key] = GENERAL_RECIPIENTS; });
 const TIERS = [
   { id:'single',     name:'Single Bloom',     desc:'8–10 seconds · one scene',            price:1.99, pop:false },
   { id:'experience', name:'Bloom Experience', desc:'25–35 seconds · multi-scene story',   price:4.99, pop:true  },
