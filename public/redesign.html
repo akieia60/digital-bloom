@@ -540,6 +540,26 @@ const GROUPS = [
   { key:'friendship',   name:'Friendship',         src:['friendship','encouragement'],           wash:'linear-gradient(150deg,#2d1710,#ff8c42)' },
   { key:'holidays',     name:'Holidays',           src:['holidays','christmas','womens-day','zodiac','luxury','signature-stories'], wash:'linear-gradient(150deg,#1a1010,#c0392b)' },
 ];
+/* Gamble's recipient roster — his words, his order. Sent 7/16, 8/9, 8/18
+   and again 8/20 10:33. Shelves show even before a bloom exists for them,
+   so the structure is visible and Monique knows exactly what to render. */
+const ROSTER = {
+  'thank-you': [
+    ['for-dad','For Dad'],            ['for-mom','For Mom'],
+    ['for-sister','Sister'],          ['for-brother','Brother'],
+    ['co-workers','Co-Workers'],      ['for-friend','Friends'],
+    ['girlfriend','Girlfriend'],      ['boyfriend','Boyfriend'],
+    ['husband','Husband'],            ['wife','Wife'],
+    ['fiance','Fiancé'],              ['business-partner','Bus. Partner'],
+    ['teacher','Teacher'],            ['cousin','Cousin'],
+    ['aunt','Aunt'],                  ['uncle','Uncle'],
+    ['grandma','Grandma'],            ['granddad','Granddad'],
+    ['boss','Boss'],                  ['coach','Coaches'],
+    ['police','Police'],              ['fireman','Fireman'],
+    ['employee','Employee'],          ['mechanic','Mechanic'],
+    ['teammates','Teammates'],
+  ],
+};
 const TIERS = [
   { id:'single',     name:'Single Bloom',     desc:'8–10 seconds · one scene',            price:1.99, pop:false },
   { id:'experience', name:'Bloom Experience', desc:'25–35 seconds · multi-scene story',   price:4.99, pop:true  },
@@ -672,12 +692,22 @@ function openGroup(key){
   const items = state.byGroup[key]||[];
   const counts = {};
   items.forEach(p=>{ const s=p.subcategory||'other'; counts[s]=(counts[s]||0)+1; });
-  const subs = Object.keys(counts).sort((a,b)=>counts[b]-counts[a]);
+  const roster = ROSTER[key] || [];
+  state.labels = {};
+  roster.forEach(([slug,label])=>{ state.labels[slug]=label; });
+
+  // stocked shelves first (busiest first), then the empty ones the roster promises
+  const stocked = Object.keys(counts).sort((a,b)=>counts[b]-counts[a]);
+  const empty   = roster.map(r=>r[0]).filter(sl=>!counts[sl]);
+  const subs    = stocked.concat(empty);
 
   $('#recTitle').textContent = g.name;
   $('#recCount').textContent = subs.length+' recipients · '+items.length+' blooms';
-  $('#recChips').innerHTML = ['__all'].concat(subs).map(s=>
-    `<button class="chip${s==='__all'?' sel':''}" data-sub="${esc(s)}">${s==='__all'?'Everyone':esc(titleize(s))}</button>`).join('');
+  $('#recChips').innerHTML = ['__all'].concat(subs).map(sl=>{
+    const label = sl==='__all' ? 'Everyone' : (state.labels[sl] || titleize(sl));
+    const bare  = sl!=='__all' && !counts[sl];
+    return `<button class="chip${sl==='__all'?' sel':''}${bare?' soon':''}" data-sub="${esc(sl)}">${esc(label)}</button>`;
+  }).join('');
   paintRec();
   show('recipients');
   // Gamble 8/20: the pills need to announce themselves or nobody taps them.
@@ -693,10 +723,14 @@ function openGroup(key){
 function paintRec(){
   const items = state.byGroup[state.group.key]||[];
   const list = state.sub ? items.filter(p=>(p.subcategory||'other')===state.sub) : items;
-  $('#recSelLabel').textContent = state.sub ? titleize(state.sub) : 'Everyone';
+  const label = state.sub ? ((state.labels && state.labels[state.sub]) || titleize(state.sub)) : 'Everyone';
+  $('#recSelLabel').textContent = label;
   $('#recSelCount').textContent = list.length+' bloom'+(list.length===1?'':'s');
   $('#recGrid').innerHTML = list.slice(0,60).map(p=>tile(p)).join('')
-    || `<div style="grid-column:1/-1;padding:40px 0;text-align:center;color:rgba(250,240,236,.45)">Nothing here yet.</div>`;
+    || `<div style="grid-column:1/-1;padding:34px 20px;text-align:center;border:1px dashed rgba(255,255,255,.14);border-radius:20px">
+          <div style="font-family:'Playfair Display',Georgia,serif;font-size:19px;color:var(--cream)">${esc(label)} is next up</div>
+          <div style="margin-top:7px;font-size:13px;line-height:1.5;color:rgba(250,240,236,.5)">The shelf is built — the blooms are being made.</div>
+        </div>`;
 }
 
 /* ---------- product ---------- */
