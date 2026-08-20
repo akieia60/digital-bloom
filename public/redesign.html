@@ -98,6 +98,42 @@
     border-top:1px solid rgba(255,255,255,.09);transform:translateY(100%);transition:transform .32s cubic-bezier(.32,.72,0,1)}
   .sheet.on .panel{transform:translateY(0)}
   .grab{margin:0 auto 14px}
+
+  /* ---- hamburger menu ---- */
+  .menu{position:fixed;inset:0;z-index:160;display:none}
+  .menu.on{display:block}
+  .menu .scrim{position:absolute;inset:0;background:rgba(0,0,0,.62);opacity:0;transition:.3s}
+  .menu.on .scrim{opacity:1}
+  .menu .panel{position:absolute;top:0;left:0;bottom:0;width:min(88vw,360px);overflow-y:auto;
+    padding:calc(16px + var(--sat)) 20px calc(28px + var(--sab));background:var(--navy);
+    border-right:1px solid rgba(255,255,255,.09);transform:translateX(-100%);
+    transition:transform .32s cubic-bezier(.32,.72,0,1)}
+  .menu.on .panel{transform:translateX(0)}
+  .menu h3{margin:26px 0 10px;font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold)}
+  .menu a,.menu button.mi{display:flex;align-items:center;justify-content:space-between;gap:10px;
+    width:100%;min-height:48px;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.06);
+    font-size:16px;color:var(--cream);text-decoration:none;text-align:left;background:none}
+  .menu a:active,.menu button.mi:active{color:var(--gold)}
+  .burger{width:44px;height:44px;display:flex;flex-direction:column;justify-content:center;gap:4.5px;
+    align-items:center;flex:none;border-radius:50%}
+  .burger span{display:block;width:19px;height:1.6px;border-radius:2px;background:rgba(250,240,236,.88)}
+
+  /* ---- attention pulse on the recipient pills (3 beats, then rests) ---- */
+  @keyframes beat{0%,100%{transform:scale(1)}50%{transform:scale(1.085)}}
+  .rail.pulse .chip{animation:beat 1.15s ease-in-out 3}
+  .rail.pulse .chip:nth-child(2){animation-delay:.09s}
+  .rail.pulse .chip:nth-child(3){animation-delay:.18s}
+  .rail.pulse .chip:nth-child(4){animation-delay:.27s}
+  .rail.pulse .chip:nth-child(5){animation-delay:.36s}
+  .cue{display:flex;align-items:center;gap:7px;padding:14px 18px 0;font-size:11px;font-weight:700;
+    letter-spacing:.16em;text-transform:uppercase;color:var(--gold)}
+  .cue svg{animation:nudge 1.4s ease-in-out 4}
+  @keyframes nudge{0%,100%{transform:translateX(0)}50%{transform:translateX(4px)}}
+  @media (prefers-reduced-motion: reduce){
+    .rail.pulse .chip,.cue svg{animation:none}
+  }
+  .soon{opacity:.5}
+  .soon::after{content:'soon';margin-left:7px;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:rgba(250,240,236,.45)}
 </style>
 </head>
 <body>
@@ -108,7 +144,8 @@
 <section class="screen on" id="s-landing">
  <div class="wrap">
   <div class="nav">
-    <div class="brand">
+    <button class="burger" data-menu aria-label="Menu"><span></span><span></span><span></span></button>
+    <div class="brand" style="flex:1">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#c9a84c" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 12c0-3 1.8-5.5 4.2-5.5C18 6.5 19 8 19 9.6 19 12 16.4 12 12 12z"/><path d="M12 12c0-3-1.8-5.5-4.2-5.5C6 6.5 5 8 5 9.6 5 12 7.6 12 12 12z"/><path d="M12 12c3 0 5.5 1.8 5.5 4.2 0 1.8-1.5 2.8-3.1 2.8C12 19 12 16.4 12 12z"/><path d="M12 12c-3 0-5.5 1.8-5.5 4.2 0 1.8 1.5 2.8 3.1 2.8C12 19 12 16.4 12 12z"/></svg>
       Digital Bloom
     </div>
@@ -142,7 +179,7 @@
   </div>
 
   <!-- how -->
-  <div style="padding:38px 18px;background:var(--navy-page);border-top:1px solid rgba(255,255,255,.05)">
+  <div id="sec-how" style="padding:38px 18px;background:var(--navy-page);border-top:1px solid rgba(255,255,255,.05)">
     <div class="eyebrow">How it works</div>
     <h2 class="h1" style="margin:10px 0 20px;font-size:26px">Three minutes, start to tears.</h2>
     <div style="display:flex;flex-direction:column;gap:10px" id="steps"></div>
@@ -159,13 +196,17 @@
     <div style="padding:16px 18px 0"><button class="btn btn-gold" data-go="shop">See all occasions</button></div>
   </div>
 
-  <div style="padding:42px 18px;background:#fff;color:var(--t1)">
+  <div id="sec-back" style="padding:42px 18px;background:#fff;color:var(--t1)">
     <div class="eyebrow" style="color:var(--gold-dk)">What comes back</div>
-    <h2 style="margin:10px 0 18px;font-family:'Playfair Display',Georgia,serif;font-weight:500;font-size:26px;line-height:1.2">People don't text back thank you. They call you crying.</h2>
-    <div style="padding:18px;border:1px solid var(--line);border-radius:18px;background:var(--soft)">
-      <div class="serif" style="font-size:18px;font-style:italic;line-height:1.45">[REAL RECIPIENT QUOTE — drop in a real one from the archive comments]</div>
+    <h2 style="margin:10px 0 16px;font-family:'Playfair Display',Georgia,serif;font-weight:500;font-size:26px;line-height:1.2">Digital blooms make some people very emotional.</h2>
+    <p style="margin:0;font-size:16px;line-height:1.65;color:var(--t2)">These are very moving digital cards. People don't text back thanking you. They usually call crying. Tears of joy. The blooms are beautiful and effective. Try one — you'll see.</p>
+    <div style="margin-top:14px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--t3)">— Gamble, co-founder</div>
+
+    <div style="margin-top:22px;padding:18px;border:1px solid var(--line);border-radius:18px;background:var(--soft)">
+      <div class="serif" style="font-size:18px;font-style:italic;line-height:1.45">[REAL RECIPIENT QUOTE — one line from somebody who received one]</div>
       <div style="margin-top:12px;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--t3)">[Name] · [Occasion]</div>
     </div>
+
     <div style="display:flex;gap:8px;margin-top:18px;align-items:center;justify-content:center;color:var(--t2)">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="4" y="10" width="16" height="10" rx="2.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
       <span style="font-size:12px">Secure checkout by Stripe · Apple Pay &amp; Google Pay</span>
@@ -173,8 +214,9 @@
   </div>
 
   <div style="padding:44px 18px calc(38px + var(--sab));background:var(--ink);text-align:center">
-    <h2 class="h1" style="margin:0;font-size:28px">Somebody in your phone<br><em style="color:var(--blush)">is waiting to hear it.</em></h2>
-    <button class="btn btn-primary" style="margin-top:22px" data-go="shop">Send a Bloom</button>
+    <h2 class="h1" style="margin:0;font-size:27px">Someone in your phone<br><em style="color:var(--blush)">deserves to hear from you.</em></h2>
+    <p style="margin:16px auto 0;max-width:330px;font-size:15px;line-height:1.6;color:rgba(250,240,236,.66)">Maybe they love you, miss you, thinking about you, or haven't heard from you in a while. Surprise them with a digital card and flowers — I'm sure they'll love it.</p>
+    <button class="btn btn-primary" style="margin-top:24px" data-go="shop">Send a Bloom</button>
     <div style="margin-top:24px;font-size:11px;letter-spacing:.14em;color:rgba(250,240,236,.25)">© Digital Bloom™ · prototype</div>
   </div>
  </div>
@@ -188,6 +230,7 @@
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(250,240,236,.85)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
     </button>
     <div class="brand" style="flex:1">Occasions</div>
+    <button class="burger" data-menu aria-label="Menu"><span></span><span></span><span></span></button>
   </div>
   <div class="sectionhead">
     <h2 style="font-size:30px;margin-top:0">Occasions</h2>
@@ -211,7 +254,11 @@
         <div style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:rgba(250,240,236,.45)" id="recCount">—</div>
       </div>
     </div>
-    <div class="rail" id="recChips" style="padding:14px 0 12px;margin:0 -18px;width:calc(100% + 36px);padding-left:18px;padding-right:18px"></div>
+    <div class="cue" id="recCue" style="padding:12px 0 0">
+      Choose who it's for
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>
+    </div>
+    <div class="rail" id="recChips" style="padding:12px 0 12px;margin:0 -18px;width:calc(100% + 36px);padding-left:18px;padding-right:18px"></div>
   </div>
   <div class="sectionhead" style="padding-bottom:8px">
     <h2 id="recSelLabel" style="font-size:25px;margin-top:0">Everyone</h2>
@@ -387,6 +434,42 @@
  </div>
 </section>
 
+
+<!-- ===================== HAMBURGER MENU ===================== -->
+<div class="menu" id="menu">
+  <div class="scrim" data-closemenu></div>
+  <div class="panel">
+    <div style="display:flex;align-items:center;justify-content:space-between">
+      <div class="brand">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#c9a84c" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 12c0-3 1.8-5.5 4.2-5.5C18 6.5 19 8 19 9.6 19 12 16.4 12 12 12z"/><path d="M12 12c0-3-1.8-5.5-4.2-5.5C6 6.5 5 8 5 9.6 5 12 7.6 12 12 12z"/><path d="M12 12c3 0 5.5 1.8 5.5 4.2 0 1.8-1.5 2.8-3.1 2.8C12 19 12 16.4 12 12z"/><path d="M12 12c-3 0-5.5 1.8-5.5 4.2 0 1.8 1.5 2.8 3.1 2.8C12 19 12 16.4 12 12z"/></svg>
+        Digital Bloom
+      </div>
+      <button class="iconbtn" data-closemenu aria-label="Close">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(250,240,236,.75)" stroke-width="1.8" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+    <div style="margin-top:6px;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:rgba(250,240,236,.35)">Cinematic Digital Experiences</div>
+
+    <h3>Shop</h3>
+    <button class="mi" data-go="shop" data-closemenu>Occasions <span style="color:rgba(250,240,236,.35);font-size:13px" id="miOccCount"></span></button>
+    <a href="/credits" data-closemenu>Gift credits</a>
+    <a href="/credits/balance" data-closemenu>Check a balance</a>
+
+    <h3 id="understandingTitle">Understanding</h3>
+    <button class="mi" data-scroll="how" data-closemenu>How it works</button>
+    <button class="mi" data-scroll="back" data-closemenu>What comes back</button>
+
+    <h3>Company</h3>
+    <a href="/about" data-closemenu>About</a>
+    <a href="/contact" data-closemenu>Contact</a>
+    <a href="/terms" data-closemenu>Terms</a>
+    <a href="/privacy" data-closemenu>Privacy</a>
+    <a href="/refunds" data-closemenu>Refunds</a>
+
+    <div style="margin-top:26px;font-size:11px;letter-spacing:.14em;color:rgba(250,240,236,.25)">© Digital Bloom™ · prototype</div>
+  </div>
+</div>
+
 <!-- ===================== SHARE SHEET ===================== -->
 <div class="sheet" id="shareSheet">
   <div class="scrim" data-closesheet></div>
@@ -501,11 +584,19 @@ function back(){
   show(prev,false);
 }
 document.addEventListener('click', e=>{
+  if(e.target.closest('[data-menu]')){ $('#menu').classList.add('on'); return; }
+  if(e.target.closest('[data-closemenu]')) $('#menu').classList.remove('on');
+  const sc = e.target.closest('[data-scroll]');
+  if(sc){ const dest=sc.dataset.scroll; show('landing');
+    setTimeout(()=>{ const el=document.getElementById('sec-'+dest);
+      if(el) el.scrollIntoView({behavior:'smooth',block:'start'}); },120); return; }
   const go = e.target.closest('[data-go]');
   if(go){ const dest = go.dataset.go; if(dest==='shop') renderCats(); show(dest); }
   if(e.target.closest('[data-back]')) back();
   if(e.target.closest('[data-closesheet]')) $('#shareSheet').classList.remove('on');
 });
+document.addEventListener('keydown', e=>{ if(e.key==='Escape'){
+  $('#menu').classList.remove('on'); $('#shareSheet').classList.remove('on'); } });
 
 /* ---------- data ---------- */
 async function load(){
@@ -567,6 +658,8 @@ function catTile(g){
     </button>`;
 }
 function renderCats(){
+  const el = $('#miOccCount');
+  if(el) el.textContent = GROUPS.filter(g=>(state.byGroup[g.key]||[]).length).length;
   const live = GROUPS.filter(g=>(state.byGroup[g.key]||[]).length);
   $('#catGrid').innerHTML = live.map(catTile).join('');
   $('#shopSub').textContent = live.length+' occasions · every one opens into the people inside it.';
@@ -587,6 +680,15 @@ function openGroup(key){
     `<button class="chip${s==='__all'?' sel':''}" data-sub="${esc(s)}">${s==='__all'?'Everyone':esc(titleize(s))}</button>`).join('');
   paintRec();
   show('recipients');
+  // Gamble 8/20: the pills need to announce themselves or nobody taps them.
+  // Three beats, then it rests — an always-on animation eats phone battery.
+  const rail = $('#recChips');
+  const seen = +(localStorage.getItem('db_rec_cue') || 0);
+  if(seen < 3){
+    rail.classList.remove('pulse'); void rail.offsetWidth; rail.classList.add('pulse');
+    localStorage.setItem('db_rec_cue', seen + 1);
+    setTimeout(()=>rail.classList.remove('pulse'), 4200);
+  }
 }
 function paintRec(){
   const items = state.byGroup[state.group.key]||[];
@@ -666,6 +768,8 @@ document.addEventListener('click', e=>{
   const g = e.target.closest('[data-gkey]');   if(g){ openGroup(g.dataset.gkey); return; }
   const t = e.target.closest('[data-pid]');    if(t){ openProduct(t.dataset.pid); return; }
   const c = e.target.closest('[data-sub]');    if(c){
+    $('#recChips').classList.remove('pulse');
+    localStorage.setItem('db_rec_cue', 3);
     state.sub = c.dataset.sub==='__all' ? null : c.dataset.sub;
     $$('#recChips .chip').forEach(x=>x.classList.toggle('sel', x===c));
     paintRec(); return; }
