@@ -6,6 +6,7 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY
 );
 
+<<<<<<< Updated upstream
 const VALID_KINDS = new Set(['product', 'render', 'marketing']);
 const VALID_AUTHORS = new Set(['ak', 'gamble', 'david', 'monique', 'aubrey', 'gam', 'linda', 'other']);
 
@@ -24,6 +25,14 @@ function actorFromToken(token) {
 
 function authOk(token) {
   return actorFromToken(token) !== null;
+=======
+const ADMIN_TOKEN = process.env.ADMIN_TOKEN || '';
+const VALID_KINDS = new Set(['product', 'render', 'marketing']);
+const VALID_AUTHORS = new Set(['ak', 'gamble', 'david', 'monique', 'aubrey', 'gam', 'linda', 'other']);
+
+function authOk(token) {
+  return Boolean(ADMIN_TOKEN) && token === ADMIN_TOKEN;
+>>>>>>> Stashed changes
 }
 
 export default async function handler(req, res) {
