@@ -63,7 +63,7 @@ locally any time with `npm run validate-categories`.
 
 Digital Bloom is a **luxury digital gifting platform**. Instead of sending physical flowers, customers send beautifully animated video bouquets ("blooms") for occasions like birthdays, Mother's Day, Valentine's Day, etc.
 
-- **Live site:** digitabloom.com
+- **Live site:** digitalbloom.store  (digitabloom.com is a legacy alternate, NOT production)
 - **GitHub:** github.com/akieia60/digital-bloom
 - **Hosting:** Vercel (auto-deploys when you push to `main` branch)
 - **Business partner / UI feedback:** Gamble (704-605-2509)
@@ -72,7 +72,7 @@ Digital Bloom is a **luxury digital gifting platform**. Instead of sending physi
 - Customers browse by occasion → customize a bloom → pay via Stripe → recipient gets the digital experience
 - **Pricing tiers:** $1.99 / $4.99 / $9.99 / $19.99
 - **Experience Credits:** A gift-card-style system — buy credits, redeem later
-- **IMPORTANT:** Stripe is currently in **sandbox/test mode**. No real money is being charged yet.
+- **IMPORTANT:** Stripe is **LIVE** (confirmed by Ak 2026-09-03). Real money is charged. Lifetime to date: 232 completed orders, $531.40. Treat every checkout change as touching real payments.
 
 ---
 
@@ -202,11 +202,11 @@ digital-bloom/
 - TM symbol on branding throughout
 - Dark sections changed from black to deep navy blue (#0D1B36)
 - Category page text made white/readable on navy background
-- Stripe: sandbox mode, 10 payment methods enabled (not live yet)
+- Stripe: LIVE, 10 payment methods enabled
 - Success page redesigned
 
 ### 🚧 Not done yet
-- Stripe going live (still in test/sandbox mode — needs key swap in Vercel)
+- Repricing: 341 of 351 products are still $1.99 while Stripe tiers define $4.99/$9.99/$19.99. Paid traffic cannot pay back at a $1.00 average order.
 - Google Pay (needs to be toggled on in Stripe dashboard)
 - Category preview videos (need 3–5 second clips for each occasion)
 
@@ -219,7 +219,7 @@ digital-bloom/
 
 ## GAMBLE'S FEEDBACK SYSTEM
 
-Gamble is Ak's business partner who does UI/UX walkthroughs of the live site. When Ak says "Gamble wants X" or shares Gamble's feedback, treat it as a high-priority UI change request. Gamble reviews the live site at **digitabloom.com**.
+Gamble is Ak's business partner who does UI/UX walkthroughs of the live site. When Ak says "Gamble wants X" or shares Gamble's feedback, treat it as a high-priority UI change request. Gamble reviews the live site at **digitalbloom.store**.
 
 ---
 
