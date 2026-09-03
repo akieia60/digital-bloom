@@ -86,7 +86,7 @@ export const vi = {
   cat_general_tagline: "Những bloom đẹp cho mọi khoảnh khắc",
 
   // ─── Stats Bar ───
-  stat_blooms_sent: "Blooms đã gửi",
+  stat_blooms_sent: "Blooms trong Bộ sưu tập",
   stat_categories: "Danh mục",
   stat_languages: "Ngôn ngữ",
   stat_max_experience: "Trải nghiệm tối đa",

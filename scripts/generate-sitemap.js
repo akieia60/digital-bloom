@@ -34,11 +34,23 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const OUT_PATH = path.join(__dirname, '..', 'public', 'sitemap.xml');
 
+// .trim() is load-bearing: a Vercel env var set via `echo ... | vercel env add`
+// carries a trailing newline, which lands *inside* every <loc> tag and makes
+// all URLs invalid. That shipped to production and left the sitemap with zero
+// usable URLs (caught 2026-09-03). Strip whitespace before anything else.
 const BASE_URL = (
   process.env.APP_BASE_URL ||
   process.env.VITE_APP_BASE_URL ||
   'https://digitalbloom.store'
-).replace(/\/$/, '');
+)
+  .trim()
+  .replace(/\/$/, '');
+
+if (!/^https:\/\/[^\s]+$/.test(BASE_URL)) {
+  throw new Error(
+    `generate-sitemap: BASE_URL is not a clean https URL: ${JSON.stringify(BASE_URL)}`
+  );
+}
 
 const STATIC_PATHS = [
   { loc: '/',        priority: '1.0', changefreq: 'weekly' },

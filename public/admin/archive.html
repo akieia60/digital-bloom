@@ -427,12 +427,9 @@ if (!VALID_MODES.has(currentMode)) currentMode = 'renders';
 // Per-target open-feedback counts loaded once per tab change so card
 // badges show the count without N+1 fetches.
 let feedbackCountIndex = {}; // key = `${kind}:${ref}` → number
-<<<<<<< Updated upstream
 let marketingApprovalIndex = {}; // key = filename → true when open feedback has BUFFER_APPROVED marker
 let marketingQueuedIndex = {}; // key = filename → true when open feedback has BUFFER_QUEUED marker
 let lastMarketingItems = [];
-=======
->>>>>>> Stashed changes
 async function loadFeedbackCounts() {
   if (!TOKEN) return;
   try {
@@ -440,7 +437,6 @@ async function loadFeedbackCounts() {
     if (!r.ok) return;
     const j = await r.json();
     const idx = {};
-<<<<<<< Updated upstream
     const approvals = {};
     const queued = {};
     for (const f of j.feedback || []) {
@@ -452,18 +448,12 @@ async function loadFeedbackCounts() {
         queued[f.target_ref] = true;
         continue;
       }
-=======
-    for (const f of j.feedback || []) {
->>>>>>> Stashed changes
       const k = `${f.target_kind}:${f.target_ref}`;
       idx[k] = (idx[k] || 0) + 1;
     }
     feedbackCountIndex = idx;
-<<<<<<< Updated upstream
     marketingApprovalIndex = approvals;
     marketingQueuedIndex = queued;
-=======
->>>>>>> Stashed changes
   } catch {}
 }
 
@@ -476,14 +466,9 @@ function syncUrl() {
 
 function tabs() {
   const el = document.getElementById('cat-tabs');
-<<<<<<< Updated upstream
   const subcatBar = document.getElementById('subcat-bar');
   // Marketing + Feedback aren't keyed off prompt-engine cat. Hide the
   // category strip and subcat bar when in those modes.
-=======
-  // Marketing + Feedback aren't keyed off prompt-engine cat. Hide the
-  // category strip when in those modes.
->>>>>>> Stashed changes
   if (currentMode === 'marketing' || currentMode === 'feedback') {
     el.style.display = 'none';
     subcatBar.classList.add('hidden');
@@ -506,7 +491,6 @@ function tabs() {
   });
 }
 
-<<<<<<< Updated upstream
 // Render the subcategory chip bar for the current category.
 // `counts` is an optional object { [subcatSlug]: number } populated after
 // data loads so chips can show how many items exist in each lane.
@@ -619,8 +603,6 @@ function applySubcatFilter() {
   }
 }
 
-=======
->>>>>>> Stashed changes
 // ── Feedback modal helpers ─────────────────────────────────────────
 let fbContext = null; // { kind, ref, label, thumb_url, video_url }
 
@@ -642,13 +624,10 @@ async function openFb(kind, ref, label, thumbUrl, videoUrl) {
   document.getElementById('fb-sub').textContent = `${kind} · ${ref.slice(0, 40)}`;
   document.getElementById('fb-body').value = '';
   document.getElementById('fb-list').innerHTML = '<div style="color:#7a8fad;font-size:0.8rem;padding:8px 4px">Loading…</div>';
-<<<<<<< Updated upstream
   // Reset Save button state — saveFb's success path doesn't re-enable, so opening
   // a second video would show a stale "Saving…" disabled button. (Ak 2026-05-11)
   const saveBtn = document.getElementById('fb-save');
   if (saveBtn) { saveBtn.disabled = false; saveBtn.textContent = 'Save comment'; }
-=======
->>>>>>> Stashed changes
   document.getElementById('fb-modal').classList.add('show');
   try {
     const r = await fetch(`/api/admin/feedback?token=${encodeURIComponent(TOKEN)}&target_kind=${encodeURIComponent(kind)}&target_ref=${encodeURIComponent(ref)}&limit=50`);
@@ -766,11 +745,7 @@ function feedbackQueue(items) {
   }).join('')}</div>`;
 }
 
-<<<<<<< Updated upstream
 function toast(msg, ok=true, durationMs=2600) {
-=======
-function toast(msg, ok=true) {
->>>>>>> Stashed changes
   const t = document.getElementById('toast');
   t.textContent = msg;
   t.style.background = ok ? '#1f3a1f' : '#3a1010';

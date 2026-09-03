@@ -86,7 +86,7 @@ export const ja = {
   cat_general_tagline: "あらゆる瞬間に美しいブルームを",
 
   // ─── Stats Bar ───
-  stat_blooms_sent: "送られたブルーム",
+  stat_blooms_sent: "コレクションのブルーム",
   stat_categories: "カテゴリー",
   stat_languages: "言語",
   stat_max_experience: "最大体験",

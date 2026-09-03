@@ -55,8 +55,5 @@ service-account*.json
 stripe-product-ids.json
 .env*.local
 .api-keys
-<<<<<<< Updated upstream
 .vercel
-=======
 .git.broken-*
->>>>>>> Stashed changes

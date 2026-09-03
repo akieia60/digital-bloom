@@ -1,51 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-<<<<<<< Updated upstream
     <loc>https://digitalbloom.store/</loc>
     <lastmod>2026-08-18</lastmod>
-=======
-    <loc>https://digitalbloom.com/</loc>
-    <lastmod>2026-05-04</lastmod>
->>>>>>> Stashed changes
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-<<<<<<< Updated upstream
     <loc>https://digitalbloom.store/shop</loc>
     <lastmod>2026-08-18</lastmod>
-=======
-    <loc>https://digitalbloom.com/shop</loc>
-    <lastmod>2026-05-04</lastmod>
->>>>>>> Stashed changes
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-<<<<<<< Updated upstream
     <loc>https://digitalbloom.store/about</loc>
     <lastmod>2026-08-18</lastmod>
-=======
-    <loc>https://digitalbloom.com/about</loc>
-    <lastmod>2026-05-04</lastmod>
->>>>>>> Stashed changes
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-<<<<<<< Updated upstream
     <loc>https://digitalbloom.store/contact</loc>
     <lastmod>2026-08-18</lastmod>
-=======
-    <loc>https://digitalbloom.com/contact</loc>
-    <lastmod>2026-05-04</lastmod>
->>>>>>> Stashed changes
     <changefreq>monthly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
-<<<<<<< Updated upstream
     <loc>https://digitalbloom.store/privacy</loc>
     <lastmod>2026-08-18</lastmod>
     <changefreq>yearly</changefreq>
@@ -66,15 +45,10 @@
   <url>
     <loc>https://digitalbloom.store/shop/mothers-day</loc>
     <lastmod>2026-08-18</lastmod>
-=======
-    <loc>https://digitalbloom.com/shop/mothers-day</loc>
-    <lastmod>2026-05-04</lastmod>
->>>>>>> Stashed changes
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-<<<<<<< Updated upstream
     <loc>https://digitalbloom.store/shop/fathers-day</loc>
     <lastmod>2026-08-18</lastmod>
     <changefreq>weekly</changefreq>
@@ -83,26 +57,16 @@
   <url>
     <loc>https://digitalbloom.store/shop/graduation</loc>
     <lastmod>2026-08-18</lastmod>
-=======
-    <loc>https://digitalbloom.com/shop/fathers-day</loc>
-    <lastmod>2026-05-04</lastmod>
->>>>>>> Stashed changes
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-<<<<<<< Updated upstream
     <loc>https://digitalbloom.store/shop/birthday</loc>
     <lastmod>2026-08-18</lastmod>
-=======
-    <loc>https://digitalbloom.com/shop/graduation</loc>
-    <lastmod>2026-05-04</lastmod>
->>>>>>> Stashed changes
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-<<<<<<< Updated upstream
     <loc>https://digitalbloom.store/shop/anniversary</loc>
     <lastmod>2026-08-18</lastmod>
     <changefreq>weekly</changefreq>
@@ -117,125 +81,70 @@
   <url>
     <loc>https://digitalbloom.store/shop/memorial-day</loc>
     <lastmod>2026-08-18</lastmod>
-=======
-    <loc>https://digitalbloom.com/shop/birthday</loc>
-    <lastmod>2026-05-04</lastmod>
->>>>>>> Stashed changes
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-<<<<<<< Updated upstream
     <loc>https://digitalbloom.store/shop/love</loc>
     <lastmod>2026-08-18</lastmod>
-=======
-    <loc>https://digitalbloom.com/shop/anniversary</loc>
-    <lastmod>2026-05-04</lastmod>
->>>>>>> Stashed changes
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-<<<<<<< Updated upstream
     <loc>https://digitalbloom.store/shop/valentine</loc>
     <lastmod>2026-08-18</lastmod>
-=======
-    <loc>https://digitalbloom.com/shop/love</loc>
-    <lastmod>2026-05-04</lastmod>
->>>>>>> Stashed changes
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-<<<<<<< Updated upstream
     <loc>https://digitalbloom.store/shop/friendship</loc>
     <lastmod>2026-08-18</lastmod>
-=======
-    <loc>https://digitalbloom.com/shop/valentine</loc>
-    <lastmod>2026-05-04</lastmod>
->>>>>>> Stashed changes
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-<<<<<<< Updated upstream
     <loc>https://digitalbloom.store/shop/thank-you</loc>
     <lastmod>2026-08-18</lastmod>
-=======
-    <loc>https://digitalbloom.com/shop/friendship</loc>
-    <lastmod>2026-05-04</lastmod>
->>>>>>> Stashed changes
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-<<<<<<< Updated upstream
     <loc>https://digitalbloom.store/shop/encouragement</loc>
     <lastmod>2026-08-18</lastmod>
-=======
-    <loc>https://digitalbloom.com/shop/thank-you</loc>
-    <lastmod>2026-05-04</lastmod>
->>>>>>> Stashed changes
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-<<<<<<< Updated upstream
     <loc>https://digitalbloom.store/shop/celebration</loc>
     <lastmod>2026-08-18</lastmod>
-=======
-    <loc>https://digitalbloom.com/shop/encouragement</loc>
-    <lastmod>2026-05-04</lastmod>
->>>>>>> Stashed changes
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-<<<<<<< Updated upstream
     <loc>https://digitalbloom.store/shop/sympathy</loc>
     <lastmod>2026-08-18</lastmod>
-=======
-    <loc>https://digitalbloom.com/shop/celebration</loc>
-    <lastmod>2026-05-04</lastmod>
->>>>>>> Stashed changes
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-<<<<<<< Updated upstream
     <loc>https://digitalbloom.store/shop/grief</loc>
     <lastmod>2026-08-18</lastmod>
-=======
-    <loc>https://digitalbloom.com/shop/sympathy</loc>
-    <lastmod>2026-05-04</lastmod>
->>>>>>> Stashed changes
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-<<<<<<< Updated upstream
     <loc>https://digitalbloom.store/shop/luxury</loc>
     <lastmod>2026-08-18</lastmod>
-=======
-    <loc>https://digitalbloom.com/shop/grief</loc>
-    <lastmod>2026-05-04</lastmod>
->>>>>>> Stashed changes
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-<<<<<<< Updated upstream
     <loc>https://digitalbloom.store/shop/zodiac</loc>
     <lastmod>2026-08-18</lastmod>
-=======
-    <loc>https://digitalbloom.com/shop/luxury</loc>
-    <lastmod>2026-05-04</lastmod>
->>>>>>> Stashed changes
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-<<<<<<< Updated upstream
     <loc>https://digitalbloom.store/shop/signature-stories</loc>
     <lastmod>2026-08-18</lastmod>
     <changefreq>weekly</changefreq>
@@ -244,1049 +153,100 @@
   <url>
     <loc>https://digitalbloom.store/shop/acknowledgement</loc>
     <lastmod>2026-08-18</lastmod>
-=======
-    <loc>https://digitalbloom.com/shop/zodiac</loc>
-    <lastmod>2026-05-04</lastmod>
->>>>>>> Stashed changes
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-<<<<<<< Updated upstream
     <loc>https://digitalbloom.store/shop/christmas</loc>
     <lastmod>2026-08-18</lastmod>
-=======
-    <loc>https://digitalbloom.com/shop/signature-stories</loc>
-    <lastmod>2026-05-04</lastmod>
->>>>>>> Stashed changes
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-<<<<<<< Updated upstream
     <loc>https://digitalbloom.store/shop/holidays</loc>
     <lastmod>2026-08-18</lastmod>
-=======
-    <loc>https://digitalbloom.com/shop/acknowledgement</loc>
-    <lastmod>2026-05-04</lastmod>
->>>>>>> Stashed changes
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-<<<<<<< Updated upstream
     <loc>https://digitalbloom.store/product/733b81df-99f9-46f8-8034-3cccf2057862</loc>
     <lastmod>2026-05-17</lastmod>
-=======
-    <loc>https://digitalbloom.com/shop/christmas</loc>
-    <lastmod>2026-05-04</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/shop/holidays</loc>
-    <lastmod>2026-05-04</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/56d9a2cc-837d-481a-a32d-0ef51b78091f</loc>
-    <lastmod>2026-05-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://digitalbloom.com/product/2a756060-b702-47d1-b40f-901a45a5a98a</loc>
-    <lastmod>2026-04-27</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/64cbb1bf-32b5-40fe-8281-4f003480ff88</loc>
-    <lastmod>2026-04-28</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/2193d362-06f9-4494-af44-21638fb1a4cd</loc>
-    <lastmod>2026-05-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/33d20e3f-7b30-4983-a1b1-17991feb8bde</loc>
-    <lastmod>2026-05-01</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/birthday-roses-bloom-v44</loc>
-    <lastmod>2026-03-30</lastmod>
->>>>>>> Stashed changes
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-<<<<<<< Updated upstream
     <loc>https://digitalbloom.store/product/cc4cda96-7fb4-4c88-8edc-ecad583e18d6</loc>
     <lastmod>2026-05-10</lastmod>
-=======
-    <loc>https://digitalbloom.com/product/mothers-day-signature-bloom</loc>
-    <lastmod>2026-04-13</lastmod>
->>>>>>> Stashed changes
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-<<<<<<< Updated upstream
     <loc>https://digitalbloom.store/product/63cadd7b-245f-4ba8-a5fe-f5a1417508ea</loc>
     <lastmod>2026-05-09</lastmod>
-=======
-    <loc>https://digitalbloom.com/product/mothers-day-premium-bloom</loc>
-    <lastmod>2026-02-23</lastmod>
->>>>>>> Stashed changes
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-<<<<<<< Updated upstream
     <loc>https://digitalbloom.store/product/encouragement-sunrise-sunflowers-you-ve-got-this</loc>
-=======
-    <loc>https://digitalbloom.com/product/birthday-rose-garden-v46</loc>
-    <lastmod>2026-03-30</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/valentines-red-rose-v40</loc>
-    <lastmod>2026-03-30</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/mothers-day-classic-bloom-v98</loc>
-    <lastmod>2026-03-30</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/glass-stiletto-rose-i-v38</loc>
-    <lastmod>2026-03-30</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/1c4a2c58-b041-41ce-bb6a-f34b1b502d2a</loc>
-    <lastmod>2026-04-28</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/7af4c010-fbda-49ba-b7d8-6eba4737663a</loc>
-    <lastmod>2026-05-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/valentines-rose-bloom-v15</loc>
-    <lastmod>2026-03-30</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/glass-stiletto-rose-ii-v82</loc>
-    <lastmod>2026-03-30</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/bcb28fe3-1258-46b1-9add-82860b7af6cc</loc>
-    <lastmod>2026-04-28</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/mothers-day-gray-box-pink-roses-v1</loc>
-    <lastmod>2026-04-14</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/29d97082-47da-48ba-a2e1-151ed2b2aa96</loc>
-    <lastmod>2026-04-28</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/23854e86-156b-445f-81cc-1f4ba0fd7b93</loc>
-    <lastmod>2026-04-28</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/e6cb919f-8fee-4656-a41d-0e24f985fe63</loc>
-    <lastmod>2026-04-27</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/mothers-day-balloon-celebration</loc>
-    <lastmod>2026-03-16</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/mothers-day-eternal-love</loc>
-    <lastmod>2026-02-23</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/7b429924-336c-46e3-899c-666b5b16975c</loc>
-    <lastmod>2026-04-28</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/mothers-day-digital-bloom-mothers-day-v1</loc>
-    <lastmod>2026-04-14</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/94f0c18a-9174-46ea-8aa5-ad49dc7552b4</loc>
-    <lastmod>2026-04-27</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/ea455101-5320-456c-86ed-cccdb9c53773</loc>
-    <lastmod>2026-04-28</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/36fcf56a-b061-452c-837f-ade5e5c52a35</loc>
-    <lastmod>2026-05-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/6df10d39-aca0-4a03-a635-b06e7989814f</loc>
-    <lastmod>2026-05-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/memorial-rose-tribute</loc>
-    <lastmod>2026-02-23</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/birthday-rose-transition-v76</loc>
-    <lastmod>2026-03-30</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/e4c3d314-46ee-46c7-8c46-e472b2c6c571</loc>
-    <lastmod>2026-04-27</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/1ce8e626-4c81-43d5-9d30-8ec3ac565956</loc>
-    <lastmod>2026-04-28</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/edab6452-94be-483e-a470-08d83bcd23e1</loc>
-    <lastmod>2026-04-28</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/i-love-you-rose-bloom</loc>
-    <lastmod>2026-02-23</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/i-love-you-rose-bloom-2</loc>
-    <lastmod>2026-02-23</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/mothers-day-nine-rose-bouquets-changing-colors-v1</loc>
-    <lastmod>2026-04-14</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/mothers-day-pink-balloons-pink-roses-v1</loc>
-    <lastmod>2026-04-14</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/mothers-day-pink-roses-v1</loc>
-    <lastmod>2026-04-14</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/mothers-day-purple-box-beautiful-bouquet-v1</loc>
-    <lastmod>2026-04-14</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/birthday-birthday-card-rolls-as-balloons-v1</loc>
-    <lastmod>2026-04-14</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/birthday-birthday-card-roses-balloons-v1</loc>
-    <lastmod>2026-04-14</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/birthday-roses-transition-v2</loc>
-    <lastmod>2026-04-14</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/35c2cf3e-cd6e-40c5-b006-93bac247b417</loc>
-    <lastmod>2026-04-27</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/friendship-thinking-of-you-white-orchids-white-roses-v1</loc>
-    <lastmod>2026-04-14</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/sports-basketball-bloom-v1</loc>
-    <lastmod>2026-04-14</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/sports-basketball-boom-into-heart-v1</loc>
-    <lastmod>2026-04-14</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/sports-basketball-boom-v1</loc>
-    <lastmod>2026-04-14</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/valentines-red-and-pink-with-balloons-v1</loc>
-    <lastmod>2026-04-14</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/a7ac1152-7a1e-4b29-894d-db738fe81d48</loc>
-    <lastmod>2026-04-27</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/sports-basketball-into-a-heart-v1</loc>
-    <lastmod>2026-04-14</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/luxury-bloom-v1</loc>
-    <lastmod>2026-04-14</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/luxury-pink-roses-white-orchids-stiletto-v1</loc>
-    <lastmod>2026-04-14</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/c729b7ab-a5a7-48be-ad8a-4d08d4ad537f</loc>
-    <lastmod>2026-04-27</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/4b285384-28bf-4d29-8a8b-5954d4566c43</loc>
-    <lastmod>2026-04-27</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/luxury-red-roses-and-jewelry-v1</loc>
-    <lastmod>2026-04-14</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/womens-day-purple-box-beautiful-bouquet-bloom-v1</loc>
-    <lastmod>2026-04-14</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/056c1124-c9da-40b4-b747-25a00d27fc41</loc>
-    <lastmod>2026-04-27</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/mothers-day-spring-garden-morning</loc>
->>>>>>> Stashed changes
     <lastmod>2026-04-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-<<<<<<< Updated upstream
     <loc>https://digitalbloom.store/product/i-love-you-rose-bloom</loc>
     <lastmod>2026-05-24</lastmod>
-=======
-    <loc>https://digitalbloom.com/product/birthday-balloon-celebration</loc>
-    <lastmod>2026-04-17</lastmod>
->>>>>>> Stashed changes
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-<<<<<<< Updated upstream
     <loc>https://digitalbloom.store/product/mothers-day-premium-bloom</loc>
     <lastmod>2026-05-24</lastmod>
-=======
-    <loc>https://digitalbloom.com/product/birthday-birthday-wish-the-dandelion-dream</loc>
-    <lastmod>2026-04-17</lastmod>
->>>>>>> Stashed changes
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-<<<<<<< Updated upstream
     <loc>https://digitalbloom.store/product/mothers-day-signature-bloom</loc>
     <lastmod>2026-05-24</lastmod>
-=======
-    <loc>https://digitalbloom.com/product/2d20ad0c-2985-4aa6-afea-74cb1a382850</loc>
-    <lastmod>2026-04-27</lastmod>
->>>>>>> Stashed changes
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-<<<<<<< Updated upstream
     <loc>https://digitalbloom.store/product/db6b0dfd-e7ca-4bae-a0e2-9d2a29ee28ea</loc>
     <lastmod>2026-05-09</lastmod>
-=======
-    <loc>https://digitalbloom.com/product/mothers-day-a-love-that-never-fades</loc>
-    <lastmod>2026-04-17</lastmod>
->>>>>>> Stashed changes
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-<<<<<<< Updated upstream
     <loc>https://digitalbloom.store/product/4cac22a1-ea41-44de-8ba6-63d72b75b47f</loc>
     <lastmod>2026-05-18</lastmod>
-=======
-    <loc>https://digitalbloom.com/product/mothers-day-golden-sunset-bloom</loc>
-    <lastmod>2026-04-17</lastmod>
->>>>>>> Stashed changes
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-<<<<<<< Updated upstream
     <loc>https://digitalbloom.store/product/33d20e3f-7b30-4983-a1b1-17991feb8bde</loc>
     <lastmod>2026-05-09</lastmod>
-=======
-    <loc>https://digitalbloom.com/product/encouragement-sunrise-sunflowers-you-ve-got-this</loc>
-    <lastmod>2026-04-17</lastmod>
->>>>>>> Stashed changes
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-<<<<<<< Updated upstream
     <loc>https://digitalbloom.store/product/19515ca2-d4e5-43f1-849f-6359596f2675</loc>
     <lastmod>2026-05-09</lastmod>
-=======
-    <loc>https://digitalbloom.com/product/fbf4619f-33d8-45c7-9b7c-65c2f10edecd</loc>
-    <lastmod>2026-04-27</lastmod>
->>>>>>> Stashed changes
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-<<<<<<< Updated upstream
     <loc>https://digitalbloom.store/product/glass-stiletto-rose-ii-v82</loc>
     <lastmod>2026-05-24</lastmod>
-=======
-    <loc>https://digitalbloom.com/product/sympathy-white-orchids-with-sympathy</loc>
-    <lastmod>2026-04-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://digitalbloom.com/product/80168e06-d249-4186-a0e3-2342d638fa77</loc>
-    <lastmod>2026-04-28</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/dc2cfecf-0b99-4fad-932e-3ad85fc26460</loc>
-    <lastmod>2026-04-27</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/6bb24883-ea8c-4c98-910a-281f502e0129</loc>
-    <lastmod>2026-04-28</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/signature-stories-md-01-everything-i-am</loc>
-    <lastmod>2026-04-18</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/f15f2284-d353-41c3-af9a-b111a19074bb</loc>
-    <lastmod>2026-05-01</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/ss-md-02</loc>
-    <lastmod>2026-04-18</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/v2-289</loc>
-    <lastmod>2026-04-18</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/ss-md-03</loc>
-    <lastmod>2026-04-18</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/ss-md-04</loc>
-    <lastmod>2026-04-18</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/ss-md-05</loc>
-    <lastmod>2026-04-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/ss-bd-01</loc>
-    <lastmod>2026-04-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/ss-bd-02</loc>
-    <lastmod>2026-04-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/graduation-the-scholar-s-bloom-graduation-ascent</loc>
-    <lastmod>2026-04-17</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/f8a6e9d4-bab7-438e-b678-f45611d11469</loc>
-    <lastmod>2026-04-27</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/bday-2</loc>
-    <lastmod>2026-04-20</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/bday-3</loc>
-    <lastmod>2026-04-20</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/v2-216</loc>
-    <lastmod>2026-04-22</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/v2-214</loc>
-    <lastmod>2026-04-22</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/v2-215</loc>
-    <lastmod>2026-04-22</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/v2-212</loc>
-    <lastmod>2026-04-22</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/v2-210</loc>
-    <lastmod>2026-04-20</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/v2-213</loc>
-    <lastmod>2026-04-22</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/md-1</loc>
-    <lastmod>2026-04-20</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/fd-2</loc>
-    <lastmod>2026-04-22</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/2b850358-c8bb-4f99-9591-b77dc95b9873</loc>
-    <lastmod>2026-04-27</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/b5a4c05f-1ad7-4adb-a243-930a5793f118</loc>
-    <lastmod>2026-04-27</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/1bc1daf0-3487-4c46-b992-f981c1e13e81</loc>
-    <lastmod>2026-04-28</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/1f3975de-e96c-4610-8de2-2c1a15138fae</loc>
-    <lastmod>2026-05-01</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/f5850929-99f9-42ba-babb-75769919c876</loc>
-    <lastmod>2026-05-01</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/371c5729-9929-45fc-b0dc-b3cb58f0edf8</loc>
-    <lastmod>2026-05-01</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/3e64371a-d2bc-4fc5-8444-ffb6e1906c73</loc>
-    <lastmod>2026-05-01</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/19515ca2-d4e5-43f1-849f-6359596f2675</loc>
-    <lastmod>2026-04-27</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/30d9ac8a-166e-4b91-915c-ef8812d5c251</loc>
-    <lastmod>2026-04-28</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/aa46e5db-2b20-4bd9-a262-9264eed3436e</loc>
-    <lastmod>2026-04-28</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/a8800141-15d4-4515-8378-01666bb8cf4d</loc>
-    <lastmod>2026-04-28</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/4d9683fa-760e-495c-a974-40633ec0594b</loc>
-    <lastmod>2026-05-01</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/a88d85e9-79c4-4d73-943d-34ec4bee4591</loc>
-    <lastmod>2026-04-27</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/v2-202</loc>
-    <lastmod>2026-04-22</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/88ece04f-6b7a-4684-b0d3-2449c01759d4</loc>
-    <lastmod>2026-05-01</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/1e24fa76-d61e-4ba2-9c1d-e22b05cb0cc7</loc>
-    <lastmod>2026-04-27</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/b0dc67a4-f238-4e7e-ad30-b428497a6600</loc>
-    <lastmod>2026-04-26</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/35190674-7ba9-4e54-b11f-a79ed35797e4</loc>
-    <lastmod>2026-04-26</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/2b9a3b5f-00e8-4c8c-ba67-02c878ed7ee9</loc>
-    <lastmod>2026-04-26</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/6b072c64-5413-48de-8ec9-ab04626ee629</loc>
-    <lastmod>2026-04-26</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/27530f7c-d3c3-44f6-8d35-2b4fe1b0b7f8</loc>
-    <lastmod>2026-04-26</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/0047106b-b581-42bd-9467-987b5327fc49</loc>
-    <lastmod>2026-04-27</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/6d259ec0-3214-403e-b9de-0f9ae1a24d80</loc>
-    <lastmod>2026-04-27</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/cc5fbb4b-71d7-4348-8f4d-40fdff82c028</loc>
-    <lastmod>2026-04-27</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/62cc9735-0c4d-44b7-849f-b653d2430655</loc>
-    <lastmod>2026-04-27</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/726f5d33-e7a6-411f-8dc5-e3b77e476d1d</loc>
-    <lastmod>2026-04-27</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/75777c7a-cdc4-4f2c-8013-f5e4e30585bf</loc>
-    <lastmod>2026-04-27</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/4c1b4624-53cd-4f18-8eae-affb1abbc60d</loc>
-    <lastmod>2026-04-28</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/12168363-be56-418d-bf8d-546d6e437625</loc>
-    <lastmod>2026-04-27</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/26778c38-12d7-4004-b6ee-1df77fd2f228</loc>
-    <lastmod>2026-04-27</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/67cc6667-5e40-48f2-8819-8860bc8d0d19</loc>
-    <lastmod>2026-04-27</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/8e514895-7be8-4c42-94ff-f44c85bd8ba5</loc>
-    <lastmod>2026-04-27</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/095986ba-fe2f-40f4-b012-4329993ae581</loc>
-    <lastmod>2026-04-27</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/93f35a20-79be-42f2-8ea0-8deee8a1269c</loc>
-    <lastmod>2026-04-27</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/3208326c-de83-44fb-972b-92aa5dbb2783</loc>
-    <lastmod>2026-04-27</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/567a9f05-7d75-4d3d-bd2f-07309c3705e0</loc>
-    <lastmod>2026-04-27</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/ee544ef0-3bc0-427b-a93f-55bb8125bb4b</loc>
-    <lastmod>2026-04-27</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/e4c93ee0-00ce-4285-9f0a-9c8d2bbdf4dc</loc>
-    <lastmod>2026-04-27</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/8ceeebe5-50e1-49fa-86d0-0ac7f4006014</loc>
-    <lastmod>2026-04-27</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/8e6fc5af-0265-462a-a374-54188eecd9fd</loc>
-    <lastmod>2026-04-28</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/4f0edf8a-d78a-4a02-b72d-b917508218d1</loc>
-    <lastmod>2026-04-27</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/2245e10e-212b-4ce8-a96a-756e02f54412</loc>
-    <lastmod>2026-04-27</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/9123af6a-0685-403c-b4d2-60296001125a</loc>
-    <lastmod>2026-04-27</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/a022d948-75b6-49c7-8af9-7a8ab1eabf92</loc>
-    <lastmod>2026-04-28</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/1730d355-e9ce-4932-819a-664bdd60446a</loc>
-    <lastmod>2026-04-27</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/41db70fb-17bd-4166-94dc-c45abeb927e7</loc>
-    <lastmod>2026-04-28</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/dec4b5e2-e4a3-44c0-bb4c-0e2c4f3c91c1</loc>
-    <lastmod>2026-04-28</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/f9fe3faa-9087-46d9-b822-9f4a22750e1e</loc>
-    <lastmod>2026-04-28</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/a1996c16-e829-418d-8993-124ec125858b</loc>
-    <lastmod>2026-04-28</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/0c271d01-72a1-46b1-ab3a-e60b2b19bae3</loc>
-    <lastmod>2026-04-28</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/0a82e7ad-8841-4278-9f8e-dd91820929f4</loc>
-    <lastmod>2026-04-28</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/9c993363-6c69-4aa4-bb58-d9089d65ee66</loc>
-    <lastmod>2026-04-28</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/anniversary-champagne-roses-anniversary</loc>
-    <lastmod>2026-04-17</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/v2-204</loc>
-    <lastmod>2026-04-22</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/v2-200</loc>
-    <lastmod>2026-04-22</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/v2-201</loc>
-    <lastmod>2026-04-22</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/v2-203</loc>
-    <lastmod>2026-04-22</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/anniversary-the-infinity-rose-anniversary-vow-vault</loc>
-    <lastmod>2026-04-17</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/a6a75f95-14ba-441f-9d61-611f1bd7988a</loc>
-    <lastmod>2026-05-01</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/d23bec15-fb6b-40b9-8af8-221140eabf4d</loc>
-    <lastmod>2026-05-01</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/fathers-day-rose-garden</loc>
-    <lastmod>2026-04-13</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/c1335d45-4911-4006-9e5d-6f774e77d4f1</loc>
-    <lastmod>2026-05-01</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/fd-1</loc>
-    <lastmod>2026-04-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/v2-291</loc>
-    <lastmod>2026-04-19</lastmod>
->>>>>>> Stashed changes
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-<<<<<<< Updated upstream
     <loc>https://digitalbloom.store/product/glass-stiletto-rose-i-v38</loc>
     <lastmod>2026-05-24</lastmod>
-=======
-    <loc>https://digitalbloom.com/product/63cadd7b-245f-4ba8-a5fe-f5a1417508ea</loc>
-    <lastmod>2026-05-01</lastmod>
->>>>>>> Stashed changes
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-<<<<<<< Updated upstream
     <loc>https://digitalbloom.store/product/bbfbef53-a089-4311-8a08-d0d12986b8e5</loc>
     <lastmod>2026-05-18</lastmod>
     <changefreq>monthly</changefreq>
@@ -1354,159 +314,47 @@
   </url>
   <url>
     <loc>https://digitalbloom.store/product/graduation-the-scholar-s-bloom-graduation-ascent</loc>
-=======
-    <loc>https://digitalbloom.com/product/love-romantic-roses</loc>
->>>>>>> Stashed changes
     <lastmod>2026-04-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-<<<<<<< Updated upstream
     <loc>https://digitalbloom.store/product/c8ce2034-f42b-4803-90a5-824dd1b09dd1</loc>
     <lastmod>2026-05-17</lastmod>
-=======
-    <loc>https://digitalbloom.com/product/fd-v1</loc>
-    <lastmod>2026-04-19</lastmod>
->>>>>>> Stashed changes
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-<<<<<<< Updated upstream
     <loc>https://digitalbloom.store/product/b4806e41-8a2d-4924-b103-1ef54cdee149</loc>
     <lastmod>2026-05-17</lastmod>
-=======
-    <loc>https://digitalbloom.com/product/love-eternal-love-vault</loc>
-    <lastmod>2026-04-17</lastmod>
->>>>>>> Stashed changes
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-<<<<<<< Updated upstream
     <loc>https://digitalbloom.store/product/mothers-day-eternal-love</loc>
     <lastmod>2026-05-24</lastmod>
-=======
-    <loc>https://digitalbloom.com/product/golden-roses-experience</loc>
-    <lastmod>2026-02-23</lastmod>
->>>>>>> Stashed changes
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-<<<<<<< Updated upstream
     <loc>https://digitalbloom.store/product/birthday-roses-bloom-v44</loc>
     <lastmod>2026-05-24</lastmod>
-=======
-    <loc>https://digitalbloom.com/product/v2-224</loc>
-    <lastmod>2026-04-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://digitalbloom.com/product/lotus-bloom</loc>
-    <lastmod>2026-02-23</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/love-digital-bloom-red-roses-v1</loc>
-    <lastmod>2026-04-14</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/love-pink-balloons-pink-roses-v1</loc>
-    <lastmod>2026-04-14</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/love-pink-roses-and-balloons-v1</loc>
-    <lastmod>2026-04-14</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/6e9b2dda-edac-48f4-9d22-15c655282eba</loc>
-    <lastmod>2026-04-27</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/36da32ac-443e-4de6-bb70-d1e4d3eb8a29</loc>
-    <lastmod>2026-04-27</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/d4aead64-4200-417e-baa0-2ed8e44292a2</loc>
-    <lastmod>2026-04-27</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/36fc9172-7433-4976-bfc6-4ea808378370</loc>
-    <lastmod>2026-04-27</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/mothers-day-generational-bloom-vault</loc>
-    <lastmod>2026-04-17</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/68c27f8e-0155-4868-9bb4-7a53aabaa1f9</loc>
-    <lastmod>2026-04-27</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/ee7bc4a7-471b-48ec-9d8c-56237029b891</loc>
-    <lastmod>2026-04-27</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/199274fc-7e14-4bf9-9037-24824d980c22</loc>
-    <lastmod>2026-04-27</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digitalbloom.com/product/md-2</loc>
-    <lastmod>2026-04-20</lastmod>
->>>>>>> Stashed changes
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-<<<<<<< Updated upstream
     <loc>https://digitalbloom.store/product/0baf7f05-6c95-421d-84be-cfb4a5685237</loc>
     <lastmod>2026-05-09</lastmod>
-=======
-    <loc>https://digitalbloom.com/product/1c35d5fb-17c4-4bc8-8b43-5674bca450f2</loc>
-    <lastmod>2026-04-27</lastmod>
->>>>>>> Stashed changes
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-<<<<<<< Updated upstream
     <loc>https://digitalbloom.store/product/bday-2</loc>
     <lastmod>2026-05-09</lastmod>
-=======
-    <loc>https://digitalbloom.com/product/mothers-day-mama-s-rose-vault</loc>
-    <lastmod>2026-04-17</lastmod>
->>>>>>> Stashed changes
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-<<<<<<< Updated upstream
     <loc>https://digitalbloom.store/product/610059ff-7af5-4265-9a98-2f41193e2ea4</loc>
     <lastmod>2026-05-18</lastmod>
     <changefreq>monthly</changefreq>
@@ -3423,10 +2271,6 @@
   <url>
     <loc>https://digitalbloom.store/product/lotus-bloom</loc>
     <lastmod>2026-05-24</lastmod>
-=======
-    <loc>https://digitalbloom.com/product/mothers-day-marble-rose-luxury</loc>
-    <lastmod>2026-04-17</lastmod>
->>>>>>> Stashed changes
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>

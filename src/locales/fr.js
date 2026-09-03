@@ -86,7 +86,7 @@ export const fr = {
   cat_general_tagline: "De belles blooms pour chaque moment",
 
   // ─── Stats Bar ───
-  stat_blooms_sent: "Blooms Envoyées",
+  stat_blooms_sent: "Blooms dans la Collection",
   stat_categories: "Catégories",
   stat_languages: "Langues",
   stat_max_experience: "Expérience Max",

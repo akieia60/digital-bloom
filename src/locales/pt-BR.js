@@ -86,7 +86,7 @@ export const ptBR = {
   cat_general_tagline: "Belos blooms para cada momento",
 
   // ─── Stats Bar ───
-  stat_blooms_sent: "Blooms Enviados",
+  stat_blooms_sent: "Blooms na Coleção",
   stat_categories: "Categorias",
   stat_languages: "Idiomas",
   stat_max_experience: "Experiência Máx",

@@ -86,7 +86,7 @@ export const tl = {
   cat_general_tagline: "Magagandang blooms para sa bawat sandali",
 
   // ─── Stats Bar ───
-  stat_blooms_sent: "Blooms na Ipinadala",
+  stat_blooms_sent: "Mga Bloom sa Koleksyon",
   stat_categories: "Mga Kategorya",
   stat_languages: "Mga Wika",
   stat_max_experience: "Max Experience",

@@ -41,9 +41,6 @@ Before ending your session, add a log entry to the Agent Coordination Hub with:
 - All blooms must be silent (audio stripped). `ffmpeg -movflags +faststart` is mandatory on every MP4.
 - Watermark is baked in-video via ffmpeg — never DOM overlay
 
-<<<<<<< Updated upstream
-*Last updated: May 9, 2026 by Magic (Manus)*
-=======
 All category data (slugs, display names, taglines, emojis, accent colors,
 expected prompt counts) lives in **one place**:
 
@@ -229,4 +226,5 @@ Gamble is Ak's business partner who does UI/UX walkthroughs of the live site. Wh
 ## IF YOU'RE EVER UNSURE
 
 Just ask Ak. A quick question saves a lot of cleanup. Ak prefers short, clear communication over long explanations. If you get confused between the two repos or aren't sure what page/file to edit — **stop and ask first**.
->>>>>>> Stashed changes
+
+*Last updated: May 9, 2026 by Magic (Manus)*

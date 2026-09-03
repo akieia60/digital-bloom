@@ -86,7 +86,7 @@ export const ht = {
   cat_general_tagline: "Bloom bèl pou chak moman",
 
   // ─── Stats Bar ───
-  stat_blooms_sent: "Bloom Voye",
+  stat_blooms_sent: "Bloom nan Koleksyon an",
   stat_categories: "Kategori",
   stat_languages: "Lang",
   stat_max_experience: "Eksperyans Maksimòm",

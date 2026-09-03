@@ -86,7 +86,7 @@ export const zh = {
   cat_general_tagline: "每个时刻的美丽绽放",
 
   // ─── Stats Bar ───
-  stat_blooms_sent: "绽放已发送",
+  stat_blooms_sent: "系列中的绽放",
   stat_categories: "场景类别",
   stat_languages: "支持语言",
   stat_max_experience: "最大体验",
