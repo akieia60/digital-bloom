@@ -134,6 +134,37 @@
   }
   .soon{opacity:.5}
   .soon::after{content:'soon';margin-left:7px;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:rgba(250,240,236,.45)}
+  .chip small{margin-left:6px;font-size:11px;font-weight:500;opacity:.55}
+
+  /* ---- occasion → who → style ---- */
+  .rrow{padding-top:4px}
+  .rowlabel{padding:12px 18px 8px;font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:rgba(250,240,236,.42)}
+  .grid.one{grid-template-columns:1fr}
+  .tile.wide{aspect-ratio:16/10}
+  .tile.wide .cap b{font-size:24px}
+  .tile.bare{opacity:.62}
+  .mhead{padding:30px 18px 12px;font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold)}
+  .hrail{display:flex;gap:12px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding:0 18px 2px;scroll-snap-type:x proximity}
+  .hrail::-webkit-scrollbar{display:none}
+  .hrail .tile{flex:none;width:42%;max-width:210px;scroll-snap-align:start}
+  .orow{padding-top:26px}
+  .orow-h{display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding:0 18px 12px}
+  .orow-h h3{margin:0;font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:22px;color:var(--cream)}
+  .orow-h button{flex:none;min-height:44px;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gold)}
+  .dchip{flex:none;display:flex;flex-direction:column;align-items:flex-start;gap:3px;min-width:132px;padding:13px 16px;
+    border-radius:18px;border:1px solid rgba(201,168,76,.3);background:rgba(201,168,76,.07);text-align:left}
+  .dchip b{font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:17px;color:var(--cream)}
+  .dchip span{font-size:12px;color:rgba(250,240,236,.6)}
+  .dchip em{font-style:normal;font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gold)}
+  .dchip.bare{border-color:rgba(255,255,255,.1);background:rgba(255,255,255,.03)}
+  .dchip.bare em{color:rgba(250,240,236,.4)}
+  .wrapchips{display:flex;flex-wrap:wrap;gap:8px;padding:0 18px}
+  .promise{display:flex;flex-direction:column;gap:9px;margin:18px 0 0;padding:0;list-style:none}
+  .promise li{display:flex;gap:10px;align-items:center;font-size:14px;color:rgba(250,240,236,.8)}
+  .promise li::before{content:'';flex:none;width:6px;height:6px;border-radius:50%;background:var(--gold)}
+  .empty{grid-column:1/-1;padding:30px 20px;text-align:center;border:1px dashed rgba(255,255,255,.14);border-radius:20px;
+    font-size:13px;line-height:1.5;color:rgba(250,240,236,.5)}
+  .empty .serif-h{margin-bottom:7px;font-family:'Playfair Display',Georgia,serif;font-size:19px;color:var(--cream)}
 </style>
 </head>
 <body>
@@ -157,10 +188,15 @@
       radial-gradient(100% 70% at 92% 100%,rgba(201,168,76,.14) 0%,transparent 62%),var(--navy);overflow:hidden">
     <div style="display:inline-flex;align-items:center;gap:8px;padding:7px 16px;border:1px solid rgba(201,133,122,.28);border-radius:999px;background:rgba(201,133,122,.07)">
       <span style="width:5px;height:5px;border-radius:50%;background:var(--gold)"></span>
-      <span style="font-size:10px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:rgba(250,240,236,.78)">Delivered in minutes</span>
+      <span style="font-size:10px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:rgba(250,240,236,.78)">The card and the flowers, in one</span>
     </div>
     <h1 class="h1" style="margin:20px 0 0;font-size:clamp(38px,10.5vw,50px)">Give Them Their Flowers<br><em style="color:var(--blush)">While They're Still Here</em></h1>
-    <p class="serif" style="margin:16px 0 0;font-size:19px;line-height:1.5;color:rgba(250,240,236,.76);max-width:340px">Send what you couldn't quite say — a cinematic video bouquet, made for one person, opened on their phone.</p>
+    <p class="serif" style="margin:16px 0 0;font-size:19px;line-height:1.5;color:rgba(250,240,236,.76);max-width:340px">A card and a bouquet in one short film — their name on it, sent from your phone in under a minute.</p>
+    <ul class="promise">
+      <li>Their name engraved on the card in the film</li>
+      <li>Arrives from your own number, in minutes</li>
+      <li>No app, no account, no signup</li>
+    </ul>
 
     <div style="position:relative;margin-top:24px;border-radius:34px;overflow:hidden;border:1px solid rgba(255,255,255,.09);background:var(--ink);aspect-ratio:4/5">
       <video id="heroVideo" muted playsinline loop preload="metadata" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover"></video>
@@ -175,18 +211,35 @@
       <button class="btn btn-primary" data-go="shop">Send a Bloom</button>
       <button class="btn btn-ghost" id="watchFirst">Watch one first</button>
     </div>
-    <div style="margin-top:13px;text-align:center;font-size:12px;color:rgba(250,240,236,.42)">From <b style="color:var(--gold)">$1.99</b> · no app, no account, no signup</div>
+    <div style="margin-top:13px;text-align:center;font-size:12px;color:rgba(250,240,236,.42)">From <b style="color:var(--gold)">$1.99</b> · less than a paper card</div>
   </div>
 
-  <!-- occasions preview -->
-  <div style="padding:36px 0 40px;background:var(--navy)">
-    <div class="sectionhead" style="padding-bottom:16px">
+  <!-- coming up: next holidays, by date -->
+  <div style="padding:30px 0 6px;background:var(--navy)">
+    <div class="sectionhead" style="padding-top:0;padding-bottom:14px">
+      <div class="eyebrow">Coming up</div>
+      <h2>Don't miss the next one</h2>
+    </div>
+    <div class="rail" id="upRail" style="gap:10px"></div>
+  </div>
+
+  <!-- who are you sending to? -->
+  <div style="padding:30px 0 4px;background:var(--navy)">
+    <div class="sectionhead" style="padding-top:0;padding-bottom:14px">
       <div class="eyebrow">Start here</div>
       <h2>Who are you sending to?</h2>
-      <p id="occSub">Every occasion opens into the people inside it.</p>
+      <p>Tap a person — we'll show every bloom made for them.</p>
     </div>
-    <div class="grid" id="landingCats"></div>
-    <div style="padding:16px 18px 0"><button class="btn btn-gold" data-go="shop">See all occasions</button></div>
+    <div class="wrapchips" id="pickRail"></div>
+  </div>
+
+  <!-- one swipe row per occasion -->
+  <div style="padding:6px 0 40px;background:var(--navy)">
+    <div id="occRows"></div>
+    <div style="padding:26px 18px 0">
+      <button class="btn btn-gold" data-go="shop">See all occasions</button>
+      <p id="occSub" style="margin:10px 0 0;text-align:center;font-size:12px;color:rgba(250,240,236,.42)"></p>
+    </div>
   </div>
 
   <div style="padding:44px 18px calc(38px + var(--sab));background:var(--ink);text-align:center">
@@ -212,7 +265,7 @@
     <h2 style="font-size:30px;margin-top:0">Occasions</h2>
     <p id="shopSub">Loading your catalog…</p>
   </div>
-  <div class="grid" id="catGrid"></div>
+  <div id="shopBody"></div>
   <div style="height:calc(30px + var(--sab))"></div>
  </div>
 </section>
@@ -220,28 +273,45 @@
 <!-- ===================== 3 · RECIPIENTS ===================== -->
 <section class="screen" id="s-recipients">
  <div class="wrap">
-  <div class="nav" style="align-items:flex-start;padding-bottom:0;flex-direction:column;gap:0">
-    <div style="display:flex;align-items:center;gap:12px;width:100%">
-      <button class="iconbtn" data-back>
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(250,240,236,.85)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
-      </button>
-      <div>
-        <div style="font-family:'Playfair Display',Georgia,serif;font-size:19px" id="recTitle">Category</div>
-        <div style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:rgba(250,240,236,.45)" id="recCount">—</div>
-      </div>
+  <div class="nav">
+    <button class="iconbtn" data-back>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(250,240,236,.85)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
+    </button>
+    <div style="flex:1">
+      <div style="font-family:'Playfair Display',Georgia,serif;font-size:19px" id="recTitle">Category</div>
+      <div style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:rgba(250,240,236,.45)" id="recCount">—</div>
     </div>
-    <div class="cue" id="recCue" style="padding:12px 0 0">
-      Choose who it's for
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>
-    </div>
-    <div class="rail" id="recChips" style="padding:12px 0 12px;margin:0 -18px;width:calc(100% + 36px);padding-left:18px;padding-right:18px"></div>
+    <button class="burger" data-menu aria-label="Menu"><span></span><span></span><span></span></button>
   </div>
+  <div class="cue" id="recCue">
+    Choose who it's for
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>
+  </div>
+  <div id="recRows" style="padding-bottom:6px;border-bottom:1px solid rgba(255,255,255,.06)"></div>
   <div class="sectionhead" style="padding-bottom:8px">
     <h2 id="recSelLabel" style="font-size:25px;margin-top:0">Everyone</h2>
     <p id="recSelCount">—</p>
   </div>
   <div class="grid" id="recGrid"></div>
   <div style="height:calc(30px + var(--sab))"></div>
+ </div>
+</section>
+
+<!-- ============ 3b · ONE PERSON, EVERY OCCASION ============ -->
+<section class="screen" id="s-person">
+ <div class="wrap">
+  <div class="nav">
+    <button class="iconbtn" data-back>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(250,240,236,.85)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
+    </button>
+    <div style="flex:1">
+      <div style="font-family:'Playfair Display',Georgia,serif;font-size:19px" id="psTitle">For —</div>
+      <div style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:rgba(250,240,236,.45)" id="psCount">—</div>
+    </div>
+    <button class="burger" data-menu aria-label="Menu"><span></span><span></span><span></span></button>
+  </div>
+  <div id="psBody"></div>
+  <div style="height:calc(36px + var(--sab))"></div>
  </div>
 </section>
 
@@ -466,7 +536,9 @@
     <div style="margin-top:6px;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:rgba(250,240,236,.35)">Cinematic Digital Experiences</div>
 
     <h3>Shop</h3>
-    <button class="mi" data-go="shop" data-closemenu>Occasions <span style="color:rgba(250,240,236,.35);font-size:13px" id="miOccCount"></span></button>
+    <button class="mi" data-gkey="birthday" data-closemenu>Birthday</button>
+    <button class="mi" data-go="shop" data-closemenu>All occasions <span style="color:rgba(250,240,236,.35);font-size:13px" id="miOccCount"></span></button>
+    <button class="mi" data-go="shop" data-anchor="m-holiday" data-closemenu>Holidays, by date</button>
     <a href="/credits" data-closemenu>Gift credits</a>
     <a href="/credits/balance" data-closemenu>Check a balance</a>
 
@@ -542,55 +614,174 @@
 const SB   = "https://yhdbeblowolfinxxhsnt.supabase.co";
 const ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InloZGJlYmxvd29sZmlueHhoc250Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjkyNjA0NjMsImV4cCI6MjA4NDgzNjQ2M30.DGIJ5FSr2M4wBi3eQ5rjC0jx3CVS4pEcJe1PMOSR0yM";
 
-/* ---- 21 shipped categories consolidated to 10 ---- */
-const GROUPS = [
-  { key:'mothers-day',  name:"Mother's Day",       src:['mothers-day'],                          wash:'linear-gradient(150deg,#3a1f3c,#c9857a)' },
-  { key:'fathers-day',  name:"Father's Day",       src:['fathers-day'],                          wash:'linear-gradient(150deg,#10294d,#2980b9)' },
-  { key:'birthday',     name:'Birthday',           src:['birthday'],                             wash:'linear-gradient(150deg,#2b2410,#c9a84c)' },
-  { key:'thank-you',    name:'Thank You',          src:['thank-you','acknowledgement'],          wash:'linear-gradient(150deg,#10291f,#27ae60)' },
-  { key:'love',         name:'Love & Anniversary', src:['love','valentine','anniversary','wedding'], wash:'linear-gradient(150deg,#3d1020,#ff3b7f)' },
-  { key:'graduation',   name:'Graduation',         src:['graduation'],                           wash:'linear-gradient(150deg,#1d1a2e,#9b59b6)' },
-  { key:'sympathy',     name:'Sympathy',           src:['sympathy','grief','memorial-day'],      wash:'linear-gradient(150deg,#16211f,#8db4a5)' },
-  { key:'celebration',  name:'Congratulations',    src:['celebration','sports'],                 wash:'linear-gradient(150deg,#2a1c0f,#f39c12)' },
-  { key:'friendship',   name:'Friendship',         src:['friendship','encouragement'],           wash:'linear-gradient(150deg,#2d1710,#ff8c42)' },
-  { key:'holidays',     name:'Holidays',           src:['holidays','christmas','womens-day','zodiac','luxury','signature-stories'], wash:'linear-gradient(150deg,#1a1010,#c0392b)' },
+/* ==========================================================================
+   Occasion → who it's for → style.  Ak, 2026-10-18: "categories should be
+   specific to occasion like birthday, then sub categories specific under
+   that — son, nephew, cousin, friend." Modelled on how Hallmark, American
+   Greetings and Moonpig lay out their cards (researched the same day):
+   Birthday is its own front door, its people split For Her / For Him /
+   For Anyone, and style is a filter — never a shelf of its own.
+
+   This replaces the single 25-name list every category shared (Gamble 8/20).
+   His 25 names still live under Thank You, where he first sent them.
+   The original taxonomy: docs/taxonomy/ORIGINAL-CATEGORIES-2026-08-20.md
+
+   A person is [key, label, tags]. `tags` are the subcategory values already
+   on products. A product joins a person's shelf when its subcategory is in
+   that list (plus the person's GLOBAL_TAGS). Tags that are styles, hobbies
+   or senders go in `styles`; anything unmapped still shows under Everyone.
+   ========================================================================== */
+const P = (key,label,tags) => [key,label,tags||[]];
+const GLOBAL_TAGS = {           // Gamble's Thank You slugs + the plain forms
+  mom:['for-mom'], dad:['for-dad'], sister:['for-sister'], brother:['for-brother'],
+  son:['for-son','son'], daughter:['for-daughter','daughter'],
+  wife:['wife','for-wife'], husband:['husband','for-husband'],
+  girlfriend:['girlfriend'], boyfriend:['boyfriend'], fiance:['fiance'],
+  grandma:['grandma','for-grandma'], grandpa:['granddad','for-grandpa'],
+  aunt:['aunt','for-auntie'], uncle:['uncle'], cousin:['cousin'],
+  friend:['for-friend'], 'best-friend':['for-bestie'], coworker:['co-workers'],
+  boss:['boss'], employee:['employee'], 'business-partner':['business-partner'],
+  teacher:['teacher'], coach:['coach'], teammates:['teammates'],
+  police:['police'], fireman:['fireman'], mechanic:['mechanic'],
+};
+const W = {
+  gold:'linear-gradient(150deg,#2b2410,#c9a84c)', rose:'linear-gradient(150deg,#3a1f3c,#c9857a)',
+  blue:'linear-gradient(150deg,#10294d,#2980b9)', green:'linear-gradient(150deg,#10291f,#27ae60)',
+  pink:'linear-gradient(150deg,#3d1020,#ff3b7f)', violet:'linear-gradient(150deg,#1d1a2e,#9b59b6)',
+  sage:'linear-gradient(150deg,#16211f,#8db4a5)', amber:'linear-gradient(150deg,#2a1c0f,#f39c12)',
+  coral:'linear-gradient(150deg,#2d1710,#ff8c42)', red:'linear-gradient(150deg,#1a1010,#c0392b)',
+  ink:'linear-gradient(150deg,#0c1f3f,#3b4b6b)',
+};
+// fixed-date and floating holidays (month is 0-based)
+const nth  = (y,m,dow,n)=>{ const d=new Date(y,m,1); return new Date(y,m,1+((dow-d.getDay()+7)%7)+(n-1)*7); };
+const lastDow = (y,m,dow)=>{ const d=new Date(y,m+1,0); return new Date(y,m,d.getDate()-((d.getDay()-dow+7)%7)); };
+
+const OCCASIONS = [
+  /* ---------------- the front door ---------------- */
+  { key:'birthday', name:'Birthday', menu:'birthday', src:['birthday'], wash:W.gold,
+    cols:[
+      { title:'For Her', people:[ P('mom','Mom'), P('wife','Wife'), P('daughter','Daughter'), P('sister','Sister'),
+          P('grandma','Grandma'), P('aunt','Aunt'), P('niece','Niece',['for-niece-nephew']), P('granddaughter','Granddaughter'),
+          P('her','Her — anyone',['for-her']) ]},
+      { title:'For Him', people:[ P('dad','Dad'), P('husband','Husband'), P('son','Son'), P('brother','Brother'),
+          P('grandpa','Grandpa'), P('uncle','Uncle'), P('nephew','Nephew',['for-niece-nephew']), P('grandson','Grandson'),
+          P('him','Him — anyone',['for-him','birthday-for-him']) ]},
+      { title:'For Anyone', people:[ P('partner','Partner',['for-partner']), P('twin','Twin',['for-twins']),
+          P('best-friend','Best Friend'), P('friend','Friend'), P('cousin','Cousin'), P('coworker','Co-Worker'),
+          P('boss','Boss'), P('kids','Kids & Teens') ]},
+    ],
+    styles:[ P('classic','Classic',['classic','universal-adult']), P('milestone','Milestone',['milestone']),
+             P('bold','Bold & Fun',['bold-adult','power-adult','gen-z-party','cosmic']),
+             P('inspiring','Inspiring',['transformation','resilience']) ] },
+
+  /* ---------------- celebrate ---------------- */
+  { key:'graduation', name:'Graduation', menu:'celebrate', src:['graduation'], wash:W.violet,
+    cols:[
+      { title:'For Her', people:[ P('daughter','Daughter'), P('granddaughter','Granddaughter'), P('niece','Niece'), P('her','Her — anyone',['for-her']) ]},
+      { title:'For Him', people:[ P('son','Son'), P('grandson','Grandson'), P('nephew','Nephew') ]},
+      { title:'For Anyone', people:[ P('friend','Friend'), P('firstgen','First in the Family',['for-firstgen']),
+          P('grad-school','Grad School & Doctorate',['doctorate']) ]},
+    ],
+    styles:[ P('classic','Classic',['classic','for-the-grad','class-of-2026']) ] },
+  { key:'anniversary', name:'Anniversary', menu:'celebrate', src:['anniversary'], wash:W.rose,
+    cols:[{ title:'Who', people:[ P('wife','Wife'), P('husband','Husband'), P('spouse','Spouse',['for-spouse']),
+          P('parents','Mom & Dad'), P('couple','The Couple') ]}],
+    styles:[ P('milestone','Milestone Year',['milestone']), P('luxe','Luxe',['vault']) ] },
+  { key:'wedding', name:'Wedding', menu:'celebrate', src:['wedding'], wash:W.rose,
+    cols:[{ title:'Who', people:[ P('couple','The Couple',['wedding-vows-forever','wedding-vows-hold','moonshot']),
+          P('bride','Bride'), P('groom','Groom') ]}] },
+  { key:'congrats', name:'Congratulations', menu:'celebrate', src:['celebration','sports'], wash:W.amber,
+    cols:[
+      { title:'Family', people:[ P('son','Son'), P('daughter','Daughter'), P('sister','Sister'), P('brother','Brother') ]},
+      { title:'Work & Friends', people:[ P('friend','Friend'), P('coworker','Co-Worker'), P('employee','Employee'),
+          P('boss','Boss'), P('teammates','Teammates') ]},
+    ],
+    styles:[ P('sports','Sports',['basketball']), P('grad','Graduation',['graduation']) ] },
+
+  /* ---------------- everyday ---------------- */
+  // Gamble's 25 — his words, sent 7/16, 8/9, 8/18, 8/20.
+  { key:'thank-you', name:'Thank You', menu:'everyday', src:['thank-you','acknowledgement'], wash:W.green,
+    cols:[
+      { title:'Family', people:[ P('mom','Mom'), P('dad','Dad'), P('sister','Sister'), P('brother','Brother'),
+          P('grandma','Grandma'), P('grandpa','Granddad'), P('aunt','Aunt'), P('uncle','Uncle'), P('cousin','Cousin') ]},
+      { title:'Love', people:[ P('wife','Wife'), P('husband','Husband'), P('girlfriend','Girlfriend'),
+          P('boyfriend','Boyfriend'), P('fiance','Fiancé') ]},
+      { title:'Work & Community', people:[ P('boss','Boss'), P('coworker','Co-Workers'), P('employee','Employee'),
+          P('business-partner','Business Partner'), P('teacher','Teacher'), P('coach','Coach'), P('teammates','Teammates'),
+          P('police','Police'), P('fireman','Fireman'), P('mechanic','Mechanic') ]},
+      { title:'Friends', people:[ P('friend','Friends') ]},
+    ],
+    styles:[ P('appreciated',"You're Appreciated",['peer-recognition','peer-recognition-him','i-see-you']) ] },
+  { key:'love', name:'Love & Romance', menu:'everyday', src:['love','valentine'], wash:W.pink,
+    cols:[
+      { title:'For Her', people:[ P('wife','Wife'), P('girlfriend','Girlfriend'), P('fiancee','Fiancée') ]},
+      { title:'For Him', people:[ P('husband','Husband'), P('boyfriend','Boyfriend'), P('fiance','Fiancé') ]},
+      { title:'For Anyone', people:[ P('partner','Partner'), P('crush','Crush') ]},
+    ],
+    styles:[ P('romantic','Romantic',['romantic-love','red-roses-valentine','valentine-general']),
+             P('luxe','Luxe',['romantic-luxury']), P('pink','Pink & Sweet',['romantic-pink','pink-valentine']) ] },
+  { key:'friendship', name:'Friendship & Thinking of You', menu:'everyday', src:['friendship','encouragement'], wash:W.coral,
+    cols:[{ title:'Who', people:[ P('best-friend','Best Friend'), P('friend','Friend'),
+          P('long-distance','Long-Distance Friend'), P('sister-friend','Sister-Friend') ]}],
+    styles:[ P('thinking','Thinking of You',['thinking-of-you']), P('encourage','You Got This',['you-got-this']),
+             P('moment','Big Moment',['moonshot']) ] },
+
+  /* ---------------- tough times ---------------- */
+  { key:'sympathy', name:'Sympathy', menu:'tough', src:['sympathy','grief'], wash:W.sage,
+    cols:[{ title:'Who', people:[ P('friend','Friend'), P('family','Family'), P('coworker','Co-Worker'),
+          P('church','Church Family'), P('neighbor','Neighbor') ]}],
+    styles:[ P('memory','In Loving Memory',['memorial-rose','in-loving-memory','memorial-garden','memorial-light']),
+             P('comfort','Comfort & Peace',['comfort','peace','held-in-light','hard-times','sympathy-soft-words',
+               'sympathy-companionship','universal','lost-family','white-orchids']) ] },
+
+  /* ---------------- holidays, by date ---------------- */
+  { key:'halloween',    name:'Halloween',      menu:'holiday', src:['halloween'],    wash:W.amber, when:y=>new Date(y,9,31) },
+  { key:'thanksgiving', name:'Thanksgiving',   menu:'holiday', src:['thanksgiving'], wash:W.amber, when:y=>nth(y,10,4,4) },
+  { key:'christmas',    name:'Christmas',      menu:'holiday', src:['christmas'],    wash:W.red,   when:y=>new Date(y,11,25) },
+  { key:'new-year',     name:"New Year's",     menu:'holiday', src:['new-year'],     wash:W.gold,  when:y=>new Date(y,0,1) },
+  { key:'valentines',   name:"Valentine's Day",menu:'holiday', alias:'love',         wash:W.pink,  when:y=>new Date(y,1,14) },
+  { key:'womens-day',   name:"Women's Day",    menu:'holiday', src:['womens-day'],   wash:W.violet,when:y=>new Date(y,2,8) },
+  { key:'mothers-day',  name:"Mother's Day",   menu:'holiday', src:['mothers-day'],  wash:W.rose,  when:y=>nth(y,4,0,2),
+    cols:[{ title:'Who', people:[ P('mom','Mom',['any-mother','classic','from-son']), P('wife','Wife',['to-my-wife','from-husband']),
+          P('grandma','Grandma',['kids-grandma']), P('stepmom','Stepmom',['stepmom']), P('new-mom','New Mom',['new-mom']),
+          P('single-mom','Single Mom',['single-mom']), P('mother-of-my-children','Mother of My Children',['mother-of-my-children']),
+          P('godmother','Godmother / Auntie',['godmother-auntie']), P('mother-figure','Mother Figure',['mother-figure','friend-honoring']),
+          P('long-distance-mom','Long-Distance Mom',['long-distance']), P('mom-heaven','Mom in Heaven',['memorial']) ]}] },
+  { key:'memorial-day', name:'Memorial Day',   menu:'holiday', src:['memorial-day'], wash:W.blue,  when:y=>lastDow(y,4,1),
+    cols:[{ title:'Who', people:[ P('veteran','Veterans',['veterans-honor']) ]}] },
+  { key:'pride',        name:'Pride Month',    menu:'holiday', src:['holidays'],     wash:W.violet,when:y=>new Date(y,5,1) },
+  { key:'fathers-day',  name:"Father's Day",   menu:'holiday', src:['fathers-day'],  wash:W.blue,  when:y=>nth(y,5,0,3),
+    cols:[{ title:'Who', people:[ P('dad','Dad',['from-daughter','from-son','family-man']), P('husband','Husband'),
+          P('grandpa','Grandpa'), P('stepdad','Stepdad',['for-stepdad']), P('father-in-law','Father-in-Law',['father-in-law']),
+          P('new-dad','New Dad',['young-father']), P('dad-heaven','Dad in Heaven',['memorial']) ]}],
+    styleTitle:'His thing',
+    styles:[ P('sports','Sports Fan',['basketball-fan','soccer-fan','baseball-fan','hockey-fan','football-fan']),
+             P('outdoors','Hunting & Fishing',['hunting-fan','fishing-fan']), P('cars','Cars',['auto-enthusiast']),
+             P('worker','Hard Worker',['working-dad','truck-driver']) ] },
+
+  /* ---------------- collections (not occasions) ---------------- */
+  { key:'zodiac', name:'Zodiac', menu:'collection', src:['zodiac'], wash:W.ink,
+    cols:[{ title:'Sign', people:[ P('fire','Fire Signs',['fire-signs']), P('earth','Earth Signs',['earth-signs']),
+          P('air','Air Signs',['air-signs']), P('water','Water Signs',['water-signs']) ]}] },
+  { key:'luxury', name:'Luxury', menu:'collection', src:['luxury'], wash:W.gold },
+  { key:'signature', name:'Signature Stories', menu:'collection', src:['signature-stories'], wash:W.rose },
 ];
-/* Gamble's recipient roster — his words, his order. Sent 7/16, 8/9, 8/18
-   and again 8/20 10:33. Shelves show even before a bloom exists for them,
-   so the structure is visible and Monique knows exactly what to render. */
-const GENERAL_RECIPIENTS = [
-    ['for-dad','For Dad'],            ['for-mom','For Mom'],
-    ['for-sister','Sister'],          ['for-brother','Brother'],
-    ['co-workers','Co-Workers'],      ['for-friend','Friends'],
-    ['girlfriend','Girlfriend'],      ['boyfriend','Boyfriend'],
-    ['husband','Husband'],            ['wife','Wife'],
-    ['fiance','Fiancé'],              ['business-partner','Bus. Partner'],
-    ['teacher','Teacher'],            ['cousin','Cousin'],
-    ['aunt','Aunt'],                  ['uncle','Uncle'],
-    ['grandma','Grandma'],            ['granddad','Granddad'],
-    ['boss','Boss'],                  ['coach','Coaches'],
-    ['police','Police'],              ['fireman','Fireman'],
-    ['employee','Employee'],          ['mechanic','Mechanic'],
-    ['teammates','Teammates'],
+const MENUS = [
+  ['celebrate','Celebrate'], ['everyday','Everyday'], ['tough','Tough Times'],
+  ['holiday','Holidays'], ['collection','Collections'],
 ];
-// Gamble 2026-08-20 17:01: "make sure that all of the sub categories are in
-// consistency with the sub categories from the thank you category — they should
-// all be the same." So every category carries the same recipient list.
-// Paired with 17:02: "save the old categories in Akieia's old category list" —
-// the occasion-specific tags that already hold blooms are NOT dropped. Stocked
-// shelves sort first, then the shared roster fills in the rest, so Mother's Day
-// keeps Stepmom / Single Mom / Godmother and still offers the common names.
-// The full original taxonomy is archived at
-// docs/taxonomy/ORIGINAL-CATEGORIES-2026-08-20.md.
-const ROSTER = {};
-GROUPS.forEach(g => { ROSTER[g.key] = GENERAL_RECIPIENTS; });
+// The "Who are you sending to?" picker on the homepage
+const PICK = ['mom','dad','wife','husband','partner','son','daughter','sister','brother',
+              'grandma','grandpa','best-friend','friend','coworker','boss','teacher'];
+const HOME_ROWS = ['birthday','thank-you','love','sympathy','graduation','congrats','friendship'];
+
 const TIERS = [
   { id:'single',     name:'Single Bloom',     desc:'8–10 seconds · one scene',            price:1.99, pop:false },
   { id:'experience', name:'Bloom Experience', desc:'25–35 seconds · multi-scene story',   price:4.99, pop:true  },
   { id:'premium',    name:'Premium Bloom',    desc:'35–45 seconds · full cinematic',      price:9.99, pop:false },
 ];
 const STEPS = [
-  ["Pick who it's for","Mom, your brother, the coach who showed up. We sort by the relationship, not the holiday."],
+  ["Pick the occasion, then who it's for","Birthday, then Son. Thank You, then Coach. Every occasion opens into the people inside it."],
   ["Write the part you mean","Their name is engraved on the card inside the film. One screen, then pay."],
   ["It arrives from your own number","We open your Messages with the link ready. They tap it and the bloom takes over their screen."],
 ];
@@ -602,9 +793,36 @@ const titleize = s => String(s||'').replace(/-/g,' ').replace(/\b\w/g,c=>c.toUpp
   .replace(/\bFor\b /,'For ').replace(/\bMy\b/,'My');
 const fmt = n => '$'+Number(n).toFixed(2);
 const time = t => { t=Math.max(0,t|0); return Math.floor(t/60)+':'+String(t%60).padStart(2,'0'); };
+const plural = (n,w) => n+' '+w+(n===1?'':'s');
+const store = { get(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } },
+                set(k,v){ try{ localStorage.setItem(k,v); }catch(e){} } };
 
-const state = { products:[], byGroup:{}, group:null, sub:null, product:null, tier:'experience',
+const state = { products:[], byOcc:{}, occ:null, sub:null, style:null, product:null, tier:'experience',
                 del:'self', name:'', msg:'', from:'', stack:[] };
+
+/* ---------- occasion helpers ---------- */
+const occ = key => OCCASIONS.find(o=>o.key===key);
+const real = o => o && o.alias ? occ(o.alias) : o;            // Valentine's opens Love & Romance
+const people = o => (o.cols||[]).flatMap(c=>c.people);
+const tagsOf = person => person[2].concat(GLOBAL_TAGS[person[0]]||[]);
+const items = o => state.byOcc[real(o).key] || [];
+const matches = (p, entry) => tagsOf(entry).includes(p.subcategory);
+const LABEL = {};
+OCCASIONS.forEach(o=>people(o).forEach(([k,l])=>{ if(!LABEL[k]) LABEL[k]=l; }));
+LABEL.grandpa = 'Grandpa';
+function labelIn(o,p){                                       // what a tile says under its title
+  const hit = people(o).find(x=>matches(p,x)) || (o.styles||[]).find(x=>matches(p,x));
+  return hit ? hit[1] : '';
+}
+function homeOf(p){ return OCCASIONS.find(o=>!o.alias && (o.src||[]).includes(p.category)); }
+function nextDate(o){
+  const t=new Date(); t.setHours(0,0,0,0);
+  let d=o.when(t.getFullYear()); if(d<t) d=o.when(t.getFullYear()+1);
+  return d;
+}
+const daysUntil = d => Math.round((d - new Date(new Date().setHours(0,0,0,0)))/864e5);
+const dateLabel = d => d.toLocaleDateString('en-US',{month:'short',day:'numeric'});
+const upcoming = () => OCCASIONS.filter(o=>o.when).map(o=>({o,d:nextDate(o)})).sort((a,b)=>a.d-b.d);
 
 /* ---------- toast ---------- */
 let tT;
@@ -631,7 +849,8 @@ document.addEventListener('click', e=>{
   if(e.target.closest('[data-menu]')){ $('#menu').classList.add('on'); return; }
   if(e.target.closest('[data-closemenu]')) $('#menu').classList.remove('on');
   const go = e.target.closest('[data-go]');
-  if(go){ const dest = go.dataset.go; if(dest==='shop') renderCats(); show(dest); }
+  if(go){ const dest = go.dataset.go; if(dest==='shop') renderShop(); show(dest);
+    if(go.dataset.anchor){ const a=document.getElementById(go.dataset.anchor); if(a) a.scrollIntoView(); } }
   if(e.target.closest('[data-back]')) back();
   if(e.target.closest('[data-closesheet]')) $('#shareSheet').classList.remove('on');
 });
@@ -646,21 +865,37 @@ async function load(){
   if(!r.ok) throw new Error('HTTP '+r.status);
   state.products = await r.json();
   const map = {};
-  GROUPS.forEach(g=>{ map[g.key] = state.products.filter(p=> g.src.includes(p.category)); });
-  state.byGroup = map;
+  OCCASIONS.forEach(o=>{ if(!o.alias) map[o.key] = state.products.filter(p=> (o.src||[]).includes(p.category)); });
+  state.byOcc = map;
 }
 
 /* ---------- tiles ---------- */
-function tile(p){
-  const g = GROUPS.find(x=>x.src.includes(p.category));
+function tile(p,o){
+  o = o || homeOf(p);
   const poster = p.thumbnail_url ? `<img src="${esc(p.thumbnail_url)}" alt="" loading="lazy">`
     : `<video src="${esc(p.video_url)}#t=1" preload="metadata" muted playsinline></video>`;
-  return `<button class="tile" data-pid="${esc(p.id)}" style="background:${g?g.wash:'var(--navy-mid)'}">
+  const sub = o ? labelIn(o,p) : '';
+  return `<button class="tile" data-pid="${esc(p.id)}" style="background:${o?o.wash:'var(--navy-mid)'}">
       ${poster}<div class="veil"></div>
-      <div class="cap"><b>${esc(p.name)}</b><span>${esc(titleize(p.subcategory||''))}</span></div>
+      <div class="cap"><b>${esc(p.name)}</b><span>${esc(sub)}</span></div>
+    </button>`;
+}
+function occTile(o, wide){
+  const list = items(o);
+  const lead = list.find(p=>p.thumbnail_url) || list[0];
+  const media = lead ? (lead.thumbnail_url
+      ? `<img src="${esc(lead.thumbnail_url)}" alt="" loading="lazy">`
+      : `<video src="${esc(lead.video_url)}#t=1" preload="metadata" muted playsinline></video>`) : '';
+  let line = list.length ? plural(list.length,'bloom') : 'Coming soon';
+  if(o.when){ const d=nextDate(o); line = dateLabel(d)+' · '+(list.length ? plural(list.length,'bloom') : 'coming soon'); }
+  return `<button class="tile${wide?' wide':''}${list.length?'':' bare'}" data-gkey="${esc(o.key)}">
+      <div style="position:absolute;inset:0;background:${o.wash}"></div>${media}
+      <div class="veil"></div>
+      <div class="cap"><b>${esc(o.name)}</b><span>${esc(line)}</span></div>
     </button>`;
 }
 
+/* ---------- landing ---------- */
 function renderLanding(){
   $('#steps').innerHTML = STEPS.map((s,i)=>`
     <div style="display:flex;gap:14px;align-items:flex-start;padding:16px;border-radius:18px;background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.06)">
@@ -669,88 +904,140 @@ function renderLanding(){
       <div style="margin-top:4px;font-size:13px;line-height:1.5;color:rgba(250,240,236,.6)">${esc(s[1])}</div></div>
     </div>`).join('');
 
-  const top = GROUPS.filter(g=> (state.byGroup[g.key]||[]).length).slice(0,4);
-  $('#landingCats').innerHTML = top.map(g=>catTile(g)).join('');
-  $('#occSub').textContent = GROUPS.filter(g=>(state.byGroup[g.key]||[]).length).length
-    + ' occasions · ' + state.products.length + ' blooms ready to send';
+  // coming up — the next holidays, by date
+  $('#upRail').innerHTML = upcoming().slice(0,6).map(({o,d})=>{
+    const n = items(o).length, days = daysUntil(d);
+    const when = days===0 ? 'today' : days===1 ? 'tomorrow' : 'in '+days+' days';
+    return `<button class="dchip${n?'':' bare'}" data-gkey="${esc(o.key)}">
+        <b>${esc(o.name)}</b><span>${esc(d.toLocaleDateString('en-US',{weekday:'short'}))} · ${esc(dateLabel(d))}</span>
+        <em>${n ? esc(when) : 'blooms coming'}</em></button>`;
+  }).join('');
 
-  // hero video = a real mother's-day bloom
-  const pool = (state.byGroup['mothers-day']||[]).concat(state.byGroup['birthday']||[]);
+  // who are you sending to?
+  $('#pickRail').innerHTML = PICK.map(k=>{
+    const n = personCount(k);
+    return `<button class="chip${n?'':' soon'}" data-person="${esc(k)}">${esc(LABEL[k]||titleize(k))}</button>`;
+  }).join('');
+
+  // one swipe row per occasion
+  $('#occRows').innerHTML = HOME_ROWS.map(occ).filter(o=>items(o).length).map(o=>`
+    <div class="orow">
+      <div class="orow-h"><h3>${esc(o.name)}</h3><button data-gkey="${esc(o.key)}">See all ${items(o).length}</button></div>
+      <div class="hrail">${items(o).slice(0,10).map(p=>tile(p,o)).join('')}</div>
+    </div>`).join('');
+
+  const live = OCCASIONS.filter(o=>!o.alias && items(o).length).length;
+  $('#occSub').textContent = live+' occasions · '+state.products.length+' blooms ready to send';
+
+  // hero = a real birthday bloom, the occasion that never goes out of season
+  const pool = items(occ('birthday')).filter(p=>p.thumbnail_url).concat(items(occ('birthday')));
   const hero = pool[0];
   if(hero){
     const v=$('#heroVideo'); v.src=hero.video_url; v.load();
     v.play().catch(()=>{});
-    $('#heroTag').textContent = titleize(hero.subcategory||hero.category);
+    $('#heroTag').textContent = 'Birthday' + (labelIn(occ('birthday'),hero) ? ' · '+labelIn(occ('birthday'),hero) : '');
     $('#watchFirst').onclick = ()=> openProduct(hero.id);
   }
 }
-function catTile(g){
-  const items = state.byGroup[g.key]||[];
-  const subs = new Set(items.map(p=>p.subcategory).filter(Boolean));
-  const lead = items.find(p=>p.thumbnail_url) || items[0];
-  const media = lead ? (lead.thumbnail_url
-      ? `<img src="${esc(lead.thumbnail_url)}" alt="" loading="lazy">`
-      : `<video src="${esc(lead.video_url)}#t=1" preload="metadata" muted playsinline></video>`) : '';
-  return `<button class="tile" data-gkey="${esc(g.key)}">
-      <div style="position:absolute;inset:0;background:${g.wash}"></div>${media}
-      <div class="veil"></div>
-      <div class="cap"><b>${esc(g.name)}</b><span>${items.length} blooms · ${subs.size} recipients</span></div>
-    </button>`;
-}
-function renderCats(){
-  const el = $('#miOccCount');
-  if(el) el.textContent = GROUPS.filter(g=>(state.byGroup[g.key]||[]).length).length;
-  const live = GROUPS.filter(g=>(state.byGroup[g.key]||[]).length);
-  $('#catGrid').innerHTML = live.map(catTile).join('');
-  $('#shopSub').textContent = live.length+' occasions · every one opens into the people inside it.';
+
+/* ---------- all occasions ---------- */
+function renderShop(){
+  const live = OCCASIONS.filter(o=>!o.alias && items(o).length).length;
+  const el = $('#miOccCount'); if(el) el.textContent = live;
+  $('#shopSub').textContent = live+' occasions · each one opens into the people inside it.';
+  let html = `<div class="grid one">${occTile(occ('birthday'),true)}</div>`;
+  MENUS.forEach(([m,title])=>{
+    let list = OCCASIONS.filter(o=>o.menu===m);
+    if(m==='holiday') list = upcoming().map(x=>x.o);
+    else list = list.filter(o=>items(o).length);
+    if(!list.length) return;
+    html += `<div class="mhead" id="m-${m}">${esc(title)}</div><div class="grid">${list.map(o=>occTile(o)).join('')}</div>`;
+  });
+  $('#shopBody').innerHTML = html;
 }
 
-/* ---------- recipients ---------- */
-function openGroup(key){
-  const g = GROUPS.find(x=>x.key===key); if(!g) return;
-  state.group = g; state.sub = null;
-  const items = state.byGroup[key]||[];
-  const counts = {};
-  items.forEach(p=>{ const s=p.subcategory||'other'; counts[s]=(counts[s]||0)+1; });
-  const roster = ROSTER[key] || [];
-  state.labels = {};
-  roster.forEach(([slug,label])=>{ state.labels[slug]=label; });
+/* ---------- one occasion: who it's for + style ---------- */
+function openGroup(key, preSub){
+  const o = real(occ(key)); if(!o) return;
+  state.occ = o; state.sub = preSub || null; state.style = null;
+  const list = items(o);
+  const count = entry => list.filter(p=>matches(p,entry)).length;
+  const chips = (arr, attr) => arr
+      .map(e=>({e,n:count(e)}))
+      .sort((a,b)=> (b.n>0)-(a.n>0))                        // stocked first, keep the familiar order
+      .map(({e,n})=>`<button class="chip${n?'':' soon'}${state.sub===e[0]?' sel':''}" data-${attr}="${esc(e[0])}">${esc(e[1])}${n?` <small>${n}</small>`:''}</button>`)
+      .join('');
 
-  // stocked shelves first (busiest first), then the empty ones the roster promises
-  const stocked = Object.keys(counts).sort((a,b)=>counts[b]-counts[a]);
-  const empty   = roster.map(r=>r[0]).filter(sl=>!counts[sl]);
-  const subs    = stocked.concat(empty);
-
-  $('#recTitle').textContent = g.name;
-  $('#recCount').textContent = subs.length+' recipients · '+items.length+' blooms';
-  $('#recChips').innerHTML = ['__all'].concat(subs).map(sl=>{
-    const label = sl==='__all' ? 'Everyone' : (state.labels[sl] || titleize(sl));
-    const bare  = sl!=='__all' && !counts[sl];
-    return `<button class="chip${sl==='__all'?' sel':''}${bare?' soon':''}" data-sub="${esc(sl)}">${esc(label)}</button>`;
-  }).join('');
+  $('#recTitle').textContent = o.name;
+  const ppl = people(o);
+  $('#recCount').textContent = list.length ? plural(list.length,'bloom') + (ppl.length ? ' · '+ppl.length+(ppl.length===1?' person':' people') : '') : 'Coming soon';
+  let rows = `<div class="rrow"><div class="rail"><button class="chip${state.sub?'':' sel'}" data-sub="__all">Everyone <small>${list.length}</small></button></div></div>`;
+  (o.cols||[]).forEach(c=>{
+    rows += `<div class="rrow"><div class="rowlabel">${esc(c.title)}</div><div class="rail">${chips(c.people,'sub')}</div></div>`;
+  });
+  const styles = (o.styles||[]).filter(s=>count(s));
+  if(styles.length){
+    rows += `<div class="rrow"><div class="rowlabel">${esc(o.styleTitle||'Style')}</div><div class="rail">${chips(styles,'style')}</div></div>`;
+  }
+  $('#recRows').innerHTML = rows;
+  $('#recCue').style.display = ppl.length ? '' : 'none';
   paintRec();
   show('recipients');
   // Gamble 8/20: the pills need to announce themselves or nobody taps them.
   // Three beats, then it rests — an always-on animation eats phone battery.
-  const rail = $('#recChips');
-  const seen = +(localStorage.getItem('db_rec_cue') || 0);
-  if(seen < 3){
-    rail.classList.remove('pulse'); void rail.offsetWidth; rail.classList.add('pulse');
-    localStorage.setItem('db_rec_cue', seen + 1);
-    setTimeout(()=>rail.classList.remove('pulse'), 4200);
+  const rails = $$('#recRows .rail');
+  const seen = +(store.get('db_rec_cue') || 0);
+  if(seen < 3 && rails[1]){
+    rails[1].classList.remove('pulse'); void rails[1].offsetWidth; rails[1].classList.add('pulse');
+    store.set('db_rec_cue', seen + 1);
+    setTimeout(()=>rails[1].classList.remove('pulse'), 4200);
   }
 }
 function paintRec(){
-  const items = state.byGroup[state.group.key]||[];
-  const list = state.sub ? items.filter(p=>(p.subcategory||'other')===state.sub) : items;
-  const label = state.sub ? ((state.labels && state.labels[state.sub]) || titleize(state.sub)) : 'Everyone';
+  const o = state.occ, all = items(o);
+  const person = state.sub ? people(o).find(x=>x[0]===state.sub) : null;
+  const style  = state.style ? (o.styles||[]).find(x=>x[0]===state.style) : null;
+  let list = all;
+  if(person) list = list.filter(p=>matches(p,person));
+  if(style)  list = list.filter(p=>matches(p,style));
+  const label = [person ? person[1] : 'Everyone', style ? style[1] : ''].filter(Boolean).join(' · ');
   $('#recSelLabel').textContent = label;
-  $('#recSelCount').textContent = list.length+' bloom'+(list.length===1?'':'s');
-  $('#recGrid').innerHTML = list.slice(0,60).map(p=>tile(p)).join('')
-    || `<div style="grid-column:1/-1;padding:34px 20px;text-align:center;border:1px dashed rgba(255,255,255,.14);border-radius:20px">
-          <div style="font-family:'Playfair Display',Georgia,serif;font-size:19px;color:var(--cream)">${esc(label)} is next up</div>
-          <div style="margin-top:7px;font-size:13px;line-height:1.5;color:rgba(250,240,236,.5)">The shelf is built — the blooms are being made.</div>
+  $('#recSelCount').textContent = plural(list.length,'bloom');
+  $$('#recRows [data-sub]').forEach(x=>x.classList.toggle('sel', (x.dataset.sub==='__all' && !state.sub) || x.dataset.sub===state.sub));
+  $$('#recRows [data-style]').forEach(x=>x.classList.toggle('sel', x.dataset.style===state.style));
+  const what = person ? person[1] : o.name;
+  $('#recGrid').innerHTML = list.slice(0,60).map(p=>tile(p,o)).join('')
+    || `<div class="empty">
+          <div class="serif-h">${esc(what)} is next up</div>
+          <div>The shelf is built — the blooms are being made.</div>
         </div>`;
+}
+
+/* ---------- one person, every occasion ---------- */
+function personCount(k){
+  return OCCASIONS.filter(o=>!o.alias).reduce((n,o)=>{
+    const e = people(o).find(x=>x[0]===k); return n + (e ? items(o).filter(p=>matches(p,e)).length : 0);
+  },0);
+}
+function openPerson(k){
+  const label = LABEL[k] || titleize(k);
+  $('#psTitle').textContent = 'For '+label;
+  let html = '', soon = [], total = 0;
+  OCCASIONS.filter(o=>!o.alias && o.menu!=='collection').forEach(o=>{
+    const e = people(o).find(x=>x[0]===k); if(!e) return;
+    const list = items(o).filter(p=>matches(p,e));
+    if(!list.length){ soon.push(o.name); return; }
+    total += list.length;
+    html += `<div class="orow">
+      <div class="orow-h"><h3>${esc(o.name)}</h3><button data-gkey="${esc(o.key)}" data-presub="${esc(k)}">See all ${list.length}</button></div>
+      <div class="hrail">${list.slice(0,10).map(p=>tile(p,o)).join('')}</div></div>`;
+  });
+  if(soon.length) html += `<div class="empty" style="margin:20px 18px 0">
+      <div class="serif-h">More for ${esc(label)} is next up</div>
+      <div>Shelves built and waiting: ${esc(soon.join(' · '))}</div></div>`;
+  $('#psCount').textContent = total ? plural(total,'bloom') : 'Coming soon';
+  $('#psBody').innerHTML = html;
+  show('person');
 }
 
 /* ---------- product ---------- */
@@ -759,10 +1046,10 @@ function openProduct(id){
   state.product = p; state.tier='experience';
   $('#pdName').textContent = p.name;
   $('#pdDesc').textContent = p.description || 'A sealed card opens, their name in gold, and the whole screen fills until there is nothing left but the flowers and what you wrote.';
-  const g = GROUPS.find(x=>x.src.includes(p.category));
+  const o = homeOf(p), who = o ? labelIn(o,p) : '';
   $('#pdTags').innerHTML =
-    `<span style="padding:6px 12px;border:1px solid rgba(201,168,76,.35);border-radius:999px;font-size:9px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--gold)">${esc(g?g.name:p.category)}</span>`
-  + (p.subcategory?`<span style="padding:6px 12px;border:1px solid rgba(255,255,255,.14);border-radius:999px;font-size:9px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:rgba(250,240,236,.62)">${esc(titleize(p.subcategory))}</span>`:'');
+    `<span style="padding:6px 12px;border:1px solid rgba(201,168,76,.35);border-radius:999px;font-size:9px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--gold)">${esc(o?o.name:p.category)}</span>`
+  + (who?`<span style="padding:6px 12px;border:1px solid rgba(255,255,255,.14);border-radius:999px;font-size:9px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:rgba(250,240,236,.62)">${esc(who)}</span>`:'');
   paintTiers();
   const v=$('#pdVideo'); v.src=p.video_url; v.muted=true; v.load();
   v.play().then(()=>setPlayIcon(true)).catch(()=>setPlayIcon(false));
@@ -819,13 +1106,16 @@ function openDelivery(){
 
 /* ---------- events ---------- */
 document.addEventListener('click', e=>{
-  const g = e.target.closest('[data-gkey]');   if(g){ openGroup(g.dataset.gkey); return; }
+  const g = e.target.closest('[data-gkey]');   if(g){ openGroup(g.dataset.gkey, g.dataset.presub); return; }
+  const pe = e.target.closest('[data-person]'); if(pe){ openPerson(pe.dataset.person); return; }
   const t = e.target.closest('[data-pid]');    if(t){ openProduct(t.dataset.pid); return; }
   const c = e.target.closest('[data-sub]');    if(c){
-    $('#recChips').classList.remove('pulse');
-    localStorage.setItem('db_rec_cue', 3);
+    $$('#recRows .rail').forEach(r=>r.classList.remove('pulse'));
+    store.set('db_rec_cue', 3);
     state.sub = c.dataset.sub==='__all' ? null : c.dataset.sub;
-    $$('#recChips .chip').forEach(x=>x.classList.toggle('sel', x===c));
+    paintRec(); return; }
+  const st = e.target.closest('[data-style]'); if(st){
+    state.style = state.style===st.dataset.style ? null : st.dataset.style;
     paintRec(); return; }
   const tr = e.target.closest('[data-tier]');  if(tr){ state.tier=tr.dataset.tier; paintTiers(); return; }
   const d = e.target.closest('[data-del]');    if(d){
@@ -888,7 +1178,7 @@ $('#shareTargets').addEventListener('click', async e=>{
 });
 
 /* ---------- boot ---------- */
-load().then(()=>{ renderLanding(); renderCats(); })
+load().then(()=>{ renderLanding(); renderShop(); })
       .catch(err=>{ toast('Could not load the catalog'); console.error(err); });
 })();
 </script>
