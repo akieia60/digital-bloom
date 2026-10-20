@@ -3,7 +3,7 @@
    Refined, mobile-first, white-forward
    ============================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&family=Cormorant+Garamond:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap');
+/* Font @import removed — fonts load once from index.html. */
 
 html {
   scroll-behavior: smooth;
