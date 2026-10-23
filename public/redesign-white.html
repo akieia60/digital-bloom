@@ -10,7 +10,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&family=Outfit:wght@300;400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap">
 <style>
   :root{
-    --ink:#ffffff; --navy:#ffffff; --navy-page:#faf7f3; --navy-mid:#f1ebe3;
+    --ink:#f3eee6; --navy:#f6f2eb; --navy-page:#efe8dd; --navy-mid:#e7dfd2;
     --blush:#c9857a; --blush-lt:#e8b4ad; --gold:#a8862f; --gold-dk:#B8923F; --cream:#1d1d1f;
     --w:#fff; --soft:#FAFAFA; --line:#E5E5EA; --line-lt:#F0F0F0;
     --t1:#1D1D1F; --t2:#6E6E73; --t3:#AEAEB2;
@@ -38,7 +38,7 @@
   .btn-ghost{border:1px solid rgba(0,0,0,.14);background:rgba(0,0,0,.04);color:rgba(29,29,31,.82);font-weight:600;letter-spacing:.14em}
   .btn-gold{border:1px solid rgba(201,168,76,.35);background:transparent;color:var(--gold);letter-spacing:.16em}
   .nav{display:flex;align-items:center;justify-content:space-between;gap:12px;
-    padding:calc(12px + var(--sat)) 18px 12px;background:rgba(255,255,255,.94);
+    padding:calc(12px + var(--sat)) 18px 12px;background:rgba(246,242,235,.94);
     border-bottom:1px solid rgba(0,0,0,.06);position:sticky;top:0;z-index:40;backdrop-filter:blur(14px)}
   .iconbtn{width:44px;height:44px;display:flex;align-items:center;justify-content:center;border-radius:50%;
     background:rgba(0,0,0,.06);flex:none}
@@ -208,7 +208,7 @@
       <li>No app, no account, no signup</li>
     </ul>
 
-    <div style="position:relative;margin-top:24px;border-radius:34px;overflow:hidden;border:1px solid rgba(0,0,0,.09);background:var(--ink);aspect-ratio:4/5">
+    <div style="position:relative;margin-top:24px;border-radius:34px;overflow:hidden;border:1px solid rgba(0,0,0,.09);background:#0c1f3f;aspect-ratio:4/5">
       <video id="heroVideo" muted playsinline loop preload="metadata" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover"></video>
       <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(7,17,31,.1) 0%,transparent 30%,rgba(7,17,31,.55) 100%);pointer-events:none"></div>
       <div id="heroTag" style="position:absolute;left:16px;top:16px;padding:8px 14px;border-radius:999px;background:rgba(6,13,24,.55);border:1px solid rgba(255,255,255,.1);font-size:9px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.85)">Loading</div>
@@ -368,8 +368,8 @@
 
 <!-- ===================== 5 · PERSONALIZE + PAY ===================== -->
 <section class="screen" id="s-checkout">
- <div class="wrap" style="background:#fff;color:var(--t1);min-height:100dvh">
-  <div style="display:flex;align-items:center;gap:12px;padding:calc(12px + var(--sat)) 18px 12px;border-bottom:1px solid var(--line-lt);position:sticky;top:0;background:#fff;z-index:40">
+ <div class="wrap" style="background:#f6f2eb;color:var(--t1);min-height:100dvh">
+  <div style="display:flex;align-items:center;gap:12px;padding:calc(12px + var(--sat)) 18px 12px;border-bottom:1px solid var(--line-lt);position:sticky;top:0;background:#f6f2eb;z-index:40">
     <button class="iconbtn" data-back style="background:#F5F5F7">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1D1D1F" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
     </button>
@@ -506,7 +506,7 @@
     <div style="display:flex;flex-direction:column;gap:10px" id="steps"></div>
   </div>
 
-  <div style="padding:42px 18px;background:#fff;color:var(--t1)">
+  <div style="padding:42px 18px;background:#f6f2eb;color:var(--t1)">
     <div class="eyebrow" style="color:var(--gold-dk)">What comes back</div>
     <h2 style="margin:10px 0 16px;font-family:'Playfair Display',Georgia,serif;font-weight:500;font-size:26px;line-height:1.2">Digital blooms make some people very emotional.</h2>
     <p style="margin:0;font-size:16px;line-height:1.65;color:var(--t2)">These are very moving digital cards. People don't text back thanking you. They usually call crying. Tears of joy. The blooms are beautiful and effective. Try one — you'll see.</p>
