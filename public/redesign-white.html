@@ -1,0 +1,1231 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>Digital Bloom — White Preview</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&family=Outfit:wght@300;400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap">
+<style>
+  :root{
+    --ink:#ffffff; --navy:#ffffff; --navy-page:#faf7f3; --navy-mid:#f1ebe3;
+    --blush:#c9857a; --blush-lt:#e8b4ad; --gold:#a8862f; --gold-dk:#B8923F; --cream:#1d1d1f;
+    --w:#fff; --soft:#FAFAFA; --line:#E5E5EA; --line-lt:#F0F0F0;
+    --t1:#1D1D1F; --t2:#6E6E73; --t3:#AEAEB2;
+    --sat: env(safe-area-inset-top, 0px); --sab: env(safe-area-inset-bottom, 0px);
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0;background:var(--ink);color:var(--cream);
+    font-family:'Outfit',-apple-system,BlinkMacSystemFont,sans-serif;
+    overscroll-behavior-y:none;-webkit-font-smoothing:antialiased}
+  img,video{display:block;max-width:100%}
+  button{font-family:inherit;cursor:pointer;border:0;background:none;color:inherit}
+  .screen{display:none;min-height:100vh;min-height:100dvh}
+  .screen.on{display:block}
+  .wrap{max-width:520px;margin:0 auto;position:relative}
+
+  /* ---- shared bits ---- */
+  .eyebrow{font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold)}
+  .h1{font-family:'Playfair Display',Georgia,serif;font-weight:400;line-height:1.02;letter-spacing:-.01em;color:var(--cream)}
+  .serif{font-family:'Cormorant Garamond',Georgia,serif}
+  .btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;height:54px;
+    border-radius:999px;font-size:12px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;
+    transition:transform .18s ease,opacity .18s ease}
+  .btn:active{transform:scale(.975)}
+  .btn-primary{background:linear-gradient(135deg,var(--blush) 0%,var(--blush-lt) 100%);color:#1d1d1f}
+  .btn-ghost{border:1px solid rgba(0,0,0,.14);background:rgba(0,0,0,.04);color:rgba(29,29,31,.82);font-weight:600;letter-spacing:.14em}
+  .btn-gold{border:1px solid rgba(201,168,76,.35);background:transparent;color:var(--gold);letter-spacing:.16em}
+  .nav{display:flex;align-items:center;justify-content:space-between;gap:12px;
+    padding:calc(12px + var(--sat)) 18px 12px;background:rgba(255,255,255,.94);
+    border-bottom:1px solid rgba(0,0,0,.06);position:sticky;top:0;z-index:40;backdrop-filter:blur(14px)}
+  .iconbtn{width:44px;height:44px;display:flex;align-items:center;justify-content:center;border-radius:50%;
+    background:rgba(0,0,0,.06);flex:none}
+  .iconbtn:active{background:rgba(0,0,0,.14)}
+  .brand{display:flex;align-items:center;gap:9px;font-family:'Playfair Display',Georgia,serif;font-size:16px}
+  .pill{height:36px;padding:0 16px;border-radius:999px;background:var(--gold);color:var(--ink);
+    font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase}
+
+  /* rails */
+  .rail{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding:0 18px 2px}
+  .rail::-webkit-scrollbar{display:none}
+  .chip{flex:none;min-height:44px;display:flex;align-items:center;padding:11px 18px;border-radius:999px;
+    border:1px solid rgba(0,0,0,.14);background:rgba(0,0,0,.05);color:rgba(29,29,31,.72);
+    font-size:13px;font-weight:500;white-space:nowrap}
+  .chip.sel{border-color:var(--gold);background:rgba(201,168,76,.16);color:var(--gold);font-weight:600}
+
+  /* tiles */
+  .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;padding:0 18px}
+  .tile{position:relative;border-radius:20px;overflow:hidden;aspect-ratio:3/4;
+    border:1px solid rgba(0,0,0,.08);background:var(--navy-mid);isolation:isolate}
+  .tile:active{transform:scale(.98)}
+  .tile video,.tile img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+  .tile .veil{position:absolute;inset:0;background:linear-gradient(180deg,transparent 34%,rgba(7,17,31,.88) 100%)}
+  .tile .cap{position:absolute;left:13px;right:13px;bottom:11px}
+  .tile .cap b{display:block;font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:16px;line-height:1.15;color:#fff}
+  .tile .cap span{display:block;margin-top:4px;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.55)}
+  .badge{position:absolute;top:10px;left:10px;padding:5px 10px;border-radius:999px;background:rgba(6,13,24,.6);
+    border:1px solid rgba(201,168,76,.4);font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
+
+  .sectionhead{padding:24px 18px 14px}
+  .sectionhead h2{margin:8px 0 4px;font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:27px;color:var(--cream)}
+  .sectionhead p{margin:0;font-size:13px;line-height:1.5;color:rgba(29,29,31,.55)}
+
+  /* forms */
+  .label{display:block;font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--t2)}
+  .field{width:100%;min-height:52px;margin-top:8px;padding:14px 16px;border:1px solid #D2D2D7;border-radius:14px;
+    background:#fff;font-family:inherit;font-size:16px;color:var(--t1);outline:none}
+  .field:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(201,161,74,.14)}
+  .note{display:flex;gap:8px;margin-top:8px;padding:10px 12px;border-radius:12px;background:#FAF6EC;
+    font-size:12px;line-height:1.4;color:var(--t2)}
+  .opt{display:flex;align-items:flex-start;gap:12px;padding:15px;border-radius:16px;border:1px solid var(--line);background:#fff;text-align:left}
+  .opt.sel{border-color:#C9A14A;background:#FAF6EC}
+  .dot{flex:none;width:18px;height:18px;margin-top:2px;border-radius:50%;border:1.5px solid #D2D2D7;background:#fff}
+  .opt.sel .dot{border:5px solid #C9A14A}
+
+  .toast{position:fixed;left:50%;bottom:calc(26px + var(--sab));transform:translateX(-50%) translateY(20px);
+    padding:13px 22px;border-radius:999px;background:rgba(7,17,31,.94);border:1px solid rgba(201,168,76,.35);
+    color:var(--cream);font-size:13px;opacity:0;pointer-events:none;transition:.28s ease;z-index:200;max-width:88vw;text-align:center}
+  .toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+
+  .sheet{position:fixed;inset:0;z-index:150;display:none}
+  .sheet.on{display:block}
+  .sheet .scrim{position:absolute;inset:0;background:rgba(0,0,0,.6);opacity:0;transition:.3s}
+  .sheet.on .scrim{opacity:1}
+  .sheet .panel{position:absolute;left:0;right:0;bottom:0;max-height:92vh;overflow-y:auto;
+    padding:12px 18px calc(26px + var(--sab));border-radius:28px 28px 0 0;background:var(--navy);
+    border-top:1px solid rgba(0,0,0,.09);transform:translateY(100%);transition:transform .32s cubic-bezier(.32,.72,0,1)}
+  .sheet.on .panel{transform:translateY(0)}
+  .grab{margin:0 auto 14px}
+
+  /* ---- hamburger menu ---- */
+  .menu{position:fixed;inset:0;z-index:160;display:none}
+  .menu.on{display:block}
+  .menu .scrim{position:absolute;inset:0;background:rgba(0,0,0,.62);opacity:0;transition:.3s}
+  .menu.on .scrim{opacity:1}
+  .menu .panel{position:absolute;top:0;left:0;bottom:0;width:min(88vw,360px);overflow-y:auto;
+    padding:calc(16px + var(--sat)) 20px calc(28px + var(--sab));background:var(--navy);
+    border-right:1px solid rgba(0,0,0,.09);transform:translateX(-100%);
+    transition:transform .32s cubic-bezier(.32,.72,0,1)}
+  .menu.on .panel{transform:translateX(0)}
+  .menu h3{margin:26px 0 10px;font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold)}
+  .menu a,.menu button.mi{display:flex;align-items:center;justify-content:space-between;gap:10px;
+    width:100%;min-height:48px;padding:12px 0;border-bottom:1px solid rgba(0,0,0,.06);
+    font-size:16px;color:var(--cream);text-decoration:none;text-align:left;background:none}
+  .menu a:active,.menu button.mi:active{color:var(--gold)}
+  .burger{width:44px;height:44px;display:flex;flex-direction:column;justify-content:center;gap:4.5px;
+    align-items:center;flex:none;border-radius:50%}
+  .burger span{display:block;width:19px;height:1.6px;border-radius:2px;background:rgba(29,29,31,.88)}
+
+  /* ---- attention pulse on the recipient pills (3 beats, then rests) ---- */
+  @keyframes beat{0%,100%{transform:scale(1)}50%{transform:scale(1.085)}}
+  .rail.pulse .chip{animation:beat 1.15s ease-in-out 3}
+  .rail.pulse .chip:nth-child(2){animation-delay:.09s}
+  .rail.pulse .chip:nth-child(3){animation-delay:.18s}
+  .rail.pulse .chip:nth-child(4){animation-delay:.27s}
+  .rail.pulse .chip:nth-child(5){animation-delay:.36s}
+  .cue{display:flex;align-items:center;gap:7px;padding:14px 18px 0;font-size:11px;font-weight:700;
+    letter-spacing:.16em;text-transform:uppercase;color:var(--gold)}
+  .cue svg{animation:nudge 1.4s ease-in-out 4}
+  @keyframes nudge{0%,100%{transform:translateX(0)}50%{transform:translateX(4px)}}
+  @media (prefers-reduced-motion: reduce){
+    .rail.pulse .chip,.cue svg{animation:none}
+  }
+  .soon{opacity:.5}
+  .soon::after{content:'soon';margin-left:7px;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:rgba(29,29,31,.45)}
+  .chip small{margin-left:6px;font-size:11px;font-weight:500;opacity:.55}
+
+  /* ---- occasion → who → style ---- */
+  .rrow{padding-top:4px}
+  .rowlabel{padding:12px 18px 8px;font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:rgba(29,29,31,.42)}
+  .grid.one{grid-template-columns:1fr}
+  .tile.wide{aspect-ratio:16/10}
+  .tile.wide .cap b{font-size:24px}
+  .tile.bare{opacity:.62}
+  .mhead{padding:30px 18px 12px;font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold)}
+  .hrail{display:flex;gap:12px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding:0 18px 2px;scroll-snap-type:x proximity}
+  .hrail::-webkit-scrollbar{display:none}
+  .hrail .tile{flex:none;width:42%;max-width:210px;scroll-snap-align:start}
+  .orow{padding-top:26px}
+  .orow-h{display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding:0 18px 12px}
+  .orow-h h3{margin:0;font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:22px;color:var(--cream)}
+  .orow-h button{flex:none;min-height:44px;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gold)}
+  .dchip{flex:none;display:flex;flex-direction:column;align-items:flex-start;gap:3px;min-width:132px;padding:13px 16px;
+    border-radius:18px;border:1px solid rgba(201,168,76,.3);background:rgba(201,168,76,.07);text-align:left}
+  .dchip b{font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:17px;color:var(--cream)}
+  .dchip span{font-size:12px;color:rgba(29,29,31,.6)}
+  .dchip em{font-style:normal;font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gold)}
+  .dchip.bare{border-color:rgba(0,0,0,.1);background:rgba(0,0,0,.03)}
+  .dchip.bare em{color:rgba(29,29,31,.4)}
+  .wrapchips{display:flex;flex-wrap:wrap;gap:8px;padding:0 18px}
+  .promise{display:flex;flex-direction:column;gap:9px;margin:18px 0 0;padding:0;list-style:none}
+  .promise li{display:flex;gap:10px;align-items:center;font-size:14px;color:rgba(29,29,31,.8)}
+  .promise li::before{content:'';flex:none;width:6px;height:6px;border-radius:50%;background:var(--gold)}
+  /* Gamble 10/22: no pills. Plain words you swipe, the blooms do the selling. */
+  .whohead{padding:18px 18px 4px;font-family:'Playfair Display',Georgia,serif;font-size:22px;color:var(--cream)}
+  .who{display:flex;gap:22px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding:6px 18px 4px}
+  .who::-webkit-scrollbar{display:none}
+  .who button{flex:none;min-height:44px;padding:8px 0;border-bottom:2px solid transparent;background:none;
+    font-size:16px;font-weight:500;color:rgba(29,29,31,.62);white-space:nowrap}
+  .who button.sel{color:var(--gold);border-bottom-color:var(--gold);font-weight:600}
+  .who button.soon::after{display:none}
+  .who.sm button{font-size:14px}
+  .swipehint{padding:0 18px 10px;font-size:11px;color:rgba(29,29,31,.38)}
+  .empty{grid-column:1/-1;padding:30px 20px;text-align:center;border:1px dashed rgba(0,0,0,.14);border-radius:20px;
+    font-size:13px;line-height:1.5;color:rgba(29,29,31,.5)}
+  .empty .serif-h{margin-bottom:7px;font-family:'Playfair Display',Georgia,serif;font-size:19px;color:var(--cream)}
+</style>
+</head>
+<body>
+
+<div class="toast" id="toast"></div>
+
+<!-- ===================== 1 · LANDING ===================== -->
+<section class="screen on" id="s-landing">
+ <div class="wrap">
+  <div class="nav">
+    <button class="burger" data-menu aria-label="Menu"><span></span><span></span><span></span></button>
+    <div class="brand" style="flex:1">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#c9a84c" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 12c0-3 1.8-5.5 4.2-5.5C18 6.5 19 8 19 9.6 19 12 16.4 12 12 12z"/><path d="M12 12c0-3-1.8-5.5-4.2-5.5C6 6.5 5 8 5 9.6 5 12 7.6 12 12 12z"/><path d="M12 12c3 0 5.5 1.8 5.5 4.2 0 1.8-1.5 2.8-3.1 2.8C12 19 12 16.4 12 12z"/><path d="M12 12c-3 0-5.5 1.8-5.5 4.2 0 1.8 1.5 2.8 3.1 2.8C12 19 12 16.4 12 12z"/></svg>
+      Digital Bloom
+    </div>
+    <button class="pill" data-go="shop">Send</button>
+  </div>
+
+  <div style="position:relative;padding:34px 18px 40px;background:
+      radial-gradient(120% 80% at 12% 0%,rgba(201,133,122,.20) 0%,transparent 62%),
+      radial-gradient(100% 70% at 92% 100%,rgba(201,168,76,.14) 0%,transparent 62%),var(--navy);overflow:hidden">
+    <div style="display:inline-flex;align-items:center;gap:8px;padding:7px 16px;border:1px solid rgba(201,133,122,.28);border-radius:999px;background:rgba(201,133,122,.07)">
+      <span style="width:5px;height:5px;border-radius:50%;background:var(--gold)"></span>
+      <span style="font-size:10px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:rgba(29,29,31,.78)">The card and the flowers, in one</span>
+    </div>
+    <h1 class="h1" style="margin:20px 0 0;font-size:clamp(38px,10.5vw,50px)">Give Them Their Flowers<br><em style="color:var(--blush)">While They're Still Here</em></h1>
+    <p class="serif" style="margin:16px 0 0;font-size:19px;line-height:1.5;color:rgba(29,29,31,.76);max-width:340px">A card and a bouquet in one short film — their name on it, sent from your phone in under a minute.</p>
+    <ul class="promise">
+      <li>Their name engraved on the card in the film</li>
+      <li>Arrives from your own number, in minutes</li>
+      <li>No app, no account, no signup</li>
+    </ul>
+
+    <div style="position:relative;margin-top:24px;border-radius:34px;overflow:hidden;border:1px solid rgba(0,0,0,.09);background:var(--ink);aspect-ratio:4/5">
+      <video id="heroVideo" muted playsinline loop preload="metadata" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover"></video>
+      <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(7,17,31,.1) 0%,transparent 30%,rgba(7,17,31,.55) 100%);pointer-events:none"></div>
+      <div id="heroTag" style="position:absolute;left:16px;top:16px;padding:8px 14px;border-radius:999px;background:rgba(6,13,24,.55);border:1px solid rgba(255,255,255,.1);font-size:9px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.85)">Loading</div>
+      <button id="heroSound" class="iconbtn" style="position:absolute;right:16px;top:16px;background:rgba(6,13,24,.55)" aria-label="Sound">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H3v6h3l5 4z"/><path d="M17 9l4 6M21 9l-4 6"/></svg>
+      </button>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:10px;margin-top:22px">
+      <button class="btn btn-primary" data-go="shop">Send a Bloom</button>
+      <button class="btn btn-ghost" id="watchFirst">Watch one first</button>
+    </div>
+    <div style="margin-top:13px;text-align:center;font-size:12px;color:rgba(29,29,31,.42)">From <b style="color:var(--gold)">$1.99</b> · less than a paper card</div>
+  </div>
+
+  <!-- coming up: next holidays, by date -->
+  <div style="padding:30px 0 6px;background:var(--navy)">
+    <div class="sectionhead" style="padding-top:0;padding-bottom:14px">
+      <div class="eyebrow">Coming up</div>
+      <h2>Don't miss the next one</h2>
+    </div>
+    <div class="rail" id="upRail" style="gap:10px"></div>
+  </div>
+
+  <!-- who are you sending to? -->
+  <div style="padding:30px 0 4px;background:var(--navy)">
+    <div class="sectionhead" style="padding-top:0;padding-bottom:14px">
+      <div class="eyebrow">Start here</div>
+      <h2>Who are you sending to?</h2>
+      <p>Tap a person — we'll show every bloom made for them.</p>
+    </div>
+    <div class="hrail" id="pickRail"></div>
+  </div>
+
+  <!-- one swipe row per occasion -->
+  <div style="padding:6px 0 40px;background:var(--navy)">
+    <div id="occRows"></div>
+    <div style="padding:26px 18px 0">
+      <button class="btn btn-gold" data-go="shop">See all occasions</button>
+      <p id="occSub" style="margin:10px 0 0;text-align:center;font-size:12px;color:rgba(29,29,31,.42)"></p>
+    </div>
+  </div>
+
+  <div style="padding:44px 18px calc(38px + var(--sab));background:var(--ink);text-align:center">
+    <!-- Gamble 8/20: the ad copy lives in Understanding the Process, not in the way of the product -->
+    <button class="btn btn-ghost" data-go="understanding">Understanding the Process</button>
+    <div style="margin-top:24px;font-size:11px;letter-spacing:.14em;color:rgba(29,29,31,.25)">© Digital Bloom™ · prototype</div>
+  </div>
+ </div>
+</section>
+
+<!-- ===================== 2 · OCCASIONS ===================== -->
+<section class="screen" id="s-shop">
+ <div class="wrap">
+  <div class="nav">
+    <button class="iconbtn" data-back>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(29,29,31,.85)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
+    </button>
+    <div class="brand" style="flex:1">Occasions</div>
+    <button class="burger" data-menu aria-label="Menu"><span></span><span></span><span></span></button>
+  </div>
+  <div class="sectionhead">
+    <h2 style="font-size:30px;margin-top:0">Occasions</h2>
+    <p id="shopSub">Loading your catalog…</p>
+  </div>
+  <div id="shopBody"></div>
+  <div style="height:calc(30px + var(--sab))"></div>
+ </div>
+</section>
+
+<!-- ===================== 3 · RECIPIENTS ===================== -->
+<section class="screen" id="s-recipients">
+ <div class="wrap">
+  <div class="nav">
+    <button class="iconbtn" data-back>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(29,29,31,.85)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
+    </button>
+    <div style="flex:1">
+      <div style="font-family:'Playfair Display',Georgia,serif;font-size:19px" id="recTitle">Category</div>
+      <div style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:rgba(29,29,31,.45)" id="recCount">—</div>
+    </div>
+    <button class="burger" data-menu aria-label="Menu"><span></span><span></span><span></span></button>
+  </div>
+  <div class="cue" id="recCue">
+    Choose who it's for
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>
+  </div>
+  <div id="recRows" style="padding-bottom:6px;border-bottom:1px solid rgba(0,0,0,.06)"></div>
+  <div class="sectionhead" style="padding-bottom:8px">
+    <h2 id="recSelLabel" style="font-size:25px;margin-top:0">Everyone</h2>
+    <p id="recSelCount">—</p>
+  </div>
+  <div class="grid" id="recGrid"></div>
+  <div style="height:calc(30px + var(--sab))"></div>
+ </div>
+</section>
+
+<!-- ============ 3b · ONE PERSON, EVERY OCCASION ============ -->
+<section class="screen" id="s-person">
+ <div class="wrap">
+  <div class="nav">
+    <button class="iconbtn" data-back>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(29,29,31,.85)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
+    </button>
+    <div style="flex:1">
+      <div style="font-family:'Playfair Display',Georgia,serif;font-size:19px" id="psTitle">For —</div>
+      <div style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:rgba(29,29,31,.45)" id="psCount">—</div>
+    </div>
+    <button class="burger" data-menu aria-label="Menu"><span></span><span></span><span></span></button>
+  </div>
+  <div id="psBody"></div>
+  <div style="height:calc(36px + var(--sab))"></div>
+ </div>
+</section>
+
+<!-- ===================== 4 · PRODUCT ===================== -->
+<section class="screen" id="s-product">
+ <div class="wrap" style="background:var(--ink)">
+  <div style="position:relative;aspect-ratio:3/4;background:#000">
+    <video id="pdVideo" playsinline preload="auto" style="width:100%;height:100%;object-fit:cover"></video>
+    <div style="position:absolute;top:calc(12px + var(--sat));left:14px;right:14px;display:flex;justify-content:space-between">
+      <button class="iconbtn" data-back style="background:rgba(6,13,24,.5)">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
+      </button>
+      <button class="iconbtn" id="pdSound" style="background:rgba(6,13,24,.5)">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H3v6h3l5 4z"/><path d="M17 9l4 6M21 9l-4 6"/></svg>
+      </button>
+    </div>
+    <button id="pdPlay" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center">
+      <span id="pdPlayIcon" style="width:70px;height:70px;border-radius:50%;background:rgba(6,13,24,.5);border:1px solid rgba(0,0,0,.22);display:flex;align-items:center;justify-content:center">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="#fff"><path d="M8 5l12 7-12 7z"/></svg>
+      </span>
+    </button>
+    <div style="position:absolute;left:14px;right:14px;bottom:14px;pointer-events:none">
+      <div style="height:3px;border-radius:3px;background:rgba(0,0,0,.18);overflow:hidden"><div id="pdBar" style="width:0%;height:100%;background:var(--gold)"></div></div>
+      <div style="display:flex;justify-content:space-between;margin-top:7px;font-size:11px;color:rgba(0,0,0,.55)"><span id="pdCur">0:00</span><span id="pdDur">0:00</span></div>
+    </div>
+  </div>
+
+  <div style="padding:22px 18px 0">
+    <div style="display:flex;gap:8px;flex-wrap:wrap" id="pdTags"></div>
+    <h1 class="h1" style="margin:14px 0 0;font-size:28px" id="pdName">—</h1>
+    <p class="serif" style="margin:11px 0 0;font-size:18px;line-height:1.5;color:rgba(29,29,31,.7)" id="pdDesc"></p>
+  </div>
+
+  <div style="padding:20px 18px 0">
+    <div class="eyebrow">Choose a length</div>
+    <div style="display:flex;flex-direction:column;gap:10px;margin-top:13px" id="pdTiers"></div>
+  </div>
+
+  <div style="position:sticky;bottom:0;margin-top:22px;padding:14px 18px calc(20px + var(--sab));background:linear-gradient(180deg,rgba(7,17,31,0) 0%,var(--ink) 26%)">
+    <button class="btn btn-primary" id="pdBuy">Personalize &amp; send — $4.99</button>
+    <div style="margin-top:9px;text-align:center;font-size:11px;color:rgba(29,29,31,.42)">One screen. No account. Apple Pay ready.</div>
+  </div>
+ </div>
+</section>
+
+<!-- ===================== 5 · PERSONALIZE + PAY ===================== -->
+<section class="screen" id="s-checkout">
+ <div class="wrap" style="background:#fff;color:var(--t1);min-height:100dvh">
+  <div style="display:flex;align-items:center;gap:12px;padding:calc(12px + var(--sat)) 18px 12px;border-bottom:1px solid var(--line-lt);position:sticky;top:0;background:#fff;z-index:40">
+    <button class="iconbtn" data-back style="background:#F5F5F7">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1D1D1F" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
+    </button>
+    <div style="flex:1">
+      <div style="font-family:'Playfair Display',Georgia,serif;font-size:17px">Personalize &amp; send</div>
+      <div style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--t3)">One screen · about 60 seconds</div>
+    </div>
+  </div>
+
+  <div style="padding:16px 18px 0">
+    <div style="position:relative;border-radius:20px;overflow:hidden;aspect-ratio:16/10;background:var(--ink)">
+      <video id="coVideo" muted playsinline loop preload="metadata" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.75"></video>
+      <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(7,17,31,.35),rgba(7,17,31,.75))"></div>
+      <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px;text-align:center">
+        <div style="font-size:9px;font-weight:700;letter-spacing:.24em;text-transform:uppercase;color:rgba(201,168,76,.9)">For</div>
+        <div id="pvName" style="margin-top:5px;font-family:'Playfair Display',Georgia,serif;font-size:26px;color:var(--cream)">Their name</div>
+        <div id="pvMsg" class="serif" style="margin-top:7px;max-width:250px;font-size:15px;font-style:italic;line-height:1.4;color:rgba(29,29,31,.8);white-space:pre-line"></div>
+      </div>
+      <div style="position:absolute;left:12px;bottom:9px;font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:rgba(0,0,0,.4)">Live preview</div>
+    </div>
+  </div>
+
+  <div style="padding:20px 18px 0;display:flex;flex-direction:column;gap:16px">
+    <div>
+      <label class="label" for="fName">Their name</label>
+      <input class="field" id="fName" type="text" placeholder="Mama Lois" autocomplete="off" enterkeyhint="next">
+      <div class="note">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#B8923F" stroke-width="1.8" stroke-linecap="round" style="flex:none;margin-top:1px"><circle cx="12" cy="12" r="9"/><path d="M12 8v5"/><path d="M12 16h.01"/></svg>
+        <span>Double-check the spelling — it gets engraved on the card in the film.</span>
+      </div>
+    </div>
+    <div>
+      <label class="label" for="fMsg">What you want to say</label>
+      <textarea class="field" id="fMsg" rows="3" maxlength="120" placeholder="You planted everything I am."></textarea>
+      <div style="display:flex;justify-content:space-between;margin-top:6px;font-size:11px;color:var(--t3)">
+        <span>Keep it short — it stays on screen 4 seconds</span><span id="cCount">0 / 120</span>
+      </div>
+    </div>
+    <div>
+      <label class="label" for="fFrom">Signed</label>
+      <input class="field" id="fFrom" type="text" placeholder="Ak" autocomplete="off">
+    </div>
+    <div>
+      <label class="label">How it gets there</label>
+      <div style="display:flex;flex-direction:column;gap:10px;margin-top:10px">
+        <button class="opt sel" data-del="self">
+          <span class="dot"></span>
+          <span style="flex:1">
+            <b style="display:block;font-size:14px;font-weight:600;color:var(--t1)">I'll send it</b>
+            <span style="display:block;margin-top:3px;font-size:12px;line-height:1.4;color:var(--t2)">Opens your Messages with the link ready — arrives from your own number.</span>
+          </span>
+          <span style="font-size:12px;font-weight:600;color:var(--gold-dk)">Free</span>
+        </button>
+        <button class="opt" data-del="us">
+          <span class="dot"></span>
+          <span style="flex:1">
+            <b style="display:block;font-size:14px;font-weight:600;color:var(--t1)">We send it for you</b>
+            <span style="display:block;margin-top:3px;font-size:12px;line-height:1.4;color:var(--t2)">Schedule the exact day and time. We text it to them.</span>
+          </span>
+          <span style="font-size:12px;font-weight:600;color:var(--t3)">+$1.00</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin:22px 18px 0;padding:18px;border-radius:20px;background:var(--soft);border:1px solid var(--line-lt)">
+    <div style="display:flex;justify-content:space-between;font-size:14px;color:var(--t2)"><span id="sumLine">Bloom Experience</span><span id="sumPrice">$4.99</span></div>
+    <div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:8px;padding-top:12px;border-top:1px solid var(--line)">
+      <span style="font-size:15px;font-weight:600;color:var(--t1)">Total</span>
+      <span id="sumTotal" style="font-family:'Playfair Display',Georgia,serif;font-size:26px;color:var(--t1)">$4.99</span>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:10px;margin-top:16px">
+      <button class="btn" id="payApple" style="height:54px;border-radius:14px;background:#000;color:#fff;letter-spacing:0;text-transform:none;font-size:16px;font-weight:600">
+        <svg width="17" height="20" viewBox="0 0 17 20" fill="#fff"><path d="M13.6 10.6c0-2.3 1.9-3.4 2-3.5-1.1-1.6-2.8-1.8-3.4-1.8-1.4-.2-2.8.8-3.5.8-.7 0-1.9-.8-3.1-.8-1.6 0-3 .9-3.8 2.4-1.6 2.8-.4 7 1.2 9.3.8 1.1 1.7 2.4 2.9 2.3 1.2 0 1.6-.7 3-.7s1.8.7 3 .7c1.3 0 2.1-1.1 2.8-2.3.9-1.3 1.3-2.6 1.3-2.7 0 0-2.4-.9-2.4-3.7zM11.3 3.8c.6-.8 1.1-1.9 1-3-.9 0-2.1.6-2.8 1.4-.6.7-1.2 1.8-1 2.9 1 .1 2.1-.5 2.8-1.3z"/></svg>
+        Pay
+      </button>
+      <button class="btn" id="payCard" style="height:54px;border-radius:14px;border:1px solid #D2D2D7;background:#fff;color:var(--t1);letter-spacing:0;text-transform:none;font-size:15px;font-weight:600">Pay with card</button>
+    </div>
+  </div>
+  <div style="padding:14px 18px calc(28px + var(--sab));text-align:center;font-size:11px;line-height:1.5;color:var(--t3)">No account. No subscription. Yours to keep forever.</div>
+ </div>
+</section>
+
+<!-- ===================== 6 · DELIVERY ===================== -->
+<section class="screen" id="s-delivery">
+ <div style="position:relative;width:100%;height:100dvh;background:#000;overflow:hidden">
+   <video id="dlVideo" playsinline preload="auto" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover"></video>
+   <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.55) 0%,transparent 26%,transparent 46%,rgba(0,0,0,.82) 100%);pointer-events:none"></div>
+
+   <div style="position:absolute;top:calc(54px + var(--sat));left:24px;right:24px;text-align:center;pointer-events:none">
+     <div style="font-size:10px;font-weight:600;letter-spacing:.28em;text-transform:uppercase;color:rgba(201,168,76,.9)">A bloom for</div>
+     <div id="dlName" style="margin-top:9px;font-family:'Playfair Display',Georgia,serif;font-size:36px;color:var(--cream)">—</div>
+     <div id="dlFrom" style="margin-top:7px;font-size:12px;letter-spacing:.12em;color:rgba(29,29,31,.5)"></div>
+   </div>
+
+   <div id="dlMsg" class="serif" style="position:absolute;left:24px;right:24px;bottom:186px;text-align:center;font-size:23px;font-style:italic;line-height:1.42;color:rgba(29,29,31,.95);pointer-events:none"></div>
+
+   <button class="iconbtn" id="dlReplay" style="position:absolute;top:calc(14px + var(--sat));right:16px;background:rgba(0,0,0,.1)">
+     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(29,29,31,.9)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg>
+   </button>
+   <button class="iconbtn" id="dlSound" style="position:absolute;top:calc(14px + var(--sat));left:16px;background:rgba(0,0,0,.1)">
+     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(29,29,31,.9)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H3v6h3l5 4z"/><path d="M17 9l4 6M21 9l-4 6"/></svg>
+   </button>
+
+   <div style="position:absolute;left:16px;right:16px;bottom:calc(22px + var(--sab));display:flex;flex-direction:column;gap:10px">
+     <div style="display:flex;gap:10px">
+       <button class="btn btn-ghost" id="dlSave" style="height:50px;letter-spacing:.06em;font-size:13px;text-transform:none;backdrop-filter:blur(8px)">
+         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11"/><path d="M8 11l4 4 4-4"/><path d="M5 19h14"/></svg> Save it
+       </button>
+       <button class="btn btn-ghost" id="dlShare" style="height:50px;letter-spacing:.06em;font-size:13px;text-transform:none;backdrop-filter:blur(8px)">
+         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4"/><path d="M8 8l4-4 4 4"/><path d="M5 14v5h14v-5"/></svg> Share
+       </button>
+     </div>
+     <button class="btn btn-primary" style="height:52px;letter-spacing:.16em" data-go="shop">Send one back</button>
+     <div style="text-align:center;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:rgba(29,29,31,.3)">Digital Bloom™ · yours to keep forever</div>
+   </div>
+ </div>
+</section>
+
+
+<!-- ============ UNDERSTANDING THE PROCESS ============ -->
+<section class="screen" id="s-understanding">
+ <div class="wrap">
+  <div class="nav">
+    <button class="iconbtn" data-back>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(29,29,31,.85)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
+    </button>
+    <div class="brand" style="flex:1">Understanding the Process</div>
+  </div>
+
+  <div style="padding:38px 18px;background:var(--navy-page);border-top:1px solid rgba(0,0,0,.05)">
+    <div class="eyebrow">How it works</div>
+    <h2 class="h1" style="margin:10px 0 20px;font-size:26px">Three minutes, start to tears.</h2>
+    <div style="display:flex;flex-direction:column;gap:10px" id="steps"></div>
+  </div>
+
+  <div style="padding:42px 18px;background:#fff;color:var(--t1)">
+    <div class="eyebrow" style="color:var(--gold-dk)">What comes back</div>
+    <h2 style="margin:10px 0 16px;font-family:'Playfair Display',Georgia,serif;font-weight:500;font-size:26px;line-height:1.2">Digital blooms make some people very emotional.</h2>
+    <p style="margin:0;font-size:16px;line-height:1.65;color:var(--t2)">These are very moving digital cards. People don't text back thanking you. They usually call crying. Tears of joy. The blooms are beautiful and effective. Try one — you'll see.</p>
+    <div style="margin-top:14px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--t3)">— Gamble, co-founder</div>
+
+    <div hidden style="margin-top:22px;padding:18px;border:1px solid var(--line);border-radius:18px;background:var(--soft)">
+      <div class="serif" style="font-size:18px;font-style:italic;line-height:1.45">[REAL RECIPIENT QUOTE — one line from somebody who received one]</div>
+      <div style="margin-top:12px;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--t3)">[Name] · [Occasion]</div>
+    </div>
+
+    <div style="display:flex;gap:8px;margin-top:18px;align-items:center;justify-content:center;color:var(--t2)">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="4" y="10" width="16" height="10" rx="2.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+      <span style="font-size:12px">Secure checkout by Stripe · Apple Pay &amp; Google Pay</span>
+    </div>
+  </div>
+
+  <div id="u-ad" style="padding:44px 18px calc(38px + var(--sab));background:var(--ink);text-align:center">
+    <h2 class="h1" style="margin:0;font-size:27px">Someone in your phone<br><em style="color:var(--blush)">deserves to hear from you.</em></h2>
+    <p style="margin:16px auto 0;max-width:330px;font-size:15px;line-height:1.6;color:rgba(29,29,31,.66)">Maybe they love you, miss you, thinking about you, or haven't heard from you in a while. Surprise them with a digital card and flowers — I'm sure they'll love it.</p>
+    <button class="btn btn-primary" style="margin-top:24px" data-go="shop">Send a Bloom</button>
+  </div>
+ </div>
+</section>
+
+<!-- ===================== HAMBURGER MENU ===================== -->
+<div class="menu" id="menu">
+  <div class="scrim" data-closemenu></div>
+  <div class="panel">
+    <div style="display:flex;align-items:center;justify-content:space-between">
+      <div class="brand">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#c9a84c" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 12c0-3 1.8-5.5 4.2-5.5C18 6.5 19 8 19 9.6 19 12 16.4 12 12 12z"/><path d="M12 12c0-3-1.8-5.5-4.2-5.5C6 6.5 5 8 5 9.6 5 12 7.6 12 12 12z"/><path d="M12 12c3 0 5.5 1.8 5.5 4.2 0 1.8-1.5 2.8-3.1 2.8C12 19 12 16.4 12 12z"/><path d="M12 12c-3 0-5.5 1.8-5.5 4.2 0 1.8 1.5 2.8 3.1 2.8C12 19 12 16.4 12 12z"/></svg>
+        Digital Bloom
+      </div>
+      <button class="iconbtn" data-closemenu aria-label="Close">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(29,29,31,.75)" stroke-width="1.8" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+    <div style="margin-top:6px;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:rgba(29,29,31,.35)">Cinematic Digital Experiences</div>
+
+    <h3>Shop</h3>
+    <button class="mi" data-gkey="birthday" data-closemenu>Birthday</button>
+    <button class="mi" data-go="shop" data-closemenu>All occasions <span style="color:rgba(29,29,31,.35);font-size:13px" id="miOccCount"></span></button>
+    <button class="mi" data-go="shop" data-anchor="m-holiday" data-closemenu>Holidays, by date</button>
+    <a href="/credits" data-closemenu>Gift credits</a>
+    <a href="/credits/balance" data-closemenu>Check a balance</a>
+
+    <h3 id="understandingTitle">Understanding the Process</h3>
+    <button class="mi" data-go="understanding" data-closemenu>How it works</button>
+    <button class="mi" data-go="understanding" data-closemenu>What comes back</button>
+    <button class="mi" data-go="understanding" data-anchor="u-ad" data-closemenu>Someone in your phone</button>
+
+    <h3>Company</h3>
+    <a href="/about" data-closemenu>About</a>
+    <a href="/contact" data-closemenu>Contact</a>
+    <a href="/terms" data-closemenu>Terms</a>
+    <a href="/privacy" data-closemenu>Privacy</a>
+    <a href="/refunds" data-closemenu>Refunds</a>
+
+    <div style="margin-top:26px;font-size:11px;letter-spacing:.14em;color:rgba(29,29,31,.25)">© Digital Bloom™ · prototype</div>
+  </div>
+</div>
+
+<!-- ===================== SHARE SHEET ===================== -->
+<div class="sheet" id="shareSheet">
+  <div class="scrim" data-closesheet></div>
+  <div class="panel">
+    <button class="grab" data-closesheet style="display:block;width:56px;height:22px;padding:9px 9px 9px;background:none;border:0" aria-label="Close">
+      <span style="display:block;width:38px;height:4px;border-radius:4px;background:rgba(0,0,0,.2)"></span>
+    </button>
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:14px">
+      <h2 class="h1" style="margin:0;font-size:24px;flex:1">Let them see your face when you saw it.</h2>
+      <button class="iconbtn" data-closesheet style="flex:none;margin-top:-2px" aria-label="Close">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(29,29,31,.75)" stroke-width="1.8" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+    <p style="margin:9px 0 18px;font-size:13px;line-height:1.5;color:rgba(29,29,31,.58)">Save the bloom, then post it with the caption. Your people find out Digital Bloom exists from you — not an ad.</p>
+
+    <button class="opt" id="stepSave" style="width:100%;background:rgba(0,0,0,.05);border-color:rgba(0,0,0,.09);align-items:center">
+      <span style="flex:none;width:34px;height:34px;display:flex;align-items:center;justify-content:center;border-radius:50%;border:1px solid rgba(201,168,76,.4);color:var(--gold)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11"/><path d="M8 11l4 4 4-4"/><path d="M5 19h14"/></svg>
+      </span>
+      <span style="flex:1">
+        <b style="display:block;font-size:14px;font-weight:600;color:var(--cream)">Save to camera roll</b>
+        <span style="display:block;margin-top:3px;font-size:12px;color:rgba(29,29,31,.5)">The full video, watermark and all</span>
+      </span>
+      <span style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:rgba(29,29,31,.35)">Step 1</span>
+    </button>
+
+    <div style="margin-top:10px;padding:15px;border-radius:16px;background:rgba(0,0,0,.05);border:1px solid rgba(0,0,0,.09)">
+      <div style="display:flex;align-items:center;gap:13px">
+        <span style="flex:none;width:34px;height:34px;display:flex;align-items:center;justify-content:center;border-radius:50%;border:1px solid rgba(201,168,76,.4);color:var(--gold)">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M15 5H6a2 2 0 0 0-2 2v9"/></svg>
+        </span>
+        <span style="flex:1">
+          <b style="display:block;font-size:14px;font-weight:600;color:var(--cream)">Copy the caption</b>
+          <span style="display:block;margin-top:3px;font-size:12px;color:rgba(29,29,31,.5)">Edit it — it should sound like you</span>
+        </span>
+        <span style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:rgba(29,29,31,.35)">Step 2</span>
+      </div>
+      <textarea id="capText" rows="5" style="width:100%;margin-top:12px;padding:14px;border-radius:12px;background:rgba(0,0,0,.28);border:1px solid rgba(0,0,0,.07);font-family:'Cormorant Garamond',Georgia,serif;font-size:16px;font-style:italic;line-height:1.5;color:rgba(29,29,31,.88);outline:none;resize:vertical"></textarea>
+      <button class="btn btn-ghost" id="copyCap" style="margin-top:12px;height:48px">Copy caption</button>
+    </div>
+
+    <div style="display:flex;gap:10px;margin-top:14px" id="shareTargets"></div>
+
+    <div style="margin-top:16px;padding:16px;border-radius:18px;border:1px solid rgba(201,168,76,.3);background:linear-gradient(180deg,rgba(201,168,76,.11) 0%,rgba(0,0,0,.02) 100%)">
+      <div class="eyebrow">Pass it on</div>
+      <div style="margin-top:6px;font-family:'Playfair Display',Georgia,serif;font-size:18px;color:var(--cream)">Somebody gave you yours. Who's next?</div>
+      <button class="btn btn-primary" style="height:50px;margin-top:13px;letter-spacing:.16em" data-go="shop" data-closesheet>Send a bloom back</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+"use strict";
+const SB   = "https://yhdbeblowolfinxxhsnt.supabase.co";
+const ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InloZGJlYmxvd29sZmlueHhoc250Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjkyNjA0NjMsImV4cCI6MjA4NDgzNjQ2M30.DGIJ5FSr2M4wBi3eQ5rjC0jx3CVS4pEcJe1PMOSR0yM";
+
+/* ==========================================================================
+   Occasion → who it's for → style.  Ak, 2026-10-18: "categories should be
+   specific to occasion like birthday, then sub categories specific under
+   that — son, nephew, cousin, friend." Modelled on how Hallmark, American
+   Greetings and Moonpig lay out their cards (researched the same day):
+   Birthday is its own front door, its people split For Her / For Him /
+   For Anyone, and style is a filter — never a shelf of its own.
+
+   This replaces the single 25-name list every category shared (Gamble 8/20).
+   His 25 names still live under Thank You, where he first sent them.
+   The original taxonomy: docs/taxonomy/ORIGINAL-CATEGORIES-2026-08-20.md
+
+   A person is [key, label, tags]. `tags` are the subcategory values already
+   on products. A product joins a person's shelf when its subcategory is in
+   that list (plus the person's GLOBAL_TAGS). Tags that are styles, hobbies
+   or senders go in `styles`; anything unmapped still shows under Everyone.
+   ========================================================================== */
+const P = (key,label,tags) => [key,label,tags||[]];
+const GLOBAL_TAGS = {           // Gamble's Thank You slugs + the plain forms
+  mom:['for-mom'], dad:['for-dad'], sister:['for-sister'], brother:['for-brother'],
+  son:['for-son','son'], daughter:['for-daughter','daughter'],
+  wife:['wife','for-wife'], husband:['husband','for-husband'],
+  girlfriend:['girlfriend'], boyfriend:['boyfriend'], fiance:['fiance'],
+  grandma:['grandma','for-grandma'], grandpa:['granddad','for-grandpa'],
+  aunt:['aunt','for-auntie'], uncle:['uncle'], cousin:['cousin'],
+  friend:['for-friend'], 'best-friend':['for-bestie'], coworker:['co-workers'],
+  boss:['boss'], employee:['employee'], 'business-partner':['business-partner'],
+  teacher:['teacher'], coach:['coach'], teammates:['teammates'],
+  police:['police'], fireman:['fireman'], mechanic:['mechanic'],
+};
+const W = {
+  gold:'linear-gradient(150deg,#2b2410,#c9a84c)', rose:'linear-gradient(150deg,#3a1f3c,#c9857a)',
+  blue:'linear-gradient(150deg,#10294d,#2980b9)', green:'linear-gradient(150deg,#10291f,#27ae60)',
+  pink:'linear-gradient(150deg,#3d1020,#ff3b7f)', violet:'linear-gradient(150deg,#1d1a2e,#9b59b6)',
+  sage:'linear-gradient(150deg,#16211f,#8db4a5)', amber:'linear-gradient(150deg,#2a1c0f,#f39c12)',
+  coral:'linear-gradient(150deg,#2d1710,#ff8c42)', red:'linear-gradient(150deg,#1a1010,#c0392b)',
+  ink:'linear-gradient(150deg,#0c1f3f,#3b4b6b)',
+};
+// fixed-date and floating holidays (month is 0-based)
+const nth  = (y,m,dow,n)=>{ const d=new Date(y,m,1); return new Date(y,m,1+((dow-d.getDay()+7)%7)+(n-1)*7); };
+const lastDow = (y,m,dow)=>{ const d=new Date(y,m+1,0); return new Date(y,m,d.getDate()-((d.getDay()-dow+7)%7)); };
+
+const OCCASIONS = [
+  /* ---------------- the front door ---------------- */
+  { key:'birthday', name:'Birthday', menu:'birthday', src:['birthday'], wash:W.gold,
+    cols:[
+      { title:'For Her', people:[ P('mom','Mom'), P('wife','Wife'), P('daughter','Daughter'), P('sister','Sister'),
+          P('grandma','Grandma'), P('aunt','Aunt'), P('niece','Niece',['for-niece-nephew']), P('granddaughter','Granddaughter'),
+          P('her','Her — anyone',['for-her']) ]},
+      { title:'For Him', people:[ P('dad','Dad'), P('husband','Husband'), P('son','Son'), P('brother','Brother'),
+          P('grandpa','Grandpa'), P('uncle','Uncle'), P('nephew','Nephew',['for-niece-nephew']), P('grandson','Grandson'),
+          P('him','Him — anyone',['for-him','birthday-for-him']) ]},
+      { title:'For Anyone', people:[ P('partner','Partner',['for-partner']), P('twin','Twin',['for-twins']),
+          P('best-friend','Best Friend'), P('friend','Friend'), P('cousin','Cousin'), P('coworker','Co-Worker'),
+          P('boss','Boss'), P('kids','Kids & Teens') ]},
+    ],
+    styles:[ P('classic','Classic',['classic','universal-adult']), P('milestone','Milestone',['milestone']),
+             P('bold','Bold & Fun',['bold-adult','power-adult','gen-z-party','cosmic']),
+             P('inspiring','Inspiring',['transformation','resilience']) ] },
+
+  /* ---------------- celebrate ---------------- */
+  { key:'graduation', name:'Graduation', menu:'celebrate', src:['graduation'], wash:W.violet,
+    cols:[
+      { title:'For Her', people:[ P('daughter','Daughter'), P('granddaughter','Granddaughter'), P('niece','Niece'), P('her','Her — anyone',['for-her']) ]},
+      { title:'For Him', people:[ P('son','Son'), P('grandson','Grandson'), P('nephew','Nephew') ]},
+      { title:'For Anyone', people:[ P('friend','Friend'), P('firstgen','First in the Family',['for-firstgen']),
+          P('grad-school','Grad School & Doctorate',['doctorate']) ]},
+    ],
+    styles:[ P('classic','Classic',['classic','for-the-grad','class-of-2026']) ] },
+  { key:'anniversary', name:'Anniversary', menu:'celebrate', src:['anniversary'], wash:W.rose,
+    cols:[{ title:'Who', people:[ P('wife','Wife'), P('husband','Husband'), P('spouse','Spouse',['for-spouse']),
+          P('parents','Mom & Dad'), P('couple','The Couple') ]}],
+    styles:[ P('milestone','Milestone Year',['milestone']), P('luxe','Luxe',['vault']) ] },
+  { key:'wedding', name:'Wedding', menu:'celebrate', src:['wedding'], wash:W.rose,
+    cols:[{ title:'Who', people:[ P('couple','The Couple',['wedding-vows-forever','wedding-vows-hold','moonshot']),
+          P('bride','Bride'), P('groom','Groom') ]}] },
+  { key:'congrats', name:'Congratulations', menu:'celebrate', src:['celebration','sports'], wash:W.amber,
+    cols:[
+      { title:'Family', people:[ P('son','Son'), P('daughter','Daughter'), P('sister','Sister'), P('brother','Brother') ]},
+      { title:'Work & Friends', people:[ P('friend','Friend'), P('coworker','Co-Worker'), P('employee','Employee'),
+          P('boss','Boss'), P('teammates','Teammates') ]},
+    ],
+    styles:[ P('sports','Sports',['basketball']), P('grad','Graduation',['graduation']) ] },
+
+  /* ---------------- everyday ---------------- */
+  // Gamble's 25 — his words, sent 7/16, 8/9, 8/18, 8/20.
+  { key:'thank-you', name:'Thank You', menu:'everyday', src:['thank-you','acknowledgement'], wash:W.green,
+    cols:[
+      { title:'Family', people:[ P('mom','Mom'), P('dad','Dad'), P('sister','Sister'), P('brother','Brother'),
+          P('grandma','Grandma'), P('grandpa','Granddad'), P('aunt','Aunt'), P('uncle','Uncle'), P('cousin','Cousin') ]},
+      { title:'Love', people:[ P('wife','Wife'), P('husband','Husband'), P('girlfriend','Girlfriend'),
+          P('boyfriend','Boyfriend'), P('fiance','Fiancé') ]},
+      { title:'Work & Community', people:[ P('boss','Boss'), P('coworker','Co-Workers'), P('employee','Employee'),
+          P('business-partner','Business Partner'), P('teacher','Teacher'), P('coach','Coach'), P('teammates','Teammates'),
+          P('police','Police'), P('fireman','Fireman'), P('mechanic','Mechanic') ]},
+      { title:'Friends', people:[ P('friend','Friends') ]},
+    ],
+    styles:[ P('appreciated',"You're Appreciated",['peer-recognition','peer-recognition-him','i-see-you']) ] },
+  { key:'love', name:'Love & Romance', menu:'everyday', src:['love','valentine'], wash:W.pink,
+    cols:[
+      { title:'For Her', people:[ P('wife','Wife'), P('girlfriend','Girlfriend'), P('fiancee','Fiancée') ]},
+      { title:'For Him', people:[ P('husband','Husband'), P('boyfriend','Boyfriend'), P('fiance','Fiancé') ]},
+      { title:'For Anyone', people:[ P('partner','Partner'), P('crush','Crush') ]},
+    ],
+    styles:[ P('romantic','Romantic',['romantic-love','red-roses-valentine','valentine-general']),
+             P('luxe','Luxe',['romantic-luxury']), P('pink','Pink & Sweet',['romantic-pink','pink-valentine']) ] },
+  { key:'friendship', name:'Friendship & Thinking of You', menu:'everyday', src:['friendship','encouragement'], wash:W.coral,
+    cols:[{ title:'Who', people:[ P('best-friend','Best Friend'), P('friend','Friend'),
+          P('long-distance','Long-Distance Friend'), P('sister-friend','Sister-Friend') ]}],
+    styles:[ P('thinking','Thinking of You',['thinking-of-you']), P('encourage','You Got This',['you-got-this']),
+             P('moment','Big Moment',['moonshot']) ] },
+
+  /* ---------------- tough times ---------------- */
+  { key:'sympathy', name:'Sympathy', menu:'tough', src:['sympathy','grief'], wash:W.sage,
+    cols:[{ title:'Who', people:[ P('friend','Friend'), P('family','Family'), P('coworker','Co-Worker'),
+          P('church','Church Family'), P('neighbor','Neighbor') ]}],
+    styles:[ P('memory','In Loving Memory',['memorial-rose','in-loving-memory','memorial-garden','memorial-light']),
+             P('comfort','Comfort & Peace',['comfort','peace','held-in-light','hard-times','sympathy-soft-words',
+               'sympathy-companionship','universal','lost-family','white-orchids']) ] },
+
+  /* ---------------- holidays, by date ---------------- */
+  { key:'halloween',    name:'Halloween',      menu:'holiday', src:['halloween'],    wash:W.amber, when:y=>new Date(y,9,31) },
+  { key:'thanksgiving', name:'Thanksgiving',   menu:'holiday', src:['thanksgiving'], wash:W.amber, when:y=>nth(y,10,4,4) },
+  { key:'christmas',    name:'Christmas',      menu:'holiday', src:['christmas'],    wash:W.red,   when:y=>new Date(y,11,25) },
+  { key:'new-year',     name:"New Year's",     menu:'holiday', src:['new-year'],     wash:W.gold,  when:y=>new Date(y,0,1) },
+  { key:'valentines',   name:"Valentine's Day",menu:'holiday', alias:'love',         wash:W.pink,  when:y=>new Date(y,1,14) },
+  { key:'womens-day',   name:"Women's Day",    menu:'holiday', src:['womens-day'],   wash:W.violet,when:y=>new Date(y,2,8) },
+  { key:'mothers-day',  name:"Mother's Day",   menu:'holiday', src:['mothers-day'],  wash:W.rose,  when:y=>nth(y,4,0,2),
+    cols:[{ title:'Who', people:[ P('mom','Mom',['any-mother','classic','from-son']), P('wife','Wife',['to-my-wife','from-husband']),
+          P('grandma','Grandma',['kids-grandma']), P('stepmom','Stepmom',['stepmom']), P('new-mom','New Mom',['new-mom']),
+          P('single-mom','Single Mom',['single-mom']), P('mother-of-my-children','Mother of My Children',['mother-of-my-children']),
+          P('godmother','Godmother / Auntie',['godmother-auntie']), P('mother-figure','Mother Figure',['mother-figure','friend-honoring']),
+          P('long-distance-mom','Long-Distance Mom',['long-distance']), P('mom-heaven','Mom in Heaven',['memorial']) ]}] },
+  { key:'memorial-day', name:'Memorial Day',   menu:'holiday', src:['memorial-day'], wash:W.blue,  when:y=>lastDow(y,4,1),
+    cols:[{ title:'Who', people:[ P('veteran','Veterans',['veterans-honor']) ]}] },
+  { key:'pride',        name:'Pride Month',    menu:'holiday', src:['holidays'],     wash:W.violet,when:y=>new Date(y,5,1) },
+  { key:'fathers-day',  name:"Father's Day",   menu:'holiday', src:['fathers-day'],  wash:W.blue,  when:y=>nth(y,5,0,3),
+    cols:[{ title:'Who', people:[ P('dad','Dad',['from-daughter','from-son','family-man']), P('husband','Husband'),
+          P('grandpa','Grandpa'), P('stepdad','Stepdad',['for-stepdad']), P('father-in-law','Father-in-Law',['father-in-law']),
+          P('new-dad','New Dad',['young-father']), P('dad-heaven','Dad in Heaven',['memorial']) ]}],
+    styleTitle:'His thing',
+    styles:[ P('sports','Sports Fan',['basketball-fan','soccer-fan','baseball-fan','hockey-fan','football-fan']),
+             P('outdoors','Hunting & Fishing',['hunting-fan','fishing-fan']), P('cars','Cars',['auto-enthusiast']),
+             P('worker','Hard Worker',['working-dad','truck-driver']) ] },
+
+  /* ---------------- collections (not occasions) ---------------- */
+  { key:'zodiac', name:'Zodiac', menu:'collection', src:['zodiac'], wash:W.ink,
+    cols:[{ title:'Sign', people:[ P('fire','Fire Signs',['fire-signs']), P('earth','Earth Signs',['earth-signs']),
+          P('air','Air Signs',['air-signs']), P('water','Water Signs',['water-signs']) ]}] },
+  { key:'luxury', name:'Luxury', menu:'collection', src:['luxury'], wash:W.gold },
+  { key:'signature', name:'Signature Stories', menu:'collection', src:['signature-stories'], wash:W.rose },
+];
+const MENUS = [
+  ['celebrate','Celebrate'], ['everyday','Everyday'], ['tough','Tough Times'],
+  ['holiday','Holidays'], ['collection','Collections'],
+];
+// The "Who are you sending to?" picker on the homepage
+const PICK = ['mom','dad','wife','husband','partner','son','daughter','sister','brother',
+              'grandma','grandpa','best-friend','friend','coworker','boss','teacher'];
+const HOME_ROWS = ['birthday','thank-you','love','sympathy','graduation','congrats','friendship'];
+
+const TIERS = [
+  { id:'single',     name:'Single Bloom',     desc:'8–10 seconds · one scene',            price:1.99, pop:false },
+  { id:'experience', name:'Bloom Experience', desc:'25–35 seconds · multi-scene story',   price:4.99, pop:true  },
+  { id:'premium',    name:'Premium Bloom',    desc:'35–45 seconds · full cinematic',      price:9.99, pop:false },
+];
+const STEPS = [
+  ["Pick the occasion, then who it's for","Birthday, then Son. Thank You, then Coach. Every occasion opens into the people inside it."],
+  ["Write the part you mean","Their name is engraved on the card inside the film. One screen, then pay."],
+  ["It arrives from your own number","We open your Messages with the link ready. They tap it and the bloom takes over their screen."],
+];
+
+const $  = (s,r)=> (r||document).querySelector(s);
+const $$ = (s,r)=> Array.from((r||document).querySelectorAll(s));
+const esc = s => String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const titleize = s => String(s||'').replace(/-/g,' ').replace(/\b\w/g,c=>c.toUpperCase())
+  .replace(/\bFor\b /,'For ').replace(/\bMy\b/,'My');
+const fmt = n => '$'+Number(n).toFixed(2);
+const time = t => { t=Math.max(0,t|0); return Math.floor(t/60)+':'+String(t%60).padStart(2,'0'); };
+const plural = (n,w) => n+' '+w+(n===1?'':'s');
+const store = { get(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } },
+                set(k,v){ try{ localStorage.setItem(k,v); }catch(e){} } };
+
+const state = { products:[], byOcc:{}, occ:null, sub:null, style:null, product:null, tier:'experience',
+                del:'self', name:'', msg:'', from:'', stack:[] };
+
+/* ---------- occasion helpers ---------- */
+const occ = key => OCCASIONS.find(o=>o.key===key);
+const real = o => o && o.alias ? occ(o.alias) : o;            // Valentine's opens Love & Romance
+const people = o => (o.cols||[]).flatMap(c=>c.people);
+const tagsOf = person => person[2].concat(GLOBAL_TAGS[person[0]]||[]);
+const items = o => state.byOcc[real(o).key] || [];
+const matches = (p, entry) => tagsOf(entry).includes(p.subcategory);
+const LABEL = {};
+OCCASIONS.forEach(o=>people(o).forEach(([k,l])=>{ if(!LABEL[k]) LABEL[k]=l; }));
+LABEL.grandpa = 'Grandpa';
+function labelIn(o,p){                                       // what a tile says under its title
+  const hit = people(o).find(x=>matches(p,x)) || (o.styles||[]).find(x=>matches(p,x));
+  return hit ? hit[1] : '';
+}
+function homeOf(p){ return OCCASIONS.find(o=>!o.alias && (o.src||[]).includes(p.category)); }
+function nextDate(o){
+  const t=new Date(); t.setHours(0,0,0,0);
+  let d=o.when(t.getFullYear()); if(d<t) d=o.when(t.getFullYear()+1);
+  return d;
+}
+const daysUntil = d => Math.round((d - new Date(new Date().setHours(0,0,0,0)))/864e5);
+const dateLabel = d => d.toLocaleDateString('en-US',{month:'short',day:'numeric'});
+const upcoming = () => OCCASIONS.filter(o=>o.when).map(o=>({o,d:nextDate(o)})).sort((a,b)=>a.d-b.d);
+
+/* ---------- toast ---------- */
+let tT;
+function toast(msg){ const t=$('#toast'); t.textContent=msg; t.classList.add('on');
+  clearTimeout(tT); tT=setTimeout(()=>t.classList.remove('on'),2400); }
+
+/* ---------- navigation ---------- */
+function show(id,push){
+  $$('.screen').forEach(s=>s.classList.remove('on'));
+  const el = document.getElementById('s-'+id);
+  if(!el) return;
+  el.classList.add('on');
+  window.scrollTo(0,0);
+  if(push!==false) state.stack.push(id);
+  // pause any video not on screen
+  $$('video').forEach(v=>{ if(!el.contains(v)) { try{v.pause();}catch(e){} } });
+}
+function back(){
+  state.stack.pop();
+  const prev = state.stack[state.stack.length-1] || 'landing';
+  show(prev,false);
+}
+document.addEventListener('click', e=>{
+  if(e.target.closest('[data-menu]')){ $('#menu').classList.add('on'); return; }
+  if(e.target.closest('[data-closemenu]')) $('#menu').classList.remove('on');
+  const go = e.target.closest('[data-go]');
+  if(go){ const dest = go.dataset.go; if(dest==='shop') renderShop(); show(dest);
+    if(go.dataset.anchor){ const a=document.getElementById(go.dataset.anchor); if(a) a.scrollIntoView(); } }
+  if(e.target.closest('[data-back]')) back();
+  if(e.target.closest('[data-closesheet]')) $('#shareSheet').classList.remove('on');
+});
+document.addEventListener('keydown', e=>{ if(e.key==='Escape'){
+  $('#menu').classList.remove('on'); $('#shareSheet').classList.remove('on'); } });
+
+/* ---------- data ---------- */
+async function load(){
+  const url = SB+'/rest/v1/products?select=id,name,description,category,subcategory,video_url,thumbnail_url,price,tier'
+            + '&is_active=eq.true&video_url=not.is.null&order=created_at.desc&limit=1000';
+  const r = await fetch(url,{headers:{apikey:ANON,Authorization:'Bearer '+ANON}});
+  if(!r.ok) throw new Error('HTTP '+r.status);
+  state.products = await r.json();
+  const map = {};
+  OCCASIONS.forEach(o=>{ if(!o.alias) map[o.key] = state.products.filter(p=> (o.src||[]).includes(p.category)); });
+  state.byOcc = map;
+}
+
+/* ---------- tiles ---------- */
+// Gamble 10/22: "the actual bloom itself" is the ad, so tiles play the bloom
+// while they're on screen and pause when they scroll off (saves phone battery).
+const liveObs = 'IntersectionObserver' in window ? new IntersectionObserver(es=>es.forEach(en=>{
+  const v = en.target;
+  if(en.isIntersecting){ if(!v.src) v.src = v.dataset.src; v.play().catch(()=>{}); } else v.pause();
+}),{threshold:.45}) : null;
+function liveMedia(p){
+  if(!p) return '';
+  const poster = p.thumbnail_url ? ` poster="${esc(p.thumbnail_url)}"` : '';
+  return `<video class="live" data-src="${esc(p.video_url)}"${poster} muted loop playsinline preload="none"></video>`;
+}
+function wireLive(root){
+  $$('video.live',root).forEach(v=>{ if(liveObs) liveObs.observe(v); else { v.src=v.dataset.src; } });
+}
+function tile(p,o){
+  o = o || homeOf(p);
+  const poster = liveMedia(p);
+  const sub = o ? labelIn(o,p) : '';
+  return `<button class="tile" data-pid="${esc(p.id)}" style="background:${o?o.wash:'var(--navy-mid)'}">
+      ${poster}<div class="veil"></div>
+      <div class="cap"><b>${esc(p.name)}</b><span>${esc(sub)}</span></div>
+    </button>`;
+}
+function occTile(o, wide){
+  const list = items(o);
+  const lead = list.find(p=>p.thumbnail_url) || list[0];
+  const media = liveMedia(lead);
+  let line = list.length ? plural(list.length,'bloom') : 'Coming soon';
+  if(o.when){ const d=nextDate(o); line = dateLabel(d)+' · '+(list.length ? plural(list.length,'bloom') : 'coming soon'); }
+  return `<button class="tile${wide?' wide':''}${list.length?'':' bare'}" data-gkey="${esc(o.key)}">
+      <div style="position:absolute;inset:0;background:${o.wash}"></div>${media}
+      <div class="veil"></div>
+      <div class="cap"><b>${esc(o.name)}</b><span>${esc(line)}</span></div>
+    </button>`;
+}
+
+function personTile(key, label, list, attr){
+  const lead = list.find(p=>p.thumbnail_url) || list[0];
+  return `<button class="tile" data-${attr}="${esc(key)}">
+      <div style="position:absolute;inset:0;background:var(--navy-mid)"></div>${liveMedia(lead)}
+      <div class="veil"></div>
+      <div class="cap"><b>${esc(label)}</b><span>${esc(plural(list.length,'bloom'))}</span></div>
+    </button>`;
+}
+function personBlooms(k){
+  const out = [];
+  OCCASIONS.filter(o=>!o.alias).forEach(o=>{
+    const e = people(o).find(x=>x[0]===k); if(e) items(o).forEach(p=>{ if(matches(p,e) && !out.includes(p)) out.push(p); });
+  });
+  return out;
+}
+
+/* ---------- landing ---------- */
+function renderLanding(){
+  $('#steps').innerHTML = STEPS.map((s,i)=>`
+    <div style="display:flex;gap:14px;align-items:flex-start;padding:16px;border-radius:18px;background:rgba(0,0,0,.035);border:1px solid rgba(0,0,0,.06)">
+      <div style="flex:none;width:30px;height:30px;border-radius:50%;border:1px solid rgba(201,168,76,.4);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--gold)">${i+1}</div>
+      <div><div style="font-size:15px;font-weight:600;color:var(--cream)">${esc(s[0])}</div>
+      <div style="margin-top:4px;font-size:13px;line-height:1.5;color:rgba(29,29,31,.6)">${esc(s[1])}</div></div>
+    </div>`).join('');
+
+  // coming up — the next holidays, by date
+  $('#upRail').innerHTML = upcoming().slice(0,6).map(({o,d})=>{
+    const n = items(o).length, days = daysUntil(d);
+    const when = days===0 ? 'today' : days===1 ? 'tomorrow' : 'in '+days+' days';
+    return `<button class="dchip${n?'':' bare'}" data-gkey="${esc(o.key)}">
+        <b>${esc(o.name)}</b><span>${esc(d.toLocaleDateString('en-US',{weekday:'short'}))} · ${esc(dateLabel(d))}</span>
+        <em>${n ? esc(when) : 'blooms coming'}</em></button>`;
+  }).join('');
+
+  // who are you sending to?
+  // Gamble 10/22: people show up as live bloom tiles, same as the occasions, not pills
+  $('#pickRail').innerHTML = PICK.map(k=>({k,list:personBlooms(k)})).filter(x=>x.list.length)
+    .map(({k,list})=>personTile(k, LABEL[k]||titleize(k), list, 'person')).join('');
+
+  // one swipe row per occasion
+  $('#occRows').innerHTML = HOME_ROWS.map(occ).filter(o=>items(o).length).map(o=>`
+    <div class="orow">
+      <div class="orow-h"><h3>${esc(o.name)}</h3><button data-gkey="${esc(o.key)}">See all ${items(o).length}</button></div>
+      <div class="hrail">${items(o).slice(0,10).map(p=>tile(p,o)).join('')}</div>
+    </div>`).join('');
+
+  wireLive($('#s-landing'));
+  const live = OCCASIONS.filter(o=>!o.alias && items(o).length).length;
+  $('#occSub').textContent = live+' occasions · '+state.products.length+' blooms ready to send';
+
+  // hero = a real birthday bloom, the occasion that never goes out of season
+  const pool = items(occ('birthday')).filter(p=>p.thumbnail_url).concat(items(occ('birthday')));
+  const hero = pool[0];
+  if(hero){
+    const v=$('#heroVideo'); v.src=hero.video_url; v.load();
+    v.play().catch(()=>{});
+    $('#heroTag').textContent = 'Birthday' + (labelIn(occ('birthday'),hero) ? ' · '+labelIn(occ('birthday'),hero) : '');
+    $('#watchFirst').onclick = ()=> openProduct(hero.id);
+  }
+}
+
+/* ---------- all occasions ---------- */
+function renderShop(){
+  const live = OCCASIONS.filter(o=>!o.alias && items(o).length).length;
+  const el = $('#miOccCount'); if(el) el.textContent = live;
+  $('#shopSub').textContent = live+' occasions · each one opens into the people inside it.';
+  let html = `<div class="grid one">${occTile(occ('birthday'),true)}</div>`;
+  MENUS.forEach(([m,title])=>{
+    let list = OCCASIONS.filter(o=>o.menu===m);
+    if(m==='holiday') list = upcoming().map(x=>x.o);
+    else list = list.filter(o=>items(o).length);
+    if(!list.length) return;
+    html += `<div class="mhead" id="m-${m}">${esc(title)}</div><div class="grid">${list.map(o=>occTile(o)).join('')}</div>`;
+  });
+  $('#shopBody').innerHTML = html; wireLive($('#shopBody'));
+}
+
+/* ---------- one occasion: who it's for + style ---------- */
+function openGroup(key, preSub){
+  const o = real(occ(key)); if(!o) return;
+  state.occ = o; state.sub = preSub || null; state.style = null;
+  const list = items(o);
+  const count = entry => list.filter(p=>matches(p,entry)).length;
+  // plain words, stocked people first; empty shelves stay in the list but dimmed
+  const words = (arr, attr) => arr
+      .map(e=>({e,n:count(e)}))
+      .sort((a,b)=> (b.n>0)-(a.n>0))
+      .map(({e,n})=>`<button class="${n?'':'soon'}" data-${attr}="${esc(e[0])}">${esc(e[1])}</button>`)
+      .join('');
+
+  $('#recTitle').textContent = o.name;
+  const ppl = people(o);
+  $('#recCount').textContent = list.length ? plural(list.length,'bloom') : 'Coming soon';
+  let rows = '';
+  if(ppl.length){
+    rows += `<div class="whohead">Who's this for?</div>
+      <div class="who" id="whoRail"><button data-sub="__all">Everyone</button>${words(ppl,'sub')}</div>
+      <div class="swipehint">Swipe for more →</div>`;
+  }
+  const styles = (o.styles||[]).filter(s=>count(s));
+  if(styles.length){
+    rows += `<div class="rowlabel" style="padding-top:6px">${esc(o.styleTitle||'Style')}</div>
+      <div class="who sm">${words(styles,'style')}</div>`;
+  }
+  $('#recRows').innerHTML = rows;
+  $('#recCue').style.display = 'none';
+  paintRec();
+  show('recipients');
+}
+function paintRec(){
+  const o = state.occ, all = items(o);
+  const person = state.sub ? people(o).find(x=>x[0]===state.sub) : null;
+  const style  = state.style ? (o.styles||[]).find(x=>x[0]===state.style) : null;
+  let list = all;
+  if(person) list = list.filter(p=>matches(p,person));
+  if(style)  list = list.filter(p=>matches(p,style));
+  const label = [person ? person[1] : 'Everyone', style ? style[1] : ''].filter(Boolean).join(' · ');
+  $('#recSelLabel').textContent = label;
+  $('#recSelCount').textContent = plural(list.length,'bloom');
+  $$('#recRows [data-sub]').forEach(x=>x.classList.toggle('sel', (x.dataset.sub==='__all' && !state.sub) || x.dataset.sub===state.sub));
+  $$('#recRows [data-style]').forEach(x=>x.classList.toggle('sel', x.dataset.style===state.style));
+  const what = person ? person[1] : o.name;
+  const sel = $('#recRows .who [data-sub].sel'); if(sel) sel.scrollIntoView({inline:'center',block:'nearest'});
+  let lead = '';
+  if(!person && !style){
+    const stocked = people(o).map(e=>({e,l:all.filter(p=>matches(p,e))})).filter(x=>x.l.length);
+    if(stocked.length){
+      $('#recSelLabel').textContent = 'Pick who it\'s for';
+      lead = stocked.map(({e,l})=>personTile(e[0], e[1], l, 'sub')).join('')
+           + `<div class="mhead" style="grid-column:1/-1;padding:26px 0 2px">Every ${esc(o.name)} bloom</div>`;
+    }
+  }
+  $('#recGrid').innerHTML = lead + list.slice(0,60).map(p=>tile(p,o)).join('')
+    || `<div class="empty">
+          <div class="serif-h">${esc(what)} is next up</div>
+          <div>The shelf is built — the blooms are being made.</div>
+        </div>`;
+  wireLive($('#recGrid'));
+}
+
+/* ---------- one person, every occasion ---------- */
+function personCount(k){
+  return OCCASIONS.filter(o=>!o.alias).reduce((n,o)=>{
+    const e = people(o).find(x=>x[0]===k); return n + (e ? items(o).filter(p=>matches(p,e)).length : 0);
+  },0);
+}
+function openPerson(k){
+  const label = LABEL[k] || titleize(k);
+  $('#psTitle').textContent = 'For '+label;
+  let html = '', soon = [], total = 0;
+  OCCASIONS.filter(o=>!o.alias && o.menu!=='collection').forEach(o=>{
+    const e = people(o).find(x=>x[0]===k); if(!e) return;
+    const list = items(o).filter(p=>matches(p,e));
+    if(!list.length){ soon.push(o.name); return; }
+    total += list.length;
+    html += `<div class="orow">
+      <div class="orow-h"><h3>${esc(o.name)}</h3><button data-gkey="${esc(o.key)}" data-presub="${esc(k)}">See all ${list.length}</button></div>
+      <div class="hrail">${list.slice(0,10).map(p=>tile(p,o)).join('')}</div></div>`;
+  });
+  if(soon.length) html += `<div class="empty" style="margin:20px 18px 0">
+      <div class="serif-h">More for ${esc(label)} is next up</div>
+      <div>Shelves built and waiting: ${esc(soon.join(' · '))}</div></div>`;
+  $('#psCount').textContent = total ? plural(total,'bloom') : 'Coming soon';
+  $('#psBody').innerHTML = html; wireLive($('#psBody'));
+  show('person');
+}
+
+/* ---------- product ---------- */
+function openProduct(id){
+  const p = state.products.find(x=>x.id===id); if(!p) return;
+  state.product = p; state.tier='experience';
+  $('#pdName').textContent = p.name;
+  $('#pdDesc').textContent = p.description || 'A sealed card opens, their name in gold, and the whole screen fills until there is nothing left but the flowers and what you wrote.';
+  const o = homeOf(p), who = o ? labelIn(o,p) : '';
+  $('#pdTags').innerHTML =
+    `<span style="padding:6px 12px;border:1px solid rgba(201,168,76,.35);border-radius:999px;font-size:9px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--gold)">${esc(o?o.name:p.category)}</span>`
+  + (who?`<span style="padding:6px 12px;border:1px solid rgba(0,0,0,.14);border-radius:999px;font-size:9px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:rgba(29,29,31,.62)">${esc(who)}</span>`:'');
+  paintTiers();
+  const v=$('#pdVideo'); v.src=p.video_url; v.muted=true; v.load();
+  v.play().then(()=>setPlayIcon(true)).catch(()=>setPlayIcon(false));
+  show('product');
+}
+function paintTiers(){
+  $('#pdTiers').innerHTML = TIERS.map(t=>{
+    const sel = state.tier===t.id;
+    return `<button data-tier="${t.id}" style="display:flex;align-items:center;gap:14px;min-height:44px;padding:16px;border-radius:18px;text-align:left;
+      border:1px solid ${sel?'var(--gold)':'rgba(0,0,0,.1)'};background:${sel?'rgba(201,168,76,.12)':'rgba(0,0,0,.035)'}">
+      <span style="flex:1">
+        <span style="display:flex;align-items:center;gap:8px">
+          <b style="font-size:15px;font-weight:600;color:var(--cream)">${t.name}</b>
+          ${t.pop?'<span style="padding:3px 9px;border-radius:999px;background:rgba(201,168,76,.18);font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gold)">Most sent</span>':''}
+        </span>
+        <span style="display:block;margin-top:4px;font-size:12px;color:rgba(29,29,31,.55)">${t.desc}</span>
+      </span>
+      <b style="font-size:17px;font-weight:700;color:${sel?'var(--gold)':'rgba(29,29,31,.72)'}">${fmt(t.price)}</b>
+    </button>`;}).join('');
+  $('#pdBuy').textContent = 'Personalize & send — '+fmt(TIERS.find(t=>t.id===state.tier).price);
+}
+function setPlayIcon(playing){
+  $('#pdPlayIcon').style.opacity = playing ? '0' : '1';
+}
+
+/* ---------- checkout ---------- */
+function openCheckout(){
+  const p = state.product; if(!p) return;
+  const v=$('#coVideo'); v.src=p.video_url; v.load(); v.play().catch(()=>{});
+  paintSummary(); show('checkout');
+}
+function paintSummary(){
+  const t = TIERS.find(x=>x.id===state.tier);
+  const extra = state.del==='us' ? 1 : 0;
+  $('#sumLine').textContent = t.name;
+  $('#sumPrice').textContent = fmt(t.price);
+  $('#sumTotal').textContent = fmt(t.price+extra);
+}
+
+/* ---------- delivery ---------- */
+function openDelivery(){
+  const p = state.product; if(!p) return;
+  $('#dlName').textContent = state.name || 'Mama Lois';
+  $('#dlFrom').textContent = state.from ? 'from '+state.from : '';
+  $('#dlMsg').textContent  = state.msg ? '"'+state.msg+'"' : '';
+  const v=$('#dlVideo'); v.src=p.video_url; v.muted=false; v.load();
+  v.play().catch(()=>{ v.muted=true; v.play().catch(()=>{}); });
+  $('#capText').value =
+    (state.name||'Somebody')+" just got this from "+(state.from||'me')+" and I am NOT okay.\n\n"
+    +"It's called a Digital Bloom — give people their flowers while they're still here to see them. "
+    +"I'm challenging 3 of you to send one today. digitalbloom.store";
+  show('delivery');
+}
+
+/* ---------- events ---------- */
+document.addEventListener('click', e=>{
+  const g = e.target.closest('[data-gkey]');   if(g){ openGroup(g.dataset.gkey, g.dataset.presub); return; }
+  const pe = e.target.closest('[data-person]'); if(pe){ openPerson(pe.dataset.person); return; }
+  const t = e.target.closest('[data-pid]');    if(t){ openProduct(t.dataset.pid); return; }
+  const c = e.target.closest('[data-sub]');    if(c){
+    state.sub = c.dataset.sub==='__all' ? null : c.dataset.sub;
+    paintRec();
+    if(c.classList.contains('tile')) window.scrollTo({top:0,behavior:'smooth'});
+    return; }
+  const st = e.target.closest('[data-style]'); if(st){
+    state.style = state.style===st.dataset.style ? null : st.dataset.style;
+    paintRec(); return; }
+  const tr = e.target.closest('[data-tier]');  if(tr){ state.tier=tr.dataset.tier; paintTiers(); return; }
+  const d = e.target.closest('[data-del]');    if(d){
+    state.del=d.dataset.del;
+    $$('[data-del]').forEach(x=>x.classList.toggle('sel', x===d));
+    paintSummary(); return; }
+});
+
+$('#pdBuy').onclick = openCheckout;
+$('#pdPlay').onclick = ()=>{ const v=$('#pdVideo');
+  if(v.paused){ v.play(); setPlayIcon(true); } else { v.pause(); setPlayIcon(false); } };
+$('#pdSound').onclick = ()=>{ const v=$('#pdVideo'); v.muted=!v.muted; toast(v.muted?'Sound off':'Sound on'); };
+$('#pdVideo').addEventListener('timeupdate', ()=>{ const v=$('#pdVideo');
+  if(v.duration){ $('#pdBar').style.width=(v.currentTime/v.duration*100)+'%';
+    $('#pdCur').textContent=time(v.currentTime); $('#pdDur').textContent=time(v.duration); } });
+$('#pdVideo').addEventListener('ended', ()=>setPlayIcon(false));
+
+$('#heroSound').onclick = ()=>{ const v=$('#heroVideo'); v.muted=!v.muted; if(!v.muted) v.play().catch(()=>{}); toast(v.muted?'Sound off':'Sound on'); };
+
+const fName=$('#fName'), fMsg=$('#fMsg'), fFrom=$('#fFrom');
+fName.addEventListener('input', ()=>{ state.name=fName.value; $('#pvName').textContent = state.name || 'Their name'; });
+fMsg.addEventListener('input', ()=>{ state.msg=fMsg.value; $('#pvMsg').textContent = state.msg;
+  $('#cCount').textContent = state.msg.length+' / 120'; });
+fFrom.addEventListener('input', ()=>{ state.from=fFrom.value; });
+
+function pay(){
+  if(!state.name.trim()){ fName.focus(); toast('Who is it for?'); return; }
+  toast('Paid — building their bloom…');
+  setTimeout(openDelivery, 900);
+}
+$('#payApple').onclick = pay;
+$('#payCard').onclick  = pay;
+
+$('#dlReplay').onclick = ()=>{ const v=$('#dlVideo'); v.currentTime=0; v.play().catch(()=>{}); };
+$('#dlSound').onclick  = ()=>{ const v=$('#dlVideo'); v.muted=!v.muted; if(!v.muted) v.play().catch(()=>{}); toast(v.muted?'Sound off':'Sound on'); };
+$('#dlShare').onclick  = ()=> $('#shareSheet').classList.add('on');
+$('#dlSave').onclick   = ()=>{ if(state.product) window.open(state.product.video_url,'_blank'); toast('Opening the video — press and hold to save'); };
+$('#stepSave').onclick = ()=>{ if(state.product) window.open(state.product.video_url,'_blank'); toast('Press and hold the video to save it'); };
+$('#copyCap').onclick  = async ()=>{
+  try{ await navigator.clipboard.writeText($('#capText').value); }
+  catch(e){ $('#capText').select(); document.execCommand('copy'); }
+  $('#copyCap').textContent='Copied — now open Instagram';
+  $('#copyCap').style.borderColor='var(--gold)'; $('#copyCap').style.color='var(--gold)';
+  toast('Caption copied');
+};
+$('#shareTargets').innerHTML = [
+  ['Instagram','linear-gradient(135deg,#f9ce34,#ee2a7b 50%,#6228d7)'],
+  ['TikTok','linear-gradient(135deg,#25f4ee,#000 50%,#fe2c55)'],
+  ['Messages','linear-gradient(135deg,#5bd75b,#0bbf3c)'],
+  ['More','rgba(0,0,0,.18)'],
+].map(([n,bg])=>`<button data-target="${n}" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:7px;min-height:44px;padding:13px 0;border-radius:14px;background:rgba(0,0,0,.05);border:1px solid rgba(0,0,0,.09)">
+  <span style="width:22px;height:22px;border-radius:7px;background:${bg}"></span>
+  <span style="font-size:11px;color:rgba(29,29,31,.7)">${n}</span></button>`).join('');
+$('#shareTargets').addEventListener('click', async e=>{
+  const b=e.target.closest('[data-target]'); if(!b) return;
+  const text=$('#capText').value;
+  if(navigator.share){ try{ await navigator.share({text, url:location.origin}); return; }catch(err){} }
+  try{ await navigator.clipboard.writeText(text); toast('Caption copied — open '+b.dataset.target); }
+  catch(err){ toast('Copy the caption above'); }
+});
+
+/* ---------- boot ---------- */
+load().then(()=>{ renderLanding(); renderShop(); })
+      .catch(err=>{ toast('Could not load the catalog'); console.error(err); });
+})();
+</script>
+</body>
+</html>
