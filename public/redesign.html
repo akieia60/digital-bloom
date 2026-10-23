@@ -162,6 +162,16 @@
   .promise{display:flex;flex-direction:column;gap:9px;margin:18px 0 0;padding:0;list-style:none}
   .promise li{display:flex;gap:10px;align-items:center;font-size:14px;color:rgba(250,240,236,.8)}
   .promise li::before{content:'';flex:none;width:6px;height:6px;border-radius:50%;background:var(--gold)}
+  /* Gamble 10/22: no pills. Plain words you swipe, the blooms do the selling. */
+  .whohead{padding:18px 18px 4px;font-family:'Playfair Display',Georgia,serif;font-size:22px;color:var(--cream)}
+  .who{display:flex;gap:22px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding:6px 18px 4px}
+  .who::-webkit-scrollbar{display:none}
+  .who button{flex:none;min-height:44px;padding:8px 0;border-bottom:2px solid transparent;background:none;
+    font-size:16px;font-weight:500;color:rgba(250,240,236,.62);white-space:nowrap}
+  .who button.sel{color:var(--gold);border-bottom-color:var(--gold);font-weight:600}
+  .who button.soon::after{display:none}
+  .who.sm button{font-size:14px}
+  .swipehint{padding:0 18px 10px;font-size:11px;color:rgba(250,240,236,.38)}
   .empty{grid-column:1/-1;padding:30px 20px;text-align:center;border:1px dashed rgba(255,255,255,.14);border-radius:20px;
     font-size:13px;line-height:1.5;color:rgba(250,240,236,.5)}
   .empty .serif-h{margin-bottom:7px;font-family:'Playfair Display',Georgia,serif;font-size:19px;color:var(--cream)}
@@ -230,7 +240,7 @@
       <h2>Who are you sending to?</h2>
       <p>Tap a person — we'll show every bloom made for them.</p>
     </div>
-    <div class="wrapchips" id="pickRail"></div>
+    <div class="hrail" id="pickRail"></div>
   </div>
 
   <!-- one swipe row per occasion -->
@@ -870,10 +880,23 @@ async function load(){
 }
 
 /* ---------- tiles ---------- */
+// Gamble 10/22: "the actual bloom itself" is the ad, so tiles play the bloom
+// while they're on screen and pause when they scroll off (saves phone battery).
+const liveObs = 'IntersectionObserver' in window ? new IntersectionObserver(es=>es.forEach(en=>{
+  const v = en.target;
+  if(en.isIntersecting){ if(!v.src) v.src = v.dataset.src; v.play().catch(()=>{}); } else v.pause();
+}),{threshold:.45}) : null;
+function liveMedia(p){
+  if(!p) return '';
+  const poster = p.thumbnail_url ? ` poster="${esc(p.thumbnail_url)}"` : '';
+  return `<video class="live" data-src="${esc(p.video_url)}"${poster} muted loop playsinline preload="none"></video>`;
+}
+function wireLive(root){
+  $$('video.live',root).forEach(v=>{ if(liveObs) liveObs.observe(v); else { v.src=v.dataset.src; } });
+}
 function tile(p,o){
   o = o || homeOf(p);
-  const poster = p.thumbnail_url ? `<img src="${esc(p.thumbnail_url)}" alt="" loading="lazy">`
-    : `<video src="${esc(p.video_url)}#t=1" preload="metadata" muted playsinline></video>`;
+  const poster = liveMedia(p);
   const sub = o ? labelIn(o,p) : '';
   return `<button class="tile" data-pid="${esc(p.id)}" style="background:${o?o.wash:'var(--navy-mid)'}">
       ${poster}<div class="veil"></div>
@@ -883,9 +906,7 @@ function tile(p,o){
 function occTile(o, wide){
   const list = items(o);
   const lead = list.find(p=>p.thumbnail_url) || list[0];
-  const media = lead ? (lead.thumbnail_url
-      ? `<img src="${esc(lead.thumbnail_url)}" alt="" loading="lazy">`
-      : `<video src="${esc(lead.video_url)}#t=1" preload="metadata" muted playsinline></video>`) : '';
+  const media = liveMedia(lead);
   let line = list.length ? plural(list.length,'bloom') : 'Coming soon';
   if(o.when){ const d=nextDate(o); line = dateLabel(d)+' · '+(list.length ? plural(list.length,'bloom') : 'coming soon'); }
   return `<button class="tile${wide?' wide':''}${list.length?'':' bare'}" data-gkey="${esc(o.key)}">
@@ -893,6 +914,22 @@ function occTile(o, wide){
       <div class="veil"></div>
       <div class="cap"><b>${esc(o.name)}</b><span>${esc(line)}</span></div>
     </button>`;
+}
+
+function personTile(key, label, list, attr){
+  const lead = list.find(p=>p.thumbnail_url) || list[0];
+  return `<button class="tile" data-${attr}="${esc(key)}">
+      <div style="position:absolute;inset:0;background:var(--navy-mid)"></div>${liveMedia(lead)}
+      <div class="veil"></div>
+      <div class="cap"><b>${esc(label)}</b><span>${esc(plural(list.length,'bloom'))}</span></div>
+    </button>`;
+}
+function personBlooms(k){
+  const out = [];
+  OCCASIONS.filter(o=>!o.alias).forEach(o=>{
+    const e = people(o).find(x=>x[0]===k); if(e) items(o).forEach(p=>{ if(matches(p,e) && !out.includes(p)) out.push(p); });
+  });
+  return out;
 }
 
 /* ---------- landing ---------- */
@@ -914,10 +951,9 @@ function renderLanding(){
   }).join('');
 
   // who are you sending to?
-  $('#pickRail').innerHTML = PICK.map(k=>{
-    const n = personCount(k);
-    return `<button class="chip${n?'':' soon'}" data-person="${esc(k)}">${esc(LABEL[k]||titleize(k))}</button>`;
-  }).join('');
+  // Gamble 10/22: people show up as live bloom tiles, same as the occasions, not pills
+  $('#pickRail').innerHTML = PICK.map(k=>({k,list:personBlooms(k)})).filter(x=>x.list.length)
+    .map(({k,list})=>personTile(k, LABEL[k]||titleize(k), list, 'person')).join('');
 
   // one swipe row per occasion
   $('#occRows').innerHTML = HOME_ROWS.map(occ).filter(o=>items(o).length).map(o=>`
@@ -926,6 +962,7 @@ function renderLanding(){
       <div class="hrail">${items(o).slice(0,10).map(p=>tile(p,o)).join('')}</div>
     </div>`).join('');
 
+  wireLive($('#s-landing'));
   const live = OCCASIONS.filter(o=>!o.alias && items(o).length).length;
   $('#occSub').textContent = live+' occasions · '+state.products.length+' blooms ready to send';
 
@@ -953,7 +990,7 @@ function renderShop(){
     if(!list.length) return;
     html += `<div class="mhead" id="m-${m}">${esc(title)}</div><div class="grid">${list.map(o=>occTile(o)).join('')}</div>`;
   });
-  $('#shopBody').innerHTML = html;
+  $('#shopBody').innerHTML = html; wireLive($('#shopBody'));
 }
 
 /* ---------- one occasion: who it's for + style ---------- */
@@ -962,36 +999,31 @@ function openGroup(key, preSub){
   state.occ = o; state.sub = preSub || null; state.style = null;
   const list = items(o);
   const count = entry => list.filter(p=>matches(p,entry)).length;
-  const chips = (arr, attr) => arr
+  // plain words, stocked people first; empty shelves stay in the list but dimmed
+  const words = (arr, attr) => arr
       .map(e=>({e,n:count(e)}))
-      .sort((a,b)=> (b.n>0)-(a.n>0))                        // stocked first, keep the familiar order
-      .map(({e,n})=>`<button class="chip${n?'':' soon'}${state.sub===e[0]?' sel':''}" data-${attr}="${esc(e[0])}">${esc(e[1])}${n?` <small>${n}</small>`:''}</button>`)
+      .sort((a,b)=> (b.n>0)-(a.n>0))
+      .map(({e,n})=>`<button class="${n?'':'soon'}" data-${attr}="${esc(e[0])}">${esc(e[1])}</button>`)
       .join('');
 
   $('#recTitle').textContent = o.name;
   const ppl = people(o);
-  $('#recCount').textContent = list.length ? plural(list.length,'bloom') + (ppl.length ? ' · '+ppl.length+(ppl.length===1?' person':' people') : '') : 'Coming soon';
-  let rows = `<div class="rrow"><div class="rail"><button class="chip${state.sub?'':' sel'}" data-sub="__all">Everyone <small>${list.length}</small></button></div></div>`;
-  (o.cols||[]).forEach(c=>{
-    rows += `<div class="rrow"><div class="rowlabel">${esc(c.title)}</div><div class="rail">${chips(c.people,'sub')}</div></div>`;
-  });
+  $('#recCount').textContent = list.length ? plural(list.length,'bloom') : 'Coming soon';
+  let rows = '';
+  if(ppl.length){
+    rows += `<div class="whohead">Who's this for?</div>
+      <div class="who" id="whoRail"><button data-sub="__all">Everyone</button>${words(ppl,'sub')}</div>
+      <div class="swipehint">Swipe for more →</div>`;
+  }
   const styles = (o.styles||[]).filter(s=>count(s));
   if(styles.length){
-    rows += `<div class="rrow"><div class="rowlabel">${esc(o.styleTitle||'Style')}</div><div class="rail">${chips(styles,'style')}</div></div>`;
+    rows += `<div class="rowlabel" style="padding-top:6px">${esc(o.styleTitle||'Style')}</div>
+      <div class="who sm">${words(styles,'style')}</div>`;
   }
   $('#recRows').innerHTML = rows;
-  $('#recCue').style.display = ppl.length ? '' : 'none';
+  $('#recCue').style.display = 'none';
   paintRec();
   show('recipients');
-  // Gamble 8/20: the pills need to announce themselves or nobody taps them.
-  // Three beats, then it rests — an always-on animation eats phone battery.
-  const rails = $$('#recRows .rail');
-  const seen = +(store.get('db_rec_cue') || 0);
-  if(seen < 3 && rails[1]){
-    rails[1].classList.remove('pulse'); void rails[1].offsetWidth; rails[1].classList.add('pulse');
-    store.set('db_rec_cue', seen + 1);
-    setTimeout(()=>rails[1].classList.remove('pulse'), 4200);
-  }
 }
 function paintRec(){
   const o = state.occ, all = items(o);
@@ -1006,11 +1038,22 @@ function paintRec(){
   $$('#recRows [data-sub]').forEach(x=>x.classList.toggle('sel', (x.dataset.sub==='__all' && !state.sub) || x.dataset.sub===state.sub));
   $$('#recRows [data-style]').forEach(x=>x.classList.toggle('sel', x.dataset.style===state.style));
   const what = person ? person[1] : o.name;
-  $('#recGrid').innerHTML = list.slice(0,60).map(p=>tile(p,o)).join('')
+  const sel = $('#recRows .who [data-sub].sel'); if(sel) sel.scrollIntoView({inline:'center',block:'nearest'});
+  let lead = '';
+  if(!person && !style){
+    const stocked = people(o).map(e=>({e,l:all.filter(p=>matches(p,e))})).filter(x=>x.l.length);
+    if(stocked.length){
+      $('#recSelLabel').textContent = 'Pick who it\'s for';
+      lead = stocked.map(({e,l})=>personTile(e[0], e[1], l, 'sub')).join('')
+           + `<div class="mhead" style="grid-column:1/-1;padding:26px 0 2px">Every ${esc(o.name)} bloom</div>`;
+    }
+  }
+  $('#recGrid').innerHTML = lead + list.slice(0,60).map(p=>tile(p,o)).join('')
     || `<div class="empty">
           <div class="serif-h">${esc(what)} is next up</div>
           <div>The shelf is built — the blooms are being made.</div>
         </div>`;
+  wireLive($('#recGrid'));
 }
 
 /* ---------- one person, every occasion ---------- */
@@ -1036,7 +1079,7 @@ function openPerson(k){
       <div class="serif-h">More for ${esc(label)} is next up</div>
       <div>Shelves built and waiting: ${esc(soon.join(' · '))}</div></div>`;
   $('#psCount').textContent = total ? plural(total,'bloom') : 'Coming soon';
-  $('#psBody').innerHTML = html;
+  $('#psBody').innerHTML = html; wireLive($('#psBody'));
   show('person');
 }
 
@@ -1110,10 +1153,10 @@ document.addEventListener('click', e=>{
   const pe = e.target.closest('[data-person]'); if(pe){ openPerson(pe.dataset.person); return; }
   const t = e.target.closest('[data-pid]');    if(t){ openProduct(t.dataset.pid); return; }
   const c = e.target.closest('[data-sub]');    if(c){
-    $$('#recRows .rail').forEach(r=>r.classList.remove('pulse'));
-    store.set('db_rec_cue', 3);
     state.sub = c.dataset.sub==='__all' ? null : c.dataset.sub;
-    paintRec(); return; }
+    paintRec();
+    if(c.classList.contains('tile')) window.scrollTo({top:0,behavior:'smooth'});
+    return; }
   const st = e.target.closest('[data-style]'); if(st){
     state.style = state.style===st.dataset.style ? null : st.dataset.style;
     paintRec(); return; }
