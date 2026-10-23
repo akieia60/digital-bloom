@@ -253,9 +253,8 @@
   </div>
 
   <div style="padding:44px 18px calc(38px + var(--sab));background:var(--ink);text-align:center">
-    <h2 class="h1" style="margin:0;font-size:27px">Someone in your phone<br><em style="color:var(--blush)">deserves to hear from you.</em></h2>
-    <p style="margin:16px auto 0;max-width:330px;font-size:15px;line-height:1.6;color:rgba(250,240,236,.66)">Maybe they love you, miss you, thinking about you, or haven't heard from you in a while. Surprise them with a digital card and flowers — I'm sure they'll love it.</p>
-    <button class="btn btn-primary" style="margin-top:24px" data-go="shop">Send a Bloom</button>
+    <!-- Gamble 8/20: the ad copy lives in Understanding the Process, not in the way of the product -->
+    <button class="btn btn-ghost" data-go="understanding">Understanding the Process</button>
     <div style="margin-top:24px;font-size:11px;letter-spacing:.14em;color:rgba(250,240,236,.25)">© Digital Bloom™ · prototype</div>
   </div>
  </div>
@@ -513,7 +512,7 @@
     <p style="margin:0;font-size:16px;line-height:1.65;color:var(--t2)">These are very moving digital cards. People don't text back thanking you. They usually call crying. Tears of joy. The blooms are beautiful and effective. Try one — you'll see.</p>
     <div style="margin-top:14px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--t3)">— Gamble, co-founder</div>
 
-    <div style="margin-top:22px;padding:18px;border:1px solid var(--line);border-radius:18px;background:var(--soft)">
+    <div hidden style="margin-top:22px;padding:18px;border:1px solid var(--line);border-radius:18px;background:var(--soft)">
       <div class="serif" style="font-size:18px;font-style:italic;line-height:1.45">[REAL RECIPIENT QUOTE — one line from somebody who received one]</div>
       <div style="margin-top:12px;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--t3)">[Name] · [Occasion]</div>
     </div>
@@ -524,8 +523,10 @@
     </div>
   </div>
 
-  <div style="padding:34px 18px calc(38px + var(--sab));background:var(--ink);text-align:center">
-    <button class="btn btn-primary" data-go="shop">Send a Bloom</button>
+  <div id="u-ad" style="padding:44px 18px calc(38px + var(--sab));background:var(--ink);text-align:center">
+    <h2 class="h1" style="margin:0;font-size:27px">Someone in your phone<br><em style="color:var(--blush)">deserves to hear from you.</em></h2>
+    <p style="margin:16px auto 0;max-width:330px;font-size:15px;line-height:1.6;color:rgba(250,240,236,.66)">Maybe they love you, miss you, thinking about you, or haven't heard from you in a while. Surprise them with a digital card and flowers — I'm sure they'll love it.</p>
+    <button class="btn btn-primary" style="margin-top:24px" data-go="shop">Send a Bloom</button>
   </div>
  </div>
 </section>
@@ -555,6 +556,7 @@
     <h3 id="understandingTitle">Understanding the Process</h3>
     <button class="mi" data-go="understanding" data-closemenu>How it works</button>
     <button class="mi" data-go="understanding" data-closemenu>What comes back</button>
+    <button class="mi" data-go="understanding" data-anchor="u-ad" data-closemenu>Someone in your phone</button>
 
     <h3>Company</h3>
     <a href="/about" data-closemenu>About</a>
