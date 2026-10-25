@@ -32,7 +32,7 @@
   .pill.on{border-color:var(--gold);background:rgba(212,175,55,.15);color:var(--gold);font-weight:600}
   select.pill{appearance:none;-webkit-appearance:none;font-family:inherit}
 
-  .stage{margin-top:14px;position:relative;border-radius:22px;overflow:hidden;background:var(--ink);aspect-ratio:9/12;border:1px solid var(--line)}
+  .stage{margin-top:14px;position:relative;border-radius:22px;overflow:hidden;background:var(--ink);aspect-ratio:4/5;max-height:44vh;margin-left:auto;margin-right:auto;border:1px solid var(--line)}
   .stage video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
   .tag{position:absolute;top:12px;left:12px;padding:6px 11px;border-radius:999px;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;background:rgba(9,20,40,.72)}
   .tag.ok{color:var(--green);border:1px solid rgba(95,191,122,.5)}
@@ -177,7 +177,7 @@ function load(i){
 
 async function save(){
   const p = queue[pos]; if(!p) return;
-  const before = { category:p.category, subcategory:p.subcategory||null };
+  const before = { category:p.category, subcategory:p.subcategory||null, clearReview: !p.category_reviewed_at };
   const after = { category:pick.category, subcategory:pick.subcategory||null };
   $('#go').disabled = true;
   try{

@@ -311,7 +311,10 @@ export default async function handler(req, res) {
       }
       const now = new Date().toISOString();
       const { data, error } = await supabase.from('products')
-        .update({ category, subcategory: sub, category_reviewed_at: now, category_reviewed_by: actor,
+        // clearReview: Undo puts a bloom back the way it was, unchecked included
+        .update({ category, subcategory: sub,
+          category_reviewed_at: body.clearReview ? null : now,
+          category_reviewed_by: body.clearReview ? null : actor,
           last_action_by: actor, last_action_at: now })
         .eq('id', productId)
         .select('id, name, category, subcategory, category_reviewed_at, category_reviewed_by')
