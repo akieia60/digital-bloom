@@ -104,9 +104,9 @@
   .menu.on{display:block}
   .menu .scrim{position:absolute;inset:0;background:rgba(0,0,0,.62);opacity:0;transition:.3s}
   .menu.on .scrim{opacity:1}
-  .menu .panel{position:absolute;top:0;left:0;bottom:0;width:min(88vw,360px);overflow-y:auto;
+  .menu .panel{position:absolute;top:0;right:0;bottom:0;width:min(88vw,360px);overflow-y:auto;
     padding:calc(16px + var(--sat)) 20px calc(28px + var(--sab));background:var(--navy);
-    border-right:1px solid rgba(255,255,255,.09);transform:translateX(-100%);
+    border-left:1px solid rgba(255,255,255,.09);transform:translateX(100%);
     transition:transform .32s cubic-bezier(.32,.72,0,1)}
   .menu.on .panel{transform:translateX(0)}
   .menu h3{margin:26px 0 10px;font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold)}
@@ -175,86 +175,114 @@
   .empty{grid-column:1/-1;padding:30px 20px;text-align:center;border:1px dashed rgba(255,255,255,.14);border-radius:20px;
     font-size:13px;line-height:1.5;color:rgba(250,240,236,.5)}
   .empty .serif-h{margin-bottom:7px;font-family:'Playfair Display',Georgia,serif;font-size:19px;color:var(--cream)}
+
+  /* Gamble 10/24: the tagline is a splash on open (5–7s), then the store */
+  .splash{position:fixed;inset:0;z-index:300;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    padding:calc(30px + var(--sat)) 26px calc(30px + var(--sab));text-align:center;
+    background:radial-gradient(120% 80% at 12% 0%,rgba(201,133,122,.22) 0%,transparent 62%),
+      radial-gradient(100% 70% at 92% 100%,rgba(201,168,76,.16) 0%,transparent 62%),var(--navy-page);
+    transition:opacity .7s ease,visibility .7s}
+  .splash.off{opacity:0;visibility:hidden;pointer-events:none}
+  .splash .tagpill{display:inline-flex;align-items:center;gap:8px;margin-top:26px;padding:9px 18px;border-radius:999px;
+    border:1px solid rgba(201,168,76,.4);background:rgba(201,168,76,.08);font-size:12px;font-weight:600;
+    letter-spacing:.12em;text-transform:uppercase;color:var(--cream)}
+  .splash .tap{position:absolute;left:0;right:0;bottom:calc(28px + var(--sab));font-size:11px;letter-spacing:.16em;
+    text-transform:uppercase;color:rgba(250,240,236,.35)}
+  .splash .bar{position:absolute;left:0;top:0;height:2px;width:0;background:var(--gold)}
+  .splash.run .bar{width:100%;transition:width 6s linear}
+
+  /* Gamble 10/24: home tiles are display only — the category name is the door */
+  .tile.show{pointer-events:none}
+  .orow-h .oname{flex:1;min-width:0;display:flex;align-items:baseline;gap:10px;min-height:44px;text-align:left;
+    font-size:inherit;font-weight:inherit;letter-spacing:normal;text-transform:none;color:inherit}
+  .orow-h .oname h3{margin:0}
+  .orow-h .oname em{font-style:normal;font-size:20px;color:var(--gold)}
+  .hero{display:block;position:relative;width:100%;margin-top:6px;border-radius:30px;overflow:hidden;aspect-ratio:4/5;
+    border:1px solid rgba(201,168,76,.28);background:var(--ink);text-align:left}
+  .hero video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+  .hero .veil{position:absolute;inset:0;background:linear-gradient(180deg,transparent 45%,rgba(7,17,31,.9) 100%)}
+  .hero .cap{position:absolute;left:20px;right:20px;bottom:20px}
+  .hero .cap b{display:block;font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:40px;line-height:1;color:#fff}
+  .hero .cap span{display:inline-flex;align-items:center;gap:6px;margin-top:12px;font-size:12px;font-weight:700;
+    letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
+
+  /* Gamble 10/24: the message shows by itself first, then stays while the bloom plays */
+  .dl-intro{position:absolute;inset:0;z-index:5;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    padding:30px 28px;text-align:center;background:var(--navy-page);transition:opacity .9s ease,visibility .9s}
+  .dl-intro.off{opacity:0;visibility:hidden}
+  .dl-intro .msg{margin-top:22px;max-width:420px;font-family:'Cormorant Garamond',Georgia,serif;font-size:27px;
+    font-style:italic;line-height:1.42;color:var(--cream);opacity:0;transform:translateY(10px);transition:opacity 1s ease .3s,transform 1s ease .3s}
+  .dl-intro.in .msg{opacity:1;transform:none}
+  .dl-msg{position:absolute;left:14px;right:14px;bottom:calc(64px + var(--sab));padding:16px 18px;border-radius:20px;
+    background:rgba(7,17,31,.62);border:1px solid rgba(255,255,255,.08);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+    text-align:center;font-family:'Cormorant Garamond',Georgia,serif;font-size:19px;font-style:italic;line-height:1.42;
+    color:rgba(250,240,236,.96);opacity:0;transition:opacity .9s ease;pointer-events:none}
+  .dl-msg.on{opacity:1}
+  .dl-msg:empty{display:none}
+  .langrow{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .langrow button{min-height:44px;padding:10px 12px;border-radius:12px;border:1px solid rgba(255,255,255,.1);
+    background:rgba(255,255,255,.04);font-size:14px;color:rgba(250,240,236,.8);text-align:left}
+  .langrow button.sel{border-color:var(--gold);background:rgba(201,168,76,.14);color:var(--gold);font-weight:600}
 </style>
 </head>
 <body>
 
 <div class="toast" id="toast"></div>
 
+<!-- ===================== SPLASH (Gamble 10/24) ===================== -->
+<!-- Shows on open for ~6s (tap skips), then fades to the store. Once per visit. -->
+<div class="splash off" id="splash" role="dialog" aria-label="Digital Bloom">
+  <div class="bar"></div>
+  <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#c9a84c" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 12c0-3 1.8-5.5 4.2-5.5C18 6.5 19 8 19 9.6 19 12 16.4 12 12 12z"/><path d="M12 12c0-3-1.8-5.5-4.2-5.5C6 6.5 5 8 5 9.6 5 12 7.6 12 12 12z"/><path d="M12 12c3 0 5.5 1.8 5.5 4.2 0 1.8-1.5 2.8-3.1 2.8C12 19 12 16.4 12 12z"/><path d="M12 12c-3 0-5.5 1.8-5.5 4.2 0 1.8 1.5 2.8 3.1 2.8C12 19 12 16.4 12 12z"/></svg>
+  <div style="margin-top:10px;font-family:'Playfair Display',Georgia,serif;font-size:18px;color:var(--cream)">Digital Bloom™</div>
+  <h1 class="h1" style="margin:30px 0 0;font-size:clamp(36px,10vw,52px)"><span data-i18n="h1a">Give Them Their Flowers</span><br><em style="color:var(--blush)" data-i18n="h1b">While They're Still Here</em></h1>
+  <div class="tagpill"><span style="width:5px;height:5px;border-radius:50%;background:var(--gold)"></span><span data-i18n="pill">A card, flowers &amp; balloons in 1</span></div>
+  <div class="tap" data-i18n="tap">Tap to start</div>
+</div>
+
 <!-- ===================== 1 · LANDING ===================== -->
 <section class="screen on" id="s-landing">
  <div class="wrap">
   <div class="nav">
-    <button class="burger" data-menu aria-label="Menu"><span></span><span></span><span></span></button>
     <div class="brand" style="flex:1">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#c9a84c" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 12c0-3 1.8-5.5 4.2-5.5C18 6.5 19 8 19 9.6 19 12 16.4 12 12 12z"/><path d="M12 12c0-3-1.8-5.5-4.2-5.5C6 6.5 5 8 5 9.6 5 12 7.6 12 12 12z"/><path d="M12 12c3 0 5.5 1.8 5.5 4.2 0 1.8-1.5 2.8-3.1 2.8C12 19 12 16.4 12 12z"/><path d="M12 12c-3 0-5.5 1.8-5.5 4.2 0 1.8 1.5 2.8 3.1 2.8C12 19 12 16.4 12 12z"/></svg>
-      Digital Bloom
+      Digital Bloom™
     </div>
-    <button class="pill" data-go="shop">Send</button>
+    <!-- Gamble 10/24: no SEND on the front page — the menu (with language) lives here -->
+    <button class="burger" data-menu aria-label="Menu"><span></span><span></span><span></span></button>
   </div>
 
-  <div style="position:relative;padding:34px 18px 40px;background:
-      radial-gradient(120% 80% at 12% 0%,rgba(201,133,122,.20) 0%,transparent 62%),
-      radial-gradient(100% 70% at 92% 100%,rgba(201,168,76,.14) 0%,transparent 62%),var(--navy);overflow:hidden">
-    <div style="display:inline-flex;align-items:center;gap:8px;padding:7px 16px;border:1px solid rgba(201,133,122,.28);border-radius:999px;background:rgba(201,133,122,.07)">
-      <span style="width:5px;height:5px;border-radius:50%;background:var(--gold)"></span>
-      <span style="font-size:10px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:rgba(250,240,236,.78)">The card and the flowers, in one</span>
-    </div>
-    <h1 class="h1" style="margin:20px 0 0;font-size:clamp(38px,10.5vw,50px)">Give Them Their Flowers<br><em style="color:var(--blush)">While They're Still Here</em></h1>
-    <p class="serif" style="margin:16px 0 0;font-size:19px;line-height:1.5;color:rgba(250,240,236,.76);max-width:340px">A card and a bouquet in one short film — their name on it, sent from your phone in under a minute.</p>
-    <ul class="promise">
-      <li>Their name engraved on the card in the film</li>
-      <li>Arrives from your own number, in minutes</li>
-      <li>No app, no account, no signup</li>
-    </ul>
-
-    <div style="position:relative;margin-top:24px;border-radius:34px;overflow:hidden;border:1px solid rgba(255,255,255,.09);background:var(--ink);aspect-ratio:4/5">
-      <video id="heroVideo" muted playsinline loop preload="metadata" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover"></video>
-      <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(7,17,31,.1) 0%,transparent 30%,rgba(7,17,31,.55) 100%);pointer-events:none"></div>
-      <div id="heroTag" style="position:absolute;left:16px;top:16px;padding:8px 14px;border-radius:999px;background:rgba(6,13,24,.55);border:1px solid rgba(255,255,255,.1);font-size:9px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.85)">Loading</div>
-      <button id="heroSound" class="iconbtn" style="position:absolute;right:16px;top:16px;background:rgba(6,13,24,.55)" aria-label="Sound">
-        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H3v6h3l5 4z"/><path d="M17 9l4 6M21 9l-4 6"/></svg>
-      </button>
-    </div>
-
-    <div style="display:flex;flex-direction:column;gap:10px;margin-top:22px">
-      <button class="btn btn-primary" data-go="shop">Send a Bloom</button>
-      <button class="btn btn-ghost" id="watchFirst">Watch one first</button>
-    </div>
-    <div style="margin-top:13px;text-align:center;font-size:12px;color:rgba(250,240,236,.42)">From <b style="color:var(--gold)">$1.99</b> · less than a paper card</div>
+  <!-- Birthday hero: the occasion that never goes out of season. Opens the category, not a bloom. -->
+  <div style="padding:18px 18px 4px;background:var(--navy)">
+    <button class="hero" data-gkey="birthday" aria-label="Birthday">
+      <video id="heroVideo" muted playsinline loop preload="metadata"></video>
+      <div class="veil"></div>
+      <div class="cap"><b>Birthday</b><span><span data-i18n="who">Who are you sending to?</span>
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></span></div>
+    </button>
   </div>
 
-  <!-- coming up: next holidays, by date -->
-  <div style="padding:30px 0 6px;background:var(--navy)">
-    <div class="sectionhead" style="padding-top:0;padding-bottom:14px">
-      <div class="eyebrow">Coming up</div>
-      <h2>Don't miss the next one</h2>
-    </div>
-    <div class="rail" id="upRail" style="gap:10px"></div>
-  </div>
-
-  <!-- who are you sending to? -->
-  <div style="padding:30px 0 4px;background:var(--navy)">
-    <div class="sectionhead" style="padding-top:0;padding-bottom:14px">
-      <div class="eyebrow">Start here</div>
-      <h2>Who are you sending to?</h2>
-      <p>Tap a person — we'll show every bloom made for them.</p>
-    </div>
-    <div class="hrail" id="pickRail"></div>
-  </div>
-
-  <!-- one swipe row per occasion -->
+  <!-- one display row per occasion — tap the name to open it -->
   <div style="padding:6px 0 40px;background:var(--navy)">
     <div id="occRows"></div>
     <div style="padding:26px 18px 0">
-      <button class="btn btn-gold" data-go="shop">See all occasions</button>
+      <button class="btn btn-gold" data-go="shop" data-i18n="allOcc">See all occasions</button>
       <p id="occSub" style="margin:10px 0 0;text-align:center;font-size:12px;color:rgba(250,240,236,.42)"></p>
     </div>
   </div>
 
+  <!-- coming up: next holidays, by date (Gamble 10/24: bottom of the page, out of the product's way) -->
+  <div style="padding:30px 0 34px;background:var(--navy);border-top:1px solid rgba(255,255,255,.06)">
+    <div class="sectionhead" style="padding-top:0;padding-bottom:14px">
+      <div class="eyebrow" data-i18n="upE">Coming up</div>
+      <h2 data-i18n="upH">Don't miss the next one</h2>
+    </div>
+    <div class="rail" id="upRail" style="gap:10px"></div>
+  </div>
+
   <div style="padding:44px 18px calc(38px + var(--sab));background:var(--ink);text-align:center">
     <!-- Gamble 8/20: the ad copy lives in Understanding the Process, not in the way of the product -->
-    <button class="btn btn-ghost" data-go="understanding">Understanding the Process</button>
+    <button class="btn btn-ghost" data-go="understanding" data-i18n="und">Understanding the Process</button>
     <div style="margin-top:24px;font-size:11px;letter-spacing:.14em;color:rgba(250,240,236,.25)">© Digital Bloom™ · prototype</div>
   </div>
  </div>
@@ -267,11 +295,11 @@
     <button class="iconbtn" data-back>
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(250,240,236,.85)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
     </button>
-    <div class="brand" style="flex:1">Occasions</div>
+    <div class="brand" style="flex:1" data-i18n="occ">Occasions</div>
     <button class="burger" data-menu aria-label="Menu"><span></span><span></span><span></span></button>
   </div>
   <div class="sectionhead">
-    <h2 style="font-size:30px;margin-top:0">Occasions</h2>
+    <h2 style="font-size:30px;margin-top:0" data-i18n="occ">Occasions</h2>
     <p id="shopSub">Loading your catalog…</p>
   </div>
   <div id="shopBody"></div>
@@ -303,24 +331,6 @@
   </div>
   <div class="grid" id="recGrid"></div>
   <div style="height:calc(30px + var(--sab))"></div>
- </div>
-</section>
-
-<!-- ============ 3b · ONE PERSON, EVERY OCCASION ============ -->
-<section class="screen" id="s-person">
- <div class="wrap">
-  <div class="nav">
-    <button class="iconbtn" data-back>
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(250,240,236,.85)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
-    </button>
-    <div style="flex:1">
-      <div style="font-family:'Playfair Display',Georgia,serif;font-size:19px" id="psTitle">For —</div>
-      <div style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:rgba(250,240,236,.45)" id="psCount">—</div>
-    </div>
-    <button class="burger" data-menu aria-label="Menu"><span></span><span></span><span></span></button>
-  </div>
-  <div id="psBody"></div>
-  <div style="height:calc(36px + var(--sab))"></div>
  </div>
 </section>
 
@@ -394,7 +404,7 @@
 
   <div style="padding:20px 18px 0;display:flex;flex-direction:column;gap:16px">
     <div>
-      <label class="label" for="fName">Their name</label>
+      <label class="label" for="fName" data-i18n="name">Their name</label>
       <input class="field" id="fName" type="text" placeholder="Mama Lois" autocomplete="off" enterkeyhint="next">
       <div class="note">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#B8923F" stroke-width="1.8" stroke-linecap="round" style="flex:none;margin-top:1px"><circle cx="12" cy="12" r="9"/><path d="M12 8v5"/><path d="M12 16h.01"/></svg>
@@ -402,43 +412,28 @@
       </div>
     </div>
     <div>
-      <label class="label" for="fMsg">What you want to say</label>
-      <textarea class="field" id="fMsg" rows="3" maxlength="120" placeholder="You planted everything I am."></textarea>
-      <div style="display:flex;justify-content:space-between;margin-top:6px;font-size:11px;color:var(--t3)">
-        <span>Keep it short — it stays on screen 4 seconds</span><span id="cCount">0 / 120</span>
+      <!-- Gamble 10/24: no delivery choice — hit send and it goes straight to their phone -->
+      <label class="label" for="fPhone" data-i18n="phone">Their mobile number</label>
+      <input class="field" id="fPhone" type="tel" inputmode="tel" placeholder="(555) 123-4567" autocomplete="off">
+    </div>
+    <div>
+      <label class="label" for="fMsg" data-i18n="msg">Your message</label>
+      <!-- Gamble 10/24: +50 characters minimum (was 120) -->
+      <textarea class="field" id="fMsg" rows="4" maxlength="180" placeholder="You planted everything I am."></textarea>
+      <div style="display:flex;justify-content:space-between;gap:12px;margin-top:6px;font-size:11px;color:var(--t3)">
+        <span>Shows on screen by itself first, then stays while the bloom plays</span><span id="cCount" style="flex:none">0 / 180</span>
       </div>
     </div>
     <div>
-      <label class="label" for="fFrom">Signed</label>
+      <label class="label" for="fFrom" data-i18n="from">Signed</label>
       <input class="field" id="fFrom" type="text" placeholder="Ak" autocomplete="off">
-    </div>
-    <div>
-      <label class="label">How it gets there</label>
-      <div style="display:flex;flex-direction:column;gap:10px;margin-top:10px">
-        <button class="opt sel" data-del="self">
-          <span class="dot"></span>
-          <span style="flex:1">
-            <b style="display:block;font-size:14px;font-weight:600;color:var(--t1)">I'll send it</b>
-            <span style="display:block;margin-top:3px;font-size:12px;line-height:1.4;color:var(--t2)">Opens your Messages with the link ready — arrives from your own number.</span>
-          </span>
-          <span style="font-size:12px;font-weight:600;color:var(--gold-dk)">Free</span>
-        </button>
-        <button class="opt" data-del="us">
-          <span class="dot"></span>
-          <span style="flex:1">
-            <b style="display:block;font-size:14px;font-weight:600;color:var(--t1)">We send it for you</b>
-            <span style="display:block;margin-top:3px;font-size:12px;line-height:1.4;color:var(--t2)">Schedule the exact day and time. We text it to them.</span>
-          </span>
-          <span style="font-size:12px;font-weight:600;color:var(--t3)">+$1.00</span>
-        </button>
-      </div>
     </div>
   </div>
 
   <div style="margin:22px 18px 0;padding:18px;border-radius:20px;background:var(--soft);border:1px solid var(--line-lt)">
     <div style="display:flex;justify-content:space-between;font-size:14px;color:var(--t2)"><span id="sumLine">Bloom Experience</span><span id="sumPrice">$4.99</span></div>
     <div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:8px;padding-top:12px;border-top:1px solid var(--line)">
-      <span style="font-size:15px;font-weight:600;color:var(--t1)">Total</span>
+      <span style="font-size:15px;font-weight:600;color:var(--t1)" data-i18n="total">Total</span>
       <span id="sumTotal" style="font-family:'Playfair Display',Georgia,serif;font-size:26px;color:var(--t1)">$4.99</span>
     </div>
     <div style="display:flex;flex-direction:column;gap:10px;margin-top:16px">
@@ -446,16 +441,16 @@
         <svg width="17" height="20" viewBox="0 0 17 20" fill="#fff"><path d="M13.6 10.6c0-2.3 1.9-3.4 2-3.5-1.1-1.6-2.8-1.8-3.4-1.8-1.4-.2-2.8.8-3.5.8-.7 0-1.9-.8-3.1-.8-1.6 0-3 .9-3.8 2.4-1.6 2.8-.4 7 1.2 9.3.8 1.1 1.7 2.4 2.9 2.3 1.2 0 1.6-.7 3-.7s1.8.7 3 .7c1.3 0 2.1-1.1 2.8-2.3.9-1.3 1.3-2.6 1.3-2.7 0 0-2.4-.9-2.4-3.7zM11.3 3.8c.6-.8 1.1-1.9 1-3-.9 0-2.1.6-2.8 1.4-.6.7-1.2 1.8-1 2.9 1 .1 2.1-.5 2.8-1.3z"/></svg>
         Pay
       </button>
-      <button class="btn" id="payCard" style="height:54px;border-radius:14px;border:1px solid #D2D2D7;background:#fff;color:var(--t1);letter-spacing:0;text-transform:none;font-size:15px;font-weight:600">Pay with card</button>
+      <button class="btn" id="payCard" style="height:54px;border-radius:14px;border:1px solid #D2D2D7;background:#fff;color:var(--t1);letter-spacing:0;text-transform:none;font-size:15px;font-weight:600" data-i18n="card">Pay with card</button>
     </div>
   </div>
-  <div style="padding:14px 18px calc(28px + var(--sab));text-align:center;font-size:11px;line-height:1.5;color:var(--t3)">No account. No subscription. Yours to keep forever.</div>
+  <div style="padding:14px 18px calc(28px + var(--sab));text-align:center;font-size:11px;line-height:1.5;color:var(--t3)">Pay and it sends — straight to their phone. No account, no extra steps.</div>
  </div>
 </section>
 
 <!-- ===================== 6 · DELIVERY ===================== -->
 <section class="screen" id="s-delivery">
- <div style="position:relative;width:100%;height:100dvh;background:#000;overflow:hidden">
+ <div style="position:relative;width:100%;height:100dvh;background:var(--navy-page);overflow:hidden">
    <video id="dlVideo" playsinline preload="auto" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover"></video>
    <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.55) 0%,transparent 26%,transparent 46%,rgba(0,0,0,.82) 100%);pointer-events:none"></div>
 
@@ -465,27 +460,23 @@
      <div id="dlFrom" style="margin-top:7px;font-size:12px;letter-spacing:.12em;color:rgba(250,240,236,.5)"></div>
    </div>
 
-   <div id="dlMsg" class="serif" style="position:absolute;left:24px;right:24px;bottom:186px;text-align:center;font-size:23px;font-style:italic;line-height:1.42;color:rgba(250,240,236,.95);pointer-events:none"></div>
+   <!-- the bloom plays under the message; Gamble 10/24: no save / share / send-one-back -->
+   <div id="dlMsg" class="dl-msg"></div>
 
-   <button class="iconbtn" id="dlReplay" style="position:absolute;top:calc(14px + var(--sat));right:16px;background:rgba(255,255,255,.1)">
+   <!-- message alone on screen first, then it fades to the bloom -->
+   <div class="dl-intro" id="dlIntro">
+     <div style="font-size:10px;font-weight:600;letter-spacing:.28em;text-transform:uppercase;color:rgba(201,168,76,.9)">A bloom for</div>
+     <div id="dlIntroName" style="margin-top:9px;font-family:'Playfair Display',Georgia,serif;font-size:34px;color:var(--cream)">—</div>
+     <div class="msg" id="dlIntroMsg"></div>
+     <div id="dlIntroFrom" style="margin-top:18px;font-size:12px;letter-spacing:.14em;color:rgba(250,240,236,.55)"></div>
+   </div>
+
+   <button class="iconbtn" data-back aria-label="Back" style="position:absolute;z-index:6;top:calc(14px + var(--sat));left:16px;background:rgba(255,255,255,.1)">
+     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(250,240,236,.9)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
+   </button>
+   <button class="iconbtn" id="dlReplay" aria-label="Replay" style="position:absolute;z-index:6;top:calc(14px + var(--sat));right:16px;background:rgba(255,255,255,.1)">
      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(250,240,236,.9)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg>
    </button>
-   <button class="iconbtn" id="dlSound" style="position:absolute;top:calc(14px + var(--sat));left:16px;background:rgba(255,255,255,.1)">
-     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(250,240,236,.9)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H3v6h3l5 4z"/><path d="M17 9l4 6M21 9l-4 6"/></svg>
-   </button>
-
-   <div style="position:absolute;left:16px;right:16px;bottom:calc(22px + var(--sab));display:flex;flex-direction:column;gap:10px">
-     <div style="display:flex;gap:10px">
-       <button class="btn btn-ghost" id="dlSave" style="height:50px;letter-spacing:.06em;font-size:13px;text-transform:none;backdrop-filter:blur(8px)">
-         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11"/><path d="M8 11l4 4 4-4"/><path d="M5 19h14"/></svg> Save it
-       </button>
-       <button class="btn btn-ghost" id="dlShare" style="height:50px;letter-spacing:.06em;font-size:13px;text-transform:none;backdrop-filter:blur(8px)">
-         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4"/><path d="M8 8l4-4 4 4"/><path d="M5 14v5h14v-5"/></svg> Share
-       </button>
-     </div>
-     <button class="btn btn-primary" style="height:52px;letter-spacing:.16em" data-go="shop">Send one back</button>
-     <div style="text-align:center;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:rgba(250,240,236,.3)">Digital Bloom™ · yours to keep forever</div>
-   </div>
  </div>
 </section>
 
@@ -546,19 +537,22 @@
     </div>
     <div style="margin-top:6px;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:rgba(250,240,236,.35)">Cinematic Digital Experiences</div>
 
-    <h3>Shop</h3>
+    <h3 data-i18n="lang">Language</h3>
+    <div class="langrow" id="langRow"></div>
+
+    <h3 data-i18n="shop">Shop</h3>
     <button class="mi" data-gkey="birthday" data-closemenu>Birthday</button>
     <button class="mi" data-go="shop" data-closemenu>All occasions <span style="color:rgba(250,240,236,.35);font-size:13px" id="miOccCount"></span></button>
     <button class="mi" data-go="shop" data-anchor="m-holiday" data-closemenu>Holidays, by date</button>
     <a href="/credits" data-closemenu>Gift credits</a>
     <a href="/credits/balance" data-closemenu>Check a balance</a>
 
-    <h3 id="understandingTitle">Understanding the Process</h3>
+    <h3 id="understandingTitle" data-i18n="und">Understanding the Process</h3>
     <button class="mi" data-go="understanding" data-closemenu>How it works</button>
     <button class="mi" data-go="understanding" data-closemenu>What comes back</button>
     <button class="mi" data-go="understanding" data-anchor="u-ad" data-closemenu>Someone in your phone</button>
 
-    <h3>Company</h3>
+    <h3 data-i18n="company">Company</h3>
     <a href="/about" data-closemenu>About</a>
     <a href="/contact" data-closemenu>Contact</a>
     <a href="/terms" data-closemenu>Terms</a>
@@ -566,57 +560,6 @@
     <a href="/refunds" data-closemenu>Refunds</a>
 
     <div style="margin-top:26px;font-size:11px;letter-spacing:.14em;color:rgba(250,240,236,.25)">© Digital Bloom™ · prototype</div>
-  </div>
-</div>
-
-<!-- ===================== SHARE SHEET ===================== -->
-<div class="sheet" id="shareSheet">
-  <div class="scrim" data-closesheet></div>
-  <div class="panel">
-    <button class="grab" data-closesheet style="display:block;width:56px;height:22px;padding:9px 9px 9px;background:none;border:0" aria-label="Close">
-      <span style="display:block;width:38px;height:4px;border-radius:4px;background:rgba(255,255,255,.2)"></span>
-    </button>
-    <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:14px">
-      <h2 class="h1" style="margin:0;font-size:24px;flex:1">Let them see your face when you saw it.</h2>
-      <button class="iconbtn" data-closesheet style="flex:none;margin-top:-2px" aria-label="Close">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(250,240,236,.75)" stroke-width="1.8" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
-      </button>
-    </div>
-    <p style="margin:9px 0 18px;font-size:13px;line-height:1.5;color:rgba(250,240,236,.58)">Save the bloom, then post it with the caption. Your people find out Digital Bloom exists from you — not an ad.</p>
-
-    <button class="opt" id="stepSave" style="width:100%;background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.09);align-items:center">
-      <span style="flex:none;width:34px;height:34px;display:flex;align-items:center;justify-content:center;border-radius:50%;border:1px solid rgba(201,168,76,.4);color:var(--gold)">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11"/><path d="M8 11l4 4 4-4"/><path d="M5 19h14"/></svg>
-      </span>
-      <span style="flex:1">
-        <b style="display:block;font-size:14px;font-weight:600;color:var(--cream)">Save to camera roll</b>
-        <span style="display:block;margin-top:3px;font-size:12px;color:rgba(250,240,236,.5)">The full video, watermark and all</span>
-      </span>
-      <span style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:rgba(250,240,236,.35)">Step 1</span>
-    </button>
-
-    <div style="margin-top:10px;padding:15px;border-radius:16px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09)">
-      <div style="display:flex;align-items:center;gap:13px">
-        <span style="flex:none;width:34px;height:34px;display:flex;align-items:center;justify-content:center;border-radius:50%;border:1px solid rgba(201,168,76,.4);color:var(--gold)">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M15 5H6a2 2 0 0 0-2 2v9"/></svg>
-        </span>
-        <span style="flex:1">
-          <b style="display:block;font-size:14px;font-weight:600;color:var(--cream)">Copy the caption</b>
-          <span style="display:block;margin-top:3px;font-size:12px;color:rgba(250,240,236,.5)">Edit it — it should sound like you</span>
-        </span>
-        <span style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:rgba(250,240,236,.35)">Step 2</span>
-      </div>
-      <textarea id="capText" rows="5" style="width:100%;margin-top:12px;padding:14px;border-radius:12px;background:rgba(0,0,0,.28);border:1px solid rgba(255,255,255,.07);font-family:'Cormorant Garamond',Georgia,serif;font-size:16px;font-style:italic;line-height:1.5;color:rgba(250,240,236,.88);outline:none;resize:vertical"></textarea>
-      <button class="btn btn-ghost" id="copyCap" style="margin-top:12px;height:48px">Copy caption</button>
-    </div>
-
-    <div style="display:flex;gap:10px;margin-top:14px" id="shareTargets"></div>
-
-    <div style="margin-top:16px;padding:16px;border-radius:18px;border:1px solid rgba(201,168,76,.3);background:linear-gradient(180deg,rgba(201,168,76,.11) 0%,rgba(255,255,255,.02) 100%)">
-      <div class="eyebrow">Pass it on</div>
-      <div style="margin-top:6px;font-family:'Playfair Display',Georgia,serif;font-size:18px;color:var(--cream)">Somebody gave you yours. Who's next?</div>
-      <button class="btn btn-primary" style="height:50px;margin-top:13px;letter-spacing:.16em" data-go="shop" data-closesheet>Send a bloom back</button>
-    </div>
   </div>
 </div>
 
@@ -782,10 +725,8 @@ const MENUS = [
   ['celebrate','Celebrate'], ['everyday','Everyday'], ['tough','Tough Times'],
   ['holiday','Holidays'], ['collection','Collections'],
 ];
-// The "Who are you sending to?" picker on the homepage
-const PICK = ['mom','dad','wife','husband','partner','son','daughter','sister','brother',
-              'grandma','grandpa','best-friend','friend','coworker','boss','teacher'];
-const HOME_ROWS = ['birthday','thank-you','love','sympathy','graduation','congrats','friendship'];
+// Birthday is the hero at the top, so the rows start after it
+const HOME_ROWS = ['thank-you','love','sympathy','graduation','congrats','friendship'];
 
 const TIERS = [
   { id:'single',     name:'Single Bloom',     desc:'8–10 seconds · one scene',            price:1.99, pop:false },
@@ -795,8 +736,50 @@ const TIERS = [
 const STEPS = [
   ["Pick the occasion, then who it's for","Birthday, then Son. Thank You, then Coach. Every occasion opens into the people inside it."],
   ["Write the part you mean","Their name is engraved on the card inside the film. One screen, then pay."],
-  ["It arrives from your own number","We open your Messages with the link ready. They tap it and the bloom takes over their screen."],
+  ["Hit send — it goes straight to their phone","Your message shows up first, by itself, then the bloom plays with it on screen."],
 ];
+
+/* ---------- language (Gamble 10/24: switcher lives in the menu) ---------- */
+const LANGS = [['en','English'],['es','Español'],['fr','Français'],['pt','Português'],['de','Deutsch'],
+               ['zh','中文'],['ja','日本語'],['vi','Tiếng Việt'],['tl','Tagalog']];
+const T = {
+  en:{pill:'A card, flowers & balloons in 1', h1a:'Give Them Their Flowers', h1b:"While They're Still Here", tap:'Tap to start',
+      upE:'Coming up', upH:"Don't miss the next one", allOcc:'See all occasions', und:'Understanding the Process',
+      who:'Who are you sending to?', seeAll:'See all', occ:'Occasions', name:'Their name', phone:'Their mobile number',
+      msg:'Your message', from:'Signed', card:'Pay with card', total:'Total', lang:'Language', shop:'Shop', company:'Company'},
+  es:{pill:'Tarjeta, flores y globos en uno', h1a:'Dales sus flores', h1b:'mientras están aquí', tap:'Toca para empezar',
+      upE:'Próximamente', upH:'No te pierdas la próxima', allOcc:'Ver todas las ocasiones', und:'Cómo funciona',
+      who:'¿A quién se lo envías?', seeAll:'Ver todo', occ:'Ocasiones', name:'Su nombre', phone:'Su número de celular',
+      msg:'Tu mensaje', from:'Firmado', card:'Pagar con tarjeta', total:'Total', lang:'Idioma', shop:'Tienda', company:'Empresa'},
+  fr:{pill:'Carte, fleurs et ballons en un', h1a:'Offrez-leur des fleurs', h1b:"pendant qu'ils sont là", tap:'Touchez pour commencer',
+      upE:'Bientôt', upH:'Ne manquez pas la prochaine', allOcc:'Toutes les occasions', und:'Comment ça marche',
+      who:"À qui l'envoyez-vous ?", seeAll:'Tout voir', occ:'Occasions', name:'Son prénom', phone:'Son numéro de mobile',
+      msg:'Votre message', from:'Signé', card:'Payer par carte', total:'Total', lang:'Langue', shop:'Boutique', company:'Entreprise'},
+  pt:{pill:'Cartão, flores e balões em um', h1a:'Dê flores a quem você ama', h1b:'enquanto estão aqui', tap:'Toque para começar',
+      upE:'Em breve', upH:'Não perca a próxima', allOcc:'Ver todas as ocasiões', und:'Como funciona',
+      who:'Para quem você vai enviar?', seeAll:'Ver tudo', occ:'Ocasiões', name:'Nome da pessoa', phone:'Celular da pessoa',
+      msg:'Sua mensagem', from:'Assinado', card:'Pagar com cartão', total:'Total', lang:'Idioma', shop:'Loja', company:'Empresa'},
+  de:{pill:'Karte, Blumen & Ballons in einem', h1a:'Schenk ihnen Blumen', h1b:'solange sie hier sind', tap:'Tippen zum Starten',
+      upE:'Demnächst', upH:'Verpasse nicht den nächsten Anlass', allOcc:'Alle Anlässe', und:"So funktioniert's",
+      who:'An wen sendest du?', seeAll:'Alle ansehen', occ:'Anlässe', name:'Name', phone:'Handynummer',
+      msg:'Deine Nachricht', from:'Von', card:'Mit Karte zahlen', total:'Gesamt', lang:'Sprache', shop:'Shop', company:'Unternehmen'},
+  zh:{pill:'贺卡、鲜花和气球，三合一', h1a:'趁他们还在', h1b:'把花送给他们', tap:'点击开始',
+      upE:'即将到来', upH:'别错过下一个节日', allOcc:'查看所有场合', und:'使用说明',
+      who:'你要送给谁？', seeAll:'查看全部', occ:'场合', name:'对方姓名', phone:'对方手机号',
+      msg:'你的留言', from:'署名', card:'刷卡支付', total:'合计', lang:'语言', shop:'选购', company:'公司'},
+  ja:{pill:'カード・花・風船がひとつに', h1a:'大切な人がいるうちに', h1b:'花を贈ろう', tap:'タップして開始',
+      upE:'もうすぐ', upH:'次の記念日をお見逃しなく', allOcc:'すべてのシーン', und:'ご利用の流れ',
+      who:'誰に送りますか？', seeAll:'すべて見る', occ:'シーン', name:'お相手のお名前', phone:'お相手の携帯番号',
+      msg:'メッセージ', from:'差出人', card:'カードで支払う', total:'合計', lang:'言語', shop:'ショップ', company:'会社情報'},
+  vi:{pill:'Thiệp, hoa và bóng bay trong một', h1a:'Tặng hoa cho người thương', h1b:'khi họ vẫn còn ở đây', tap:'Chạm để bắt đầu',
+      upE:'Sắp tới', upH:'Đừng bỏ lỡ dịp tiếp theo', allOcc:'Xem tất cả các dịp', und:'Cách hoạt động',
+      who:'Bạn gửi cho ai?', seeAll:'Xem tất cả', occ:'Các dịp', name:'Tên người nhận', phone:'Số điện thoại người nhận',
+      msg:'Lời nhắn của bạn', from:'Người gửi', card:'Thanh toán bằng thẻ', total:'Tổng cộng', lang:'Ngôn ngữ', shop:'Mua sắm', company:'Công ty'},
+  tl:{pill:'Card, bulaklak at lobo sa isa', h1a:'Ibigay ang kanilang bulaklak', h1b:'habang nandito pa sila', tap:'I-tap para magsimula',
+      upE:'Paparating', upH:'Huwag palampasin ang susunod', allOcc:'Tingnan lahat ng okasyon', und:'Paano ito gumagana',
+      who:'Para kanino mo ipapadala?', seeAll:'Tingnan lahat', occ:'Mga Okasyon', name:'Pangalan nila', phone:'Mobile number nila',
+      msg:'Mensahe mo', from:'Mula kay', card:'Magbayad gamit ang card', total:'Kabuuan', lang:'Wika', shop:'Mamili', company:'Kumpanya'},
+};
 
 const $  = (s,r)=> (r||document).querySelector(s);
 const $$ = (s,r)=> Array.from((r||document).querySelectorAll(s));
@@ -810,7 +793,16 @@ const store = { get(k){ try{ return localStorage.getItem(k); }catch(e){ return n
                 set(k,v){ try{ localStorage.setItem(k,v); }catch(e){} } };
 
 const state = { products:[], byOcc:{}, occ:null, sub:null, style:null, product:null, tier:'experience',
-                del:'self', name:'', msg:'', from:'', stack:[] };
+                name:'', phone:'', msg:'', from:'', lang: store.get('db_lang') || 'en' };
+const t = k => (T[state.lang] && T[state.lang][k]) || T.en[k];
+function applyLang(){
+  if(!T[state.lang]) state.lang = 'en';
+  document.documentElement.lang = state.lang;
+  $$('[data-i18n]').forEach(el=>{ el.textContent = t(el.dataset.i18n); });
+  $('#langRow').innerHTML = LANGS.map(([k,n])=>
+    `<button data-lang="${k}" class="${k===state.lang?'sel':''}">${esc(n)}</button>`).join('');
+  if(state.products.length){ renderLanding(); if(state.occ) openGroup(state.occ.key, state.sub, true); }
+}
 
 /* ---------- occasion helpers ---------- */
 const occ = key => OCCASIONS.find(o=>o.key===key);
@@ -841,33 +833,48 @@ let tT;
 function toast(msg){ const t=$('#toast'); t.textContent=msg; t.classList.add('on');
   clearTimeout(tT); tT=setTimeout(()=>t.classList.remove('on'),2400); }
 
-/* ---------- navigation ---------- */
-function show(id,push){
+/* ---------- navigation ----------
+   Gamble 10/24: a back button on every page and every action. Each step is a
+   browser-history entry, so the on-screen back arrow and the phone's own
+   swipe-back both land on the step before (including leaving a recipient). */
+function show(id){
   $$('.screen').forEach(s=>s.classList.remove('on'));
   const el = document.getElementById('s-'+id);
   if(!el) return;
   el.classList.add('on');
   window.scrollTo(0,0);
-  if(push!==false) state.stack.push(id);
   // pause any video not on screen
   $$('video').forEach(v=>{ if(!el.contains(v)) { try{v.pause();}catch(e){} } });
 }
-function back(){
-  state.stack.pop();
-  const prev = state.stack[state.stack.length-1] || 'landing';
-  show(prev,false);
+function go(id, extra){
+  try{ history.pushState(Object.assign({db:1,id},extra||{}),''); }catch(e){}
+  show(id);
 }
+function back(){
+  const s = history.state;
+  if(s && s.db && s.id!=='landing') history.back(); else show('landing');
+}
+window.addEventListener('popstate', e=>{
+  const s = (e.state && e.state.db) ? e.state : {id:'landing'};
+  $('#menu').classList.remove('on');
+  if(s.id==='delivery') stopDelivery();
+  if(s.id==='recipients' && s.occ){ openGroup(s.occ, s.sub, true); return; }
+  if(s.id==='product' && !state.product){ show('landing'); return; }
+  show(s.id);
+  if(s.id==='product') $('#pdVideo').play().catch(()=>{});
+});
 document.addEventListener('click', e=>{
   if(e.target.closest('[data-menu]')){ $('#menu').classList.add('on'); return; }
   if(e.target.closest('[data-closemenu]')) $('#menu').classList.remove('on');
-  const go = e.target.closest('[data-go]');
-  if(go){ const dest = go.dataset.go; if(dest==='shop') renderShop(); show(dest);
-    if(go.dataset.anchor){ const a=document.getElementById(go.dataset.anchor); if(a) a.scrollIntoView(); } }
+  const g = e.target.closest('[data-go]');
+  if(g){ const dest = g.dataset.go; if(dest==='shop') renderShop(); go(dest);
+    if(g.dataset.anchor){ const a=document.getElementById(g.dataset.anchor); if(a) a.scrollIntoView(); } }
   if(e.target.closest('[data-back]')) back();
-  if(e.target.closest('[data-closesheet]')) $('#shareSheet').classList.remove('on');
+  const l = e.target.closest('[data-lang]');
+  if(l){ state.lang = l.dataset.lang; store.set('db_lang', state.lang); applyLang();
+    $('#menu').classList.remove('on'); toast(LANGS.find(x=>x[0]===state.lang)[1]); }
 });
-document.addEventListener('keydown', e=>{ if(e.key==='Escape'){
-  $('#menu').classList.remove('on'); $('#shareSheet').classList.remove('on'); } });
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') $('#menu').classList.remove('on'); });
 
 /* ---------- data ---------- */
 async function load(){
@@ -896,14 +903,17 @@ function liveMedia(p){
 function wireLive(root){
   $$('video.live',root).forEach(v=>{ if(liveObs) liveObs.observe(v); else { v.src=v.dataset.src; } });
 }
-function tile(p,o){
+// Gamble 10/24: blooms on the front page and on a category's people are
+// advertising — they play but don't open. Only a recipient's shelf opens a bloom.
+function tile(p,o,showOnly){
   o = o || homeOf(p);
   const poster = liveMedia(p);
   const sub = o ? labelIn(o,p) : '';
-  return `<button class="tile" data-pid="${esc(p.id)}" style="background:${o?o.wash:'var(--navy-mid)'}">
+  const tag = showOnly ? 'div' : 'button';
+  return `<${tag} class="tile${showOnly?' show':''}"${showOnly?'':` data-pid="${esc(p.id)}"`} style="background:${o?o.wash:'var(--navy-mid)'}">
       ${poster}<div class="veil"></div>
       <div class="cap"><b>${esc(p.name)}</b><span>${esc(sub)}</span></div>
-    </button>`;
+    </${tag}>`;
 }
 function occTile(o, wide){
   const list = items(o);
@@ -926,13 +936,6 @@ function personTile(key, label, list, attr){
       <div class="cap"><b>${esc(label)}</b><span>${esc(plural(list.length,'bloom'))}</span></div>
     </button>`;
 }
-function personBlooms(k){
-  const out = [];
-  OCCASIONS.filter(o=>!o.alias).forEach(o=>{
-    const e = people(o).find(x=>x[0]===k); if(e) items(o).forEach(p=>{ if(matches(p,e) && !out.includes(p)) out.push(p); });
-  });
-  return out;
-}
 
 /* ---------- landing ---------- */
 function renderLanding(){
@@ -952,30 +955,27 @@ function renderLanding(){
         <em>${n ? esc(when) : 'blooms coming'}</em></button>`;
   }).join('');
 
-  // who are you sending to?
-  // Gamble 10/22: people show up as live bloom tiles, same as the occasions, not pills
-  $('#pickRail').innerHTML = PICK.map(k=>({k,list:personBlooms(k)})).filter(x=>x.list.length)
-    .map(({k,list})=>personTile(k, LABEL[k]||titleize(k), list, 'person')).join('');
-
-  // one swipe row per occasion
+  // one display row per occasion; the name (and See all) is the way in
   $('#occRows').innerHTML = HOME_ROWS.map(occ).filter(o=>items(o).length).map(o=>`
     <div class="orow">
-      <div class="orow-h"><h3>${esc(o.name)}</h3><button data-gkey="${esc(o.key)}">See all ${items(o).length}</button></div>
-      <div class="hrail">${items(o).slice(0,10).map(p=>tile(p,o)).join('')}</div>
+      <div class="orow-h">
+        <button class="oname" data-gkey="${esc(o.key)}"><h3>${esc(o.name)}</h3><em>›</em></button>
+        <button data-gkey="${esc(o.key)}">${esc(t('seeAll'))} ${items(o).length}</button>
+      </div>
+      <div class="hrail">${items(o).slice(0,10).map(p=>tile(p,o,true)).join('')}</div>
     </div>`).join('');
 
   wireLive($('#s-landing'));
   const live = OCCASIONS.filter(o=>!o.alias && items(o).length).length;
   $('#occSub').textContent = live+' occasions · '+state.products.length+' blooms ready to send';
 
-  // hero = a real birthday bloom, the occasion that never goes out of season
+  // hero = a real birthday bloom playing; tapping it opens Birthday → who it's for
   const pool = items(occ('birthday')).filter(p=>p.thumbnail_url).concat(items(occ('birthday')));
   const hero = pool[0];
-  if(hero){
-    const v=$('#heroVideo'); v.src=hero.video_url; v.load();
+  const v = $('#heroVideo');
+  if(hero && v.dataset.pid!==hero.id){
+    v.dataset.pid = hero.id; v.src = hero.video_url; v.load();
     v.play().catch(()=>{});
-    $('#heroTag').textContent = 'Birthday' + (labelIn(occ('birthday'),hero) ? ' · '+labelIn(occ('birthday'),hero) : '');
-    $('#watchFirst').onclick = ()=> openProduct(hero.id);
   }
 }
 
@@ -996,93 +996,70 @@ function renderShop(){
 }
 
 /* ---------- one occasion: who it's for + style ---------- */
-function openGroup(key, preSub){
+// Gamble 10/24: open Birthday → "Who are you sending to?" → Mom, Dad, Brother…
+// The people show their blooms as a preview; a bloom only opens from inside
+// that person's shelf. Occasions with no people (Luxury, holidays) open straight.
+function openGroup(key, preSub, fromPop){
   const o = real(occ(key)); if(!o) return;
   state.occ = o; state.sub = preSub || null; state.style = null;
   const list = items(o);
   const count = entry => list.filter(p=>matches(p,entry)).length;
   // plain words, stocked people first; empty shelves stay in the list but dimmed
-  const words = (arr, attr) => arr
+  const words = people(o)
       .map(e=>({e,n:count(e)}))
       .sort((a,b)=> (b.n>0)-(a.n>0))
-      .map(({e,n})=>`<button class="${n?'':'soon'}" data-${attr}="${esc(e[0])}">${esc(e[1])}</button>`)
+      .map(({e,n})=>`<button class="${n?'':'soon'}" data-sub="${esc(e[0])}">${esc(e[1])}</button>`)
       .join('');
 
   $('#recTitle').textContent = o.name;
-  const ppl = people(o);
   $('#recCount').textContent = list.length ? plural(list.length,'bloom') : 'Coming soon';
-  let rows = '';
-  if(ppl.length){
-    rows += `<div class="whohead">Who's this for?</div>
-      <div class="who" id="whoRail"><button data-sub="__all">Everyone</button>${words(ppl,'sub')}</div>
-      <div class="swipehint">Swipe for more →</div>`;
-  }
-  const styles = (o.styles||[]).filter(s=>count(s));
-  if(styles.length){
-    rows += `<div class="rowlabel" style="padding-top:6px">${esc(o.styleTitle||'Style')}</div>
-      <div class="who sm">${words(styles,'style')}</div>`;
-  }
-  $('#recRows').innerHTML = rows;
+  $('#recRows').innerHTML = people(o).length
+    ? `<div class="whohead">${esc(t('who'))}</div>
+       <div class="who" id="whoRail">${words}</div>
+       <div class="swipehint">Swipe for more →</div><div id="styleRow"></div>`
+    : `<div id="styleRow"></div>`;
   $('#recCue').style.display = 'none';
   paintRec();
   show('recipients');
+  if(!fromPop) try{ history.pushState({db:1,id:'recipients',occ:o.key,sub:state.sub},''); }catch(e){}
 }
 function paintRec(){
-  const o = state.occ, all = items(o);
-  const person = state.sub ? people(o).find(x=>x[0]===state.sub) : null;
-  const style  = state.style ? (o.styles||[]).find(x=>x[0]===state.style) : null;
-  let list = all;
-  if(person) list = list.filter(p=>matches(p,person));
-  if(style)  list = list.filter(p=>matches(p,style));
-  const label = [person ? person[1] : 'Everyone', style ? style[1] : ''].filter(Boolean).join(' · ');
-  $('#recSelLabel').textContent = label;
-  $('#recSelCount').textContent = plural(list.length,'bloom');
-  $$('#recRows [data-sub]').forEach(x=>x.classList.toggle('sel', (x.dataset.sub==='__all' && !state.sub) || x.dataset.sub===state.sub));
-  $$('#recRows [data-style]').forEach(x=>x.classList.toggle('sel', x.dataset.style===state.style));
-  const what = person ? person[1] : o.name;
+  const o = state.occ, all = items(o), ppl = people(o);
+  const person = state.sub ? ppl.find(x=>x[0]===state.sub) : null;
+  $$('#recRows [data-sub]').forEach(x=>x.classList.toggle('sel', x.dataset.sub===state.sub));
   const sel = $('#recRows .who [data-sub].sel'); if(sel) sel.scrollIntoView({inline:'center',block:'nearest'});
-  let lead = '';
-  if(!person && !style){
-    const stocked = people(o).map(e=>({e,l:all.filter(p=>matches(p,e))})).filter(x=>x.l.length);
-    if(stocked.length){
-      $('#recSelLabel').textContent = 'Pick who it\'s for';
-      lead = stocked.map(({e,l})=>personTile(e[0], e[1], l, 'sub')).join('')
-           + `<div class="mhead" style="grid-column:1/-1;padding:26px 0 2px">Every ${esc(o.name)} bloom</div>`;
-    }
+
+  // step 1 — pick the person: preview tiles, each one opens that person's shelf
+  if(ppl.length && !person){
+    const stocked = ppl.map(e=>({e,l:all.filter(p=>matches(p,e))})).filter(x=>x.l.length);
+    $('#styleRow').innerHTML = '';
+    $('#recSelLabel').textContent = 'Tap one to see their blooms';
+    $('#recSelCount').textContent = stocked.length+(stocked.length===1?' person':' people')+' with blooms ready';
+    $('#recGrid').innerHTML = stocked.map(({e,l})=>personTile(e[0], e[1], l, 'sub')).join('')
+      || `<div class="empty"><div class="serif-h">${esc(o.name)} is next up</div>
+            <div>The shelf is built — the blooms are being made.</div></div>`;
+    wireLive($('#recGrid'));
+    return;
   }
-  $('#recGrid').innerHTML = lead + list.slice(0,60).map(p=>tile(p,o)).join('')
+
+  // step 2 — inside the shelf: these blooms open
+  const base = person ? all.filter(p=>matches(p,person)) : all;
+  const styles = (o.styles||[]).filter(s=>base.some(p=>matches(p,s)));
+  const style = state.style ? styles.find(x=>x[0]===state.style) : null;
+  const list = style ? base.filter(p=>matches(p,style)) : base;
+  $('#styleRow').innerHTML = styles.length
+    ? `<div class="rowlabel" style="padding-top:6px">${esc(o.styleTitle||'Style')}</div>
+       <div class="who sm">${styles.map(s=>`<button class="${s===style?'sel':''}" data-style="${esc(s[0])}">${esc(s[1])}</button>`).join('')}</div>`
+    : '';
+  const what = person ? person[1] : o.name;
+  $('#recSelLabel').textContent = [what, style ? style[1] : ''].filter(Boolean).join(' · ');
+  $('#recSelCount').textContent = plural(list.length,'bloom');
+  $('#recGrid').innerHTML = list.slice(0,60).map(p=>tile(p,o)).join('')
     || `<div class="empty">
           <div class="serif-h">${esc(what)} is next up</div>
           <div>The shelf is built — the blooms are being made.</div>
         </div>`;
   wireLive($('#recGrid'));
-}
-
-/* ---------- one person, every occasion ---------- */
-function personCount(k){
-  return OCCASIONS.filter(o=>!o.alias).reduce((n,o)=>{
-    const e = people(o).find(x=>x[0]===k); return n + (e ? items(o).filter(p=>matches(p,e)).length : 0);
-  },0);
-}
-function openPerson(k){
-  const label = LABEL[k] || titleize(k);
-  $('#psTitle').textContent = 'For '+label;
-  let html = '', soon = [], total = 0;
-  OCCASIONS.filter(o=>!o.alias && o.menu!=='collection').forEach(o=>{
-    const e = people(o).find(x=>x[0]===k); if(!e) return;
-    const list = items(o).filter(p=>matches(p,e));
-    if(!list.length){ soon.push(o.name); return; }
-    total += list.length;
-    html += `<div class="orow">
-      <div class="orow-h"><h3>${esc(o.name)}</h3><button data-gkey="${esc(o.key)}" data-presub="${esc(k)}">See all ${list.length}</button></div>
-      <div class="hrail">${list.slice(0,10).map(p=>tile(p,o)).join('')}</div></div>`;
-  });
-  if(soon.length) html += `<div class="empty" style="margin:20px 18px 0">
-      <div class="serif-h">More for ${esc(label)} is next up</div>
-      <div>Shelves built and waiting: ${esc(soon.join(' · '))}</div></div>`;
-  $('#psCount').textContent = total ? plural(total,'bloom') : 'Coming soon';
-  $('#psBody').innerHTML = html; wireLive($('#psBody'));
-  show('person');
 }
 
 /* ---------- product ---------- */
@@ -1098,7 +1075,7 @@ function openProduct(id){
   paintTiers();
   const v=$('#pdVideo'); v.src=p.video_url; v.muted=true; v.load();
   v.play().then(()=>setPlayIcon(true)).catch(()=>setPlayIcon(false));
-  show('product');
+  go('product');
 }
 function paintTiers(){
   $('#pdTiers').innerHTML = TIERS.map(t=>{
@@ -1124,49 +1101,69 @@ function setPlayIcon(playing){
 function openCheckout(){
   const p = state.product; if(!p) return;
   const v=$('#coVideo'); v.src=p.video_url; v.load(); v.play().catch(()=>{});
-  paintSummary(); show('checkout');
+  paintSummary(); go('checkout');
 }
 function paintSummary(){
   const t = TIERS.find(x=>x.id===state.tier);
-  const extra = state.del==='us' ? 1 : 0;
   $('#sumLine').textContent = t.name;
   $('#sumPrice').textContent = fmt(t.price);
-  $('#sumTotal').textContent = fmt(t.price+extra);
+  $('#sumTotal').textContent = fmt(t.price);
 }
 
-/* ---------- delivery ---------- */
+/* ---------- delivery: what lands on their phone ----------
+   Gamble 10/24: the message comes up on screen by itself BEFORE the bloom,
+   long enough to read, then the bloom plays with the message still there. */
+let dlTimer;
+function stopDelivery(){ clearTimeout(dlTimer); try{ $('#dlVideo').pause(); }catch(e){} }
+function playDelivery(){
+  const v = $('#dlVideo'), intro = $('#dlIntro'), msg = $('#dlMsg');
+  stopDelivery();
+  v.currentTime = 0;
+  msg.classList.remove('on');
+  intro.classList.remove('off','in');
+  void intro.offsetWidth;                       // restart the fade-in
+  intro.classList.add('in');
+  // ~4s floor, plus reading time for longer notes, capped at 10s
+  const hold = Math.min(10000, 4000 + state.msg.length*35);
+  dlTimer = setTimeout(()=>{
+    intro.classList.add('off');
+    msg.classList.add('on');
+    v.play().catch(()=>{});
+  }, state.msg ? hold : 2200);
+}
 function openDelivery(){
   const p = state.product; if(!p) return;
-  $('#dlName').textContent = state.name || 'Mama Lois';
+  const name = state.name || 'Mama Lois';
+  $('#dlName').textContent = name;
+  $('#dlIntroName').textContent = name;
   $('#dlFrom').textContent = state.from ? 'from '+state.from : '';
-  $('#dlMsg').textContent  = state.msg ? '"'+state.msg+'"' : '';
-  const v=$('#dlVideo'); v.src=p.video_url; v.muted=false; v.load();
-  v.play().catch(()=>{ v.muted=true; v.play().catch(()=>{}); });
-  $('#capText').value =
-    (state.name||'Somebody')+" just got this from "+(state.from||'me')+" and I am NOT okay.\n\n"
-    +"It's called a Digital Bloom — give people their flowers while they're still here to see them. "
-    +"I'm challenging 3 of you to send one today. digitalbloom.store";
-  show('delivery');
+  $('#dlIntroFrom').textContent = state.from ? '— '+state.from : '';
+  const quoted = state.msg ? '“'+state.msg+'”' : '';
+  $('#dlMsg').textContent = quoted;
+  $('#dlIntroMsg').textContent = quoted;
+  const v=$('#dlVideo'); v.src=p.video_url; v.muted=true; v.load();
+  go('delivery');
+  playDelivery();
 }
 
 /* ---------- events ---------- */
 document.addEventListener('click', e=>{
   const g = e.target.closest('[data-gkey]');   if(g){ openGroup(g.dataset.gkey, g.dataset.presub); return; }
-  const pe = e.target.closest('[data-person]'); if(pe){ openPerson(pe.dataset.person); return; }
-  const t = e.target.closest('[data-pid]');    if(t){ openProduct(t.dataset.pid); return; }
+  const tl = e.target.closest('[data-pid]');   if(tl){ openProduct(tl.dataset.pid); return; }
   const c = e.target.closest('[data-sub]');    if(c){
-    state.sub = c.dataset.sub==='__all' ? null : c.dataset.sub;
+    if(c.dataset.sub===state.sub) return;
+    // each person is its own step, so back returns to "Who are you sending to?"
+    const fromList = !state.sub;
+    state.sub = c.dataset.sub; state.style = null;
     paintRec();
-    if(c.classList.contains('tile')) window.scrollTo({top:0,behavior:'smooth'});
+    try{ const s = {db:1,id:'recipients',occ:state.occ.key,sub:state.sub};
+         fromList ? history.pushState(s,'') : history.replaceState(s,''); }catch(err){}
+    window.scrollTo({top:0,behavior:'smooth'});
     return; }
   const st = e.target.closest('[data-style]'); if(st){
     state.style = state.style===st.dataset.style ? null : st.dataset.style;
     paintRec(); return; }
   const tr = e.target.closest('[data-tier]');  if(tr){ state.tier=tr.dataset.tier; paintTiers(); return; }
-  const d = e.target.closest('[data-del]');    if(d){
-    state.del=d.dataset.del;
-    $$('[data-del]').forEach(x=>x.classList.toggle('sel', x===d));
-    paintSummary(); return; }
 });
 
 $('#pdBuy').onclick = openCheckout;
@@ -1178,51 +1175,42 @@ $('#pdVideo').addEventListener('timeupdate', ()=>{ const v=$('#pdVideo');
     $('#pdCur').textContent=time(v.currentTime); $('#pdDur').textContent=time(v.duration); } });
 $('#pdVideo').addEventListener('ended', ()=>setPlayIcon(false));
 
-$('#heroSound').onclick = ()=>{ const v=$('#heroVideo'); v.muted=!v.muted; if(!v.muted) v.play().catch(()=>{}); toast(v.muted?'Sound off':'Sound on'); };
-
-const fName=$('#fName'), fMsg=$('#fMsg'), fFrom=$('#fFrom');
+const fName=$('#fName'), fPhone=$('#fPhone'), fMsg=$('#fMsg'), fFrom=$('#fFrom');
 fName.addEventListener('input', ()=>{ state.name=fName.value; $('#pvName').textContent = state.name || 'Their name'; });
+fPhone.addEventListener('input', ()=>{ state.phone=fPhone.value; });
 fMsg.addEventListener('input', ()=>{ state.msg=fMsg.value; $('#pvMsg').textContent = state.msg;
-  $('#cCount').textContent = state.msg.length+' / 120'; });
+  $('#cCount').textContent = state.msg.length+' / 180'; });
 fFrom.addEventListener('input', ()=>{ state.from=fFrom.value; });
 
+// Gamble 10/24: pay is the send. No delivery choice, no extra screens.
 function pay(){
   if(!state.name.trim()){ fName.focus(); toast('Who is it for?'); return; }
-  toast('Paid — building their bloom…');
+  if(state.phone.replace(/\D/g,'').length < 10){ fPhone.focus(); toast('Add their mobile number'); return; }
+  toast('Paid — sending to '+state.name.trim()+'’s phone…');
   setTimeout(openDelivery, 900);
 }
 $('#payApple').onclick = pay;
 $('#payCard').onclick  = pay;
 
-$('#dlReplay').onclick = ()=>{ const v=$('#dlVideo'); v.currentTime=0; v.play().catch(()=>{}); };
-$('#dlSound').onclick  = ()=>{ const v=$('#dlVideo'); v.muted=!v.muted; if(!v.muted) v.play().catch(()=>{}); toast(v.muted?'Sound off':'Sound on'); };
-$('#dlShare').onclick  = ()=> $('#shareSheet').classList.add('on');
-$('#dlSave').onclick   = ()=>{ if(state.product) window.open(state.product.video_url,'_blank'); toast('Opening the video — press and hold to save'); };
-$('#stepSave').onclick = ()=>{ if(state.product) window.open(state.product.video_url,'_blank'); toast('Press and hold the video to save it'); };
-$('#copyCap').onclick  = async ()=>{
-  try{ await navigator.clipboard.writeText($('#capText').value); }
-  catch(e){ $('#capText').select(); document.execCommand('copy'); }
-  $('#copyCap').textContent='Copied — now open Instagram';
-  $('#copyCap').style.borderColor='var(--gold)'; $('#copyCap').style.color='var(--gold)';
-  toast('Caption copied');
-};
-$('#shareTargets').innerHTML = [
-  ['Instagram','linear-gradient(135deg,#f9ce34,#ee2a7b 50%,#6228d7)'],
-  ['TikTok','linear-gradient(135deg,#25f4ee,#000 50%,#fe2c55)'],
-  ['Messages','linear-gradient(135deg,#5bd75b,#0bbf3c)'],
-  ['More','rgba(255,255,255,.18)'],
-].map(([n,bg])=>`<button data-target="${n}" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:7px;min-height:44px;padding:13px 0;border-radius:14px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09)">
-  <span style="width:22px;height:22px;border-radius:7px;background:${bg}"></span>
-  <span style="font-size:11px;color:rgba(250,240,236,.7)">${n}</span></button>`).join('');
-$('#shareTargets').addEventListener('click', async e=>{
-  const b=e.target.closest('[data-target]'); if(!b) return;
-  const text=$('#capText').value;
-  if(navigator.share){ try{ await navigator.share({text, url:location.origin}); return; }catch(err){} }
-  try{ await navigator.clipboard.writeText(text); toast('Caption copied — open '+b.dataset.target); }
-  catch(err){ toast('Copy the caption above'); }
-});
+$('#dlReplay').onclick = playDelivery;
+
+/* ---------- splash: once per visit, ~6s, tap to skip ---------- */
+function splash(){
+  const el = $('#splash');
+  let seen = null; try{ seen = sessionStorage.getItem('db_splash'); }catch(e){}
+  if(seen) return;
+  try{ sessionStorage.setItem('db_splash','1'); }catch(e){}
+  el.classList.remove('off');
+  requestAnimationFrame(()=>requestAnimationFrame(()=>el.classList.add('run')));
+  const done = ()=>{ clearTimeout(timer); el.classList.add('off'); };
+  const timer = setTimeout(done, 6000);
+  el.addEventListener('click', done, {once:true});
+}
 
 /* ---------- boot ---------- */
+try{ history.replaceState({db:1,id:'landing'},''); }catch(e){}
+applyLang();
+splash();
 load().then(()=>{ renderLanding(); renderShop(); })
       .catch(err=>{ toast('Could not load the catalog'); console.error(err); });
 })();
