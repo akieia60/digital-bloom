@@ -645,12 +645,12 @@ const OCCASIONS = [
           P('police','Police'), P('fireman','Fireman'), P('mechanic','Mechanic') ]},
       { title:'Friends', people:[ P('friend','Friends') ]},
     ],
-    styles:[ P('appreciated',"You're Appreciated",['peer-recognition','peer-recognition-him','i-see-you']) ] },
+    styles:[ P('appreciated',"You're Appreciated",['peer-recognition','peer-recognition-him','i-see-you','job-well-done']) ] },
   { key:'love', name:'Love & Romance', menu:'everyday', src:['love','valentine'], wash:W.pink,
     cols:[
       { title:'For Her', people:[ P('wife','Wife'), P('girlfriend','Girlfriend'), P('fiancee','Fiancée') ]},
-      { title:'For Him', people:[ P('husband','Husband'), P('boyfriend','Boyfriend'), P('fiance','Fiancé') ]},
-      { title:'For Anyone', people:[ P('partner','Partner'), P('crush','Crush') ]},
+      { title:'For Him', people:[ P('husband','Husband'), P('boyfriend','Boyfriend'), P('fiance','Fiancé'), P('him','Him — anyone',['for-him']) ]},
+      { title:'For Anyone', people:[ P('partner','Partner',['for-partner']), P('crush','Crush') ]},
     ],
     styles:[ P('romantic','Romantic',['romantic-love','red-roses-valentine','valentine-general']),
              P('luxe','Luxe',['romantic-luxury']), P('pink','Pink & Sweet',['romantic-pink','pink-valentine']) ] },
@@ -731,7 +731,7 @@ const EN = {
   today:'Today', tomorrow:'Tomorrow', inDays:'In {n} days', bloomsComing:'Blooms coming soon',
   swipe:'Swipe for more →', style:'Style', soon:'Coming soon',
   emptyH:'{what} is next up', emptyB:'The shelf is built — the blooms are being made.',
-  tapOne:'Choose a Category', ready_one:'{n} person with blooms ready', ready_other:'{n} people with blooms ready',
+  tapOne:'Choose a Category', more:'More', ready_one:'{n} person with blooms ready', ready_other:'{n} people with blooms ready',
   blooms_one:'{n} bloom', blooms_other:'{n} blooms',
   length:'Choose a length', mostSent:'Most sent', buy:'Personalize & send — {price}', buyNote:'One screen. No account. Apple Pay ready.',
   desc:'A sealed card opens, their name in gold, and the whole screen fills until there is nothing left but the flowers and what you wrote.',
@@ -821,6 +821,18 @@ const people = o => (o.cols||[]).flatMap(c=>c.people);
 const tagsOf = person => person[2].concat(GLOBAL_TAGS[person[0]]||[]);
 const items = o => state.byOcc[real(o).key] || [];
 const matches = (p, entry) => tagsOf(entry).includes(p.subcategory);
+// Gamble 10/25: inside an occasion you choose a category — the people, the
+// style shelves (Milestone, Sports Fan…), and "More" for anything else — so a
+// bloom is always reachable from one of them.
+const MORE = '__more';
+const shelves = o => people(o).concat((o.styles||[]).map(x=>['s:'+x[0], x[1], x[2]]));
+const inShelf = (p, e, o) => e[0]===MORE ? !shelves(o).some(x=>matches(p,x)) : matches(p,e);
+const shelfLabel = e => e[0]===MORE ? t('more') : L(e[1]);
+function shelvesWithMore(o){
+  const s = shelves(o);
+  if(!s.length) return s;                      // no shelves: the blooms show straight away
+  return items(o).some(p=>!s.some(x=>matches(p,x))) ? s.concat([[MORE,'More',[]]]) : s;
+}
 function labelIn(o,p){                                       // what a tile says under its title
   const hit = people(o).find(x=>matches(p,x)) || (o.styles||[]).find(x=>matches(p,x));
   return hit ? L(hit[1]) : '';
@@ -928,7 +940,7 @@ function personTile(key, label, list, attr){
   return `<button class="tile" data-${attr}="${esc(key)}">
       <div style="position:absolute;inset:0;background:var(--navy-mid)"></div>${liveMedia(lead)}
       <div class="veil"></div>
-      <div class="cap"><b>${esc(L(label))}</b></div>
+      <div class="cap"><b>${esc(label)}</b></div>
     </button>`;
 }
 
@@ -978,17 +990,19 @@ function openGroup(key, preSub, fromPop){
   const o = real(occ(key)); if(!o) return;
   state.occ = o; state.sub = preSub || null; state.style = null;
   const list = items(o);
-  const count = entry => list.filter(p=>matches(p,entry)).length;
-  // plain words, stocked people first; empty shelves stay in the list but dimmed
-  const words = people(o)
+  const count = entry => list.filter(p=>inShelf(p,entry,o)).length;
+  // plain words, stocked shelves first; empty people stay in the list but dimmed,
+  // empty style shelves are left out
+  const words = shelvesWithMore(o)
       .map(e=>({e,n:count(e)}))
+      .filter(({e,n})=> n || !e[0].startsWith('s:'))
       .sort((a,b)=> (b.n>0)-(a.n>0))
-      .map(({e,n})=>`<button class="${n?'':'soon'}" data-sub="${esc(e[0])}">${esc(L(e[1]))}</button>`)
+      .map(({e,n})=>`<button class="${n?'':'soon'}" data-sub="${esc(e[0])}">${esc(shelfLabel(e))}</button>`)
       .join('');
 
   $('#recTitle').textContent = L(o.name);
   $('#recCount').textContent = '';
-  $('#recRows').innerHTML = people(o).length
+  $('#recRows').innerHTML = shelves(o).length
     ? `<div class="whohead">${esc(t('who'))}</div>
        <div class="who" id="whoRail">${words}</div>
        <div class="swipehint">${esc(t('swipe'))}</div><div id="styleRow"></div>`
@@ -999,18 +1013,18 @@ function openGroup(key, preSub, fromPop){
   if(!fromPop) try{ history.pushState({db:1,id:'recipients',occ:o.key,sub:state.sub},''); }catch(e){}
 }
 function paintRec(){
-  const o = state.occ, all = items(o), ppl = people(o);
+  const o = state.occ, all = items(o), ppl = shelvesWithMore(o);
   const person = state.sub ? ppl.find(x=>x[0]===state.sub) : null;
   $$('#recRows [data-sub]').forEach(x=>x.classList.toggle('sel', x.dataset.sub===state.sub));
   const sel = $('#recRows .who [data-sub].sel'); if(sel) sel.scrollIntoView({inline:'center',block:'nearest'});
 
   // step 1 — pick the person: preview tiles, each one opens that person's shelf
   if(ppl.length && !person){
-    const stocked = ppl.map(e=>({e,l:all.filter(p=>matches(p,e))})).filter(x=>x.l.length);
+    const stocked = ppl.map(e=>({e,l:all.filter(p=>inShelf(p,e,o))})).filter(x=>x.l.length);
     $('#styleRow').innerHTML = '';
     $('#recSelLabel').textContent = t('tapOne');
     $('#recSelCount').textContent = '';
-    $('#recGrid').innerHTML = stocked.map(({e,l})=>personTile(e[0], e[1], l, 'sub')).join('')
+    $('#recGrid').innerHTML = stocked.map(({e,l})=>personTile(e[0], shelfLabel(e), l, 'sub')).join('')
       || `<div class="empty"><div class="serif-h">${esc(t('emptyH',{what:L(o.name)}))}</div>
             <div>${esc(t('emptyB'))}</div></div>`;
     wireLive($('#recGrid'));
@@ -1018,15 +1032,17 @@ function paintRec(){
   }
 
   // step 2 — inside the shelf: these blooms open
-  const base = person ? all.filter(p=>matches(p,person)) : all;
-  const styles = (o.styles||[]).filter(s=>base.some(p=>matches(p,s)));
+  const base = person ? all.filter(p=>inShelf(p,person,o)) : all;
+  // the style filter only makes sense inside a person's shelf
+  const isPerson = person && !person[0].startsWith('s:') && person[0]!==MORE;
+  const styles = (!person || isPerson) ? (o.styles||[]).filter(s=>base.some(p=>matches(p,s))) : [];
   const style = state.style ? styles.find(x=>x[0]===state.style) : null;
   const list = style ? base.filter(p=>matches(p,style)) : base;
   $('#styleRow').innerHTML = styles.length
     ? `<div class="rowlabel" style="padding-top:6px">${esc(o.styleTitle ? L(o.styleTitle) : t('style'))}</div>
        <div class="who sm">${styles.map(s=>`<button class="${s===style?'sel':''}" data-style="${esc(s[0])}">${esc(L(s[1]))}</button>`).join('')}</div>`
     : '';
-  const what = L(person ? person[1] : o.name);
+  const what = person ? shelfLabel(person) : L(o.name);
   $('#recSelLabel').textContent = [what, style ? L(style[1]) : ''].filter(Boolean).join(' · ');
   $('#recSelCount').textContent = '';
   $('#recGrid').innerHTML = list.slice(0,60).map(p=>tile(p,o)).join('')
