@@ -173,9 +173,15 @@
 <body>
 
 <header>
+  <a id="sort-link" href="sort.html" style="float:right;margin-left:12px;display:inline-flex;align-items:center;min-height:40px;padding:0 16px;border-radius:999px;background:#D4AF37;color:#0D1B36;font-weight:700;font-size:0.78rem;letter-spacing:0.12em;text-transform:uppercase;text-decoration:none;">Sort ↗</a>
   <h1>🌸 Video Archive</h1>
   <p>Renders, On Site, Archive — one tap to publish or restore.</p>
 </header>
+<script>
+  // Ak 10/25: Sort screen — check/move each bloom's occasion + recipient
+  (function(){ var t=new URLSearchParams(location.search).get('token')||'';
+    document.getElementById('sort-link').href='sort.html?token='+encodeURIComponent(t); })();
+</script>
 
 <!-- Bre's download tray — sticky, lives outside the re-rendered grid so
      it can't be wiped mid-burn. When a Bre Pull completes, the burned-

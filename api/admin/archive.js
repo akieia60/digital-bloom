@@ -1,5 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
-import { PROMPT_ENGINE_CATEGORY_MAP } from '../../src/data/categories.js';
+import { PROMPT_ENGINE_CATEGORY_MAP, CATEGORIES } from '../../src/data/categories.js';
+import { LANE_CATALOGS } from '../../src/data/laneCatalogs.js';
 
 export const maxDuration = 60;
 
@@ -14,6 +15,30 @@ const SLUG_TO_LABELS = Object.entries(PROMPT_ENGINE_CATEGORY_MAP).reduce((acc, [
   acc[slug].push(label);
   return acc;
 }, {});
+
+// ── Sort screen (Ak 10/25): one bloom at a time, she says what it is and
+// who it's for. Categories with a lane catalog only accept those tags (any
+// other tag hides the bloom on CategoryPage); the rest get a plain WHO list.
+const GENERIC_WHO = [
+  ['for-her', 'For Her'], ['for-him', 'For Him'], ['for-partner', 'Partner'],
+  ['for-mom', 'Mom'], ['for-dad', 'Dad'], ['for-daughter', 'Daughter'], ['for-son', 'Son'],
+  ['for-sister', 'Sister'], ['for-brother', 'Brother'], ['for-grandma', 'Grandma'],
+  ['for-grandpa', 'Grandpa'], ['for-auntie', 'Auntie'], ['for-niece-nephew', 'Niece/Nephew'],
+  ['for-bestie', 'Bestie'], ['for-friend', 'Friend'],
+].map(([slug, label]) => ({ slug, label }));
+
+function sortOptions(extraSlugs = []) {
+  const known = new Set(CATEGORIES.map((c) => c.slug));
+  const cats = CATEGORIES.map((c) => ({ slug: c.slug, label: c.name }));
+  extraSlugs.filter((s) => s && !known.has(s)).forEach((s) => cats.push({
+    slug: s, label: s.replace(/-/g, ' ').replace(/\b\w/g, (m) => m.toUpperCase()),
+  }));
+  return cats.map((c) => ({
+    ...c,
+    strict: Boolean(LANE_CATALOGS[c.slug]),
+    who: (LANE_CATALOGS[c.slug] || GENERIC_WHO).map(({ slug, label }) => ({ slug, label })),
+  }));
+}
 
 function unauthorized(res) {
   return res.status(401).json({ error: 'unauthorized' });
@@ -114,6 +139,20 @@ export default async function handler(req, res) {
 
     const status = (req.query.status || 'inactive').toString();
     const categorySlug = (req.query.category || 'mothers-day').toString();
+
+    // ── Sort screen: every bloom on the site + the choices for each
+    if (status === 'sort') {
+      const { data, error } = await supabase
+        .from('products')
+        .select('id, name, category, subcategory, video_url, thumbnail_url, category_reviewed_at, category_reviewed_by')
+        .eq('is_active', true)
+        .not('video_url', 'is', null)
+        .order('category')
+        .order('name');
+      if (error) return res.status(500).json({ error: error.message });
+      const extra = [...new Set((data || []).map((p) => p.category))];
+      return res.status(200).json({ options: sortOptions(extra), products: data || [] });
+    }
 
     // ── Marketing tab: lists commercial drafts written to
     // `monique-videos/commercial_drafts/`. Different shape from the other
@@ -257,6 +296,29 @@ export default async function handler(req, res) {
     if (!actor) return unauthorized(res);
 
     const { action, productId, promptId } = body;
+
+    // Sort screen: Ak sets what a bloom is and who it's for (or confirms it).
+    if (action === 'recategorize') {
+      const { category, subcategory } = body;
+      if (!productId || !category) return res.status(400).json({ error: 'productId and category required' });
+      const { data: existing } = await supabase.from('products').select('id, category').eq('id', productId).single();
+      if (!existing) return res.status(404).json({ error: 'product not found' });
+      const opt = sortOptions([existing.category]).find((c) => c.slug === category);
+      if (!opt) return res.status(400).json({ error: `unknown category ${category}` });
+      const sub = subcategory || null;
+      if (sub && opt.strict && !opt.who.some((w) => w.slug === sub)) {
+        return res.status(400).json({ error: `${sub} isn't a ${opt.label} lane — it would hide the bloom` });
+      }
+      const now = new Date().toISOString();
+      const { data, error } = await supabase.from('products')
+        .update({ category, subcategory: sub, category_reviewed_at: now, category_reviewed_by: actor,
+          last_action_by: actor, last_action_at: now })
+        .eq('id', productId)
+        .select('id, name, category, subcategory, category_reviewed_at, category_reviewed_by')
+        .single();
+      if (error) return res.status(500).json({ error: error.message });
+      return res.status(200).json({ ok: true, action: 'recategorize', product: data });
+    }
 
     // ── Publish a render to site (creates or refreshes the product)
     if (action === 'publish') {

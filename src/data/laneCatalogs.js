@@ -64,6 +64,8 @@ export const LANE_CATALOGS = {
     { slug: 'for-him',            label: 'For Him',           tagline: 'Kings, brothers, sons, friends — give him his crown.' },
     { slug: 'for-mom',            label: 'For Mom',           tagline: 'The woman who started it all — now her day.' },
     { slug: 'for-dad',            label: 'For Dad',           tagline: 'For Pops, Daddy, the man who made you who you are.' },
+    { slug: 'for-daughter',       label: 'For Daughter',      tagline: 'Our girl — the day she came into the world.' },
+    { slug: 'for-son',            label: 'For Son',           tagline: 'Our boy — the day he came into the world.' },
     { slug: 'for-grandma',        label: 'For Grandma',       tagline: 'Wisdom, warmth, and a lifetime of cake.' },
     { slug: 'for-sister',         label: 'For Sister',        tagline: 'Day-one, ride-or-die, sister bloom.' },
     { slug: 'for-brother',        label: 'For Brother',       tagline: 'For the brother who built you up alongside him.' },
@@ -85,6 +87,9 @@ export const LANE_CATALOGS = {
   graduation: [
     { slug: 'class-of-2026',      label: 'Class of 2026',     tagline: 'For the cap-tossing, future-ready Class of 2026.' },
     { slug: 'for-her',            label: 'For Her',           tagline: "Quiet dignity, hard-earned — she did it." },
+    { slug: 'for-him',            label: 'For Him',           tagline: 'Head high, tassel turned — he did it.' },
+    { slug: 'for-daughter',       label: 'For Daughter',      tagline: 'Our girl, walking across that stage.' },
+    { slug: 'for-son',            label: 'For Son',           tagline: 'Our boy, walking across that stage.' },
     { slug: 'for-firstgen',       label: 'First in the Line', tagline: 'Generational pride — the first to make it through.' },
     { slug: 'classic',            label: 'Classic Graduation', tagline: 'The long nights, the comeback semesters — the diploma in hand.' },
   ],
