@@ -318,7 +318,8 @@
  <div class="wrap" style="background:var(--ink)">
   <div style="position:relative;aspect-ratio:3/4;background:#000">
     <video id="pdVideo" playsinline preload="auto" style="width:100%;height:100%;object-fit:cover"></video>
-    <div style="position:absolute;top:calc(12px + var(--sat));left:14px;right:14px;display:flex;justify-content:space-between">
+    <!-- z-index: the full-frame play button sits later in the markup and was swallowing taps on back (Gamble 10/25) -->
+    <div style="position:absolute;z-index:3;top:calc(12px + var(--sat));left:14px;right:14px;display:flex;justify-content:space-between">
       <button class="iconbtn" data-back style="background:rgba(6,13,24,.5)">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
       </button>
