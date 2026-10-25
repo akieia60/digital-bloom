@@ -143,6 +143,7 @@
   .tile.wide{aspect-ratio:16/10}
   .tile.wide .cap b{font-size:24px}
   .tile.bare{opacity:.62}
+  .mhead,#occRows{scroll-margin-top:76px}
   .mhead{padding:30px 18px 12px;font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold)}
   .hrail{display:flex;gap:12px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding:0 18px 2px;scroll-snap-type:x proximity}
   .hrail::-webkit-scrollbar{display:none}
@@ -263,12 +264,9 @@
   </div>
 
   <!-- one display row per occasion — tap the name to open it -->
-  <div style="padding:6px 0 40px;background:var(--navy)">
+  <div style="padding:6px 0 34px;background:var(--navy)">
+    <!-- Gamble 10/25: every occasion lives here — scroll, no "See all occasions" pill -->
     <div id="occRows"></div>
-    <div style="padding:26px 18px 0">
-      <button class="btn btn-gold" data-go="shop" data-i18n="allOcc">See all occasions</button>
-      <p id="occSub" style="margin:10px 0 0;text-align:center;font-size:12px;color:rgba(250,240,236,.42)"></p>
-    </div>
   </div>
 
   <!-- coming up: next holidays, by date (Gamble 10/24: bottom of the page, out of the product's way) -->
@@ -288,25 +286,6 @@
  </div>
 </section>
 
-<!-- ===================== 2 · OCCASIONS ===================== -->
-<section class="screen" id="s-shop">
- <div class="wrap">
-  <div class="nav">
-    <button class="iconbtn" data-back>
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(250,240,236,.85)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
-    </button>
-    <div class="brand" style="flex:1" data-i18n="occ">Occasions</div>
-    <button class="burger" data-menu aria-label="Menu"><span></span><span></span><span></span></button>
-  </div>
-  <div class="sectionhead">
-    <h2 style="font-size:30px;margin-top:0" data-i18n="occ">Occasions</h2>
-    <p id="shopSub" data-i18n="loading">Loading your catalog…</p>
-  </div>
-  <div id="shopBody"></div>
-  <div style="height:calc(30px + var(--sab))"></div>
- </div>
-</section>
-
 <!-- ===================== 3 · RECIPIENTS ===================== -->
 <section class="screen" id="s-recipients">
  <div class="wrap">
@@ -316,7 +295,7 @@
     </button>
     <div style="flex:1">
       <div style="font-family:'Playfair Display',Georgia,serif;font-size:19px" id="recTitle">Category</div>
-      <div style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:rgba(250,240,236,.45)" id="recCount">—</div>
+      <div style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:rgba(250,240,236,.45)" id="recCount"></div>
     </div>
     <button class="burger" data-menu aria-label="Menu"><span></span><span></span><span></span></button>
   </div>
@@ -327,7 +306,7 @@
   <div id="recRows" style="padding-bottom:6px;border-bottom:1px solid rgba(255,255,255,.06)"></div>
   <div class="sectionhead" style="padding-bottom:8px">
     <h2 id="recSelLabel" style="font-size:25px;margin-top:0">Everyone</h2>
-    <p id="recSelCount">—</p>
+    <p id="recSelCount"></p>
   </div>
   <div class="grid" id="recGrid"></div>
   <div style="height:calc(30px + var(--sab))"></div>
@@ -517,7 +496,7 @@
   <div id="u-ad" style="padding:44px 18px calc(38px + var(--sab));background:var(--ink);text-align:center">
     <h2 class="h1" style="margin:0;font-size:27px"><span data-i18n="adH1">Someone in your phone</span><br><em style="color:var(--blush)" data-i18n="adH2">deserves to hear from you.</em></h2>
     <p style="margin:16px auto 0;max-width:330px;font-size:15px;line-height:1.6;color:rgba(250,240,236,.66)" data-i18n="adP">Maybe they love you, miss you, thinking about you, or haven't heard from you in a while. Surprise them with a digital card and flowers — I'm sure they'll love it.</p>
-    <button class="btn btn-primary" style="margin-top:24px" data-go="shop" data-i18n="sendBloom">Send a Bloom</button>
+    <button class="btn btn-primary" style="margin-top:24px" data-go="landing" data-anchor="occRows" data-i18n="sendBloom">Send a Bloom</button>
   </div>
  </div>
 </section>
@@ -542,8 +521,8 @@
 
     <h3 data-i18n="shop">Shop</h3>
     <button class="mi" data-gkey="birthday" data-closemenu data-label="Birthday">Birthday</button>
-    <button class="mi" data-go="shop" data-closemenu><span data-i18n="mAll">All occasions</span> <span style="color:rgba(250,240,236,.35);font-size:13px" id="miOccCount"></span></button>
-    <button class="mi" data-go="shop" data-anchor="m-holiday" data-closemenu data-i18n="mHol">Holidays, by date</button>
+    <button class="mi" data-go="landing" data-anchor="occRows" data-closemenu data-i18n="mAll">All occasions</button>
+    <button class="mi" data-go="landing" data-anchor="m-holiday" data-closemenu data-i18n="mHol">Holidays, by date</button>
     <a href="/credits" data-closemenu data-i18n="mCredits">Gift credits</a>
     <a href="/credits/balance" data-closemenu data-i18n="mBal">Check a balance</a>
 
@@ -725,8 +704,7 @@ const MENUS = [
   ['celebrate','Celebrate'], ['everyday','Everyday'], ['tough','Tough Times'],
   ['holiday','Holidays'], ['collection','Collections'],
 ];
-// Birthday is the hero at the top, so the rows start after it
-const HOME_ROWS = ['thank-you','love','sympathy','graduation','congrats','friendship'];
+
 
 const TIERS = [
   { id:'single',     name:'tierSingle', desc:'tierSingleD', price:1.99, pop:false },
@@ -746,14 +724,14 @@ const LANGS = [['en','English','en-US'],['es','Español','es-US'],['fr','França
                ['tl','Tagalog','fil-PH']];
 const EN = {
   pill:'A card, flowers & balloons in 1', h1a:'Give Them Their Flowers', h1b:"While They're Still Here", tap:'Tap to start',
-  upE:'Coming up', upH:"Don't miss the next one", allOcc:'See all occasions', und:'Understanding the Process',
-  proto:'© Digital Bloom™ · prototype', who:'Who are you sending to?', seeAll:'See all {n}',
+  upE:'Coming up', upH:"Don't Miss The Next Holiday", allOcc:'See all occasions', und:'Understanding the Process',
+  proto:'© Digital Bloom™ · prototype', who:'Who are you sending to?', seeAll:'See all',
   occSub:'{o} occasions · {b} blooms ready to send', occ:'Occasions', loading:'Loading your catalog…',
   shopSub:'{n} occasions — each one opens into the people inside it.',
   today:'Today', tomorrow:'Tomorrow', inDays:'In {n} days', bloomsComing:'Blooms coming soon',
   swipe:'Swipe for more →', style:'Style', soon:'Coming soon',
   emptyH:'{what} is next up', emptyB:'The shelf is built — the blooms are being made.',
-  tapOne:'Tap one to see their blooms', ready_one:'{n} person with blooms ready', ready_other:'{n} people with blooms ready',
+  tapOne:'Choose a Category', ready_one:'{n} person with blooms ready', ready_other:'{n} people with blooms ready',
   blooms_one:'{n} bloom', blooms_other:'{n} blooms',
   length:'Choose a length', mostSent:'Most sent', buy:'Personalize & send — {price}', buyNote:'One screen. No account. Apple Pay ready.',
   desc:'A sealed card opens, their name in gold, and the whole screen fills until there is nothing left but the flowers and what you wrote.',
@@ -830,7 +808,7 @@ function applyLang(){
     </div>`).join('');
   if(!state.name) $('#pvName').textContent = t('name');
   if(state.products.length){
-    renderLanding(); renderShop();
+    renderLanding();
     if(state.occ) openGroup(state.occ.key, state.sub, true);
     if(state.product){ paintProductText(); paintTiers(); paintSummary(); }
   }
@@ -896,7 +874,7 @@ document.addEventListener('click', e=>{
   if(e.target.closest('[data-menu]')){ $('#menu').classList.add('on'); return; }
   if(e.target.closest('[data-closemenu]')) $('#menu').classList.remove('on');
   const g = e.target.closest('[data-go]');
-  if(g){ const dest = g.dataset.go; if(dest==='shop') renderShop(); go(dest);
+  if(g){ const dest = g.dataset.go; if(dest!==(history.state&&history.state.id)) go(dest);
     if(g.dataset.anchor){ const a=document.getElementById(g.dataset.anchor); if(a) a.scrollIntoView(); } }
   if(e.target.closest('[data-back]')) back();
   const l = e.target.closest('[data-lang]');
@@ -945,25 +923,12 @@ function tile(p,o,showOnly){
       <div class="cap"><b>${esc(N(p))}</b><span>${esc(sub)}</span></div>
     </${tag}>`;
 }
-function occTile(o, wide){
-  const list = items(o);
-  const lead = list.find(p=>p.thumbnail_url) || list[0];
-  const media = liveMedia(lead);
-  let line = list.length ? tn('blooms',list.length) : t('soon');
-  if(o.when){ const d=nextDate(o); line = dateLabel(d)+' · '+(list.length ? tn('blooms',list.length) : t('soon')); }
-  return `<button class="tile${wide?' wide':''}${list.length?'':' bare'}" data-gkey="${esc(o.key)}">
-      <div style="position:absolute;inset:0;background:${o.wash}"></div>${media}
-      <div class="veil"></div>
-      <div class="cap"><b>${esc(L(o.name))}</b><span>${esc(line)}</span></div>
-    </button>`;
-}
-
 function personTile(key, label, list, attr){
   const lead = list.find(p=>p.thumbnail_url) || list[0];
   return `<button class="tile" data-${attr}="${esc(key)}">
       <div style="position:absolute;inset:0;background:var(--navy-mid)"></div>${liveMedia(lead)}
       <div class="veil"></div>
-      <div class="cap"><b>${esc(L(label))}</b><span>${esc(tn('blooms',list.length))}</span></div>
+      <div class="cap"><b>${esc(L(label))}</b></div>
     </button>`;
 }
 
@@ -971,26 +936,29 @@ function personTile(key, label, list, attr){
 function renderLanding(){
   // coming up — the next holidays, by date
   $('#upRail').innerHTML = upcoming().slice(0,6).map(({o,d})=>{
-    const n = items(o).length, days = daysUntil(d);
+    const days = daysUntil(d);
     const when = days===0 ? t('today') : days===1 ? t('tomorrow') : t('inDays',{n:days});
-    return `<button class="dchip${n?'':' bare'}" data-gkey="${esc(o.key)}">
+    return `<button class="dchip" data-gkey="${esc(o.key)}">
         <b>${esc(L(o.name))}</b><span>${esc(d.toLocaleDateString(locale(),{weekday:'short'}))} · ${esc(dateLabel(d))}</span>
-        <em>${esc(n ? when : t('bloomsComing'))}</em></button>`;
+        <em>${esc(when)}</em></button>`;
   }).join('');
 
-  // one display row per occasion; the name (and See all) is the way in
-  $('#occRows').innerHTML = HOME_ROWS.map(occ).filter(o=>items(o).length).map(o=>`
+  // Gamble 10/25: the whole lineup, top to bottom — Birthday hero, then every
+  // occasion with blooms, grouped; holidays in date order. Name is the way in.
+  const row = o => `
     <div class="orow">
       <div class="orow-h">
         <button class="oname" data-gkey="${esc(o.key)}"><h3>${esc(L(o.name))}</h3><em>›</em></button>
-        <button data-gkey="${esc(o.key)}">${esc(t('seeAll',{n:items(o).length}))}</button>
+        <button data-gkey="${esc(o.key)}">${esc(t('seeAll'))}</button>
       </div>
       <div class="hrail">${items(o).slice(0,10).map(p=>tile(p,o,true)).join('')}</div>
-    </div>`).join('');
-
+    </div>`;
+  $('#occRows').innerHTML = MENUS.map(([m,title])=>{
+    let list = m==='holiday' ? upcoming().map(x=>x.o) : OCCASIONS.filter(o=>o.menu===m);
+    list = list.filter(o=>!o.alias && items(o).length);
+    return list.length ? `<div class="mhead" id="m-${m}">${esc(L(title))}</div>`+list.map(row).join('') : '';
+  }).join('');
   wireLive($('#s-landing'));
-  const live = OCCASIONS.filter(o=>!o.alias && items(o).length).length;
-  $('#occSub').textContent = t('occSub',{o:live, b:state.products.length});
 
   // hero = a real birthday bloom playing; tapping it opens Birthday → who it's for
   const pool = items(occ('birthday')).filter(p=>p.thumbnail_url).concat(items(occ('birthday')));
@@ -1000,22 +968,6 @@ function renderLanding(){
     v.dataset.pid = hero.id; v.src = hero.video_url; v.load();
     v.play().catch(()=>{});
   }
-}
-
-/* ---------- all occasions ---------- */
-function renderShop(){
-  const live = OCCASIONS.filter(o=>!o.alias && items(o).length).length;
-  const el = $('#miOccCount'); if(el) el.textContent = live;
-  $('#shopSub').textContent = t('shopSub',{n:live});
-  let html = `<div class="grid one">${occTile(occ('birthday'),true)}</div>`;
-  MENUS.forEach(([m,title])=>{
-    let list = OCCASIONS.filter(o=>o.menu===m);
-    if(m==='holiday') list = upcoming().map(x=>x.o);
-    else list = list.filter(o=>items(o).length);
-    if(!list.length) return;
-    html += `<div class="mhead" id="m-${m}">${esc(L(title))}</div><div class="grid">${list.map(o=>occTile(o)).join('')}</div>`;
-  });
-  $('#shopBody').innerHTML = html; wireLive($('#shopBody'));
 }
 
 /* ---------- one occasion: who it's for + style ---------- */
@@ -1035,7 +987,7 @@ function openGroup(key, preSub, fromPop){
       .join('');
 
   $('#recTitle').textContent = L(o.name);
-  $('#recCount').textContent = list.length ? tn('blooms',list.length) : t('soon');
+  $('#recCount').textContent = '';
   $('#recRows').innerHTML = people(o).length
     ? `<div class="whohead">${esc(t('who'))}</div>
        <div class="who" id="whoRail">${words}</div>
@@ -1057,7 +1009,7 @@ function paintRec(){
     const stocked = ppl.map(e=>({e,l:all.filter(p=>matches(p,e))})).filter(x=>x.l.length);
     $('#styleRow').innerHTML = '';
     $('#recSelLabel').textContent = t('tapOne');
-    $('#recSelCount').textContent = tn('ready',stocked.length);
+    $('#recSelCount').textContent = '';
     $('#recGrid').innerHTML = stocked.map(({e,l})=>personTile(e[0], e[1], l, 'sub')).join('')
       || `<div class="empty"><div class="serif-h">${esc(t('emptyH',{what:L(o.name)}))}</div>
             <div>${esc(t('emptyB'))}</div></div>`;
@@ -1076,7 +1028,7 @@ function paintRec(){
     : '';
   const what = L(person ? person[1] : o.name);
   $('#recSelLabel').textContent = [what, style ? L(style[1]) : ''].filter(Boolean).join(' · ');
-  $('#recSelCount').textContent = tn('blooms',list.length);
+  $('#recSelCount').textContent = '';
   $('#recGrid').innerHTML = list.slice(0,60).map(p=>tile(p,o)).join('')
     || `<div class="empty">
           <div class="serif-h">${esc(t('emptyH',{what}))}</div>
