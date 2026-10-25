@@ -257,7 +257,7 @@
     <button class="hero" data-gkey="birthday" aria-label="Birthday">
       <video id="heroVideo" muted playsinline loop preload="metadata"></video>
       <div class="veil"></div>
-      <div class="cap"><b>Birthday</b><span><span data-i18n="who">Who are you sending to?</span>
+      <div class="cap"><b data-label="Birthday">Birthday</b><span><span data-i18n="who">Who are you sending to?</span>
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></span></div>
     </button>
   </div>
@@ -283,7 +283,7 @@
   <div style="padding:44px 18px calc(38px + var(--sab));background:var(--ink);text-align:center">
     <!-- Gamble 8/20: the ad copy lives in Understanding the Process, not in the way of the product -->
     <button class="btn btn-ghost" data-go="understanding" data-i18n="und">Understanding the Process</button>
-    <div style="margin-top:24px;font-size:11px;letter-spacing:.14em;color:rgba(250,240,236,.25)">© Digital Bloom™ · prototype</div>
+    <div style="margin-top:24px;font-size:11px;letter-spacing:.14em;color:rgba(250,240,236,.25)" data-i18n="proto">© Digital Bloom™ · prototype</div>
   </div>
  </div>
 </section>
@@ -300,7 +300,7 @@
   </div>
   <div class="sectionhead">
     <h2 style="font-size:30px;margin-top:0" data-i18n="occ">Occasions</h2>
-    <p id="shopSub">Loading your catalog…</p>
+    <p id="shopSub" data-i18n="loading">Loading your catalog…</p>
   </div>
   <div id="shopBody"></div>
   <div style="height:calc(30px + var(--sab))"></div>
@@ -365,13 +365,13 @@
   </div>
 
   <div style="padding:20px 18px 0">
-    <div class="eyebrow">Choose a length</div>
+    <div class="eyebrow" data-i18n="length">Choose a length</div>
     <div style="display:flex;flex-direction:column;gap:10px;margin-top:13px" id="pdTiers"></div>
   </div>
 
   <div style="position:sticky;bottom:0;margin-top:22px;padding:14px 18px calc(20px + var(--sab));background:linear-gradient(180deg,rgba(7,17,31,0) 0%,var(--ink) 26%)">
     <button class="btn btn-primary" id="pdBuy">Personalize &amp; send — $4.99</button>
-    <div style="margin-top:9px;text-align:center;font-size:11px;color:rgba(250,240,236,.42)">One screen. No account. Apple Pay ready.</div>
+    <div style="margin-top:9px;text-align:center;font-size:11px;color:rgba(250,240,236,.42)" data-i18n="buyNote">One screen. No account. Apple Pay ready.</div>
   </div>
  </div>
 </section>
@@ -384,8 +384,8 @@
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1D1D1F" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
     </button>
     <div style="flex:1">
-      <div style="font-family:'Playfair Display',Georgia,serif;font-size:17px">Personalize &amp; send</div>
-      <div style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--t3)">One screen · about 60 seconds</div>
+      <div style="font-family:'Playfair Display',Georgia,serif;font-size:17px" data-i18n="coTitle">Personalize &amp; send</div>
+      <div style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--t3)" data-i18n="coSub">One screen · about 60 seconds</div>
     </div>
   </div>
 
@@ -394,39 +394,39 @@
       <video id="coVideo" muted playsinline loop preload="metadata" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.75"></video>
       <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(7,17,31,.35),rgba(7,17,31,.75))"></div>
       <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px;text-align:center">
-        <div style="font-size:9px;font-weight:700;letter-spacing:.24em;text-transform:uppercase;color:rgba(201,168,76,.9)">For</div>
+        <div style="font-size:9px;font-weight:700;letter-spacing:.24em;text-transform:uppercase;color:rgba(201,168,76,.9)" data-i18n="pvFor">For</div>
         <div id="pvName" style="margin-top:5px;font-family:'Playfair Display',Georgia,serif;font-size:26px;color:var(--cream)">Their name</div>
         <div id="pvMsg" class="serif" style="margin-top:7px;max-width:250px;font-size:15px;font-style:italic;line-height:1.4;color:rgba(250,240,236,.8);white-space:pre-line"></div>
       </div>
-      <div style="position:absolute;left:12px;bottom:9px;font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.4)">Live preview</div>
+      <div style="position:absolute;left:12px;bottom:9px;font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.4)" data-i18n="live">Live preview</div>
     </div>
   </div>
 
   <div style="padding:20px 18px 0;display:flex;flex-direction:column;gap:16px">
     <div>
       <label class="label" for="fName" data-i18n="name">Their name</label>
-      <input class="field" id="fName" type="text" placeholder="Mama Lois" autocomplete="off" enterkeyhint="next">
+      <input class="field" id="fName" type="text" placeholder="Mama Lois" data-i18n-ph="phName" autocomplete="off" enterkeyhint="next">
       <div class="note">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#B8923F" stroke-width="1.8" stroke-linecap="round" style="flex:none;margin-top:1px"><circle cx="12" cy="12" r="9"/><path d="M12 8v5"/><path d="M12 16h.01"/></svg>
-        <span>Double-check the spelling — it gets engraved on the card in the film.</span>
+        <span data-i18n="spell">Double-check the spelling — it gets engraved on the card in the film.</span>
       </div>
     </div>
     <div>
       <!-- Gamble 10/24: no delivery choice — hit send and it goes straight to their phone -->
       <label class="label" for="fPhone" data-i18n="phone">Their mobile number</label>
-      <input class="field" id="fPhone" type="tel" inputmode="tel" placeholder="(555) 123-4567" autocomplete="off">
+      <input class="field" id="fPhone" type="tel" inputmode="tel" placeholder="(555) 123-4567" data-i18n-ph="phPhone" autocomplete="off">
     </div>
     <div>
       <label class="label" for="fMsg" data-i18n="msg">Your message</label>
       <!-- Gamble 10/24: +50 characters minimum (was 120) -->
-      <textarea class="field" id="fMsg" rows="4" maxlength="180" placeholder="You planted everything I am."></textarea>
+      <textarea class="field" id="fMsg" rows="4" maxlength="180" placeholder="You planted everything I am." data-i18n-ph="phMsg"></textarea>
       <div style="display:flex;justify-content:space-between;gap:12px;margin-top:6px;font-size:11px;color:var(--t3)">
-        <span>Shows on screen by itself first, then stays while the bloom plays</span><span id="cCount" style="flex:none">0 / 180</span>
+        <span data-i18n="msgHint">Appears on its own first, then stays on screen while the bloom plays.</span><span id="cCount" style="flex:none">0 / 180</span>
       </div>
     </div>
     <div>
       <label class="label" for="fFrom" data-i18n="from">Signed</label>
-      <input class="field" id="fFrom" type="text" placeholder="Ak" autocomplete="off">
+      <input class="field" id="fFrom" type="text" placeholder="Ak" data-i18n-ph="phFrom" autocomplete="off">
     </div>
   </div>
 
@@ -439,12 +439,12 @@
     <div style="display:flex;flex-direction:column;gap:10px;margin-top:16px">
       <button class="btn" id="payApple" style="height:54px;border-radius:14px;background:#000;color:#fff;letter-spacing:0;text-transform:none;font-size:16px;font-weight:600">
         <svg width="17" height="20" viewBox="0 0 17 20" fill="#fff"><path d="M13.6 10.6c0-2.3 1.9-3.4 2-3.5-1.1-1.6-2.8-1.8-3.4-1.8-1.4-.2-2.8.8-3.5.8-.7 0-1.9-.8-3.1-.8-1.6 0-3 .9-3.8 2.4-1.6 2.8-.4 7 1.2 9.3.8 1.1 1.7 2.4 2.9 2.3 1.2 0 1.6-.7 3-.7s1.8.7 3 .7c1.3 0 2.1-1.1 2.8-2.3.9-1.3 1.3-2.6 1.3-2.7 0 0-2.4-.9-2.4-3.7zM11.3 3.8c.6-.8 1.1-1.9 1-3-.9 0-2.1.6-2.8 1.4-.6.7-1.2 1.8-1 2.9 1 .1 2.1-.5 2.8-1.3z"/></svg>
-        Pay
+        <span data-i18n="pay">Pay</span>
       </button>
       <button class="btn" id="payCard" style="height:54px;border-radius:14px;border:1px solid #D2D2D7;background:#fff;color:var(--t1);letter-spacing:0;text-transform:none;font-size:15px;font-weight:600" data-i18n="card">Pay with card</button>
     </div>
   </div>
-  <div style="padding:14px 18px calc(28px + var(--sab));text-align:center;font-size:11px;line-height:1.5;color:var(--t3)">Pay and it sends — straight to their phone. No account, no extra steps.</div>
+  <div style="padding:14px 18px calc(28px + var(--sab));text-align:center;font-size:11px;line-height:1.5;color:var(--t3)" data-i18n="payNote">Pay and it sends — straight to their phone. No account, no extra steps.</div>
  </div>
 </section>
 
@@ -455,7 +455,7 @@
    <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.55) 0%,transparent 26%,transparent 46%,rgba(0,0,0,.82) 100%);pointer-events:none"></div>
 
    <div style="position:absolute;top:calc(54px + var(--sat));left:24px;right:24px;text-align:center;pointer-events:none">
-     <div style="font-size:10px;font-weight:600;letter-spacing:.28em;text-transform:uppercase;color:rgba(201,168,76,.9)">A bloom for</div>
+     <div style="font-size:10px;font-weight:600;letter-spacing:.28em;text-transform:uppercase;color:rgba(201,168,76,.9)" data-i18n="bloomFor">A bloom for</div>
      <div id="dlName" style="margin-top:9px;font-family:'Playfair Display',Georgia,serif;font-size:36px;color:var(--cream)">—</div>
      <div id="dlFrom" style="margin-top:7px;font-size:12px;letter-spacing:.12em;color:rgba(250,240,236,.5)"></div>
    </div>
@@ -465,7 +465,7 @@
 
    <!-- message alone on screen first, then it fades to the bloom -->
    <div class="dl-intro" id="dlIntro">
-     <div style="font-size:10px;font-weight:600;letter-spacing:.28em;text-transform:uppercase;color:rgba(201,168,76,.9)">A bloom for</div>
+     <div style="font-size:10px;font-weight:600;letter-spacing:.28em;text-transform:uppercase;color:rgba(201,168,76,.9)" data-i18n="bloomFor">A bloom for</div>
      <div id="dlIntroName" style="margin-top:9px;font-family:'Playfair Display',Georgia,serif;font-size:34px;color:var(--cream)">—</div>
      <div class="msg" id="dlIntroMsg"></div>
      <div id="dlIntroFrom" style="margin-top:18px;font-size:12px;letter-spacing:.14em;color:rgba(250,240,236,.55)"></div>
@@ -488,20 +488,20 @@
     <button class="iconbtn" data-back>
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(250,240,236,.85)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
     </button>
-    <div class="brand" style="flex:1">Understanding the Process</div>
+    <div class="brand" style="flex:1" data-i18n="und">Understanding the Process</div>
   </div>
 
   <div style="padding:38px 18px;background:var(--navy-page);border-top:1px solid rgba(255,255,255,.05)">
-    <div class="eyebrow">How it works</div>
-    <h2 class="h1" style="margin:10px 0 20px;font-size:26px">Three minutes, start to tears.</h2>
+    <div class="eyebrow" data-i18n="howE">How it works</div>
+    <h2 class="h1" style="margin:10px 0 20px;font-size:26px" data-i18n="howH">Three minutes, start to tears.</h2>
     <div style="display:flex;flex-direction:column;gap:10px" id="steps"></div>
   </div>
 
   <div style="padding:42px 18px;background:#fff;color:var(--t1)">
-    <div class="eyebrow" style="color:var(--gold-dk)">What comes back</div>
-    <h2 style="margin:10px 0 16px;font-family:'Playfair Display',Georgia,serif;font-weight:500;font-size:26px;line-height:1.2">Digital blooms make some people very emotional.</h2>
-    <p style="margin:0;font-size:16px;line-height:1.65;color:var(--t2)">These are very moving digital cards. People don't text back thanking you. They usually call crying. Tears of joy. The blooms are beautiful and effective. Try one — you'll see.</p>
-    <div style="margin-top:14px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--t3)">— Gamble, co-founder</div>
+    <div class="eyebrow" style="color:var(--gold-dk)" data-i18n="backE">What comes back</div>
+    <h2 style="margin:10px 0 16px;font-family:'Playfair Display',Georgia,serif;font-weight:500;font-size:26px;line-height:1.2" data-i18n="backH">Digital blooms make some people very emotional.</h2>
+    <p style="margin:0;font-size:16px;line-height:1.65;color:var(--t2)" data-i18n="backP">These are very moving digital cards. People don't text back thanking you. They usually call crying. Tears of joy. The blooms are beautiful and effective. Try one — you'll see.</p>
+    <div style="margin-top:14px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--t3)" data-i18n="backBy">— Gamble, co-founder</div>
 
     <div hidden style="margin-top:22px;padding:18px;border:1px solid var(--line);border-radius:18px;background:var(--soft)">
       <div class="serif" style="font-size:18px;font-style:italic;line-height:1.45">[REAL RECIPIENT QUOTE — one line from somebody who received one]</div>
@@ -510,14 +510,14 @@
 
     <div style="display:flex;gap:8px;margin-top:18px;align-items:center;justify-content:center;color:var(--t2)">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="4" y="10" width="16" height="10" rx="2.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
-      <span style="font-size:12px">Secure checkout by Stripe · Apple Pay &amp; Google Pay</span>
+      <span style="font-size:12px" data-i18n="secure">Secure checkout by Stripe · Apple Pay &amp; Google Pay</span>
     </div>
   </div>
 
   <div id="u-ad" style="padding:44px 18px calc(38px + var(--sab));background:var(--ink);text-align:center">
-    <h2 class="h1" style="margin:0;font-size:27px">Someone in your phone<br><em style="color:var(--blush)">deserves to hear from you.</em></h2>
-    <p style="margin:16px auto 0;max-width:330px;font-size:15px;line-height:1.6;color:rgba(250,240,236,.66)">Maybe they love you, miss you, thinking about you, or haven't heard from you in a while. Surprise them with a digital card and flowers — I'm sure they'll love it.</p>
-    <button class="btn btn-primary" style="margin-top:24px" data-go="shop">Send a Bloom</button>
+    <h2 class="h1" style="margin:0;font-size:27px"><span data-i18n="adH1">Someone in your phone</span><br><em style="color:var(--blush)" data-i18n="adH2">deserves to hear from you.</em></h2>
+    <p style="margin:16px auto 0;max-width:330px;font-size:15px;line-height:1.6;color:rgba(250,240,236,.66)" data-i18n="adP">Maybe they love you, miss you, thinking about you, or haven't heard from you in a while. Surprise them with a digital card and flowers — I'm sure they'll love it.</p>
+    <button class="btn btn-primary" style="margin-top:24px" data-go="shop" data-i18n="sendBloom">Send a Bloom</button>
   </div>
  </div>
 </section>
@@ -535,31 +535,31 @@
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(250,240,236,.75)" stroke-width="1.8" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
       </button>
     </div>
-    <div style="margin-top:6px;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:rgba(250,240,236,.35)">Cinematic Digital Experiences</div>
+    <div style="margin-top:6px;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:rgba(250,240,236,.35)" data-i18n="tagline">Cinematic Digital Experiences</div>
 
     <h3 data-i18n="lang">Language</h3>
     <div class="langrow" id="langRow"></div>
 
     <h3 data-i18n="shop">Shop</h3>
-    <button class="mi" data-gkey="birthday" data-closemenu>Birthday</button>
-    <button class="mi" data-go="shop" data-closemenu>All occasions <span style="color:rgba(250,240,236,.35);font-size:13px" id="miOccCount"></span></button>
-    <button class="mi" data-go="shop" data-anchor="m-holiday" data-closemenu>Holidays, by date</button>
-    <a href="/credits" data-closemenu>Gift credits</a>
-    <a href="/credits/balance" data-closemenu>Check a balance</a>
+    <button class="mi" data-gkey="birthday" data-closemenu data-label="Birthday">Birthday</button>
+    <button class="mi" data-go="shop" data-closemenu><span data-i18n="mAll">All occasions</span> <span style="color:rgba(250,240,236,.35);font-size:13px" id="miOccCount"></span></button>
+    <button class="mi" data-go="shop" data-anchor="m-holiday" data-closemenu data-i18n="mHol">Holidays, by date</button>
+    <a href="/credits" data-closemenu data-i18n="mCredits">Gift credits</a>
+    <a href="/credits/balance" data-closemenu data-i18n="mBal">Check a balance</a>
 
     <h3 id="understandingTitle" data-i18n="und">Understanding the Process</h3>
-    <button class="mi" data-go="understanding" data-closemenu>How it works</button>
-    <button class="mi" data-go="understanding" data-closemenu>What comes back</button>
-    <button class="mi" data-go="understanding" data-anchor="u-ad" data-closemenu>Someone in your phone</button>
+    <button class="mi" data-go="understanding" data-closemenu data-i18n="howE">How it works</button>
+    <button class="mi" data-go="understanding" data-closemenu data-i18n="backE">What comes back</button>
+    <button class="mi" data-go="understanding" data-anchor="u-ad" data-closemenu data-i18n="adH1">Someone in your phone</button>
 
     <h3 data-i18n="company">Company</h3>
-    <a href="/about" data-closemenu>About</a>
-    <a href="/contact" data-closemenu>Contact</a>
-    <a href="/terms" data-closemenu>Terms</a>
-    <a href="/privacy" data-closemenu>Privacy</a>
-    <a href="/refunds" data-closemenu>Refunds</a>
+    <a href="/about" data-closemenu data-i18n="about">About</a>
+    <a href="/contact" data-closemenu data-i18n="contact">Contact</a>
+    <a href="/terms" data-closemenu data-i18n="terms">Terms</a>
+    <a href="/privacy" data-closemenu data-i18n="privacy">Privacy</a>
+    <a href="/refunds" data-closemenu data-i18n="refunds">Refunds</a>
 
-    <div style="margin-top:26px;font-size:11px;letter-spacing:.14em;color:rgba(250,240,236,.25)">© Digital Bloom™ · prototype</div>
+    <div style="margin-top:26px;font-size:11px;letter-spacing:.14em;color:rgba(250,240,236,.25)" data-i18n="proto">© Digital Bloom™ · prototype</div>
   </div>
 </div>
 
@@ -729,58 +729,69 @@ const MENUS = [
 const HOME_ROWS = ['thank-you','love','sympathy','graduation','congrats','friendship'];
 
 const TIERS = [
-  { id:'single',     name:'Single Bloom',     desc:'8–10 seconds · one scene',            price:1.99, pop:false },
-  { id:'experience', name:'Bloom Experience', desc:'25–35 seconds · multi-scene story',   price:4.99, pop:true  },
-  { id:'premium',    name:'Premium Bloom',    desc:'35–45 seconds · full cinematic',      price:9.99, pop:false },
+  { id:'single',     name:'tierSingle', desc:'tierSingleD', price:1.99, pop:false },
+  { id:'experience', name:'tierExp',    desc:'tierExpD',    price:4.99, pop:true  },
+  { id:'premium',    name:'tierPrem',   desc:'tierPremD',   price:9.99, pop:false },
 ];
-const STEPS = [
-  ["Pick the occasion, then who it's for","Birthday, then Son. Thank You, then Coach. Every occasion opens into the people inside it."],
-  ["Write the part you mean","Their name is engraved on the card inside the film. One screen, then pay."],
-  ["Hit send — it goes straight to their phone","Your message shows up first, by itself, then the bloom plays with it on screen."],
-];
+const STEPS = [['s1t','s1b'], ['s2t','s2b'], ['s3t','s3b']];
 
-/* ---------- language (Gamble 10/24: switcher lives in the menu) ---------- */
-const LANGS = [['en','English'],['es','Español'],['fr','Français'],['pt','Português'],['de','Deutsch'],
-               ['zh','中文'],['ja','日本語'],['vi','Tiếng Việt'],['tl','Tagalog']];
-const T = {
-  en:{pill:'A card, flowers & balloons in 1', h1a:'Give Them Their Flowers', h1b:"While They're Still Here", tap:'Tap to start',
-      upE:'Coming up', upH:"Don't miss the next one", allOcc:'See all occasions', und:'Understanding the Process',
-      who:'Who are you sending to?', seeAll:'See all', occ:'Occasions', name:'Their name', phone:'Their mobile number',
-      msg:'Your message', from:'Signed', card:'Pay with card', total:'Total', lang:'Language', shop:'Shop', company:'Company'},
-  es:{pill:'Tarjeta, flores y globos en uno', h1a:'Dales sus flores', h1b:'mientras están aquí', tap:'Toca para empezar',
-      upE:'Próximamente', upH:'No te pierdas la próxima', allOcc:'Ver todas las ocasiones', und:'Cómo funciona',
-      who:'¿A quién se lo envías?', seeAll:'Ver todo', occ:'Ocasiones', name:'Su nombre', phone:'Su número de celular',
-      msg:'Tu mensaje', from:'Firmado', card:'Pagar con tarjeta', total:'Total', lang:'Idioma', shop:'Tienda', company:'Empresa'},
-  fr:{pill:'Carte, fleurs et ballons en un', h1a:'Offrez-leur des fleurs', h1b:"pendant qu'ils sont là", tap:'Touchez pour commencer',
-      upE:'Bientôt', upH:'Ne manquez pas la prochaine', allOcc:'Toutes les occasions', und:'Comment ça marche',
-      who:"À qui l'envoyez-vous ?", seeAll:'Tout voir', occ:'Occasions', name:'Son prénom', phone:'Son numéro de mobile',
-      msg:'Votre message', from:'Signé', card:'Payer par carte', total:'Total', lang:'Langue', shop:'Boutique', company:'Entreprise'},
-  pt:{pill:'Cartão, flores e balões em um', h1a:'Dê flores a quem você ama', h1b:'enquanto estão aqui', tap:'Toque para começar',
-      upE:'Em breve', upH:'Não perca a próxima', allOcc:'Ver todas as ocasiões', und:'Como funciona',
-      who:'Para quem você vai enviar?', seeAll:'Ver tudo', occ:'Ocasiões', name:'Nome da pessoa', phone:'Celular da pessoa',
-      msg:'Sua mensagem', from:'Assinado', card:'Pagar com cartão', total:'Total', lang:'Idioma', shop:'Loja', company:'Empresa'},
-  de:{pill:'Karte, Blumen & Ballons in einem', h1a:'Schenk ihnen Blumen', h1b:'solange sie hier sind', tap:'Tippen zum Starten',
-      upE:'Demnächst', upH:'Verpasse nicht den nächsten Anlass', allOcc:'Alle Anlässe', und:"So funktioniert's",
-      who:'An wen sendest du?', seeAll:'Alle ansehen', occ:'Anlässe', name:'Name', phone:'Handynummer',
-      msg:'Deine Nachricht', from:'Von', card:'Mit Karte zahlen', total:'Gesamt', lang:'Sprache', shop:'Shop', company:'Unternehmen'},
-  zh:{pill:'贺卡、鲜花和气球，三合一', h1a:'趁他们还在', h1b:'把花送给他们', tap:'点击开始',
-      upE:'即将到来', upH:'别错过下一个节日', allOcc:'查看所有场合', und:'使用说明',
-      who:'你要送给谁？', seeAll:'查看全部', occ:'场合', name:'对方姓名', phone:'对方手机号',
-      msg:'你的留言', from:'署名', card:'刷卡支付', total:'合计', lang:'语言', shop:'选购', company:'公司'},
-  ja:{pill:'カード・花・風船がひとつに', h1a:'大切な人がいるうちに', h1b:'花を贈ろう', tap:'タップして開始',
-      upE:'もうすぐ', upH:'次の記念日をお見逃しなく', allOcc:'すべてのシーン', und:'ご利用の流れ',
-      who:'誰に送りますか？', seeAll:'すべて見る', occ:'シーン', name:'お相手のお名前', phone:'お相手の携帯番号',
-      msg:'メッセージ', from:'差出人', card:'カードで支払う', total:'合計', lang:'言語', shop:'ショップ', company:'会社情報'},
-  vi:{pill:'Thiệp, hoa và bóng bay trong một', h1a:'Tặng hoa cho người thương', h1b:'khi họ vẫn còn ở đây', tap:'Chạm để bắt đầu',
-      upE:'Sắp tới', upH:'Đừng bỏ lỡ dịp tiếp theo', allOcc:'Xem tất cả các dịp', und:'Cách hoạt động',
-      who:'Bạn gửi cho ai?', seeAll:'Xem tất cả', occ:'Các dịp', name:'Tên người nhận', phone:'Số điện thoại người nhận',
-      msg:'Lời nhắn của bạn', from:'Người gửi', card:'Thanh toán bằng thẻ', total:'Tổng cộng', lang:'Ngôn ngữ', shop:'Mua sắm', company:'Công ty'},
-  tl:{pill:'Card, bulaklak at lobo sa isa', h1a:'Ibigay ang kanilang bulaklak', h1b:'habang nandito pa sila', tap:'I-tap para magsimula',
-      upE:'Paparating', upH:'Huwag palampasin ang susunod', allOcc:'Tingnan lahat ng okasyon', und:'Paano ito gumagana',
-      who:'Para kanino mo ipapadala?', seeAll:'Tingnan lahat', occ:'Mga Okasyon', name:'Pangalan nila', phone:'Mobile number nila',
-      msg:'Mensahe mo', from:'Mula kay', card:'Magbayad gamit ang card', total:'Kabuuan', lang:'Wika', shop:'Mamili', company:'Kumpanya'},
+/* ---------- language (Gamble 10/24: switcher lives in the menu) ----------
+   EN is the master copy. Each other language is a hand-written file at
+   /i18n/redesign/<lang>.json with the same keys plus `labels` (occasion,
+   people and style names, keyed by the English) and `names` (bloom display
+   names, keyed by the product's name in the database). en.json carries the
+   cleaned English bloom names. Anything missing falls back to English. */
+const LANGS = [['en','English','en-US'],['es','Español','es-US'],['fr','Français','fr-FR'],['pt','Português','pt-BR'],
+               ['de','Deutsch','de-DE'],['zh','中文','zh-CN'],['ja','日本語','ja-JP'],['vi','Tiếng Việt','vi-VN'],
+               ['tl','Tagalog','fil-PH']];
+const EN = {
+  pill:'A card, flowers & balloons in 1', h1a:'Give Them Their Flowers', h1b:"While They're Still Here", tap:'Tap to start',
+  upE:'Coming up', upH:"Don't miss the next one", allOcc:'See all occasions', und:'Understanding the Process',
+  proto:'© Digital Bloom™ · prototype', who:'Who are you sending to?', seeAll:'See all {n}',
+  occSub:'{o} occasions · {b} blooms ready to send', occ:'Occasions', loading:'Loading your catalog…',
+  shopSub:'{n} occasions — each one opens into the people inside it.',
+  today:'Today', tomorrow:'Tomorrow', inDays:'In {n} days', bloomsComing:'Blooms coming soon',
+  swipe:'Swipe for more →', style:'Style', soon:'Coming soon',
+  emptyH:'{what} is next up', emptyB:'The shelf is built — the blooms are being made.',
+  tapOne:'Tap one to see their blooms', ready_one:'{n} person with blooms ready', ready_other:'{n} people with blooms ready',
+  blooms_one:'{n} bloom', blooms_other:'{n} blooms',
+  length:'Choose a length', mostSent:'Most sent', buy:'Personalize & send — {price}', buyNote:'One screen. No account. Apple Pay ready.',
+  desc:'A sealed card opens, their name in gold, and the whole screen fills until there is nothing left but the flowers and what you wrote.',
+  tierSingle:'Single Bloom', tierSingleD:'8–10 seconds · one scene',
+  tierExp:'Bloom Experience', tierExpD:'25–35 seconds · a story in several scenes',
+  tierPrem:'Premium Bloom', tierPremD:'35–45 seconds · the full cinematic film',
+  coTitle:'Personalize & send', coSub:'One screen · about 60 seconds', pvFor:'For', live:'Live preview',
+  name:'Their name', phone:'Their mobile number', msg:'Your message', from:'Signed',
+  spell:'Double-check the spelling — it gets engraved on the card in the film.',
+  msgHint:'Appears on its own first, then stays on screen while the bloom plays.',
+  phName:'Mama Lois', phMsg:'You planted everything I am.', phFrom:'Ak', phPhone:'(555) 123-4567',
+  total:'Total', pay:'Pay', card:'Pay with card', payNote:'Pay and it sends — straight to their phone. No account, no extra steps.',
+  tWho:'Who is it for?', tPhone:'Add their mobile number', tSending:'Paid — sending it to {name} now…',
+  tLoadErr:"We couldn't load the blooms. Check your connection and try again.", tSoundOn:'Sound on', tSoundOff:'Sound off',
+  bloomFor:'A bloom for', fromName:'from {name}', sign:'— {name}',
+  howE:'How it works', howH:'Three minutes, start to tears.',
+  s1t:"Pick the occasion, then who it's for", s1b:'Birthday, then Son. Thank You, then Coach. Every occasion opens into the people inside it.',
+  s2t:'Write the part you mean', s2b:'Their name is engraved on the card inside the film. One screen, then pay.',
+  s3t:'Hit send — it goes straight to their phone', s3b:'Your message shows up first, on its own, then the bloom plays with it on screen.',
+  backE:'What comes back', backH:'Digital blooms make some people very emotional.',
+  backP:"These are very moving digital cards. People don't text back thanking you. They usually call crying. Tears of joy. The blooms are beautiful and effective. Try one — you'll see.",
+  backBy:'— Gamble, co-founder', secure:'Secure checkout by Stripe · Apple Pay & Google Pay',
+  adH1:'Someone in your phone', adH2:'deserves to hear from you.',
+  adP:"Maybe they love you, miss you, think about you, or haven't heard from you in a while. Surprise them with a digital card and flowers — they'll love it.",
+  sendBloom:'Send a Bloom', tagline:'Cinematic Digital Experiences', lang:'Language', shop:'Shop', company:'Company',
+  mAll:'All occasions', mHol:'Holidays, by date', mCredits:'Gift credits', mBal:'Check a balance',
+  about:'About', contact:'Contact', terms:'Terms', privacy:'Privacy', refunds:'Refunds',
 };
-
+const DICT = { en:{ ui:EN, labels:{}, names:{} } };
+async function loadLang(code){
+  if(DICT[code] && code!=='en') return;
+  try{
+    const r = await fetch('/i18n/redesign/'+code+'.json', {cache:'no-cache'});
+    if(!r.ok) throw new Error(r.status);
+    const j = await r.json();
+    DICT[code] = { ui:Object.assign({}, code==='en'?EN:{}, j.ui||{}), labels:j.labels||{}, names:j.names||{} };
+  }catch(e){ if(code!=='en') DICT[code] = { ui:{}, labels:{}, names:{} }; }
+}
 const $  = (s,r)=> (r||document).querySelector(s);
 const $$ = (s,r)=> Array.from((r||document).querySelectorAll(s));
 const esc = s => String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -788,20 +799,41 @@ const titleize = s => String(s||'').replace(/-/g,' ').replace(/\b\w/g,c=>c.toUpp
   .replace(/\bFor\b /,'For ').replace(/\bMy\b/,'My');
 const fmt = n => '$'+Number(n).toFixed(2);
 const time = t => { t=Math.max(0,t|0); return Math.floor(t/60)+':'+String(t%60).padStart(2,'0'); };
-const plural = (n,w) => n+' '+w+(n===1?'':'s');
 const store = { get(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } },
                 set(k,v){ try{ localStorage.setItem(k,v); }catch(e){} } };
 
 const state = { products:[], byOcc:{}, occ:null, sub:null, style:null, product:null, tier:'experience',
                 name:'', phone:'', msg:'', from:'', lang: store.get('db_lang') || 'en' };
-const t = k => (T[state.lang] && T[state.lang][k]) || T.en[k];
+const D = () => DICT[state.lang] || DICT.en;
+function t(k, vars){
+  let s = D().ui[k]; if(s==null) s = EN[k]; if(s==null) s = k;
+  if(vars) s = s.replace(/\{(\w+)\}/g, (m,v)=> vars[v]!=null ? vars[v] : m);
+  return s;
+}
+const tn = (base, n) => t(base+(n===1?'_one':'_other'), {n});
+const L = s => (D().labels[s]) || s;                              // occasion / people / style names
+const N = p => D().names[p.name] || DICT.en.names[p.name] || p.name; // bloom display name
+const locale = () => (LANGS.find(x=>x[0]===state.lang)||LANGS[0])[2];
 function applyLang(){
-  if(!T[state.lang]) state.lang = 'en';
+  if(!LANGS.some(x=>x[0]===state.lang)) state.lang = 'en';
   document.documentElement.lang = state.lang;
   $$('[data-i18n]').forEach(el=>{ el.textContent = t(el.dataset.i18n); });
+  $$('[data-i18n-ph]').forEach(el=>{ el.placeholder = t(el.dataset.i18nPh); });
+  $$('[data-label]').forEach(el=>{ el.textContent = L(el.dataset.label); });
   $('#langRow').innerHTML = LANGS.map(([k,n])=>
-    `<button data-lang="${k}" class="${k===state.lang?'sel':''}">${esc(n)}</button>`).join('');
-  if(state.products.length){ renderLanding(); if(state.occ) openGroup(state.occ.key, state.sub, true); }
+    `<button data-lang="${k}" class="${k===state.lang?'sel':''}" lang="${k}">${esc(n)}</button>`).join('');
+  $('#steps').innerHTML = STEPS.map((s,i)=>`
+    <div style="display:flex;gap:14px;align-items:flex-start;padding:16px;border-radius:18px;background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.06)">
+      <div style="flex:none;width:30px;height:30px;border-radius:50%;border:1px solid rgba(201,168,76,.4);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--gold)">${i+1}</div>
+      <div><div style="font-size:15px;font-weight:600;color:var(--cream)">${esc(t(s[0]))}</div>
+      <div style="margin-top:4px;font-size:13px;line-height:1.5;color:rgba(250,240,236,.6)">${esc(t(s[1]))}</div></div>
+    </div>`).join('');
+  if(!state.name) $('#pvName').textContent = t('name');
+  if(state.products.length){
+    renderLanding(); renderShop();
+    if(state.occ) openGroup(state.occ.key, state.sub, true);
+    if(state.product){ paintProductText(); paintTiers(); paintSummary(); }
+  }
 }
 
 /* ---------- occasion helpers ---------- */
@@ -811,12 +843,9 @@ const people = o => (o.cols||[]).flatMap(c=>c.people);
 const tagsOf = person => person[2].concat(GLOBAL_TAGS[person[0]]||[]);
 const items = o => state.byOcc[real(o).key] || [];
 const matches = (p, entry) => tagsOf(entry).includes(p.subcategory);
-const LABEL = {};
-OCCASIONS.forEach(o=>people(o).forEach(([k,l])=>{ if(!LABEL[k]) LABEL[k]=l; }));
-LABEL.grandpa = 'Grandpa';
 function labelIn(o,p){                                       // what a tile says under its title
   const hit = people(o).find(x=>matches(p,x)) || (o.styles||[]).find(x=>matches(p,x));
-  return hit ? hit[1] : '';
+  return hit ? L(hit[1]) : '';
 }
 function homeOf(p){ return OCCASIONS.find(o=>!o.alias && (o.src||[]).includes(p.category)); }
 function nextDate(o){
@@ -825,7 +854,7 @@ function nextDate(o){
   return d;
 }
 const daysUntil = d => Math.round((d - new Date(new Date().setHours(0,0,0,0)))/864e5);
-const dateLabel = d => d.toLocaleDateString('en-US',{month:'short',day:'numeric'});
+const dateLabel = d => d.toLocaleDateString(locale(),{month:'short',day:'numeric'});
 const upcoming = () => OCCASIONS.filter(o=>o.when).map(o=>({o,d:nextDate(o)})).sort((a,b)=>a.d-b.d);
 
 /* ---------- toast ---------- */
@@ -871,8 +900,9 @@ document.addEventListener('click', e=>{
     if(g.dataset.anchor){ const a=document.getElementById(g.dataset.anchor); if(a) a.scrollIntoView(); } }
   if(e.target.closest('[data-back]')) back();
   const l = e.target.closest('[data-lang]');
-  if(l){ state.lang = l.dataset.lang; store.set('db_lang', state.lang); applyLang();
-    $('#menu').classList.remove('on'); toast(LANGS.find(x=>x[0]===state.lang)[1]); }
+  if(l){ const code = l.dataset.lang;
+    loadLang(code).then(()=>{ state.lang = code; store.set('db_lang', code); applyLang();
+      $('#menu').classList.remove('on'); toast(LANGS.find(x=>x[0]===code)[1]); }); }
 });
 document.addEventListener('keydown', e=>{ if(e.key==='Escape') $('#menu').classList.remove('on'); });
 
@@ -912,19 +942,19 @@ function tile(p,o,showOnly){
   const tag = showOnly ? 'div' : 'button';
   return `<${tag} class="tile${showOnly?' show':''}"${showOnly?'':` data-pid="${esc(p.id)}"`} style="background:${o?o.wash:'var(--navy-mid)'}">
       ${poster}<div class="veil"></div>
-      <div class="cap"><b>${esc(p.name)}</b><span>${esc(sub)}</span></div>
+      <div class="cap"><b>${esc(N(p))}</b><span>${esc(sub)}</span></div>
     </${tag}>`;
 }
 function occTile(o, wide){
   const list = items(o);
   const lead = list.find(p=>p.thumbnail_url) || list[0];
   const media = liveMedia(lead);
-  let line = list.length ? plural(list.length,'bloom') : 'Coming soon';
-  if(o.when){ const d=nextDate(o); line = dateLabel(d)+' · '+(list.length ? plural(list.length,'bloom') : 'coming soon'); }
+  let line = list.length ? tn('blooms',list.length) : t('soon');
+  if(o.when){ const d=nextDate(o); line = dateLabel(d)+' · '+(list.length ? tn('blooms',list.length) : t('soon')); }
   return `<button class="tile${wide?' wide':''}${list.length?'':' bare'}" data-gkey="${esc(o.key)}">
       <div style="position:absolute;inset:0;background:${o.wash}"></div>${media}
       <div class="veil"></div>
-      <div class="cap"><b>${esc(o.name)}</b><span>${esc(line)}</span></div>
+      <div class="cap"><b>${esc(L(o.name))}</b><span>${esc(line)}</span></div>
     </button>`;
 }
 
@@ -933,41 +963,34 @@ function personTile(key, label, list, attr){
   return `<button class="tile" data-${attr}="${esc(key)}">
       <div style="position:absolute;inset:0;background:var(--navy-mid)"></div>${liveMedia(lead)}
       <div class="veil"></div>
-      <div class="cap"><b>${esc(label)}</b><span>${esc(plural(list.length,'bloom'))}</span></div>
+      <div class="cap"><b>${esc(L(label))}</b><span>${esc(tn('blooms',list.length))}</span></div>
     </button>`;
 }
 
 /* ---------- landing ---------- */
 function renderLanding(){
-  $('#steps').innerHTML = STEPS.map((s,i)=>`
-    <div style="display:flex;gap:14px;align-items:flex-start;padding:16px;border-radius:18px;background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.06)">
-      <div style="flex:none;width:30px;height:30px;border-radius:50%;border:1px solid rgba(201,168,76,.4);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--gold)">${i+1}</div>
-      <div><div style="font-size:15px;font-weight:600;color:var(--cream)">${esc(s[0])}</div>
-      <div style="margin-top:4px;font-size:13px;line-height:1.5;color:rgba(250,240,236,.6)">${esc(s[1])}</div></div>
-    </div>`).join('');
-
   // coming up — the next holidays, by date
   $('#upRail').innerHTML = upcoming().slice(0,6).map(({o,d})=>{
     const n = items(o).length, days = daysUntil(d);
-    const when = days===0 ? 'today' : days===1 ? 'tomorrow' : 'in '+days+' days';
+    const when = days===0 ? t('today') : days===1 ? t('tomorrow') : t('inDays',{n:days});
     return `<button class="dchip${n?'':' bare'}" data-gkey="${esc(o.key)}">
-        <b>${esc(o.name)}</b><span>${esc(d.toLocaleDateString('en-US',{weekday:'short'}))} · ${esc(dateLabel(d))}</span>
-        <em>${n ? esc(when) : 'blooms coming'}</em></button>`;
+        <b>${esc(L(o.name))}</b><span>${esc(d.toLocaleDateString(locale(),{weekday:'short'}))} · ${esc(dateLabel(d))}</span>
+        <em>${esc(n ? when : t('bloomsComing'))}</em></button>`;
   }).join('');
 
   // one display row per occasion; the name (and See all) is the way in
   $('#occRows').innerHTML = HOME_ROWS.map(occ).filter(o=>items(o).length).map(o=>`
     <div class="orow">
       <div class="orow-h">
-        <button class="oname" data-gkey="${esc(o.key)}"><h3>${esc(o.name)}</h3><em>›</em></button>
-        <button data-gkey="${esc(o.key)}">${esc(t('seeAll'))} ${items(o).length}</button>
+        <button class="oname" data-gkey="${esc(o.key)}"><h3>${esc(L(o.name))}</h3><em>›</em></button>
+        <button data-gkey="${esc(o.key)}">${esc(t('seeAll',{n:items(o).length}))}</button>
       </div>
       <div class="hrail">${items(o).slice(0,10).map(p=>tile(p,o,true)).join('')}</div>
     </div>`).join('');
 
   wireLive($('#s-landing'));
   const live = OCCASIONS.filter(o=>!o.alias && items(o).length).length;
-  $('#occSub').textContent = live+' occasions · '+state.products.length+' blooms ready to send';
+  $('#occSub').textContent = t('occSub',{o:live, b:state.products.length});
 
   // hero = a real birthday bloom playing; tapping it opens Birthday → who it's for
   const pool = items(occ('birthday')).filter(p=>p.thumbnail_url).concat(items(occ('birthday')));
@@ -983,14 +1006,14 @@ function renderLanding(){
 function renderShop(){
   const live = OCCASIONS.filter(o=>!o.alias && items(o).length).length;
   const el = $('#miOccCount'); if(el) el.textContent = live;
-  $('#shopSub').textContent = live+' occasions · each one opens into the people inside it.';
+  $('#shopSub').textContent = t('shopSub',{n:live});
   let html = `<div class="grid one">${occTile(occ('birthday'),true)}</div>`;
   MENUS.forEach(([m,title])=>{
     let list = OCCASIONS.filter(o=>o.menu===m);
     if(m==='holiday') list = upcoming().map(x=>x.o);
     else list = list.filter(o=>items(o).length);
     if(!list.length) return;
-    html += `<div class="mhead" id="m-${m}">${esc(title)}</div><div class="grid">${list.map(o=>occTile(o)).join('')}</div>`;
+    html += `<div class="mhead" id="m-${m}">${esc(L(title))}</div><div class="grid">${list.map(o=>occTile(o)).join('')}</div>`;
   });
   $('#shopBody').innerHTML = html; wireLive($('#shopBody'));
 }
@@ -1008,15 +1031,15 @@ function openGroup(key, preSub, fromPop){
   const words = people(o)
       .map(e=>({e,n:count(e)}))
       .sort((a,b)=> (b.n>0)-(a.n>0))
-      .map(({e,n})=>`<button class="${n?'':'soon'}" data-sub="${esc(e[0])}">${esc(e[1])}</button>`)
+      .map(({e,n})=>`<button class="${n?'':'soon'}" data-sub="${esc(e[0])}">${esc(L(e[1]))}</button>`)
       .join('');
 
-  $('#recTitle').textContent = o.name;
-  $('#recCount').textContent = list.length ? plural(list.length,'bloom') : 'Coming soon';
+  $('#recTitle').textContent = L(o.name);
+  $('#recCount').textContent = list.length ? tn('blooms',list.length) : t('soon');
   $('#recRows').innerHTML = people(o).length
     ? `<div class="whohead">${esc(t('who'))}</div>
        <div class="who" id="whoRail">${words}</div>
-       <div class="swipehint">Swipe for more →</div><div id="styleRow"></div>`
+       <div class="swipehint">${esc(t('swipe'))}</div><div id="styleRow"></div>`
     : `<div id="styleRow"></div>`;
   $('#recCue').style.display = 'none';
   paintRec();
@@ -1033,11 +1056,11 @@ function paintRec(){
   if(ppl.length && !person){
     const stocked = ppl.map(e=>({e,l:all.filter(p=>matches(p,e))})).filter(x=>x.l.length);
     $('#styleRow').innerHTML = '';
-    $('#recSelLabel').textContent = 'Tap one to see their blooms';
-    $('#recSelCount').textContent = stocked.length+(stocked.length===1?' person':' people')+' with blooms ready';
+    $('#recSelLabel').textContent = t('tapOne');
+    $('#recSelCount').textContent = tn('ready',stocked.length);
     $('#recGrid').innerHTML = stocked.map(({e,l})=>personTile(e[0], e[1], l, 'sub')).join('')
-      || `<div class="empty"><div class="serif-h">${esc(o.name)} is next up</div>
-            <div>The shelf is built — the blooms are being made.</div></div>`;
+      || `<div class="empty"><div class="serif-h">${esc(t('emptyH',{what:L(o.name)}))}</div>
+            <div>${esc(t('emptyB'))}</div></div>`;
     wireLive($('#recGrid'));
     return;
   }
@@ -1048,16 +1071,16 @@ function paintRec(){
   const style = state.style ? styles.find(x=>x[0]===state.style) : null;
   const list = style ? base.filter(p=>matches(p,style)) : base;
   $('#styleRow').innerHTML = styles.length
-    ? `<div class="rowlabel" style="padding-top:6px">${esc(o.styleTitle||'Style')}</div>
-       <div class="who sm">${styles.map(s=>`<button class="${s===style?'sel':''}" data-style="${esc(s[0])}">${esc(s[1])}</button>`).join('')}</div>`
+    ? `<div class="rowlabel" style="padding-top:6px">${esc(o.styleTitle ? L(o.styleTitle) : t('style'))}</div>
+       <div class="who sm">${styles.map(s=>`<button class="${s===style?'sel':''}" data-style="${esc(s[0])}">${esc(L(s[1]))}</button>`).join('')}</div>`
     : '';
-  const what = person ? person[1] : o.name;
-  $('#recSelLabel').textContent = [what, style ? style[1] : ''].filter(Boolean).join(' · ');
-  $('#recSelCount').textContent = plural(list.length,'bloom');
+  const what = L(person ? person[1] : o.name);
+  $('#recSelLabel').textContent = [what, style ? L(style[1]) : ''].filter(Boolean).join(' · ');
+  $('#recSelCount').textContent = tn('blooms',list.length);
   $('#recGrid').innerHTML = list.slice(0,60).map(p=>tile(p,o)).join('')
     || `<div class="empty">
-          <div class="serif-h">${esc(what)} is next up</div>
-          <div>The shelf is built — the blooms are being made.</div>
+          <div class="serif-h">${esc(t('emptyH',{what}))}</div>
+          <div>${esc(t('emptyB'))}</div>
         </div>`;
   wireLive($('#recGrid'));
 }
@@ -1066,32 +1089,38 @@ function paintRec(){
 function openProduct(id){
   const p = state.products.find(x=>x.id===id); if(!p) return;
   state.product = p; state.tier='experience';
-  $('#pdName').textContent = p.name;
-  $('#pdDesc').textContent = p.description || 'A sealed card opens, their name in gold, and the whole screen fills until there is nothing left but the flowers and what you wrote.';
-  const o = homeOf(p), who = o ? labelIn(o,p) : '';
-  $('#pdTags').innerHTML =
-    `<span style="padding:6px 12px;border:1px solid rgba(201,168,76,.35);border-radius:999px;font-size:9px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--gold)">${esc(o?o.name:p.category)}</span>`
-  + (who?`<span style="padding:6px 12px;border:1px solid rgba(255,255,255,.14);border-radius:999px;font-size:9px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:rgba(250,240,236,.62)">${esc(who)}</span>`:'');
+  paintProductText();
   paintTiers();
   const v=$('#pdVideo'); v.src=p.video_url; v.muted=true; v.load();
   v.play().then(()=>setPlayIcon(true)).catch(()=>setPlayIcon(false));
   go('product');
 }
+// The database description carries internal production notes, so the page
+// uses one written line (translated) instead of showing it.
+function paintProductText(){
+  const p = state.product; if(!p) return;
+  $('#pdName').textContent = N(p);
+  $('#pdDesc').textContent = t('desc');
+  const o = homeOf(p), who = o ? labelIn(o,p) : '';
+  $('#pdTags').innerHTML =
+    `<span style="padding:6px 12px;border:1px solid rgba(201,168,76,.35);border-radius:999px;font-size:9px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--gold)">${esc(o?L(o.name):p.category)}</span>`
+  + (who?`<span style="padding:6px 12px;border:1px solid rgba(255,255,255,.14);border-radius:999px;font-size:9px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:rgba(250,240,236,.62)">${esc(who)}</span>`:'');
+}
 function paintTiers(){
-  $('#pdTiers').innerHTML = TIERS.map(t=>{
-    const sel = state.tier===t.id;
-    return `<button data-tier="${t.id}" style="display:flex;align-items:center;gap:14px;min-height:44px;padding:16px;border-radius:18px;text-align:left;
+  $('#pdTiers').innerHTML = TIERS.map(tier=>{
+    const sel = state.tier===tier.id;
+    return `<button data-tier="${tier.id}" style="display:flex;align-items:center;gap:14px;min-height:44px;padding:16px;border-radius:18px;text-align:left;
       border:1px solid ${sel?'var(--gold)':'rgba(255,255,255,.1)'};background:${sel?'rgba(201,168,76,.12)':'rgba(255,255,255,.035)'}">
       <span style="flex:1">
         <span style="display:flex;align-items:center;gap:8px">
-          <b style="font-size:15px;font-weight:600;color:var(--cream)">${t.name}</b>
-          ${t.pop?'<span style="padding:3px 9px;border-radius:999px;background:rgba(201,168,76,.18);font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gold)">Most sent</span>':''}
+          <b style="font-size:15px;font-weight:600;color:var(--cream)">${esc(t(tier.name))}</b>
+          ${tier.pop?'<span style="padding:3px 9px;border-radius:999px;background:rgba(201,168,76,.18);font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gold)">'+esc(t('mostSent'))+'</span>':''}
         </span>
-        <span style="display:block;margin-top:4px;font-size:12px;color:rgba(250,240,236,.55)">${t.desc}</span>
+        <span style="display:block;margin-top:4px;font-size:12px;color:rgba(250,240,236,.55)">${esc(t(tier.desc))}</span>
       </span>
-      <b style="font-size:17px;font-weight:700;color:${sel?'var(--gold)':'rgba(250,240,236,.72)'}">${fmt(t.price)}</b>
+      <b style="font-size:17px;font-weight:700;color:${sel?'var(--gold)':'rgba(250,240,236,.72)'}">${fmt(tier.price)}</b>
     </button>`;}).join('');
-  $('#pdBuy').textContent = 'Personalize & send — '+fmt(TIERS.find(t=>t.id===state.tier).price);
+  $('#pdBuy').textContent = t('buy',{price:fmt(TIERS.find(x=>x.id===state.tier).price)});
 }
 function setPlayIcon(playing){
   $('#pdPlayIcon').style.opacity = playing ? '0' : '1';
@@ -1104,10 +1133,10 @@ function openCheckout(){
   paintSummary(); go('checkout');
 }
 function paintSummary(){
-  const t = TIERS.find(x=>x.id===state.tier);
-  $('#sumLine').textContent = t.name;
-  $('#sumPrice').textContent = fmt(t.price);
-  $('#sumTotal').textContent = fmt(t.price);
+  const tier = TIERS.find(x=>x.id===state.tier);
+  $('#sumLine').textContent = t(tier.name);
+  $('#sumPrice').textContent = fmt(tier.price);
+  $('#sumTotal').textContent = fmt(tier.price);
 }
 
 /* ---------- delivery: what lands on their phone ----------
@@ -1133,11 +1162,11 @@ function playDelivery(){
 }
 function openDelivery(){
   const p = state.product; if(!p) return;
-  const name = state.name || 'Mama Lois';
+  const name = state.name || t('phName');
   $('#dlName').textContent = name;
   $('#dlIntroName').textContent = name;
-  $('#dlFrom').textContent = state.from ? 'from '+state.from : '';
-  $('#dlIntroFrom').textContent = state.from ? '— '+state.from : '';
+  $('#dlFrom').textContent = state.from ? t('fromName',{name:state.from}) : '';
+  $('#dlIntroFrom').textContent = state.from ? t('sign',{name:state.from}) : '';
   const quoted = state.msg ? '“'+state.msg+'”' : '';
   $('#dlMsg').textContent = quoted;
   $('#dlIntroMsg').textContent = quoted;
@@ -1169,14 +1198,14 @@ document.addEventListener('click', e=>{
 $('#pdBuy').onclick = openCheckout;
 $('#pdPlay').onclick = ()=>{ const v=$('#pdVideo');
   if(v.paused){ v.play(); setPlayIcon(true); } else { v.pause(); setPlayIcon(false); } };
-$('#pdSound').onclick = ()=>{ const v=$('#pdVideo'); v.muted=!v.muted; toast(v.muted?'Sound off':'Sound on'); };
+$('#pdSound').onclick = ()=>{ const v=$('#pdVideo'); v.muted=!v.muted; toast(t(v.muted?'tSoundOff':'tSoundOn')); };
 $('#pdVideo').addEventListener('timeupdate', ()=>{ const v=$('#pdVideo');
   if(v.duration){ $('#pdBar').style.width=(v.currentTime/v.duration*100)+'%';
     $('#pdCur').textContent=time(v.currentTime); $('#pdDur').textContent=time(v.duration); } });
 $('#pdVideo').addEventListener('ended', ()=>setPlayIcon(false));
 
 const fName=$('#fName'), fPhone=$('#fPhone'), fMsg=$('#fMsg'), fFrom=$('#fFrom');
-fName.addEventListener('input', ()=>{ state.name=fName.value; $('#pvName').textContent = state.name || 'Their name'; });
+fName.addEventListener('input', ()=>{ state.name=fName.value; $('#pvName').textContent = state.name || t('name'); });
 fPhone.addEventListener('input', ()=>{ state.phone=fPhone.value; });
 fMsg.addEventListener('input', ()=>{ state.msg=fMsg.value; $('#pvMsg').textContent = state.msg;
   $('#cCount').textContent = state.msg.length+' / 180'; });
@@ -1184,9 +1213,9 @@ fFrom.addEventListener('input', ()=>{ state.from=fFrom.value; });
 
 // Gamble 10/24: pay is the send. No delivery choice, no extra screens.
 function pay(){
-  if(!state.name.trim()){ fName.focus(); toast('Who is it for?'); return; }
-  if(state.phone.replace(/\D/g,'').length < 10){ fPhone.focus(); toast('Add their mobile number'); return; }
-  toast('Paid — sending to '+state.name.trim()+'’s phone…');
+  if(!state.name.trim()){ fName.focus(); toast(t('tWho')); return; }
+  if(state.phone.replace(/\D/g,'').length < 10){ fPhone.focus(); toast(t('tPhone')); return; }
+  toast(t('tSending',{name:state.name.trim()}));
   setTimeout(openDelivery, 900);
 }
 $('#payApple').onclick = pay;
@@ -1209,10 +1238,10 @@ function splash(){
 
 /* ---------- boot ---------- */
 try{ history.replaceState({db:1,id:'landing'},''); }catch(e){}
-applyLang();
 splash();
-load().then(()=>{ renderLanding(); renderShop(); })
-      .catch(err=>{ toast('Could not load the catalog'); console.error(err); });
+Promise.all([loadLang('en'), state.lang!=='en' ? loadLang(state.lang) : null, load()])
+      .then(()=>{ applyLang(); })
+      .catch(err=>{ toast(t('tLoadErr')); console.error(err); });
 })();
 </script>
 </body>
