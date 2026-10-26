@@ -155,7 +155,7 @@ function paint(){
   }
   $('#go').disabled = false; $('#skip').disabled = false;
   const h = hints[p.id] || {};
-  const badge = p.category_reviewed_at ? `<div class="tag ok">✓ Checked by ${esc(p.category_reviewed_by||'you')}</div>`
+  const badge = p.category_reviewed_at ? `<div class="tag ok">✓ Checked</div>`
               : h.moved ? `<div class="tag ai">AI moved this today</div>` : '';
   $('#main').innerHTML = `
     <div class="stage">
@@ -199,6 +199,13 @@ const CAT_WORDS = { 'bday':'birthday', 'b-day':'birthday', 'mothers day':'mother
   'congratulations':'celebration', 'romance':'love', 'romantic':'love', 'valentines':'valentine', 'valentines day':'valentine',
   'memorial':'grief', 'in memory':'grief', 'condolences':'sympathy', 'grad':'graduation', 'friend':'friendship',
   'appreciation':'acknowledgement', 'pride':'holidays', 'xmas':'christmas' };
+// everyday words → part of a person chip's label/slug ("coworker" finds "For a Colleague")
+const WHO_WORDS = { 'coworker':'colleague', 'co worker':'colleague', 'coworkers':'colleague', 'wife':'wife', 'husband':'spouse',
+  'spouse':'spouse', 'girlfriend':'partner', 'boyfriend':'partner', 'bae':'partner', 'aunt':'auntie', 'auntie':'auntie',
+  'granddad':'grandpa', 'grandfather':'grandpa', 'grandmother':'grandma', 'granny':'grandma', 'nana':'grandma',
+  'niece':'niece', 'nephew':'niece', 'kids':'niece', 'mother':'mom', 'mama':'mom', 'mommy':'mom', 'father':'dad',
+  'daddy':'dad', 'pops':'dad', 'best friend':'bestie', 'bff':'bestie', 'twin':'twins', 'boss':'employer',
+  'woman':'her', 'women':'her', 'lady':'her', 'man':'him', 'men':'him', 'guy':'him', 'grad':'class' };
 const ANYONE = /\b(anyone|anybody|everyone|everybody|no one specific|nobody specific|any one|general|for all)\b/;
 const norm = s => ' ' + String(s||'').toLowerCase().replace(/[’']/g,'').replace(/&/g,' and ').replace(/[^a-z0-9]+/g,' ').replace(/\s+/g,' ').trim() + ' ';
 const has = (text, phrase) => phrase && text.includes(' ' + phrase + ' ');
@@ -225,6 +232,10 @@ function hear(raw){
     const l = w.label.toLowerCase();
     whoPairs.push([l, w.slug], [l.replace(/^for (a |an |my |the )?/,''), w.slug],
                   [w.slug.replace(/-/g,' '), w.slug], [w.slug.replace(/^for-/,'').replace(/-/g,' '), w.slug]);
+  });
+  Object.entries(WHO_WORDS).forEach(([word, part])=>{
+    const m = o.who.find(x=>x.slug.includes(part) || x.label.toLowerCase().includes(part));
+    if(m) whoPairs.push([word, m.slug]);
   });
   const w = best(text, whoPairs);
   if(w){ pick.subcategory = w[1]; heard.push(whoLabel(pick.category, w[1])); }
