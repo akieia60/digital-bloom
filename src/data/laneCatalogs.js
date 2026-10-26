@@ -132,6 +132,60 @@ export const LANE_CATALOGS = {
   // lanes.
 };
 
+// Gamble 10/26 10:44 AM: "create the sub categories for every category that
+// we have and insert them so that they can be filled in and the blooms can be
+// separated." His 25 people, in his order, join every catalog above. Empty
+// lanes stay hidden on CategoryPage until a bloom is sorted into them.
+// `same` = slugs a catalog may already use for that person (no duplicate row).
+export const GAMBLE_RECIPIENTS = [
+  { slug: 'for-dad',          label: 'For Dad',              tagline: 'For the man who showed you how.',                  key: 'dad' },
+  { slug: 'for-mom',          label: 'For Mom',              tagline: 'For the woman who started it all.',                key: 'mom' },
+  { slug: 'for-sister',       label: 'For Sister',           tagline: 'Day-one, ride-or-die.',                            key: 'sister' },
+  { slug: 'for-brother',      label: 'For Brother',          tagline: 'For the brother who has your back.',               key: 'brother' },
+  { slug: 'co-workers',       label: 'For Co-Workers',       tagline: 'For the people who make the work day better.',     key: 'coworker',  same: ['colleagues'] },
+  { slug: 'for-friend',       label: 'For Friends',          tagline: 'For the friends who show up.',                     key: 'friend',    same: ['friends', 'friend-honoring'] },
+  { slug: 'girlfriend',       label: 'For Girlfriend',       tagline: 'For the woman you are falling for.',               key: 'girlfriend' },
+  { slug: 'boyfriend',        label: 'For Boyfriend',        tagline: 'For the man you are falling for.',                 key: 'boyfriend' },
+  { slug: 'husband',          label: 'For Husband',          tagline: 'For the man you chose for life.',                  key: 'husband' },
+  { slug: 'wife',             label: 'For Wife',             tagline: 'For the woman you chose for life.',                key: 'wife',      same: ['to-my-wife'] },
+  { slug: 'fiance',           label: 'For Fiancé',           tagline: 'For the one you are about to marry.',              key: 'fiance' },
+  { slug: 'business-partner', label: 'For Business Partner', tagline: 'For the partner sharing the table.',               key: 'business-partner', same: ['business-partners'] },
+  { slug: 'teacher',          label: 'For Teacher',          tagline: 'For the one who taught you.',                      key: 'teacher',   same: ['teachers'] },
+  { slug: 'cousin',           label: 'For Cousin',           tagline: 'Family you grew up beside.',                       key: 'cousin' },
+  { slug: 'for-auntie',       label: 'For Aunt',             tagline: 'Auntie energy — the second mom in the family.',    key: 'aunt',      same: ['godmother-auntie'] },
+  { slug: 'uncle',            label: 'For Uncle',            tagline: 'For the uncle who is always in your corner.',      key: 'uncle' },
+  { slug: 'for-grandma',      label: 'For Grandma',          tagline: 'Wisdom, warmth, and a lifetime of love.',          key: 'grandma' },
+  { slug: 'for-grandpa',      label: 'For Granddad',         tagline: 'Legacy, wisdom, the stories passed down.',         key: 'grandpa' },
+  { slug: 'boss',             label: 'For Boss',             tagline: 'For the boss who believed in you.',                key: 'boss',      same: ['employers'] },
+  { slug: 'coach',            label: 'For Coach',            tagline: 'For the coach who pushed you further.',            key: 'coach' },
+  { slug: 'police',           label: 'For Police',           tagline: 'For the officers who keep us safe.',               key: 'police' },
+  { slug: 'fireman',          label: 'For Fireman',          tagline: 'For the ones who run toward the fire.',            key: 'fireman' },
+  { slug: 'employee',         label: 'For Employee',         tagline: 'For the ones who build it alongside you.',         key: 'employee',  same: ['employees'] },
+  { slug: 'mechanic',         label: 'For Mechanic',         tagline: 'For the hands that keep you moving.',              key: 'mechanic' },
+  { slug: 'teammates',        label: 'For Teammates',        tagline: 'For the team that wins together.',                 key: 'teammates' },
+];
+
+// Mother's Day is for her, Father's Day is for him (David's 5/7 catch).
+export const RECIPIENT_SKIPS = {
+  'mothers-day': ['dad', 'brother', 'boyfriend', 'husband', 'fiance', 'uncle', 'grandpa'],
+  'fathers-day': ['mom', 'sister', 'girlfriend', 'wife', 'aunt', 'grandma'],
+};
+
+export function withRecipients(categorySlug, lanes = []) {
+  const have = new Set(lanes.map((l) => l.slug));
+  const skip = RECIPIENT_SKIPS[categorySlug] || [];
+  const add = GAMBLE_RECIPIENTS
+    .filter((r) => !skip.includes(r.key) && !have.has(r.slug) && !(r.same || []).some((s) => have.has(s)))
+    .map(({ slug, label, tagline }) => ({ slug, label, tagline }));
+  // "In Memory" stays last
+  const memorial = lanes.filter((l) => l.slug === 'memorial');
+  return lanes.filter((l) => l.slug !== 'memorial').concat(add, memorial);
+}
+
+for (const slug of Object.keys(LANE_CATALOGS)) {
+  LANE_CATALOGS[slug] = withRecipients(slug, LANE_CATALOGS[slug]);
+}
+
 export function getLaneCatalog(categorySlug) {
   return LANE_CATALOGS[categorySlug] || null;
 }

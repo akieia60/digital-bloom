@@ -574,9 +574,9 @@ const GLOBAL_TAGS = {           // Gamble's Thank You slugs + the plain forms
   girlfriend:['girlfriend'], boyfriend:['boyfriend'], fiance:['fiance'],
   grandma:['grandma','for-grandma'], grandpa:['granddad','for-grandpa'],
   aunt:['aunt','for-auntie'], uncle:['uncle'], cousin:['cousin'],
-  friend:['for-friend'], 'best-friend':['for-bestie'], coworker:['co-workers'],
-  boss:['boss'], employee:['employee'], 'business-partner':['business-partner'],
-  teacher:['teacher'], coach:['coach'], teammates:['teammates'],
+  friend:['for-friend','friends'], 'best-friend':['for-bestie'], coworker:['co-workers','colleagues'],
+  boss:['boss','employers'], employee:['employee','employees'], 'business-partner':['business-partner','business-partners'],
+  teacher:['teacher','teachers'], coach:['coach'], teammates:['teammates'],
   police:['police'], fireman:['fireman'], mechanic:['mechanic'],
 };
 const W = {
@@ -707,6 +707,28 @@ const OCCASIONS = [
   { key:'luxury', name:'Luxury', menu:'collection', src:['luxury'], wash:W.gold },
   { key:'signature', name:'Signature Stories', menu:'collection', src:['signature-stories'], wash:W.rose },
 ];
+// Gamble 10/26 10:44 AM: "create the sub categories for every category that we
+// have and insert them so that they can be filled in and the blooms can be
+// separated." His 25 people join every occasion that doesn't already have
+// them; empty ones show dimmed until blooms are sorted in (admin/sort.html).
+// Mirrors GAMBLE_RECIPIENTS in src/data/laneCatalogs.js.
+const GAMBLE_25 = [ P('dad','Dad'), P('mom','Mom'), P('sister','Sister'), P('brother','Brother'),
+  P('coworker','Co-Workers'), P('friend','Friends'), P('girlfriend','Girlfriend'), P('boyfriend','Boyfriend'),
+  P('husband','Husband'), P('wife','Wife'), P('fiance','Fiancé'), P('business-partner','Business Partner'),
+  P('teacher','Teacher'), P('cousin','Cousin'), P('aunt','Aunt'), P('uncle','Uncle'), P('grandma','Grandma'),
+  P('grandpa','Granddad'), P('boss','Boss'), P('coach','Coach'), P('police','Police'), P('fireman','Fireman'),
+  P('employee','Employee'), P('mechanic','Mechanic'), P('teammates','Teammates') ];
+const GAMBLE_SKIP = {             // Mother's Day is for her, Father's Day is for him
+  'mothers-day':['dad','brother','boyfriend','husband','fiance','uncle','grandpa'],
+  'fathers-day':['mom','sister','girlfriend','wife','aunt','grandma'],
+};
+const GAMBLE_SAME = { aunt:['godmother'] };   // already on the shelf under another name
+OCCASIONS.filter(o=>!o.alias).forEach(o=>{
+  const have = new Set((o.cols||[]).flatMap(c=>c.people.map(x=>x[0])));
+  const skip = GAMBLE_SKIP[o.key] || [];
+  const add = GAMBLE_25.filter(x=>!have.has(x[0]) && !skip.includes(x[0]) && !(GAMBLE_SAME[x[0]]||[]).some(k=>have.has(k)));
+  if(add.length) o.cols = (o.cols||[]).concat({ title:'Everyone', people:add });
+});
 const MENUS = [
   ['celebrate','Celebrate'], ['everyday','Everyday'], ['tough','Tough Times'],
   ['holiday','Holidays'], ['collection','Collections'],

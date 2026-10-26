@@ -1,6 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 import { PROMPT_ENGINE_CATEGORY_MAP, CATEGORIES } from '../../src/data/categories.js';
-import { LANE_CATALOGS } from '../../src/data/laneCatalogs.js';
+import { LANE_CATALOGS, withRecipients } from '../../src/data/laneCatalogs.js';
 
 export const maxDuration = 60;
 
@@ -36,7 +36,8 @@ function sortOptions(extraSlugs = []) {
   return cats.map((c) => ({
     ...c,
     strict: Boolean(LANE_CATALOGS[c.slug]),
-    who: (LANE_CATALOGS[c.slug] || GENERIC_WHO).map(({ slug, label }) => ({ slug, label })),
+    // Gamble 10/26: his 25 people are offered in every category
+    who: (LANE_CATALOGS[c.slug] || withRecipients(c.slug, GENERIC_WHO)).map(({ slug, label }) => ({ slug, label })),
   }));
 }
 
