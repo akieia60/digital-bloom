@@ -144,7 +144,7 @@ export default async function handler(req, res) {
     if (status === 'sort') {
       const { data, error } = await supabase
         .from('products')
-        .select('id, name, category, subcategory, video_url, thumbnail_url, category_reviewed_at, category_reviewed_by')
+        .select('id, name, category, subcategory, video_url, thumbnail_url, category_reviewed_at, category_reviewed_by, category_note')
         .eq('is_active', true)
         .not('video_url', 'is', null)
         .order('category')
@@ -310,14 +310,17 @@ export default async function handler(req, res) {
         return res.status(400).json({ error: `${sub} isn't a ${opt.label} lane — it would hide the bloom` });
       }
       const now = new Date().toISOString();
+      // note: Ak's own words ("birthday, for anyone") — kept so new shelves can be built from them
+      const note = typeof body.note === 'string' ? (body.note.trim().slice(0, 300) || null) : undefined;
       const { data, error } = await supabase.from('products')
         // clearReview: Undo puts a bloom back the way it was, unchecked included
         .update({ category, subcategory: sub,
           category_reviewed_at: body.clearReview ? null : now,
           category_reviewed_by: body.clearReview ? null : actor,
+          ...(note !== undefined ? { category_note: note } : {}),
           last_action_by: actor, last_action_at: now })
         .eq('id', productId)
-        .select('id, name, category, subcategory, category_reviewed_at, category_reviewed_by')
+        .select('id, name, category, subcategory, category_reviewed_at, category_reviewed_by, category_note')
         .single();
       if (error) return res.status(500).json({ error: error.message });
       return res.status(200).json({ ok: true, action: 'recategorize', product: data });
