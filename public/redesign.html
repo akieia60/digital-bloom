@@ -658,14 +658,19 @@ const OCCASIONS = [
     ],
     styles:[ P('romantic','Romantic',['romantic-love','red-roses-valentine','valentine-general']),
              P('luxe','Luxe',['romantic-luxury']), P('pink','Pink & Sweet',['romantic-pink','pink-valentine']) ] },
-  { key:'friendship', name:'Friendship & Thinking of You', menu:'everyday', src:['friendship','encouragement'], wash:W.coral,
+  // Gamble 10/26 11:01 AM: "Friendship and thinking of you should be two
+  // separate categories." Thinking-of-you blooms move over from any category.
+  { key:'friendship', name:'Friendship', menu:'everyday', src:['friendship'], drop:['thinking-of-you'], wash:W.coral,
     cols:[{ title:'Who', people:[ P('best-friend','Best Friend'), P('friend','Friend'),
           P('long-distance','Long-Distance Friend'), P('sister-friend','Sister-Friend'), P('her','Her — anyone',['for-her']) ]},
       // Ak 10/25: love-you family cards (no occasion on them) live here
       { title:'Family', people:[ P('grandma','Grandma'), P('sister','Sister'), P('aunt','Aunt'),
           P('brother','Brother'), P('kids','Kids & Teens',['for-niece-nephew']) ]}],
-    styles:[ P('thinking','Thinking of You',['thinking-of-you']), P('encourage','You Got This',['you-got-this']),
-             P('moment','Big Moment',['moonshot']) ] },
+    styles:[ P('moment','Big Moment',['moonshot']) ] },
+  { key:'thinking-of-you', name:'Thinking of You', menu:'everyday', src:['encouragement'], subs:['thinking-of-you'], wash:W.sage,
+    cols:[{ title:'Who', people:[ P('friend','Friend'), P('long-distance','Long-Distance Friend'),
+          P('her','Her — anyone',['for-her']), P('him','Him — anyone',['for-him']) ]}],
+    styles:[ P('thinking','Thinking of You',['thinking-of-you']), P('encourage','You Got This',['you-got-this']) ] },
 
   /* ---------------- tough times ---------------- */
   { key:'sympathy', name:'Sympathy', menu:'tough', src:['sympathy','grief'], wash:W.sage,
@@ -933,7 +938,8 @@ async function load(){
   if(!r.ok) throw new Error('HTTP '+r.status);
   state.products = await r.json();
   const map = {};
-  OCCASIONS.forEach(o=>{ if(!o.alias) map[o.key] = state.products.filter(p=> (o.src||[]).includes(p.category)); });
+  OCCASIONS.forEach(o=>{ if(!o.alias) map[o.key] = state.products.filter(p=>
+      ((o.src||[]).includes(p.category) && !(o.drop||[]).includes(p.subcategory)) || (o.subs||[]).includes(p.subcategory)); });
   state.byOcc = map;
 }
 
