@@ -103,6 +103,7 @@ export function normalizeBloomDeliverySettings(purchase) {
     buyerEmailSentAt: delivery.buyerEmailSentAt || null,
     buyerLastAttemptAt: delivery.buyerLastAttemptAt || null,
     buyerLastError: delivery.buyerLastError || null,
+    buyerNudgeSentAt: delivery.buyerNudgeSentAt || null,
   };
 }
 
@@ -153,6 +154,26 @@ async function updatePurchaseDeliveryManifest(supabase, purchase, patch) {
   }
 
   return data;
+}
+
+// Sets a one-time delivery flag only if no other request has set it yet, so
+// overlapping status polls can't each send the same email. Returns the
+// updated row when this request won the claim, or null when it didn't.
+async function claimDeliveryFlag(supabase, purchase, field, value) {
+  const manifest = cloneManifest(purchase);
+  const currentDelivery = manifest.delivery && typeof manifest.delivery === 'object' ? manifest.delivery : {};
+  const { data, error } = await supabase
+    .from('purchases')
+    .update({
+      composition_manifest: { ...manifest, delivery: { ...currentDelivery, [field]: value } },
+      updated_at: new Date().toISOString(),
+    })
+    .eq('id', purchase.id)
+    .is(`composition_manifest->delivery->>${field}`, null)
+    .select('*, products(*)');
+
+  if (error) throw error;
+  return data && data.length ? data[0] : null;
 }
 
 export async function sendBloomDeliveryEmail({
@@ -483,32 +504,48 @@ export async function processBloomDeliveryEmails({
       // about the recipient that simply isn't true — and it would hide the
       // hand-off button that is the only thing that actually delivers.
       const nudgeTo = delivery.purchaserEmail || recipientEmail || purchase.customer_email || '';
-      const alreadyNudged = Boolean(delivery.buyerNudgeSentAt);
 
-      if (nudgeTo && !alreadyNudged) {
+      // The manage page polls this every few seconds, so the nudge must be
+      // claimed in the database before it is sent — otherwise every poll
+      // sends another copy (Gamble got ~18 on 2026-11-02).
+      if (nudgeTo && !delivery.buyerNudgeSentAt) {
+        let claimed = null;
         try {
-          await sendBloomDeliveryEmail({
-            req,
-            to: nudgeTo,
-            purchase,
-            delivery,
-            isTest: isTestModePurchase(purchase, explicitTestMode),
-          });
-        } catch (nudgeError) {
-          console.error(`[processBloomDeliveryEmails] Buyer nudge failed for ${purchase.id}:`, nudgeError);
+          claimed = await claimDeliveryFlag(supabase, purchase, 'buyerNudgeSentAt', now.toISOString());
+        } catch (claimError) {
+          console.error(`[processBloomDeliveryEmails] Nudge claim failed for ${purchase.id}:`, claimError);
+        }
+        if (claimed) {
+          purchase = claimed;
+          try {
+            await sendBloomDeliveryEmail({
+              req,
+              to: nudgeTo,
+              purchase,
+              delivery,
+              isTest: isTestModePurchase(purchase, explicitTestMode),
+            });
+          } catch (nudgeError) {
+            console.error(`[processBloomDeliveryEmails] Buyer nudge failed for ${purchase.id}:`, nudgeError);
+          }
+        } else {
+          // Another request already nudged; don't write over its flag with our stale copy.
+          processed.push(purchase);
+          continue;
         }
       }
 
-      try {
-        purchase = await updatePurchaseDeliveryManifest(supabase, purchase, {
-          emailStatus: 'pending',
-          lastError: null,
-          awaitingBuyerHandoff: true,
-          recipientPhone: delivery.recipientPhone,
-          ...(nudgeTo && !alreadyNudged ? { buyerNudgeSentAt: now.toISOString() } : {}),
-        });
-      } catch (manifestError) {
-        console.error(`Failed to mark purchase ${purchase.id} as awaiting buyer hand-off:`, manifestError);
+      if (delivery.emailStatus !== 'pending' || !purchase.composition_manifest?.delivery?.awaitingBuyerHandoff) {
+        try {
+          purchase = await updatePurchaseDeliveryManifest(supabase, purchase, {
+            emailStatus: 'pending',
+            lastError: null,
+            awaitingBuyerHandoff: true,
+            recipientPhone: delivery.recipientPhone,
+          });
+        } catch (manifestError) {
+          console.error(`Failed to mark purchase ${purchase.id} as awaiting buyer hand-off:`, manifestError);
+        }
       }
 
       processed.push(purchase);
