@@ -157,7 +157,9 @@ export default async function handler(req, res) {
         if (firstPurchase) {
           const delivery = firstPurchase.composition_manifest?.delivery || {};
           await sendOrderAlert({
-            purchase: firstPurchase,
+            // amount_total is the exact amount Stripe charged (in cents), so
+            // the alert shows what the buyer really paid.
+            purchase: { ...firstPurchase, amount_total: session.amount_total },
             delivery,
           });
         }

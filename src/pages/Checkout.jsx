@@ -45,7 +45,10 @@ export default function Checkout() {
   // existing fallback in the SMS hint copy keeps the flow alive — number is
   // saved on the order, gift link email-falls-back to the buyer until SMS
   // goes live.
-  const [deliveryChannel, setDeliveryChannel] = useState('phone');
+  // 2026-11-05 (AK, Week 1 plan): default + "Recommended" moved to Email.
+  // Email sends on its own; Text depends on the buyer tapping Send in their
+  // own Messages app, and Gamble's May choice of Text is reversible here.
+  const [deliveryChannel, setDeliveryChannel] = useState('email');
   // Carrier consent. Twilio rejected our toll-free verification for exactly
   // one reason — "Opt-in: Consent for messaging is a requirement for service"
   // — and Google Ads asks for the same thing. Carriers want the literal
@@ -395,7 +398,7 @@ export default function Checkout() {
                     How should it reach them?
                   </div>
                   <p className="cart-credit-entry-hint" style={{ margin: '0 0 4px' }}>
-                    Texting is fastest — the bloom link opens in Messages on your phone, so they see it from your familiar number, not a shortcode.
+                    Email arrives on its own. Text opens Messages on your phone so you can send it from your own number.
                   </p>
                   <div className="cart-credit-choice-row" role="radiogroup" aria-label="Delivery channel">
                     <button
@@ -403,10 +406,20 @@ export default function Checkout() {
                       role="radio"
                       aria-checked={deliveryChannel === 'phone'}
                       onClick={() => setDeliveryChannel('phone')}
-                      className={`cart-credit-choice cart-credit-choice--recommended ${deliveryChannel === 'phone' ? 'is-active' : ''}`}
+                      className={`cart-credit-choice ${deliveryChannel === 'phone' ? 'is-active' : ''}`}
                     >
                       <span aria-hidden="true" style={{ marginRight: '6px' }}>📱</span>
                       By Text
+                    </button>
+                    <button
+                      type="button"
+                      role="radio"
+                      aria-checked={deliveryChannel === 'email'}
+                      onClick={() => setDeliveryChannel('email')}
+                      className={`cart-credit-choice cart-credit-choice--recommended ${deliveryChannel === 'email' ? 'is-active' : ''}`}
+                    >
+                      <span aria-hidden="true" style={{ marginRight: '6px' }}>✉️</span>
+                      By Email
                       <span
                         aria-hidden="true"
                         style={{
@@ -423,16 +436,6 @@ export default function Checkout() {
                       >
                         Recommended
                       </span>
-                    </button>
-                    <button
-                      type="button"
-                      role="radio"
-                      aria-checked={deliveryChannel === 'email'}
-                      onClick={() => setDeliveryChannel('email')}
-                      className={`cart-credit-choice ${deliveryChannel === 'email' ? 'is-active' : ''}`}
-                    >
-                      <span aria-hidden="true" style={{ marginRight: '6px' }}>✉️</span>
-                      By Email
                     </button>
                   </div>
 

@@ -122,8 +122,12 @@ export default function Personalize() {
       setError('Pick a bloom first — visit /shop to choose one, then return.');
       return;
     }
+    if (!isValidEmail(sender)) {
+      setError('Please enter your email so we can send your receipt and your bloom link.');
+      return;
+    }
     if (!receiver.trim() || (!isValidEmail(receiver) && !isValidPhone(receiver))) {
-      setError("Receiver needs a valid phone or email so we can deliver the bloom.");
+      setError("Please enter their phone number or email so we can deliver the bloom.");
       return;
     }
 
@@ -163,27 +167,32 @@ export default function Personalize() {
 
     setIsProcessing(true);
     const formattedItems = [{ product: { ...product, quantity: 1, customization }, quantity: 1 }];
-    const trimmedSender = sender.trim();
-    const recipientEmail = isValidEmail(receiver) ? receiver.trim()
-                          : (isValidEmail(trimmedSender) ? trimmedSender : '');
-    const recipientPhone = isValidPhone(receiver) ? receiver.trim().replace(/\D/g, '') : '';
-    const customerInfo = trimmedSender
-      ? {
-          email: isValidEmail(trimmedSender) ? trimmedSender : '',
-          delivery: {
-            target: 'recipient',
-            recipientEmail,
-            recipientPhone,
-            deliveryChannel: recipientPhone ? 'phone' : 'email',
-            purchaserEmail: isValidEmail(trimmedSender) ? trimmedSender : '',
-            deliveryMode: 'now',
-            deliveryDate: '',
-            buyerTimezone: typeof Intl !== 'undefined'
-              ? (Intl.DateTimeFormat().resolvedOptions().timeZone || '')
-              : '',
-          },
-        }
-      : {};
+    // The recipient is ALWAYS saved on the order. Before 2026-11-05 a blank
+    // Sender box sent `{}` here, so the site silently forgot who the bloom
+    // was for (the 2026-10-25 order). The buyer email is now required above.
+    const buyerEmail = sender.trim();
+    const receiverIsEmail = isValidEmail(receiver);
+    // Email wins when the receiver box holds an email; digits only count as a
+    // phone number when it is not an email address.
+    const recipientEmail = receiverIsEmail ? receiver.trim() : buyerEmail;
+    const recipientPhone = !receiverIsEmail && isValidPhone(receiver)
+      ? receiver.trim().replace(/\D/g, '')
+      : '';
+    const customerInfo = {
+      email: buyerEmail,
+      delivery: {
+        target: 'recipient',
+        recipientEmail,
+        recipientPhone,
+        deliveryChannel: recipientPhone ? 'phone' : 'email',
+        purchaserEmail: buyerEmail,
+        deliveryMode: 'now',
+        deliveryDate: '',
+        buyerTimezone: typeof Intl !== 'undefined'
+          ? (Intl.DateTimeFormat().resolvedOptions().timeZone || '')
+          : '',
+      },
+    };
 
     try {
       const result = await createCartCheckoutSession(formattedItems, null, customerInfo);
@@ -511,7 +520,7 @@ export default function Personalize() {
             borderBottom: `1px dashed ${NAVY_LINE}`,
             marginBottom: '1.2rem',
           }}>
-            After clicking Checkout, everything else is one window.
+            Secure checkout by Stripe. Takes about 30 seconds.
           </div>
 
           <div style={{
@@ -529,14 +538,14 @@ export default function Personalize() {
             }}>${(priceCents / 100).toFixed(2)}</span>
           </div>
 
-          <Field label="Sender">
-            <Input value={sender} onChange={setSender} placeholder="Phone or Email" />
-            <SmallHelper>Phone or Email</SmallHelper>
+          <Field label="Your email">
+            <Input value={sender} onChange={setSender} placeholder="you@email.com" />
+            <SmallHelper>For your receipt and your bloom link</SmallHelper>
           </Field>
 
-          <Field label="Receiver">
-            <Input value={receiver} onChange={setReceiver} placeholder="Phone or Email" />
-            <SmallHelper>Phone or Email</SmallHelper>
+          <Field label="Send it to">
+            <Input value={receiver} onChange={setReceiver} placeholder="Their phone number or email" />
+            <SmallHelper>Email arrives on its own. For a phone number, you'll tap Send in your Messages app after checkout.</SmallHelper>
           </Field>
 
           <div style={{
@@ -619,16 +628,6 @@ export default function Personalize() {
       </div>
       )}
 
-      <div style={{
-        marginTop: '2.5rem',
-        marginBottom: '1rem',
-        textAlign: 'center',
-        fontSize: '0.72rem',
-        color: TEXT_MUTED,
-        lineHeight: 1.6,
-      }}>
-        Approved layout 2026-05-17 (Ak + Gamble). Wired to real cart + Stripe.
-      </div>
         </div>{/* /maxWidth wrapper */}
       </div>{/* /BOTTOM scrollable area */}
     </div>
