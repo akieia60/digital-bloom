@@ -545,7 +545,7 @@ export default function Personalize() {
 
           <Field label="Send it to">
             <Input value={receiver} onChange={setReceiver} placeholder="Their phone number or email" />
-            <SmallHelper>Email arrives on its own. For a phone number, you'll tap Send in your Messages app after checkout.</SmallHelper>
+            <SmallHelper>For a phone number, you'll tap Send in your Messages app after checkout. Email arrives on its own.</SmallHelper>
           </Field>
 
           <div style={{
