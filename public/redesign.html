@@ -852,7 +852,19 @@ function applyLang(){
 const occ = key => OCCASIONS.find(o=>o.key===key);
 const real = o => o && o.alias ? occ(o.alias) : o;            // Valentine's opens Love & Romance
 const people = o => (o.cols||[]).flatMap(c=>c.people);
-const tagsOf = person => person[2].concat(GLOBAL_TAGS[person[0]]||[]);
+// A K 11/10: "It can be a Thinking of You one, but is it for a man or a
+// woman?" A bloom made For Her also fills every woman's shelf in that
+// occasion (Sister, Mom, Aunt…), For Him every man's. Jobs and friends could
+// be either, so they take both plus the Classic anyone-blooms.
+const GENDER = {
+  her:['mom','sister','girlfriend','wife','fiancee','grandma','aunt','daughter','stepmom','godmother','sister-friend'],
+  him:['dad','brother','boyfriend','husband','fiance','grandpa','uncle','son','fireman'],
+  any:['coworker','friend','best-friend','long-distance','cousin','boss','employee','business-partner','teacher',
+       'coach','teammates','police','mechanic','partner','family'],
+};
+const genderTags = key => GENDER.her.includes(key) ? ['for-her']
+  : GENDER.him.includes(key) ? ['for-him'] : GENDER.any.includes(key) ? ['for-her','for-him','classic'] : [];
+const tagsOf = person => person[2].concat(GLOBAL_TAGS[person[0]]||[], genderTags(person[0]));
 const items = o => state.byOcc[real(o).key] || [];
 const matches = (p, entry) => tagsOf(entry).includes(p.subcategory);
 // Gamble 10/25: inside an occasion you choose a category — the people, the
