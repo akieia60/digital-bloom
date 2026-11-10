@@ -578,6 +578,7 @@ const GLOBAL_TAGS = {           // Gamble's Thank You slugs + the plain forms
   boss:['boss','employers'], employee:['employee','employees'], 'business-partner':['business-partner','business-partners'],
   teacher:['teacher','teachers'], coach:['coach'], teammates:['teammates'],
   police:['police'], fireman:['fireman'], mechanic:['mechanic'],
+  kids:['for-kids','kids'], granddaughter:['granddaughter'], grandson:['grandson'],
 };
 const W = {
   gold:'linear-gradient(150deg,#2b2410,#c9a84c)', rose:'linear-gradient(150deg,#3a1f3c,#c9857a)',
@@ -596,14 +597,15 @@ const OCCASIONS = [
   { key:'birthday', name:'Birthday', menu:'birthday', src:['birthday'], wash:W.gold,
     cols:[
       { title:'For Her', people:[ P('mom','Mom'), P('wife','Wife'), P('daughter','Daughter'), P('sister','Sister'),
-          P('grandma','Grandma'), P('aunt','Aunt'), P('niece','Niece',['for-niece-nephew']), P('granddaughter','Granddaughter'),
-          P('her','Her — anyone',['for-her']) ]},
+          P('grandma','Grandma'), P('aunt','Aunt'), P('her','Her — anyone',['for-her']) ]},
       { title:'For Him', people:[ P('dad','Dad'), P('husband','Husband'), P('son','Son'), P('brother','Brother'),
-          P('grandpa','Grandpa'), P('uncle','Uncle'), P('nephew','Nephew',['for-niece-nephew']), P('grandson','Grandson'),
-          P('him','Him — anyone',['for-him','birthday-for-him']) ]},
+          P('grandpa','Grandpa'), P('uncle','Uncle'), P('him','Him — anyone',['for-him','birthday-for-him']) ]},
+      // A K 11/10: "Under birthday, we need for people to be able to find kids."
+      { title:'For Kids', people:[ P('kids','Kids & Teens'), P('niece','Niece',['for-niece-nephew']),
+          P('nephew','Nephew',['for-niece-nephew']), P('granddaughter','Granddaughter'), P('grandson','Grandson') ]},
       { title:'For Anyone', people:[ P('partner','Partner',['for-partner']), P('twin','Twin',['for-twins']),
           P('best-friend','Best Friend'), P('friend','Friend'), P('cousin','Cousin'), P('coworker','Co-Worker'),
-          P('boss','Boss'), P('kids','Kids & Teens') ]},
+          P('boss','Boss') ]},
     ],
     styles:[ P('classic','Classic',['classic','universal-adult']), P('milestone','Milestone',['milestone']),
              P('bold','Bold & Fun',['bold-adult','power-adult','gen-z-party','cosmic']),
@@ -668,8 +670,11 @@ const OCCASIONS = [
           P('brother','Brother'), P('kids','Kids & Teens',['for-niece-nephew']) ]}],
     styles:[ P('moment','Big Moment',['moonshot']) ] },
   { key:'thinking-of-you', name:'Thinking of You', menu:'everyday', src:['encouragement'], subs:['thinking-of-you'], wash:W.sage,
-    cols:[{ title:'Who', people:[ P('friend','Friend'), P('long-distance','Long-Distance Friend'),
-          P('her','Her — anyone',['for-her']), P('him','Him — anyone',['for-him']) ]}],
+    // A K 11/10: "it can be for a man, a woman, or a child"
+    cols:[{ title:'For Her', people:[ P('her','Her — anyone',['for-her']), P('mom','Mom'), P('sister','Sister'), P('grandma','Grandma') ]},
+          { title:'For Him', people:[ P('him','Him — anyone',['for-him']), P('dad','Dad'), P('brother','Brother'), P('grandpa','Granddad') ]},
+          { title:'For a Child', people:[ P('kids','Kids & Teens') ]},
+          { title:'Friends', people:[ P('friend','Friend'), P('long-distance','Long-Distance Friend') ]}],
     styles:[ P('thinking','Thinking of You',['thinking-of-you']), P('encourage','You Got This',['you-got-this']) ] },
 
   /* ---------------- tough times ---------------- */
@@ -722,10 +727,10 @@ const GAMBLE_25 = [ P('dad','Dad'), P('mom','Mom'), P('sister','Sister'), P('bro
   P('husband','Husband'), P('wife','Wife'), P('fiance','Fiancé'), P('business-partner','Business Partner'),
   P('teacher','Teacher'), P('cousin','Cousin'), P('aunt','Aunt'), P('uncle','Uncle'), P('grandma','Grandma'),
   P('grandpa','Granddad'), P('boss','Boss'), P('coach','Coach'), P('police','Police'), P('fireman','Fireman'),
-  P('employee','Employee'), P('mechanic','Mechanic'), P('teammates','Teammates') ];
+  P('employee','Employee'), P('mechanic','Mechanic'), P('teammates','Teammates'), P('kids','Kids & Teens') ];
 const GAMBLE_SKIP = {             // Mother's Day is for her, Father's Day is for him
-  'mothers-day':['dad','brother','boyfriend','husband','fiance','uncle','grandpa'],
-  'fathers-day':['mom','sister','girlfriend','wife','aunt','grandma'],
+  'mothers-day':['dad','brother','boyfriend','husband','fiance','uncle','grandpa','kids'],
+  'fathers-day':['mom','sister','girlfriend','wife','aunt','grandma','kids'],
 };
 const GAMBLE_SAME = { aunt:['godmother'] };   // already on the shelf under another name
 OCCASIONS.filter(o=>!o.alias).forEach(o=>{
@@ -859,10 +864,12 @@ const people = o => (o.cols||[]).flatMap(c=>c.people);
 const GENDER = {
   her:['mom','sister','girlfriend','wife','fiancee','grandma','aunt','daughter','stepmom','godmother','sister-friend'],
   him:['dad','brother','boyfriend','husband','fiance','grandpa','uncle','son','fireman'],
+  kid:['kids','granddaughter','grandson'],     // A K 11/10: "a man, a woman, or a child"
   any:['coworker','friend','best-friend','long-distance','cousin','boss','employee','business-partner','teacher',
        'coach','teammates','police','mechanic','partner','family'],
 };
-const genderTags = key => GENDER.her.includes(key) ? ['for-her']
+const genderTags = key => GENDER.kid.includes(key) ? ['for-niece-nephew']
+  : GENDER.her.includes(key) ? ['for-her']
   : GENDER.him.includes(key) ? ['for-him'] : GENDER.any.includes(key) ? ['for-her','for-him','classic'] : [];
 const tagsOf = person => person[2].concat(GLOBAL_TAGS[person[0]]||[], genderTags(person[0]));
 const items = o => state.byOcc[real(o).key] || [];

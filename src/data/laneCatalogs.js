@@ -163,12 +163,14 @@ export const GAMBLE_RECIPIENTS = [
   { slug: 'employee',         label: 'For Employee',         tagline: 'For the ones who build it alongside you.',         key: 'employee',  same: ['employees'] },
   { slug: 'mechanic',         label: 'For Mechanic',         tagline: 'For the hands that keep you moving.',              key: 'mechanic' },
   { slug: 'teammates',        label: 'For Teammates',        tagline: 'For the team that wins together.',                 key: 'teammates' },
+  // A K 11/10: "Under birthday, we need for people to be able to find kids."
+  { slug: 'for-kids',         label: 'For Kids & Teens',     tagline: 'For the little ones and the teens.',              key: 'kids' },
 ];
 
 // Mother's Day is for her, Father's Day is for him (David's 5/7 catch).
 export const RECIPIENT_SKIPS = {
-  'mothers-day': ['dad', 'brother', 'boyfriend', 'husband', 'fiance', 'uncle', 'grandpa'],
-  'fathers-day': ['mom', 'sister', 'girlfriend', 'wife', 'aunt', 'grandma'],
+  'mothers-day': ['dad', 'brother', 'boyfriend', 'husband', 'fiance', 'uncle', 'grandpa', 'kids'],
+  'fathers-day': ['mom', 'sister', 'girlfriend', 'wife', 'aunt', 'grandma', 'kids'],
 };
 
 export function withRecipients(categorySlug, lanes = []) {
