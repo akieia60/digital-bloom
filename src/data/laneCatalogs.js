@@ -188,6 +188,30 @@ for (const slug of Object.keys(LANE_CATALOGS)) {
   LANE_CATALOGS[slug] = withRecipients(slug, LANE_CATALOGS[slug]);
 }
 
+// A K 11/10: "It can be a Thinking of You one, but is it for a man or a
+// woman" — or a child. A bloom tagged For Her also fills every woman's lane
+// in its category, For Him every man's; jobs and friends take both plus
+// Classic. Mirrors GENDER in public/redesign.html.
+const FILL_HER = ['for-her'];
+const FILL_HIM = ['for-him'];
+const FILL_ANY = ['for-her', 'for-him', 'classic'];
+const LANE_FILLS = {
+  'for-mom': FILL_HER, 'for-sister': FILL_HER, girlfriend: FILL_HER, wife: FILL_HER, 'to-my-wife': FILL_HER,
+  'for-grandma': FILL_HER, 'for-auntie': FILL_HER, 'for-daughter': FILL_HER,
+  'for-dad': FILL_HIM, 'for-brother': FILL_HIM, boyfriend: FILL_HIM, husband: FILL_HIM, fiance: FILL_HIM,
+  'for-grandpa': FILL_HIM, uncle: FILL_HIM, 'for-son': FILL_HIM, fireman: FILL_HIM,
+  'co-workers': FILL_ANY, 'for-friend': FILL_ANY, 'business-partner': FILL_ANY, teacher: FILL_ANY, cousin: FILL_ANY,
+  boss: FILL_ANY, coach: FILL_ANY, police: FILL_ANY, employee: FILL_ANY, mechanic: FILL_ANY, teammates: FILL_ANY,
+  'for-kids': ['for-niece-nephew'],
+};
+const NO_FILL = ['mothers-day', 'fathers-day'];   // every lane there is already one person
+
+// Subcategory tags whose blooms belong in a lane: its own slug first.
+export function laneTags(categorySlug, laneSlug) {
+  if (NO_FILL.includes(categorySlug)) return [laneSlug];
+  return [laneSlug, ...(LANE_FILLS[laneSlug] || [])];
+}
+
 export function getLaneCatalog(categorySlug) {
   return LANE_CATALOGS[categorySlug] || null;
 }

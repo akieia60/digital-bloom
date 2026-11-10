@@ -5,7 +5,7 @@ import SubcatLane from '../components/SubcatLane';
 import { useProducts } from '../hooks/useProducts';
 import OCCASIONS from '../data/occasions';
 import { CATEGORY_BY_SLUG } from '../data/categories';
-import { getLaneCatalog } from '../data/laneCatalogs';
+import { getLaneCatalog, laneTags } from '../data/laneCatalogs';
 
 export default function CategoryPage() {
   const { categorySlug } = useParams();
@@ -55,10 +55,15 @@ export default function CategoryPage() {
   const lanes = useMemo(() => {
     if (!laneCatalog || !productsBySubcat) return [];
     return laneCatalog.map((entry) => {
-      const items = productsBySubcat.get(entry.slug) || [];
+      // A K 11/10: For Her / For Him / kids blooms also fill the matching
+      // people's lanes (Sister, Uncle, Mechanic…), own-tag blooms first.
+      const seen = new Set();
+      const items = laneTags(categorySlug, entry.slug)
+        .flatMap((tag) => productsBySubcat.get(tag) || [])
+        .filter((p) => !seen.has(p.id) && seen.add(p.id));
       return { ...entry, products: items, comingSoon: items.length === 0 };
     });
-  }, [laneCatalog, productsBySubcat]);
+  }, [laneCatalog, productsBySubcat, categorySlug]);
 
   // Untagged products in a category that DOES have a lane catalog —
   // render them in a final "more in this collection" lane so they
