@@ -285,3 +285,43 @@ export const TOTAL_EXPECTED_PROMPTS = CATEGORIES.reduce(
   (sum, c) => sum + (c.expectedPrompts || 0),
   0
 );
+
+/**
+ * Shop display order (AK, 2026-11-06): what's in season first, then the
+ * year-round best sellers, then the rest. Seasonal shelves (Mother's Day,
+ * Father's Day, Valentine's, Memorial Day) sit near the end until their
+ * season comes, then move them to the top of this list.
+ * Any slug missing here falls to the end in its CATEGORIES order.
+ */
+export const SHOP_DISPLAY_ORDER = [
+  'holidays',
+  'christmas',
+  'love',
+  'birthday',
+  'friendship',
+  'thank-you',
+  'encouragement',
+  'acknowledgement',
+  'celebration',
+  'graduation',
+  'anniversary',
+  'wedding',
+  'sympathy',
+  'grief',
+  'mothers-day',
+  'fathers-day',
+  'valentine',
+  'memorial-day',
+  'luxury',
+  'zodiac',
+  'signature-stories',
+];
+
+/** CATEGORIES sorted by SHOP_DISPLAY_ORDER, for every shopper-facing list. */
+export const CATEGORIES_IN_SHOP_ORDER = [...CATEGORIES].sort((a, b) => {
+  const rank = (c) => {
+    const i = SHOP_DISPLAY_ORDER.indexOf(c.slug);
+    return i === -1 ? SHOP_DISPLAY_ORDER.length + CATEGORIES.indexOf(c) : i;
+  };
+  return rank(a) - rank(b);
+});

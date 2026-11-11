@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useCart } from '../context/CartContext';
+import { getApiBase } from '../lib/apiBase';
 import '../styles/success.css';
 
 const POLL_LIMIT = 30;
@@ -26,6 +27,12 @@ const Success = () => {
   const [copied, setCopied] = useState(false);
   const [refreshNonce, setRefreshNonce] = useState(0);
   const [hasSavedCart, setHasSavedCart] = useState(false);
+  // Text hand-off record. Tapping "Send via Text" only opens the buyer's own
+  // Messages app, so nothing told Digital Bloom the text went out: every text
+  // order stayed "pending" and the daily "bloom is ready" reminders kept
+  // firing. After the tap we ask once and record the answer (2026-11-05).
+  const [textHandedOff, setTextHandedOff] = useState(false);
+  const [textRecord, setTextRecord] = useState(null); // null | 'saving' | 'saved' | 'error'
   const sessionId = searchParams.get('session_id');
 
   useEffect(() => {
@@ -138,6 +145,22 @@ const Success = () => {
     [purchases]
   );
   const hasPendingWork = renderingPurchases.length > 0 || processingPurchases.length > 0 || checkout?.checkout_status !== 'completed';
+
+  const confirmTextSent = async (bloomSlug) => {
+    if (!bloomSlug || textRecord === 'saving') return;
+    setTextRecord('saving');
+    try {
+      const response = await fetch(`${getApiBase()}/api/mark-bloom-sent`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ bloom_slug: bloomSlug }),
+      });
+      // 409 means it was already recorded as delivered, which is fine here.
+      setTextRecord(response.ok || response.status === 409 ? 'saved' : 'error');
+    } catch {
+      setTextRecord('error');
+    }
+  };
 
   const copyLink = async () => {
     const shareUrl = `${window.location.origin}${primaryGiftPath}`;
@@ -439,6 +462,7 @@ const Success = () => {
               )}
               <a
                 href={smsHref}
+                onClick={() => setTextHandedOff(true)}
                 className="success-share-btn"
                 style={{ textAlign: 'center', textDecoration: 'none', background: '#34c759', color: '#fff', fontWeight: 600 }}
               >
@@ -469,6 +493,28 @@ const Success = () => {
                 {copied ? t('success_copied') : t('success_copy_link')}
               </button>
             </div>
+            {textHandedOff && primaryPurchase?.bloom_slug && textRecord !== 'saved' && (
+              <div style={{ marginTop: '14px', display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+                <span className="success-card-text" style={{ margin: 0 }}>
+                  {textRecord === 'error'
+                    ? "We couldn't save that just now. Please try again."
+                    : 'Did your text go through?'}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => confirmTextSent(primaryPurchase.bloom_slug)}
+                  disabled={textRecord === 'saving'}
+                  className="success-btn-gold success-btn-gold--compact"
+                >
+                  {textRecord === 'saving' ? 'Saving…' : 'Yes, I sent it'}
+                </button>
+              </div>
+            )}
+            {textRecord === 'saved' && (
+              <p className="success-card-text" style={{ marginTop: '14px' }}>
+                Delivered. Your bloom is on its way to them.
+              </p>
+            )}
             <p className="success-card-text" style={{ marginTop: '12px' }}>
               {t('success_protected_link_note')}
             </p>

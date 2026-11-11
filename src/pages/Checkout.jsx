@@ -45,6 +45,8 @@ export default function Checkout() {
   // existing fallback in the SMS hint copy keeps the flow alive — number is
   // saved on the order, gift link email-falls-back to the buyer until SMS
   // goes live.
+  // 2026-11-06 (AK): Text stays first, preselected and Recommended. Email
+  // remains a full option.
   const [deliveryChannel, setDeliveryChannel] = useState('phone');
   // Carrier consent. Twilio rejected our toll-free verification for exactly
   // one reason — "Opt-in: Consent for messaging is a requirement for service"
@@ -395,7 +397,7 @@ export default function Checkout() {
                     How should it reach them?
                   </div>
                   <p className="cart-credit-entry-hint" style={{ margin: '0 0 4px' }}>
-                    Texting is fastest — the bloom link opens in Messages on your phone, so they see it from your familiar number, not a shortcode.
+                    Text opens Messages on your phone so they get it from your own number. Email arrives on its own.
                   </p>
                   <div className="cart-credit-choice-row" role="radiogroup" aria-label="Delivery channel">
                     <button
