@@ -4,7 +4,7 @@ import ProductGrid from '../components/ProductGrid';
 import ProductCard from '../components/ProductCard';
 import { useProducts } from '../hooks/useProducts';
 import { useLanguage } from '../contexts/LanguageContext';
-import { CATEGORIES } from '../data/categories';
+import { CATEGORIES_IN_SHOP_ORDER } from '../data/categories';
 import '../styles/gallery.css';
 
 function BackButton() {
@@ -136,7 +136,7 @@ export default function Shop({ searchQuery, setSearchQuery }) {
           </div>
         ) : (
           <div className="gallery-sections">
-            {CATEGORIES.filter((cat) => !cat.hidden).map((cat) => (
+            {CATEGORIES_IN_SHOP_ORDER.filter((cat) => !cat.hidden).map((cat) => (
               <CategorySection key={cat.slug} cat={cat} products={products} />
             ))}
             {/* Empty-state helper — shown only while the entire site has no

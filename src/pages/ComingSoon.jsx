@@ -9,7 +9,7 @@ const PAGE_INFO = {
   },
   '/contact': {
     title: 'Get in Touch',
-    description: 'Our contact page is on its way. In the meantime, reach us at hello@digitalbloom.com.',
+    description: 'Our contact page is on its way. In the meantime, reach us at hello@digitalbloom.store.',
   },
   '/checkout': {
     title: 'Checkout',

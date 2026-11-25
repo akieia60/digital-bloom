@@ -41,7 +41,7 @@ export default function ContactSection() {
             <div className="contact-details">
               <p>
                 <strong>Email:</strong>{' '}
-                <a href="mailto:hello@digitalbloom.com">hello@digitalbloom.com</a>
+                <a href="mailto:hello@digitalbloom.store">hello@digitalbloom.store</a>
               </p>
             </div>
           </div>

@@ -2,7 +2,7 @@ import { useRef, useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { useProducts } from '../../hooks/useProducts';
-import { CATEGORIES } from '../../data/categories';
+import { CATEGORIES_IN_SHOP_ORDER } from '../../data/categories';
 import OCCASIONS from '../../data/occasions';
 
 // Curated preview overrides — used when Ak wants a specific video to be the
@@ -35,7 +35,7 @@ export default function CategoryGrid() {
       if (!firstVideoBySlug[p.category]) firstVideoBySlug[p.category] = p.video_url;
     }
 
-    return CATEGORIES
+    return CATEGORIES_IN_SHOP_ORDER
       .filter((cat) => !cat.hidden)
       .map((cat) => {
         const preview = PREVIEW_OVERRIDES[cat.slug] || firstVideoBySlug[cat.slug] || null;

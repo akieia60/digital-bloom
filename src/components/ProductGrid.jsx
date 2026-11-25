@@ -3,7 +3,7 @@ import { useSearchParams, Link } from 'react-router-dom';
 import ProductCard from './ProductCard';
 import { useProducts } from '../hooks/useProducts';
 import { PRICING_TIERS } from '../config/pricingTiers';
-import { CATEGORIES, CATEGORY_BY_SLUG } from '../data/categories';
+import { CATEGORIES, CATEGORIES_IN_SHOP_ORDER, CATEGORY_BY_SLUG } from '../data/categories';
 import '../styles/gallery.css';
 
 // Derived from the canonical taxonomy in src/data/categories.js so adding a
@@ -57,10 +57,10 @@ const ProductGrid = ({ searchQuery = '', category = null }) => {
     return groups;
   }, [filteredProducts]);
 
-  // Display order comes straight from categories.js. Empty categories are
+  // Display order comes from SHOP_DISPLAY_ORDER in categories.js. Empty categories are
   // auto-hidden so the site never shows a "0 experiences" shelf while Ak is
   // still generating content for that occasion.
-  const categoryOrder = CATEGORIES.map((c) => c.slug);
+  const categoryOrder = CATEGORIES_IN_SHOP_ORDER.map((c) => c.slug);
   const orderedCategories = categoryOrder.filter(
     (cat) => groupedProducts[cat]?.length > 0
   );

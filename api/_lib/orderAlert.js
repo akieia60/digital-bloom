@@ -37,7 +37,14 @@ function buildOrderSummary({ purchase, delivery, cartItems }) {
     cartItems?.[0]?.product?.name ||
     'Digital Bloom';
 
-  const priceCents = purchase?.amount_total || purchase?.products?.price_cents;
+  // What the buyer actually paid. purchases.total_price is written at
+  // checkout from the cart price ($1.00 during the promo, what Stripe charges); the
+  // product's own price_cents is the list price ($1.99+), which made order
+  // alerts show $1.99 for $1.00 orders (fixed 2026-11-05).
+  const paidDollars = Number.parseFloat(purchase?.total_price);
+  const priceCents = purchase?.amount_total
+    || (Number.isFinite(paidDollars) && paidDollars > 0 ? Math.round(paidDollars * 100) : null)
+    || purchase?.products?.price_cents;
   const priceStr = priceCents
     ? `$${(Number(priceCents) / 100).toFixed(2)}`
     : (purchase?.products?.price ? `$${purchase.products.price}` : '$?.??');
